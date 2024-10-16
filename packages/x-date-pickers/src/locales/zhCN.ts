@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: '十二小时制',
 };
 
-const zhCNPickers: Partial<PickersLocaleText<any>> = {
+const zhCNPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '上个月',
   nextMonth: '下个月',
@@ -42,7 +42,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `选择 ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? '未选择时间' : `已选择${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `选择 ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? '未选择时间' : `已选择${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -59,11 +59,11 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `选择日期，已选择${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `选择日期，已选择${formattedDate ?? utils.format(value!, 'fullDate')}`
       : '选择日期',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `选择时间，已选择${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `选择时间，已选择${formattedTime ?? utils.format(value!, 'fullTime')}`
       : '选择时间',
   fieldClearLabel: '清除',
 

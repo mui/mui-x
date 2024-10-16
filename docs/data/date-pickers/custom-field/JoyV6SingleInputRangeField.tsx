@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -101,10 +100,9 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
+  extends UseSingleInputDateRangeFieldProps<false>,
     BaseSingleInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
+      DateRange,
       RangeFieldSection,
       false,
       DateRangeValidationError
@@ -128,7 +126,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
     });
 
     const fieldResponse = useSingleInputDateRangeField<
-      Dayjs,
       false,
       JoySingleInputDateRangeFieldProps
     >({ ...textFieldProps, enableAccessibleFieldDOMStructure: false });
@@ -162,7 +159,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleOpen = (event: React.PointerEvent) => {

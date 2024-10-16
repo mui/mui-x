@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import useForkRef from '@mui/utils/useForkRef';
-import { DateRange, FieldType } from '@mui/x-date-pickers-pro/models';
+import { RangeValue } from '@mui/x-date-pickers/models';
+import { FieldType } from '@mui/x-date-pickers-pro/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -11,7 +12,7 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { SingleInputDateRangeFieldProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
-interface DateRangeButtonFieldProps extends SingleInputDateRangeFieldProps<Dayjs> {
+interface DateRangeButtonFieldProps extends SingleInputDateRangeFieldProps {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -51,7 +52,7 @@ DateRangeButtonField.fieldType = 'single-input';
 
 const ButtonDateRangePicker = React.forwardRef(
   (
-    props: Omit<DateRangePickerProps<Dayjs>, 'open' | 'onOpen' | 'onClose'>,
+    props: Omit<DateRangePickerProps, 'open' | 'onOpen' | 'onClose'>,
     ref: React.Ref<HTMLDivElement>,
   ) => {
     const [open, setOpen] = React.useState(false);
@@ -71,7 +72,7 @@ const ButtonDateRangePicker = React.forwardRef(
 );
 
 export default function DateRangePickerWithButtonField() {
-  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
+  const [value, setValue] = React.useState<RangeValue>([null, null]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -80,7 +81,9 @@ export default function DateRangePickerWithButtonField() {
           value[0] === null && value[1] === null
             ? null
             : value
-                .map((date) => (date ? date.format('MM/DD/YYYY') : 'null'))
+                .map((date) =>
+                  date ? (date as Dayjs).format('MM/DD/YYYY') : 'null',
+                )
                 .join(' - ')
         }
         value={value}

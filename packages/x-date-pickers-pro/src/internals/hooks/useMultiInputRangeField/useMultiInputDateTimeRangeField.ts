@@ -24,7 +24,6 @@ import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useMultiInputDateTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
@@ -34,13 +33,11 @@ export const useMultiInputDateTimeRangeField = <
   endTextFieldProps,
   unstableEndFieldRef,
 }: UseMultiInputDateTimeRangeFieldParams<
-  TDate,
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedDateTimeField<
-    TDate,
-    UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseMultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     typeof inSharedProps
   >(inSharedProps);
 
@@ -80,10 +77,9 @@ export const useMultiInputDateTimeRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<TDate | null, DateTimeValidationError> => {
+  ): FieldChangeHandler<PickerValidDate | null, DateTimeValidationError> => {
     return (newDate, rawContext) => {
-      const newDateRange: DateRange<TDate> =
-        index === 0 ? [newDate, value[1]] : [value[0], newDate];
+      const newDateRange: DateRange = index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<DateTimeRangeValidationError> = {
         ...rawContext,
@@ -105,7 +101,6 @@ export const useMultiInputDateTimeRangeField = <
   });
 
   const startFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof sharedProps
   > = {
@@ -126,7 +121,6 @@ export const useMultiInputDateTimeRangeField = <
   };
 
   const endFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof sharedProps
   > = {
@@ -146,13 +140,11 @@ export const useMultiInputDateTimeRangeField = <
   };
 
   const startDateResponse = useDateTimeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
   >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   const endDateResponse = useDateTimeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof endFieldProps
   >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;

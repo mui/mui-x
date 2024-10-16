@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';

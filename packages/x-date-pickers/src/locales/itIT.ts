@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'il meridiano',
 };
 
-const itITPickers: Partial<PickersLocaleText<any>> = {
+const itITPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mese precedente',
   nextMonth: 'Mese successivo',
@@ -44,7 +44,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Seleziona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Seleziona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
@@ -61,11 +61,11 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Scegli la data, la data selezionata è ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Scegli la data, la data selezionata è ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Scegli la data',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Scegli l'ora, l'ora selezionata è ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Scegli l'ora, l'ora selezionata è ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : "Scegli l'ora",
   fieldClearLabel: 'Cancella valore',
 

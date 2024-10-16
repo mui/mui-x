@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'меридием',
 };
 
-const ruRUPickers: Partial<PickersLocaleText<any>> = {
+const ruRUPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -45,7 +45,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Выбрать ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Время не выбрано' : `Выбрано время ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Выбрать ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Время не выбрано' : `Выбрано время ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -62,11 +62,11 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Выберите дату, выбрана дата ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Выберите дату, выбрана дата ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Выберите дату',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Выберите время, выбрано время ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Выберите время, выбрано время ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Выберите время',
   fieldClearLabel: 'Очистить значение',
 

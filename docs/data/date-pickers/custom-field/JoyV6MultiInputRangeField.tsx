@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -132,10 +131,9 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, false>,
+  extends UseDateRangeFieldProps<false>,
     BaseMultiInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
+      DateRange,
       RangeFieldSection,
       false,
       DateRangeValidationError
@@ -179,7 +177,6 @@ const JoyMultiInputDateRangeField = React.forwardRef(
     }) as MultiInputFieldSlotTextFieldProps;
 
     const fieldResponse = useMultiInputDateRangeField<
-      Dayjs,
       false,
       MultiInputFieldSlotTextFieldProps
     >({
@@ -215,7 +212,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 ) as JoyMultiInputDateRangeFieldComponent;
 
 const JoyDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

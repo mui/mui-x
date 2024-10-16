@@ -5,8 +5,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
-const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange>[] = [
   {
     label: 'Next Available Weekend',
     getValue: ({ isValid }) => {
@@ -48,19 +49,20 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-const shouldDisableDate = (date: Dayjs) => {
+const shouldDisableDate = (date: PickerValidDate) => {
+  const dateWithKnownAdapter = date as Dayjs;
   const today = dayjs();
 
-  if (today.isSame(date, 'month')) {
+  if (today.isSame(dateWithKnownAdapter, 'month')) {
     return true;
   }
   const nextMonth = today.add(1, 'month').startOf('month');
 
-  if (date.isSame(nextMonth, 'month')) {
-    if (date.isSame(nextMonth, 'week')) {
+  if (dateWithKnownAdapter.isSame(nextMonth, 'month')) {
+    if (dateWithKnownAdapter.isSame(nextMonth, 'week')) {
       return true;
     }
-    return [10, 11, 12, 16, 18, 29, 30].includes(date.date());
+    return [10, 11, 12, 16, 18, 29, 30].includes(dateWithKnownAdapter.date());
   }
   return false;
 };

@@ -1,4 +1,3 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlots,
@@ -10,21 +9,17 @@ import {
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
 
-export interface DateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDateTimeRangePickerSlots<TDate>,
-    MobileDateTimeRangePickerSlots<TDate> {}
+export interface DateTimeRangePickerSlots
+  extends DesktopDateTimeRangePickerSlots,
+    MobileDateTimeRangePickerSlots {}
 
-export interface DateTimeRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DesktopDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+export interface DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface DateTimeRangePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
+export interface DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -35,10 +30,10 @@ export interface DateTimeRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimeRangePickerSlots<TDate>;
+  slots?: DateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

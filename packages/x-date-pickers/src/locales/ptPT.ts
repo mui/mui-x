@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiano',
 };
 
-const ptPTPickers: Partial<PickersLocaleText<any>> = {
+const ptPTPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mês anterior',
   nextMonth: 'Próximo mês',
@@ -44,7 +44,7 @@ const ptPTPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Selecione ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Selecione ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -61,11 +61,11 @@ const ptPTPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Escolha uma data, a data selecionada é ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Escolha uma data, a data selecionada é ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Escolha uma data',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Escolha uma hora, a hora selecionada é ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Escolha uma hora, a hora selecionada é ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Escolha uma hora',
   fieldClearLabel: 'Limpar valor',
 

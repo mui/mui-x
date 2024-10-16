@@ -52,7 +52,7 @@ describe('<DigitalClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 30);
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 30);
       digitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;

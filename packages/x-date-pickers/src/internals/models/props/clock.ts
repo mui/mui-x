@@ -6,8 +6,8 @@ import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectio
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 import { TimeViewWithMeridiem } from '../common';
 
-export interface ExportedBaseClockProps<TDate extends PickerValidDate>
-  extends TimeValidationProps<TDate>,
+export interface ExportedBaseClockProps
+  extends TimeValidationProps,
     BaseTimeValidationProps,
     TimezoneProps {
   /**
@@ -17,9 +17,9 @@ export interface ExportedBaseClockProps<TDate extends PickerValidDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate extends PickerValidDate, TView extends TimeViewWithMeridiem>
+export interface BaseClockProps<TView extends TimeViewWithMeridiem>
   extends ExportedUseViewsOptions<TView>,
-    ExportedBaseClockProps<TDate> {
+    ExportedBaseClockProps {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -29,12 +29,12 @@ export interface BaseClockProps<TDate extends PickerValidDate, TView extends Tim
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false
@@ -49,12 +49,12 @@ export interface BaseClockProps<TDate extends PickerValidDate, TView extends Tim
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
 }
 
-export interface DesktopOnlyTimePickerProps<TDate extends PickerValidDate>
-  extends Omit<ExportedDigitalClockProps<TDate>, 'timeStep'>,
-    Omit<ExportedMultiSectionDigitalClockProps<TDate>, 'timeSteps'> {
+export interface DesktopOnlyTimePickerProps
+  extends Omit<ExportedDigitalClockProps, 'timeStep'>,
+    Omit<ExportedMultiSectionDigitalClockProps, 'timeSteps'> {
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 <DateCalendar />;
@@ -11,7 +11,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 <DateCalendar value={null} />;
 
 // External components are generic as well
-<DateCalendar<Moment>
+<DateCalendar
   view="day"
   views={['day']}
   value={moment()}

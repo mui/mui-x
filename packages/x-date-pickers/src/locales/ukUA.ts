@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Південь',
 };
 
-const ukUAPickers: Partial<PickersLocaleText<any>> = {
+const ukUAPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Попередній місяць',
   nextMonth: 'Наступний місяць',
@@ -44,7 +44,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Вибрати ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Час не вибраний' : `Вибрано час ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Вибрати ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Час не вибраний' : `Вибрано час ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -61,11 +61,11 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Оберіть дату, обрана дата  ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Оберіть дату, обрана дата  ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Оберіть дату',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Оберіть час, обраний час  ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Оберіть час, обраний час  ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Оберіть час',
   fieldClearLabel: 'Очистити дані',
 

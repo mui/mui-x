@@ -6,8 +6,8 @@ import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { PickerValidDate } from '../../models';
 
-export type PickerOnChangeFn<TDate extends PickerValidDate> = (
-  date: TDate | null,
+export type PickerOnChangeFn = (
+  date: PickerValidDate | null,
   selectionState?: PickerSelectionState,
 ) => void;
 

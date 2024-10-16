@@ -7,8 +7,7 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
 export interface ValidateTimeRangeProps extends Required<BaseTimeValidationProps> {}
 
 export const validateTimeRange: Validator<
-  DateRange<any>,
-  any,
+  DateRange,
   TimeRangeValidationError,
   ValidateTimeRangeProps
 > = ({ adapter, value, timezone, props }) => {

@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'メリディム',
 };
 
-const jaJPPickers: Partial<PickersLocaleText<any>> = {
+const jaJPPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '先月',
   nextMonth: '来月',
@@ -45,7 +45,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view] ?? view}を選択してください ${!formattedTime && (time === null || !utils.isValid(time)) ? '時間が選択されていません' : `選択した時間は ${formattedTime ?? utils.format(time, 'fullTime')} です`}`,
+    `${timeViews[view] ?? view}を選択してください ${!formattedTime && (time === null || !utils.isValid(time)) ? '時間が選択されていません' : `選択した時間は ${formattedTime ?? utils.format(time!, 'fullTime')} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
@@ -62,11 +62,11 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `日付を選択してください。選択した日付は ${formattedDate ?? utils.format(value, 'fullDate')} です`
+      ? `日付を選択してください。選択した日付は ${formattedDate ?? utils.format(value!, 'fullDate')} です`
       : '日付を選択してください',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `時間を選択してください。選択した時間は ${formattedTime ?? utils.format(value, 'fullTime')} です`
+      ? `時間を選択してください。選択した時間は ${formattedTime ?? utils.format(value!, 'fullTime')} です`
       : '時間を選択してください',
   fieldClearLabel: 'クリア',
 

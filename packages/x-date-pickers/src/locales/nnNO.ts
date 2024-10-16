@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiem',
 };
 
-const nnNOPickers: Partial<PickersLocaleText<any>> = {
+const nnNOPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Forrige månad',
   nextMonth: 'Neste månad',
@@ -44,7 +44,7 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Vel ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Vel ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid vald' : `Vald tid er ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timar`,
   minutesClockNumberText: (minutes) => `${minutes} minuttar`,
   secondsClockNumberText: (seconds) => `${seconds} sekundar`,
@@ -61,11 +61,11 @@ const nnNOPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Vel dato, vald dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Vel dato, vald dato er ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Vel dato',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Vel tid, vald tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Vel tid, vald tid er ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Vel tid',
   fieldClearLabel: 'Fjern verdi',
 

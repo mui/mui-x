@@ -11,7 +11,6 @@ import type {
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { PickerValidDate } from './pickers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -167,11 +166,10 @@ type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure exten
  */
 export type BaseSingleInputFieldProps<
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError> &
+> = BaseFieldProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError> &
   BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 /**

@@ -5,5 +5,7 @@
 </LocalizationProvider>
 <Typography>
   Value:{' '}
-  {value.map((date) => (date == null ? 'null' : date.format('L'))).join(' – ')}
+  {value
+    .map((date) => (date == null ? 'null' : (date as Dayjs).format('L')))
+    .join(' – ')}
 </Typography>

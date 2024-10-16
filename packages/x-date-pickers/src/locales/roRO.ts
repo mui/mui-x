@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiane',
 };
 
-const roROPickers: Partial<PickersLocaleText<any>> = {
+const roROPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Luna anterioară',
   nextMonth: 'Luna următoare',
@@ -45,7 +45,7 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Selectați ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Selectați ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nicio oră selectată' : `Ora selectată este ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
@@ -62,11 +62,11 @@ const roROPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Selectați data, data selectată este ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Selectați data, data selectată este ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Selectați data',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Selectați ora, ora selectată este ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Selectați ora, ora selectată este ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Selectați ora',
   fieldClearLabel: 'Golire conținut',
 
