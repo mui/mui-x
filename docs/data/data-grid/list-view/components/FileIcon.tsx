@@ -6,10 +6,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import { FileType } from '../types';
 
-const FILE_TYPE_ICONS: Record<
-  string,
-  { component: React.ElementType; color: SvgIconProps['color'] }
-> = {
+const FILE_TYPE_ICONS = {
   video: {
     component: VideocamIcon,
     color: 'error',
@@ -26,10 +23,13 @@ const FILE_TYPE_ICONS: Record<
     component: FolderZipIcon,
     color: 'inherit',
   },
-};
+} satisfies Record<
+  string,
+  { component: React.ElementType; color: SvgIconProps['color'] }
+>;
 
 const FILE_ICON: Record<
-  string,
+  FileType,
   { component: React.ElementType; color: SvgIconProps['color'] }
 > = {
   pdf: FILE_TYPE_ICONS.document,
