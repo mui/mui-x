@@ -9,6 +9,7 @@ export * from './DataGrid';
 
 export * from './components';
 export * from './constants';
+export * from './constants/dataGridPropsDefaultValues';
 export * from './hooks';
 export * from './models';
 export * from './context';

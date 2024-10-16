@@ -17,6 +17,7 @@ import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
+import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
@@ -25,7 +26,8 @@ export type ChartContainerProps = Omit<
     Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
-    PluginProviderProps,
+    PluginProviderProps &
+    AnimationProviderProps,
   'children'
 > & {
   /**
@@ -53,6 +55,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     highlightedProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
   } = useChartContainerProps(props, ref);
 
   return (
@@ -65,7 +68,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
                 <HighlightedProvider {...highlightedProviderProps}>
                   <ChartsSurface {...chartsSurfaceProps}>
                     <ChartsAxesGradients />
-                    {children}
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </ChartsSurface>
                 </HighlightedProvider>
               </InteractionProvider>
@@ -140,6 +143,11 @@ ChartContainer.propTypes = {
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
