@@ -12,6 +12,10 @@ Unlike the default grid view, the list view makes no assumptions on how data is 
 
 In order to display data in a list view, a `unstable_listColumn` prop must be provided with a `renderCell` function.
 
+:::warning
+This feature is under development and is marked as **unstable**. While you can use the list view feature in production, the API could change in the future.
+:::
+
 {{"demo": "ListView.js", "bg": "inline"}}
 
 ## Advanced usage
@@ -21,5 +25,5 @@ The list view feature can be combined with [custom subcomponents](/x/react-data-
 {{"demo": "ListViewAdvanced.js", "bg": "inline", "hideToolbar": true}}
 
 :::info
-See the code for this demo in [CodeSandbox](https://codesandbox.io/).
+See the code for this demo in [CodeSandbox](https://codesandbox.io/p/sandbox/x-react-data-grid-list-view-zmkzhz).
 :::
