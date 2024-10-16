@@ -3,7 +3,7 @@
     "autoFocus": { "type": { "name": "bool" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile variants (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile variant (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
