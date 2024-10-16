@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/jscodeshift": "^0.12.0",
     "dayjs": "^1.11.13",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.5.46",
     "rimraf": "^6.0.1"
   },
   "sideEffects": false,

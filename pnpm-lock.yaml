@@ -336,8 +336,8 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-timezone:
-        specifier: ^0.5.45
-        version: 0.5.45
+        specifier: ^0.5.46
+        version: 0.5.46
       nyc:
         specifier: ^17.1.0
         version: 17.1.0
@@ -573,8 +573,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1
       moment-timezone:
-        specifier: ^0.5.45
-        version: 0.5.45
+        specifier: ^0.5.46
+        version: 0.5.46
       next:
         specifier: ^14.2.15
         version: 14.2.15(@babel/core@7.25.7)(@opentelemetry/api@1.8.0)(@playwright/test@1.44.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -971,8 +971,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       moment-timezone:
-        specifier: ^0.5.45
-        version: 0.5.45
+        specifier: ^0.5.46
+        version: 0.5.46
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1281,8 +1281,8 @@ importers:
         specifier: ^0.10.1
         version: 0.10.1
       moment-timezone:
-        specifier: ^0.5.45
-        version: 0.5.45
+        specifier: ^0.5.46
+        version: 0.5.46
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -7903,8 +7903,8 @@ packages:
   moment-jalaali@0.10.1:
     resolution: {integrity: sha512-/iwLtt3onvI6wFydUSTj10nFeNkD9sZ0fSY1gmqC2dwt1yGYJun6agI7E7SiBYi8uzGlt3P4KuPYCMLiv43E+g==}
 
-  moment-timezone@0.5.45:
-    resolution: {integrity: sha512-HIWmqA86KcmCAhnMAN0wuDOARV/525R2+lOLotuGFzn4HO+FH+/645z2wx0Dt3iDv6/p61SIvKnDstISainhLQ==}
+  moment-timezone@0.5.46:
+    resolution: {integrity: sha512-ZXm9b36esbe7OmdABqIWJuBBiLLwAjrN7CE+7sYdCCx82Nabt1wHDj8TVseS59QIlfFPbOoiBPm6ca9BioG4hw==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -17794,10 +17794,10 @@ snapshots:
     dependencies:
       jalaali-js: 1.2.6
       moment: 2.30.1
-      moment-timezone: 0.5.45
+      moment-timezone: 0.5.46
       rimraf: 3.0.2
 
-  moment-timezone@0.5.45:
+  moment-timezone@0.5.46:
     dependencies:
       moment: 2.30.1
 
