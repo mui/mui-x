@@ -5,6 +5,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { eslintUseValue } from '../../../utils/utils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowEntry } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -91,6 +92,8 @@ export const useGridRowsMeta = (
       // HACK: rowHeight trails behind the most up-to-date value just enough to
       // mess the initial rowsMeta hydration :/
       const baseRowHeight = gridDimensionsSelector(apiRef.current.state).rowHeight;
+      eslintUseValue(rowHeight);
+
       const entry = apiRef.current.getRowHeightEntry(row.id);
 
       if (!getRowHeightProp) {
