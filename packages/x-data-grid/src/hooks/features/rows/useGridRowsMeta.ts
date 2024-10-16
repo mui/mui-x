@@ -79,7 +79,7 @@ export const useGridRowsMeta = (
         spacingBottom: 0,
         detail: 0,
         autoHeight: false,
-        needsFirstMeasurement: true, // Assume all rows will need to be measured by default
+        needsFirstMeasurement: true,
       };
       heightCache.set(rowId, entry);
     }
