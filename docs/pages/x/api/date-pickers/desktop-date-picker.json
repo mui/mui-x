@@ -1,7 +1,7 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
-    "closeOnSelect": { "type": { "name": "bool" }, "default": "`true`" },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "true" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
