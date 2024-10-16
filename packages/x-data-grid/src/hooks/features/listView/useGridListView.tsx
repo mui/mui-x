@@ -16,17 +16,6 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
 export type GridListViewState = { listColumn: GridStateColDef | undefined };
 
-const getListColumnWidth = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
-  const dimensions = gridDimensionsSelector(apiRef.current.state);
-  const columns = gridVisibleColumnDefinitionsSelector(apiRef);
-  const actionsColumn = columns.find((col) => col.type === 'actions');
-  const viewportWidth = dimensions.viewportInnerSize.width;
-  const listColumnWidth = actionsColumn
-    ? viewportWidth - actionsColumn.computedWidth
-    : viewportWidth;
-  return listColumnWidth;
-};
-
 export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
 > = (state, props, apiRef) => ({
@@ -43,26 +32,20 @@ export function useGridListView(
   /**
    * API METHODS
    */
-  const getListColumn = React.useCallback<GridListViewApi['getListColumn']>(
-    (field) => {
-      const listColumn = gridListColumnSelector(apiRef.current.state);
-      if (listColumn?.field === field) {
-        return listColumn;
-      }
+  const getListColumn: GridListViewApi['getListColumn'] = (field) => {
+    const listColumn = gridListColumnSelector(apiRef.current.state);
+    if (listColumn?.field === field) {
+      return listColumn;
+    }
 
-      const columns = gridColumnDefinitionsSelector(apiRef);
-      return columns.find((col) => col.field === field && col.type === 'actions');
-    },
-    [apiRef],
-  );
+    const columns = gridColumnDefinitionsSelector(apiRef);
+    return columns.find((col) => col.field === field && col.type === 'actions');
+  };
 
-  const getListColumnIndex = React.useCallback<GridListViewApi['getListColumnIndex']>(
-    (field) => {
-      const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
-      return columns.findIndex((col) => col.field === field);
-    },
-    [apiRef],
-  );
+  const getListColumnIndex: GridListViewApi['getListColumnIndex'] = (field) => {
+    const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
+    return columns.findIndex((col) => col.field === field);
+  };
 
   const listColumnApi: GridListViewApi = {
     getListColumn,
@@ -116,4 +99,15 @@ export function useGridListView(
       });
     }
   }, [apiRef, props.unstable_listColumn]);
+}
+
+function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+  const dimensions = gridDimensionsSelector(apiRef.current.state);
+  const columns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const actionsColumn = columns.find((col) => col.type === 'actions');
+  const viewportWidth = dimensions.viewportInnerSize.width;
+  const listColumnWidth = actionsColumn
+    ? viewportWidth - actionsColumn.computedWidth
+    : viewportWidth;
+  return listColumnWidth;
 }
