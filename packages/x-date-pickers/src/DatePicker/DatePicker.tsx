@@ -64,7 +64,7 @@ DatePicker.propTypes = {
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile variants (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default `true` for desktop, `false` for mobile variant (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
