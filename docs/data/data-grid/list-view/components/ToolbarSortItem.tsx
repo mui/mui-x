@@ -31,16 +31,16 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
   const fields = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const sortableFields = fields.filter((field) => field.sortable);
-  const activeSort = sortModel?.[0];
+  const sortCount = sortModel.length;
 
   const handleSortChange = (field: string, sort: GridSortDirection) => {
-    apiRef.current.sortColumn(field, sort);
+    apiRef.current.sortColumn(field, sort, true);
   };
 
   return (
     <React.Fragment>
       <ToolbarButton onClick={() => setOpen(true)}>
-        <Badge badgeContent={activeSort ? 1 : 0} color="primary" variant="dot">
+        <Badge badgeContent={sortCount} color="primary" variant="dot">
           <SwapVertIcon fontSize="small" />
         </Badge>
       </ToolbarButton>
@@ -57,11 +57,14 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
 
         <List>
           {sortableFields.map((field) => {
-            const isActive = activeSort?.field === field.field;
+            const fieldIndexInSortModel = sortModel.findIndex(
+              (sort) => sort.field === field.field,
+            );
+            const fieldInSortModel = sortModel[fieldIndexInSortModel];
             let nextSort: GridSortDirection = 'asc';
 
-            if (isActive) {
-              nextSort = activeSort.sort === 'asc' ? 'desc' : null;
+            if (fieldInSortModel) {
+              nextSort = fieldInSortModel.sort === 'asc' ? 'desc' : null;
             }
 
             return (
@@ -70,14 +73,18 @@ export function ToolbarSortItem(props: ToolbarSortItemProps) {
                   onClick={() => handleSortChange(field.field, nextSort)}
                 >
                   <ListItemIcon>
-                    {isActive && (
-                      <React.Fragment>
-                        {activeSort.sort === 'asc' ? (
+                    {fieldInSortModel && (
+                      <Badge
+                        badgeContent={
+                          sortCount > 1 ? fieldIndexInSortModel + 1 : null
+                        }
+                      >
+                        {fieldInSortModel.sort === 'asc' ? (
                           <GridArrowUpwardIcon />
                         ) : (
                           <GridArrowDownwardIcon />
                         )}
-                      </React.Fragment>
+                      </Badge>
                     )}
                   </ListItemIcon>
                   <ListItemText>{field.headerName}</ListItemText>
