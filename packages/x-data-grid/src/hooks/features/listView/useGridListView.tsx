@@ -6,11 +6,8 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridListViewApi } from '../../../models/api/gridListViewApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridEventListener } from '../../../models/events';
-import {
-  gridListColumnSelector,
-  gridVisibleListColumnDefinitionsSelector,
-} from './gridListViewSelectors';
-import { gridColumnDefinitionsSelector, gridVisibleColumnDefinitionsSelector } from '../columns';
+import { gridVisibleListColumnDefinitionsSelector } from './gridListViewSelectors';
+import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
@@ -33,13 +30,8 @@ export function useGridListView(
    * API METHODS
    */
   const getListColumn: GridListViewApi['getListColumn'] = (field) => {
-    const listColumn = gridListColumnSelector(apiRef.current.state);
-    if (listColumn?.field === field) {
-      return listColumn;
-    }
-
-    const columns = gridColumnDefinitionsSelector(apiRef);
-    return columns.find((col) => col.field === field && col.type === 'actions');
+    const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
+    return columns.find((col) => col.field === field);
   };
 
   const getListColumnIndex: GridListViewApi['getListColumnIndex'] = (field) => {
