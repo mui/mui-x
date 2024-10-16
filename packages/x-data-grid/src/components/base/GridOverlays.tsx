@@ -61,9 +61,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-/**
- * @ignore - internal component.
- */
 function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

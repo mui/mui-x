@@ -61,7 +61,13 @@ interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 's
 }
 
 /**
- * @ignore - internal component.
+ * Demos:
+ *
+ * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
+ *
+ * API:
+ *
+ * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
  */
 function PickersSection(props: PickersSectionProps) {
   const { slots, slotProps, element, classes } = props;
@@ -114,15 +120,6 @@ type PickersSectionListComponent = ((
   props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-/**
- * Demos:
- *
- * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
- *
- * API:
- *
- * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
- */
 const PickersSectionList = React.forwardRef(function PickersSectionList(
   inProps: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,

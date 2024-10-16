@@ -26,25 +26,16 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
 
-/**
- * @ignore - internal component.
- */
 function AreaPlotZoom(props: AreaPlotProps) {
   const { isInteracting } = useZoom();
   return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
-/**
- * @ignore - internal component.
- */
 function LinePlotZoom(props: LinePlotProps) {
   const { isInteracting } = useZoom();
   return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
-/**
- * @ignore - internal component.
- */
 function MarkPlotZoom(props: MarkPlotProps) {
   const { isInteracting } = useZoom();
   return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
