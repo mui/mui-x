@@ -9,7 +9,10 @@ import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
-  const { render, clock } = createPickerRenderer({ clockConfig: new Date(2019, 0, 2) });
+  const { render, clock } = createPickerRenderer({
+    clockConfig: new Date(2019, 0, 2),
+    clockOptions: { toFake: ['Date'] },
+  });
 
   it('switches between views uncontrolled', async () => {
     const handleViewChange = spy();
@@ -131,24 +134,24 @@ describe('<DateCalendar />', () => {
     clock.withFakeTimers();
 
     // test: https://github.com/mui/mui-x/issues/12373
-    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
+    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
       const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
-      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
+      const { user } = render(
+        <DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />,
+      );
 
-      fireEvent.click(
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
-      fireEvent.click(screen.getByRole('radio', { name: '2020' }));
-      // Finish the transition to the day view
-      clock.runToLast();
+      await user.click(screen.getByRole('radio', { name: '2020' }));
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
-      fireEvent.click(
+      await user.click(screen.getByRole('gridcell', { name: '1' }));
+      await user.click(
         screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
       );
       // select the current year with a date in the past to trigger "findClosestEnabledDate"
-      fireEvent.click(screen.getByRole('radio', { name: '2019' }));
+      await user.click(screen.getByRole('radio', { name: '2019' }));
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
     });

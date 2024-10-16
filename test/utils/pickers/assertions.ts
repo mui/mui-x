@@ -1,6 +1,5 @@
 import { expect } from 'chai';
-import { SinonSpy } from 'sinon';
-import { cleanText } from 'test/utils/pickers';
+import { AdapterClassToUse, cleanText } from 'test/utils/pickers';
 
 export const expectFieldValueV7 = (
   fieldSectionsContainer: HTMLDivElement,
@@ -30,15 +29,24 @@ export const expectFieldPlaceholderV6 = (
 };
 
 export function expectPickerChangeHandlerValue(
-  type: 'date' | 'date-time' | 'time' | 'date-range' | 'date-time-range',
-  spyCallback: SinonSpy,
+  value: any | any[],
   expectedValue: any,
+  ignoreMilliseconds = false,
+  adapterToUse: AdapterClassToUse | null = null,
 ) {
-  if (['date-range', 'date-time-range'].includes(type)) {
-    spyCallback.lastCall.firstArg.forEach((value, index) => {
-      expect(value).to.deep.equal(expectedValue[index]);
+  if (Array.isArray(value)) {
+    value.forEach((positionValue, index) => {
+      if (ignoreMilliseconds && adapterToUse) {
+        // expect(adapterToUse.setMilliseconds(positionValue, 0)).to.deep.equal(expectedValue[index]);
+        expect(positionValue).to.deep.equal(expectedValue[index]);
+      } else {
+        expect(positionValue).to.deep.equal(expectedValue[index]);
+      }
     });
+  } else if (ignoreMilliseconds && adapterToUse) {
+    // expect(adapterToUse.setMilliseconds(value, 0)).to.deep.equal(expectedValue);
+    expect(value).to.deep.equal(expectedValue);
   } else {
-    expect(spyCallback.lastCall.firstArg).to.deep.equal(expectedValue);
+    expect(value).to.deep.equal(expectedValue);
   }
 }

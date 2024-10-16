@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
+import { describeConformance, screen } from '@mui/internal-test-utils';
+import userEvent from '@testing-library/user-event';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -15,6 +16,7 @@ import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
 describe('<MobileDateTimeRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
+    clockOptions: { toFake: ['Date'] },
   });
 
   describePicker(MobileDateTimeRangePicker, {
@@ -83,9 +85,9 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         : expectedPlaceholder;
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
-        openPicker({
+        await openPicker({
           type: 'date-time-range',
           variant: 'mobile',
           initialFocus: setEndDate ? 'end' : 'start',
@@ -108,12 +110,12 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
 
       // if we want to set the end date, we firstly need to switch to end date "range position"
       if (setEndDate) {
-        fireEvent.click(
+        await userEvent.click(
           screen.getByRole('button', { name: adapterToUse.format(value[1], 'shortDate') }),
         );
       }
 
-      fireEvent.click(
+      await userEvent.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
@@ -124,8 +126,8 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      fireEvent.click(
+      await userEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      await userEvent.click(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
@@ -133,16 +135,16 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (hasMeridiem) {
         // meridiem is an extra view on `MobileDateTimeRangePicker`
         // we need to click it to finish selection
-        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        await userEvent.click(
+          screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
+        );
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await userEvent.keyboard('{Escape}');
       } else {
         // return to the start date view in case we'd like to repeat the selection process
-        fireEvent.click(
+        await userEvent.click(
           screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
         );
       }

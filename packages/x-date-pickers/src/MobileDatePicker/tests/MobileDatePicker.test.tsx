@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -15,16 +15,16 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer();
   const { renderWithProps } = buildFieldInteractions({
     render,
     clock,
     Component: MobileDatePicker,
   });
 
-  it('allows to change only year', () => {
+  it('allows to change only year', async () => {
     const onChangeMock = spy();
-    render(
+    const { user } = render(
       <MobileDatePicker
         enableAccessibleFieldDOMStructure
         open
@@ -33,15 +33,15 @@ describe('<MobileDatePicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByLabelText(/switch to year view/i));
-    fireEvent.click(screen.getByText('2010', { selector: 'button' }));
+    await user.click(screen.getByLabelText(/switch to year view/i));
+    await user.click(screen.getByText('2010', { selector: 'button' }));
 
     expect(screen.getAllByTestId('calendar-month-and-year-text')[0]).to.have.text('January 2010');
     expect(onChangeMock.callCount).to.equal(1);
   });
 
-  it('allows to select edge years from list', () => {
-    render(
+  it('allows to select edge years from list', async () => {
+    const { user } = render(
       <MobileDatePicker
         enableAccessibleFieldDOMStructure
         open
@@ -52,17 +52,17 @@ describe('<MobileDatePicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByText('2010', { selector: 'button' }));
+    await user.click(screen.getByText('2010', { selector: 'button' }));
     expect(screen.getByTestId('datepicker-toolbar-date')).to.have.text('Fri, Jan 1');
   });
 
-  it('prop `onMonthChange` – dispatches callback when months switching', () => {
+  it('prop `onMonthChange` – dispatches callback when months switching', async () => {
     const onMonthChangeMock = spy();
-    render(
+    const { user } = render(
       <MobileDatePicker enableAccessibleFieldDOMStructure open onMonthChange={onMonthChangeMock} />,
     );
 
-    fireEvent.click(screen.getByLabelText('Next month'));
+    await user.click(screen.getByLabelText('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(1);
   });
 
@@ -150,18 +150,20 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
+    it('should open when clicking the input', async () => {
       const onOpen = spy();
 
-      render(<MobileDatePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      const { user } = render(
+        <MobileDatePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+      );
 
-      fireEvent.click(getFieldSectionsContainer());
+      await user.click(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call `onAccept` even if controlled', () => {
+    it('should call `onAccept` even if controlled', async () => {
       const onAccept = spy();
 
       function ControlledMobileDatePicker(props) {
@@ -177,17 +179,17 @@ describe('<MobileDatePicker />', () => {
         );
       }
 
-      render(<ControlledMobileDatePicker onAccept={onAccept} />);
+      const { user } = render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      openPicker({ type: 'date', variant: 'mobile' });
+      await openPicker({ type: 'date', variant: 'mobile' });
 
-      fireEvent.click(screen.getByText('15', { selector: 'button' }));
-      fireEvent.click(screen.getByText('OK', { selector: 'button' }));
+      await user.click(screen.getByText('15', { selector: 'button' }));
+      await user.click(screen.getByText('OK', { selector: 'button' }));
 
       expect(onAccept.callCount).to.equal(1);
     });
 
-    it('should update internal state when controlled value is updated', () => {
+    it('should update internal state when controlled value is updated', async () => {
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true as const,
         value: adapterToUse.date('2019-01-01'),
@@ -201,10 +203,8 @@ describe('<MobileDatePicker />', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      openPicker({ type: 'date', variant: 'mobile' });
-      // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      clock.runToLast();
+      await openPicker({ type: 'date', variant: 'mobile' });
+      await view.user.keyboard('{Escape}');
 
       // Verify it's still a clean value
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');

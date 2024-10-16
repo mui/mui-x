@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   adapterToUse,
@@ -12,11 +12,13 @@ import {
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import userEvent from '@testing-library/user-event';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+    clockOptions: { toFake: ['Date'] },
   });
 
   describePicker(MobileDateRangePicker, { render, fieldType: 'multi-input', variant: 'mobile' });
@@ -72,7 +74,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
@@ -83,10 +85,10 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+        await openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
       }
 
-      fireEvent.click(
+      await userEvent.click(
         screen.getAllByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],
@@ -94,8 +96,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await userEvent.keyboard('{Escape}');
       }
 
       return newValue;

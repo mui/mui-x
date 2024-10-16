@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   getAllFieldInputRoot,
@@ -9,7 +9,6 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
-import { fireUserEvent } from '../../fireUserEvent';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
@@ -57,7 +56,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(emptyValue);
     });
 
-    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
+    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
       const onChange = spy();
 
       const v7Response = renderWithProps({
@@ -65,7 +64,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         defaultValue: values[0],
         onChange,
       });
-      const newValue = setNewValue(values[0], {
+      const newValue = await setNewValue(values[0], {
         selectSection: v7Response.selectSection,
         pressKey: v7Response.pressKey,
       });
@@ -82,7 +81,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
     });
 
-    it('should call onChange when updating a value defined with `props.value`', () => {
+    it('should call onChange when updating a value defined with `props.value`', async () => {
       const onChange = spy();
 
       const useControlledElement = (props) => {
@@ -101,7 +100,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         { enableAccessibleFieldDOMStructure: true, value: values[0], onChange },
         { hook: useControlledElement },
       );
-      const newValue = setNewValue(values[0], {
+      const newValue = await setNewValue(values[0], {
         selectSection: v7Response.selectSection,
         pressKey: v7Response.pressKey,
       });
@@ -157,7 +156,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
     });
 
-    it('should not allow editing with keyboard in mobile pickers', () => {
+    it('should not allow editing with keyboard in mobile pickers', async () => {
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
@@ -168,21 +167,23 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         enableAccessibleFieldDOMStructure: true,
         onChange: handleChange,
       });
-      v7Response.selectSection(undefined);
-      fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
+      await v7Response.selectSection(undefined);
+      await v7Response.user.keyboard('{ArrowUp}');
       expect(handleChange.callCount).to.equal(0);
     });
 
-    it('should have correct labelledby relationship when toolbar is shown', () => {
+    it('should have correct labelledby relationship when toolbar is shown', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
-        open: true,
-        slotProps: { toolbar: { hidden: false } },
-        localeText: { toolbarTitle: 'Test toolbar' },
+      await act(async () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          open: true,
+          slotProps: { toolbar: { hidden: false } },
+          localeText: { toolbarTitle: 'Test toolbar' },
+        });
       });
 
       if (params.variant === 'mobile' && params.type === 'date-time-range') {
@@ -192,53 +193,57 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
     });
 
-    it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
+    it('should have correct labelledby relationship with provided label when toolbar is hidden', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
-      renderWithProps({
-        enableAccessibleFieldDOMStructure: true,
-        open: true,
-        slotProps: { toolbar: { hidden: true } },
-        ...(isRangeType
-          ? {
-              localeText: {
-                start: 'test',
-                end: 'relationship',
-              },
-            }
-          : { label: 'test relationship' }),
+      await act(async () => {
+        renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          open: true,
+          slotProps: { toolbar: { hidden: true } },
+          ...(isRangeType
+            ? {
+                localeText: {
+                  start: 'test',
+                  end: 'relationship',
+                },
+              }
+            : { label: 'test relationship' }),
+        });
       });
 
       expect(screen.getByRole('dialog', { name: 'test relationship' })).not.to.equal(null);
     });
 
-    it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
+    it('should have correct labelledby relationship without label and hidden toolbar but external props', async () => {
       if (componentFamily !== 'picker' || isDesktopRange) {
         return;
       }
 
-      render(
-        <div>
-          <div id="label-id">external label</div>
-          <ElementToTest
-            enableAccessibleFieldDOMStructure
-            open
-            {...(isRangeType && {
-              localeText: {
-                start: '',
-                end: '',
-              },
-            })}
-            slotProps={{
-              toolbar: { hidden: true },
-              [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
-                'aria-labelledby': 'label-id',
-              },
-            }}
-          />
-        </div>,
+      await act(async () =>
+        render(
+          <div>
+            <div id="label-id">external label</div>
+            <ElementToTest
+              enableAccessibleFieldDOMStructure
+              open
+              {...(isRangeType && {
+                localeText: {
+                  start: '',
+                  end: '',
+                },
+              })}
+              slotProps={{
+                toolbar: { hidden: true },
+                [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
+                  'aria-labelledby': 'label-id',
+                },
+              }}
+            />
+          </div>,
+        ),
       );
       expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
     });

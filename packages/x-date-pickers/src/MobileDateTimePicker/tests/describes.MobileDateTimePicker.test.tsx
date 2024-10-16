@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -13,11 +13,13 @@ import {
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
+import { userEvent } from '@testing-library/user-event';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+    clockOptions: { toFake: ['Date'] },
   });
 
   describePicker(MobileDateTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
@@ -70,15 +72,15 @@ describe('<MobileDateTimePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'date-time', variant: 'mobile' });
+        await openPicker({ type: 'date-time', variant: 'mobile' });
       }
 
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
-      fireEvent.click(
+      await userEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -97,17 +99,15 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        await userEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-        clock.runToLast();
+        await userEvent.keyboard('{Escape}');
       } else {
         // return to the date view in case we'd like to repeat the selection process
-        fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));
+        await userEvent.click(screen.getByRole('tab', { name: 'pick date' }));
       }
 
       return newValue;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { flushMicrotasks, screen } from '@mui/internal-test-utils';
 import { adapterToUse } from 'test/utils/pickers';
 
 const isDisabled = (el: HTMLElement) => el.getAttribute('disabled') !== null;
@@ -49,7 +49,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         : {}),
     };
 
-    it('should apply shouldDisableDate', function test() {
+    it('should apply shouldDisableDate', async function test() {
       const { render } = getOptions();
       render(
         <ElementToTest
@@ -58,23 +58,26 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
+      await flushMicrotasks();
       testDisabledDate('10', [false, true], !isDesktop || includesTimeView);
       testDisabledDate('11', [true, true], !isDesktop || includesTimeView);
     });
 
-    it('should apply disablePast', function test() {
-      const { render, clock } = getOptions();
+    it('should apply disablePast', async function test() {
+      const { render } = getOptions();
 
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
         const { referenceDate, ...otherProps } = props;
-        return <ElementToTest value={[now, null]} {...otherProps} />;
+        return <ElementToTest value={[now, null]} reduceAnimations {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
+
+      await flushMicrotasks();
 
       testDisabledDate(
         adapterToUse.format(now, 'dayOfMonth'),
@@ -89,7 +92,6 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
-        clock.runToLast();
       }
       testDisabledDate(
         adapterToUse.format(yesterday, 'dayOfMonth'),
@@ -98,19 +100,21 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       );
     });
 
-    it('should apply disableFuture', function test() {
-      const { render, clock } = getOptions();
+    it('should apply disableFuture', async function test() {
+      const { render } = getOptions();
 
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date();
         const { referenceDate, ...otherProps } = props;
-        return <ElementToTest value={[now, null]} {...otherProps} />;
+        return <ElementToTest value={[now, null]} reduceAnimations {...otherProps} />;
       }
       const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
+
+      await flushMicrotasks();
 
       testDisabledDate(
         adapterToUse.format(now, 'dayOfMonth'),
@@ -125,7 +129,6 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
-        clock.runToLast();
       }
       testDisabledDate(
         adapterToUse.format(yesterday, 'dayOfMonth'),
@@ -134,7 +137,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       );
     });
 
-    it('should apply minDate', function test() {
+    it('should apply minDate', async function test() {
       const { render } = getOptions();
 
       render(
@@ -144,6 +147,8 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
           minDate={adapterToUse.date('2019-06-04')}
         />,
       );
+
+      await flushMicrotasks();
 
       testDisabledDate('1', [true, false], !isDesktop || includesTimeView);
       testDisabledDate('3', [true, false], !isDesktop || includesTimeView);
@@ -161,6 +166,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
           {...defaultProps}
           referenceDate={adapterToUse.date('2019-06-15')}
           maxDate={adapterToUse.date('2019-06-04')}
+          reduceAnimations
         />,
       );
 

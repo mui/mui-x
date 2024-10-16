@@ -15,7 +15,7 @@ describe('<DigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
       const referenceDate = '2018-01-01T12:30:00';
 
@@ -34,7 +34,7 @@ describe('<DigitalClock />', () => {
         }),
       ).to.have.attribute('tabindex', '0');
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -54,7 +54,7 @@ describe('<DigitalClock />', () => {
       ).to.have.attribute('tabindex', '0');
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
       render(
@@ -65,7 +65,7 @@ describe('<DigitalClock />', () => {
         />,
       );
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -73,7 +73,7 @@ describe('<DigitalClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
       render(
@@ -84,7 +84,7 @@ describe('<DigitalClock />', () => {
         />,
       );
 
-      digitalClockHandler.setViewValue(
+      await digitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );

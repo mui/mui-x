@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
+import { act, fireTouchChangedEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   adapterToUse,
@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer();
 
   it('should render date and time by default', () => {
     render(
@@ -93,18 +93,20 @@ describe('<MobileDateTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
+    it('should open when clicking the input', async () => {
       const onOpen = spy();
 
-      render(<MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      const { user } = render(
+        <MobileDateTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
+      );
 
-      fireEvent.click(getFieldSectionsContainer());
+      await user.click(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onChange when selecting each view', function test() {
+    it('should call onChange when selecting each view', async function test() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         this.skip();
       }
@@ -114,7 +116,7 @@ describe('<MobileDateTimePicker />', () => {
       const onClose = spy();
       const defaultValue = adapterToUse.date('2018-01-01');
 
-      render(
+      const { user } = render(
         <MobileDateTimePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -125,36 +127,44 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'mobile' });
+      await openPicker({ type: 'date-time', variant: 'mobile' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the year view
-      fireEvent.click(screen.getByLabelText(/switch to year view/));
-      fireEvent.click(screen.getByText('2010', { selector: 'button' }));
+      await user.click(screen.getByLabelText(/switch to year view/));
+      await user.click(screen.getByText('2010', { selector: 'button' }));
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
-      clock.runToLast();
+      await waitFor(() => expect(screen.getByRole('gridcell', { name: '15' })).toBeVisible());
 
       // Change the date
-      fireEvent.click(screen.getByRole('gridcell', { name: '15' }));
+      await user.click(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      });
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
+      });
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minuteClockEvent);
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minuteClockEvent);
+      });
+      await act(async () => {
+        fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minuteClockEvent);
+      });
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:53:00'));
       expect(onAccept.callCount).to.equal(0);

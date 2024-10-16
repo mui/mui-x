@@ -97,7 +97,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], isSingleInput);
     });
 
-    it('should apply disablePast', function test() {
+    it('should apply disablePast', async function test() {
       const onErrorMock = spy();
       const now = adapterToUse.date();
       render(<ElementToTest enableAccessibleFieldDOMStructure disablePast onError={onErrorMock} />);
@@ -113,7 +113,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         return;
       }
 
-      act(() => {
+      await act(() => {
         setValue(adapterToUse.date(past));
       });
 
@@ -121,7 +121,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
       testInvalidStatus([true, false], isSingleInput);
 
-      act(() => {
+      await act(() => {
         setValue(adapterToUse.date(past), { setEndDate: true });
       });
 
@@ -129,7 +129,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
       testInvalidStatus([true, true], isSingleInput);
 
-      act(() => {
+      await act(() => {
         setValue(adapterToUse.date(now));
       });
       expect(onErrorMock.callCount).to.equal(3);

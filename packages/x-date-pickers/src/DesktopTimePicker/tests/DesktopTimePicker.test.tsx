@@ -10,10 +10,11 @@ describe('<DesktopTimePicker />', () => {
     const { render } = createPickerRenderer({
       clock: 'fake',
       clockConfig: new Date('2018-01-01T10:05:05.000'),
+      clockOptions: { toFake: ['Date'] },
     });
 
     it('should render "accept" action and 3 time sections by default', () => {
-      render(<DesktopTimePicker open />);
+      render(<DesktopTimePicker open reduceAnimations />);
 
       expect(screen.getByRole('button', { name: 'OK' })).not.to.equal(null);
       expect(screen.getByRole('listbox', { name: 'Select hours' })).not.to.equal(null);
@@ -25,14 +26,16 @@ describe('<DesktopTimePicker />', () => {
     });
 
     it('should render single column picker given big enough "thresholdToRenderTimeInASingleColumn" number', () => {
-      render(<DesktopTimePicker open thresholdToRenderTimeInASingleColumn={1000} />);
+      render(
+        <DesktopTimePicker open thresholdToRenderTimeInASingleColumn={1000} reduceAnimations />,
+      );
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '09:35 AM' })).not.to.equal(null);
     });
 
     it('should render single column picker given big enough "timeSteps.minutes" number', () => {
-      render(<DesktopTimePicker open timeSteps={{ minutes: 60 }} />);
+      render(<DesktopTimePicker open timeSteps={{ minutes: 60 }} reduceAnimations />);
 
       expect(screen.getByRole('listbox', { name: 'Select time' })).not.to.equal(null);
       expect(screen.getByRole('option', { name: '09:00 AM' })).not.to.equal(null);
@@ -44,6 +47,7 @@ describe('<DesktopTimePicker />', () => {
           open
           views={['hours', 'minutes', 'seconds']}
           timeSteps={{ hours: 3, minutes: 15, seconds: 20 }}
+          reduceAnimations
         />,
       );
 
@@ -77,7 +81,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      await openPicker({ type: 'time', variant: 'desktop' });
 
       await user.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
@@ -101,7 +105,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      await openPicker({ type: 'time', variant: 'desktop' });
 
       await user.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
@@ -134,7 +138,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      await openPicker({ type: 'time', variant: 'desktop' });
 
       await user.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
@@ -172,7 +176,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      await openPicker({ type: 'time', variant: 'desktop' });
 
       await user.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);

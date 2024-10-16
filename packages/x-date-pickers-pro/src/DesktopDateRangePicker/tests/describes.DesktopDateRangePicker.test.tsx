@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -13,11 +13,13 @@ import {
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { describeConformance } from 'test/utils/describeConformance';
+import userEvent from '@testing-library/user-event';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+    clockOptions: { toFake: ['Date'] },
   });
 
   describePicker(DesktopDateRangePicker, { render, fieldType: 'multi-input', variant: 'desktop' });
@@ -72,7 +74,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -86,14 +88,14 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        fireEvent.click(
+        await userEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
       }
 
       return newValue;
@@ -134,7 +136,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
 
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
@@ -148,14 +150,14 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        fireEvent.click(
+        await userEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
       }
 
       return newValue;

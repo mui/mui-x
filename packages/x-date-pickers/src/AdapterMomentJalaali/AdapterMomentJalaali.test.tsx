@@ -70,7 +70,6 @@ describe('<AdapterMomentJalaali />', () => {
 
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, clock, adapter } = createPickerRenderer({
-          clock: 'fake',
           adapterName: 'moment-jalaali',
           locale: localeObject,
         });

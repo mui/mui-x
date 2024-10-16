@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireTouchChangedEvent, screen, within, fireEvent } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { adapterToUse, createPickerRenderer, describeValidation } from 'test/utils/pickers';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
-  });
+  const { render, clock } = createPickerRenderer();
 
   describeValidation(StaticTimePicker, () => ({
     render,
@@ -35,7 +32,7 @@ describe('<StaticTimePicker />', () => {
     ],
   }));
 
-  it('should allow view modification, but not update value when `readOnly` prop is passed', function test() {
+  it('should allow view modification, but not update value when `readOnly` prop is passed', async function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
       this.skip();
@@ -50,7 +47,7 @@ describe('<StaticTimePicker />', () => {
     };
     const onChange = spy();
     const onViewChange = spy();
-    render(
+    const { user } = render(
       <StaticTimePicker
         value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
@@ -60,16 +57,16 @@ describe('<StaticTimePicker />', () => {
     );
 
     // Can switch between views
-    fireEvent.click(screen.getByTestId('minutes'));
+    await user.click(screen.getByTestId('minutes'));
     expect(onViewChange.callCount).to.equal(1);
 
-    fireEvent.click(screen.getByTestId('hours'));
+    await user.click(screen.getByTestId('hours'));
     expect(onViewChange.callCount).to.equal(2);
 
     // Can not switch between meridiem
-    fireEvent.click(screen.getByRole('button', { name: /AM/i }));
+    await user.click(screen.getByRole('button', { name: /AM/i }));
     expect(onChange.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: /PM/i }));
+    await user.click(screen.getByRole('button', { name: /PM/i }));
     expect(onChange.callCount).to.equal(0);
 
     // Can not set value
@@ -85,7 +82,7 @@ describe('<StaticTimePicker />', () => {
     expect(disabledHours.length).to.equal(0);
   });
 
-  it('should allow switching between views and display disabled options when `disabled` prop is passed', function test() {
+  it('should allow switching between views and display disabled options when `disabled` prop is passed', async function test() {
     // Only run in supported browsers
     if (typeof Touch === 'undefined') {
       this.skip();
@@ -100,7 +97,7 @@ describe('<StaticTimePicker />', () => {
     };
     const onChange = spy();
     const onViewChange = spy();
-    render(
+    const { user } = render(
       <StaticTimePicker
         value={adapterToUse.date('2019-01-01')}
         onChange={onChange}
@@ -110,16 +107,16 @@ describe('<StaticTimePicker />', () => {
     );
 
     // Can switch between views
-    fireEvent.click(screen.getByTestId('minutes'));
+    await user.click(screen.getByTestId('minutes'));
     expect(onViewChange.callCount).to.equal(1);
 
-    fireEvent.click(screen.getByTestId('hours'));
+    await user.click(screen.getByTestId('hours'));
     expect(onViewChange.callCount).to.equal(2);
 
     // Can not switch between meridiem
-    fireEvent.click(screen.getByRole('button', { name: /AM/i }));
+    await user.click(screen.getByRole('button', { name: /AM/i }));
     expect(onChange.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: /PM/i }));
+    await user.click(screen.getByRole('button', { name: /PM/i }));
     expect(onChange.callCount).to.equal(0);
 
     // Can not set value
