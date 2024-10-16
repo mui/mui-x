@@ -51,9 +51,12 @@ In all the below scenarios, the picker closes when `onClose` is called, except i
 #### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
-By default, it is set to `true` on desktop and `false` on mobile.
+The default value of `closeOnSelect` varies among the components:
 
-Here are a few examples:
+- `DatePicker` and `DateRangePicker`: `true` on desktop and `false` on mobile variants;
+- `TimePicker`, `DateTimePicker` and `DateTimeRangePicker`: `false` on both desktop and mobile variants.
+
+  Here are a few examples:
 
 :::info
 The examples below are using the desktop and mobile variants of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
