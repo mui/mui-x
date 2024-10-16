@@ -54,7 +54,7 @@ export interface HeatmapSlotProps
 export interface HeatmapProps
   extends Omit<
       ResponsiveChartContainerProProps,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange'
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,

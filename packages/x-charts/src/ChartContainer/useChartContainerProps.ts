@@ -10,7 +10,7 @@ import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../context/PluginProvider';
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { AnimationProviderProps } from '../context/AnimationProvider';
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
@@ -34,12 +34,11 @@ export const useChartContainerProps = (
     onHighlightChange,
     plugins,
     children,
+    skipAnimation,
     ...other
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
   const chartSurfaceRef = useForkRef(ref, svgRef);
-
-  useReducedMotion(); // a11y reduce motion (see: https://react-spring.dev/docs/utilities/use-reduced-motion)
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
@@ -48,6 +47,10 @@ export const useChartContainerProps = (
     height,
     margin,
     svgRef,
+  };
+
+  const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
+    skipAnimation,
   };
 
   const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
@@ -96,6 +99,7 @@ export const useChartContainerProps = (
     highlightedProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
   };
