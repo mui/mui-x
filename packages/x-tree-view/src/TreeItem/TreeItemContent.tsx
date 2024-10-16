@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Checkbox from '@mui/material/Checkbox';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import { useTreeItemState } from './useTreeItemState';
 import {
   TreeItem2DragAndDropOverlay,
   TreeItem2DragAndDropOverlayProps,
 } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2LabelInput, TreeItem2LabelInputProps } from '../TreeItem2LabelInput';
-import { MuiCancellableEvent } from '../internals/models';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -137,7 +137,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleLabelDoubleClick = (event: React.MouseEvent & MuiCancellableEvent) => {
-    if (event.defaultMuiPrevented) {
+    if (shouldSkipEventHandler(event)) {
       return;
     }
     toggleItemEditing();

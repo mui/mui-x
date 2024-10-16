@@ -2,6 +2,7 @@ import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import {
   UseTreeItem2Parameters,
   UseTreeItem2ReturnValue,
@@ -19,10 +20,7 @@ import {
   UseTreeItem2ContentSlotPropsFromUseTreeItem,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import {
-  MuiCancellableEvent,
-  TreeViewItemPluginSlotPropsEnhancerParams,
-} from '../internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -67,7 +65,7 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
 
@@ -81,7 +79,7 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onBlur?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
 
@@ -112,7 +110,7 @@ export const useTreeItem2 = <
     (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
       if (
-        event.defaultMuiPrevented ||
+        shouldSkipEventHandler(event) ||
         (event.target as HTMLElement)?.dataset?.element === 'labelInput'
       ) {
         return;
@@ -124,7 +122,7 @@ export const useTreeItem2 = <
   const createLabelHandleDoubleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
       interactions.toggleItemEditing();
@@ -135,7 +133,10 @@ export const useTreeItem2 = <
       otherHandlers.onClick?.(event);
       onItemClick?.(event, itemId);
 
-      if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
+      if (
+        shouldSkipEventHandler(event) ||
+        checkboxRef.current?.contains(event.target as HTMLElement)
+      ) {
         return;
       }
       if (expansionTrigger === 'content') {
@@ -150,7 +151,7 @@ export const useTreeItem2 = <
   const createContentHandleMouseDown =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
 
@@ -164,7 +165,7 @@ export const useTreeItem2 = <
     (otherHandlers: EventHandlers) =>
     (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
       otherHandlers.onChange?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
 
@@ -178,7 +179,7 @@ export const useTreeItem2 = <
   const createIconContainerHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
       if (expansionTrigger === 'iconContainer') {

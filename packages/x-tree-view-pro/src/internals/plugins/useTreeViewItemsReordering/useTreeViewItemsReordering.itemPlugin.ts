@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import {
-  MuiCancellableEvent,
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
@@ -40,7 +40,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
         const handleDragStart = (event: React.DragEvent & MuiCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
-          if (event.defaultMuiPrevented || event.defaultPrevented) {
+          if (shouldSkipEventHandler(event) || event.defaultPrevented) {
             return;
           }
 
@@ -68,7 +68,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
         const handleRootDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-          if (event.defaultMuiPrevented) {
+          if (shouldSkipEventHandler(event)) {
             return;
           }
 
@@ -77,7 +77,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
         const handleRootDragEnd = (event: React.DragEvent & MuiCancellableEvent) => {
           externalEventHandlers.onDragEnd?.(event);
-          if (event.defaultMuiPrevented) {
+          if (shouldSkipEventHandler(event)) {
             return;
           }
 
@@ -102,7 +102,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
         const handleDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-          if (event.defaultMuiPrevented || validActionsRef.current == null) {
+          if (shouldSkipEventHandler(event) || validActionsRef.current == null) {
             return;
           }
 
@@ -121,7 +121,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
 
         const handleDragEnter = (event: React.DragEvent & MuiCancellableEvent) => {
           externalEventHandlers.onDragEnter?.(event);
-          if (event.defaultMuiPrevented) {
+          if (shouldSkipEventHandler(event)) {
             return;
           }
 
