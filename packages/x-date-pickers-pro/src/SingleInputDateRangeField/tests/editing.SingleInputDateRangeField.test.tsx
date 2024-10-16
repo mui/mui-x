@@ -22,7 +22,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
@@ -40,7 +44,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -60,7 +64,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
@@ -83,7 +91,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -102,7 +110,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(0);
@@ -122,7 +134,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(0);
@@ -262,7 +274,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
@@ -280,7 +296,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -300,7 +316,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV7(view.getSectionsContainer(), 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expectFieldValueV7(view.getSectionsContainer(), 'MMMM YYYY – MMMM YYYY');
@@ -323,7 +343,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValueV6(input, 'January YYYY – MMMM YYYY');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: '' } });
         expectFieldValueV6(input, 'MMMM YYYY – MMMM YYYY');
@@ -342,7 +362,11 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
 
         view.pressKey(null, '');
         expect(onChangeV7.callCount).to.equal(0);
@@ -362,7 +386,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         view.selectSection('month');
 
         // Select all sections
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
 
         fireEvent.change(input, { target: { value: 'Delete' } });
         expect(onChangeV6.callCount).to.equal(0);
