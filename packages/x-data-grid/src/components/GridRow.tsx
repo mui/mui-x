@@ -445,7 +445,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const indexInSection = i - pinnedColumns.left.length;
 
     if (!column) {
-      return null;
+      continue;
     }
 
     cells.push(getCell(column, indexInSection, i, middleColumnsLength));
