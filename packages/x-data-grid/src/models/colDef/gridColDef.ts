@@ -361,7 +361,7 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
  *   - [List view](/x/react-data-grid/list-view/)
  */
 export type GridListColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
-  GridColDef<R, V, F>,
+  GridBaseColDef<R, V, F>,
   'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
 >;
 
