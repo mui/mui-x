@@ -46,7 +46,7 @@ Use the `onItemLabelChange` prop to trigger an action when the label of an item 
 ## Change the default behavior
 
 By default, blurring the Tree Item saves the new value if there is one.
-To modify this behavior, use the `slotProps` of the Tree Item 2.
+To modify this behavior, use the `slotProps` of the `<TreeItem2 />`.
 
 {{"demo": "CustomBehavior.js"}}
 

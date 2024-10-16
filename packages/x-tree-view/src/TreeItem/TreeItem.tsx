@@ -523,13 +523,13 @@ TreeItem.propTypes = {
   className: PropTypes.string,
   /**
    * The component used to render the content of the item.
-   * @deprecated Consider using the Tree Item 2 component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
   /**
    * Props applied to ContentComponent.
-   * @deprecated Consider using the Tree Item 2 component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps: PropTypes.object,
   /**

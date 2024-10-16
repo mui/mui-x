@@ -62,7 +62,7 @@ Target the `treeItemClasses.groupTransition` class to add connection borders bet
 ### Gmail clone
 
 :::warning
-This example is built using the new Tree Item 2 component
+This example is built using the new `<TreeItem2 />` component
 which adds several slots to modify the content of the Tree Item or change its behavior.
 
 You can learn more about this new component in the [Overview page](/x/react-tree-view/#tree-item-components).

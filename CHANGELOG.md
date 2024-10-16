@@ -79,7 +79,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 - [docs] Add custom columns panel demo (#14825) @cherniavskii
 - [docs] Capitalize all instances of "Data Grid" (#14884) @samuelsycamore
 - [docs] Divide charts `tooltip` and `highlighting` pages (#14824) @JCQuintas
-- [docs] Document the Tree Item 2 component and the `useTreeItem2` hook (#14551) @noraleonte
+- [docs] Document the `<TreeItem2 />` component and the `useTreeItem2` hook (#14551) @noraleonte
 - [docs] Fix column pinning for "Disable detail panel content scroll" section (#14854 and #14885) @kalyan90
 - [docs] Fix detail panel demo not working well with pinned columns (#14883) @cherniavskii
 - [docs] New recipe of a read-only field (#14606) @flaviendelangle
@@ -799,7 +799,7 @@ This expansion of the Pro plan comes with some adjustments to our pricing strate
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the Rich Tree View Pro component
+- 🎁 Introduce [item reordering using drag and drop](https://mui.com/x/react-tree-view/rich-tree-view/ordering/) on the `<RichTreeViewPro />` component
 
   <img width="287" src="https://github.com/user-attachments/assets/78bd83c5-7ce4-4ed7-acf9-be70b2dbce54" alt="Item reordering using drag and drop" />
 
@@ -1292,7 +1292,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 - [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
-- [license] Allow usage of charts and Tree View pro package for old premium licenses (#13619) @flaviendelangle
+- [license] Allow usage of Charts and Tree View Pro package for old premium licenses (#13619) @flaviendelangle
 
 ## 7.7.1
 
@@ -1455,7 +1455,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 - [core] Add `eslint-plugin-react-compiler` experimental version and rules (#13415) @JCQuintas
 - [core] Minor setup cleanup (#13467) @LukasTy
 - [infra] Adjust CI setup (#13448) @LukasTy
-- [test] Add tests for the custom slots of Tree Item 2 (#13314) @flaviendelangle
+- [test] Add tests for the custom slots of `<TreeItem2 />` (#13314) @flaviendelangle
 
 ## 7.6.2
 
@@ -1816,7 +1816,7 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 
 #### `@mui/x-tree-view@7.4.0`
 
-- [TreeView] Fix props propagation and theme entry in Tree Item 2 (#12889) @flaviendelangle
+- [TreeView] Fix props propagation and theme entry in `<TreeItem2 />` (#12889) @flaviendelangle
 
 ### Docs
 
@@ -2202,7 +2202,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 #### `@mui/x-tree-view@7.1.1`
 
 - [TreeView] Add JSDoc to all `publicAPI` methods (#12649) @flaviendelangle
-- [TreeView] Create Rich Tree View Pro component (not released yet) (#12610) @flaviendelangle
+- [TreeView] Create `<RichTreeViewPro />` component (not released yet) (#12610) @flaviendelangle
 - [TreeView] Create Pro package (not released yet) (#12240) @flaviendelangle
 - [TreeView] Fix typo in errors (#12623) @alissa-tung
 - [TreeView] New API method: `setItemExpansion` (#12595) @flaviendelangle
@@ -2222,13 +2222,13 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [docs] Move Data Grid interfaces to standard API page layout (#12016) @alexfauquette
 - [docs] Remove ` around @default values (#12158) @alexfauquette
 - [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
-- [docs] Use Tree Item 2 for icon expansion example on Rich Tree View (#12563) @flaviendelangle
+- [docs] Use `<TreeItem2 />` for icon expansion example on `<RichTreeView />` (#12563) @flaviendelangle
 
 ### Core
 
 - [core] Add cherry-pick `master` to `v6` action (#12648) @LukasTy
 - [core] Fix typo in `@mui/x-tree-view-pro/themeAugmentation` (#12674) @flaviendelangle
-- [core] Introduce `describeTreeView` to run test on Simple Tree View and Rich Tree View, using Tree Item and Tree Item 2 + migrate expansion tests (#12428) @flaviendelangle
+- [core] Introduce `describeTreeView` to run test on `<SimpleTreeView />` and `<RichTreeView />`, using `<TreeItem />` and `<TreeItem2 />` + migrate expansion tests (#12428) @flaviendelangle
 - [core] Limit `test-types` CI step allowed memory (#12651) @LukasTy
 - [core] Remove explicit `express` package (#12602) @LukasTy
 - [core] Update to new embedded translations in the docs package (#12232) @Janpot
@@ -2420,7 +2420,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 
 #### Breaking changes
 
-- The required `nodeId` prop used by the Tree Item has been renamed to `itemId` for consistency:
+- The required `nodeId` prop used by `<TreeItem />` has been renamed to `itemId` for consistency:
 
 ```diff
  <TreeView>
@@ -2573,7 +2573,7 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 #### `@mui/x-tree-view@7.0.0-beta.7`
 
 - [TreeView] Clean the usage of the term "item" and "node" in API introduced during v7 (#12368) @noraleonte
-- [TreeView] Introduce a new Tree Item 2 component and a new `useTreeItem2` hook (#11721) @flaviendelangle
+- [TreeView] Introduce a new `<TreeItem2 />` component and a new `useTreeItem2` hook (#11721) @flaviendelangle
 - [TreeView] Rename `onNodeFocus` to `onItemFocus` (#12419) @noraleonte
 
 ### Docs
@@ -2631,9 +2631,9 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 
 #### Breaking changes
 
-- The component used to animate the item children is now defined as a slot on the Tree Item component.
+- The component used to animate the item children is now defined as a slot on the `<TreeItem />` component.
 
-  If you were passing a `TransitionComponent` or `TransitionProps` to your Tree Item component,
+  If you were passing a `TransitionComponent` or `TransitionProps` to your `<TreeItem />` component,
   you need to use the new `groupTransition` slot on this component:
 
   ```diff
@@ -2649,7 +2649,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
     </SimpleTreeView>
   ```
 
-- The `group` class of the Tree Item component has been renamed to `groupTransition` to match with its new slot name.
+- The `group` class of the `<TreeItem />` component has been renamed to `groupTransition` to match with its new slot name.
 
   ```diff
    const StyledTreeItem = styled(TreeItem)({
@@ -3740,8 +3740,8 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 
 ### Tree View / `@mui/x-tree-view@7.0.0-alpha.8`
 
-- [Tree View] Cleanup `onKeyDown` handler (#11481) @flaviendelangle
-- [Tree View] Define the parameters used by each plugin to avoid listing them in each component (#11473) @flaviendelangle
+- [TreeView] Cleanup `onKeyDown` handler (#11481) @flaviendelangle
+- [TreeView] Define the parameters used by each plugin to avoid listing them in each component (#11473) @flaviendelangle
 
 ### Docs
 
@@ -3768,7 +3768,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🎁 New component to create a Tree View from a structured data source:
 
-  You can now directly pass your data to the Rich Tree View component instead of manually converting it into JSX Tree Item components:
+  You can now directly pass your data to the `<RichTreeView />` component instead of manually converting it into JSX `<TreeItem />` components:
 
   ```tsx
   const ITEMS = [
@@ -5099,7 +5099,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 
 ### Core
 
-- [core] Adds migration docs for charts, pickers and Tree View (#10926) @michelengelen
+- [core] Adds migration docs for Charts, Pickers, and Tree View (#10926) @michelengelen
 - [core] Bump monorepo (#10959) @LukasTy
 - [core] Changed prettier branch value to next (#10917) @michelengelen
 - [core] Fix GitHub title tag consistency @oliviertassinari

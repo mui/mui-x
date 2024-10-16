@@ -46,8 +46,8 @@ At the moment, the Simple and Rich Tree Views are similar in terms of feature su
 
 The `@mui/x-tree-view` package exposes two different components to define your tree items:
 
-- Tree Item
-- Tree Item 2
+- `<TreeItem />`
+- `<TreeItem2 />`
 
 #### Tree Item
 
@@ -83,7 +83,7 @@ export default function App() {
 
 #### Tree Item 2
 
-This is a new component that provides a more powerful customization API, and will eventually replace Tree Item.
+This is a new component that provides a more powerful customization API, and will eventually replace `<TreeItem />`.
 
 When using Simple Tree View,
 you can import it from `@mui/x-tree-view/TreeItem2` and use it as a child of the Simple Tree View component:
