@@ -857,6 +857,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
   /**
    * If `true`, displays the data in a list view.
    * Use in combination with `unstable_listColumn`.
+   * @default false
    */
   unstable_listView: boolean;
 }
