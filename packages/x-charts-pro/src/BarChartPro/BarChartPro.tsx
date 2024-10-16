@@ -18,6 +18,9 @@ import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
 
+/**
+ * @ignore - internal component.
+ */
 function BarChartPlotZoom(props: BarPlotProps) {
   const { isInteracting } = useZoom();
 

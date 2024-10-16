@@ -67,6 +67,9 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
 
+/**
+ * @ignore - internal component.
+ */
 function EmptyCell({ width }: { width: number }) {
   if (!width) {
     return null;
