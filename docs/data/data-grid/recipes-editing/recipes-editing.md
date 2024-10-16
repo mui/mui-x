@@ -14,7 +14,7 @@ To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">En
 ## Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
-To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
+To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](/x/react-data-grid/editing/#validation) section.
 When the callback is called, it will have an additional `otherFieldsProps` param containing the props from the other fields in the same row.
 Use this param to check if the value from the current column is valid or not.
 Return the modified `props` containing the error as you would for cell editing.

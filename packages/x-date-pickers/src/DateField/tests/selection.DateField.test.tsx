@@ -170,7 +170,11 @@ describe('<DateField /> - Selection', () => {
       // Test with v7 input
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       view.unmount();
@@ -179,7 +183,7 @@ describe('<DateField /> - Selection', () => {
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('month');
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
@@ -190,7 +194,11 @@ describe('<DateField /> - Selection', () => {
         format: `- ${adapterToUse.formats.year}`,
       });
       view.selectSection('year');
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
 
       view.unmount();
@@ -202,7 +210,7 @@ describe('<DateField /> - Selection', () => {
       });
       const input = getTextbox();
       view.selectSection('year');
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
   });
@@ -250,7 +258,11 @@ describe('<DateField /> - Selection', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowRight' });
@@ -264,7 +276,7 @@ describe('<DateField /> - Selection', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(input, { key: 'ArrowRight' });
@@ -315,7 +327,11 @@ describe('<DateField /> - Selection', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
@@ -329,7 +345,7 @@ describe('<DateField /> - Selection', () => {
       view.selectSection('month');
 
       // Select all sections
-      fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+      fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
       fireEvent.keyDown(input, { key: 'ArrowLeft' });
