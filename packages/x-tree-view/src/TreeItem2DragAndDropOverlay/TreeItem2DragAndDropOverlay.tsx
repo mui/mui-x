@@ -59,7 +59,7 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
         marginLeft:
           'calc(var(--TreeView-indentMultiplier) * calc(var(--TreeView-itemDepth) - 1))' as any,
         borderBottom: theme.vars
-          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6}))`
+          ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
           borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[900]} / ${0.6})` : alpha(theme.palette.grey[900], 0.6),
