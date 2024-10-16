@@ -31,19 +31,19 @@ export function useGridListView(
   /*
    * API METHODS
    */
-  const getListColumn: GridListViewApi['getListColumn'] = (field) => {
+  const getListColumn: GridListViewApi['unstable_getListColumn'] = (field) => {
     const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
     return columns.find((col) => col.field === field);
   };
 
-  const getListColumnIndex: GridListViewApi['getListColumnIndex'] = (field) => {
+  const getListColumnIndex: GridListViewApi['unstable_getListColumnIndex'] = (field) => {
     const columns = gridVisibleListColumnDefinitionsSelector(apiRef);
     return columns.findIndex((col) => col.field === field);
   };
 
   const listColumnApi: GridListViewApi = {
-    getListColumn,
-    getListColumnIndex,
+    unstable_getListColumn: getListColumn,
+    unstable_getListColumnIndex: getListColumnIndex,
   };
 
   useGridApiMethod(apiRef, listColumnApi, 'private');

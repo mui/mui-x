@@ -122,16 +122,6 @@
       },
       "required": true
     },
-    "getListColumn": {
-      "type": { "description": "(field: string) =&gt; GridStateColDef | undefined" },
-      "required": true,
-      "isProPlan": true
-    },
-    "getListColumnIndex": {
-      "type": { "description": "(field: string) =&gt; number" },
-      "required": true,
-      "isProPlan": true
-    },
     "getLocaleText": {
       "type": {
         "description": "&lt;T extends GridTranslationKeys&gt;(key: T) =&gt; GridLocaleText[T]"
@@ -479,6 +469,16 @@
     },
     "unstable_dataSource": {
       "type": { "description": "GridDataSourceApiBase" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_getListColumn": {
+      "type": { "description": "(field: string) =&gt; GridListColDef | undefined" },
+      "required": true,
+      "isProPlan": true
+    },
+    "unstable_getListColumnIndex": {
+      "type": { "description": "(field: string) =&gt; number" },
       "required": true,
       "isProPlan": true
     },

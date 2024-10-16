@@ -56,7 +56,7 @@ export function useGridParamsApi(
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
       const getColumnFn = props.unstable_listView
-        ? apiRef.current.getListColumn
+        ? apiRef.current.unstable_getListColumn
         : apiRef.current.getColumn;
       const colDef = getColumnFn(field) as GridStateColDef;
       const row = apiRef.current.getRow(id);

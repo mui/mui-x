@@ -508,7 +508,7 @@ export const useGridKeyboardNavigation = (
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const getColumnIndexFn = listView
-        ? apiRef.current.getListColumnIndex
+        ? apiRef.current.unstable_getListColumnIndex
         : apiRef.current.getColumnIndex;
       const colIndexBefore = (params as GridCellParams).field
         ? getColumnIndexFn((params as GridCellParams).field)
