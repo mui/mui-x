@@ -177,9 +177,11 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
-      it('should not emit "onChange" when touch dragging is ended where it was started', function test() {
+      it('should not emit "onChange" when touch dragging is ended where it was started', function test(t = {}) {
         if (!document.elementFromPoint) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const onChange = spy();
         render(
@@ -245,9 +247,11 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('2');
       });
 
-      it('should emit "onChange" when touch dragging end date', function test() {
+      it('should emit "onChange" when touch dragging end date', function test(t = {}) {
         if (!document.elementFromPoint) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const onChange = spy();
         const initialValue: [any, any] = [
@@ -323,9 +327,11 @@ describe('<DateRangeCalendar />', () => {
         expect(document.activeElement).toHaveAccessibleName('22');
       });
 
-      it('should emit "onChange" when touch dragging start date', function test() {
+      it('should emit "onChange" when touch dragging start date', function test(t = {}) {
         if (!document.elementFromPoint) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const onChange = spy();
         const initialValue: [any, any] = [
@@ -398,9 +404,11 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
+      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test(t = {}) {
         if (!document.elementFromPoint) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const initialValue: [any, any] = [
           adapterToUse.date('2018-01-01'),

@@ -329,9 +329,12 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test() {
+  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const handleFetchRows = spy();
     render(

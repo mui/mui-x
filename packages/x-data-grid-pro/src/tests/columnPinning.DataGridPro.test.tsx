@@ -89,10 +89,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     window.ResizeObserver = originalResizeObserver;
   });
 
-  it('should scroll when the next cell to focus is covered by the left pinned columns', function test() {
+  it('should scroll when the next cell to focus is covered by the left pinned columns', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
@@ -104,10 +106,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(virtualScroller.scrollLeft).to.equal(0);
   });
 
-  it('should scroll when the next cell to focus is covered by the right pinned columns', function test() {
+  it('should scroll when the next cell to focus is covered by the right pinned columns', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestCase initialState={{ pinnedColumns: { right: ['price16M'] } }} />);
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
@@ -118,10 +122,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(virtualScroller.scrollLeft).to.equal(100);
   });
 
-  it('should increase the width of right pinned columns by resizing to the left', function test() {
+  it('should increase the width of right pinned columns by resizing to the left', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
     const columnHeader = getColumnHeaderCell(2);
@@ -136,10 +142,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(separator).to.have.class(gridClasses['columnSeparator--sideLeft']);
   });
 
-  it('should reduce the width of right pinned columns by resizing to the right', function test() {
+  it('should reduce the width of right pinned columns by resizing to the right', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestCase nbCols={3} initialState={{ pinnedColumns: { right: ['price1M'] } }} />);
     const columnHeader = getColumnHeaderCell(2);
@@ -204,10 +212,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
   });
 
-  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test() {
+  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test(t = {}) {
     if (isJSDOM) {
       // Doesn't work with mocked window.getComputedStyle
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -227,10 +237,12 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   // https://github.com/mui/mui-x/issues/12431
-  it('should not render unnecessary filler after the last row', function test() {
+  it('should not render unnecessary filler after the last row', function test(t = {}) {
     if (isJSDOM) {
       // Needs layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const rowHeight = 50;

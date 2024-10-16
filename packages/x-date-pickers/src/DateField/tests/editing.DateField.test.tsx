@@ -935,10 +935,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should support day with letter suffix', function test() {
+    it('should support day with letter suffix', function test(t = {}) {
       // Luxon don't have any day format with a letter suffix
       if (adapter.lib === 'luxon') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       testFieldChange({
@@ -2132,8 +2134,8 @@ describe('<DateField /> - Editing', () => {
       let originalUserAgent: string = '';
 
       beforeEach(() => {
-        originalUserAgent = global.navigator.userAgent;
-        Object.defineProperty(global.navigator, 'userAgent', {
+        originalUserAgent = globalThis.navigator.userAgent;
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           writable: true,
           value:
@@ -2142,7 +2144,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       afterEach(() => {
-        Object.defineProperty(global.navigator, 'userAgent', {
+        Object.defineProperty(globalThis.navigator, 'userAgent', {
           configurable: true,
           value: originalUserAgent,
         });

@@ -109,9 +109,11 @@ describe('<DataGridPremium /> - Row spanning', () => {
   }
 
   // See https://github.com/mui/mui-x/issues/14691
-  it('should not throw when initializing an aggregation model', function test() {
+  it('should not throw when initializing an aggregation model', function test(t = {}) {
     if (isJSDOM) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     expect(() =>
       render(

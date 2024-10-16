@@ -10,9 +10,11 @@ import { getFakeContextValue } from 'test/utils/tree-view/fakeContextValue';
 
 describeTreeView<[]>('TreeItem component', ({ render, treeItemComponentName }) => {
   describe('ContentComponent / ContentProps props (TreeItem only)', () => {
-    it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test() {
+    it('should render TreeItem when itemId prop is escaping characters without throwing an error', function test(t = {}) {
       if (treeItemComponentName === 'TreeItem2') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const view = render({

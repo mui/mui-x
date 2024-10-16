@@ -240,9 +240,11 @@ describe('<DataGrid /> - Rows', () => {
       );
     }
 
-    it('should throw an error if getActions is missing', function test() {
+    it('should throw an error if getActions is missing', function test(t = {}) {
       if (!isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       expect(() => {
         render(
@@ -494,12 +496,10 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('prop: getRowHeight', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
@@ -820,10 +820,13 @@ describe('<DataGrid /> - Rows', () => {
         });
       });
 
-      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test(t = {}) {
         const { userAgent } = window.navigator;
         if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
-          this.skip(); // FIXME: We need a waitFor that works with fake clock
+          // FIXME: We need a waitFor that works with fake clock
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
@@ -874,10 +877,13 @@ describe('<DataGrid /> - Rows', () => {
         expect(gridOffsetTop()).to.equal(0);
       });
 
-      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test(t = {}) {
         const { userAgent } = window.navigator;
         if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
-          this.skip(); // In Chrome non-headless and Edge this test is flacky
+          // In Chrome non-headless and Edge this test is flacky
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
@@ -1120,10 +1126,12 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   // https://github.com/mui/mui-x/issues/10373
-  it('should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport', async function test() {
+  it('should set proper `data-rowindex` and `aria-rowindex` when focused row is out of the viewport', async function test(t = {}) {
     if (isJSDOM) {
       // needs virtualization
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <div style={{ width: 300, height: 300 }}>

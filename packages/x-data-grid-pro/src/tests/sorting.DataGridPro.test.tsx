@@ -170,10 +170,12 @@ describe('<DataGridPro /> - Sorting', () => {
     });
   });
 
-  it('should prune rendering on cells', function test() {
+  it('should prune rendering on cells', function test(t = {}) {
     // The number of renders depends on the user-agent
     if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     let renderCellCount: number = 0;

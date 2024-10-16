@@ -83,12 +83,10 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('resizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     const columns = [{ field: 'brand', width: 100 }];
 
@@ -102,10 +100,12 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(110);
     });
 
-    it('should allow to resize columns with the touch', function test() {
+    it('should allow to resize columns with the touch', function test(t = {}) {
       // Only run in supported browsers
       if (typeof Touch === 'undefined') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(<Test columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
@@ -165,12 +165,14 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.doubleClick(separator);
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
-      const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
-      const isWidth114Present = widthArgs.some((width) => width === 114);
-      expect(isWidth114Present).to.equal(true);
+      const expectedWidth = process.env.MUI_BROWSER === 'true' ? 63.71875 : 114;
+      expect(onColumnWidthChange.args.map((arg) => arg[0].width)).to.deep.equal([
+        120,
+        expectedWidth,
+      ]);
       const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
-      const isColDefWidth114Present = colDefWidthArgs.some((width) => width === 114);
-      expect(isColDefWidth114Present).to.equal(true);
+      const isCorrectColDefWidthPresent = colDefWidthArgs.some((width) => width === expectedWidth);
+      expect(isCorrectColDefWidthPresent).to.equal(true);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
@@ -238,12 +240,10 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     describe('flex resizing', () => {
-      before(function beforeHook() {
-        if (isJSDOM) {
-          // Need layouting
-          this.skip();
-        }
-      });
+      if (isJSDOM) {
+        // Need layouting
+        return;
+      }
 
       it('should resize the flex width after resizing another column with api', () => {
         const twoColumns = [
@@ -435,12 +435,10 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('autosizing', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     const rows = [
       {
@@ -473,7 +471,11 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([211, 233]);
+      if (process.env.MUI_BROWSER === 'true') {
+        expect(getWidths()).to.deep.equal([155, 177]);
+      } else {
+        expect(getWidths()).to.deep.equal([211, 233]);
+      }
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -483,14 +485,22 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 233]);
+      if (process.env.MUI_BROWSER === 'true') {
+        expect(getWidths()).to.deep.equal([100, 177]);
+      } else {
+        expect(getWidths()).to.deep.equal([100, 233]);
+      }
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([211, 233]);
+      if (process.env.MUI_BROWSER === 'true') {
+        expect(getWidths()).to.deep.equal([155, 177]);
+      } else {
+        expect(getWidths()).to.deep.equal([211, 233]);
+      }
     });
 
     describe('options', () => {
@@ -506,7 +516,10 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [211, 233]);
+        await autosize(
+          { includeHeaders: true },
+          process.env.MUI_BROWSER === 'true' ? [155, 177] : [211, 233],
+        );
       });
 
       it('.includeOutliers works', async () => {
@@ -536,6 +549,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
+      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
@@ -557,6 +571,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
+      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
@@ -571,6 +586,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
+      // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });

@@ -36,10 +36,12 @@ describe('<DataGridPro /> - Column spanning', () => {
     ],
   };
 
-  it('should not apply `colSpan` in pinned columns section if there is only one column there', function test() {
+  it('should not apply `colSpan` in pinned columns section if there is only one column there', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -155,10 +157,12 @@ describe('<DataGridPro /> - Column spanning', () => {
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
-  it('should work with column resizing', function test() {
+  it('should work with column resizing', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const columns = [{ field: 'brand', colSpan: 2 }, { field: 'category' }, { field: 'price' }];

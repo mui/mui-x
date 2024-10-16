@@ -122,10 +122,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
   });
 
-  it('should keep rows pinned on rows scroll', function test() {
+  it('should keep rows pinned on rows scroll', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(<BaselineTestCase rowCount={20} colCount={5} />);
@@ -420,10 +422,12 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(getActiveCellRowId()).to.equal('1');
     });
 
-    it('should work with pinned columns', function test() {
+    it('should work with pinned columns', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       function TestCase() {
@@ -489,10 +493,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     });
   });
 
-  it('should work with variable row height', function test() {
+  it('should work with variable row height', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     let apiRef!: React.MutableRefObject<GridApi>;
@@ -522,10 +528,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)?.clientHeight).to.equal(20);
   });
 
-  it('should always update on `rowHeight` change', async function test() {
+  it('should always update on `rowHeight` change', async function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const defaultRowHeight = 52;
@@ -559,10 +567,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('pinnedRows--bottom')!.offsetHeight).to.equal(36);
   });
 
-  it('should work with `autoHeight`', function test() {
+  it('should work with `autoHeight`', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const columnHeaderHeight = 56;
@@ -583,10 +593,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(grid('main')!.clientHeight).to.equal(columnHeaderHeight + rowHeight * rowCount);
   });
 
-  it('should work with `autoPageSize`', function test() {
+  it('should work with `autoPageSize`', function test(t = {}) {
     if (isJSDOM) {
       // Need layouting
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     render(
@@ -765,10 +777,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(1)!).to.have.class(className);
   });
 
-  it('should support cell editing', async function test() {
+  it('should support cell editing', async function test(t = {}) {
     if (isJSDOM) {
       // flaky in JSDOM
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];
@@ -804,10 +818,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
   });
 
-  it('should support row editing', async function test() {
+  it('should support row editing', async function test(t = {}) {
     if (isJSDOM) {
       // flaky in JSDOM
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     const processRowUpdate = spy((row) => ({ ...row, currencyPair: 'USD-GBP' }));
     const columns: GridColDef[] = [{ field: 'id' }, { field: 'name', editable: true }];

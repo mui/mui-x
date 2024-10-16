@@ -123,9 +123,12 @@ describe('<DataGrid /> - Columns', () => {
   });
 
   // https://github.com/mui/mui-x/issues/13719
-  it('should not crash when updating columns immediately after scrolling', function test() {
+  it('should not crash when updating columns immediately after scrolling', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // Needs layout
+      // Needs layout
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     const data = [

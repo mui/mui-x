@@ -11,10 +11,12 @@ describe('<DataGridPremium /> - Columns', () => {
 
   describe('resizing', () => {
     // https://github.com/mui/mui-x/issues/10078
-    it('should properly resize aggregated column', function test() {
+    it('should properly resize aggregated column', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(

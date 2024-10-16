@@ -6,6 +6,12 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
 
 describe('<DataGrid /> - Export', () => {
+  // We need `createObjectURL` to test the downloaded value
+  if (/jsdom/.test(window.navigator.userAgent)) {
+    // Need layouting
+    return;
+  }
+
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
@@ -18,18 +24,10 @@ describe('<DataGrid /> - Export', () => {
     );
   }
 
-  // We need `createObjectURL` to test the downloaded value
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let spyCreateObjectURL: SinonSpy;
 
   beforeEach(() => {
-    spyCreateObjectURL = spy(global.URL, 'createObjectURL');
+    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
   });
 
   afterEach(() => {

@@ -55,7 +55,9 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
         <ElementToTest
           enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))
+          }
         />,
       );
       act(() => {
@@ -89,7 +91,8 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
+        shouldDisableDate: (date: any) =>
+          adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -114,7 +117,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       act(() => {
-        setValue(adapterToUse.date(past));
+        setValue(past);
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -122,7 +125,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(past), { setEndDate: true });
+        setValue(past, { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -130,8 +133,9 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(now));
+        setValue(adapterToUse.addHours(now, 1));
       });
+
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disablePast']);
       testInvalidStatus([false, true], isSingleInput);

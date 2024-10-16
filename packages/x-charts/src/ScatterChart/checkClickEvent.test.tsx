@@ -30,17 +30,30 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('ScatterChart - click event', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('onItemClick - using vornoid', () => {
-    it('should provide the right context as second argument when clicking svg', function test() {
+    it('should provide the right context as second argument when clicking svg', function test(t = {}) {
       if (isJSDOM) {
         // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -77,15 +90,16 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.callCount).to.equal(2);
     });
 
-    it('should provide the right context as second argument when clicking mark', function test() {
+    it('should provide the right context as second argument when clicking mark', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -114,15 +128,16 @@ describe('ScatterChart - click event', () => {
   });
 
   describe('onItemClick - disabling vornoid', () => {
-    it('should not call onItemClick when clicking the SVG', function test() {
+    it('should not call onItemClick when clicking the SVG', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}
@@ -144,15 +159,16 @@ describe('ScatterChart - click event', () => {
       expect(onItemClick.callCount).to.equal(0);
     });
 
-    it('should provide the right context as second argument when clicking mark', function test() {
+    it('should provide the right context as second argument when clicking mark', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onItemClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 100,
             height: 100,
           }}

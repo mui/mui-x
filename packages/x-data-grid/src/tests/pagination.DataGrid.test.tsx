@@ -33,12 +33,9 @@ describe('<DataGrid /> - Pagination', () => {
   }
 
   describe('prop: paginationModel and onPaginationModelChange', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      return;
+    }
 
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase paginationModel={{ page: 1, pageSize: 1 }} pageSizeOptions={[1]} />);
@@ -391,12 +388,10 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('prop: autoPageSize', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
@@ -638,12 +633,10 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   describe('prop: initialState.pagination', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     it('should allow to initialize the paginationModel', () => {
       render(

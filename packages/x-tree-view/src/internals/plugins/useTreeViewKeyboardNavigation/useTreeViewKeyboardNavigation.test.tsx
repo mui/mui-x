@@ -1169,10 +1169,12 @@ describeTreeView<
       expect(view.getFocusedItemId()).to.equal('1');
     });
 
-    it('should work with ReactElement label', function test() {
+    it('should work with ReactElement label', function test(t = {}) {
       // Only the SimpleTreeView can have React Element labels.
       if (treeViewComponentName !== 'SimpleTreeView') {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       const view = render({

@@ -397,12 +397,10 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('virtualization', () => {
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     let apiRef: React.MutableRefObject<GridApi>;
     function TestCaseVirtualization(
@@ -890,12 +888,10 @@ describe('<DataGridPro /> - Rows', () => {
   describe('apiRef: setRowHeight', () => {
     const ROW_HEIGHT = 52;
 
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (isJSDOM) {
+      // Need layouting
+      return;
+    }
 
     beforeEach(() => {
       baselineProps = {

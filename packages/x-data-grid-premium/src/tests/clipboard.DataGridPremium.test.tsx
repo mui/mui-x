@@ -169,12 +169,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
   });
 
   describe('paste', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // These test are flaky in JSDOM
-        this.skip();
-      }
-    });
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // These test are flaky in JSDOM
+      return;
+    }
 
     function paste(cell: HTMLElement, pasteText: string) {
       const pasteEvent = new Event('paste');

@@ -256,9 +256,9 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
-    it('should add the new cell selection range to the existing state', () => {
+    it('should add the new cell selection range to the existing state', async () => {
       const onCellSelectionModelChange = spy();
-      render(
+      const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{ '0': { id: true } }}
           onCellSelectionModelChange={onCellSelectionModelChange}
@@ -266,8 +266,18 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
 
       // Add a new cell range to the selection
-      fireEvent.mouseDown(getCell(2, 0), { ctrlKey: true });
-      fireEvent.mouseOver(getCell(3, 0), { ctrlKey: true });
+      const isMac = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+
+      await user.keyboard(isMac ? '{Meta>}' : '{Control>}');
+      await user.pointer([
+        // touch the screen at element1
+        { keys: '[MouseLeft>]', target: getCell(2, 0) },
+        // move the touch pointer to element2
+        { target: getCell(3, 0) },
+        // release the touch pointer at the last position (element2)
+        { keys: '[/MouseLeft]' },
+      ]);
+      await user.keyboard(isMac ? '{/Meta}' : '{/Control}');
 
       expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
         '0': { id: true },
@@ -362,12 +372,10 @@ describe('<DataGridPremium /> - Cell selection', () => {
   });
 
   describe('Auto-scroll', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      return;
+    }
 
     it('should auto-scroll when the mouse approaches the bottom edge', () => {
       stub(window, 'requestAnimationFrame').callsFake(() => 0);

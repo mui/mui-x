@@ -7,8 +7,6 @@ type PackageJson = {
   version: string;
 };
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 export function checkMaterialVersion({
   packageJson,
   materialPackageJson,
@@ -16,25 +14,32 @@ export function checkMaterialVersion({
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
 }) {
-  if (!isJSDOM) {
-    return undefined;
-  }
+  return it(`${packageJson.name} should resolve proper @mui/material version`, function test(t = {}) {
+    const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-  const expectedVersion = packageJson.devDependencies['@mui/material'];
+    if (!isJSDOM) {
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
+    }
 
-  const versions = childProcess.execSync(`npm dist-tag ls ${'@mui/material'} ${expectedVersion}`, {
-    encoding: 'utf8',
-  });
-  const tagMapping = versions
-    .split('\n')
-    .find((mapping) => {
-      return mapping.startsWith(`${expectedVersion}: `);
-    })
-    ?.split(': ')[1];
+    const expectedVersion = packageJson.devDependencies['@mui/material'];
 
-  const version = tagMapping ?? expectedVersion;
+    const versions = childProcess.execSync(
+      `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
+      {
+        encoding: 'utf8',
+      },
+    );
+    const tagMapping = versions
+      .split('\n')
+      .find((mapping) => {
+        return mapping.startsWith(`${expectedVersion}: `);
+      })
+      ?.split(': ')[1];
 
-  return it(`${packageJson.name} should resolve proper @mui/material version`, () => {
+    const version = tagMapping ?? expectedVersion;
+
     expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
       true,
       `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,

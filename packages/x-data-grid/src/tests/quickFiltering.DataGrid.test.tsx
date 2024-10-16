@@ -639,9 +639,11 @@ describe('<DataGrid /> - Quick filter', () => {
   });
 
   // https://github.com/mui/mui-x/issues/6783
-  it('should not override user input when typing', async function test() {
+  it('should not override user input when typing', async function test(t = {}) {
     if (isJSDOM) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     // Warning: this test doesn't fail consistently as it is timing-sensitive.
     const debounceMs = 50;

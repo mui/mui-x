@@ -31,9 +31,12 @@ describe('<DataGridPro /> - Column headers', () => {
     ],
   };
 
-  it('should not scroll the column headers when a column is focused', function test() {
+  it('should not scroll the column headers when a column is focused', function test(t = {}) {
     if (isJSDOM) {
-      this.skip(); // JSDOM version of .focus() doesn't scroll
+      // JSDOM version of .focus() doesn't scroll
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <div style={{ width: 102, height: 500 }}>

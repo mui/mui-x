@@ -37,7 +37,7 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
   !isEnabled
     ? []
     : packagesNames.map((packageName) => ({
-        files: [`packages/${packageName}/src/**/*{.ts,.tsx,.js}`],
+        files: [`packages/${packageName}/src/**/*.?(c|m)[jt]s?(x)`],
         rules: {
           'react-compiler/react-compiler': 'error',
         },
@@ -58,7 +58,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 // It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
-    files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
+    files: [`packages/${root}/src/**/*.?(c|m)[jt]s?(x)`],
     excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
     rules: {
       'no-restricted-imports': [
@@ -94,8 +94,8 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
     : [
         {
           files: [
-            `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
-            `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
+            `packages/${root}/src/**/*.test.?(c|m)[jt]s?(x)`,
+            `packages/${root}/src/**/*.spec.?(c|m)[jt]s?(x)`,
           ],
           excludedFiles: ['*.d.ts'],
           rules: {
@@ -244,7 +244,7 @@ module.exports = {
       },
     },
     {
-      files: ['packages/*/src/**/*{.ts,.tsx,.js}'],
+      files: ['packages/*/src/**/*.?(c|m)[jt]s?(x)'],
       excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
       rules: {
         'material-ui/mui-name-matches-component-name': [
@@ -267,7 +267,7 @@ module.exports = {
       },
     },
     {
-      files: ['docs/**/*{.ts,.tsx,.js}'],
+      files: ['docs/**/*.?(c|m)[jt]s?(x)'],
       excludedFiles: ['*.d.ts'],
       rules: {
         'no-restricted-imports': [
@@ -295,6 +295,12 @@ module.exports = {
             ],
           },
         ],
+      },
+    },
+    {
+      files: ['**/*.browser.test.?(c|m)[jt]s?(x)'],
+      rules: {
+        'testing-library/prefer-screen-queries': 'off',
       },
     },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),

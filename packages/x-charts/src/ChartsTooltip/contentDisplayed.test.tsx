@@ -27,17 +27,30 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('axis trigger', () => {
-    it('should show right values with vertical layout', function test() {
+    it('should show right values with vertical layout', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -93,16 +106,17 @@ describe('ChartsTooltip', () => {
       ]);
     });
 
-    it('should show right values with horizontal layout', function test() {
+    it('should show right values with horizontal layout', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -161,16 +175,17 @@ describe('ChartsTooltip', () => {
   });
 
   describe('item trigger', () => {
-    it('should show right values with vertical layout', function test() {
+    it('should show right values with vertical layout', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -204,16 +219,17 @@ describe('ChartsTooltip', () => {
       expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', 'S2', '1']);
     });
 
-    it('should show right values with horizontal layout', function test() {
+    it('should show right values with horizontal layout', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
 
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}

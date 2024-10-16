@@ -68,12 +68,14 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
     expectFieldValueV6(input, 'January Escaped 2019');
   });
 
-  it('should support nested escaped characters', function test() {
+  it('should support nested escaped characters', function test(t = {}) {
     const { start: startChar, end: endChar } = adapter.escapedCharacters;
     // If your start character and end character are equal
     // Then you can't have nested escaped characters
     if (startChar === endChar) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
 
     // Test with v7 input

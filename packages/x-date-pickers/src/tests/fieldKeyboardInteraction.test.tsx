@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import moment from 'moment/moment';
+import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { fireEvent } from '@mui/internal-test-utils';
 import {
@@ -15,6 +15,7 @@ import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
+import 'moment/locale/fa';
 
 const testDate = '2018-05-15T09:35:10';
 
@@ -213,7 +214,7 @@ adapterToTest.forEach((adapterName) => {
       adapterName,
     });
 
-    before(() => {
+    beforeEach(() => {
       if (adapterName === 'moment-jalaali') {
         jMoment.loadPersian();
       } else if (adapterName === 'moment') {
@@ -221,7 +222,7 @@ adapterToTest.forEach((adapterName) => {
       }
     });
 
-    after(() => {
+    afterEach(() => {
       if (adapterName === 'moment-jalaali') {
         moment.locale('en');
       }

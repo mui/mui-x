@@ -22,17 +22,30 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('LineChart - click event', () => {
   const { render } = createRenderer();
 
+  beforeEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '0';
+    }
+  });
+
+  afterEach(() => {
+    if (window?.document?.body?.style) {
+      window.document.body.style.margin = '8px';
+    }
+  });
+
   describe('onAxisClick', () => {
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAxisClick = spy();
       render(
         <div
           style={{
-            margin: -8, // Removes the body default margins
             width: 400,
             height: 400,
           }}
@@ -103,16 +116,17 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onMarkClick = spy();
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
@@ -175,16 +189,17 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onAreaClick = spy();
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}
@@ -238,16 +253,17 @@ describe('LineChart - click event', () => {
       ]);
     });
 
-    it('should provide the right context as second argument', function test() {
+    it('should provide the right context as second argument', function test(t = {}) {
       if (isJSDOM) {
         // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const onLineClick = spy();
       render(
         <div
           style={{
-            margin: -8, // No idea why, but that make the SVG coordinates match the HTML coordinates
             width: 400,
             height: 400,
           }}

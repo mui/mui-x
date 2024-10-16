@@ -1,4 +1,5 @@
 // We can't import the `.mocharc.js` of the monorepo, otherwise we trigger its `setupBabel`.
+
 module.exports = {
   extension: ['js', 'ts', 'tsx'],
   ignore: [
@@ -7,6 +8,8 @@ module.exports = {
     // Mocha seems to ignore .next anyway (maybe because dotfiles?).
     // We're leaving this to make sure.
     'docs/.next/**',
+    'packages/**/*.browser.test.{js,ts,tsx,jsx}',
+    'packages/**/*.jsdom.test.{js,ts,tsx,jsx}',
   ],
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.

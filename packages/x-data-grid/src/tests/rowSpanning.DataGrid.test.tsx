@@ -112,9 +112,11 @@ describe('<DataGrid /> - Row spanning', () => {
 
   const rowHeight = 52;
 
-  it('should span the repeating row values', function test() {
+  it('should span the repeating row values', function test(t = {}) {
     if (isJSDOM) {
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(<TestDataGrid />);
     const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
@@ -128,9 +130,11 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('sorting', () => {
-    it('should work with sorting when initializing sorting', function test() {
+    it('should work with sorting when initializing sorting', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <TestDataGrid
@@ -147,9 +151,11 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
     });
 
-    it('should work with sorting when controlling sorting', function test() {
+    it('should work with sorting when controlling sorting', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
       const rowsWithSpannedCells = Object.keys(apiRef.current.state.rowSpanning.spannedCells);
@@ -164,9 +170,11 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('filtering', () => {
-    it('should work with filtering when initializing filter', function test() {
+    it('should work with filtering when initializing filter', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <TestDataGrid
@@ -189,9 +197,11 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue.code}px`);
     });
 
-    it('should work with filtering when controlling filter', function test() {
+    it('should work with filtering when controlling filter', function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <TestDataGrid
@@ -212,9 +222,11 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('pagination', () => {
-    it('should only compute the row spanning state for current page', async function test() {
+    it('should only compute the row spanning state for current page', async function test(t = {}) {
       if (isJSDOM) {
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       render(
         <TestDataGrid

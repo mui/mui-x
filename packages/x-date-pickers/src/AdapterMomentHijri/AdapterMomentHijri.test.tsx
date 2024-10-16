@@ -22,7 +22,12 @@ describe('<AdapterMomentHijri />', () => {
   });
 
   describe('Adapter localization', () => {
-    it('Formatting', () => {
+    it('Formatting', (t = {}) => {
+      if (process.env.MUI_BROWSER === 'true') {
+        // @ts-expect-error to support mocha and vitest
+        t?.skip();
+      }
+
       const adapter = new AdapterMomentHijri();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
@@ -80,7 +85,12 @@ describe('<AdapterMomentHijri />', () => {
           expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
-        it('should have well formatted value', () => {
+        it('should have well formatted value', (t = {}) => {
+          if (process.env.MUI_BROWSER === 'true') {
+            // @ts-expect-error to support mocha and vitest
+            t?.skip();
+          }
+
           const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
