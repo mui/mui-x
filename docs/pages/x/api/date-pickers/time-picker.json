@@ -3,7 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
-    "closeOnSelect": { "type": { "name": "bool" }, "default": "`false`" },
+    "closeOnSelect": { "type": { "name": "bool" }, "default": "false" },
     "defaultValue": { "type": { "name": "object" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
