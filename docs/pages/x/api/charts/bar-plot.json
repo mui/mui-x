@@ -9,7 +9,7 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
