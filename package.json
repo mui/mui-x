@@ -108,7 +108,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.8",
     "@types/lodash": "^4.17.10",
-    "@types/mocha": "^10.0.8",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^20.16.11",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
