@@ -29,7 +29,7 @@ export function useGridListView(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'unstable_listColumn'>,
 ) {
-  /**
+  /*
    * API METHODS
    */
   const getListColumn: GridListViewApi['getListColumn'] = (field) => {
@@ -85,7 +85,7 @@ export function useGridListView(
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
   useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', updateListColumnWidth);
 
-  /**
+  /*
    * EFFECTS
    */
   React.useEffect(() => {
