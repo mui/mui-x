@@ -70,8 +70,8 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
-    const lastPositionScroller = React.useRef(0);
-    const lastPositionScrollbar = React.useRef(0);
+    const isLocked = React.useRef(false);
+    const lastPosition = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
@@ -96,28 +96,34 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
-      if (scroller[propertyScroll] === lastPositionScroller.current) {
+      if (scroller[propertyScroll] === lastPosition.current) {
         return;
       }
+
+      if (isLocked.current) {
+        isLocked.current = false;
+        return;
+      }
+      isLocked.current = true;
 
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
 
-      lastPositionScrollbar.current = scrollbar[propertyScroll];
+      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
       const scrollbar = scrollbarRef.current!;
 
-      if (scrollbar[propertyScroll] === lastPositionScrollbar.current) {
+      if (isLocked.current) {
+        isLocked.current = false;
         return;
       }
+      isLocked.current = true;
 
       const value = scrollbar[propertyScroll] / scrollbarInnerSize;
       scroller[propertyScroll] = value * contentSize;
-
-      lastPositionScroller.current = scroller[propertyScroll];
     });
 
     useOnMount(() => {

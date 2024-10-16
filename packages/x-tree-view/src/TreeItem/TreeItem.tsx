@@ -13,6 +13,7 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
+import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
@@ -235,6 +236,25 @@ export const TreeItem = React.forwardRef(function TreeItem(
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
   } = useTreeItemState(itemId);
+
+  if (process.env.NODE_ENV !== 'production') {
+    // Checking directly the `props` to avoid having the default value applied
+    if (props.ContentComponent) {
+      warnOnce([
+        'MUI X: The ContentComponent prop of the TreeItem component is deprecated and will be removed in the next major release.',
+        'You can use the new TreeItem2 component or the new useTreeItem2 hook to customize the rendering of the content.',
+        'For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.',
+      ]);
+    }
+
+    if (props.ContentProps) {
+      warnOnce([
+        'MUI X: The ContentProps prop of the TreeItem component is deprecated and will be removed in the next major release.',
+        'You can use the new TreeItem2 component or the new useTreeItem2 hook to customize the rendering of the content.',
+        'For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.',
+      ]);
+    }
+  }
 
   const { contentRef, rootRef, propsEnhancers } = runItemPlugins<TreeItemProps>(props);
   const rootRefObject = React.useRef<HTMLLIElement>(null);
@@ -503,11 +523,13 @@ TreeItem.propTypes = {
   className: PropTypes.string,
   /**
    * The component used to render the content of the item.
+   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
   /**
    * Props applied to ContentComponent.
+   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps: PropTypes.object,
   /**

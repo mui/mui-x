@@ -69,8 +69,8 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
         };
       }
 
-      let selectableDescendentsCount = 0;
-      let selectedDescendentsCount = 0;
+      let selectableDescendantsCount = 0;
+      let selectedDescendantsCount = 0;
       const startIndex = sortedRowIds.findIndex((id) => id === groupId) + 1;
       for (
         let index = startIndex;
@@ -79,19 +79,19 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
       ) {
         const id = sortedRowIds[index];
         if (filteredRowsLookup[id] !== false) {
-          selectableDescendentsCount += 1;
+          selectableDescendantsCount += 1;
           if (rowSelectionLookup[id] !== undefined) {
-            selectedDescendentsCount += 1;
+            selectedDescendantsCount += 1;
           }
         }
       }
       return {
         isIndeterminate:
-          (selectedDescendentsCount > 0 && selectedDescendentsCount < selectableDescendentsCount) ||
-          (selectedDescendentsCount === selectableDescendentsCount &&
+          (selectedDescendantsCount > 0 && selectedDescendantsCount < selectableDescendantsCount) ||
+          (selectedDescendantsCount === selectableDescendantsCount &&
             rowSelectionLookup[groupId] === undefined),
         isChecked: autoSelectParents
-          ? selectedDescendentsCount > 0
+          ? selectedDescendantsCount > 0
           : rowSelectionLookup[groupId] === groupId,
       };
     },

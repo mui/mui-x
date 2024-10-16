@@ -57,7 +57,7 @@ export function checkGridRowIdIsValid(
   if (id == null) {
     throw new Error(
       [
-        'MUI X: The data grid component requires all rows to have a unique `id` property.',
+        'MUI X: The Data Grid component requires all rows to have a unique `id` property.',
         'Alternatively, you can use the `getRowId` prop to specify a custom id for each row.',
         detailErrorMessage,
         JSON.stringify(row),
@@ -437,3 +437,30 @@ export function computeRowsUpdates(
   });
   return nonPinnedRowsUpdates;
 }
+
+let warnedOnceInvalidRowHeight = false;
+
+export const getValidRowHeight = (
+  rowHeightProp: any,
+  defaultRowHeight: number,
+  warningMessage: string,
+) => {
+  if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
+    return rowHeightProp;
+  }
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !warnedOnceInvalidRowHeight &&
+    typeof rowHeightProp !== 'undefined' &&
+    rowHeightProp !== null
+  ) {
+    console.warn(warningMessage);
+    warnedOnceInvalidRowHeight = true;
+  }
+  return defaultRowHeight;
+};
+
+export const rowHeightWarning = [
+  `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
+  `The default value will be used instead.`,
+].join('\n');
