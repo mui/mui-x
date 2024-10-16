@@ -57,28 +57,33 @@ export function useGridListView(
   /*
    * EVENTS
    */
+  const updateListColumnWidth = () => {
+    apiRef.current.setState((state) => {
+      return {
+        ...state,
+        listView: {
+          ...state.listView,
+          listColumn: {
+            ...state.listView.listColumn,
+            computedWidth: getListColumnWidth(apiRef),
+          },
+        } as GridListViewState,
+      };
+    });
+  };
+
   const prevInnerWidth = React.useRef<number | null>(null);
   const handleGridSizeChange: GridEventListener<'viewportInnerSizeChange'> = (
     viewportInnerSize,
   ) => {
     if (prevInnerWidth.current !== viewportInnerSize.width) {
       prevInnerWidth.current = viewportInnerSize.width;
-      apiRef.current.setState((state) => {
-        return {
-          ...state,
-          listView: {
-            ...state.listView,
-            listColumn: {
-              ...state.listView.listColumn,
-              computedWidth: getListColumnWidth(apiRef),
-            },
-          } as GridListViewState,
-        };
-      });
+      updateListColumnWidth();
     }
   };
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleGridSizeChange);
+  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', updateListColumnWidth);
 
   /**
    * EFFECTS
@@ -93,8 +98,8 @@ export function useGridListView(
             listColumn: {
               ...props.unstable_listColumn,
               computedWidth: getListColumnWidth(apiRef),
-            } as GridStateColDef,
-          },
+            },
+          } as GridListViewState,
         };
       });
     }
@@ -106,8 +111,7 @@ function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommuni
   const columns = gridVisibleColumnDefinitionsSelector(apiRef);
   const actionsColumn = columns.find((col) => col.type === 'actions');
   const viewportWidth = dimensions.viewportInnerSize.width;
-  const listColumnWidth = actionsColumn
-    ? viewportWidth - actionsColumn.computedWidth
-    : viewportWidth;
+  const listColumnWidth =
+    actionsColumn && actionsColumn ? viewportWidth - actionsColumn.computedWidth : viewportWidth;
   return listColumnWidth;
 }
