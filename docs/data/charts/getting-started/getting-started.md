@@ -10,7 +10,7 @@ packageName: '@mui/x-charts'
 
 ## Installation
 
-Run one of the following commands to add install the free Community version or the paid Pro version of the MUI X Charts:
+Run one of the following commands to install the free Community version or the paid Pro version of the MUI X Charts:
 
 <!-- #default-branch-switch -->
 
