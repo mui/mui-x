@@ -882,7 +882,7 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
-      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).not.to.throw();
     });
   });
 
