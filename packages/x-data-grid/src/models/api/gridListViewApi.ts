@@ -1,4 +1,4 @@
-import { GridStateColDef } from '../colDef/gridColDef';
+import type { GridListColDef } from '../colDef/gridColDef';
 
 /**
  * The list view API interface that is available in the grid [[apiRef]].
@@ -9,7 +9,7 @@ export interface GridListViewApi {
    * @param {string} field The column field.
    * @returns {{GridStateColDef}} The [[GridStateColDef]].
    */
-  getListColumn: (field: string) => GridStateColDef | undefined;
+  getListColumn: (field: string) => GridListColDef | undefined;
   /**
    * Returns the index position of a list column.
    * @param {string} field The list column field.

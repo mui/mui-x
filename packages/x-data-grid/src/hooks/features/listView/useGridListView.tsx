@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import type { GridListColDef } from '../../../models/colDef/gridColDef';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -11,7 +11,9 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
-export type GridListViewState = { listColumn: GridStateColDef | undefined };
+export type GridListViewState = {
+  listColumn: (GridListColDef & { computedWidth: number }) | undefined;
+};
 
 export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
@@ -51,6 +53,9 @@ export function useGridListView(
    */
   const updateListColumnWidth = () => {
     apiRef.current.setState((state) => {
+      if (!state.listView.listColumn) {
+        return state;
+      }
       return {
         ...state,
         listView: {
@@ -59,7 +64,7 @@ export function useGridListView(
             ...state.listView.listColumn,
             computedWidth: getListColumnWidth(apiRef),
           },
-        } as GridListViewState,
+        },
       };
     });
   };
@@ -81,17 +86,18 @@ export function useGridListView(
    * EFFECTS
    */
   React.useEffect(() => {
-    if (props.unstable_listColumn) {
+    const listColumn = props.unstable_listColumn;
+    if (listColumn) {
       apiRef.current.setState((state) => {
         return {
           ...state,
           listView: {
             ...state.listView,
             listColumn: {
-              ...props.unstable_listColumn,
+              ...listColumn,
               computedWidth: getListColumnWidth(apiRef),
             },
-          } as GridListViewState,
+          },
         };
       });
     }
