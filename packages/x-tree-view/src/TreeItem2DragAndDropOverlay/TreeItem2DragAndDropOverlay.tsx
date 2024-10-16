@@ -37,7 +37,9 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
           ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderTopColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})` : alpha(theme.palette.grey[100], 0.6),
+          borderTopColor: theme.vars
+            ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})`
+            : alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -49,7 +51,9 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
           ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})` : alpha(theme.palette.grey[100], 0.6),
+          borderBottomColor: theme.vars
+            ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})`
+            : alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
@@ -62,7 +66,9 @@ const TreeItem2DragAndDropOverlayRoot = styled('div', {
           ? `1px solid rgba(${theme.vars.palette.grey[900]} / ${0.6})`
           : `1px solid ${alpha(theme.palette.grey[900], 0.6)}`,
         ...theme.applyStyles('dark', {
-          borderBottomColor: theme.vars ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})` : alpha(theme.palette.grey[100], 0.6),
+          borderBottomColor: theme.vars
+            ? `rgba(${theme.vars.palette.grey[100]} / ${0.6})`
+            : alpha(theme.palette.grey[100], 0.6),
         }),
       },
     },
