@@ -197,11 +197,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         );
         result.api = apiRef.current;
         return result;
-      } catch (e) {
-        if (e instanceof MissingRowIdError) {
+      } catch (error) {
+        if (error instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
         }
-        throw e;
+        throw error;
       }
     },
     objectShallowCompare,
@@ -393,7 +393,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       <div
         data-colindex={colIndex}
         role="presentation"
-        style={{ ...style, minWidth: 'var(--width)', maxWidth: 'var(--width)' }}
+        style={{ width: 'var(--width)', ...style }}
       />
     );
   }
@@ -481,7 +481,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   return (
     <div
       ref={handleRef}
-      className={clsx(className, classNames, classes.root)}
+      className={clsx(classes.root, classNames, className)}
       role="gridcell"
       data-field={field}
       data-colindex={colIndex}

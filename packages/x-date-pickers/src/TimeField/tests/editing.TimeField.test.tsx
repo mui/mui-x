@@ -679,7 +679,11 @@ describe('<TimeField /> - Editing', () => {
         });
 
         view.selectSection('hours');
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(view.getActiveSection(0), {
+          key: 'a',
+          keyCode: 65,
+          ctrlKey: true,
+        });
         view.pressKey(null, '');
         fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
 
@@ -704,7 +708,7 @@ describe('<TimeField /> - Editing', () => {
 
         const input = getTextbox();
         view.selectSection('hours');
-        fireEvent.keyDown(input, { key: 'a', ctrlKey: true });
+        fireEvent.keyDown(input, { key: 'a', keyCode: 65, ctrlKey: true });
         fireEvent.change(input, { target: { value: '' } });
         fireEvent.keyDown(input, { key: 'ArrowLeft' });
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import resolveProps from '@mui/utils/resolveProps';
 import {
   GridColumnLookup,
   GridColumnsState,
@@ -390,11 +391,7 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = {
-      ...existingState,
-      ...newColumn,
-      hasBeenResized,
-    };
+    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {

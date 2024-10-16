@@ -11,8 +11,8 @@
       },
       "default": "{ x: 'line' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "bottomAxis": {
@@ -126,6 +126,6 @@
   "muiName": "MuiLineChartPro",
   "filename": "/packages/x-charts-pro/src/LineChartPro/LineChartPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Zoom &amp; Pan <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Charts - Zooming and panning <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
   "cssComponent": false
 }

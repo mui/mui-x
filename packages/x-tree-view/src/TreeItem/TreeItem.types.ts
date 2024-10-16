@@ -69,11 +69,13 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   slotProps?: TreeItemSlotProps;
   /**
    * The component used to render the content of the item.
+   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent?: React.JSXElementConstructor<TreeItemContentProps>;
   /**
    * Props applied to ContentComponent.
+   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps?: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> };
   /**

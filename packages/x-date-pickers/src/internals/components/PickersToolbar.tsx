@@ -119,13 +119,13 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   return (
     <PickersToolbarRoot
       ref={ref}
-      data-mui-test="picker-toolbar"
+      data-testid="picker-toolbar"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
       <Typography
-        data-mui-test="picker-toolbar-title"
+        data-testid="picker-toolbar-title"
         color="text.secondary"
         variant="overline"
         id={titleId}

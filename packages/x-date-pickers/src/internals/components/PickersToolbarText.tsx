@@ -56,7 +56,7 @@ export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolb
     return (
       <PickersToolbarTextRoot
         ref={ref}
-        className={clsx(className, classes.root)}
+        className={clsx(classes.root, className)}
         component="span"
         {...other}
       >

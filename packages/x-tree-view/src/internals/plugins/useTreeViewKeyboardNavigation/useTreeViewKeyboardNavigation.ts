@@ -16,7 +16,7 @@ import {
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
 
-function isPrintableCharacter(string: string) {
+function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
@@ -182,6 +182,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
@@ -199,6 +202,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
       case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
@@ -250,7 +256,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Multi select behavior when pressing Ctrl + a
       // Selects all the items
-      case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+      case String.fromCharCode(event.keyCode) === 'A' &&
+        ctrlPressed &&
+        params.multiSelect &&
+        !params.disableSelection: {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
@@ -258,7 +267,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Type-ahead
       // TODO: Support typing multiple characters
-      case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+      case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
         const matchingItem = getFirstMatchingItem(itemId, key);
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);

@@ -86,7 +86,7 @@ export interface PieChartProps
   tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -191,6 +191,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       className={className}
+      skipAnimation={skipAnimation}
     >
       <ChartsAxis
         topAxis={topAxis}
@@ -200,12 +201,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot
-        slots={slots}
-        slotProps={slotProps}
-        onItemClick={onItemClick}
-        skipAnimation={skipAnimation}
-      />
+      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
@@ -222,7 +218,7 @@ PieChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -351,7 +347,7 @@ PieChart.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**

@@ -16,6 +16,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/beBY.ts"
   },
   {
+    "languageTag": "bg-BG",
+    "importName": "bgBG",
+    "localeName": "Bulgarian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/bgBG.ts"
+  },
+  {
     "languageTag": "ca-ES",
     "importName": "caES",
     "localeName": "Catalan",
@@ -40,10 +48,18 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/zhCN.ts"
   },
   {
+    "languageTag": "hr-HR",
+    "importName": "hrHR",
+    "localeName": "Croatian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/hrHR.ts"
+  },
+  {
     "languageTag": "cs-CZ",
     "importName": "csCZ",
     "localeName": "Czech",
-    "missingKeysCount": 15,
+    "missingKeysCount": 0,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/csCZ.ts"
   },

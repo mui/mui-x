@@ -133,6 +133,7 @@ export {
   useGridColumnResize,
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
+export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -156,7 +157,7 @@ export {
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
+export { isNavigationKey, isPasteShortcut, isCopyShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
