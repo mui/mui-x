@@ -10,7 +10,12 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, PickerValidDate } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  PickerOwnerState,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -66,10 +71,6 @@ export interface UseDesktopPickerSlotProps<
 > extends ExportedUseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface UseDesktopPickerOwnerState {
-  open: boolean;
-}
-
 export interface ExportedUseDesktopPickerSlotProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -95,7 +96,11 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
   >;
-  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, UseDesktopPickerOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<
+    Record<string, any>,
+    {},
+    PickerOwnerState<TDate | null>
+  >;
 }
 
 export interface DesktopOnlyPickerProps
