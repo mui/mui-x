@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
+import throttle from '../internals/throttle';
 
 type MousePosition = {
   x: number;
@@ -74,13 +75,16 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
       });
     };
 
+    const throttledHandleMove = throttle(handleMove, 50);
+
     element.addEventListener('pointerdown', handleMove);
-    element.addEventListener('pointermove', handleMove);
+    element.addEventListener('pointermove', throttledHandleMove);
     element.addEventListener('pointerup', handleOut);
 
     return () => {
+      throttledHandleMove.clear();
       element.removeEventListener('pointerdown', handleMove);
-      element.removeEventListener('pointermove', handleMove);
+      element.removeEventListener('pointermove', throttledHandleMove);
       element.removeEventListener('pointerup', handleOut);
     };
   }, [svgRef]);
