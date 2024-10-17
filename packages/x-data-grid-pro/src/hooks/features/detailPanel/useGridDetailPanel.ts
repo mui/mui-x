@@ -313,7 +313,13 @@ export const useGridDetailPanel = (
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {
-    isFirstRender.current = false;
     updateCachesIfNeeded();
   }
+  React.useEffect(() => {
+    if (!isFirstRender.current) {
+      updateCachesIfNeeded();
+      apiRef.current.hydrateRowsMeta();
+    }
+    isFirstRender.current = false;
+  }, [apiRef, updateCachesIfNeeded]);
 };
