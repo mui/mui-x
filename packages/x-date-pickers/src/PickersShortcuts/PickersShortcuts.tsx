@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
+import { useTheme } from '@mui/material/styles';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
@@ -61,6 +62,35 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
   const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+
+  const overflowGradient = {
+    background: `
+      linear-gradient(
+        ${theme.palette.background.default} 30%,
+        ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}
+      ) center top / 100% 40px no-repeat,
+      
+      linear-gradient(
+        ${isLight ? 'rgba(255, 255, 255, 0)' : 'rgba(0, 0, 0, 0)'}, 
+        ${theme.palette.background.default} 70%
+      ) center bottom / 100% 40px no-repeat,
+      
+      radial-gradient(
+        farthest-side at 50% 0,
+        ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
+        ${theme.palette.background.default}
+      ) center top / 85% 14px no-repeat,
+      
+      radial-gradient(
+        farthest-side at 50% 100%,
+        ${isLight ? 'rgba(0, 0, 0, 0.2)' : 'rgba(211, 211, 211, 0.2)'},
+        ${theme.palette.background.default}
+      ) center bottom / 85% 14px no-repeat
+    `,
+    backgroundAttachment: 'local, local, scroll, scroll',
+  };
 
   if (items == null || items.length === 0) {
     return null;
@@ -86,7 +116,12 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
         {
           maxHeight: VIEW_HEIGHT,
           maxWidth: 200,
-          overflow: 'auto',
+          scrollbarGutter: 'stable',
+          overflow: 'hidden',
+          '&:hover, &:focus-within': {
+            overflow: 'auto',
+          },
+          ...overflowGradient,
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
