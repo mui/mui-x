@@ -12,7 +12,7 @@ import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -68,7 +68,8 @@ export type DataGridForcedPropsKey =
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
-  | 'signature';
+  | 'signature'
+  | 'unstable_listView';
 
 /**
  * The Data Grid options with a default value that must be merged with the value given through props.
@@ -377,8 +378,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
-  rowPositionsDebounceMs: number;
+  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
@@ -858,14 +860,24 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * @default { parents: false, descendants: false }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   * @default false
+   */
+  unstable_listView: boolean;
 }
 
-export interface DataGridProSharedPropsWithoutDefaultValue {
+export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
   /**
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn?: GridListColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {
