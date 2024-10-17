@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @kalyan90, @rotembarsela, @wangkailang.
 Following are all team members who have contributed to this release:
-@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf, @oliviertassinari.
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf, @oliviertassinari, @samuelsycamore.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -36,7 +36,7 @@ Same changes as in `@mui/x-data-grid@7.20.1`, plus:
 
 - [DataGridPro] Fix indeterminate checkbox state for server-side data (#14956) @MBilalShafi
 - [DataGridPro] Fix scrolling performance when `rowHeight={undefined}` (#14983) @cherniavskii
-- [DataGridPro] List View (#14393) @KenanYusuf @cherniavskii
+- [DataGridPro] List view (#14393) @KenanYusuf @cherniavskii
 
 #### `@mui/x-data-grid-premium@7.20.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -82,6 +82,7 @@ Same changes as in `@mui/x-charts@7.20.1`.
 - [docs] Add recipe showing how to toggle detail panels on row click (#14666) @k-rajat19
 - [docs] Fix broken link to the validation section in the Data grid component (#14973) @arminmeh
 - [docs] Update v5 migration codesandbox @oliviertassinari
+- [docs] Enforce component style rules for the Tree View (#14963) @samuelsycamore
 
 ### Core
 
