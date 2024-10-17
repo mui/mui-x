@@ -35,6 +35,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Rensa',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Idag',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Välj datum',

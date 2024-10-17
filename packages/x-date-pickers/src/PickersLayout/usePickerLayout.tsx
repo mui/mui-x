@@ -53,6 +53,7 @@ const usePickerLayout = <
     onClear,
     onCancel,
     onSetToday,
+    onNext,
     view,
     views,
     onViewChange,
@@ -84,6 +85,7 @@ const usePickerLayout = <
       onClear,
       onCancel,
       onSetToday,
+      onNext,
       actions:
         wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },

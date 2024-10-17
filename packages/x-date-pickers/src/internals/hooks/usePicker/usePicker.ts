@@ -47,6 +47,7 @@ export const usePicker = <
     valueType,
     wrapperVariant,
     validator,
+    additionalViewProps,
   });
 
   const pickerViewsResponse = usePickerViews<

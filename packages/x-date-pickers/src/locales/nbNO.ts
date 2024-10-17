@@ -35,6 +35,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Fjern',
   okButtonLabel: 'OK',
   todayButtonLabel: 'I dag',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Velg dato',

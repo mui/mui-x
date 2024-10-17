@@ -29,6 +29,7 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Избриши',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Денес',
+  // nextButtonLabel: 'Next',
 
   // Toolbar titles
   datePickerToolbarTitle: 'Избери датум',
