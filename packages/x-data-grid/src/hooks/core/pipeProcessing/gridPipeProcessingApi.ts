@@ -21,6 +21,7 @@ import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 import { GridGetRowsParams } from '../../../models/gridDataSource';
+import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
@@ -43,7 +44,7 @@ export interface GridPipeProcessingLookup {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
-  rowHeight: { value: Record<string, number>; context: GridRowEntry };
+  rowHeight: { value: HeightEntry; context: GridRowEntry };
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;

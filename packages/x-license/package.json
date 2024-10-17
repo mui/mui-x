@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license",
-  "version": "7.18.0",
+  "version": "7.20.0",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -41,7 +41,7 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.15",
+    "@mui/internal-test-utils": "^1.0.17",
     "rimraf": "^6.0.1"
   },
   "engines": {

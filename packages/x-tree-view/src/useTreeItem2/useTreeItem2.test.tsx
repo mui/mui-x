@@ -100,6 +100,7 @@ describeTreeView<[UseTreeViewExpansionSignature, UseTreeViewIconsSignature]>(
       const input = view.getItemRoot('1.1').querySelector('.icon-input')!;
       const keydownEvent = createEvent.keyDown(input, {
         key: 'a',
+        keyCode: 65,
       });
 
       const handlePreventDefault = spy();

@@ -299,11 +299,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const handleKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case 'PageUp': {
-        if (!listRef.current) {
-          return;
-        }
-        const newIndex = getFocusedListItemIndex(listRef.current) - 5;
-        const children = listRef.current?.children;
+        const newIndex = getFocusedListItemIndex(listRef.current!) - 5;
+        const children = listRef.current!.children;
         const newFocusedIndex = Math.max(0, newIndex);
 
         const childToFocus = children[newFocusedIndex];
@@ -314,11 +311,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         break;
       }
       case 'PageDown': {
-        if (!listRef.current) {
-          return;
-        }
-        const newIndex = getFocusedListItemIndex(listRef.current) + 5;
-        const children = listRef.current?.children;
+        const newIndex = getFocusedListItemIndex(listRef.current!) + 5;
+        const children = listRef.current!.children;
         const newFocusedIndex = Math.min(children.length - 1, newIndex);
 
         const childToFocus = children[newFocusedIndex];
