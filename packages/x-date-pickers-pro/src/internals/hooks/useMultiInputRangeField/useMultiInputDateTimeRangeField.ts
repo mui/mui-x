@@ -1,3 +1,4 @@
+import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateTimeField as useDateTimeField,
@@ -8,27 +9,25 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
   useControlledValueWithTimezone,
-  useDefaultizedDateTimeField,
+  useLocalizationContext,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import type {
-  UseMultiInputDateTimeRangeFieldParams,
-  UseMultiInputDateTimeRangeFieldProps,
-} from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
+import type { UseMultiInputDateTimeRangeFieldParams } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
 import { DateTimeRangeValidationError, DateRange } from '../../../models';
 import { validateDateTimeRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
+import { getDateTimeRangeValueManager } from '../../../valueManagers';
 
 export const useMultiInputDateTimeRangeField = <
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
-  sharedProps: inSharedProps,
+  sharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
   endTextFieldProps,
@@ -38,11 +37,24 @@ export const useMultiInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedDateTimeField<
-    TDate,
-    UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    typeof inSharedProps
-  >(inSharedProps);
+  const valueManager = React.useMemo(
+    () =>
+      getDateTimeRangeValueManager<TDate, TEnableAccessibleFieldDOMStructure>({
+        enableAccessibleFieldDOMStructure: sharedProps.enableAccessibleFieldDOMStructure,
+        dateSeparator: sharedProps.dateSeparator,
+      }),
+    [sharedProps.enableAccessibleFieldDOMStructure, sharedProps.dateSeparator],
+  );
+
+  const localizationContext = useLocalizationContext<TDate>();
+  const sharedPropsWithDefaults = React.useMemo(
+    () =>
+      valueManager.applyDefaultsToFieldInternalProps({
+        ...localizationContext,
+        internalProps: sharedProps,
+      }),
+    [valueManager, localizationContext, sharedProps],
+  );
 
   const {
     value: valueProp,
@@ -58,7 +70,7 @@ export const useMultiInputDateTimeRangeField = <
     timezone: timezoneProp,
     enableAccessibleFieldDOMStructure,
     autoFocus,
-  } = sharedProps;
+  } = sharedPropsWithDefaults;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputDateRangeField',
@@ -70,11 +82,11 @@ export const useMultiInputDateTimeRangeField = <
   });
 
   const { validationError, getValidationErrorForNewValue } = useValidation({
-    props: sharedProps,
+    props: sharedPropsWithDefaults,
     value,
     timezone,
     validator: validateDateTimeRange,
-    onError: sharedProps.onError,
+    onError: sharedPropsWithDefaults.onError,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
@@ -107,7 +119,7 @@ export const useMultiInputDateTimeRangeField = <
   const startFieldProps: UseDateTimeFieldComponentProps<
     TDate,
     TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
+    typeof sharedPropsWithDefaults
   > = {
     error: !!validationError[0],
     ...startTextFieldProps,
@@ -128,7 +140,7 @@ export const useMultiInputDateTimeRangeField = <
   const endFieldProps: UseDateTimeFieldComponentProps<
     TDate,
     TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
+    typeof sharedPropsWithDefaults
   > = {
     error: !!validationError[1],
     ...endTextFieldProps,
@@ -159,7 +171,7 @@ export const useMultiInputDateTimeRangeField = <
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
-    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear'] as any),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear'] as any),
   };
 };

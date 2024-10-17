@@ -1,8 +1,7 @@
-import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
+import { FieldChangeHandler, FieldChangeHandlerContext } from '../useField';
 import { Validator } from '../../../validation';
 import { WrapperVariant } from '../../models/common';
 import {
-  FieldSection,
   FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
@@ -294,9 +293,10 @@ export interface UsePickerValueActions {
   onClose: (event?: React.UIEvent) => void;
 }
 
-export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
-  Pick<UseFieldInternalProps<TValue, PickerValidDate, TSection, any, TError>, 'value' | 'onChange'>
->;
+export interface UsePickerValueFieldResponse<TValue, TError> {
+  value: TValue;
+  onChange: FieldChangeHandler<TValue, TError>;
+}
 
 /**
  * Props passed to `usePickerViews`.
@@ -322,11 +322,11 @@ export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActi
   isValid: (value: TValue) => boolean;
 }
 
-export interface UsePickerValueResponse<TValue, TSection extends FieldSection, TError> {
+export interface UsePickerValueResponse<TValue, TError> {
   open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
-  fieldProps: UsePickerValueFieldResponse<TValue, TSection, TError>;
+  fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
   contextValue: PickersContextValue;
 }

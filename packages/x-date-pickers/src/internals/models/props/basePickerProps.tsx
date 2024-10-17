@@ -52,7 +52,7 @@ export interface BasePickerInputProps<
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any, any>,
+    UseFieldInternalProps<any, any, any, any>,
     | 'formatDensity'
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'

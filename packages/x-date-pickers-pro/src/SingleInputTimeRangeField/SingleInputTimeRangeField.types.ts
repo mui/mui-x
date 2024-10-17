@@ -1,31 +1,19 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { PickerValidDate, BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { UseTimeRangeFieldProps } from '../internals/models';
-import { DateRange, RangeFieldSection, TimeRangeValidationError } from '../models';
+import { TimeRangeFieldInternalProps } from '../valueManagers';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    ExportedUseClearableFieldProps,
-    Pick<
-      UseFieldInternalProps<
-        DateRange<TDate>,
-        TDate,
-        RangeFieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        TimeRangeValidationError
-      >,
-      'unstableFieldRef'
-    > {}
+> extends TimeRangeFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    ExportedUseClearableFieldProps {}
 
 export type SingleInputTimeRangeFieldProps<
   TDate extends PickerValidDate,

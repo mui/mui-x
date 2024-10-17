@@ -78,7 +78,7 @@ export const getRangeFieldValueManager = <TDate extends PickerValidDate>({
   dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
-}): FieldValueManager<DateRange<TDate>, TDate, RangeFieldSection> => ({
+}): FieldValueManager<TDate, true> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);

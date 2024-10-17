@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useField, useDefaultizedDateTimeField } from '@mui/x-date-pickers/internals';
+import { useField } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateTimeRange } from '../validation';
-import { RangeFieldSection, DateRange } from '../models';
+import { getDateTimeRangeValueManager } from '../valueManagers';
 
 export const useSingleInputDateTimeRangeField = <
   TDate extends PickerValidDate,
@@ -16,34 +14,22 @@ export const useSingleInputDateTimeRangeField = <
     TEnableAccessibleFieldDOMStructure
   >,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateTimeField<
-    TDate,
-    UseSingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
+  const valueManager = React.useMemo(
+    () =>
+      getDateTimeRangeValueManager<TDate, TEnableAccessibleFieldDOMStructure>({
+        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+        dateSeparator: props.dateSeparator,
+      }),
+    [props.enableAccessibleFieldDOMStructure, props.dateSeparator],
   );
 
-  return useField<
-    DateRange<TDate>,
-    TDate,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
+  return useField<typeof valueManager, typeof forwardedProps>({
     forwardedProps,
     internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateTimeRange,
-    valueType: 'date-time',
+    valueManager,
   });
 };

@@ -2,16 +2,11 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import {
-  ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
+  ExportedUseClearableFieldProps,
 } from '../hooks/useClearableField';
-import {
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-} from '../models';
+import { DateValidationError, PickerValidDate, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
@@ -24,20 +19,7 @@ import {
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
-      UseFieldInternalProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateValidationError
-      >,
-      'format'
-    >,
-    DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
+> extends DateFieldInternalProps<TDate, TEnableAccessibleFieldDOMStructure>,
     ExportedUseClearableFieldProps {}
 
 export type UseDateFieldComponentProps<
