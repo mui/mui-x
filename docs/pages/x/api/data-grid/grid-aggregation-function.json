@@ -7,24 +7,20 @@
       "type": {
         "description": "(params: GridAggregationParams&lt;V&gt;) =&gt; AV | null | undefined"
       },
-      "required": true,
-      "isPremiumPlan": true
+      "plan": "premium",
+      "required": true
     },
-    "columnTypes": { "type": { "description": "string[]" }, "isPremiumPlan": true },
+    "columnTypes": { "type": { "description": "string[]" }, "plan": "premium" },
     "getCellValue": {
       "type": { "description": "(params: GridAggregationGetCellValueParams) =&gt; V" },
-      "isPremiumPlan": true
+      "plan": "premium"
     },
-    "hasCellUnit": {
-      "type": { "description": "boolean" },
-      "default": "true",
-      "isPremiumPlan": true
-    },
+    "hasCellUnit": { "type": { "description": "boolean" }, "plan": "premium", "default": "true" },
     "label": {
       "type": { "description": "string" },
-      "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})",
-      "isPremiumPlan": true
+      "plan": "premium",
+      "default": "apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})"
     },
-    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "isPremiumPlan": true }
+    "valueFormatter": { "type": { "description": "GridValueFormatter" }, "plan": "premium" }
   }
 }
