@@ -61,6 +61,7 @@
   { "name": "DateRangePickerDayClasses", "kind": "Interface" },
   { "name": "DateRangePickerDayClassKey", "kind": "TypeAlias" },
   { "name": "DateRangePickerDayProps", "kind": "Interface" },
+  { "name": "DateRangePickerFieldProps", "kind": "TypeAlias" },
   { "name": "DateRangePickerProps", "kind": "Interface" },
   { "name": "DateRangePickerSlotProps", "kind": "Interface" },
   { "name": "DateRangePickerSlots", "kind": "Interface" },
