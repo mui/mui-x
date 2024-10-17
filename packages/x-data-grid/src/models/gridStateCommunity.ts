@@ -26,6 +26,7 @@ import type { GridRowSelectionModel } from './gridRowSelectionModel';
 import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 import type { GridColumnResizeState } from '../hooks/features/columnResize';
 import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
+import type { GridListViewState } from '../hooks/features/listView/useGridListView';
 
 /**
  * The state of Data Grid.
@@ -53,6 +54,7 @@ export interface GridStateCommunity {
   virtualization: GridVirtualizationState;
   columnResize: GridColumnResizeState;
   rowSpanning: GridRowSpanningState;
+  listViewColumn: GridListViewState;
 }
 
 /**

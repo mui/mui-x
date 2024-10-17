@@ -419,12 +419,18 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
+
   for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
 
+    if (!column) {
+      continue;
+    }
+
     cells.push(getCell(column, indexInSection, i, middleColumnsLength));
   }
+
   if (hasVirtualFocusCellRight) {
     cells.push(
       getCell(

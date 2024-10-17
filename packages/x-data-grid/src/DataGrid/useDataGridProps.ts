@@ -22,6 +22,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   disableColumnReorder: true,
   keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
+  unstable_listView: false,
 };
 
 const defaultSlots = DATA_GRID_DEFAULT_SLOTS_COMPONENTS;
