@@ -58,7 +58,7 @@ export type DateRangePickerFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = false,
 > = MakeRequired<
   UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
+  'format' | 'timezone' | 'value' | keyof BaseDateValidationProps<TDate>
 > &
   BaseSingleInputFieldProps<
     DateRange<TDate>,

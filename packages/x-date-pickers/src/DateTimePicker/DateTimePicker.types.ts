@@ -81,6 +81,7 @@ export type DateTimePickerFieldProps<
   UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   | 'format'
   | 'timezone'
+  | 'value'
   | 'ampm'
   | keyof BaseDateValidationProps<TDate>
   | keyof BaseTimeValidationProps

@@ -26,8 +26,6 @@ function ButtonDateRangeField(props) {
     ...other
   } = forwardedProps;
 
-  console.log(forwardedProps);
-
   const pickersContext = usePickersContext();
 
   const parsedFormat = useParsedFormat(internalProps);
@@ -63,6 +61,7 @@ function ButtonDateRangeField(props) {
   );
 }
 
+// Will be removed before the end of the alpha since single input will become the default fields.
 ButtonDateRangeField.fieldType = 'single-input';
 
 function ButtonFieldDateRangePicker(props) {
