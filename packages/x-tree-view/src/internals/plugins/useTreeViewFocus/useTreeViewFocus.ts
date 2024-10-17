@@ -2,12 +2,12 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/utils';
 import ownerDocument from '@mui/utils/ownerDocument';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import { TreeViewPlugin, TreeViewUsedInstance } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getActiveElement } from '../../utils/utils';
 import { getFirstNavigableItem } from '../../utils/tree';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
 import { convertSelectedItemsToArray } from '../useTreeViewSelection/useTreeViewSelection.utils';
 
 const useDefaultFocusableItemId = (
@@ -112,7 +112,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     (otherHandlers: EventHandlers) =>
     (event: React.FocusEvent<HTMLUListElement> & MuiCancellableEvent) => {
       otherHandlers.onFocus?.(event);
-      if (event.defaultMuiPrevented) {
+      if (shouldSkipEventHandler(event)) {
         return;
       }
 

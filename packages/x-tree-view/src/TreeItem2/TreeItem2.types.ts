@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
+import { MuiCancellableEventHandler } from '@mui/x-internals/cancellableEvent';
 import { UseTreeItem2Parameters, UseTreeItem2Status } from '../useTreeItem2';
 import { TreeItemClasses } from '../TreeItem';
 import { TreeItem2IconSlotProps, TreeItem2IconSlots } from '../TreeItem2Icon';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 
 export interface TreeItem2Slots extends TreeItem2IconSlots {
   /**

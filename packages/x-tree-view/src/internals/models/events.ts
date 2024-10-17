@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { MuiCancellableEvent } from '@mui/x-internals/cancellableEvent';
 
 export interface TreeViewEventLookupElement {
   params: object;
@@ -14,6 +15,4 @@ export type MuiBaseEvent =
   | DocumentEventMap[keyof DocumentEventMap]
   | {};
 
-export type MuiEvent<E extends MuiBaseEvent = MuiBaseEvent> = E & {
-  defaultMuiPrevented?: boolean;
-};
+export type MuiEvent<E extends MuiBaseEvent = MuiBaseEvent> = E & MuiCancellableEvent;

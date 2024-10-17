@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -88,7 +89,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
     itemId: string,
   ) => {
-    if (event.defaultMuiPrevented) {
+    if (shouldSkipEventHandler(event)) {
       return;
     }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { MuiCancellableEventHandler } from '@mui/x-internals/cancellableEvent';
 
 export interface TreeItem2LabelInputProps {
   value?: string;

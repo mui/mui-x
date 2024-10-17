@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { MuiCancellableEventHandler } from '@mui/x-internals/cancellableEvent';
 import {
   DefaultizedProps,
   TreeViewPluginSignature,
   UseTreeViewItemsSignature,
-  MuiCancellableEventHandler,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import { TreeItem2DragAndDropOverlayProps } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
