@@ -3,8 +3,8 @@ import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import useId from '@mui/utils/useId';
 
+import { useId } from '@mui/x-charts/utils';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
