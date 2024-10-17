@@ -61,46 +61,6 @@ const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
 })(({ ownerState }: any) => {
   return {
     overflow: 'auto',
-    // [`.${pickersLayoutClasses.contentWrapper}`]:
-    //   ownerState.layout === 'horizontal'
-    //     ? {
-    //         gridColumn: 1,
-    //         gridRow: 2,
-    //       }
-    //     : { gridColumn: 1, gridRow: 3 },
-    // [`.${pickersLayoutClasses.toolbar}`]:
-    //   ownerState.layout === 'horizontal'
-    //     ? {
-    //         gridColumnStart: 1,
-    //         gridColumnEnd: 3,
-    //         gridRow: 1,
-    //       }
-    //     : {
-    //         gridColumn: 1,
-    //         gridRow: 1,
-    //       },
-    // [`.${pickersLayoutClasses.actionBar}`]:
-    //   ownerState.layout === 'horizontal'
-    //     ? {
-    //         gridColumnStart: 1,
-    //         gridColumnEnd: 3,
-    //         gridRow: 3,
-    //       }
-    //     : { gridColumn: 1, gridRow: 4 },
-    // [`.${pickersLayoutClasses.shortcuts}`]:
-    //   ownerState.layout === 'horizontal'
-    //     ? {
-    //         gridColumn: 2,
-    //         gridRow: 2,
-    //       }
-    //     : {
-    //         gridColumn: 1,
-    //         gridRow: 2,
-    //         display: 'flex',
-    //         flexDirection: 'row',
-    //         maxWidth: '300px',
-    //         gap: '4px',
-    //       },
   };
 });
 
