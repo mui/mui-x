@@ -201,7 +201,7 @@ export interface UseTreeItem2ReturnValue<
   ) => UseTreeItem2GroupTransitionSlotProps<ExternalProps>;
   /**
    * Resolver for the DragAndDropOverlay slot's props.
-   * Warning: This slot is only useful when using the `RichTreeViewPro` component.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component.
    * @param {ExternalProps} externalProps Additional props for the DragAndDropOverlay slot.
    * @returns {UseTreeItem2DragAndDropOverlaySlotProps<ExternalProps>} Props that should be spread on the DragAndDropOverlay slot.
    */

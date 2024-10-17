@@ -50,7 +50,7 @@ You can use the `onItemPositionChange` to send the new position of an item to yo
 {{"demo": "OnItemPositionChange.js"}}
 
 If you want to send the entire dataset to your backend, you can use the [`getItemTree`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
-The following demo demonstrates it by synchronizing the first tree view with the second one whenever you do a re-ordering:
+The following demo demonstrates it by synchronizing the first Tree View with the second one whenever you do a re-ordering:
 
 {{"demo": "SendAllItemsToServer.js"}}
 

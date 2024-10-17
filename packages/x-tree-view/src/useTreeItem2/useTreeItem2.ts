@@ -92,7 +92,7 @@ export const useTreeItem2 = <
       // when we enter the editing state, we focus the input -> we don't want to remove the focused item from the state
       if (
         status.editing ||
-        // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+        // we can exit the editing state by clicking outside the input (within the Tree Item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
         // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
         (event.relatedTarget &&
           isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement) &&
