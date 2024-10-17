@@ -25,3 +25,9 @@ It checks the status of open panels using the [`useGridSelector` hook](/x/react-
 When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#grid-api-prop-setExpandedDetailPanels) from the [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) to expand or collapse all detail panels.
 
 {{"demo": "DetailPanelExpandCollapseAll.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Toggling detail panels on row click
+
+In the demo below, you can toggle the detail panel by clicking anywhere on the row:
+
+{{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
