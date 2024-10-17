@@ -24,6 +24,46 @@ function BarChartPlotZoom(props: BarPlotProps) {
   return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
+BarChartPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default undefined
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
 export interface BarChartProProps extends BarChartProps, ZoomProps {}
 
 /**
