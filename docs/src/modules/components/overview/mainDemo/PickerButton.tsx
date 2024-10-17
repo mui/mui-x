@@ -10,6 +10,7 @@ import {
   DateValidationError,
   FieldSection,
   PickerValidDate,
+  SimpleValue,
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
@@ -47,15 +48,15 @@ function ButtonField(props: ButtonFieldProps) {
 }
 
 export default function PickerButton() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2023-04-17'));
+  const [value, setValue] = React.useState<SimpleValue>(dayjs('2023-04-17'));
   const [open, setOpen] = React.useState(false);
 
   return (
     <Card variant="outlined" sx={{ padding: 1 }}>
       <DatePicker
         value={value}
-        label={value == null ? null : value.format('MMM DD, YYYY')}
-        onChange={(newValue) => setValue(newValue as Dayjs)}
+        label={value == null ? null : (value as Dayjs).format('MMM DD, YYYY')}
+        onChange={setValue}
         slots={{ field: ButtonField }}
         slotProps={{
           field: { setOpen } as any,
