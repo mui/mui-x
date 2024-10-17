@@ -42,11 +42,26 @@ const PickersToolbarRoot = styled('div', {
     {
       props: { isLandscape: true },
       style: {
+        gridColumn: 1,
+        gridRow: '2 / 3',
         height: 'auto',
         maxWidth: 160,
         padding: 16,
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
+      },
+    },
+    {
+      props: { isLandscape: true, isRtl: true },
+      style: {
+        gridColumn: 3,
+      },
+    },
+    {
+      props: { isLandscape: false },
+      style: {
+        gridColumn: '2 / 4',
+        gridRow: 1,
       },
     },
   ],
@@ -119,13 +134,13 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   return (
     <PickersToolbarRoot
       ref={ref}
-      data-mui-test="picker-toolbar"
+      data-testid="picker-toolbar"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
       <Typography
-        data-mui-test="picker-toolbar-title"
+        data-testid="picker-toolbar-title"
         color="text.secondary"
         variant="overline"
         id={titleId}
