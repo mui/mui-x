@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesDefaultized, CommonTooltipChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
@@ -12,9 +12,10 @@ import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { useSeries } from '../hooks/useSeries';
 
-type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
-  getColor: (dataIndex: number) => string;
-};
+type ChartSeriesDefaultizedWithColorGetter =
+  ChartSeriesDefaultized<CommonTooltipChartSeriesType> & {
+    getColor: (dataIndex: number) => string;
+  };
 
 export type ChartsAxisContentProps = {
   /**

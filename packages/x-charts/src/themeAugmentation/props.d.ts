@@ -8,14 +8,14 @@ import { LineChartProps } from '../LineChart/LineChart';
 import { ScatterChartProps } from '../ScatterChart/ScatterChart';
 import { PieChartProps } from '../PieChart/PieChart';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { CommonTooltipChartSeriesType } from '../models/seriesType/config';
 
 export interface ChartsComponentsPropsList {
   MuiChartsXAxis: ChartsXAxisProps;
   MuiChartsYAxis: ChartsYAxisProps;
   MuiChartsGrid: ChartsGridProps;
   MuiChartsLegend: ChartsLegendProps;
-  MuiChartsTooltip: ChartsTooltipProps<ChartSeriesType>;
+  MuiChartsTooltip: ChartsTooltipProps<CommonTooltipChartSeriesType>;
   MuiChartsSurface: ChartsSurfaceProps;
 
   // BarChart components

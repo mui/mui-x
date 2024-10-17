@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "RadarAreaPlot",
+  "imports": [
+    "import { RadarAreaPlot } from '@mui/x-charts/RadarChart';",
+    "import { RadarAreaPlot } from '@mui/x-charts';",
+    "import { RadarAreaPlot } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadarAreaPlot",
+  "filename": "/packages/x-charts/src/RadarChart/RadarAreaPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radar/\">Charts - Radar 🚧</a></li></ul>",
+  "cssComponent": false
+}

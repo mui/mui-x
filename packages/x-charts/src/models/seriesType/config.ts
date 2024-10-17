@@ -14,6 +14,7 @@ import {
   DefaultizedPieValueType,
 } from './pie';
 import { DefaultizedProps, MakeOptional } from '../helpers';
+import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -60,9 +61,24 @@ export interface ChartsSeriesConfig {
     itemIdentifier: PieItemIdentifier;
     valueType: DefaultizedPieValueType;
   };
+  radar: {
+    seriesInput: DefaultizedProps<RadarSeriesType, 'id'> & { color: string };
+    series: DefaultizedRadarSeriesType;
+    seriesProp: RadarSeriesType;
+    itemIdentifier: RadarItemIdentifier;
+    customTooltip: true;
+    valueType: number;
+  };
 }
 
 export type ChartSeriesType = keyof ChartsSeriesConfig;
+
+export type CommonTooltipChartSeriesType = keyof Pick<
+  ChartsSeriesConfig,
+  {
+    [Key in ChartSeriesType]: ChartsSeriesConfig[Key] extends { customTooltip: true } ? never : Key;
+  }[ChartSeriesType]
+>;
 
 export type CartesianChartSeriesType = keyof Pick<
   ChartsSeriesConfig,

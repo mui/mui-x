@@ -50,7 +50,7 @@ export const useResponsiveChartContainerProps = (
     colors,
     dataset,
     desc,
-    disableAxisListener,
+    disableAxisListener: true,
     highlightedItem,
     onHighlightChange,
     plugins,
