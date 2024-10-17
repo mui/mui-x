@@ -382,7 +382,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     onBlur?.(event);
     if (
       editing ||
-      // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+      // we can exit the editing state by clicking outside the input (within the Tree Item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
       // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
       (event.relatedTarget &&
         isTargetInDescendants(event.relatedTarget as HTMLElement, rootRefObject.current) &&
@@ -523,13 +523,13 @@ TreeItem.propTypes = {
   className: PropTypes.string,
   /**
    * The component used to render the content of the item.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
   /**
    * Props applied to ContentComponent.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps: PropTypes.object,
   /**
@@ -542,7 +542,7 @@ TreeItem.propTypes = {
    */
   itemId: PropTypes.string.isRequired,
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label: PropTypes.node,
   /**
