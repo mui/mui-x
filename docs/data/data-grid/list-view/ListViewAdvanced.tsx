@@ -275,7 +275,7 @@ export default function ListViewAdvanced() {
   return (
     <React.Fragment>
       <CSSBaseline />
-      <div ref={containerRef}>
+      <div ref={containerRef} style={{ maxWidth: '100%' }}>
         <DataGridPremium
           apiRef={apiRef}
           rows={rows}
