@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @kalyan90, @rotembarsela, @wangkailang.
 Following are all team members who have contributed to this release:
-@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf.
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf, @oliviertassinari.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -28,6 +28,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix `onRowSelectionModelChange` not being called after row is removed (#14972) @arminmeh
 - [DataGrid] Fix pagination scrollbar issue on small zoom (#14911) @cherniavskii
 - [DataGrid] Fix scroll jumping (#14929) @romgrk
+- [DataGrid] Fix excessive white space at the end of the Data Grid (#14864) @kalyan90
 
 #### `@mui/x-data-grid-pro@7.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -47,7 +48,7 @@ Same changes as in `@mui/x-data-grid-pro@7.20.1`.
 
 - [pickers] Cleanup `PageUp` and `PageDown` event handlers on time components (#14928) @arthurbalduini
 - [pickers] Create the new picker's `ownerState` object (#14889) @flaviendelangle
-- [pickers] Fix `PickerValidDate` usage in `DateRangePickerToolbar` (#14925) @flaviendelangle
+- [pickers] Fix `PickerValidDate` usage in the Date Range Picker Toolbar (#14925) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@7.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -57,7 +58,7 @@ Same changes as in `@mui/x-date-pickers@7.20.1`.
 
 #### `@mui/x-charts@7.20.1`
 
-- [charts] Allow `dataset` to be used with `ScatterChart` (#14915) @JCQuintas
+- [charts] Allow `dataset` to be used with the Scatter Chart (#14915) @JCQuintas
 - [charts] Ensure `reduce motion` preference disables animation on page load (#14417) @JCQuintas
 
 #### `@mui/x-charts-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -87,7 +88,6 @@ Same changes as in `@mui/x-charts@7.20.1`.
 - [core] Fix shortcut with localization keyboard (#14220) @rotembarsela
 - [core] Fix docs deploy command (#14920) @arminmeh
 - [code-infra] Prepare some tests to work in `vitest/playwright` (#14926) @JCQuintas
-- [Data grid] Fix excessive white space at the end of grid (#14864) @kalyan90
 - [test] Fix `AdapterDayjs` coverage calculation (#14957) @LukasTy
 - [test] Fix split infinitive API convention use @oliviertassinari
 
