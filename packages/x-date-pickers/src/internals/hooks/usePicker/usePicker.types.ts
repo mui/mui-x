@@ -11,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { FieldSection, PickerOwnerState, PickerValidDate } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
@@ -64,4 +64,6 @@ export interface UsePickerResponse<
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {}
+    UsePickerLayoutPropsResponse<TValue, TView> {
+  ownerState: PickerOwnerState<TValue>;
+}

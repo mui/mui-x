@@ -35,7 +35,7 @@ export interface GridToolbarExportProps {
   [key: string]: any;
 }
 
-export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
+function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   const apiRef = useGridApiContext();
   const { hideMenu, options, ...other } = props;
 
@@ -52,7 +52,28 @@ export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   );
 }
 
-export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
+GridCsvExportMenuItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  hideMenu: PropTypes.func,
+  options: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    delimiter: PropTypes.string,
+    disableToolbarButton: PropTypes.bool,
+    escapeFormulas: PropTypes.bool,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    getRowsToExport: PropTypes.func,
+    includeColumnGroupsHeaders: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    shouldAppendQuotes: PropTypes.bool,
+    utf8WithBom: PropTypes.bool,
+  }),
+} as any;
+
+function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   const apiRef = useGridApiContext();
   const { hideMenu, options, ...other } = props;
 
@@ -68,6 +89,42 @@ export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
     </MenuItem>
   );
 }
+
+GridPrintExportMenuItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  hideMenu: PropTypes.func,
+  options: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    bodyClassName: PropTypes.string,
+    copyStyles: PropTypes.bool,
+    disableToolbarButton: PropTypes.bool,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    getRowsToExport: PropTypes.func,
+    hideFooter: PropTypes.bool,
+    hideToolbar: PropTypes.bool,
+    includeCheckboxes: PropTypes.bool,
+    pageStyle: PropTypes.oneOfType([
+      PropTypes.shape({
+        '__@hasInstance@646': PropTypes.func.isRequired,
+        '__@metadata@648': PropTypes.any,
+        apply: PropTypes.func.isRequired,
+        arguments: PropTypes.any.isRequired,
+        bind: PropTypes.func.isRequired,
+        call: PropTypes.func.isRequired,
+        caller: PropTypes.object.isRequired,
+        length: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        prototype: PropTypes.any.isRequired,
+        toString: PropTypes.func.isRequired,
+      }),
+      PropTypes.string,
+    ]),
+  }),
+} as any;
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
@@ -107,4 +164,4 @@ GridToolbarExport.propTypes = {
   slotProps: PropTypes.object,
 } as any;
 
-export { GridToolbarExport };
+export { GridToolbarExport, GridCsvExportMenuItem, GridPrintExportMenuItem };

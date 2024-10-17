@@ -510,7 +510,7 @@ export const useGridVirtualScroller = () => {
     return rows;
   };
 
-  const needsHorizontalScrollbar = outerSize.width && columnsTotalWidth >= outerSize.width;
+  const needsHorizontalScrollbar = outerSize.width && columnsTotalWidth > outerSize.width;
 
   const scrollerStyle = React.useMemo(
     () =>
