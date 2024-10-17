@@ -23,7 +23,7 @@ import {
   selectorIsItemEditable,
 } from '../useTreeViewLabel/useTreeViewLabel.selectors';
 
-function isPrintableCharacter(string: string) {
+function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
@@ -264,7 +264,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Multi select behavior when pressing Ctrl + a
       // Selects all the items
-      case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+      case String.fromCharCode(event.keyCode) === 'A' &&
+        ctrlPressed &&
+        params.multiSelect &&
+        !params.disableSelection: {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
@@ -272,7 +275,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Type-ahead
       // TODO: Support typing multiple characters
-      case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+      case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
         const matchingItem = getFirstMatchingItem(itemId, key);
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);

@@ -712,12 +712,12 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
     // This `describe` only tests basics scenarios, more complex scenarios are tested in this file's other `describe`.
     describe('aria-selected item attribute', () => {
       describe('single selection', () => {
-        it('should not have the attribute `aria-selected=false` if not selected', () => {
+        it('should have the attribute `aria-selected=false` if not selected', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
           });
 
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
         });
 
         it('should have the attribute `aria-selected=true` if selected', () => {
@@ -750,14 +750,23 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'true');
         });
 
-        it('should have the attribute `aria-selected=false` if disabledSelection is true', () => {
+        it('should not have the attribute `aria-selected=false` if disabledSelection is true', () => {
           const view = render({
             multiSelect: true,
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
           });
 
-          expect(view.getItemRoot('1')).to.have.attribute('aria-selected', 'false');
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
+        });
+
+        it('should not have the attribute `aria-selected=false` if the item is disabled', () => {
+          const view = render({
+            multiSelect: true,
+            items: [{ id: '1', disabled: true }, { id: '2' }],
+          });
+
+          expect(view.getItemRoot('1')).not.to.have.attribute('aria-selected');
         });
       });
     });

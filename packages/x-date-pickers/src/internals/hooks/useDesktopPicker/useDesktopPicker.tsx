@@ -6,7 +6,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
 import {
-  UseDesktopPickerOwnerState,
   UseDesktopPickerParams,
   UseDesktopPickerProps,
   UseDesktopPickerSlotProps,
@@ -81,6 +80,7 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     contextValue,
+    ownerState,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -89,11 +89,6 @@ export const useDesktopPicker = <
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
-
-  // TODO v8: Apply this ownerState to all the slots in this hook.
-  const ownerStateV8: UseDesktopPickerOwnerState = {
-    open,
-  };
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: inputAdornmentOwnerState, ...inputAdornmentProps } = useSlotProps({
@@ -122,7 +117,7 @@ export const useDesktopPicker = <
   const openPickerIconProps = useSlotProps({
     elementType: OpenPickerIcon,
     externalSlotProps: innerSlotProps?.openPickerIcon,
-    ownerState: ownerStateV8,
+    ownerState,
   });
 
   const Field = slots.field;

@@ -5,6 +5,7 @@ import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { usePickerOwnerState } from './usePickerOwnerState';
 
 export const usePicker = <
   TValue,
@@ -71,6 +72,8 @@ export const usePicker = <
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });
 
+  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
+
   return {
     // Picker value
     open: pickerValueResponse.open,
@@ -87,5 +90,8 @@ export const usePicker = <
 
     // Picker context
     contextValue: pickerValueResponse.contextValue,
+
+    // Picker owner state
+    ownerState: pickerOwnerState,
   };
 };

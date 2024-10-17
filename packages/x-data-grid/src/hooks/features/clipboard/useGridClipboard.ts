@@ -4,6 +4,7 @@ import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { isCopyShortcut } from '../../../utils/keyboardUtils';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -74,14 +75,7 @@ export const useGridClipboard = (
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
-      if (
-        !(
-          (event.ctrlKey || event.metaKey) &&
-          event.key.toLowerCase() === 'c' &&
-          !event.shiftKey &&
-          !event.altKey
-        )
-      ) {
+      if (!isCopyShortcut(event)) {
         return;
       }
 

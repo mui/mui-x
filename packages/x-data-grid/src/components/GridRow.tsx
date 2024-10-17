@@ -6,7 +6,6 @@ import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -29,6 +28,7 @@ import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell'
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -111,7 +111,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     onMouseOver,
     ...other
   } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const configuration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
@@ -153,37 +153,19 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
-      // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
-      // doesn't care about pagination and considers the rows from the current page only, so the
-      // first row always has index=0. We need to subtract the index of the first row to make it
-      // compatible with the index used by the virtualization.
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
-      // pinned rows are not part of the visible rows
-      if (rowIndex != null) {
+      // Pinned rows are not part of the visible rows
+      if (rowIndex !== undefined) {
         apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
       }
     }
 
-    const rootElement = ref.current;
-    const hasFixedHeight = rowHeight !== 'auto';
-    if (!rootElement || hasFixedHeight || typeof ResizeObserver === 'undefined') {
-      return undefined;
+    if (ref.current && rowHeight === 'auto') {
+      return apiRef.current.observeRowHeight(ref.current, rowId);
     }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      const [entry] = entries;
-      const height =
-        entry.borderBoxSize && entry.borderBoxSize.length > 0
-          ? entry.borderBoxSize[0].blockSize
-          : entry.contentRect.height;
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
-    });
-
-    resizeObserver.observe(rootElement);
-
-    return () => resizeObserver.disconnect();
-  }, [apiRef, currentPage.range, index, rowHeight, rowId]);
+    return undefined;
+  }, [apiRef, currentPage.range, rowHeight, rowId]);
 
   const publish = React.useCallback(
     (
@@ -254,21 +236,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-  const sizes = useGridSelector(
+  const heightEntry = useGridSelector(
     apiRef,
-    () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId) }),
+    () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
     objectShallowCompare,
   );
-
-  let minHeight = rowHeight;
-  if (minHeight === 'auto' && sizes) {
-    const numberOfBaseSizes = 1;
-    const maximumSize = sizes.baseCenter ?? 0;
-
-    if (maximumSize > 0 && numberOfBaseSizes > 1) {
-      minHeight = maximumSize;
-    }
-  }
 
   const style = React.useMemo(() => {
     if (isNotVisible) {
@@ -282,28 +254,28 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const rowStyle = {
       ...styleProp,
       maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-      minHeight,
+      minHeight: rowHeight,
       '--height': typeof rowHeight === 'number' ? `${rowHeight}px` : rowHeight,
     };
 
-    if (sizes?.spacingTop) {
+    if (heightEntry.spacingTop) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
-      rowStyle[property] = sizes.spacingTop;
+      rowStyle[property] = heightEntry.spacingTop;
     }
 
-    if (sizes?.spacingBottom) {
+    if (heightEntry.spacingBottom) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
       let propertyValue = rowStyle[property];
       // avoid overriding existing value
       if (typeof propertyValue !== 'number') {
         propertyValue = parseInt(propertyValue || '0', 10);
       }
-      propertyValue += sizes.spacingBottom;
+      propertyValue += heightEntry.spacingBottom;
       rowStyle[property] = propertyValue;
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
+  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = rowNode ? getRowAriaAttributes(rowNode, index) : undefined;

@@ -277,6 +277,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     const timezone = this.getTimezone(value);
     if (timezone !== 'UTC') {
       const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
+      /* istanbul ignore next */
       // @ts-ignore
       if (fixedValue.$offset === (value.$offset ?? 0)) {
         return value;

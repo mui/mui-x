@@ -27,7 +27,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
           seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
         });
 
-        const seriesMinMax = series[seriesId].data.reduce<ExtremumGetterResult>(
+        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
           (accSeries, d, dataIndex) => {
             if (filter && !filter(d, dataIndex)) {
               return accSeries;
@@ -36,7 +36,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
           },
           [Infinity, -Infinity],
         );
-        return mergeMinMax(acc, seriesMinMax);
+        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
       },
       [Infinity, -Infinity],
     );
@@ -59,7 +59,7 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
           seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
         });
 
-        const seriesMinMax = series[seriesId].data.reduce<ExtremumGetterResult>(
+        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
           (accSeries, d, dataIndex) => {
             if (filter && !filter(d, dataIndex)) {
               return accSeries;
@@ -68,7 +68,7 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
           },
           [Infinity, -Infinity],
         );
-        return mergeMinMax(acc, seriesMinMax);
+        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
       },
       [Infinity, -Infinity],
     );

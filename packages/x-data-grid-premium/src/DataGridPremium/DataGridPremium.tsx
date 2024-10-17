@@ -967,6 +967,7 @@ DataGridPremiumRaw.propTypes = {
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
   rowPositionsDebounceMs: PropTypes.number,
   /**

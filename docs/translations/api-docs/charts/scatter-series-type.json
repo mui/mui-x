@@ -1,9 +1,12 @@
 {
   "interfaceDescription": "",
   "propertiesDescriptions": {
-    "data": { "description": "" },
     "type": { "description": "" },
     "color": { "description": "" },
+    "data": { "description": "" },
+    "datasetKeys": {
+      "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, all of <code>x</code>, <code>y</code>, and <code>id</code> must be provided.<br />While <code>z</code> is optional."
+    },
     "disableHover": {
       "description": "If true, the interaction will not use element hover for this series."
     },
