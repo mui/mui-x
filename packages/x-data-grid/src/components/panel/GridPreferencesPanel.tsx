@@ -6,24 +6,37 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export function GridPreferencesPanel() {
+interface GridPreferencesPanelProps {
+  /**
+   * Type of the panel.
+   */
+  type: GridPreferencePanelsValue;
+  /**
+   * Anchor element for the panel.
+   */
+  anchorEl: HTMLButtonElement | null;
+}
+
+export function GridPreferencesPanel({ type, anchorEl }: GridPreferencesPanelProps) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-  const panelContent = apiRef.current.unstable_applyPipeProcessors(
-    'preferencePanel',
-    null,
-    preferencePanelState.openedPanelValue ?? GridPreferencePanelsValue.filters,
-  );
+  const isOpen =
+    columns.length > 0 &&
+    preferencePanelState.open &&
+    type === preferencePanelState.openedPanelValue;
+
+  const panelContent = apiRef.current.unstable_applyPipeProcessors('preferencePanel', null, type);
 
   return (
     <rootProps.slots.panel
       as={rootProps.slots.basePopper}
-      open={columns.length > 0 && preferencePanelState.open}
+      open={isOpen}
       id={preferencePanelState.panelId}
       aria-labelledby={preferencePanelState.labelId}
+      anchorEl={anchorEl}
       {...rootProps.slotProps?.panel}
       {...rootProps.slotProps?.basePopper}
     >
