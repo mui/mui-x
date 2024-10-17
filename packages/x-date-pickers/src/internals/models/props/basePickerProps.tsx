@@ -29,7 +29,7 @@ export interface BasePickerProps<
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
-  localeText?: PickersInputComponentLocaleText<TDate>;
+  localeText?: PickersInputComponentLocaleText;
 }
 
 /**

@@ -14,7 +14,7 @@ interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
   formatDensity: 'dense' | 'spacious';
   isRtl: boolean;
   shouldRespectLeadingZeros: boolean;
-  localeText: PickersLocaleText<TDate>;
+  localeText: PickersLocaleText;
   localizedDigits: string[];
   date: TDate | null;
   enableAccessibleFieldDOMStructure: boolean;
@@ -63,7 +63,7 @@ const getEscapedPartsFromFormat = <TDate extends PickerValidDate>({
 
 const getSectionPlaceholder = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  localeText: PickersLocaleText<TDate>,
+  localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   sectionFormat: string,
 ) => {
