@@ -9,7 +9,7 @@ _Oct 17, 2024_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Added `dataset` prop support for `ScatterChart` component
+- 💫 Added [`dataset` prop support for the Scatter Chart component](https://mui.com/x/react-charts/scatter/#using-a-dataset)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
