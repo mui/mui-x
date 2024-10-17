@@ -4,7 +4,7 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { DefaultizedProps, MakeRequired } from '../internals/models/helpers';
+import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
