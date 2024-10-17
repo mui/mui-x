@@ -15,14 +15,14 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import {
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2Root,
-  TreeItem2GroupTransition,
-} from '@mui/x-tree-view/TreeItem2';
-import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
+  TreeItemContent,
+  TreeItemIconContainer,
+  TreeItemRoot,
+  TreeItemGroupTransition,
+} from '@mui/x-tree-view/TreeItem';
+import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 
 declare module 'react' {
   interface CSSProperties {
@@ -32,7 +32,7 @@ declare module 'react' {
 }
 
 interface StyledTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     React.HTMLAttributes<HTMLLIElement> {
   bgColor?: string;
   bgColorForDarkMode?: string;
@@ -42,11 +42,11 @@ interface StyledTreeItemProps
   labelInfo?: string;
 }
 
-const CustomTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
+const CustomTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   marginBottom: theme.spacing(0.3),
   color: theme.palette.text.secondary,
   borderRadius: theme.spacing(2),
@@ -64,11 +64,11 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
   },
 }));
 
-const CustomTreeItemIconContainer = styled(TreeItem2IconContainer)(({ theme }) => ({
+const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-const CustomTreeItemGroupTransition = styled(TreeItem2GroupTransition)(
+const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)(
   ({ theme }) => ({
     marginLeft: 0,
     [`& .content`]: {
@@ -104,7 +104,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getLabelProps,
     getGroupTransitionProps,
     status,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const style = {
     '--tree-view-color': theme.palette.mode !== 'dark' ? color : colorForDarkMode,
@@ -113,7 +113,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItemProvider itemId={itemId}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -125,7 +125,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           })}
         >
           <CustomTreeItemIconContainer {...getIconContainerProps()}>
-            <TreeItem2Icon status={status} />
+            <TreeItemIcon status={status} />
           </CustomTreeItemIconContainer>
           <Box
             sx={{
@@ -152,7 +152,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           <CustomTreeItemGroupTransition {...getGroupTransitionProps()} />
         )}
       </CustomTreeItemRoot>
-    </TreeItem2Provider>
+    </TreeItemProvider>
   );
 });
 

@@ -6,20 +6,17 @@ import {
   UseTreeViewItemsSignature,
   isTargetInDescendants,
 } from '@mui/x-tree-view/internals';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
-  UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering,
-  UseTreeItem2RootSlotPropsFromItemsReordering,
+  UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
+  UseTreeItemRootSlotPropsFromItemsReordering,
   UseTreeViewItemsReorderingSignature,
   TreeViewItemItemReorderingValidActions,
-  UseTreeItem2ContentSlotPropsFromItemsReordering,
+  UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
-  props,
-}) => {
+export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemsReordering, instance } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
@@ -32,7 +29,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         rootRefObject,
         contentRefObject,
         externalEventHandlers,
-      }): UseTreeItem2RootSlotPropsFromItemsReordering => {
+      }): UseTreeItemRootSlotPropsFromItemsReordering => {
         const draggable = instance.canItemBeDragged(itemId);
         if (!draggable) {
           return {};
@@ -94,7 +91,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
       content: ({
         externalEventHandlers,
         contentRefObject,
-      }): UseTreeItem2ContentSlotPropsFromItemsReordering => {
+      }): UseTreeItemContentSlotPropsFromItemsReordering => {
         const currentDrag = itemsReordering.currentDrag;
         if (!currentDrag || currentDrag.draggedItemId === itemId) {
           return {};
@@ -133,7 +130,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           onDragOver: handleDragOver,
         };
       },
-      dragAndDropOverlay: (): UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering => {
+      dragAndDropOverlay: (): UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering => {
         const currentDrag = itemsReordering.currentDrag;
         if (!currentDrag || currentDrag.targetItemId !== itemId || currentDrag.action == null) {
           return {};
