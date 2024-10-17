@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersLayoutProps } from './PickersLayout.types';
-import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
+import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerValidDate } from '../models';
@@ -28,45 +28,6 @@ export const PickersLayoutRoot = styled('div', {
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
-  [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
-  variants: [
-    {
-      props: { isLandscape: true },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 1,
-          gridRow: '2 / 3',
-        },
-        [`.${pickersLayoutClasses.shortcuts}`]: { gridColumn: '2 / 4', gridRow: 1 },
-      },
-    },
-    {
-      props: { isLandscape: true, isRtl: true },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: {
-          gridColumn: 3,
-        },
-      },
-    },
-    {
-      props: { isLandscape: false },
-      style: {
-        [`& .${pickersLayoutClasses.toolbar}`]: { gridColumn: '2 / 4', gridRow: 1 },
-        [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 1,
-          gridRow: '2 / 3',
-        },
-      },
-    },
-    {
-      props: { isLandscape: false, isRtl: true },
-      style: {
-        [`& .${pickersLayoutClasses.shortcuts}`]: {
-          gridColumn: 3,
-        },
-      },
-    },
-  ],
 });
 
 export const PickersLayoutContentWrapper = styled('div', {
