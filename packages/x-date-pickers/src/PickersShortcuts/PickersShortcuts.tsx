@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -50,6 +51,32 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
   isValid: (value: TValue) => boolean;
 }
 
+const PickersShortcutsRoot = styled(List, {
+  name: 'MuiPickersLayout',
+  slot: 'Shortcuts',
+  overridesResolver: (_, styles) => [styles.shortcuts],
+})({
+  variants: [
+    {
+      props: { isLandscape: true },
+      style: { gridColumn: '2 / 4', gridRow: 1 },
+    },
+    {
+      props: { isLandscape: false },
+      style: {
+        gridColumn: 1,
+        gridRow: '2 / 3',
+      },
+    },
+    {
+      props: { isLandscape: false, isRtl: true },
+      style: {
+        gridColumn: 3,
+      },
+    },
+  ],
+});
+
 /**
  * Demos:
  *
@@ -80,7 +107,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
   });
 
   return (
-    <List
+    <PickersShortcutsRoot
       dense
       sx={[
         {
@@ -99,7 +126,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
           </ListItem>
         );
       })}
-    </List>
+    </PickersShortcutsRoot>
   );
 }
 
