@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'buổi',
 };
 
-const viVNPickers: Partial<PickersLocaleText<any>> = {
+const viVNPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Tháng trước',
   nextMonth: 'Tháng sau',
@@ -44,7 +44,7 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `Chọn ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Không có giờ được chọn' : `Giờ được chọn là ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `Chọn ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Không có giờ được chọn' : `Giờ được chọn là ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} giờ`,
   minutesClockNumberText: (minutes) => `${minutes} phút`,
   secondsClockNumberText: (seconds) => `${seconds} giây`,
@@ -61,11 +61,11 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Chọn ngày, ngày đã chọn là ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Chọn ngày, ngày đã chọn là ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Chọn ngày',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Chọn giờ, giờ đã chọn là ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Chọn giờ, giờ đã chọn là ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Chọn giờ',
   fieldClearLabel: 'Xóa giá trị',
 

@@ -10,7 +10,10 @@
     "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "onChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: PickerValidDate) => void",
+        "describedArgs": ["value"]
+      }
     },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
@@ -20,7 +23,7 @@
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(year: TDate) => boolean",
+        "type": "function(year: PickerValidDate) => boolean",
         "describedArgs": ["year"],
         "returned": "boolean"
       }

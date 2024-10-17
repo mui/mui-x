@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,7 +10,7 @@ import {
   DatePickerToolbarProps,
 } from '@mui/x-date-pickers/DatePicker';
 
-function CustomToolbar(props: DatePickerToolbarProps<Dayjs>) {
+function CustomToolbar(props: DatePickerToolbarProps) {
   return (
     <Box
       // Pass the className to the root element to get correct layout

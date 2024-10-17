@@ -5,16 +5,19 @@ import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function LifeCycleDateFieldEmpty() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [value, setValue] = React.useState<SimpleValue>(null);
 
   return (
     <Stack spacing={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField value={value} onChange={setValue} />
       </LocalizationProvider>
-      <Typography>Value: {value == null ? 'null' : value.format('L')}</Typography>
+      <Typography>
+        Value: {value == null ? 'null' : (value as Dayjs).format('L')}
+      </Typography>
     </Stack>
   );
 }

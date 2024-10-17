@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
@@ -10,7 +10,7 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -31,7 +31,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
+function CustomLayout(props: PickersLayoutProps<PickerValidDate | null, TimeView>) {
   const { actionBar, content, toolbar } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={props}>

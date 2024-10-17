@@ -5,10 +5,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
 const today = dayjs();
 
-const isInCurrentYear = (date: Dayjs) => date.get('year') === dayjs().get('year');
+const isInCurrentYear = (date: PickerValidDate) =>
+  (date as Dayjs).get('year') === dayjs().get('year');
 
 export default function DateValidationShouldDisableYear() {
   return (

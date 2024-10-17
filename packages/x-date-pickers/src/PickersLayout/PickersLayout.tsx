@@ -8,9 +8,8 @@ import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { isLandscape, classes } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -24,7 +23,7 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersLayoutProps<any, any, any> }>({
+})<{ ownerState: PickersLayoutProps<any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -80,12 +79,8 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -99,9 +94,8 @@ type PickersLayoutComponent = (<
  */
 const PickersLayout = React.forwardRef(function PickersLayout<
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
+>(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);

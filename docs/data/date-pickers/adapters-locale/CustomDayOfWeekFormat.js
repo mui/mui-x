@@ -11,7 +11,7 @@ export default function CustomDayOfWeekFormat() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
         value={value}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={setValue}
         dayOfWeekFormatter={(weekday) => `${weekday.format('dd')}.`}
       />
     </LocalizationProvider>

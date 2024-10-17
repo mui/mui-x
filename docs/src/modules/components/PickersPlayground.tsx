@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -176,7 +176,7 @@ interface ComponentFamilySet {
   props: Record<string, any>;
 }
 
-const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange>[] = [
   {
     label: 'This Week',
     getValue: () => {
@@ -370,7 +370,7 @@ export default function PickersPlayground() {
   const dateViews = React.useMemo(() => availableViews.filter(isDatePickerView), [availableViews]);
   const timeViews = React.useMemo(() => availableViews.filter(isTimeView), [availableViews]);
 
-  const commonProps = React.useMemo<StaticDateTimePickerProps<Dayjs>>(
+  const commonProps = React.useMemo<StaticDateTimePickerProps>(
     () => ({
       orientation: isLandscape ? 'landscape' : 'portrait',
       showDaysOutsideCurrentMonth,

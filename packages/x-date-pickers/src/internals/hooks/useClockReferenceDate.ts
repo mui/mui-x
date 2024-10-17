@@ -4,16 +4,16 @@ import { singleItemValueManager } from '../utils/valueManagers';
 import { getTodayDate } from '../utils/date-utils';
 import { SECTION_TYPE_GRANULARITY } from '../utils/getDefaultReferenceDate';
 
-export const useClockReferenceDate = <TDate extends PickerValidDate, TProps extends {}>({
+export const useClockReferenceDate = <TProps extends {}>({
   value,
   referenceDate: referenceDateProp,
   utils,
   props,
   timezone,
 }: {
-  value: TDate;
-  referenceDate: TDate | undefined;
-  utils: MuiPickersAdapter<TDate>;
+  value: PickerValidDate;
+  referenceDate: PickerValidDate | undefined;
+  utils: MuiPickersAdapter;
   props: TProps;
   timezone: PickersTimezone;
 }) => {

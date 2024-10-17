@@ -24,7 +24,6 @@ import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useMultiInputTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
@@ -34,13 +33,11 @@ export const useMultiInputTimeRangeField = <
   endTextFieldProps,
   unstableEndFieldRef,
 }: UseMultiInputTimeRangeFieldParams<
-  TDate,
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedTimeField<
-    TDate,
-    UseMultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseMultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     typeof inSharedProps
   >(inSharedProps);
 
@@ -80,10 +77,9 @@ export const useMultiInputTimeRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<TDate | null, TimeValidationError> => {
+  ): FieldChangeHandler<PickerValidDate | null, TimeValidationError> => {
     return (newDate, rawContext) => {
-      const newDateRange: DateRange<TDate> =
-        index === 0 ? [newDate, value[1]] : [value[0], newDate];
+      const newDateRange: DateRange = index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<TimeRangeValidationError> = {
         ...rawContext,
@@ -105,7 +101,6 @@ export const useMultiInputTimeRangeField = <
   });
 
   const startFieldProps: UseTimeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof sharedProps
   > = {
@@ -126,7 +121,6 @@ export const useMultiInputTimeRangeField = <
   };
 
   const endFieldProps: UseTimeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof sharedProps
   > = {
@@ -146,16 +140,13 @@ export const useMultiInputTimeRangeField = <
   };
 
   const startDateResponse = useTimeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
   >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  const endDateResponse = useTimeField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof endFieldProps
-  >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
+  const endDateResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof endFieldProps>(
+    endFieldProps,
+  ) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

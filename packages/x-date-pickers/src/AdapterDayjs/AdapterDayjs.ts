@@ -138,7 +138,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
+export class AdapterDayjs implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -296,8 +296,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Dayjs> => {
-    type R = DateBuilderReturnType<T, Dayjs>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
       return <R>null;
     }

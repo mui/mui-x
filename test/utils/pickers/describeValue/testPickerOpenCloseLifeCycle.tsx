@@ -22,18 +22,18 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
   describe('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
-      render(<ElementToTest enableAccessibleFieldDOMStructure />);
+      render(<ElementToTest />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
     });
 
     it('should open on mount if `prop.open` is true', () => {
-      render(<ElementToTest enableAccessibleFieldDOMStructure open />);
+      render(<ElementToTest open />);
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest enableAccessibleFieldDOMStructure disabled onOpen={onOpen} />);
+      render(<ElementToTest disabled onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -41,7 +41,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should not open when `prop.readOnly` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest enableAccessibleFieldDOMStructure readOnly onOpen={onOpen} />);
+      render(<ElementToTest readOnly onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -298,7 +298,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -356,7 +355,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -376,14 +374,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-        />,
-      );
+      render(<ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />);
 
       // Dismiss the picker
       fireEvent.keyDown(document.body, { key: 'Escape' });

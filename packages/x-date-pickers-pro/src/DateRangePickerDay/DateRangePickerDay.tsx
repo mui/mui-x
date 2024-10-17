@@ -6,7 +6,6 @@ import { useLicenseVerifier } from '@mui/x-license';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -17,8 +16,8 @@ import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps<TDate extends PickerValidDate>
-  extends Omit<PickersDayProps<TDate>, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
+export interface DateRangePickerDayProps
+  extends Omit<PickersDayProps, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -58,7 +57,7 @@ export interface DateRangePickerDayProps<TDate extends PickerValidDate>
   draggable?: boolean;
 }
 
-type OwnerState = DateRangePickerDayProps<any> & {
+type OwnerState = DateRangePickerDayProps & {
   isEndOfMonth: boolean;
   isStartOfMonth: boolean;
   isFirstVisibleCell: boolean;
@@ -291,17 +290,16 @@ const DateRangePickerDayDay = styled(PickersDay, {
       },
     },
   ],
-}) as unknown as <TDate extends PickerValidDate>(
-  props: PickersDayProps<TDate> & { ownerState: OwnerState },
+}) as (props: PickersDayProps & { ownerState: OwnerState }) => React.JSX.Element;
+
+type DateRangePickerDayComponent = (
+  props: DateRangePickerDayProps & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element;
 
-type DateRangePickerDayComponent = <TDate extends PickerValidDate>(
-  props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => React.JSX.Element;
-
-const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
-  TDate extends PickerValidDate,
->(inProps: DateRangePickerDayProps<TDate>, ref: React.Ref<HTMLButtonElement>) {
+const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
+  inProps: DateRangePickerDayProps,
+  ref: React.Ref<HTMLButtonElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
@@ -323,7 +321,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
   } = props;
 
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const isEndOfMonth = utils.isSameDay(day, utils.endOfMonth(day));
   const isStartOfMonth = utils.isSameDay(day, utils.startOfMonth(day));
@@ -356,7 +354,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<
         className={classes.rangeIntervalPreview}
         ownerState={ownerState}
       >
-        <DateRangePickerDayDay<TDate>
+        <DateRangePickerDayDay
           data-testid="DateRangePickerDay"
           {...other}
           ref={ref}

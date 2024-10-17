@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerValidDate, TimeView } from '../models';
+import { TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
@@ -9,8 +9,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { validateTime } from '../validation';
 
-type StaticTimePickerComponent = (<TDate extends PickerValidDate>(
-  props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticTimePickerComponent = ((
+  props: StaticTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -23,20 +23,19 @@ type StaticTimePickerComponent = (<TDate extends PickerValidDate>(
  *
  * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
  */
-const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate extends PickerValidDate>(
-  inProps: StaticTimePickerProps<TDate>,
+const StaticTimePicker = React.forwardRef(function StaticTimePicker(
+  inProps: StaticTimePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const defaultizedProps = useTimePickerDefaultizedProps<
-    TDate,
-    TimeView,
-    StaticTimePickerProps<TDate>
-  >(inProps, 'MuiStaticTimePicker');
+  const defaultizedProps = useTimePickerDefaultizedProps<TimeView, StaticTimePickerProps>(
+    inProps,
+    'MuiStaticTimePicker',
+  );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
@@ -59,7 +58,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate extend
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -204,8 +203,7 @@ StaticTimePicker.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
