@@ -5,7 +5,6 @@ import {
   GridRenderCellParams,
   GridRowEventLookup,
   gridRowMaximumTreeDepthSelector,
-  gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
@@ -33,20 +32,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
+  // TODO: remove treeDepth checks once row reorder is compatible
   const isDraggable = React.useMemo(
-    () =>
-      !!rootProps.rowReordering &&
-      !sortModel.length &&
-      treeDepth === 1 &&
-      Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+    () => !!rootProps.rowReordering && treeDepth === 1 && Object.keys(editRowsState).length === 0,
+    [rootProps.rowReordering, treeDepth, editRowsState],
   );
 
   const ownerState = { isDraggable, classes: rootProps.classes };
