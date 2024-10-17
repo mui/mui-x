@@ -37,4 +37,4 @@ useTreeViewId.params = {
   id: true,
 };
 
-useTreeViewId.getInitialState = () => ({ id: { treeId: undefined } });
+useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: id ?? undefined } });
