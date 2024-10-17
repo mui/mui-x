@@ -59,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@7.20.1`.
 - [charts] Allow `dataset` to be used with `ScatterChart` (#14915) @JCQuintas
 - [charts] Ensure `reduce motion` preference disables animation on page load (#14417) @JCQuintas
 
-#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.0.0-beta.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.20.1`.
 
