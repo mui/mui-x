@@ -201,7 +201,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (isMenuOpen || isNavigationKey(event.key) || isFilterReadOnly) {
+        if (isMenuOpen || (event.key !== ' ' && isNavigationKey(event.key)) || isFilterReadOnly) {
           return;
         }
         switch (event.key) {
