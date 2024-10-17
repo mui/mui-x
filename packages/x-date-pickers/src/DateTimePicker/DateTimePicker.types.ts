@@ -65,6 +65,11 @@ export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends 
 export type DateTimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   DefaultizedProps<
     UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'timezone' | 'ampm' | keyof BaseDateValidationProps | keyof BaseTimeValidationProps
+    | 'format'
+    | 'timezone'
+    | 'value'
+    | 'ampm'
+    | keyof BaseDateValidationProps
+    | keyof BaseTimeValidationProps
   > &
     BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateTimeValidationError>;

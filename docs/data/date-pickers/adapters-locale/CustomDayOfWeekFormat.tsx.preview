@@ -1,5 +1,5 @@
 <DateCalendar
   value={value}
-  onChange={(newValue) => setValue(newValue)}
-  dayOfWeekFormatter={(weekday) => `${weekday.format('dd')}.`}
+  onChange={setValue}
+  dayOfWeekFormatter={(weekday) => `${(weekday as Dayjs).format('dd')}.`}
 />

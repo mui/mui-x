@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function ReferenceDateExplicitDateTimePicker() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [value, setValue] = React.useState<SimpleValue>(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -18,7 +19,7 @@ export default function ReferenceDateExplicitDateTimePicker() {
           referenceDate={dayjs('2022-04-17T15:30')}
         />
         <Typography>
-          Stored value: {value == null ? 'null' : value.format()}
+          Stored value: {value == null ? 'null' : (value as Dayjs).format()}
         </Typography>
       </Stack>
     </LocalizationProvider>

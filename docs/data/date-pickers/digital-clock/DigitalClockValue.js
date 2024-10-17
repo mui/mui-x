@@ -24,10 +24,7 @@ export default function DigitalClockValue() {
             <DigitalClock defaultValue={dayjs('2022-04-17T15:30')} />
           </DemoItem>
           <DemoItem label="Controlled digital clock">
-            <DigitalClock
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-            />
+            <DigitalClock value={value} onChange={setValue} />
           </DemoItem>
         </DemoContainer>
         <DemoContainer
@@ -37,10 +34,7 @@ export default function DigitalClockValue() {
             <MultiSectionDigitalClock defaultValue={dayjs('2022-04-17T15:30')} />
           </DemoItem>
           <DemoItem label="Controlled multi section digital clock">
-            <MultiSectionDigitalClock
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-            />
+            <MultiSectionDigitalClock value={value} onChange={setValue} />
           </DemoItem>
         </DemoContainer>
       </DemoContainer>

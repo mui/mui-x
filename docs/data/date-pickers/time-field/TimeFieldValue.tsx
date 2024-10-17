@@ -1,12 +1,13 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function TimeFieldValue() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T15:30'));
+  const [value, setValue] = React.useState<SimpleValue>(dayjs('2022-04-17T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -15,11 +16,7 @@ export default function TimeFieldValue() {
           label="Uncontrolled field"
           defaultValue={dayjs('2022-04-17T15:30')}
         />
-        <TimeField
-          label="Controlled field"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
+        <TimeField label="Controlled field" value={value} onChange={setValue} />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -9,13 +9,14 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
+  SimpleValue,
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<true>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
+      PickerValidDate | null,
       FieldSection,
       true,
       DateValidationError
@@ -48,7 +49,7 @@ function ButtonField(props: ButtonFieldProps) {
 }
 
 function ButtonDatePicker(
-  props: Omit<DatePickerProps<Dayjs>, 'open' | 'onOpen' | 'onClose'>,
+  props: Omit<DatePickerProps, 'open' | 'onOpen' | 'onClose'>,
 ) {
   const [open, setOpen] = React.useState(false);
 
@@ -65,14 +66,14 @@ function ButtonDatePicker(
 }
 
 export default function PickerWithButtonField() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [value, setValue] = React.useState<SimpleValue>(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ButtonDatePicker
-        label={value == null ? null : value.format('MM/DD/YYYY')}
+        label={value == null ? null : (value as Dayjs).format('MM/DD/YYYY')}
         value={value}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={setValue}
       />
     </LocalizationProvider>
   );

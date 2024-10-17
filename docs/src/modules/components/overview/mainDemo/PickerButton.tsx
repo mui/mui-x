@@ -9,11 +9,12 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<Dayjs | null, Dayjs, FieldSection, true, DateValidationError> {
+  extends UseDateFieldProps<true>,
+    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, true, DateValidationError> {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -54,7 +55,7 @@ export default function PickerButton() {
       <DatePicker
         value={value}
         label={value == null ? null : value.format('MMM DD, YYYY')}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={(newValue) => setValue(newValue as Dayjs)}
         slots={{ field: ButtonField }}
         slotProps={{
           field: { setOpen } as any,

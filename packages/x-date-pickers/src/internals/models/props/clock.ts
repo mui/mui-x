@@ -18,7 +18,7 @@ export interface ExportedBaseClockProps
 }
 
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
-  extends ExportedUseViewsOptions<TView>,
+  extends ExportedUseViewsOptions<PickerValidDate | null, TView>,
     ExportedBaseClockProps {
   className?: string;
   /**

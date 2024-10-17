@@ -22,13 +22,16 @@ const CustomCalendarHeaderRoot = styled('div')({
 
 function CustomCalendarHeader(props) {
   const { currentMonth, onMonthChange } = props;
+  const currentMonthWithKnownAdapter = currentMonth;
 
-  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'), 'left');
-  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'), 'left');
+  const selectNextMonth = () =>
+    onMonthChange(currentMonthWithKnownAdapter.add(1, 'month'), 'left');
+  const selectNextYear = () =>
+    onMonthChange(currentMonthWithKnownAdapter.add(1, 'year'), 'left');
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(1, 'month'), 'right');
+    onMonthChange(currentMonthWithKnownAdapter.subtract(1, 'month'), 'right');
   const selectPreviousYear = () =>
-    onMonthChange(currentMonth.subtract(1, 'year'), 'right');
+    onMonthChange(currentMonthWithKnownAdapter.subtract(1, 'year'), 'right');
 
   return (
     <CustomCalendarHeaderRoot>
@@ -40,7 +43,9 @@ function CustomCalendarHeader(props) {
           <ChevronLeft />
         </IconButton>
       </Stack>
-      <Typography variant="body2">{currentMonth.format('MMMM YYYY')}</Typography>
+      <Typography variant="body2">
+        {currentMonthWithKnownAdapter.format('MMMM YYYY')}
+      </Typography>
       <Stack spacing={1} direction="row">
         <IconButton onClick={selectNextMonth} title="Next month">
           <ChevronRight />

@@ -55,6 +55,6 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   DefaultizedProps<
     UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
+    'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
   > &
     BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, TimeValidationError>;

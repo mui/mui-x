@@ -377,8 +377,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
-  rowPositionsDebounceMs: number;
+  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false

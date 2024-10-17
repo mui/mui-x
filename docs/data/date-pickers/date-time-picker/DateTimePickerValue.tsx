@@ -1,12 +1,13 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function DateTimePickerValue() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T15:30'));
+  const [value, setValue] = React.useState<SimpleValue>(dayjs('2022-04-17T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

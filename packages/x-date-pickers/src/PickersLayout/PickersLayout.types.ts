@@ -12,7 +12,6 @@ import {
   ExportedPickersShortcutProps,
   PickersShortcuts,
 } from '../PickersShortcuts/PickersShortcuts';
-import { PickerValidDate } from '../models';
 
 export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**

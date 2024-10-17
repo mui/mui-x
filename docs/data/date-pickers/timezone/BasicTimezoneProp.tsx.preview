@@ -11,5 +11,5 @@
   label={'Rendered in "Europe/Paris"'}
 />
 <Typography>
-  Stored value: {value == null ? 'null' : value.format()}
+  Stored value: {value == null ? 'null' : (value as Dayjs).format()}
 </Typography>

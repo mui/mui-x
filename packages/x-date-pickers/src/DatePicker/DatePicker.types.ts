@@ -56,6 +56,6 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   DefaultizedProps<
     UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'timezone' | keyof BaseDateValidationProps
+    'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
   > &
     BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateValidationError>;

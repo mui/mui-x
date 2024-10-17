@@ -20,10 +20,16 @@ const CustomCalendarHeaderRoot = styled('div')({
 function CustomCalendarHeader(props) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
+  const currentMonthWithKnownAdapter = currentMonth;
+  const monthWithKnownAdapter = month;
+
   const selectNextMonth = () =>
-    onMonthChange(currentMonth.add(calendars, 'month'), 'left');
+    onMonthChange(currentMonthWithKnownAdapter.add(calendars, 'month'), 'left');
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(calendars, 'month'), 'right');
+    onMonthChange(
+      currentMonthWithKnownAdapter.subtract(calendars, 'month'),
+      'right',
+    );
 
   return (
     <CustomCalendarHeaderRoot>
@@ -42,7 +48,7 @@ function CustomCalendarHeader(props) {
       >
         <ChevronLeft />
       </IconButton>
-      <Typography>{month.format('MMMM YYYY')}</Typography>
+      <Typography>{monthWithKnownAdapter.format('MMMM YYYY')}</Typography>
       <IconButton
         onClick={selectNextMonth}
         sx={[

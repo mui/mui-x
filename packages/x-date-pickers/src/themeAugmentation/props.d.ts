@@ -17,7 +17,7 @@ import { PickerPopperProps } from '../internals/components/PickersPopper';
 import { PickersToolbarProps } from '../internals/components/PickersToolbar';
 import { PickersToolbarButtonProps } from '../internals/components/PickersToolbarButton';
 import { ExportedPickersToolbarTextProps } from '../internals/components/PickersToolbarText';
-import { DateOrTimeView, PickerValidDate } from '../models';
+import { DateOrTimeView } from '../models';
 
 import { DatePickerProps } from '../DatePicker';
 import { ExportedDatePickerToolbarProps } from '../DatePicker/DatePickerToolbar';

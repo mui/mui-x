@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -7,7 +6,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateView } from '@mui/x-date-pickers/models';
+import { DateView, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   pickersLayoutClasses,
   PickersLayoutContentWrapper,
@@ -23,7 +22,7 @@ import {
 } from '@mui/x-date-pickers/DatePicker';
 
 function LayoutWithKeyboardView(
-  props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>,
+  props: PickersLayoutProps<PickerValidDate | null, DateView>,
 ) {
   const { value, onChange } = props;
   const [showKeyboardView, setShowKeyboardView] = React.useState(false);
@@ -61,7 +60,7 @@ function LayoutWithKeyboardView(
 }
 
 function ToolbarWithKeyboardViewSwitch(
-  props: DatePickerToolbarProps<any> & {
+  props: DatePickerToolbarProps & {
     showKeyboardViewSwitch?: boolean;
     showKeyboardView?: boolean;
     setShowKeyboardView?: React.Dispatch<React.SetStateAction<boolean>>;

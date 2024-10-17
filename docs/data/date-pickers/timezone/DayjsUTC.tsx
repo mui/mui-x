@@ -6,11 +6,12 @@ import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 dayjs.extend(utc);
 
 export default function DayjsUTC() {
-  const [value, setValue] = React.useState<Dayjs | null>(
+  const [value, setValue] = React.useState<SimpleValue>(
     dayjs.utc('2022-04-17T15:30'),
   );
 
@@ -19,7 +20,7 @@ export default function DayjsUTC() {
       <Stack spacing={2}>
         <DateTimePicker value={value} onChange={setValue} />
         <Typography>
-          Stored value: {value == null ? 'null' : value.format()}
+          Stored value: {value == null ? 'null' : (value as Dayjs).format()}
         </Typography>
       </Stack>
     </LocalizationProvider>

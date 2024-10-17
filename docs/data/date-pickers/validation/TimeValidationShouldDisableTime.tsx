@@ -7,10 +7,8 @@ import { TimePicker, TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
-const shouldDisableTime: TimePickerProps<Dayjs>['shouldDisableTime'] = (
-  value,
-  view,
-) => view === 'minutes' && value.minute() >= 45;
+const shouldDisableTime: TimePickerProps['shouldDisableTime'] = (value, view) =>
+  view === 'minutes' && (value as Dayjs).minute() >= 45;
 
 const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute');
 

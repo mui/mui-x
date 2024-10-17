@@ -95,7 +95,7 @@ export interface ExportedDateCalendarProps
 
 export interface DateCalendarProps
   extends ExportedDateCalendarProps,
-    ExportedUseViewsOptions<DateView> {
+    ExportedUseViewsOptions<PickerValidDate | null, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.

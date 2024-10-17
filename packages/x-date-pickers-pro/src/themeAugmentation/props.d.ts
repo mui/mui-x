@@ -1,4 +1,3 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';

@@ -63,8 +63,8 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
   onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
 }
 
-export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<UseViewsOptions<any, TView>, 'onChange' | 'openTo' | 'views'> {}
+export interface ExportedUseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem>
+  extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 

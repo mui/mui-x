@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +14,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -105,10 +105,9 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<true>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
+      PickerValidDate | null,
       FieldSection,
       true,
       DateValidationError
@@ -118,7 +117,7 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
+    const fieldResponse = useDateField<true, typeof textFieldProps>({
       ...textFieldProps,
       enableAccessibleFieldDOMStructure: true,
     });
@@ -135,7 +134,7 @@ const BrowserDateField = React.forwardRef(
 );
 
 const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}

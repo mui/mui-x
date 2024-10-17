@@ -87,8 +87,8 @@ export function getCheckboxPropsSelector(groupId: GridRowId, autoSelectParents: 
       }
       return {
         isIndeterminate:
-          (selectedDescendantsCount > 0 && selectedDescendantsCount < selectableDescendantsCount) ||
-          (selectedDescendantsCount === selectableDescendantsCount &&
+          selectedDescendantsCount > 0 &&
+          (selectedDescendantsCount < selectableDescendantsCount ||
             rowSelectionLookup[groupId] === undefined),
         isChecked: autoSelectParents
           ? selectedDescendantsCount > 0
