@@ -97,7 +97,10 @@ export function ListCell(props) {
 
       <IconButton
         aria-label="More options"
-        onClick={onOpenActions}
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenActions();
+        }}
         sx={{ mr: -0.75 }}
       >
         <GridMoreVertIcon fontSize="small" />
