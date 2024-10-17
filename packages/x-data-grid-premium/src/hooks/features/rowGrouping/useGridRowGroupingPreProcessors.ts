@@ -31,7 +31,8 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  ROW_GROUPING_STRATEGY,
+  ROW_GROUPING_STRATEGY_DEFAULT,
+  ROW_GROUPING_STRATEGY_DATA_SOURCE,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,
@@ -48,6 +49,7 @@ export const useGridRowGroupingPreProcessors = (
     | 'rowGroupingColumnMode'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
+    | 'unstable_dataSource'
   >,
 ) => {
   const getGroupingColDefs = React.useCallback(
@@ -55,6 +57,10 @@ export const useGridRowGroupingPreProcessors = (
       if (props.disableRowGrouping) {
         return [];
       }
+
+      const strategy = props.unstable_dataSource
+        ? ROW_GROUPING_STRATEGY_DATA_SOURCE
+        : ROW_GROUPING_STRATEGY_DEFAULT;
 
       const groupingColDefProp = props.groupingColDef;
 
@@ -73,8 +79,9 @@ export const useGridRowGroupingPreProcessors = (
             createGroupingColDefForAllGroupingCriteria({
               apiRef,
               rowGroupingModel,
-              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel),
+              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel, strategy),
               columnsLookup: columnsState.lookup,
+              strategy,
             }),
           ];
         }
@@ -86,6 +93,7 @@ export const useGridRowGroupingPreProcessors = (
               colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
               groupedByColDef: columnsState.lookup[groupingCriteria],
               columnsLookup: columnsState.lookup,
+              strategy,
             }),
           );
         }
@@ -95,7 +103,13 @@ export const useGridRowGroupingPreProcessors = (
         }
       }
     },
-    [apiRef, props.groupingColDef, props.rowGroupingColumnMode, props.disableRowGrouping],
+    [
+      apiRef,
+      props.groupingColDef,
+      props.rowGroupingColumnMode,
+      props.disableRowGrouping,
+      props.unstable_dataSource,
+    ],
   );
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -177,7 +191,7 @@ export const useGridRowGroupingPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: ROW_GROUPING_STRATEGY,
+          groupingName: ROW_GROUPING_STRATEGY_DEFAULT,
         });
       }
 
@@ -191,7 +205,7 @@ export const useGridRowGroupingPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: ROW_GROUPING_STRATEGY,
+        groupingName: ROW_GROUPING_STRATEGY_DEFAULT,
       });
     },
     [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -228,35 +242,29 @@ export const useGridRowGroupingPreProcessors = (
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY,
+    ROW_GROUPING_STRATEGY_DEFAULT,
     'rowTreeCreation',
     createRowTreeForRowGrouping,
   );
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DEFAULT, 'filtering', filterRows);
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DEFAULT, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY,
+    ROW_GROUPING_STRATEGY_DEFAULT,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
 
-  /**
-   * 1ST RENDER
-   */
   useFirstRender(() => {
-    setStrategyAvailability(apiRef, props.disableRowGrouping);
+    setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
   });
 
-  /**
-   * EFFECTS
-   */
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (!isFirstRender.current) {
-      setStrategyAvailability(apiRef, props.disableRowGrouping);
+      setStrategyAvailability(apiRef, props.disableRowGrouping, props.unstable_dataSource);
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, props.disableRowGrouping]);
+  }, [apiRef, props.disableRowGrouping, props.unstable_dataSource]);
 };
