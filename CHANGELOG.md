@@ -9,14 +9,14 @@ _Oct 17, 2024_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 `dataset` prop support for `ScatterChart` component
+- 💫 Added `dataset` prop support for `ScatterChart` component
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@arminmeh, @k-rajat19, @kalyan90, @romgrk, @rotembarsela, @wangkailang.
+@k-rajat19, @kalyan90, @rotembarsela, @wangkailang.
 Following are all team members who have contributed to this release:
-@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi.
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, romgrk.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
