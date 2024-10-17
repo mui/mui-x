@@ -19,7 +19,7 @@
     "populate:demos": "tsx scripts/populatePickersDemos"
   },
   "dependencies": {
-    "@babel/core": "^7.25.7",
+    "@babel/core": "^7.25.8",
     "@babel/runtime": "^7.25.7",
     "@babel/runtime-corejs2": "^7.25.7",
     "@docsearch/react": "^3.6.2",
