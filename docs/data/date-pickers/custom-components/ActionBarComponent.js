@@ -82,7 +82,7 @@ function CustomActionBar(props) {
   });
 
   return (
-    <DialogActions className={className}>
+    <DialogActions className={className} sx={{ gridColumn: '1 / 4', gridRow: 3 }}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}
