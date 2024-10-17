@@ -107,6 +107,28 @@ function PickersSection(props: PickersSectionProps) {
   );
 }
 
+PickersSection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object.isRequired,
+  element: PropTypes.shape({
+    after: PropTypes.object.isRequired,
+    before: PropTypes.object.isRequired,
+    container: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired,
+  }).isRequired,
+  /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
+} as any;
+
 type PickersSectionListComponent = ((
   props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };

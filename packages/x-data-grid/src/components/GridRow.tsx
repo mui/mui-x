@@ -81,6 +81,14 @@ function EmptyCell({ width }: { width: number }) {
   );
 }
 
+EmptyCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  width: PropTypes.number.isRequired,
+} as any;
+
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
