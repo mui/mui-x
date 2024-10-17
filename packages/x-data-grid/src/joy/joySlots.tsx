@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { ColorPaletteProp, Theme, VariantProp } from '@mui/joy/styles';
+import JoyBadge from '@mui/joy/Badge';
 import JoyCheckbox from '@mui/joy/Checkbox';
+import JoyDivider from '@mui/joy/Divider';
 import JoyInput from '@mui/joy/Input';
 import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
@@ -68,6 +70,21 @@ function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard'
     filled: 'soft',
   }[variant] || defaultVariant) as VariantProp;
 }
+
+const Badge = React.forwardRef<HTMLSpanElement, NonNullable<GridSlotsComponentsProps['baseBadge']>>(
+  ({ component, slotProps, variant, color, sx, ...props }, ref) => {
+    return (
+      <JoyBadge
+        {...props}
+        color={convertColor(color)}
+        variant="plain"
+        component="div"
+        sx={sx as SxProps<Theme>}
+        ref={ref as any}
+      />
+    );
+  },
+);
 
 const Checkbox = React.forwardRef<
   HTMLElement,
@@ -374,7 +391,9 @@ const LoadingOverlay = React.forwardRef<
 
 const joySlots: Partial<GridSlotsComponent> = {
   ...joyIconSlots,
+  baseBadge: Badge,
   baseCheckbox: Checkbox,
+  baseDivider: JoyDivider,
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
