@@ -11,17 +11,13 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 
-export type GridListViewState = {
-  listColumn: (GridListColDef & { computedWidth: number }) | undefined;
-};
+export type GridListViewState = (GridListColDef & { computedWidth: number }) | undefined;
 
 export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_listColumn'>
 > = (state, props, apiRef) => ({
   ...state,
-  listView: {
-    listColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
-  },
+  listViewColumn: { ...props.unstable_listColumn, computedWidth: getListColumnWidth(apiRef) },
 });
 
 export function useGridListView(
@@ -53,17 +49,14 @@ export function useGridListView(
    */
   const updateListColumnWidth = () => {
     apiRef.current.setState((state) => {
-      if (!state.listView.listColumn) {
+      if (!state.listViewColumn) {
         return state;
       }
       return {
         ...state,
-        listView: {
-          ...state.listView,
-          listColumn: {
-            ...state.listView.listColumn,
-            computedWidth: getListColumnWidth(apiRef),
-          },
+        listViewColumn: {
+          ...state.listViewColumn,
+          computedWidth: getListColumnWidth(apiRef),
         },
       };
     });
@@ -91,12 +84,9 @@ export function useGridListView(
       apiRef.current.setState((state) => {
         return {
           ...state,
-          listView: {
-            ...state.listView,
-            listColumn: {
-              ...listColumn,
-              computedWidth: getListColumnWidth(apiRef),
-            },
+          listViewColumn: {
+            ...listColumn,
+            computedWidth: getListColumnWidth(apiRef),
           },
         };
       });
@@ -109,7 +99,8 @@ function getListColumnWidth(apiRef: React.MutableRefObject<GridPrivateApiCommuni
   const columns = gridVisibleColumnDefinitionsSelector(apiRef);
   const actionsColumn = columns.find((col) => col.type === 'actions');
   const viewportWidth = dimensions.viewportInnerSize.width;
-  const listColumnWidth =
-    actionsColumn && actionsColumn ? viewportWidth - actionsColumn.computedWidth : viewportWidth;
+  const listColumnWidth = actionsColumn
+    ? viewportWidth - actionsColumn.computedWidth
+    : viewportWidth;
   return listColumnWidth;
 }

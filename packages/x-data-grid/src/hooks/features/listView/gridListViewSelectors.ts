@@ -6,7 +6,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns';
 /**
  * Get a list column definition
  */
-export const gridListColumnSelector = (state: GridStateCommunity) => state.listView.listColumn;
+export const gridListColumnSelector = (state: GridStateCommunity) => state.listViewColumn;
 
 /**
  * Get the visible list columns as a lookup, including the list column definition and actions.
