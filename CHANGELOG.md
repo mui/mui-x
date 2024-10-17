@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 Special thanks go out to the community contributors who have helped make this release possible:
 @k-rajat19, @kalyan90, @rotembarsela, @wangkailang.
 Following are all team members who have contributed to this release:
-@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, romgrk.
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @arminmeh, @romgrk, @KenanYusuf.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -35,6 +35,7 @@ Same changes as in `@mui/x-data-grid@7.20.1`, plus:
 
 - [DataGridPro] Fix indeterminate checkbox state for server-side data (#14956) @MBilalShafi
 - [DataGridPro] Fix scrolling performance when `rowHeight={undefined}` (#14983) @cherniavskii
+- [DataGridPro] List View (#14393) @KenanYusuf @cherniavskii
 
 #### `@mui/x-data-grid-premium@7.20.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -69,6 +70,7 @@ Same changes as in `@mui/x-charts@7.20.1`.
 
 - [TreeView] Fix `alpha` usage with CSS variables (#14969) @wangkailang
 - [TreeView] Fix usage of the `aria-selected` attribute (#14991) @flaviendelangle
+- [TreeView] Fix hydration error (#15002) @flaviendelangle
 
 ### `@mui/x-codemod@7.20.1`
 
