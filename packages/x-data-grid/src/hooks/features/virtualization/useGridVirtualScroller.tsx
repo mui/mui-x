@@ -46,6 +46,7 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -99,14 +100,23 @@ try {
 export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const { unstable_listView: listView } = rootProps;
+  const visibleColumns = useGridSelector(apiRef, () =>
+    listView
+      ? [gridListColumnSelector(apiRef.current.state)!]
+      : gridVisibleColumnDefinitionsSelector(apiRef),
+  );
   const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
     useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector) && !isJSDOM;
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const outerSize = dimensions.viewportOuterSize;
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
+  const pinnedColumnDefinitions = useGridSelector(
+    apiRef,
+    gridVisiblePinnedColumnDefinitionsSelector,
+  );
+  const pinnedColumns = listView ? { left: [], right: [] } : pinnedColumnDefinitions;
   const hasBottomPinnedRows = pinnedRows.bottom.length > 0;
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
@@ -205,7 +215,7 @@ export const useGridVirtualScroller = () => {
     [apiRef, dimensions.isReady],
   );
 
-  const triggerUpdateRenderContext = () => {
+  const triggerUpdateRenderContext = useEventCallback(() => {
     const newScroll = {
       top: scrollerRef.current!.scrollTop,
       left: scrollerRef.current!.scrollLeft,
@@ -274,7 +284,7 @@ export const useGridVirtualScroller = () => {
     scrollTimeout.start(1000, triggerUpdateRenderContext);
 
     return nextRenderContext;
-  };
+  });
 
   const forceUpdateRenderContext = () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -515,10 +525,10 @@ export const useGridVirtualScroller = () => {
   const scrollerStyle = React.useMemo(
     () =>
       ({
-        overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
+        overflowX: !needsHorizontalScrollbar || listView ? 'hidden' : undefined,
         overflowY: rootProps.autoHeight ? 'hidden' : undefined,
       }) as React.CSSProperties,
-    [needsHorizontalScrollbar, rootProps.autoHeight],
+    [needsHorizontalScrollbar, rootProps.autoHeight, listView],
   );
 
   const contentSize = React.useMemo(() => {
@@ -559,6 +569,12 @@ export const useGridVirtualScroller = () => {
       scrollerRef.current!.scrollTop = 0;
     }
   }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
+
+  useEnhancedEffect(() => {
+    if (listView) {
+      scrollerRef.current!.scrollLeft = 0;
+    }
+  }, [listView, scrollerRef]);
 
   useRunOnce(outerSize.width !== 0, () => {
     const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
@@ -629,6 +645,7 @@ type RenderContextInputs = {
   pinnedColumns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>;
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
   hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
+  listView: boolean;
 };
 
 function inputsSelector(
@@ -639,7 +656,9 @@ function inputsSelector(
 ): RenderContextInputs {
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   const currentPage = getVisibleRows(apiRef, rootProps);
-  const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+  const visibleColumns = rootProps.unstable_listView
+    ? [gridListColumnSelector(apiRef.current.state)!]
+    : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);
   const lastColumn = visibleColumns.at(-1);
@@ -663,6 +682,7 @@ function inputsSelector(
     pinnedColumns: gridVisiblePinnedColumnDefinitionsSelector(apiRef),
     visibleColumns,
     hiddenCellsOriginMap,
+    listView: rootProps.unstable_listView ?? false,
   };
 }
 
