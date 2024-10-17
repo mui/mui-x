@@ -72,7 +72,7 @@ function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard'
 }
 
 const Badge = React.forwardRef<HTMLElement, NonNullable<GridSlotsComponentsProps['baseBadge']>>(
-  ({ component, slotProps, variant, color, sx, ...props }, ref) => {
+  ({ slotProps, variant, color, sx, ...props }, ref) => {
     return (
       <JoyBadge
         {...props}
