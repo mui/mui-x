@@ -245,12 +245,6 @@
     "toggleDetailPanel": { "description": "Expands or collapses the detail panel of a row." },
     "unpinColumn": { "description": "Unpins a column." },
     "unstable_dataSource": { "description": "The data source API." },
-    "unstable_getListColumn": {
-      "description": "Returns the GridStateColDef for the given list column."
-    },
-    "unstable_getListColumnIndex": {
-      "description": "Returns the index position of a list column."
-    },
     "unstable_replaceRows": { "description": "Replace a set of rows with new rows." },
     "unstable_setColumnVirtualization": { "description": "Enable/disable column virtualization." },
     "unstable_setPinnedRows": { "description": "Changes the pinned rows." },

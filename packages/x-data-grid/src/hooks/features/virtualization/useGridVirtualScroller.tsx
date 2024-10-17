@@ -46,7 +46,7 @@ import {
 } from './gridVirtualizationSelectors';
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
-import { gridVisibleListColumnDefinitionsSelector } from '../listView/gridListViewSelectors';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -101,9 +101,10 @@ export const useGridVirtualScroller = () => {
   const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
-  const visibleColumns = useGridSelector(
-    apiRef,
-    listView ? gridVisibleListColumnDefinitionsSelector : gridVisibleColumnDefinitionsSelector,
+  const visibleColumns = useGridSelector(apiRef, () =>
+    listView
+      ? [gridListColumnSelector(apiRef.current.state)!]
+      : gridVisibleColumnDefinitionsSelector(apiRef),
   );
   const enabledForRows = useGridSelector(apiRef, gridVirtualizationRowEnabledSelector) && !isJSDOM;
   const enabledForColumns =
@@ -656,7 +657,7 @@ function inputsSelector(
   const dimensions = gridDimensionsSelector(apiRef.current.state);
   const currentPage = getVisibleRows(apiRef, rootProps);
   const visibleColumns = rootProps.unstable_listView
-    ? gridVisibleListColumnDefinitionsSelector(apiRef)
+    ? [gridListColumnSelector(apiRef.current.state)!]
     : gridVisibleColumnDefinitionsSelector(apiRef);
   const hiddenCellsOriginMap = gridRowSpanningHiddenCellsOriginMapSelector(apiRef);
   const lastRowId = apiRef.current.state.rows.dataRowIds.at(-1);

@@ -3,7 +3,6 @@ import {
   GridColumnReorderApi,
   GridRowMultiSelectionApi,
   GridRowProApi,
-  GridListViewApi,
 } from '@mui/x-data-grid';
 import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
@@ -29,8 +28,7 @@ export interface GridApiPro
     GridDataSourceApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi,
-    GridListViewApi {}
+    GridColumnReorderApi {}
 
 export interface GridPrivateApiPro
   extends GridApiPro,

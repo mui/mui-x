@@ -17,7 +17,7 @@ import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';
-import { gridVisibleListColumnDefinitionsSelector } from '../listView/gridListViewSelectors';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -69,7 +69,7 @@ export const useGridScroll = (
       const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = props.unstable_listView
-        ? gridVisibleListColumnDefinitionsSelector(apiRef)
+        ? [gridListColumnSelector(apiRef.current.state)!]
         : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {

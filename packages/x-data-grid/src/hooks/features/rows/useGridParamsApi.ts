@@ -12,6 +12,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 export class MissingRowIdError extends Error {}
 
@@ -55,10 +56,11 @@ export function useGridParamsApi(
 
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
     (id, field) => {
-      const getColumnFn = props.unstable_listView
-        ? apiRef.current.unstable_getListColumn
-        : apiRef.current.getColumn;
-      const colDef = getColumnFn(field) as GridStateColDef;
+      const colDef = (
+        props.unstable_listView
+          ? gridListColumnSelector(apiRef.current.state)
+          : apiRef.current.getColumn(field)
+      ) as GridStateColDef;
       const row = apiRef.current.getRow(id);
       const rowNode = apiRef.current.getRowNode(id);
 

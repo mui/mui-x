@@ -32,10 +32,7 @@ import {
   getRightColumnIndex,
   findNonRowSpannedCell,
 } from './utils';
-import {
-  gridVisibleListColumnDefinitionsSelector,
-  gridVisibleListColumnFieldsSelector,
-} from '../listView/gridListViewSelectors';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -95,7 +92,7 @@ export const useGridKeyboardNavigation = (
         }
       }
       const field = listView
-        ? gridVisibleListColumnFieldsSelector(apiRef)[colIndex]
+        ? gridListColumnSelector(apiRef.current.state)!.field
         : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
       const nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, field, rowSpanScanDirection);
       // `scrollToIndexes` requires a rowIndex relative to all visible rows.
@@ -507,9 +504,7 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
-      const getColumnIndexFn = listView
-        ? apiRef.current.unstable_getListColumnIndex
-        : apiRef.current.getColumnIndex;
+      const getColumnIndexFn = listView ? () => 0 : apiRef.current.getColumnIndex;
       const colIndexBefore = (params as GridCellParams).field
         ? getColumnIndexFn((params as GridCellParams).field)
         : 0;
@@ -518,7 +513,7 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const visibleColumns = listView
-        ? gridVisibleListColumnDefinitionsSelector(apiRef)
+        ? [gridListColumnSelector(apiRef.current.state)]
         : gridVisibleColumnDefinitionsSelector(apiRef);
       const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
