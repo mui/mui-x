@@ -9,7 +9,7 @@ import {
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
-import { UsePickerParams, UsePickerProps } from '../usePicker';
+import { UsePickerParams } from '../usePicker';
 import {
   BaseSingleInputFieldProps,
   FieldSection,
@@ -87,7 +87,7 @@ export interface ExportedUseDesktopPickerSlotProps<
       unknown
     >,
     {},
-    UsePickerProps<TDate | null, TDate, any, any, any, any>
+    PickerOwnerState<TDate | null>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;

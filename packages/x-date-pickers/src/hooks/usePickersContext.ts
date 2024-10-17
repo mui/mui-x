@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
-import { PickersContext } from '../internals/components/PickersProvider';
+import { PickersContext, PickersContextValue } from '../internals/components/PickersProvider';
 
 /**
  * Returns the context passed by the picker that wraps the current component.
  */
-export const usePickersContext = () => {
-  const value = React.useContext(PickersContext);
+export const usePickersContext = <
+  // TODO v8: Replace with TIsRange when available
+  TValue = any,
+>() => {
+  const value = React.useContext(PickersContext) as PickersContextValue<TValue> | null;
   if (value == null) {
     throw new Error(
       [

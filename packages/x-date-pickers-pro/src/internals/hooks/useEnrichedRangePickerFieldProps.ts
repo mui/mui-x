@@ -11,6 +11,7 @@ import {
   FieldSelectedSections,
   FieldRef,
   PickerValidDate,
+  PickerOwnerState,
 } from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
@@ -22,7 +23,6 @@ import {
   onSpaceOrEnter,
   UsePickerResponse,
   WrapperVariant,
-  UsePickerProps,
   SlotComponentPropsFromProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
@@ -71,7 +71,7 @@ export interface RangePickerFieldSlotProps<
       unknown
     >,
     {},
-    UsePickerProps<DateRange<TDate>, TDate, any, any, any, any>
+    PickerOwnerState<DateRange<TDate>>
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;

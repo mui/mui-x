@@ -18,6 +18,7 @@ import {
   FieldRef,
   BaseSingleInputFieldProps,
   InferError,
+  PickerOwnerState,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { PickersProvider } from '../../components/PickersProvider';
@@ -133,7 +134,7 @@ export const useDesktopPicker = <
         InferError<TExternalProps>
       >
     >,
-    TExternalProps
+    PickerOwnerState<TDate | null>
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
@@ -156,7 +157,7 @@ export const useDesktopPicker = <
       focused: open ? true : undefined,
       ...(inputRef ? { inputRef } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
