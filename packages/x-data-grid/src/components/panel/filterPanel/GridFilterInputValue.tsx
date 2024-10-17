@@ -48,12 +48,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const newItem = { ...item, value, fromInput: id! };
+        const newItem = {
+          ...item,
+          value: type === 'number' ? Number(value) : value,
+          fromInput: id!,
+        };
         applyValue(newItem);
         setIsApplying(false);
       });
     },
-    [id, applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [filterTimeout, rootProps.filterDebounceMs, item, type, id, applyValue],
   );
 
   React.useEffect(() => {

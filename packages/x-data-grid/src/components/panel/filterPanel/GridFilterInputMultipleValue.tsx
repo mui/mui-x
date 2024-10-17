@@ -47,9 +47,17 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   >(
     (event, value) => {
       setFilterValueState(value.map(String));
-      applyValue({ ...item, value: [...value] });
+
+      applyValue({
+        ...item,
+        value: [
+          ...value.map((filterItemValue) =>
+            type === 'number' ? Number(filterItemValue) : filterItemValue,
+          ),
+        ],
+      });
     },
-    [applyValue, item],
+    [applyValue, item, type],
   );
 
   return (
