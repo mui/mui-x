@@ -37,7 +37,7 @@ export default function ConfigToggleButtons<T extends string>({
         onChange={handleValueSwitch}
       >
         {values.map(({ key, label, icon }) => (
-          <ToggleButton value={key} key={key}>
+          <ToggleButton value={key} key={key} aria-label={key}>
             {label || icon}
           </ToggleButton>
         ))}

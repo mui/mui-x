@@ -13,6 +13,7 @@ import {
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { Layout } from './themes/themes.types';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
@@ -55,29 +56,60 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-const CustomPickersLayoutRoot = styled(PickersLayoutRoot)({
-  overflow: 'auto',
-  [`.${pickersLayoutClasses.contentWrapper}`]: {
-    gridColumn: 1,
-    gridRow: 2,
-  },
-  [`.${pickersLayoutClasses.toolbar}`]: {
-    gridColumnStart: 1,
-    gridColumnEnd: 3,
-    gridRow: 1,
-  },
-  [`.${pickersLayoutClasses.actionBar}`]: {
-    gridColumnStart: 1,
-    gridColumnEnd: 3,
-    gridRow: 3,
-  },
-  [`.${pickersLayoutClasses.shortcuts}`]: {
-    gridColumn: 2,
-    gridRow: 2,
-  },
+const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
+  shouldForwardProp: (prop) => prop !== 'layout',
+})(({ ownerState }: any) => {
+  return {
+    overflow: 'auto',
+    // [`.${pickersLayoutClasses.contentWrapper}`]:
+    //   ownerState.layout === 'horizontal'
+    //     ? {
+    //         gridColumn: 1,
+    //         gridRow: 2,
+    //       }
+    //     : { gridColumn: 1, gridRow: 3 },
+    // [`.${pickersLayoutClasses.toolbar}`]:
+    //   ownerState.layout === 'horizontal'
+    //     ? {
+    //         gridColumnStart: 1,
+    //         gridColumnEnd: 3,
+    //         gridRow: 1,
+    //       }
+    //     : {
+    //         gridColumn: 1,
+    //         gridRow: 1,
+    //       },
+    // [`.${pickersLayoutClasses.actionBar}`]:
+    //   ownerState.layout === 'horizontal'
+    //     ? {
+    //         gridColumnStart: 1,
+    //         gridColumnEnd: 3,
+    //         gridRow: 3,
+    //       }
+    //     : { gridColumn: 1, gridRow: 4 },
+    // [`.${pickersLayoutClasses.shortcuts}`]:
+    //   ownerState.layout === 'horizontal'
+    //     ? {
+    //         gridColumn: 2,
+    //         gridRow: 2,
+    //       }
+    //     : {
+    //         gridColumn: 1,
+    //         gridRow: 2,
+    //         display: 'flex',
+    //         flexDirection: 'row',
+    //         maxWidth: '300px',
+    //         gap: '4px',
+    //       },
+  };
 });
 
-function CustomLayout(props: PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'>) {
+interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'> {
+  // eslint-disable-next-line react/no-unused-prop-types
+  layout: Layout;
+}
+
+function CustomLayout(props: CustomLayoutProps) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
 
   return (
@@ -92,18 +124,20 @@ function CustomLayout(props: PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'>)
     </CustomPickersLayoutRoot>
   );
 }
-export default function CustomLayoutPicker() {
+
+export default function CustomLayoutPicker({ layout }: { layout: Layout }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateRangePicker
         defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
         slots={{
-          layout: CustomLayout,
+          layout: CustomLayout as any,
         }}
         slotProps={{
           shortcuts: {
             items: shortcutsItems,
           },
+          layout: { layout } as CustomLayoutProps,
           actionBar: { actions: ['accept', 'clear', 'cancel'] },
         }}
       />

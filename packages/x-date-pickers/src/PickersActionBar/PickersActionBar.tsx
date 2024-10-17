@@ -25,7 +25,10 @@ const PickersActionBarRoot = styled(DialogActions, {
   name: 'MuiPickersLayout',
   slot: 'ActionBar',
   overridesResolver: (_, styles) => [styles.actionBar],
-})({});
+})({
+  gridColumn: '1 / 4',
+  gridRow: 3,
+});
 
 /**
  * Demos:

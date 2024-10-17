@@ -1,7 +1,6 @@
 import { alpha, ThemeOptions } from '@mui/material/styles';
 import { dateRangePickerDayClasses } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-
-type PaletteMode = 'light' | 'dark';
+import { Config, PaletteMode } from './themes.types';
 
 export const brand = {
   50: 'hsl(240, 82%, 97%)',
@@ -14,6 +13,30 @@ export const brand = {
   700: 'hsl(240, 78%, 43%)',
   800: 'hsl(240, 78%, 35%)',
   900: 'hsl(240, 78%, 20%)',
+};
+export const orange = {
+  50: 'hsl(20, 41%, 92%)',
+  100: 'hsl(20, 55%, 83%)',
+  200: 'hsl(20, 57%, 78%)',
+  300: 'hsl(20, 70%, 70%)',
+  400: 'hsl(20, 70%, 65%)',
+  500: 'hsl(20, 70%, 55%)',
+  600: 'hsl(20, 70%, 48%)',
+  700: 'hsl(20, 78%, 40%)',
+  800: 'hsl(20, 85%, 28%)',
+  900: 'hsl(20, 100%, 19%)',
+};
+export const green = {
+  50: 'hsl(168, 19%, 88%)',
+  100: 'hsl(168, 26%, 80%)',
+  200: 'hsl(168, 26%, 74%)',
+  300: 'hsl(168, 29%, 64%)',
+  400: 'hsl(168, 31%, 49%)',
+  500: 'hsl(168, 39%, 40%)',
+  600: 'hsl(168, 37%, 35%)',
+  700: 'hsl(168, 43%, 24%)',
+  800: 'hsl(168, 57%, 18%)',
+  900: 'hsl(168, 61%, 11%)',
 };
 
 export const gray = {
@@ -29,61 +52,70 @@ export const gray = {
   900: 'hsl(220, 30%, 5%)',
 };
 
-const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
-  palette: {
-    mode,
-    background: {
-      default: gray[50],
-      paper: '#FFFFFF',
-      ...(mode === 'dark' && {
-        default: gray[900],
-        paper: '#14181F',
-      }),
-    },
-    primary: {
-      light: brand[200],
-      main: brand[500],
-      dark: brand[700],
-      contrastText: '#fff',
-      ...(mode === 'dark' && {
-        contrastText: brand[50],
-        light: brand[300],
-        main: brand[400],
-        dark: brand[800],
-      }),
-    },
-    grey: gray,
-    divider: alpha(gray[300], 0.5),
-    ...(mode === 'dark' && {
-      divider: alpha(gray[700], 0.5),
-    }),
-    action: {
-      activatedOpacity: 0.2,
-      active: alpha(gray[500], 0.5),
-      disabled: alpha(gray[500], 0.2),
-      disabledBackground: alpha(gray[300], 0.12),
-      focus: alpha(gray[500], 0.12),
-      hover: alpha(gray[400], 0.08),
-      hoverOpacity: 0.08,
-      selected: alpha(gray[500], 0.16),
-      selectedOpacity: 0.16,
-    },
-  },
-  typography: {
-    fontFamily: ['"Inter", "sans-serif"'].join(','),
-    fontSize: 13,
-    button: {
-      textTransform: 'none',
-    },
-    overline: { textTransform: 'none', fontWeight: 600 },
-  },
-  shape: {
-    borderRadius: 4,
-  },
-});
+const getDesignTokens = (mode: PaletteMode, config: Config): ThemeOptions => {
+  let color = brand;
+  if (config.color === 'orange') {
+    color = orange;
+  } else if (config.color === 'green') {
+    color = green;
+  }
 
-export const getCustomTheme = (mode: PaletteMode): ThemeOptions => {
-  const tokens = getDesignTokens(mode);
+  return {
+    palette: {
+      mode,
+      background: {
+        default: gray[50],
+        paper: '#FFFFFF',
+        ...(mode === 'dark' && {
+          default: gray[900],
+          paper: '#14181F',
+        }),
+      },
+      primary: {
+        light: color[200],
+        main: color[500],
+        dark: color[700],
+        contrastText: '#fff',
+        ...(mode === 'dark' && {
+          contrastText: color[50],
+          light: color[300],
+          main: color[400],
+          dark: color[800],
+        }),
+      },
+      grey: gray,
+      divider: alpha(gray[300], 0.5),
+      ...(mode === 'dark' && {
+        divider: alpha(gray[700], 0.5),
+      }),
+      action: {
+        activatedOpacity: 0.2,
+        active: alpha(gray[500], 0.5),
+        disabled: alpha(gray[500], 0.2),
+        disabledBackground: alpha(gray[300], 0.12),
+        focus: alpha(gray[500], 0.12),
+        hover: alpha(gray[400], 0.08),
+        hoverOpacity: 0.08,
+        selected: alpha(gray[500], 0.16),
+        selectedOpacity: 0.16,
+      },
+    },
+    typography: {
+      fontFamily: ['"Inter", "sans-serif"'].join(','),
+      fontSize: 13,
+      button: {
+        textTransform: 'none',
+      },
+      overline: { textTransform: 'none', fontWeight: 600 },
+    },
+    shape: {
+      borderRadius: 4,
+    },
+  };
+};
+
+export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions => {
+  const tokens = getDesignTokens(mode, config);
 
   return {
     ...tokens,

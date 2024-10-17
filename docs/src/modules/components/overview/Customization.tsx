@@ -8,6 +8,9 @@ import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import SvgIcon from '@mui/material/SvgIcon';
+import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
+import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +18,29 @@ import CustomLayoutRangePicker from './CustomLayoutRangePicker';
 import { getMD3Theme } from './themes/md3';
 import { getCustomTheme } from './themes/customTheme';
 import ConfigToggleButtons from './ConfigToggleButtons';
+import { Config, Themes, TypographyType, Corner, Layout, PaletteMode } from './themes/themes.types';
+
+function RectangularCornersIcon() {
+  return (
+    <SvgIcon className="rectangular" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M15.6812 4.81884H2V2.5H18V18.5H15.6812V4.81884Z" />
+    </SvgIcon>
+  );
+}
+function MediumCornersIcon() {
+  return (
+    <SvgIcon className="medium" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M12.2029 4.31884H2V2H12.2029C15.4045 2 18 4.59545 18 7.7971V18H15.6812V7.7971C15.6812 5.87611 14.1239 4.31884 12.2029 4.31884Z" />
+    </SvgIcon>
+  );
+}
+function RoundedCornersIcon() {
+  return (
+    <SvgIcon className="rounded" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M15.6812 18C15.6812 10.4441 9.5559 4.31884 2 4.31884V2C10.8366 2 18 9.16344 18 18H15.6812Z" />
+    </SvgIcon>
+  );
+}
 
 const MD3Colors = {
   default: '#6750A4',
@@ -56,10 +82,6 @@ function ColorSwatch({ color }: { color: string }) {
   );
 }
 
-type Themes = 'default' | 'md3' | 'custom';
-
-type PaletteMode = 'light' | 'dark';
-
 function getDefaultTheme(mode: PaletteMode): ThemeOptions {
   return {
     palette: {
@@ -68,13 +90,13 @@ function getDefaultTheme(mode: PaletteMode): ThemeOptions {
   };
 }
 
-const getTheme = (mode: PaletteMode, selectedTheme: Themes): ThemeOptions => {
+const getTheme = (mode: PaletteMode, config: Config, selectedTheme: Themes): ThemeOptions => {
   if (selectedTheme === 'md3') {
     return createTheme(getMD3Theme(mode));
   }
 
   if (selectedTheme === 'custom') {
-    return createTheme(getCustomTheme(mode));
+    return createTheme(getCustomTheme(mode, config));
   }
 
   return createTheme(getDefaultTheme(mode));
@@ -83,12 +105,12 @@ const getTheme = (mode: PaletteMode, selectedTheme: Themes): ThemeOptions => {
 function CustomTheme({
   selectedTheme,
   mode = 'light',
+  config,
 }: {
   selectedTheme: Themes;
   mode: 'light' | 'dark';
+  config: Config;
 }) {
-  console.log(getTheme(mode, selectedTheme));
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -104,10 +126,10 @@ function CustomTheme({
         }}
       >
         <Box sx={{ order: { xs: 2, md: 1 } }}>
-          <ThemeProvider theme={getTheme(mode, selectedTheme)}>
+          <ThemeProvider theme={getTheme(mode, config, selectedTheme)}>
             {selectedTheme === 'custom' || selectedTheme === 'default' ? (
               <Card elevation={0} sx={{ padding: 0 }}>
-                <CustomLayoutRangePicker />
+                <CustomLayoutRangePicker layout={config.layout} />
               </Card>
             ) : (
               <Card elevation={0} sx={{ padding: 0 }}>
@@ -121,18 +143,44 @@ function CustomTheme({
   );
 }
 
+const initialState: Config = {
+  selectedTheme: 'custom',
+  color: 'default',
+  layout: 'horizontal',
+  density: 'medium',
+  corner: 'rounded',
+  typography: 'default',
+};
+
 export default function Customization() {
-  const [selectedTheme, setSelectedTheme] = React.useState<Themes>('custom');
-  const [selectedColor, setSelectedColor] = React.useState<string>('default');
+  const [styleConfig, setStyleConfig] = React.useState<Config>(initialState);
+
   const brandingTheme = useTheme();
 
-  const colorScheme = getColorScheme(selectedTheme);
+  const colorScheme = getColorScheme(styleConfig.selectedTheme);
 
   const handleChangeTheme = (_event: React.MouseEvent<HTMLElement>, newTheme: Themes) => {
-    setSelectedTheme(newTheme);
+    setStyleConfig((prev) => ({
+      ...prev,
+      selectedTheme: newTheme,
+      corner: newTheme === 'custom' ? 'medium' : 'rounded',
+    }));
   };
   const handleChangeColor = (_event: React.MouseEvent<HTMLElement>, newColor: string) => {
-    setSelectedColor(newColor);
+    setStyleConfig((prev) => ({ ...prev, color: newColor }));
+  };
+  const handleChangeLayout = (_event: React.MouseEvent<HTMLElement>, newLayout: Layout) => {
+    setStyleConfig((prev) => ({ ...prev, layout: newLayout }));
+  };
+  const handleChangeCorner = (_event: React.MouseEvent<HTMLElement>, newCorner: Corner) => {
+    setStyleConfig((prev) => ({ ...prev, corner: newCorner }));
+  };
+
+  const handleChangeTypography = (
+    _event: React.MouseEvent<HTMLElement>,
+    newTypography: TypographyType,
+  ) => {
+    setStyleConfig((prev) => ({ ...prev, typography: newTypography }));
   };
 
   return (
@@ -174,7 +222,11 @@ export default function Customization() {
               })}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <CustomTheme selectedTheme={selectedTheme} mode={brandingTheme.palette.mode} />
+                <CustomTheme
+                  selectedTheme={styleConfig.selectedTheme}
+                  config={styleConfig}
+                  mode={brandingTheme.palette.mode}
+                />
               </LocalizationProvider>
             </Box>
             <Box
@@ -198,7 +250,7 @@ export default function Customization() {
                   Select Theme
                 </Typography>
                 <ConfigToggleButtons
-                  selectedValue={selectedTheme}
+                  selectedValue={styleConfig.selectedTheme}
                   handleValueSwitch={handleChangeTheme}
                   values={[
                     { key: 'custom', label: 'Custom' },
@@ -212,12 +264,80 @@ export default function Customization() {
                   Color
                 </Typography>
                 <ConfigToggleButtons
-                  selectedValue={selectedColor}
+                  selectedValue={styleConfig.color}
                   handleValueSwitch={handleChangeColor}
                   values={Object.keys(colorScheme).map((key) => ({
                     key,
                     icon: <ColorSwatch color={colorScheme[key as keyof typeof colorScheme]} />,
                   }))}
+                />
+              </Stack>
+              {styleConfig.selectedTheme !== 'md3' && (
+                <Stack spacing={1}>
+                  <Typography variant="caption" color="text.secondary" gutterBottom>
+                    Layout
+                  </Typography>
+                  <ConfigToggleButtons
+                    selectedValue={styleConfig.layout}
+                    handleValueSwitch={handleChangeLayout}
+                    values={[
+                      {
+                        key: 'horizontal',
+                        icon: <AlignHorizontalLeftIcon />,
+                      },
+                      {
+                        key: 'vertical',
+                        icon: <AlignVerticalBottomIcon />,
+                      },
+                    ]}
+                  />
+                </Stack>
+              )}
+
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary" gutterBottom>
+                  Corners
+                </Typography>
+                <ConfigToggleButtons
+                  selectedValue={styleConfig.corner}
+                  handleValueSwitch={handleChangeCorner}
+                  values={[
+                    {
+                      key: 'rectangular',
+                      icon: <RectangularCornersIcon />,
+                    },
+                    {
+                      key: 'medium',
+                      icon: <MediumCornersIcon />,
+                    },
+                    {
+                      key: 'rounded',
+                      icon: <RoundedCornersIcon />,
+                    },
+                  ]}
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary" gutterBottom>
+                  Typography
+                </Typography>
+                <ConfigToggleButtons
+                  selectedValue={styleConfig.typography}
+                  handleValueSwitch={handleChangeTypography}
+                  values={[
+                    {
+                      key: 'default',
+                      label: 'Default',
+                    },
+                    {
+                      key: 'inter',
+                      label: 'Inter',
+                    },
+                    {
+                      key: 'menlo',
+                      label: 'Menlo',
+                    },
+                  ]}
                 />
               </Stack>
             </Box>
