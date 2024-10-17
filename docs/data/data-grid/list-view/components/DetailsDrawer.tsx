@@ -138,14 +138,12 @@ function DrawerContent(
 }
 
 export function DetailsDrawer(props: DetailsDrawerProps) {
-  const { params, listView, onDescriptionChange, onClose, container, ...other } =
-    props;
+  const { params, listView, onDescriptionChange, onClose, ...other } = props;
   return (
     <Drawer
       anchor={listView ? 'bottom' : 'right'}
-      onClose={onClose}
       width={360}
-      container={container}
+      onClose={onClose}
       {...other}
     >
       {params && (

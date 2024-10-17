@@ -5,7 +5,17 @@ import Typography from '@mui/material/Typography';
 export function Card(props) {
   const { children, ...other } = props;
   return (
-    <Stack direction="row" gap={2} alignItems="center" height="100%" {...other}>
+    <Stack
+      direction="row"
+      gap={2}
+      sx={{
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        ...(other.sx || {}),
+      }}
+      {...other}
+    >
       {children}
     </Stack>
   );
@@ -26,7 +36,7 @@ export function CardMedia(props) {
 export function CardContent(props) {
   const { children, ...other } = props;
   return (
-    <Stack gap={0.25} {...other}>
+    <Stack gap={0.25} sx={{ flexGrow: 1, ...(other.sx || {}) }} {...other}>
       {children}
     </Stack>
   );

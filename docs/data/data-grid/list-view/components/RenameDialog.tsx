@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRowParams } from '@mui/x-data-grid-premium';
+import { GridRowId, GridRowParams } from '@mui/x-data-grid-premium';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,15 +9,15 @@ import TextField from '@mui/material/TextField';
 import { RowModel } from '../types';
 
 export interface RenameDialogProps {
-  params: GridRowParams<RowModel>;
+  params: Pick<GridRowParams<RowModel>, 'row'> | null;
   open: boolean;
   container?: () => HTMLElement;
-  onSaveRename: (value: string) => void;
+  onSave: (id: GridRowId, value: string) => void;
   onClose: () => void;
 }
 
 export function RenameDialog(props: RenameDialogProps) {
-  const { params, open, container, onSaveRename, onClose } = props;
+  const { params, open, container, onSave, onClose } = props;
 
   const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -25,7 +25,7 @@ export function RenameDialog(props: RenameDialogProps) {
     const formData = new FormData(event.currentTarget);
     const value = formData.get('name') as string;
 
-    onSaveRename(value);
+    onSave(params!.row.id, value);
 
     onClose();
   };
@@ -41,23 +41,27 @@ export function RenameDialog(props: RenameDialogProps) {
         onSubmit: handleSave,
       }}
     >
-      <DialogTitle id="rename-dialog-title">Rename file</DialogTitle>
-      <DialogContent>
-        <TextField
-          name="name"
-          defaultValue={params.row.name}
-          sx={{ width: 260 }}
-          fullWidth
-          required
-          autoFocus
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button type="button" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button type="submit">Save</Button>
-      </DialogActions>
+      {params && (
+        <React.Fragment>
+          <DialogTitle id="rename-dialog-title">Rename file</DialogTitle>
+          <DialogContent>
+            <TextField
+              name="name"
+              defaultValue={params.row.name}
+              sx={{ width: 260 }}
+              fullWidth
+              required
+              autoFocus
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </DialogActions>
+        </React.Fragment>
+      )}
     </Dialog>
   );
 }

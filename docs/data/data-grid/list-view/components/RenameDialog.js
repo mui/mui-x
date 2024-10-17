@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 export function RenameDialog(props) {
-  const { params, open, container, onSaveRename, onClose } = props;
+  const { params, open, container, onSave, onClose } = props;
 
   const handleSave = (event) => {
     event.preventDefault();
@@ -16,7 +16,7 @@ export function RenameDialog(props) {
     const formData = new FormData(event.currentTarget);
     const value = formData.get('name');
 
-    onSaveRename(value);
+    onSave(params.row.id, value);
 
     onClose();
   };
@@ -32,23 +32,27 @@ export function RenameDialog(props) {
         onSubmit: handleSave,
       }}
     >
-      <DialogTitle id="rename-dialog-title">Rename file</DialogTitle>
-      <DialogContent>
-        <TextField
-          name="name"
-          defaultValue={params.row.name}
-          sx={{ width: 260 }}
-          fullWidth
-          required
-          autoFocus
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button type="button" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button type="submit">Save</Button>
-      </DialogActions>
+      {params && (
+        <React.Fragment>
+          <DialogTitle id="rename-dialog-title">Rename file</DialogTitle>
+          <DialogContent>
+            <TextField
+              name="name"
+              defaultValue={params.row.name}
+              sx={{ width: 260 }}
+              fullWidth
+              required
+              autoFocus
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Save</Button>
+          </DialogActions>
+        </React.Fragment>
+      )}
     </Dialog>
   );
 }

@@ -5,7 +5,9 @@ import {
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import GridMoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Card,
   CardContent,
@@ -53,7 +55,8 @@ function Thumbnail(props) {
   );
 }
 
-export function ListCell(params) {
+export function ListCell(props) {
+  const { onOpenActions, ...params } = props;
   const apiRef = useGridApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const columnVisibilityModel = useGridSelector(
@@ -91,6 +94,14 @@ export function ListCell(params) {
           </CardDetail>
         )}
       </CardContent>
+
+      <IconButton
+        aria-label="More options"
+        onClick={onOpenActions}
+        sx={{ mr: -0.75 }}
+      >
+        <GridMoreVertIcon fontSize="small" />
+      </IconButton>
     </Card>
   );
 }

@@ -10,6 +10,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import MessageIcon from '@mui/icons-material/Message';
 
+function MessageAction(params) {
+  const handleMessage = () => {
+    console.log(`send message to ${params.row.phone}`);
+  };
+  return (
+    <IconButton aria-label="Message" onClick={handleMessage}>
+      <MessageIcon />
+    </IconButton>
+  );
+}
+
 function ListViewCell(params) {
   return (
     <Stack
@@ -21,7 +32,7 @@ function ListViewCell(params) {
       }}
     >
       <Avatar sx={{ width: 32, height: 32, backgroundColor: params.row.avatar }} />
-      <Stack>
+      <Stack sx={{ flexGrow: 1 }}>
         <Typography variant="body2" fontWeight={500}>
           {params.row.name}
         </Typography>
@@ -29,6 +40,7 @@ function ListViewCell(params) {
           {params.row.position}
         </Typography>
       </Stack>
+      <MessageAction {...params} />
     </Stack>
   );
 }
@@ -56,11 +68,7 @@ export default function ListView() {
         type: 'actions',
         field: 'actions',
         width: 75,
-        getActions: () => [
-          <IconButton aria-label="Message">
-            <MessageIcon />
-          </IconButton>,
-        ],
+        getActions: (params) => [<MessageAction {...params} />],
       },
     ];
   }, [data.columns]);

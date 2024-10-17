@@ -7,7 +7,9 @@ import {
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-premium';
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import GridMoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Card,
   CardContent,
@@ -19,6 +21,10 @@ import {
 import { FileIcon } from './FileIcon';
 import { formatDate, formatSize } from '../utils';
 import { RowModel } from '../types';
+
+interface ListCellProps extends GridRenderCellParams<RowModel> {
+  onOpenActions: () => void;
+}
 
 const ICON_SIZE_BY_DENSITY: Record<GridDensity, number> = {
   compact: 24,
@@ -56,7 +62,8 @@ function Thumbnail(props: { fileIcon: React.ReactNode }) {
   );
 }
 
-export function ListCell(params: GridRenderCellParams<RowModel>) {
+export function ListCell(props: ListCellProps) {
+  const { onOpenActions, ...params } = props;
   const apiRef = useGridApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const columnVisibilityModel = useGridSelector(
@@ -94,6 +101,14 @@ export function ListCell(params: GridRenderCellParams<RowModel>) {
           </CardDetail>
         )}
       </CardContent>
+
+      <IconButton
+        aria-label="More options"
+        onClick={onOpenActions}
+        sx={{ mr: -0.75 }}
+      >
+        <GridMoreVertIcon fontSize="small" />
+      </IconButton>
     </Card>
   );
 }

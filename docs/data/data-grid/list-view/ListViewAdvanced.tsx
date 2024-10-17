@@ -18,7 +18,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
 import { FileIcon } from './components/FileIcon';
-import { ActionDrawer } from './components/ActionDrawer';
 import { DetailsDrawer } from './components/DetailsDrawer';
 import { ListCell } from './components/ListCell';
 import { Toolbar } from './components/Toolbar';
@@ -26,11 +25,8 @@ import { INITIAL_ROWS } from './data';
 import { FILE_TYPES } from './constants';
 import { RowModel, FileType } from './types';
 import { formatDate, formatSize, stringAvatar } from './utils';
-
-const listColDef: GridColDef = {
-  field: 'listCell',
-  renderCell: ListCell,
-};
+import { ActionDrawer } from './components/ActionDrawer';
+import { RenameDialog } from './components/RenameDialog';
 
 export default function ListViewAdvanced() {
   // This is used only for the example - renders the drawer inside the container
@@ -45,13 +41,17 @@ export default function ListViewAdvanced() {
 
   const [loading, setLoading] = React.useState(false);
 
-  const [detailsState, setDetailsState] = React.useState<{
-    open: boolean;
+  const [overlayState, setOverlayState] = React.useState<{
+    overlay: 'actions' | 'details' | 'rename' | null;
     params: Pick<GridRowParams<RowModel>, 'row'> | null;
   }>({
-    open: false,
+    overlay: null,
     params: null,
   });
+
+  const handleCloseOverlay = () => {
+    setOverlayState({ overlay: null, params: null });
+  };
 
   const handleDelete = React.useCallback((ids: GridRowId[]) => {
     setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
@@ -116,7 +116,7 @@ export default function ListViewAdvanced() {
         setRows((prevRows) =>
           prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
         );
-        setDetailsState({ open: true, params: { row } });
+        setOverlayState({ overlay: 'actions', params: { row } });
         setLoading(false);
       }, timeout);
     },
@@ -192,49 +192,51 @@ export default function ListViewAdvanced() {
         field: 'actions',
         resizable: false,
         width: 50,
-        getActions: (params) =>
-          isListView
-            ? [
-                <ActionDrawer
-                  params={params}
-                  container={container}
-                  onSaveRename={(value) => handleUpdate(params.id, 'name', value)}
-                  onDelete={() => handleDelete([params.id])}
-                  onOpen={() => {
-                    setDetailsState({ open: true, params });
-                  }}
-                />,
-              ]
-            : [
-                <GridActionsCellItem
-                  label="Preview"
-                  icon={<OpenIcon fontSize="small" />}
-                  onClick={() => {
-                    setDetailsState({ open: true, params });
-                  }}
-                  showInMenu
-                />,
-                <GridActionsCellItem
-                  label="Rename"
-                  icon={<EditIcon fontSize="small" />}
-                  onClick={() =>
-                    apiRef.current?.startCellEditMode({
-                      id: params.id,
-                      field: 'name',
-                    })
-                  }
-                  showInMenu
-                />,
-                <GridActionsCellItem
-                  label="Delete"
-                  icon={<DeleteIcon fontSize="small" />}
-                  onClick={() => handleDelete([params.id])}
-                  showInMenu
-                />,
-              ],
+        getActions: (params) => [
+          <GridActionsCellItem
+            label="Preview"
+            icon={<OpenIcon fontSize="small" />}
+            onClick={() => {
+              setOverlayState({ overlay: 'actions', params });
+            }}
+            showInMenu
+          />,
+          <GridActionsCellItem
+            label="Rename"
+            icon={<EditIcon fontSize="small" />}
+            onClick={() =>
+              apiRef.current?.startCellEditMode({
+                id: params.id,
+                field: 'name',
+              })
+            }
+            showInMenu
+          />,
+          <GridActionsCellItem
+            label="Delete"
+            icon={<DeleteIcon fontSize="small" />}
+            onClick={() => handleDelete([params.id])}
+            showInMenu
+          />,
+        ],
       },
     ],
-    [isListView, handleDelete, handleUpdate, apiRef],
+    [handleDelete, apiRef],
+  );
+
+  const listColDef: GridColDef = React.useMemo(
+    () => ({
+      field: 'listCell',
+      renderCell: (params) => (
+        <ListCell
+          {...params}
+          onOpenActions={() => {
+            setOverlayState({ overlay: 'actions', params });
+          }}
+        />
+      ),
+    }),
+    [],
   );
 
   const getEstimatedRowHeight = () => {
@@ -328,18 +330,44 @@ export default function ListViewAdvanced() {
           }}
           getRowHeight={getRowHeight}
           getEstimatedRowHeight={getEstimatedRowHeight}
-          onRowDoubleClick={(params) => {
-            setDetailsState({ open: true, params });
-          }}
+          onRowDoubleClick={(params) =>
+            setOverlayState({ overlay: 'actions', params })
+          }
           hideFooterSelectedRowCount
         />
 
         <DetailsDrawer
-          {...detailsState}
+          open={overlayState.overlay === 'details'}
+          params={overlayState.params}
           listView={isListView}
           container={container}
           onDescriptionChange={(id, value) => handleUpdate(id, 'description', value)}
-          onClose={() => setDetailsState({ open: false, params: null })}
+          onClose={handleCloseOverlay}
+        />
+
+        <ActionDrawer
+          open={overlayState.overlay === 'actions'}
+          params={overlayState.params}
+          container={container}
+          onPreview={() =>
+            setOverlayState({ overlay: 'details', params: overlayState.params })
+          }
+          onRename={() =>
+            setOverlayState({ overlay: 'rename', params: overlayState.params })
+          }
+          onDelete={(id) => {
+            handleDelete([id]);
+            handleCloseOverlay();
+          }}
+          onClose={handleCloseOverlay}
+        />
+
+        <RenameDialog
+          open={overlayState.overlay === 'rename'}
+          params={overlayState.params}
+          container={container}
+          onSave={(id, value) => handleUpdate(id, 'name', value)}
+          onClose={handleCloseOverlay}
         />
       </div>
     </React.Fragment>
