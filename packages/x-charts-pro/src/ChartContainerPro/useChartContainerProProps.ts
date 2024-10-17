@@ -18,6 +18,7 @@ export const useChartContainerProProps = (
     highlightedProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
     xAxis,
     yAxis,
   } = useChartContainerProps(baseProps, ref);
@@ -39,5 +40,6 @@ export const useChartContainerProProps = (
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    animationProviderProps,
   };
 };

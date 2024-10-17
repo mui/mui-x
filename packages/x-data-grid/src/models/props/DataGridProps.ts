@@ -44,7 +44,7 @@ export interface GridExperimentalFeatures {
 }
 
 /**
- * The props users can give to the `DataGrid` component.
+ * The props users can give to the Data Grid component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues<R>> &
@@ -56,7 +56,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 };
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
+ * The props of the Data Grid component after the pre-processing phase that the user should not be able to override.
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
@@ -71,7 +71,7 @@ export type DataGridForcedPropsKey =
   | 'signature';
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
   slots: GridSlotsComponent;
@@ -79,7 +79,7 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
@@ -94,7 +94,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value overridable through props
+ * The Data Grid options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
@@ -377,8 +377,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
-  rowPositionsDebounceMs: number;
+  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
@@ -397,7 +398,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
 }
 
 /**
- * The `DataGrid` props with no default value.
+ * The Data Grid props with no default value.
  */
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
@@ -543,6 +544,12 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderClick?: GridEventListener<'columnHeaderClick'>;
+  /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu?: GridEventListener<'columnHeaderContextMenu'>;
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -836,12 +843,12 @@ export interface DataGridProSharedPropsWithDefaultValue {
   headerFilters: boolean;
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
-   * - Selecting a parent will auto-select all its filtered descendants.
-   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
    *
-   * When `rowSelectionPropagation.parents=true`
-   * - Selecting all descendants of a parent would auto-select it.
-   * - Deselecting a descendant of a selected parent would deselect the parent.
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
    * @default { parents: false, descendants: false }
@@ -866,7 +873,7 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
 }
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase.
+ * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,

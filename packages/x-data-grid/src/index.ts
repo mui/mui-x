@@ -9,6 +9,7 @@ export * from './DataGrid';
 
 export * from './components';
 export * from './constants';
+export * from './constants/dataGridPropsDefaultValues';
 export * from './hooks';
 export * from './models';
 export * from './context';
@@ -39,11 +40,11 @@ export {
 export type GridApi = GridApiCommunity;
 
 /**
- * The state of `DataGrid`.
+ * The state of Data Grid.
  */
 export type GridState = GridStateCommunity;
 
 /**
- * The initial state of `DataGrid`.
+ * The initial state of Data Grid.
  */
 export type GridInitialState = GridInitialStateCommunity;

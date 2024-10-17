@@ -78,7 +78,7 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading?: () => React.ReactNode;
   /**

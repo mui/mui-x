@@ -4,7 +4,7 @@
 
 ## Single row selection
 
-Single row selection comes enabled by default for the MIT `DataGrid` component.
+Single row selection comes enabled by default for the MIT Data Grid component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
 To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and click on it.
 
@@ -12,7 +12,7 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</k
 
 ## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-On the `DataGridPro` and `DataGridPremium` components, you can select multiple rows in two ways:
+On the Data Grid Pro and Data Grid Premium components, you can select multiple rows in two ways:
 
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
@@ -51,7 +51,7 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ### Custom checkbox column
 
-If you provide a custom checkbox column to the data grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the data grid will not add its own.
+If you provide a custom checkbox column to the Data Grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the Data Grid will not add its own.
 
 We strongly recommend to use the `GRID_CHECKBOX_SELECTION_COL_DEF` variable instead of re-defining all the custom properties yourself.
 
@@ -61,7 +61,7 @@ In the following demo, the checkbox column has been moved to the right and its w
 
 :::warning
 Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
-Otherwise, the data grid might remove your column.
+Otherwise, the Data Grid might remove your column.
 :::
 
 ### Customize indeterminate checkbox behavior
@@ -73,7 +73,7 @@ You can customize this behavior by using the [`indeterminateCheckboxAction` prop
 
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-By default, when you click the "Select All" checkbox, all rows in the data grid are selected.
+By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.
 If you want to change this behavior and only select the rows that are currently visible on the page, you can use the `checkboxSelectionVisibleOnly` prop.
 
 {{"demo": "CheckboxSelectionVisibleOnlyGrid.js", "bg": "inline"}}
@@ -81,8 +81,8 @@ If you want to change this behavior and only select the rows that are currently 
 ## Usage with server-side pagination
 
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
-This happens because the data grid cross-checks with the `rows` prop and only calls `onRowSelectionModelChange` with existing row IDs.
-Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the data grid will call `onRowSelectionModelChange` with an empty value.
+This happens because the Data Grid cross-checks with the `rows` prop and only calls `onRowSelectionModelChange` with existing row IDs.
+Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the Data Grid will call `onRowSelectionModelChange` with an empty value.
 To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows selected even if they do not exist.
 
 ```tsx

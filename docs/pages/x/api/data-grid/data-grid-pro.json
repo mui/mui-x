@@ -262,6 +262,13 @@
         "describedArgs": ["params", "event", "details"]
       }
     },
+    "onColumnHeaderContextMenu": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      }
+    },
     "onColumnHeaderDoubleClick": {
       "type": { "name": "func" },
       "signature": {
@@ -516,7 +523,11 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
+    "rowPositionsDebounceMs": {
+      "type": { "name": "number" },
+      "default": "166",
+      "deprecated": true
+    },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
