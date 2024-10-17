@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.20.1
+
+_Oct 17, 2024_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 `dataset` prop support for `ScatterChart` component
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@arminmeh, @k-rajat19, @kalyan90, @romgrk, @rotembarsela, @wangkailang.
+Following are all team members who have contributed to this release:
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.20.1`
+
+- [DataGrid] Fix `onRowSelectionModelChange` firing unnecessarily on initial render (#14909) @MBilalShafi
+- [DataGrid] Fix `onRowSelectionModelChange` not being called after row is removed (#14972) @arminmeh
+- [DataGrid] Fix pagination scrollbar issue on small zoom (#14911) @cherniavskii
+- [DataGrid] Fix scroll jumping (#14929) @romgrk
+
+#### `@mui/x-data-grid-pro@7.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.20.1`, plus:
+
+- [DataGridPro] Fix indeterminate checkbox state for server-side data (#14956) @MBilalShafi
+- [DataGridPro] Fix scrolling performance when `rowHeight={undefined}` (#14983) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.20.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.20.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.20.1`
+
+- [pickers] Cleanup `PageUp` and `PageDown` event handlers on time components (#14928) @arthurbalduini
+- [pickers] Create the new picker's `ownerState` object (#14889) @flaviendelangle
+- [pickers] Fix `PickerValidDate` usage in `DateRangePickerToolbar` (#14925) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.20.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.20.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.20.1`
+
+- [charts] Allow `dataset` to be used with `ScatterChart` (#14915) @JCQuintas
+- [charts] Ensure `reduce motion` preference disables animation on page load (#14417) @JCQuintas
+
+#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.20.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.20.1`
+
+- [TreeView] Fix `alpha` usage with CSS variables (#14969) @wangkailang
+- [TreeView] Fix usage of the `aria-selected` attribute (#14991) @flaviendelangle
+
+### `@mui/x-codemod@7.20.1`
+
+- [codemod] Add a new utility to rename imports (#14919) @flaviendelangle
+
+### Docs
+
+- [docs] Add recipe showing how to toggle detail panels on row click (#14666) @k-rajat19
+- [docs] Fix broken link to the validation section in the Data grid component (#14973) @arminmeh
+- [docs] Update v5 migration codesandbox @oliviertassinari
+
+### Core
+
+- [core] Fix shortcut with localization keyboard (#14220) @rotembarsela
+- [core] Fix docs deploy command (#14920) @arminmeh
+- [code-infra] Prepare some tests to work in `vitest/playwright` (#14926) @JCQuintas
+- [Data grid] Fix excessive white space at the end of grid (#14864) @kalyan90
+- [test] Fix `AdapterDayjs` coverage calculation (#14957) @LukasTy
+- [test] Fix split infinitive API convention use @oliviertassinari
+
 ## 7.20.0
 
 _Oct 11, 2024_
