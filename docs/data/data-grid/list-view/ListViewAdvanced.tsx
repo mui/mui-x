@@ -9,14 +9,13 @@ import {
   gridClasses,
   GridRowModel,
 } from '@mui/x-data-grid-premium';
-import Box from '@mui/material/Box';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import OpenIcon from '@mui/icons-material/Visibility';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
 import { FileIcon } from './components/FileIcon';
 import { ActionDrawer } from './components/ActionDrawer';
@@ -38,7 +37,7 @@ export default function ListViewAdvanced() {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const container = () => containerRef.current as HTMLElement;
 
-  const [isListView, setIsListView] = React.useState(true);
+  const isListView = useMediaQuery('(min-width: 700px)');
 
   const apiRef = useGridApiRef();
 
@@ -272,29 +271,9 @@ export default function ListViewAdvanced() {
   );
 
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden' }}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isListView}
-            onChange={(event) => setIsListView(event.target.checked)}
-          />
-        }
-        label="Enable list view"
-      />
-      <Box
-        ref={containerRef}
-        sx={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: isListView ? 360 : undefined,
-          height: 600,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
-          margin: '0 auto',
-        }}
-      >
+    <React.Fragment>
+      <CSSBaseline />
+      <div ref={containerRef}>
         <DataGridPremium
           apiRef={apiRef}
           rows={rows}
@@ -362,7 +341,7 @@ export default function ListViewAdvanced() {
           onDescriptionChange={(id, value) => handleUpdate(id, 'description', value)}
           onClose={() => setDetailsState({ open: false, params: null })}
         />
-      </Box>
-    </Box>
+      </div>
+    </React.Fragment>
   );
 }

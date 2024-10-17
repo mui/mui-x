@@ -40,18 +40,6 @@ export function RenameDialog(props: RenameDialogProps) {
         component: 'form',
         onSubmit: handleSave,
       }}
-      slotProps={{
-        root: {
-          style: {
-            position: 'absolute',
-          },
-        },
-        backdrop: {
-          sx: {
-            position: 'absolute',
-          },
-        },
-      }}
     >
       <DialogTitle id="rename-dialog-title">Rename file</DialogTitle>
       <DialogContent>

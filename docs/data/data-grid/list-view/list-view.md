@@ -22,7 +22,7 @@ This feature is under development and is marked as **unstable**. While you can u
 
 The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens.
 
-{{"demo": "ListViewAdvanced.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "ListViewAdvanced.js", "bg": "inline", "iframe": true, "maxWidth": 360, "height": 600, "hideToolbar": true}}
 
 :::info
 See the code for this demo in [CodeSandbox](https://codesandbox.io/p/sandbox/x-react-data-grid-list-view-zmkzhz).

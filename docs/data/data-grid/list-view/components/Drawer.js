@@ -72,21 +72,10 @@ export function Drawer(props) {
       container={container}
       PaperProps={{
         sx: {
-          position: 'absolute',
           boxSizing: 'border-box',
           ...(isBottomDrawer
             ? { pb: 1, maxHeight: 'calc(100% - 100px)' }
             : { width }),
-        },
-      }}
-      ModalProps={{
-        sx: { position: 'absolute' },
-      }}
-      slotProps={{
-        backdrop: {
-          sx: {
-            position: 'absolute',
-          },
         },
       }}
       disableSwipeToOpen
