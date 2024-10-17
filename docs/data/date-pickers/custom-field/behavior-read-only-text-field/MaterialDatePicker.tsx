@@ -62,7 +62,7 @@ function ReadOnlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
   );
 }
 
-export default function ReadOnlyMaterialTextField() {
+export default function MaterialDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ReadOnlyFieldDatePicker />
