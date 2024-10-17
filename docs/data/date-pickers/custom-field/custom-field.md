@@ -151,28 +151,28 @@ Learn more about the accessible DOM structure and its difference compared to the
 
 ## Usage with another UI
 
-### Using an `Autocomplete`
+### Using an Autocomplete
 
 If your user can only select a value in a small list of available dates,
-you can replace the field with an `Autocomplete` listing those dates:
+you can replace the field with the `<Autocomplete />` from `@mui/material` to those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
-### Using a read-only `TextField`
+### Using a read-only Text Field
 
 If you want users to select a value exclusively through the views
-but you still want the UI to look like a `TextField`, you can replace the field with a read-only `TextField`:
+but you still want the UI to look like a TextField, you can replace the field with a read-only `<TextField />` from `@mui/material`:
 
 {{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
-### Using a `Button`
+### Using a Button
 
 If you want users to select a value exclusively through the views
-and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
+and you don't want the UI to look like a Text Field, you can replace the field with a `<Button />` from `@mui/material`:
 
 {{"demo": "behavior-button/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
-The same can be applied to the `DateRangePicker`:
+The same logic can be applied to any range picker:
 
 {{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
 
