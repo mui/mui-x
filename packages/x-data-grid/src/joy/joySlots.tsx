@@ -71,14 +71,13 @@ function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard'
   }[variant] || defaultVariant) as VariantProp;
 }
 
-const Badge = React.forwardRef<HTMLSpanElement, NonNullable<GridSlotsComponentsProps['baseBadge']>>(
+const Badge = React.forwardRef<HTMLElement, NonNullable<GridSlotsComponentsProps['baseBadge']>>(
   ({ component, slotProps, variant, color, sx, ...props }, ref) => {
     return (
       <JoyBadge
         {...props}
         color={convertColor(color)}
         variant="plain"
-        component="div"
         sx={sx as SxProps<Theme>}
         ref={ref as any}
       />
