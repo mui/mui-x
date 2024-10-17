@@ -26,7 +26,7 @@ export interface DesktopDateRangePickerSlotProps<
 
 export interface DesktopDateRangePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateRangePickerProps<TDate>,
     DesktopRangeOnlyPickerProps {
   /**

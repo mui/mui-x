@@ -48,7 +48,7 @@ export type UseTimeFieldComponentProps<
 
 export type TimeFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = UseTimeFieldComponentProps<
   TDate,
   TEnableAccessibleFieldDOMStructure,
