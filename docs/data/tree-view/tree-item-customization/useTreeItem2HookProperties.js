@@ -29,11 +29,12 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getLabelInputProps,
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
+    getContextProviderProps,
     status,
   } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider {...getContextProviderProps()}>
       <TreeItem2Root {...getRootProps()}>
         <TreeItem2Content {...getContentProps()}>
           <TreeItem2IconContainer {...getIconContainerProps()}>
