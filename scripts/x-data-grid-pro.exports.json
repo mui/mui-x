@@ -1,7 +1,9 @@
 [
+  { "name": "BaseBadgePropsOverrides", "kind": "Interface" },
   { "name": "BaseButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseCheckboxPropsOverrides", "kind": "Interface" },
   { "name": "BaseChipPropsOverrides", "kind": "Interface" },
+  { "name": "BaseDividerPropsOverrides", "kind": "Interface" },
   { "name": "BaseFormControlPropsOverrides", "kind": "Interface" },
   { "name": "BaseIconButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseInputAdornmentPropsOverrides", "kind": "Interface" },

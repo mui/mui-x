@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
 import {
   GridToolbarContainer,
   GridToolbarContainerProps,
@@ -61,7 +60,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
           // TODO: remove the reference to excelOptions in community package
           excelOptions={excelOptions}
         />
-        <Box sx={{ flex: 1 }} />
+        <div style={{ flex: 1 }} />
         {showQuickFilter && <GridToolbarQuickFilter {...quickFilterProps} />}
       </GridToolbarContainer>
     );

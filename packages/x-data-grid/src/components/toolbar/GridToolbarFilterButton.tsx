@@ -6,7 +6,6 @@ import {
   unstable_capitalize as capitalize,
   unstable_useId as useId,
 } from '@mui/utils';
-import Badge from '@mui/material/Badge';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
@@ -144,9 +143,9 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           aria-expanded={isOpen}
           aria-haspopup
           startIcon={
-            <Badge badgeContent={activeFilters.length} color="primary">
+            <rootProps.slots.baseBadge badgeContent={activeFilters.length} color="primary">
               <rootProps.slots.openFilterButtonIcon />
-            </Badge>
+            </rootProps.slots.baseBadge>
           }
           {...buttonProps}
           onClick={toggleFilter}

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import Badge from '@mui/material/Badge';
 import { useGridSelector } from '../../hooks';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -97,9 +96,9 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
     >
       <GridIconButtonContainer>
         {counter > 1 && (
-          <Badge badgeContent={counter} color="default">
+          <rootProps.slots.baseBadge badgeContent={counter} color="default">
             {iconButton}
-          </Badge>
+          </rootProps.slots.baseBadge>
         )}
 
         {counter === 1 && iconButton}

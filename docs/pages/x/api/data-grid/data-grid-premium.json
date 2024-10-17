@@ -797,9 +797,21 @@
       "class": "MuiDataGridPremium-row"
     },
     {
+      "name": "baseBadge",
+      "description": "The custom Badge component used in the grid for both header and cells.",
+      "default": "Badge",
+      "class": null
+    },
+    {
       "name": "baseCheckbox",
       "description": "The custom Checkbox component used in the grid for both header and cells.",
       "default": "Checkbox",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The custom Divider component used in the grid.",
+      "default": "Divider",
       "class": null
     },
     {
