@@ -10,7 +10,7 @@ type MousePosition = {
   height: number;
 };
 
-export function generateVirtualElement(mousePosition: MousePosition | null) {
+export function generateVirtualElement(mousePosition: Pick<MousePosition, 'x' | 'y'> | null) {
   if (mousePosition === null) {
     return {
       getBoundingClientRect: () => ({
@@ -47,6 +47,9 @@ export function generateVirtualElement(mousePosition: MousePosition | null) {
 
 export type UseMouseTrackerReturnValue = null | MousePosition;
 
+/**
+ * @deprecated We recommend using vanilla JS to let popper track mouse position.
+ */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
   const svgRef = useSvgRef();
 
@@ -86,6 +89,45 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   }, [svgRef]);
 
   return mousePosition;
+}
+
+type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+
+export function usePointerType(): null | PointerType {
+  const svgRef = useSvgRef();
+
+  // Use a ref to avoid rerendering on every mousemove event.
+  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+
+    const handleEnter = (event: PointerEvent) => {
+      setPointerType({
+        height: event.height,
+        pointerType: event.pointerType as PointerType['pointerType'],
+      });
+    };
+
+    element.addEventListener('pointerenter', handleEnter);
+    element.addEventListener('pointerup', handleOut);
+
+    return () => {
+      element.removeEventListener('pointerenter', handleEnter);
+      element.removeEventListener('pointerup', handleOut);
+    };
+  }, [svgRef]);
+
+  return pointerType;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';
