@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getSectionVisibleValue } from './useField.utils';
+import { getSectionVisibleValue, parseSelectedSections } from './useField.utils';
 
 const COMMON_PROPERTIES = {
   startSeparator: '',
@@ -54,6 +54,12 @@ describe('useField utility functions', () => {
           DEFAULT_LOCALIZED_DIGITS,
         ),
       ).to.equal('\u20681\u2069');
+    });
+  });
+
+  describe('parseSelectedSections', () => {
+    it('should return null when selectedSections is not available in sections', () => {
+      expect(parseSelectedSections('year', [])).to.equal(null);
     });
   });
 });
