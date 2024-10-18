@@ -12,7 +12,12 @@ import {
   ExportedBaseTabsProps,
   PickersProvider,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
+import {
+  PickerValidDate,
+  FieldRef,
+  InferError,
+  PickerOwnerState,
+} from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -94,6 +99,7 @@ export const useDesktopRangePicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     contextValue,
+    ownerState,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -143,7 +149,7 @@ export const useDesktopRangePicker = <
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
     >,
-    TExternalProps
+    PickerOwnerState<DateRange<TDate>>
   >({
     elementType: Field,
     externalSlotProps: slotProps?.field,
@@ -163,7 +169,7 @@ export const useDesktopRangePicker = <
       ref: fieldContainerRef,
       ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
