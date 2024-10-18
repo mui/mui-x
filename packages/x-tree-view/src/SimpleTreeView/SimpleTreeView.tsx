@@ -242,7 +242,7 @@ SimpleTreeView.propTypes = {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Only works when `multiSelect` is `true`.
-   * On the SimpleTreeView, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
    *
    * @default { parents: false, descendants: false }
    */
