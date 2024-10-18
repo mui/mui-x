@@ -3,7 +3,6 @@ import {
   DateValidationError,
   TimeValidationError,
   DateTimeValidationError,
-  FieldSection,
   PickerValidDate,
 } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
@@ -45,7 +44,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
+export const singleItemFieldValueManager: FieldValueManager<any, false> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {

@@ -1,0 +1,13 @@
+.root {
+  background-color: rgba(0, 0, 0, 0.06);
+
+  &[data-focused] {
+    border-color: rgba(0, 0, 0, 0.23);
+    border-style: 'solid';
+    border-width: 2px;
+  }
+}
+
+.sectionContent {
+  outline: none;
+}

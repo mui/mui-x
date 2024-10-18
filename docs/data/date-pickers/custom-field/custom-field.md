@@ -186,9 +186,8 @@ On the examples below, you can see that the typing of the props received by a cu
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs, false>, // The headless field props
     BaseSingleInputFieldProps<
-      Dayjs | null,
       Dayjs,
-      FieldSection,
+      false,
       false, // `true` for `enableAccessibleFieldDOMStructure`
       DateValidationError
     > {} // The DOM field props
@@ -196,9 +195,8 @@ interface JoyDateFieldProps
 interface JoyDateTimeFieldProps
   extends UseDateTimeFieldProps<Dayjs, false>, // The headless field props
     BaseSingleInputFieldProps<
-      Dayjs | null,
       Dayjs,
-      FieldSection,
+      false,
       false, // `true` for `enableAccessibleFieldDOMStructure`
       DateTimeValidationError
     > {} // The DOM field props

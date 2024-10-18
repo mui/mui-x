@@ -1,16 +1,15 @@
 import * as React from 'react';
 import type { UseFieldInternalProps } from '../hooks/useField';
-import { FieldSection, PickerValidDate } from '../../models';
+import { PickerValidDate } from '../../models';
 import type { ExportedUseClearableFieldProps } from '../../hooks/useClearableField';
 
 export interface BaseFieldProps<
-  TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      UseFieldInternalProps<TDate, TIsRange, TEnableAccessibleFieldDOMStructure, TError>,
       'format'
     >,
     ExportedUseClearableFieldProps {

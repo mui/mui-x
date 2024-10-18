@@ -57,12 +57,8 @@ export interface UsePickerParams<
   props: TExternalProps;
 }
 
-export interface UsePickerResponse<
-  TValue,
-  TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
-  TError,
-> extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
+export interface UsePickerResponse<TValue, TView extends DateOrTimeViewWithMeridiem, TError>
+  extends Omit<UsePickerValueResponse<TValue, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
   ownerState: PickerOwnerState<TValue>;

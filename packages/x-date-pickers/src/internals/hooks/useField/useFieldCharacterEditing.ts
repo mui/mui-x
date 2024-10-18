@@ -1,8 +1,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickersTimezone, PickerValidDate } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
+} from '../../../models';
 import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
@@ -14,7 +18,7 @@ import {
   removeLocalizedDigits,
   isStringNumber,
 } from './useField.utils';
-import { UpdateSectionValueParams } from './useFieldState';
+import { UseFieldStateReturnValue } from './useFieldState';
 
 interface CharacterEditingQuery {
   value: string;
@@ -25,23 +29,6 @@ interface CharacterEditingQuery {
 export interface ApplyCharacterEditingParams {
   keyPressed: string;
   sectionIndex: number;
-}
-
-interface UseFieldCharacterEditingParams<
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  sections: TSection[];
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
-  localizedDigits: string[];
-  setTempAndroidValueStr: (newValue: string | null) => void;
-  timezone: PickersTimezone;
-}
-
-export interface UseFieldCharacterEditingResponse {
-  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
-  resetCharacterQuery: () => void;
 }
 
 /**
@@ -86,32 +73,41 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
->({
-  sections,
-  updateSectionValue,
-  sectionsValueBoundaries,
-  localizedDigits,
-  setTempAndroidValueStr,
-  timezone,
-}: UseFieldCharacterEditingParams<TDate, TSection>): UseFieldCharacterEditingResponse => {
+export const useFieldCharacterEditing = <TManager extends PickerAnyValueManagerV8>(
+  parameters: UseFieldCharacterEditingParameters<TManager>,
+): UseFieldCharacterEditingReturnValue => {
+  type ManagerProperties = PickerManagerProperties<TManager>;
+  type TDate = ManagerProperties['date'];
+  type TSection = ManagerProperties['section'];
+
+  const {
+    error,
+    stateResponse: {
+      state,
+      updateSectionValue,
+      sectionsValueBoundaries,
+      localizedDigits,
+      setTempAndroidValueStr,
+      timezone,
+      activeSectionIndex,
+    },
+  } = parameters;
+
   const utils = useUtils<TDate>();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
 
-  const resetQuery = useEventCallback(() => setQuery(null));
+  const resetCharacterQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
-      resetQuery();
+    if (query != null && state.sections[query.sectionIndex]?.type !== query.sectionType) {
+      resetCharacterQuery();
     }
-  }, [sections, query, resetQuery]);
+  }, [state.sections, query, resetCharacterQuery]);
 
   React.useEffect(() => {
     if (query != null) {
-      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
+      const timeout = setTimeout(() => resetCharacterQuery(), QUERY_LIFE_DURATION_MS);
 
       return () => {
         clearTimeout(timeout);
@@ -119,7 +115,7 @@ export const useFieldCharacterEditing = <
     }
 
     return () => {};
-  }, [query, resetQuery]);
+  }, [query, resetCharacterQuery]);
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
@@ -127,7 +123,7 @@ export const useFieldCharacterEditing = <
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
-    const activeSection = sections[sectionIndex];
+    const activeSection = state.sections[sectionIndex];
 
     // The current query targets the section being editing
     // We can try to concatenate the value
@@ -154,7 +150,7 @@ export const useFieldCharacterEditing = <
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      resetQuery();
+      resetCharacterQuery();
       return null;
     }
 
@@ -398,7 +394,7 @@ export const useFieldCharacterEditing = <
   };
 
   const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
-    const activeSection = sections[params.sectionIndex];
+    const activeSection = state.sections[params.sectionIndex];
     const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
     const response = isNumericEditing
       ? applyNumericEditing({
@@ -418,8 +414,24 @@ export const useFieldCharacterEditing = <
     });
   });
 
+  React.useEffect(() => {
+    if (!error && activeSectionIndex == null) {
+      resetCharacterQuery();
+    }
+  }, [state.referenceValue, activeSectionIndex, error]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return {
     applyCharacterEditing,
-    resetCharacterQuery: resetQuery,
+    resetCharacterQuery,
   };
 };
+
+interface UseFieldCharacterEditingParameters<TManager extends PickerAnyValueManagerV8> {
+  stateResponse: UseFieldStateReturnValue<TManager>;
+  error: boolean;
+}
+
+export interface UseFieldCharacterEditingReturnValue {
+  applyCharacterEditing: (params: ApplyCharacterEditingParams) => void;
+  resetCharacterQuery: () => void;
+}

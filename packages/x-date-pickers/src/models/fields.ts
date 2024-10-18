@@ -4,12 +4,11 @@ import { SxProps } from '@mui/material/styles';
 import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
   UseClearableFieldSlotProps,
   UseClearableFieldSlots,
 } from '../hooks/useClearableField';
-import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
-import type { UseFieldResponse } from '../internals/hooks/useField';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldResponse, UseFieldAccessibleDOMGetters } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import { PickerValidDate } from './pickers';
 
@@ -151,7 +150,7 @@ interface BaseForwardedV6SingleInputFieldProps {
 }
 
 interface BaseForwardedV7SingleInputFieldProps {
-  sectionListRef?: React.Ref<PickersSectionListRef>;
+  sectionListRef?: React.Ref<UseFieldAccessibleDOMGetters>;
 }
 
 type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
@@ -166,12 +165,11 @@ type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure exten
  * not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TValue,
   TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError> &
+> = BaseFieldProps<TDate, TIsRange, TEnableAccessibleFieldDOMStructure, TError> &
   BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 /**
@@ -180,11 +178,12 @@ export type BaseSingleInputFieldProps<
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
+> = Omit<
   UseFieldResponse<
     TEnableAccessibleFieldDOMStructure,
     BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
-  >
+  >,
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
 >;
 
 /**
@@ -206,3 +205,18 @@ export type BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure extend
         | 'type'
       >
     : Partial<Omit<PickersTextFieldProps, keyof ExportedPickersSectionListProps>>;
+
+type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | null];
+type RangePosition = 'start' | 'end';
+interface RangeFieldSection extends FieldSection {
+  dateName: RangePosition;
+}
+
+export type InferValueFromDate<
+  TDate extends PickerValidDate,
+  TISRange extends boolean,
+> = TISRange extends true ? DateRange<TDate> : TDate | null;
+
+export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
+  ? RangeFieldSection
+  : FieldSection;

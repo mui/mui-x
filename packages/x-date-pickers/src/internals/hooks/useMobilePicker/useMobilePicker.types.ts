@@ -45,13 +45,7 @@ export interface ExportedUseMobilePickerSlotProps<
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<
-      TDate | null,
-      TDate,
-      FieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
-    >,
+    BaseSingleInputFieldProps<TDate, false, TEnableAccessibleFieldDOMStructure, unknown>,
     {},
     UsePickerProps<TDate | null, TDate, any, any, any, any>
   >;
