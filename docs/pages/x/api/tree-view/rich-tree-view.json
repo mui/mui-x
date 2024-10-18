@@ -153,7 +153,7 @@
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
     }
   ],

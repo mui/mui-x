@@ -15,7 +15,7 @@ export default function TreeItemAnatomy() {
       <CardMedia
         sx={{ minHeight: '250px', backgroundSize: 'contain' }}
         image={src}
-        title="tree item anatomy"
+        title="Tree Item anatomy"
       />
     </Card>
   );

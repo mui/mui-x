@@ -39,7 +39,7 @@ export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
    */
   isItemEditable: (itemId: TreeViewItemId) => boolean;
   /**
-   * Set to `true` if the tree view is editable.
+   * Set to `true` if the Tree View is editable.
    */
   isTreeViewEditable: boolean;
 }

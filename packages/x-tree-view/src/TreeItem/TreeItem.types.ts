@@ -44,7 +44,7 @@ export interface TreeItemSlots extends TreeItemIconSlots {
   labelInput?: React.ElementType;
   /**
    * The component that renders the overlay when an item reordering is ongoing.
-   * Warning: This slot is only useful when using the `RichTreeViewPro` component.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component.
    * @default TreeItemDragAndDropOverlay
    */
   dragAndDropOverlay?: React.ElementType;

@@ -9,6 +9,6 @@
     "collapseIcon": "The icon used to collapse the item.",
     "endIcon": "The icon displayed next to an end item.",
     "expandIcon": "The icon used to expand the item.",
-    "icon": "The icon to display next to the tree item&#39;s label."
+    "icon": "The icon to display next to the Tree Item&#39;s label."
   }
 }
