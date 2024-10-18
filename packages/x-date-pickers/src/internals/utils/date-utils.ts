@@ -12,7 +12,7 @@ export const mergeDateAndTime = (
   utils: MuiPickersAdapter,
   dateParam: PickerValidDate,
   timeParam: PickerValidDate,
-) => {
+): PickerValidDate => {
   let mergedDate = dateParam;
   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
@@ -42,7 +42,7 @@ export const findClosestEnabledDate = ({
   isDateDisabled,
   utils,
   timezone,
-}: FindClosestDateParams) => {
+}: FindClosestDateParams): PickerValidDate | null => {
   const today = mergeDateAndTime(utils, utils.date(undefined, timezone), date);
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
@@ -96,7 +96,7 @@ export const findClosestEnabledDate = ({
 export const replaceInvalidDateByNull = (
   utils: MuiPickersAdapter,
   value: PickerValidDate | null,
-) => (value == null || !utils.isValid(value) ? null : value);
+): PickerValidDate | null => (value == null || !utils.isValid(value) ? null : value);
 
 export const applyDefaultDate = (
   utils: MuiPickersAdapter,
@@ -118,7 +118,10 @@ export const areDatesEqual = (utils: MuiPickersAdapter, a: PickerValidDate, b: P
   return utils.isEqual(a, b);
 };
 
-export const getMonthsInYear = (utils: MuiPickersAdapter, year: PickerValidDate) => {
+export const getMonthsInYear = (
+  utils: MuiPickersAdapter,
+  year: PickerValidDate,
+): PickerValidDate[] => {
   const firstMonth = utils.startOfYear(year);
   const months = [firstMonth];
 
@@ -134,7 +137,7 @@ export const getTodayDate = (
   utils: MuiPickersAdapter,
   timezone: PickersTimezone,
   valueType?: FieldValueType,
-) =>
+): PickerValidDate =>
   valueType === 'date'
     ? utils.startOfDay(utils.date(undefined, timezone))
     : utils.date(undefined, timezone);
@@ -190,7 +193,7 @@ export const resolveDateFormat = (
   return formats.keyboardDate;
 };
 
-export const getWeekdays = (utils: MuiPickersAdapter, date: PickerValidDate) => {
+export const getWeekdays = (utils: MuiPickersAdapter, date: PickerValidDate): PickerValidDate[] => {
   const start = utils.startOfWeek(date);
   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
 };

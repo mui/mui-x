@@ -450,7 +450,7 @@ export const getDateFromDateSections = (
   utils: MuiPickersAdapter,
   sections: FieldSection[],
   localizedDigits: string[],
-) => {
+): PickerValidDate => {
   // If we have both a day and a weekDay section,
   // Then we skip the weekDay in the parsing because libraries like dayjs can't parse complicated formats containing a weekDay.
   // dayjs(dayjs().format('dddd MMMM D YYYY'), 'dddd MMMM D YYYY')) // returns `Invalid Date` even if the format is valid.
@@ -721,7 +721,7 @@ export const mergeDateIntoReferenceDate = (
   sections: FieldSection[],
   referenceDate: PickerValidDate,
   shouldLimitToEditedSections: boolean,
-) =>
+): PickerValidDate =>
   // cloning sections before sort to avoid mutating it
   [...sections]
     .sort(

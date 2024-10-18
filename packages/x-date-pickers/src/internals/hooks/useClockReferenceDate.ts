@@ -16,7 +16,7 @@ export const useClockReferenceDate = <TProps extends {}>({
   utils: MuiPickersAdapter;
   props: TProps;
   timezone: PickersTimezone;
-}) => {
+}): PickerValidDate => {
   const referenceDate = React.useMemo(
     () =>
       singleItemValueManager.getInitialReferenceValue({

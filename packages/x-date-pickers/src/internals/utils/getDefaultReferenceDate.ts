@@ -66,7 +66,7 @@ export const getDefaultReferenceDate = ({
   granularity: number;
   timezone: PickersTimezone;
   getTodayDate?: () => PickerValidDate;
-}) => {
+}): PickerValidDate => {
   let referenceDate = inGetTodayDate
     ? inGetTodayDate()
     : roundDate(utils, granularity, getTodayDate(utils, timezone));

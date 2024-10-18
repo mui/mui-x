@@ -38,7 +38,7 @@ export const convertToMeridiem = (
   meridiem: Meridiem,
   ampm: boolean,
   utils: MuiPickersAdapter,
-) => {
+): PickerValidDate => {
   const newHoursAmount = convertValueToMeridiem(utils.getHours(time), meridiem, ampm);
   return utils.setHours(time, newHoursAmount);
 };
