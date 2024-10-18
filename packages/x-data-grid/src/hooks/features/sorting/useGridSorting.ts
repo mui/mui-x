@@ -153,13 +153,16 @@ export const useGridSorting = (
           },
         };
       }
-
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
+      const sortedRowIds = gridSortedRowIdsSelector(apiRef);
+      if (sortModel.length === 0 && sortedRowIds.length > 0) {
+        return state;
+      }
+
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
       const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
       });
-
       return {
         ...state,
         sorting: { ...state.sorting, sortedRows },
