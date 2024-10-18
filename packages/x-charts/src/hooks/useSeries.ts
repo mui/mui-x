@@ -74,3 +74,16 @@ export function useScatterSeries(): FormattedSeries['scatter'] {
 
   return React.useMemo(() => series.scatter, [series.scatter]);
 }
+
+/**
+ * Get access to the internal state of funnel series.
+ * The returned object contains:
+ * - series: a mapping from ids to series attributes.
+ * - seriesOrder: the array of series ids.
+ * @returns {{ series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined}  funnelSeries
+ */
+export function useFunnelSeries(): FormattedSeries['funnel'] {
+  const series = useSeries();
+
+  return React.useMemo(() => series.funnel, [series.funnel]);
+}

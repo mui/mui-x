@@ -1,3 +1,4 @@
+import { CurveType } from '../curve';
 import { DefaultizedProps } from '../helpers';
 import type { StackOffsetType } from '../stacking';
 import {
@@ -7,16 +8,6 @@ import {
   SeriesId,
   StackableSeriesType,
 } from './common';
-
-export type CurveType =
-  | 'catmullRom'
-  | 'linear'
-  | 'monotoneX'
-  | 'monotoneY'
-  | 'natural'
-  | 'step'
-  | 'stepBefore'
-  | 'stepAfter';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
