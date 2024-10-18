@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Instance } from '@popperjs/core';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
@@ -133,7 +132,7 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
   const svgRef = useSvgRef();
   const pointerType = usePointerType();
 
-  const popperRef = React.useRef<Instance>(null);
+  const popperRef: PopperProps['popperRef'] = React.useRef(null);
   const virtualElement = React.useRef(generateVirtualElement({ x: 0, y: 0 }));
 
   const { item, axis } = React.useContext(InteractionContext);
