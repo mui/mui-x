@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 
@@ -12,9 +11,7 @@ export const PickersContext = React.createContext<PickersContextValue | null>(nu
  *
  * @ignore - do not document.
  */
-export function PickersProvider<TDate extends PickerValidDate>(
-  props: PickersFieldProviderProps<TDate>,
-) {
+export function PickersProvider(props: PickersFieldProviderProps) {
   const { contextValue, localeText, children } = props;
 
   return (
@@ -24,9 +21,9 @@ export function PickersProvider<TDate extends PickerValidDate>(
   );
 }
 
-interface PickersFieldProviderProps<TDate extends PickerValidDate> {
+interface PickersFieldProviderProps {
   contextValue: PickersContextValue;
-  localeText: PickersInputLocaleText<TDate> | undefined;
+  localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
 }
 

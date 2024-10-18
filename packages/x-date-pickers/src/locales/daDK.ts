@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiem',
 };
 
-const daDKPickers: Partial<PickersLocaleText<any>> = {
+const daDKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Forrige måned',
   nextMonth: 'Næste måned',
@@ -44,8 +44,8 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vælg datointerval',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Vælg ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Vælg ${timeViews[view] ?? view}. ${!formattedTime ? 'Intet tidspunkt valgt' : `Valgte tidspunkt er ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -60,14 +60,10 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Vælg dato, valgte dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Vælg dato',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Vælg tidspunkt',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Vælg dato, valgte dato er ${formattedDate}` : 'Vælg dato',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Vælg tidspunkt, valgte tidspunkt er ${formattedTime}` : 'Vælg tidspunkt',
   fieldClearLabel: 'ryd felt',
 
   // Table labels

@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const mkPickers: Partial<PickersLocaleText<any>> = {
+const mkPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Предходен месец',
   nextMonth: 'Следен месец',
@@ -37,8 +37,8 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Избери временски опсег',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Select ${view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Нема избрано време' : `Избраното време е ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Select ${view}. ${!formattedTime ? 'Нема избрано време' : `Избраното време е ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,
@@ -53,14 +53,10 @@ const mkPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Избери датум, избраниот датум е ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Избери датум',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Избери време, избраното време е ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Избери време',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Избери датум, избраниот датум е ${formattedDate}` : 'Избери датум',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Избери време, избраното време е ${formattedTime}` : 'Избери време',
   fieldClearLabel: 'Избриши',
 
   // Table labels

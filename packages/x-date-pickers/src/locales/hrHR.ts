@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiem',
 };
 
-const hrHRPickers: Partial<PickersLocaleText<any>> = {
+const hrHRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Prethodni mjesec',
   nextMonth: 'Naredni mjesec',
@@ -44,8 +44,8 @@ const hrHRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Odaberi vremenski okvir',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Odaberi ${timeViews[view] ?? view}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Vrijeme nije odabrano' : `Odabrano vrijeme je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Odaberi ${timeViews[view] ?? view}. ${!formattedTime ? 'Vrijeme nije odabrano' : `Odabrano vrijeme je ${formattedTime}`}`,
   hoursClockNumberText: (hours) => {
     let suffix = 'sati';
     if (Number(hours) === 1) {
@@ -77,14 +77,10 @@ const hrHRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Odaberi datum, odabrani datum je ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Odaberi datum',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Odaberi vrijeme, odabrano vrijeme je ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Odaberi vrijeme',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Odaberi datum, odabrani datum je ${formattedDate}` : 'Odaberi datum',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Odaberi vrijeme, odabrano vrijeme je ${formattedTime}` : 'Odaberi vrijeme',
   fieldClearLabel: 'Izbriši',
 
   // Table labels
