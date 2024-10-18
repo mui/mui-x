@@ -17,7 +17,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('Focus', () => {
     it('should select 1st section (v7) / all sections (v6) on mount focus (`autoFocus = true`)', () => {
-      // Text with v7 input
+      // Test with accessible DOM structure
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         autoFocus: true,
@@ -26,7 +26,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       view.unmount();
 
-      // Text with v6 input
+      // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false, autoFocus: true });
       const input = getTextbox();
       expectFieldValueV6(input, 'MM/DD/YYYY');
@@ -34,7 +34,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select 1st section (v7) / all sections (v6) (`autoFocus = true`) with start separator', () => {
-      // Text with v7 input
+      // Test with accessible DOM structure
       const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         autoFocus: true,
@@ -44,7 +44,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       view.unmount();
 
-      // Text with v6 input
+      // Test with non-accessible DOM structure
       renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         autoFocus: true,
@@ -56,7 +56,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all on <Tab> focus (v6 only)', () => {
-      // Text with v6 input
+      // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
 
@@ -72,7 +72,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all on <Tab> focus with start separator (v6 only)', () => {
-      // Text with v6 input
+      // Test with non-accessible DOM structure
       renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `- ${adapterToUse.formats.year}`,
@@ -91,7 +91,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select day on mobile (v6 only)', () => {
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
@@ -108,7 +108,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select day on desktop (v6 only)', () => {
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       const input = getTextbox();
@@ -121,7 +121,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
       view.selectSection('day');
@@ -132,7 +132,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       view.selectSection('day');
@@ -143,7 +143,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should not change the selection when clicking on the only already selected section', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       view.selectSection('day');
@@ -154,7 +154,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
 
       view.selectSection('day');
@@ -167,7 +167,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: Ctrl + A', () => {
     it('should select all sections', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
       fireEvent.keyDown(view.getActiveSection(0), {
@@ -179,7 +179,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('month');
@@ -188,7 +188,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all sections with start separator', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `- ${adapterToUse.formats.year}`,
@@ -203,7 +203,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: `- ${adapterToUse.formats.year}`,
@@ -217,7 +217,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowRight', () => {
     it('should move selection to the next section when one section is selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -225,7 +225,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('day');
@@ -235,7 +235,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the last section is selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('year');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
@@ -243,7 +243,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('year');
@@ -253,7 +253,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the last section when all the sections are selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
 
@@ -270,7 +270,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('month');
@@ -286,7 +286,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowLeft', () => {
     it('should move selection to the previous section when one section is selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
@@ -294,7 +294,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('day');
@@ -304,7 +304,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the first section is selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
@@ -312,7 +312,7 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('month');
@@ -322,7 +322,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the first section when all the sections are selected', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
       view.selectSection('month');
 
@@ -339,7 +339,7 @@ describe('<DateField /> - Selection', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({ enableAccessibleFieldDOMStructure: false });
       const input = getTextbox();
       view.selectSection('month');

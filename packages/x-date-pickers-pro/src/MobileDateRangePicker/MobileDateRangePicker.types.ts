@@ -26,7 +26,7 @@ export interface MobileDateRangePickerSlotProps<
 
 export interface MobileDateRangePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateRangePickerProps<TDate>,
     MobileRangeOnlyPickerProps {
   /**

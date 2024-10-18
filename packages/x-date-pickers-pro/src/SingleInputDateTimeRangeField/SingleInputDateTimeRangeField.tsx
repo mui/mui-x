@@ -15,7 +15,7 @@ import { FieldType } from '../models';
 
 type DateRangeFieldComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: SingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -33,7 +33,7 @@ type DateRangeFieldComponent = (<
  */
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: SingleInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
@@ -49,7 +49,7 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -141,7 +141,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**

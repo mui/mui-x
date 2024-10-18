@@ -31,7 +31,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileDateTimeRangePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileDateTimeRangePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileDateTimeRangePicker',

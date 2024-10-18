@@ -18,7 +18,7 @@ describe('<MobileTimePicker />', () => {
     it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<MobileTimePicker onOpen={onOpen} />);
 
       fireEvent.click(getFieldSectionsContainer());
 
@@ -30,7 +30,6 @@ describe('<MobileTimePicker />', () => {
       const handleChange = spy();
       render(
         <MobileTimePicker
-          enableAccessibleFieldDOMStructure
           ampm
           onChange={handleChange}
           open
@@ -58,7 +57,6 @@ describe('<MobileTimePicker />', () => {
 
       render(
         <MobileTimePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
