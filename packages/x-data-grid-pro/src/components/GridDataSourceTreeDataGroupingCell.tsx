@@ -1,7 +1,6 @@
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
 import {
   getDataGridUtilityClass,
   GridRenderCellParams,
@@ -93,9 +92,9 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       {...rootProps?.slotProps?.baseIconButton}
     >
       <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <Badge variant="dot" color="error" invisible={!error}>
+        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </Badge>
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseTooltip>
     </rootProps.slots.baseIconButton>
   ) : null;
