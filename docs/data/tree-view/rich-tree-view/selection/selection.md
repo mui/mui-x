@@ -75,25 +75,36 @@ Use the `onItemSelectionToggle` prop if you want to react to an item selection c
 
 {{"demo": "TrackItemSelectionToggle.js"}}
 
-## Parent / children selection relationship
+## Automatic parents and children selection
 
-Automatically select an item when all of its children are selected and automatically select all children when the parent is selected.
+By default, selecting a parent item does not select its children. You can override this behavior using the `selectionPropagation` prop.
+
+Here's how it's structured:
+
+```ts
+type TreeViewSelectionPropagation = {
+  descendants?: boolean; // default: false
+  parents?: boolean; // default: false
+};
+```
+
+When `selectionPropagation.descendants` is set to `true`.
+
+- Selecting a parent selects all its descendants automatically.
+- Deselecting a parent deselects all its descendants automatically.
+
+When `selectionPropagation.parents` is set to `true`.
+
+- Selecting all the descendants of a parent selects the parent automatically.
+- Deselecting a descendant of a selected parent deselects the parent automatically.
+
+The example below demonstrates the usage of the `selectionPropagation` prop.
+
+{{"demo": "SelectionPropagation.js", "defaultCodeOpen": false}}
 
 :::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
-
-Don't hesitate to leave a comment on the same issue to influence what gets built.
-Especially if you already have a use case for this component,
-or if you are facing a pain point with your current solution.
+This feature only works when multi selection is enabled using `props.multiSelect`.
 :::
-
-If you cannot wait for the official implementation,
-you can create your own custom solution using the `selectedItems`,
-`onSelectedItemsChange` and `onItemSelectionToggle` props:
-
-{{"demo": "ParentChildrenSelectionRelationship.js"}}
 
 ## Imperative API
 
