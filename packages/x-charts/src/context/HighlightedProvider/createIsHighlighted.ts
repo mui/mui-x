@@ -13,7 +13,8 @@ export const createIsHighlighted =
 
     if (highlightScope.highlight === 'item') {
       return (
-        input.dataIndex === highlightedItem?.dataIndex &&
+        (input.dataIndex === highlightedItem?.dataIndex ||
+          highlightedItem?.dataIndex === undefined) &&
         input.seriesId === highlightedItem?.seriesId
       );
     }

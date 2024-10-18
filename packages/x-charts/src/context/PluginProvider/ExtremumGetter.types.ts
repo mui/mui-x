@@ -13,8 +13,8 @@ export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeri
 type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: Record<SeriesId, ChartSeries<T>>;
   axis: AxisConfig;
-  axisIndex: number;
   isDefaultAxis: boolean;
+  axisIndex: number;
   getFilters?: (params: {
     currentAxisId: AxisId | undefined;
     seriesXAxisId?: AxisId;

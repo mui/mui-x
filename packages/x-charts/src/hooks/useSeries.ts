@@ -74,3 +74,17 @@ export function useScatterSeries(): FormattedSeries['scatter'] {
 
   return React.useMemo(() => series.scatter, [series.scatter]);
 }
+
+/**
+ * Get access to the internal state of scatter series.
+ * The returned object contains:
+ * - series: a mapping from ids to series attributes.
+ * - seriesOrder: the array of series ids.
+ * @returns { series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined scatterSeries
+ */
+export function useRadarSeries(): FormattedSeries['radar'] {
+  const series = useSeries();
+  console.log(series);
+
+  return React.useMemo(() => series.radar, [series.radar]);
+}

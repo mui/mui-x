@@ -41,6 +41,7 @@ export function mergePlugins(plugins?: ChartsPlugin<ChartSeriesType>[]) {
         typeof seriesType
       >;
     }
+
     if (plugin.radiusExtremumGetter) {
       radiusExtremumGetters[seriesType] = plugin.radiusExtremumGetter as ExtremumGetter<
         typeof seriesType

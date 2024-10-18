@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesDefaultized, CommonTooltipChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { useCartesianContext } from '../context/CartesianProvider';
@@ -10,7 +10,7 @@ import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { useSeries } from '../hooks/useSeries';
 
-export interface ChartsItemContentProps<T extends ChartSeriesType> {
+export interface ChartsItemContentProps<T extends CommonTooltipChartSeriesType> {
   /**
    * The data used to identify the triggered item.
    */
@@ -32,7 +32,7 @@ export interface ChartsItemContentProps<T extends ChartSeriesType> {
   sx?: SxProps<Theme>;
 }
 
-export interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
+export interface ChartsItemTooltipContentProps<T extends CommonTooltipChartSeriesType> {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
   contentProps?: Partial<ChartsItemContentProps<T>>;
@@ -43,7 +43,7 @@ export interface ChartsItemTooltipContentProps<T extends ChartSeriesType> {
 /**
  * @ignore - internal component.
  */
-function ChartsItemTooltipContent<T extends ChartSeriesType>(
+function ChartsItemTooltipContent<T extends CommonTooltipChartSeriesType>(
   props: ChartsItemTooltipContentProps<T>,
 ) {
   const { content, itemData, sx, classes, contentProps } = props;
