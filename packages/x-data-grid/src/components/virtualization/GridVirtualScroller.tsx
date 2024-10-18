@@ -51,6 +51,8 @@ const Scroller = styled('div', {
   flexGrow: 1,
   overflow: 'scroll',
   scrollbarWidth: 'none' /* Firefox */,
+  display: 'flex',
+  flexDirection: 'column',
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
