@@ -95,7 +95,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    */
   multiSelect?: Multiple;
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection?: boolean;
@@ -111,13 +111,13 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Only works when `multiSelect` is `true`.
-   * On the SimpleTreeView, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
    *
    * @default { parents: false, descendants: false }
    */
   selectionPropagation?: TreeViewSelectionPropagation;
   /**
-   * Callback fired when tree items are selected/deselected.
+   * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
@@ -127,7 +127,7 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
     itemIds: TreeViewSelectionValue<Multiple>,
   ) => void;
   /**
-   * Callback fired when a tree item is selected or deselected.
+   * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.

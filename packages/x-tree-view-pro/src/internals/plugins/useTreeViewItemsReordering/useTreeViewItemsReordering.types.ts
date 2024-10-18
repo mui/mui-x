@@ -90,7 +90,7 @@ export interface UseTreeViewItemsReorderingParameters {
     newPosition: TreeViewItemReorderPosition;
   }) => boolean;
   /**
-   * Callback fired when a tree item is moved in the tree.
+   * Callback fired when a Tree Item is moved in the tree.
    * @param {object} params The params describing the item re-ordering.
    * @param {string} params.itemId The id of the item moved.
    * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.

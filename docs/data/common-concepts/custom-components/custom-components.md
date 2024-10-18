@@ -11,7 +11,7 @@ This is the role of all the `baseXXX` component on the Data Grid component (`bas
 These slots receive props that should be as generic as possible so that it is easy to interface any other design system.
 
 Other slots allow you to override parts of the MUI X UI components with a custom UI built specifically for this component.
-This is the role of slots like `calendarHeader` on the `DateCalendar` component or `item` on the `RichTreeView` component.
+This is the role of slots like `calendarHeader` on the `DateCalendar` component or `item` on the Rich Tree View component.
 These slots receive props specific to this part of the UI and will most likely not be re-use throughout your application.
 
 ## Basic usage
