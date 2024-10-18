@@ -11,7 +11,7 @@ import {
   GridRowsPartialUpdates,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { ROW_GROUPING_STRATEGY_DATA_SOURCE, getGroupingRules } from './gridRowGroupingUtils';
+import { getGroupingRules, RowGroupingStrategy } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
@@ -75,7 +75,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: ROW_GROUPING_STRATEGY_DATA_SOURCE,
+          groupingName: RowGroupingStrategy.DataSource,
         });
       }
 
@@ -94,7 +94,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: ROW_GROUPING_STRATEGY_DATA_SOURCE,
+        groupingName: RowGroupingStrategy.DataSource,
       });
     },
     [
@@ -119,20 +119,15 @@ export const useGridDataSourceRowGroupingPreProcessors = (
 
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY_DATA_SOURCE,
+    RowGroupingStrategy.DataSource,
     'rowTreeCreation',
     createRowTreeForRowGrouping,
   );
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.DataSource, 'filtering', filterRows);
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.DataSource, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY_DATA_SOURCE,
-    'filtering',
-    filterRows,
-  );
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DATA_SOURCE, 'sorting', sortRows);
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    ROW_GROUPING_STRATEGY_DATA_SOURCE,
+    RowGroupingStrategy.DataSource,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

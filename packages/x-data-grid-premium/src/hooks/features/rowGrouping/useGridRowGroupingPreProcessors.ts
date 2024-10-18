@@ -31,8 +31,7 @@ import {
 import {
   filterRowTreeFromGroupingColumns,
   getColDefOverrides,
-  ROW_GROUPING_STRATEGY_DEFAULT,
-  ROW_GROUPING_STRATEGY_DATA_SOURCE,
+  RowGroupingStrategy,
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,
@@ -59,8 +58,8 @@ export const useGridRowGroupingPreProcessors = (
       }
 
       const strategy = props.unstable_dataSource
-        ? ROW_GROUPING_STRATEGY_DATA_SOURCE
-        : ROW_GROUPING_STRATEGY_DEFAULT;
+        ? RowGroupingStrategy.DataSource
+        : RowGroupingStrategy.Default;
 
       const groupingColDefProp = props.groupingColDef;
 
@@ -191,7 +190,7 @@ export const useGridRowGroupingPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: ROW_GROUPING_STRATEGY_DEFAULT,
+          groupingName: RowGroupingStrategy.Default,
         });
       }
 
@@ -205,7 +204,7 @@ export const useGridRowGroupingPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: ROW_GROUPING_STRATEGY_DEFAULT,
+        groupingName: RowGroupingStrategy.Default,
       });
     },
     [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -242,15 +241,15 @@ export const useGridRowGroupingPreProcessors = (
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY_DEFAULT,
+    RowGroupingStrategy.Default,
     'rowTreeCreation',
     createRowTreeForRowGrouping,
   );
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DEFAULT, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY_DEFAULT, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'filtering', filterRows);
+  useGridRegisterStrategyProcessor(apiRef, RowGroupingStrategy.Default, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     apiRef,
-    ROW_GROUPING_STRATEGY_DEFAULT,
+    RowGroupingStrategy.Default,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

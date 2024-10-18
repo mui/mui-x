@@ -29,8 +29,10 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
-export const ROW_GROUPING_STRATEGY_DEFAULT = 'grouping-columns';
-export const ROW_GROUPING_STRATEGY_DATA_SOURCE = 'grouping-columns-data-source';
+export enum RowGroupingStrategy {
+  Default = 'grouping-columns',
+  DataSource = 'grouping-columns-data-source',
+}
 
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
@@ -180,11 +182,11 @@ export const filterRowTreeFromGroupingColumns = (
 export const getColDefOverrides = (
   groupingColDefProp: DataGridPremiumProcessedProps['groupingColDef'],
   fields: string[],
-  strategy?: typeof ROW_GROUPING_STRATEGY_DEFAULT | typeof ROW_GROUPING_STRATEGY_DATA_SOURCE,
+  strategy?: RowGroupingStrategy,
 ) => {
   if (typeof groupingColDefProp === 'function') {
     return groupingColDefProp({
-      groupingName: strategy ?? ROW_GROUPING_STRATEGY_DEFAULT,
+      groupingName: strategy ?? RowGroupingStrategy.Default,
       fields,
     });
   }
@@ -214,7 +216,7 @@ export const setStrategyAvailability = (
     };
   }
 
-  const strategy = dataSource ? ROW_GROUPING_STRATEGY_DATA_SOURCE : ROW_GROUPING_STRATEGY_DEFAULT;
+  const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
 
   privateApiRef.current.setStrategyAvailability('rowTree', strategy, isAvailable);
 };

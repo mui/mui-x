@@ -33,7 +33,6 @@ export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorde
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
-export { TREE_DATA_STRATEGY } from '../hooks/features/treeData/gridTreeDataUtils';
 export {
   useGridRowPinning,
   rowPinningStateInitializer,
