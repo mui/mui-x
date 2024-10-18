@@ -35,7 +35,7 @@ const content = [
     icon: <StyleRoundedIcon fontSize="small" color="primary" />,
   },
   {
-    title: 'Tooltips and highlights',
+    title: 'Tooltips',
     link: '/x/react-charts/tooltip/',
     icon: <TipsAndUpdatesRoundedIcon fontSize="small" color="primary" />,
   },
