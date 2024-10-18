@@ -21,11 +21,6 @@ export interface TreeViewComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItem'];
     variants?: ComponentsVariants<Theme>['MuiTreeItem'];
   };
-  MuiTreeItem2?: {
-    defaultProps?: ComponentsProps['MuiTreeItem2'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiTreeItem2'];
-    variants?: ComponentsVariants<Theme>['MuiTreeItem2'];
-  };
 }
 
 declare module '@mui/material/styles' {

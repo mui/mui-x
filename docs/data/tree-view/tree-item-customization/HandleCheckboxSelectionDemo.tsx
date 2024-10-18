@@ -1,20 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { UseTreeItem2CheckboxSlotOwnProps } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { UseTreeItemCheckboxSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import {
-  TreeItem2,
-  TreeItem2Props,
-  TreeItem2SlotProps,
-} from '@mui/x-tree-view/TreeItem2';
+  TreeItem,
+  TreeItemProps,
+  TreeItemSlotProps,
+} from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItem2Props,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { interactions } = useTreeItem2Utils({
+  const { interactions } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -23,7 +23,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     // Do something when the checkbox is clicked
   };
 
-  const handleCheckboxOnChange: UseTreeItem2CheckboxSlotOwnProps['onChange'] = (
+  const handleCheckboxOnChange: UseTreeItemCheckboxSlotOwnProps['onChange'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;
@@ -32,13 +32,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slotProps={
         {
           checkbox: { onChange: handleCheckboxOnChange },
-        } as TreeItem2SlotProps
+        } as TreeItemSlotProps
       }
     />
   );

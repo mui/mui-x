@@ -3,19 +3,10 @@
     "itemId": { "type": { "name": "string" }, "required": true },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "ContentComponent": {
-      "type": { "name": "custom", "description": "element type" },
-      "default": "TreeItemContent",
-      "deprecated": true,
-      "deprecationInfo": "Consider using the <code>&lt;TreeItem2 /&gt;</code> component or the <code>useTreeItem2</code> hook instead. For more details, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
-    },
-    "ContentProps": {
-      "type": { "name": "object" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using the <code>&lt;TreeItem2 /&gt;</code> component or the <code>useTreeItem2</code> hook instead. For more details, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
-    },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "node" } },
+    "onBlur": { "type": { "name": "func" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
     "onKeyDown": { "type": { "name": "func" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -23,13 +14,6 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      },
-      "additionalInfo": { "sx": true }
     }
   },
   "name": "TreeItem",
@@ -39,6 +23,54 @@
     "import { TreeItem } from '@mui/x-tree-view-pro';"
   ],
   "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "TreeItemRoot",
+      "class": "MuiTreeItem-root"
+    },
+    {
+      "name": "content",
+      "description": "The component that renders the content of the item.\n(e.g.: everything related to this item, not to its children).",
+      "default": "TreeItemContent",
+      "class": "MuiTreeItem-content"
+    },
+    {
+      "name": "groupTransition",
+      "description": "The component that renders the children of the item.",
+      "default": "TreeItemGroupTransition",
+      "class": "MuiTreeItem-groupTransition"
+    },
+    {
+      "name": "iconContainer",
+      "description": "The component that renders the icon.",
+      "default": "TreeItemIconContainer",
+      "class": "MuiTreeItem-iconContainer"
+    },
+    {
+      "name": "checkbox",
+      "description": "The component that renders the item checkbox for selection.",
+      "default": "TreeItemCheckbox",
+      "class": "MuiTreeItem-checkbox"
+    },
+    {
+      "name": "label",
+      "description": "The component that renders the item label.",
+      "default": "TreeItemLabel",
+      "class": "MuiTreeItem-label"
+    },
+    {
+      "name": "labelInput",
+      "description": "The component that renders the input to edit the label when the item is editable and is currently being edited.",
+      "default": "TreeItemLabelInput",
+      "class": "MuiTreeItem-labelInput"
+    },
+    {
+      "name": "dragAndDropOverlay",
+      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component.",
+      "default": "TreeItemDragAndDropOverlay",
+      "class": "MuiTreeItem-dragAndDropOverlay"
+    },
     { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
     { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
@@ -46,38 +78,14 @@
       "name": "icon",
       "description": "The icon to display next to the Tree Item's label.",
       "class": null
-    },
-    {
-      "name": "groupTransition",
-      "description": "The component that animates the appearance / disappearance of the item's children.",
-      "default": "TreeItem2Group",
-      "class": "MuiTreeItem-groupTransition"
     }
   ],
   "classes": [
-    {
-      "key": "checkbox",
-      "className": "MuiTreeItem-checkbox",
-      "description": "Styles applied to the checkbox element.",
-      "isGlobal": false
-    },
-    {
-      "key": "content",
-      "className": "MuiTreeItem-content",
-      "description": "Styles applied to the content element.",
-      "isGlobal": false
-    },
     {
       "key": "disabled",
       "className": "Mui-disabled",
       "description": "State class applied to the element when disabled.",
       "isGlobal": true
-    },
-    {
-      "key": "dragAndDropOverlay",
-      "className": "MuiTreeItem-dragAndDropOverlay",
-      "description": "Styles applied to the drag and drop overlay.",
-      "isGlobal": false
     },
     {
       "key": "editable",
@@ -104,30 +112,6 @@
       "isGlobal": true
     },
     {
-      "key": "iconContainer",
-      "className": "MuiTreeItem-iconContainer",
-      "description": "Styles applied to the Tree Item icon.",
-      "isGlobal": false
-    },
-    {
-      "key": "label",
-      "className": "MuiTreeItem-label",
-      "description": "Styles applied to the label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "labelInput",
-      "className": "MuiTreeItem-labelInput",
-      "description": "Styles applied to the input element that is visible when editing is enabled.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiTreeItem-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
       "key": "selected",
       "className": "Mui-selected",
       "description": "State class applied to the content element when selected.",
@@ -140,6 +124,6 @@
   "forwardsRefTo": "HTMLLIElement",
   "filename": "/packages/x-tree-view/src/TreeItem/TreeItem.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/getting-started/\">Tree View - Getting Started</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/customization/\">Rich Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/editing/\">Rich Tree View - Label editing</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/expansion/\">Rich Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/focus/\">Rich Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/items/\">Rich Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/ordering/\">Rich Tree View - Ordering <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-tree-view/rich-tree-view/selection/\">Rich Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
   "cssComponent": false
 }

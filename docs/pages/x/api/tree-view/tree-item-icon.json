@@ -1,0 +1,32 @@
+{
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "TreeItemIcon",
+  "imports": [
+    "import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';",
+    "import { TreeItemIcon } from '@mui/x-tree-view';",
+    "import { TreeItemIcon } from '@mui/x-tree-view-pro';"
+  ],
+  "slots": [
+    { "name": "collapseIcon", "description": "The icon used to collapse the item.", "class": null },
+    { "name": "expandIcon", "description": "The icon used to expand the item.", "class": null },
+    { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
+    {
+      "name": "icon",
+      "description": "The icon to display next to the Tree Item's label.",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiTreeItemIcon",
+  "filename": "/packages/x-tree-view/src/TreeItemIcon/TreeItemIcon.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "cssComponent": false
+}

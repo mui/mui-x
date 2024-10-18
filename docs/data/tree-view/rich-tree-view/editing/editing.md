@@ -1,6 +1,7 @@
 ---
 productId: x-tree-view
 title: Rich Tree View - Editing
+components: RichTreeView, TreeItem
 githubLabel: 'component: tree view'
 packageName: '@mui/x-tree-view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -46,13 +47,13 @@ Use the `onItemLabelChange` prop to trigger an action when the label of an item 
 ## Change the default behavior
 
 By default, blurring the Tree Item saves the new value if there is one.
-To modify this behavior, use the `slotProps` of the `<TreeItem2 />`.
+To modify this behavior, use the `slotProps` of the Tree Item.
 
 {{"demo": "CustomBehavior.js"}}
 
 ## Validation
 
-You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItem2Utils`.
+You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItemUtils`.
 
 {{"demo": "Validation.js"}}
 
