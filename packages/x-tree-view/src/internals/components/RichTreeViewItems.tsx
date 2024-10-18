@@ -61,7 +61,7 @@ function WrappedTreeItem({
 
   const children = React.useMemo(
     () =>
-      itemsToRender ? (
+      itemsToRender?.length ? (
         <RichTreeViewItems itemsToRender={itemsToRender} slots={slots} slotProps={slotProps} />
       ) : null,
     [itemsToRender, slots, slotProps],

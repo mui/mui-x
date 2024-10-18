@@ -4,6 +4,7 @@ export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 export { RichTreeViewItems } from './components/RichTreeViewItems';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
+export { useSelector } from './hooks/useSelector';
 
 export type {
   TreeViewPlugin,
@@ -11,6 +12,7 @@ export type {
   ConvertPluginsIntoSignatures,
   MergeSignaturesProperty,
   TreeViewPublicAPI,
+  TreeViewState,
   TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
@@ -50,6 +52,7 @@ export {
   useTreeViewItems,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
+  selectorItemMetaMap,
 } from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
@@ -67,4 +70,5 @@ export type {
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
+export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';

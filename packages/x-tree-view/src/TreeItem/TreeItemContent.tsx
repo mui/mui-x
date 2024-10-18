@@ -117,7 +117,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    handleContentClick?.(event, itemId);
+    handleContentClick(event, itemId);
 
     if (checkboxRef.current?.contains(event.target as HTMLElement)) {
       return;
