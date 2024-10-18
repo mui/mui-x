@@ -134,6 +134,10 @@ export {
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
 export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
+export {
+  useGridListView,
+  listViewStateInitializer,
+} from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
