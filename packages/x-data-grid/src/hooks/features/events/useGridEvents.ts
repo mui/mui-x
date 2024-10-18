@@ -13,6 +13,7 @@ export function useGridEvents(
     DataGridProcessedProps,
     | 'onColumnHeaderClick'
     | 'onColumnHeaderDoubleClick'
+    | 'onColumnHeaderContextMenu'
     | 'onColumnHeaderOver'
     | 'onColumnHeaderOut'
     | 'onColumnHeaderEnter'
@@ -30,6 +31,7 @@ export function useGridEvents(
   >,
 ): void {
   useGridApiOptionHandler(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
+  useGridApiOptionHandler(apiRef, 'columnHeaderContextMenu', props.onColumnHeaderContextMenu);
   useGridApiOptionHandler(apiRef, 'columnHeaderDoubleClick', props.onColumnHeaderDoubleClick);
   useGridApiOptionHandler(apiRef, 'columnHeaderOver', props.onColumnHeaderOver);
   useGridApiOptionHandler(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);

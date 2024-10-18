@@ -1,7 +1,7 @@
 import type { MuiPage } from 'docs/src/MuiPage';
+import chartsComponentApi from './charts-component-api-pages';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
-import chartsComponentApi from './charts-component-api-pages';
 import treeViewComponentApi from './tree-view-component-api-pages';
 
 const pages: MuiPage[] = [
@@ -110,6 +110,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
       { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
       { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+      {
+        pathname: '/x/react-data-grid/list-view',
+        title: 'List view',
+        plan: 'pro',
+        unstable: true,
+      },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
@@ -438,10 +444,11 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/legend' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/tooltip', title: 'Tooltips and highlights' },
+              { pathname: '/x/react-charts/tooltip' },
+              { pathname: '/x/react-charts/highlighting' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
-                title: 'Zooming and panning',
+                title: 'Zoom and pan',
                 plan: 'pro',
                 unstable: true,
               },

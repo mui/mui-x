@@ -154,9 +154,9 @@ npx @mui/x-codemod@latest v7.0.0/pickers/rename-slots-types <path>
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v7.0.0
+#### `preset-safe` for Data Grid v7.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/data-grid/preset-safe <path|folder>
@@ -227,9 +227,9 @@ npx @mui/x-codemod@latest v7.0.0/data-grid/remove-stabilized-experimentalFeature
 
 ### Tree View codemods
 
-#### `preset-safe` for tree view v7.0.0
+#### `preset-safe` for Tree View v7.0.0
 
-The `preset-safe` codemods for tree view.
+The `preset-safe` codemods for Tree View.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path|folder>
@@ -247,7 +247,7 @@ The list includes these transformers
 
 #### `rename-tree-view-simple-tree-view`
 
-Renames the `TreeView` component to `SimpleTreeView`
+Renames the Tree View component to Simple Tree View
 
 ```diff
 -import { TreeView } from '@mui/x-tree-view';
@@ -705,9 +705,9 @@ npx @mui/x-codemod@latest v6.0.0/pickers/rename-components-to-slots <path>
 
 ### Data Grid codemods
 
-#### `preset-safe` for data grid v6.0.0
+#### `preset-safe` for Data Grid v6.0.0
 
-The `preset-safe` codemods for data grid.
+The `preset-safe` codemods for Data Grid.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/data-grid/preset-safe <path|folder>

@@ -442,8 +442,12 @@ export const useGridRowSelection = (
   /*
    * EVENTS
    */
+  const isFirstRender = React.useRef(true);
   const removeOutdatedSelection = React.useCallback(
     (sortModelUpdated = false) => {
+      if (isFirstRender.current) {
+        return;
+      }
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
@@ -452,7 +456,7 @@ export const useGridRowSelection = (
 
       let hasChanged = false;
       currentSelection.forEach((id: GridRowId) => {
-        if (filteredRowsLookup[id] === false) {
+        if (filteredRowsLookup[id] !== true) {
           if (props.keepNonExistentRowsSelected) {
             return;
           }
@@ -673,7 +677,7 @@ export const useGridRowSelection = (
         return;
       }
 
-      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         selectRows(apiRef.current.getAllRowIds(), true);
       }
@@ -757,4 +761,10 @@ export const useGridRowSelection = (
   React.useEffect(() => {
     runIfRowSelectionIsEnabled(removeOutdatedSelection);
   }, [removeOutdatedSelection, runIfRowSelectionIsEnabled]);
+
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+  }, []);
 };

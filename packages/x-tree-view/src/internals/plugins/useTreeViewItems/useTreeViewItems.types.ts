@@ -2,17 +2,17 @@ import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
-interface TreeViewItemProps {
+export interface TreeViewItemToRenderProps {
   label: string;
   itemId: string;
   id: string | undefined;
-  children?: TreeViewItemProps[];
+  children?: TreeViewItemToRenderProps[];
 }
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
-   * When used in the `SimpleTreeView`, it returns an object with the `id` and `label` properties.
+   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
    * @param {string} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
@@ -33,7 +33,7 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Get all the items in the same format as provided by `props.items`.
-   * @returns {TreeViewItemProps[]} The items in the tree.
+   * @returns {TreeViewItemToRenderProps[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
 }
@@ -49,10 +49,10 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
   /**
    * Get the item that should be rendered.
    * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemProps` type for more information.
-   * @returns {TreeViewItemProps[]} The items to render.
+   * Check the `TreeViewItemToRenderProps` type for more information.
+   * @returns {TreeViewItemToRenderProps[]} The items to render.
    */
-  getItemsToRender: () => TreeViewItemProps[];
+  getItemsToRender: () => TreeViewItemToRenderProps[];
   /**
    * Check if a given item is disabled.
    * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
@@ -119,7 +119,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
