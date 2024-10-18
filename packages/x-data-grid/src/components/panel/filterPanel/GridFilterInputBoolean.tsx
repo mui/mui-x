@@ -54,7 +54,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setFilterValueState(value);
-      applyValue({ ...item, value });
+      applyValue({ ...item, value: Boolean(value) });
     },
     [applyValue, item],
   );
