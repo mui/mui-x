@@ -57,6 +57,10 @@ import {
   rowSpanningStateInitializer,
   useGridRowSpanning,
 } from '../hooks/features/rows/useGridRowSpanning';
+import {
+  listViewStateInitializer,
+  useGridListView,
+} from '../hooks/features/listView/useGridListView';
 
 export const useDataGridComponent = (
   inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
@@ -93,13 +97,14 @@ export const useDataGridComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridRowSpanning(apiRef, props);
-  useGridParamsApi(apiRef);
+  useGridParamsApi(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
   useGridEditing(apiRef, props);
@@ -120,6 +125,7 @@ export const useDataGridComponent = (
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
+  useGridListView(apiRef, props);
 
   return apiRef;
 };

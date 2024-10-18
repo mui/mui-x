@@ -26,7 +26,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     focused: string;
     /** State class applied to the element when disabled. */
     disabled: string;
-    /** Styles applied to the tree item icon and collapse/expand icon. */
+    /** Styles applied to the Tree Item icon and collapse/expand icon. */
     iconContainer: string;
     /** Styles applied to the label element. */
     label: string;
@@ -40,7 +40,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     editable: string;
   };
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label?: React.ReactNode;
   /**
@@ -48,15 +48,15 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
    */
   itemId: string;
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon?: React.ReactNode;
   /**
-   * The icon to display next to the tree item's label. Either an expansion or collapse icon.
+   * The icon to display next to the Tree Item's label. Either an expansion or collapse icon.
    */
   expansionIcon?: React.ReactNode;
   /**
-   * The icon to display next to the tree item's label. Either a parent or end icon.
+   * The icon to display next to the Tree Item's label. Either a parent or end icon.
    */
   displayIcon?: React.ReactNode;
   dragAndDropOverlayProps?: TreeItem2DragAndDropOverlayProps;
@@ -199,7 +199,7 @@ TreeItemContent.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   /**
-   * The icon to display next to the tree item's label. Either a parent or end icon.
+   * The icon to display next to the Tree Item's label. Either a parent or end icon.
    */
   displayIcon: PropTypes.node,
   dragAndDropOverlayProps: PropTypes.shape({
@@ -207,11 +207,11 @@ TreeItemContent.propTypes = {
     style: PropTypes.object,
   }),
   /**
-   * The icon to display next to the tree item's label. Either an expansion or collapse icon.
+   * The icon to display next to the Tree Item's label. Either an expansion or collapse icon.
    */
   expansionIcon: PropTypes.node,
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon: PropTypes.node,
   /**
@@ -219,7 +219,7 @@ TreeItemContent.propTypes = {
    */
   itemId: PropTypes.string.isRequired,
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label: PropTypes.node,
   labelInputProps: PropTypes.shape({
