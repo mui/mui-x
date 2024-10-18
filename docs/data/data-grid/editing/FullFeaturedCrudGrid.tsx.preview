@@ -3,7 +3,7 @@
   columns={columns}
   editMode="row"
   rowModesModel={rowModesModel}
-  onRowModesModelChange={handleRowModesModelChange}
+  onRowModesModelChange={setRowModesModel}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
   slots={{
