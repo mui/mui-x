@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import { InfoCard } from '@mui/docs/InfoCard';
 import ChatBubbleRoundedIcon from '@mui/icons-material/ChatBubble';
 import DashboardCustomizeRoundedIcon from '@mui/icons-material/DashboardCustomizeRounded';
+import ExtensionRoundedIcon from '@mui/icons-material/Extension';
 import HighlightRoundedIcon from '@mui/icons-material/Highlight';
 import LabelImportantRoundedIcon from '@mui/icons-material/LabelImportant';
 import LegendToggleRoundedIcon from '@mui/icons-material/LegendToggleRounded';
@@ -26,7 +27,7 @@ const content = [
   {
     title: 'Composition',
     link: '/x/react-charts/composition/',
-    icon: <TipsAndUpdatesRoundedIcon fontSize="small" color="primary" />,
+    icon: <ExtensionRoundedIcon fontSize="small" color="primary" />,
   },
   {
     title: 'Label',
