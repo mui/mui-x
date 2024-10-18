@@ -1,15 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
+import clsx from 'clsx';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement> & {
+export interface GridToolbarSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
-};
+}
 
 type OwnerState = DataGridProcessedProps;
 
@@ -17,48 +17,40 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['toolbarContainer'],
+    root: ['toolbarSeparator'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridToolbarContainerRoot = styled('div', {
+const Separator = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'ToolbarContainer',
-  overridesResolver: (_, styles) => styles.toolbarContainer,
+  slot: 'Separator',
+  overridesResolver: (_, styles) => styles.separator,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  gap: theme.spacing(0.5),
-  padding: theme.spacing(0.75, 0.75),
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  height: 24,
+  width: 1,
+  margin: theme.spacing(0.25),
+  backgroundColor: theme.palette.divider,
 }));
 
-const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
-  function GridToolbarContainer(props, ref) {
-    const { className, children, ...other } = props;
-    const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
-    if (!children) {
-      return null;
-    }
+function GridToolbarSeparator(props: GridToolbarSeparatorProps) {
+  const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
+  const { className, ...other } = props;
 
-    return (
-      <GridToolbarContainerRoot
-        ref={ref}
-        className={clsx(classes.root, className)}
-        ownerState={rootProps}
-        {...other}
-      >
-        {children}
-      </GridToolbarContainerRoot>
-    );
-  },
-);
+  return (
+    <Separator
+      ownerState={rootProps}
+      className={clsx(classes.root, className)}
+      role="separator"
+      aria-orientation="vertical"
+      {...other}
+    />
+  );
+}
 
-GridToolbarContainer.propTypes = {
+GridToolbarSeparator.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -70,4 +62,4 @@ GridToolbarContainer.propTypes = {
   ]),
 } as any;
 
-export { GridToolbarContainer };
+export { GridToolbarSeparator };

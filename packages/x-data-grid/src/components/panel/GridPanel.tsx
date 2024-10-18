@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import Popper from '@mui/material/Popper';
+import Grow from '@mui/material/Grow';
+import Popper, { PopperPlacementType } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -54,12 +55,30 @@ const GridPaperRoot = styled(Paper, {
   overflow: 'auto',
 }));
 
+const TRANSFORM_ORIGIN_BY_PLACEMENT: Record<PopperPlacementType, string> = {
+  'bottom-end': 'top right',
+  'bottom-start': 'top left',
+  'top-end': 'bottom right',
+  'top-start': 'bottom left',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+  top: 'bottom',
+  auto: 'bottom',
+  'auto-end': 'bottom',
+  'auto-start': 'bottom',
+  'right-end': 'left',
+  'right-start': 'left',
+  'left-end': 'right',
+  'left-start': 'right',
+};
+
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
-  const { children, className, classes: classesProp, ...other } = props;
+  const { children, className, classes: classesProp, anchorEl, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
-  const [isPlaced, setIsPlaced] = React.useState(false);
+  const [placement, setPlacement] = React.useState<PopperPlacementType | null>(null);
 
   const handleClickAway = React.useCallback(() => {
     apiRef.current.hidePreferences();
@@ -87,18 +106,18 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
         name: 'isPlaced',
         enabled: true,
         phase: 'main' as const,
-        fn: () => {
-          setIsPlaced(true);
+        fn: (data: any) => {
+          setPlacement(data.state.placement);
         },
         effect: () => () => {
-          setIsPlaced(false);
+          setPlacement(null);
         },
       },
     ],
     [],
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+  const [fallbackAnchorEl, setFallbackAnchorEl] = React.useState<Element | null>(null);
 
   React.useEffect(() => {
     const panelAnchor = apiRef.current.rootElementRef?.current?.querySelector(
@@ -106,11 +125,11 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     );
 
     if (panelAnchor) {
-      setAnchorEl(panelAnchor);
+      setFallbackAnchorEl(panelAnchor);
     }
   }, [apiRef]);
 
-  if (!anchorEl) {
+  if (!anchorEl && !fallbackAnchorEl) {
     return null;
   }
 
@@ -120,20 +139,31 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       placement="bottom-start"
       className={clsx(classes.panel, className)}
       ownerState={rootProps}
-      anchorEl={anchorEl}
+      anchorEl={anchorEl ?? fallbackAnchorEl}
       modifiers={modifiers}
+      transition
       {...other}
     >
-      <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
-        <GridPaperRoot
-          className={classes.paper}
-          ownerState={rootProps}
-          elevation={8}
-          onKeyDown={handleKeyDown}
-        >
-          {isPlaced && children}
-        </GridPaperRoot>
-      </ClickAwayListener>
+      {({ TransitionProps }) => (
+        <ClickAwayListener mouseEvent="onMouseDown" onClickAway={handleClickAway}>
+          <Grow
+            {...TransitionProps}
+            timeout={250}
+            style={{
+              transformOrigin: placement ? TRANSFORM_ORIGIN_BY_PLACEMENT[placement] : undefined,
+            }}
+          >
+            <GridPaperRoot
+              className={classes.paper}
+              ownerState={rootProps}
+              elevation={8}
+              onKeyDown={handleKeyDown}
+            >
+              {placement && children}
+            </GridPaperRoot>
+          </Grow>
+        </ClickAwayListener>
+      )}
     </GridPanelRoot>
   );
 });

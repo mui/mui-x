@@ -7,10 +7,14 @@ import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import MUIPopover from '@mui/material/Popover';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUIToggleButton from '@mui/material/ToggleButton';
+import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
+  GridArrowDropDownIcon,
   GridAddIcon,
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -27,21 +31,23 @@ import {
   GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
-  GridTableRowsIcon,
   GridTripleDotsVerticalIcon,
-  GridViewHeadlineIcon,
-  GridViewStreamIcon,
   GridVisibilityOffIcon,
   GridViewColumnIcon,
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridDensityCompactIcon,
+  GridDensityStandardIcon,
+  GridDensityComfortableIcon,
+  GridPrintIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import MUISelectOption from './components/MUISelectOption';
 
 const iconSlots: GridIconSlotsComponent = {
+  arrowDropDownIcon: GridArrowDropDownIcon,
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,
@@ -53,9 +59,9 @@ const iconSlots: GridIconSlotsComponent = {
   columnSortedAscendingIcon: GridArrowUpwardIcon,
   columnSortedDescendingIcon: GridArrowDownwardIcon,
   columnResizeIcon: GridSeparatorIcon,
-  densityCompactIcon: GridViewHeadlineIcon,
-  densityStandardIcon: GridTableRowsIcon,
-  densityComfortableIcon: GridViewStreamIcon,
+  densityCompactIcon: GridDensityCompactIcon,
+  densityStandardIcon: GridDensityStandardIcon,
+  densityComfortableIcon: GridDensityComfortableIcon,
   exportIcon: GridSaveAltIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
@@ -77,6 +83,7 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
+  printIcon: GridPrintIcon,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -90,9 +97,12 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: MUIPopper,
+  basePopover: MUIPopover,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseChip: MUIChip,
+  baseToggleButton: MUIToggleButton,
+  baseToggleButtonGroup: MUIToggleButtonGroup,
 };
 
 export default materialSlots;
