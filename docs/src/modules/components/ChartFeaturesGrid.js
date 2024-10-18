@@ -10,7 +10,6 @@ import LegendToggleRoundedIcon from '@mui/icons-material/LegendToggleRounded';
 import LineAxisRoundedIcon from '@mui/icons-material/LineAxisRounded';
 import StackedBarChartRoundedIcon from '@mui/icons-material/StackedBarChartRounded';
 import StyleRoundedIcon from '@mui/icons-material/StyleRounded';
-import TipsAndUpdatesRoundedIcon from '@mui/icons-material/TipsAndUpdatesRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomIn';
 
 const content = [
