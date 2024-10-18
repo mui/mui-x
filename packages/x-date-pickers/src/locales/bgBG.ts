@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'преди обяд/след обяд',
 };
 
-const bgBGPickers: Partial<PickersLocaleText<any>> = {
+const bgBGPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Предишен месец',
   nextMonth: 'Следващ месец',
@@ -61,11 +61,11 @@ const bgBGPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Избери дата, избраната дата е ${utils.format(value, 'fullDate')}`
+      ? `Избери дата, избраната дата е ${utils.format(value!, 'fullDate')}`
       : 'Избери дата',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Избери час, избраният час е ${utils.format(value, 'fullTime')}`
+      ? `Избери час, избраният час е ${utils.format(value!, 'fullTime')}`
       : 'Избери час',
   fieldClearLabel: 'Изчисти стойност',
 

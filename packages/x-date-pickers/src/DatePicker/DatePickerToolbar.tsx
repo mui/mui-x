@@ -16,8 +16,8 @@ import {
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
-export interface DatePickerToolbarProps<TDate extends PickerValidDate>
-  extends BaseToolbarProps<TDate | null, DateView>,
+export interface DatePickerToolbarProps
+  extends BaseToolbarProps<PickerValidDate | null, DateView>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -27,7 +27,7 @@ export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<DatePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: DatePickerToolbarProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -47,7 +47,7 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps<any> }>({
+})<{ ownerState: DatePickerToolbarProps }>({
   variants: [
     {
       props: { isLandscape: true },
@@ -58,8 +58,8 @@ const DatePickerToolbarTitle = styled(Typography, {
   ],
 });
 
-type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
-  props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerToolbarComponent = ((
+  props: DatePickerToolbarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -72,9 +72,10 @@ type DatePickerToolbarComponent = (<TDate extends PickerValidDate>(
  *
  * - [DatePickerToolbar API](https://mui.com/x/api/date-pickers/date-picker-toolbar/)
  */
-export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: DatePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
+  inProps: DatePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });
   const {
     value,
@@ -88,8 +89,8 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<
     view,
     ...other
   } = props;
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
+  const utils = useUtils();
+  const translations = usePickersTranslations();
   const classes = useUtilityClasses(props);
 
   const dateText = React.useMemo(() => {

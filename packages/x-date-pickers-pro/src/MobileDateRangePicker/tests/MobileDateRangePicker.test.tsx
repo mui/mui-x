@@ -17,20 +17,22 @@ describe('<MobileDateRangePicker />', () => {
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const { unmount } = render(
-        <MobileDateRangePicker
-          name="test"
-          enableAccessibleFieldDOMStructure
-          slots={{ field: SingleInputDateRangeField }}
-        />,
+        <MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
       );
       expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
 
       unmount();
 
-      // Test with v6 input
-      render(<MobileDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      // Test with non-accessible DOM structure
+      render(
+        <MobileDateRangePicker
+          enableAccessibleFieldDOMStructure={false}
+          name="test"
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
       expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
     });
   });
@@ -39,7 +41,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the start input', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<MobileDateRangePicker onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
@@ -50,7 +52,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should open when focusing the end input', () => {
       const onOpen = spy();
 
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<MobileDateRangePicker onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
@@ -62,14 +64,13 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -103,14 +104,13 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -136,14 +136,13 @@ describe('<MobileDateRangePicker />', () => {
     it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
@@ -166,14 +165,13 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -200,14 +198,13 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -233,14 +230,13 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -267,7 +263,6 @@ describe('<MobileDateRangePicker />', () => {
 
       render(
         <MobileDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -286,7 +281,7 @@ describe('<MobileDateRangePicker />', () => {
     });
 
     it('should correctly set focused styles when input is focused', () => {
-      render(<MobileDateRangePicker enableAccessibleFieldDOMStructure />);
+      render(<MobileDateRangePicker />);
 
       const startSectionsContainer = getFieldSectionsContainer();
       fireEvent.focus(startSectionsContainer);

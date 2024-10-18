@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Popoludnie',
 };
 
-const skSKPickers: Partial<PickersLocaleText<any>> = {
+const skSKPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Ďalší mesiac',
   nextMonth: 'Predchádzajúci mesiac',
@@ -45,7 +45,7 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view] ?? view} vybraný. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `${timeViews[view] ?? view} vybraný. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie je vybraný čas' : `Vybraný čas je ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodín`,
   minutesClockNumberText: (minutes) => `${minutes} minút`,
   secondsClockNumberText: (seconds) => `${seconds} sekúnd`,
@@ -62,11 +62,11 @@ const skSKPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Vyberte dátum, vybraný dátum je ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Vyberte dátum, vybraný dátum je ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Vyberte dátum',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Vyberte čas',
   // fieldClearLabel: 'Clear',
 

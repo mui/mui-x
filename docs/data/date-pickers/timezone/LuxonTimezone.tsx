@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function LuxonTimezone() {
-  const [value, setValue] = React.useState<DateTime<true> | DateTime<false> | null>(
+  const [value, setValue] = React.useState<SimpleValue>(
     DateTime.fromISO('2022-04-17T15:30', { zone: 'America/New_York' }),
   );
 
@@ -16,7 +17,7 @@ export default function LuxonTimezone() {
       <Stack spacing={2}>
         <DateTimePicker value={value} onChange={setValue} />
         <Typography>
-          Stored value: {value == null ? 'null' : value.toISO()}
+          Stored value: {value == null ? 'null' : (value as DateTime).toISO()}
         </Typography>
       </Stack>
     </LocalizationProvider>

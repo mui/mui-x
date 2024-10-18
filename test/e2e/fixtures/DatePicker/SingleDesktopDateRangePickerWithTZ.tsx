@@ -14,7 +14,6 @@ export default function BasicDesktopDateRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
-        enableAccessibleFieldDOMStructure
         slots={{ field: SingleInputDateRangeField }}
         defaultValue={[dayjs('2024-04-12'), dayjs('2024-04-14')]}
       />

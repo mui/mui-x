@@ -24,9 +24,8 @@ import {
   PickersCalendarHeaderOwnerState,
   PickersCalendarHeaderProps,
 } from './PickersCalendarHeader.types';
-import { PickerValidDate } from '../models';
 
-const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
+const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -44,7 +43,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickersCalendarHeaderOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -62,7 +61,7 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   slot: 'LabelContainer',
   overridesResolver: (_, styles) => styles.labelContainer,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickersCalendarHeaderOwnerState;
 }>(({ theme }) => ({
   display: 'flex',
   overflow: 'hidden',
@@ -78,7 +77,7 @@ const PickersCalendarHeaderLabel = styled('div', {
   slot: 'Label',
   overridesResolver: (_, styles) => styles.label,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickersCalendarHeaderOwnerState;
 }>({
   marginRight: 6,
 });
@@ -88,7 +87,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   slot: 'SwitchViewButton',
   overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickersCalendarHeaderOwnerState;
 }>({
   marginRight: 'auto',
   variants: [
@@ -108,15 +107,15 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState<any>;
+  ownerState: PickersCalendarHeaderOwnerState;
 }>(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
 }));
 
-type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type PickersCalendarHeaderComponent = ((
+  props: PickersCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -130,11 +129,12 @@ type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
  *
  * - [PickersCalendarHeader API](https://mui.com/x/api/date-pickers/pickers-calendar-header/)
  */
-const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
-  TDate extends PickerValidDate,
->(inProps: PickersCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
+  inProps: PickersCalendarHeaderProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const translations = usePickersTranslations();
+  const utils = useUtils();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 

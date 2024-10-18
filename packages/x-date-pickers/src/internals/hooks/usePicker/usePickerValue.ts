@@ -4,12 +4,7 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { useValidation } from '../../../validation';
-import {
-  FieldSection,
-  PickerChangeHandlerContext,
-  PickerValidDate,
-  InferError,
-} from '../../../models';
+import { FieldSection, PickerChangeHandlerContext, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -152,7 +147,6 @@ const shouldClosePicker = <TValue, TError>(
  */
 export const usePickerValue = <
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
@@ -161,7 +155,7 @@ export const usePickerValue = <
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+}: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
   TSection,
   InferError<TExternalProps>
@@ -212,8 +206,8 @@ export const usePickerValue = <
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
+  const utils = useUtils();
+  const adapter = useLocalizationContext();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const {

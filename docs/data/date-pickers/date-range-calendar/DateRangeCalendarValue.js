@@ -20,10 +20,7 @@ export default function DateRangeCalendarValue() {
           />
         </DemoItem>
         <DemoItem label="Controlled calendar">
-          <DateRangeCalendar
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
+          <DateRangeCalendar value={value} onChange={setValue} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

@@ -4,7 +4,7 @@ import type { UsePickerProps } from './usePicker.types';
 import { UsePickerValueResponse } from './usePickerValue.types';
 
 interface UsePickerOwnerStateParameters<TValue> {
-  props: UsePickerProps<TValue, any, any, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any, any>;
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
 }
 

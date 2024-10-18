@@ -119,10 +119,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMomentJalaali
-  extends AdapterMoment
-  implements MuiPickersAdapter<Moment, string>
-{
+export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAdapter<string> {
   public isTimezoneCompatible = false;
 
   public lib = 'moment-jalaali';
@@ -139,10 +136,8 @@ export class AdapterMomentJalaali
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    type R = DateBuilderReturnType<T, Moment>;
+  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
       return <R>null;
     }

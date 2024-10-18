@@ -496,7 +496,7 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `2` in a 12-hours format', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
@@ -510,7 +510,7 @@ describe('<TimeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
@@ -526,7 +526,7 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: adapter.formats.fullTime12h,
@@ -545,7 +545,7 @@ describe('<TimeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         enableAccessibleFieldDOMStructure: false,
         format: adapter.formats.fullTime12h,
@@ -635,7 +635,7 @@ describe('<TimeField /> - Editing', () => {
     TimeField,
     ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -651,7 +651,7 @@ describe('<TimeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -668,7 +668,7 @@ describe('<TimeField /> - Editing', () => {
       });
 
       it('should not loose date information when cleaning the date then filling it again', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -696,7 +696,7 @@ describe('<TimeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -721,7 +721,7 @@ describe('<TimeField /> - Editing', () => {
       });
 
       it('should not loose time information when using the hour format and value is provided', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -738,7 +738,7 @@ describe('<TimeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({

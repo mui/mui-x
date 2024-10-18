@@ -52,7 +52,7 @@ export default function PickerWithButtonField() {
       <ButtonDatePicker
         label={value == null ? null : value.format('MM/DD/YYYY')}
         value={value}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={setValue}
       />
     </LocalizationProvider>
   );

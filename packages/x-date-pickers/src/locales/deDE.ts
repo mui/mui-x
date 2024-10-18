@@ -10,7 +10,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiem',
 };
 
-const deDEPickers: Partial<PickersLocaleText<any>> = {
+const deDEPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Letzter Monat',
   nextMonth: 'Nächster Monat',
@@ -45,7 +45,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view] ?? view} auswählen. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `${timeViews[view] ?? view} auswählen. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Keine Uhrzeit ausgewählt' : `Gewählte Uhrzeit ist ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
@@ -62,11 +62,11 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Datum auswählen, gewähltes Datum ist ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Datum auswählen, gewähltes Datum ist ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Datum auswählen',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Uhrzeit auswählen',
   fieldClearLabel: 'Wert leeren',
 

@@ -14,7 +14,10 @@
     },
     "onChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: PickerValidDate) => void",
+        "describedArgs": ["value"]
+      }
     },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
@@ -24,7 +27,7 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }

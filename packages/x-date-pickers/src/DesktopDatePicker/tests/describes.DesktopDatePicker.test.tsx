@@ -59,7 +59,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
-      const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
+      const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {
         fireEvent.click(

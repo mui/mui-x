@@ -31,7 +31,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
@@ -74,8 +74,8 @@ describe('<MobileTimePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       // change hours
       const hourClockEvent = getClockTouchEvent(

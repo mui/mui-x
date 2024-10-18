@@ -7,12 +7,13 @@ import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { SimpleValue } from '@mui/x-date-pickers/models';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function BasicValueProp() {
-  const [value, setValue] = React.useState<Dayjs | null>(
+  const [value, setValue] = React.useState<SimpleValue>(
     dayjs.tz('2022-04-17T15:30', 'America/New_York'),
   );
 
@@ -25,7 +26,7 @@ export default function BasicValueProp() {
           onChange={setValue}
         />
         <Typography>
-          Stored value: {value == null ? 'null' : value.format()}
+          Stored value: {value == null ? 'null' : (value as Dayjs).format()}
         </Typography>
       </Stack>
     </LocalizationProvider>

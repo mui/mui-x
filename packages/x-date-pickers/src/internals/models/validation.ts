@@ -22,17 +22,17 @@ export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
 /**
  * Props used to validate a time value.
  */
-export interface TimeValidationProps<TDate extends PickerValidDate> {
+export interface TimeValidationProps {
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime?: TDate;
+  minTime?: PickerValidDate;
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime?: TDate;
+  maxTime?: PickerValidDate;
   /**
    * Step over minutes.
    * @default 1
@@ -40,12 +40,11 @@ export interface TimeValidationProps<TDate extends PickerValidDate> {
   minutesStep?: number;
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
-  shouldDisableTime?: (value: TDate, view: TimeView) => boolean;
+  shouldDisableTime?: (value: PickerValidDate, view: TimeView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -57,72 +56,68 @@ export interface TimeValidationProps<TDate extends PickerValidDate> {
  * Validation props common to all the date views.
  * All these props have a default value when used inside a field / picker / calendar.
  */
-export interface BaseDateValidationProps<TDate extends PickerValidDate>
-  extends FutureAndPastValidationProps {
+export interface BaseDateValidationProps extends FutureAndPastValidationProps {
   /**
    * Maximal selectable date.
    * @default 2099-12-31
    */
-  maxDate?: TDate;
+  maxDate?: PickerValidDate;
   /**
    * Minimal selectable date.
    * @default 1900-01-01
    */
-  minDate?: TDate;
+  minDate?: PickerValidDate;
 }
 
 /**
  * Props used to validate a date value (validates day + month + year).
  */
-export interface DayValidationProps<TDate extends PickerValidDate> {
+export interface DayValidationProps {
   /**
    * Disable specific date.
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
-  shouldDisableDate?: (day: TDate) => boolean;
+  shouldDisableDate?: (day: PickerValidDate) => boolean;
 }
 
 /**
  * Props used to validate a month value
  */
-export interface MonthValidationProps<TDate extends PickerValidDate> {
+export interface MonthValidationProps {
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
-  shouldDisableMonth?: (month: TDate) => boolean;
+  shouldDisableMonth?: (month: PickerValidDate) => boolean;
 }
 
 /**
  * Props used to validate a year value
  */
-export interface YearValidationProps<TDate extends PickerValidDate> {
+export interface YearValidationProps {
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
-  shouldDisableYear?: (year: TDate) => boolean;
+  shouldDisableYear?: (year: PickerValidDate) => boolean;
 }
 
 /**
  * Props used to validate a date time value.
  */
-export interface DateTimeValidationProps<TDate extends PickerValidDate> {
+export interface DateTimeValidationProps {
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
-  minDateTime?: TDate;
+  minDateTime?: PickerValidDate;
   /**
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
-  maxDateTime?: TDate;
+  maxDateTime?: PickerValidDate;
 }

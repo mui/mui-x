@@ -3,18 +3,14 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils } from './useUtils';
 import type { PickerValueManager } from './usePicker';
-import { PickersTimezone, PickerValidDate } from '../../models';
+import { PickersTimezone } from '../../models';
 
 /**
  * Hooks making sure that:
  * - The value returned by `onChange` always have the timezone of `props.value` or `props.defaultValue` if defined
  * - The value rendered is always the one from `props.timezone` if defined
  */
-export const useValueWithTimezone = <
-  TDate extends PickerValidDate,
-  TValue,
-  TChange extends (...params: any[]) => void,
->({
+export const useValueWithTimezone = <TValue, TChange extends (...params: any[]) => void>({
   timezone: timezoneProp,
   value: valueProp,
   defaultValue,
@@ -25,9 +21,9 @@ export const useValueWithTimezone = <
   value: TValue | undefined;
   defaultValue: TValue | undefined;
   onChange: TChange | undefined;
-  valueManager: PickerValueManager<TValue, TDate, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }) => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const firstDefaultValue = React.useRef(defaultValue);
   const inputValue = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
@@ -63,11 +59,7 @@ export const useValueWithTimezone = <
 /**
  * Wrapper around `useControlled` and `useValueWithTimezone`
  */
-export const useControlledValueWithTimezone = <
-  TDate extends PickerValidDate,
-  TValue,
-  TChange extends (...params: any[]) => void,
->({
+export const useControlledValueWithTimezone = <TValue, TChange extends (...params: any[]) => void>({
   name,
   timezone: timezoneProp,
   value: valueProp,
@@ -80,7 +72,7 @@ export const useControlledValueWithTimezone = <
   value: TValue | undefined;
   defaultValue: TValue | undefined;
   onChange: TChange | undefined;
-  valueManager: PickerValueManager<TValue, TDate, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }) => {
   const [valueWithInputTimezone, setValue] = useControlled({
     name,

@@ -80,8 +80,8 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value!, 1), 1), 5);
 
       if (isOpened) {
         fireEvent.click(
@@ -112,7 +112,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
           selectSection('meridiem');
-          const previousHours = adapterToUse.getHours(value);
+          const previousHours = adapterToUse.getHours(value!);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {

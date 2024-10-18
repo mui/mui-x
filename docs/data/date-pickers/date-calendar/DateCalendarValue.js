@@ -15,7 +15,7 @@ export default function DateCalendarValue() {
           <DateCalendar defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
         <DemoItem label="Controlled calendar">
-          <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
+          <DateCalendar value={value} onChange={setValue} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

@@ -24,8 +24,7 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   const { defaultProps, render, clock, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps & { hook?: any },
+    props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);

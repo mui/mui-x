@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'öğleden sonra',
 };
 
-const trTRPickers: Partial<PickersLocaleText<any>> = {
+const trTRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Önceki ay',
   nextMonth: 'Sonraki ay',
@@ -44,7 +44,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `${timeViews[view]} seç.  ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Zaman seçilmedi' : `Seçilen zaman: ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+    `${timeViews[view]} seç.  ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Zaman seçilmedi' : `Seçilen zaman: ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
@@ -61,11 +61,11 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Tarih seçin, seçilen tarih: ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Tarih seçin, seçilen tarih: ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Tarih seç',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Saat seçin, seçilen saat: ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Saat seçin, seçilen saat: ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Saat seç',
   // fieldClearLabel: 'Clear',
 

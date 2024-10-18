@@ -4,7 +4,6 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   TimeRangeValidationError,
   RangeFieldSection,
@@ -12,14 +11,11 @@ import {
   RangeFieldSeparatorProps,
 } from '../../models';
 
-export interface UseTimeRangeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
+export interface UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends MakeOptional<
       Omit<
         UseFieldInternalProps<
-          DateRange<TDate>,
-          TDate,
+          DateRange,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TimeRangeValidationError
@@ -29,7 +25,7 @@ export interface UseTimeRangeFieldProps<
       'format'
     >,
     RangeFieldSeparatorProps,
-    TimeValidationProps<TDate>,
+    TimeValidationProps,
     BaseTimeValidationProps {
   /**
    * 12h/24h view for hour selection clock.
