@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { TreeViewPluginSignature, MuiCancellableEvent } from '../../models';
+import { MuiCancellableEvent } from '@mui/x-internals/cancellableEvent';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';

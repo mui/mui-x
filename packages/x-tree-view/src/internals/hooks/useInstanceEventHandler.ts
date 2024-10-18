@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import { UnregisterToken, CleanupTracking } from '../utils/cleanupTracking/CleanupTracking';
 import { TimerBasedCleanupTracking } from '../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
@@ -50,9 +51,11 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
         params,
         event,
       ) => {
-        if (!event.defaultMuiPrevented) {
-          handlerRef.current?.(params, event);
+        if (shouldSkipEventHandler(event)) {
+          return;
         }
+
+        handlerRef.current?.(params, event);
       };
 
       subscription.current = instance.$$subscribeEvent(eventName as string, enhancedHandler);
@@ -85,9 +88,11 @@ export function createUseInstanceEventHandler(registryContainer: RegistryContain
           params,
           event,
         ) => {
-          if (!event.defaultMuiPrevented) {
-            handlerRef.current?.(params, event);
+          if (shouldSkipEventHandler(event)) {
+            return;
           }
+
+          handlerRef.current?.(params, event);
         };
 
         subscription.current = instance.$$subscribeEvent(eventName as string, enhancedHandler);

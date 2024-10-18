@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { MuiCancellableEvent, shouldSkipEventHandler } from '@mui/x-internals/cancellableEvent';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { MuiCancellableEvent, TreeViewItemPlugin } from '../../models';
+import { TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import {
   UseTreeItem2LabelInputSlotPropsFromLabelEditing,
@@ -37,7 +38,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
           event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent,
         ) => {
           externalEventHandlers.onKeyDown?.(event);
-          if (event.defaultMuiPrevented) {
+          if (shouldSkipEventHandler(event)) {
             return;
           }
           const target = event.target as HTMLInputElement;
@@ -51,7 +52,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
 
         const handleBlur = (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
           externalEventHandlers.onBlur?.(event);
-          if (event.defaultMuiPrevented) {
+          if (shouldSkipEventHandler(event)) {
             return;
           }
 
