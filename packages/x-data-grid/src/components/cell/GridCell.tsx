@@ -7,8 +7,10 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { isOverflown } from '../../utils/domUtils';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -76,6 +78,7 @@ export type GridCellProps = {
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
+  slotProps?: { tooltip?: Partial<TooltipProps> };
   [x: string]: any; // TODO v7: remove this - it breaks type safety
 };
 
@@ -175,12 +178,27 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     onKeyUp,
     onDragEnter,
     onDragOver,
+    slotProps,
+    'aria-label': ariaLabel,
     ...other
   } = props;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
+  const tooltipProps = slotProps?.tooltip || {
+    slotProps: {
+      popper: {
+        sx: {
+          [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]:
+            {
+              marginTop: '-5px',
+            },
+        },
+      },
+    },
+  };
+  const [tooltip, setTooltip] = React.useState<string | null>(null);
 
   const field = column.field;
 
@@ -331,6 +349,23 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   const isCellRowSpanned = hiddenCells[rowId]?.[field] ?? false;
   const rowSpan = spannedCells[rowId]?.[field] ?? 1;
 
+  let cellText = tooltip;
+  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(
+    (event) => {
+      publish('cellMouseOver', onMouseOver)(event);
+
+      if (cellText && cellRef?.current) {
+        const isOver = isOverflown(cellRef.current);
+        if (isOver && tooltip !== cellText) {
+          setTooltip(cellText);
+        } else if (!isOver && tooltip) {
+          setTooltip(null);
+        }
+      }
+    },
+    [tooltip, cellText, publish, onMouseOver],
+  );
+
   const style = React.useMemo(() => {
     if (isNotVisible) {
       return {
@@ -433,7 +468,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   }
 
   let children: React.ReactNode;
-  let title: string | undefined;
 
   if (editCellState === null && column.renderCell) {
     children = column.renderCell(cellParams);
@@ -464,7 +498,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = valueString;
-    title = valueString;
+    cellText = valueString;
   }
 
   if (React.isValidElement(children) && canManageOwnFocus) {
@@ -479,31 +513,38 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       };
 
   return (
-    <div
-      ref={handleRef}
-      className={clsx(classes.root, classNames, className)}
-      role="gridcell"
-      data-field={field}
-      data-colindex={colIndex}
-      aria-colindex={colIndex + 1}
-      aria-colspan={colSpan}
-      aria-rowspan={rowSpan}
-      style={style}
-      title={title}
-      tabIndex={tabIndex}
-      onClick={publish('cellClick', onClick)}
-      onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
-      onMouseOver={publish('cellMouseOver', onMouseOver)}
-      onMouseDown={publishMouseDown('cellMouseDown')}
-      onMouseUp={publishMouseUp('cellMouseUp')}
-      onKeyDown={publish('cellKeyDown', onKeyDown)}
-      onKeyUp={publish('cellKeyUp', onKeyUp)}
-      {...draggableEventHandlers}
-      {...other}
-      onFocus={handleFocus}
+    <rootProps.slots.baseTooltip
+      title={tooltip}
+      enterDelay={1000}
+      {...tooltipProps}
+      {...rootProps.slotProps?.baseTooltip}
     >
-      {children}
-    </div>
+      <div
+        ref={handleRef}
+        className={clsx(classes.root, classNames, className)}
+        role="gridcell"
+        data-field={field}
+        data-colindex={colIndex}
+        aria-colindex={colIndex + 1}
+        aria-colspan={colSpan}
+        aria-rowspan={rowSpan}
+        aria-label={ariaLabel}
+        style={style}
+        tabIndex={tabIndex}
+        onClick={publish('cellClick', onClick)}
+        onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
+        onMouseOver={handleMouseOver}
+        onMouseDown={publishMouseDown('cellMouseDown')}
+        onMouseUp={publishMouseUp('cellMouseUp')}
+        onKeyDown={publish('cellKeyDown', onKeyDown)}
+        onKeyUp={publish('cellKeyUp', onKeyUp)}
+        {...draggableEventHandlers}
+        {...other}
+        onFocus={handleFocus}
+      >
+        {children}
+      </div>
+    </rootProps.slots.baseTooltip>
   );
 });
 
@@ -538,6 +579,7 @@ GridCell.propTypes = {
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   sectionIndex: PropTypes.number.isRequired,
   sectionLength: PropTypes.number.isRequired,
+  slotProps: PropTypes.object,
   width: PropTypes.number.isRequired,
 } as any;
 
