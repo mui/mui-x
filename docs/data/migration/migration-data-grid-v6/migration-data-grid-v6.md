@@ -496,7 +496,7 @@ See the [Direct state access](/x/react-data-grid/state/#direct-selector-access) 
 
 ### Editing
 
-- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/#the-processrowupdate-callback) prop can be used in its place.
+- The `rowEditCommit` event and the related prop `onRowEditCommit` was removed. The [`processRowUpdate`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) prop can be used in its place.
 
 ### Other exports
 

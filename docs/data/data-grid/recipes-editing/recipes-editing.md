@@ -108,7 +108,7 @@ The following demo implements this behavior.
 
 ## Bulk editing
 
-The Data Grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
+The Data Grid [Editing](/x/react-data-grid/editing/) API exposes [the `processRowUpdate` callback](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) which is commonly used to persist edits on per-row basis.
 You can utilize this callback to batch edits locally and then choose to either persist or discard them in bulk.
 
 The demo below stores edited and deleted rows in the `unsavedChangesRef`.
