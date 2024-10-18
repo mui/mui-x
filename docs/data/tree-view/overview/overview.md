@@ -46,15 +46,15 @@ At the moment, the Simple and Rich Tree Views are similar in terms of feature su
 
 The `@mui/x-tree-view` package exposes two different components to define your tree items:
 
-- `TreeItem`
-- `TreeItem2`
+- `<TreeItem />`
+- `<TreeItem2 />`
 
-#### `TreeItem`
+#### Tree Item
 
 This is the long-standing component that is very similar to the one used in previous versions (`@mui/x-tree-view@6` and `@mui/lab`).
 
-When using `SimpleTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem` and use it as a child of the `SimpleTreeView` component:
+When using Simple Tree View,
+you can import it from `@mui/x-tree-view/TreeItem` and use it as a child of the Simple Tree View component:
 
 ```tsx
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
@@ -70,7 +70,7 @@ export default function App() {
 }
 ```
 
-When using `RichTreeView`,
+When using Rich Tree View,
 you don't have to import anything; it's the default component used to render the items:
 
 ```tsx
@@ -81,12 +81,12 @@ export default function App() {
 }
 ```
 
-#### `TreeItem2`
+#### Tree Item 2
 
-This is a new component that provides a more powerful customization API, and will eventually replace `TreeItem`.
+This is a new component that provides a more powerful customization API, and will eventually replace `<TreeItem />`.
 
-When using `SimpleTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem2` and use it as a child of the `SimpleTreeView` component:
+When using Simple Tree View,
+you can import it from `@mui/x-tree-view/TreeItem2` and use it as a child of the Simple Tree View component:
 
 ```tsx
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
@@ -102,8 +102,8 @@ export default function App() {
 }
 ```
 
-When using `RichTreeView`,
-you can import it from `@mui/x-tree-view/TreeItem2` and pass it as a slot of the `RichTreeView` component:
+When using Rich Tree View,
+you can import it from `@mui/x-tree-view/TreeItem2` and pass it as a slot of the Rich Tree View component:
 
 ```tsx
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';

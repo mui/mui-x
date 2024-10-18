@@ -28,7 +28,7 @@ Each item must have a unique identifier.
 
 This identifier is used internally to identify the item in the various models and to track the item across updates.
 
-By default, the `RichTreeView` component looks for a property named `id` in the data set to get that identifier:
+By default, the Rich Tree View component looks for a property named `id` in the data set to get that identifier:
 
 ```tsx
 const ITEMS = [{ id: 'tree-view-community' }];
@@ -36,7 +36,7 @@ const ITEMS = [{ id: 'tree-view-community' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the `RichTreeView` component where it is located.
+If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the Rich Tree View component where it is located.
 
 The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
 
@@ -63,7 +63,7 @@ It could be achieved by either defining the prop outside the component scope or 
 
 Each item must have a label which does not need to be unique.
 
-By default, the `RichTreeView` component looks for a property named `label` in the data set to get that label:
+By default, the Rich Tree View component looks for a property named `label` in the data set to get that label:
 
 ```tsx
 const ITEMS = [{ label: '@mui/x-tree-view' }];
@@ -71,7 +71,7 @@ const ITEMS = [{ label: '@mui/x-tree-view' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the `RichTreeView` component where it's located:
+If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the Rich Tree View component where it's located:
 
 The following demo shows how to use `getItemLabel` to grab the unique identifier from a property named `name`:
 
@@ -95,7 +95,7 @@ It could be achieved by either defining the prop outside the component scope or 
 :::
 
 :::warning
-Unlike the `SimpleTreeView` component, the `RichTreeView` component only supports string labels, you cannot pass React nodes to it.
+Unlike the Simple Tree View component, the Rich Tree View component only supports string labels, you cannot pass React nodes to it.
 :::
 
 ## Disabled items

@@ -42,7 +42,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         items: {
           ...prevState.items,
           itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: item },
-          // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
+          // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
           itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
         },
       };

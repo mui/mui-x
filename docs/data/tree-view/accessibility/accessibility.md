@@ -54,7 +54,7 @@ Type-ahead is supported for single characters. When typing a character, focus mo
 
 ## Selection
 
-The tree view supports both single and multi-selection. To learn more about the selection API, visit the dedicated page for the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) or the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/).
+The Tree View supports both single and multi-selection. To learn more about the selection API, visit the dedicated page for the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) or the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/).
 
 To read more about the distinction between selection and focus, you can refer to the [WAI-ARIA Authoring Practices guide](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_vs_selection).
 

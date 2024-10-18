@@ -42,6 +42,39 @@ const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColu
   },
 );
 
+GridGenericColumnMenu.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  colDef: PropTypes.object.isRequired,
+  /**
+   * Initial `slotProps` - it is internal, to be overrriden by Pro or Premium packages
+   * @ignore - do not document.
+   */
+  defaultSlotProps: PropTypes.object.isRequired,
+  /**
+   * Initial `slots` - it is internal, to be overrriden by Pro or Premium packages
+   * @ignore - do not document.
+   */
+  defaultSlots: PropTypes.object.isRequired,
+  hideMenu: PropTypes.func.isRequired,
+  id: PropTypes.string,
+  labelledby: PropTypes.string,
+  open: PropTypes.bool.isRequired,
+  /**
+   * Could be used to pass new props or override props specific to a column menu component
+   * e.g. `displayOrder`
+   */
+  slotProps: PropTypes.object,
+  /**
+   * `slots` could be used to add new and (or) override default column menu items
+   * If you register a nee component you must pass it's `displayOrder` in `slotProps`
+   * or it will be placed in the end of the list
+   */
+  slots: PropTypes.object,
+} as any;
+
 const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props, ref) {
     return (

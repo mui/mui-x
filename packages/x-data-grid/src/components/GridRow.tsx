@@ -81,6 +81,14 @@ function EmptyCell({ width }: { width: number }) {
   );
 }
 
+EmptyCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  width: PropTypes.number.isRequired,
+} as any;
+
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
@@ -411,12 +419,18 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
+
   for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
 
+    if (!column) {
+      continue;
+    }
+
     cells.push(getCell(column, indexInSection, i, middleColumnsLength));
   }
+
   if (hasVirtualFocusCellRight) {
     cells.push(
       getCell(

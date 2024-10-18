@@ -6,8 +6,6 @@ import { selectorTreeViewId } from './useTreeViewId.selectors';
 import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
 export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, store }) => {
-  const treeId = useSelector(store, selectorTreeViewId);
-
   React.useEffect(() => {
     store.update((prevState) => {
       if (params.id === prevState.id.providedTreeId && prevState.id.treeId !== undefined) {
@@ -20,6 +18,8 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
       };
     });
   }, [store, params.id]);
+
+  const treeId = useSelector(store, selectorTreeViewId);
 
   return {
     getRootProps: () => ({

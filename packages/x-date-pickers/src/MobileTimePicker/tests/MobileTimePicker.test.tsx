@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -12,25 +12,23 @@ import {
 } from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
-    it('should open when clicking the input', async () => {
+    it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      const { user } = render(
-        <MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />,
-      );
+      render(<MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
 
-      await user.click(getFieldSectionsContainer());
+      fireEvent.click(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should fire a change event when meridiem changes', async () => {
+    it('should fire a change event when meridiem changes', () => {
       const handleChange = spy();
-      const { user } = render(
+      render(
         <MobileTimePicker
           enableAccessibleFieldDOMStructure
           ampm
@@ -42,13 +40,13 @@ describe('<MobileTimePicker />', () => {
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
 
-      await user.click(buttonPM);
+      fireEvent.click(buttonPM);
 
       expect(handleChange.callCount).to.equal(1);
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
     });
 
-    it('should call onChange when selecting each view', async function test() {
+    it('should call onChange when selecting each view', function test() {
       if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
         this.skip();
       }
@@ -58,7 +56,7 @@ describe('<MobileTimePicker />', () => {
       const onClose = spy();
       const defaultValue = adapterToUse.date('2018-01-01');
 
-      const { user } = render(
+      render(
         <MobileTimePicker
           enableAccessibleFieldDOMStructure
           onChange={onChange}
@@ -68,7 +66,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'mobile', click: user.click });
+      openPicker({ type: 'time', variant: 'mobile' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

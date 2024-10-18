@@ -7,12 +7,12 @@
       "type": { "name": "custom", "description": "element type" },
       "default": "TreeItemContent",
       "deprecated": true,
-      "deprecationInfo": "Consider using the <code>TreeItem2</code> component or the <code>useTreeItem2</code> hook instead. For more detail, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
+      "deprecationInfo": "Consider using the <code>&lt;TreeItem2 /&gt;</code> component or the <code>useTreeItem2</code> hook instead. For more details, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
     },
     "ContentProps": {
       "type": { "name": "object" },
       "deprecated": true,
-      "deprecationInfo": "Consider using the <code>TreeItem2</code> component or the <code>useTreeItem2</code> hook instead. For more detail, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
+      "deprecationInfo": "Consider using the <code>&lt;TreeItem2 /&gt;</code> component or the <code>useTreeItem2</code> hook instead. For more details, see <a href=\"https://mui.com/x/react-tree-view/tree-item-customization/\">https://mui.com/x/react-tree-view/tree-item-customization/</a>."
     },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
@@ -44,7 +44,7 @@
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
     {
       "name": "icon",
-      "description": "The icon to display next to the tree item's label.",
+      "description": "The icon to display next to the Tree Item's label.",
       "class": null
     },
     {
@@ -106,7 +106,7 @@
     {
       "key": "iconContainer",
       "className": "MuiTreeItem-iconContainer",
-      "description": "Styles applied to the tree item icon.",
+      "description": "Styles applied to the Tree Item icon.",
       "isGlobal": false
     },
     {

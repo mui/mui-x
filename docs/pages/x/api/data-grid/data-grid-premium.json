@@ -649,6 +649,13 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_listColumn": {
+      "type": {
+        "name": "shape",
+        "description": "{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, display?: 'flex'<br>&#124;&nbsp;'text', field: string, renderCell?: func }"
+      }
+    },
+    "unstable_listView": { "type": { "name": "bool" } },
     "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",

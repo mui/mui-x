@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Rich Tree View - Headless
 
-<p class="description">Create your custom tree view.</p>
+<p class="description">Create your custom Tree View.</p>
 
 :::warning
 The `useTreeView` hook is not public API for now,
@@ -143,7 +143,7 @@ Once `focusedItemId` becomes a model, we could consider removing the notion of s
 
 ### Populate the Tree View instance
 
-The Tree View instance is an object accessible in all the plugins and in the `TreeItem`.
+The Tree View instance is an object accessible in all the plugins and in the Tree Item.
 It is the main way a plugin can provide features to the rest of the component.
 
 ```ts
@@ -268,7 +268,7 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
   params: UseCustomPluginParams;
   // The params specific to your plugins after running `getDefaultizedParams`
   defaultizedParams: UseCustomPluginDefaultizedParams;
-  // The methods added to the tree view instance by your plugin
+  // The methods added to the Tree View instance by your plugin
   instance: UseCustomPluginInstance;
   // The events emitted by your plugin
   events: UseCustomPluginEvents;
@@ -325,6 +325,6 @@ type UseCustomPluginSignature = TreeViewPluginSignature<{
 
 ### Log expanded items
 
-Interact with the tree view to see the expanded items being logged:
+Interact with the Tree View to see the expanded items being logged:
 
 {{"demo": "LogExpandedItems.js"}}

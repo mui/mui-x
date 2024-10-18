@@ -111,6 +111,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
       { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
       {
+        pathname: '/x/react-data-grid/list-view',
+        title: 'List view',
+        plan: 'pro',
+        unstable: true,
+      },
+      {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
         plan: 'pro',

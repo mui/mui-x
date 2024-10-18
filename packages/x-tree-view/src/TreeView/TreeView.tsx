@@ -50,7 +50,7 @@ const warn = () => {
 };
 
 /**
- * This component has been deprecated in favor of the new `SimpleTreeView` component.
+ * This component has been deprecated in favor of the new Simple Tree View component.
  * You can have a look at how to migrate to the new component in the v7 [migration guide](https://mui.com/x/migration/migration-tree-view-v6/#use-simpletreeview-instead-of-treeview)
  *
  * Demos:
@@ -104,7 +104,7 @@ TreeView.propTypes = {
     }),
   }),
   /**
-   * If `true`, the tree view renders a checkbox at the left of its label that allows selecting it.
+   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -174,39 +174,39 @@ TreeView.propTypes = {
    */
   multiSelect: PropTypes.bool,
   /**
-   * Callback fired when tree items are expanded/collapsed.
+   * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
-   * Callback fired when a tree item is expanded or collapsed.
+   * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
-   * Callback fired when a given tree item is focused.
+   * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
    * @param {string} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
-   * Callback fired when a tree item is selected or deselected.
+   * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
-   * Callback fired when tree items are selected/deselected.
+   * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {string[] | string} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.

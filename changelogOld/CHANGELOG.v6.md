@@ -1485,7 +1485,7 @@ Same changes as in `@mui/x-date-pickers@6.13.0`, plus:
 - [docs] Fix charts demo using too deep import (#10263) @LukasTy
 - [docs] Fix `e.g.` typo @oliviertassinari
 - [docs] Fix npm package indentation @oliviertassinari
-- [docs] Fix typo in tree view docs @oliviertassinari
+- [docs] Fix typo in Tree View docs @oliviertassinari
 - [docs] Improve the week picker example (#8257) @flaviendelangle
 - [docs] Include code links in the Data Grid demo (#10219) @cherniavskii
 - [docs] Polish page for SEO (#10216) @oliviertassinari
@@ -1546,7 +1546,7 @@ Same changes as in `@mui/x-date-pickers@6.12.1`.
 
 - [docs] Add `DemoContainer` and `DemoItem` JSDoc (#10186) @LukasTy
 - [docs] Add link to `custom layout` page (#10184) @LukasTy
-- [docs] Add tree view nav item (#10181) @LukasTy
+- [docs] Add Tree View nav item (#10181) @LukasTy
 - [docs] Fix wrong chart tooltip reference (#10169) @oliviertassinari
 - [docs] Improve chart SEO (#10170) @oliviertassinari
 - [docs] Precise expired license key condition (#10165) @oliviertassinari
@@ -1748,7 +1748,7 @@ _Aug 4, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- ⌚️ Move the tree view component from `@mui/lab` package
+- ⌚️ Move the Tree View component from `@mui/lab` package
 
   The `<TreeView />` component has been moved to the MUI X repository.
   It is now accessible from its own package: `@mui/x-tree-view`.
@@ -1804,7 +1804,7 @@ Same changes as in `@mui/x-date-pickers@6.11.0`.
 ### Tree View / `@mui/x-tree-view@6.0.0-alpha.0`
 
 - [TreeView] Add missing exported types (#9862) @flaviendelangle
-- [TreeView] Add tree view to changelog generator script (#9903) @MBilalShafi
+- [TreeView] Add Tree View to changelog generator script (#9903) @MBilalShafi
 - [TreeView] Create the package on the X repository (#9798) @flaviendelangle
 - [TreeView] Improve props typing (#9855) @flaviendelangle
 

@@ -31,15 +31,105 @@ function AreaPlotZoom(props: AreaPlotProps) {
   return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
+AreaPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line area item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
 function LinePlotZoom(props: LinePlotProps) {
   const { isInteracting } = useZoom();
   return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
 
+LinePlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
 function MarkPlotZoom(props: MarkPlotProps) {
   const { isInteracting } = useZoom();
   return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
+
+MarkPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  experimentalRendering: PropTypes.bool,
+  /**
+   * Callback fired when a line mark item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 export interface LineChartProProps extends LineChartProps, ZoomProps {}
 

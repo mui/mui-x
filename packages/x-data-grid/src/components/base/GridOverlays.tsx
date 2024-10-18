@@ -93,6 +93,15 @@ function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   );
 }
 
+GridOverlayWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  loadingOverlayVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
+  overlayType: PropTypes.oneOf(['loadingOverlay', 'noResultsOverlay', 'noRowsOverlay']),
+} as any;
+
 GridOverlays.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
