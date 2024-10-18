@@ -5,7 +5,6 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnPositionsSelector,
-  gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -17,7 +16,7 @@ import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';
-import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { gridListViewVisibleColumnSelector } from '../listView/gridListViewSelectors';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -68,9 +67,7 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = props.unstable_listView
-        ? [gridListColumnSelector(apiRef.current.state)!]
-        : gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = gridListViewVisibleColumnSelector(apiRef,props.unstable_listView);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
@@ -97,7 +94,7 @@ export const useGridScroll = (
         }
 
         if (typeof cellWidth === 'undefined') {
-          cellWidth = visibleColumns[params.colIndex].computedWidth;
+          cellWidth = visibleColumns[params.colIndex]!.computedWidth;
         }
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
