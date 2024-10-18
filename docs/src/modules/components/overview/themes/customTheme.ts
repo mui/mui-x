@@ -2,6 +2,16 @@ import { alpha, ThemeOptions } from '@mui/material/styles';
 import { dateRangePickerDayClasses } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { Config, PaletteMode } from './themes.types';
 
+declare module '@mui/material/styles' {
+  interface Mixins {
+    density: {
+      spacing: number;
+      width: number;
+      height: number;
+    };
+  }
+}
+
 export const brand = {
   50: 'hsl(240, 82%, 97%)',
   100: 'hsl(240, 83%, 93%)',
@@ -60,6 +70,29 @@ const getDesignTokens = (mode: PaletteMode, config: Config): ThemeOptions => {
     color = green;
   }
 
+  let corner = 4;
+  if (config.corner === 'rectangular') {
+    corner = 1;
+  } else if (config.corner === 'rounded') {
+    corner = 20;
+  }
+
+  let density = 32;
+  let spacing = 4;
+  if (config.density === 'compact') {
+    density = 28;
+    spacing = 2;
+  } else if (config.density === 'spacious') {
+    density = 36;
+  }
+
+  let family = ['"Roboto", "sans-serif"'].join(',');
+  if (config.typography === 'Inter') {
+    family = ['"Inter", "sans-serif"'].join(',');
+  } else if (config.typography === 'Menlo') {
+    family = ['"Menlo", "monospace"'].join(',');
+  }
+
   return {
     palette: {
       mode,
@@ -101,7 +134,7 @@ const getDesignTokens = (mode: PaletteMode, config: Config): ThemeOptions => {
       },
     },
     typography: {
-      fontFamily: ['"Inter", "sans-serif"'].join(','),
+      fontFamily: family,
       fontSize: 13,
       button: {
         textTransform: 'none',
@@ -109,7 +142,14 @@ const getDesignTokens = (mode: PaletteMode, config: Config): ThemeOptions => {
       overline: { textTransform: 'none', fontWeight: 600 },
     },
     shape: {
-      borderRadius: 4,
+      borderRadius: corner,
+    },
+    mixins: {
+      density: {
+        spacing,
+        width: density,
+        height: density,
+      },
     },
   };
 };
@@ -196,7 +236,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       },
       MuiPickersLayout: {
         styleOverrides: {
-          shortcuts: {
+          shortcuts: ({ theme }) => ({
             padding: '12px 24px 12px 12px',
             height: 'fit-content',
             ...(config.layout === 'horizontal'
@@ -209,12 +249,12 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
                   gap: '4px',
                 }),
             '&.MuiList-root': {
-              maxWidth: '296px',
+              maxWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 48,
             },
             '& .MuiListItem-root': {
               padding: '3px 0',
             },
-          },
+          }),
           contentWrapper: ({ theme }) => ({
             width: 'fit-content',
             ...(config.layout === 'horizontal'
@@ -284,43 +324,49 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       },
       MuiPickersSlideTransition: {
         styleOverrides: {
-          root: {
-            minWidth: 248,
+          root: ({ theme }) => ({
+            minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
             '&.MuiDayCalendar-slideTransition': {
-              minWidth: 248,
-              minHeight: 220,
+              minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
+              minHeight: theme.mixins.density.height * 7 + theme.mixins.density.spacing * 6,
             },
-          },
+          }),
         },
       },
       MuiDayCalendar: {
         styleOverrides: {
-          root: {
-            width: 248,
-          },
-          weekContainer: {
-            gap: 4,
+          monthContainer: ({ theme }) => ({
+            height: theme.mixins.density.height * 6 + theme.mixins.density.spacing * 6,
+          }),
+          root: ({ theme }) => ({
+            width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
+          }),
+          weekContainer: ({ theme }) => ({
+            height: theme.mixins.density.height,
+            gap: theme.mixins.density.spacing,
             margin: '4px 0',
-          },
-          slideTransition: { width: 248 },
+          }),
+          slideTransition: ({ theme }) => ({
+            width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
+          }),
           header: { gap: 4 },
-          weekDayLabel: {
+          weekDayLabel: ({ theme }) => ({
             margin: 0,
             fontSize: '12px',
-            width: 32,
-            height: 32,
-          },
+            width: theme.mixins.density.width,
+            height: theme.mixins.density.height,
+          }),
         },
       },
       MuiPickersDay: {
         styleOverrides: {
-          root: {
-            borderRadius: '4px',
+          root: ({ theme }) => ({
+            borderRadius: theme.shape.borderRadius,
             fontSize: '0.8rem',
             fontWeight: 500,
             border: 'none',
-            width: 32,
-            height: 32,
+            width: theme.mixins.density.width,
+            height: theme.mixins.density.height,
 
             '&:hover': {
               border: 'none',
@@ -328,7 +374,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             '&.Mui-selected': {
               transform: 'none',
             },
-          },
+          }),
           today: ({ theme }) => ({
             '&:not(.Mui-selected)': {
               borderColor: theme.palette.primary.main,
@@ -341,46 +387,46 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       },
       MuiPickersMonth: {
         styleOverrides: {
-          monthButton: {
-            borderRadius: '4px',
-          },
+          monthButton: ({ theme }) => ({
+            borderRadius: theme.shape.borderRadius,
+          }),
         },
       },
       MuiPickersYear: {
         styleOverrides: {
-          yearButton: {
-            borderRadius: '4px',
-          },
+          yearButton: ({ theme }) => ({
+            borderRadius: theme.shape.borderRadius,
+          }),
         },
       },
       MuiDateRangePickerDay: {
         styleOverrides: {
-          root: {
-            borderRadius: 4,
+          root: ({ theme }) => ({
+            borderRadius: theme.shape.borderRadius,
             ':first-of-type': {
               [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: 4,
+                borderRadius: theme.shape.borderRadius,
                 borderColor: 'transparent',
               },
               [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: 4,
+                borderRadius: theme.shape.borderRadius,
               },
             },
             ':last-of-type': {
               [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: 4,
+                borderRadius: theme.shape.borderRadius,
                 borderColor: 'transparent',
               },
               [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: 4,
+                borderRadius: theme.shape.borderRadius,
               },
             },
-          },
+          }),
           rangeIntervalPreview: {
             border: 'none',
           },
           rangeIntervalDayPreview: ({ theme }) => ({
-            borderRadius: 4,
+            borderRadius: theme.shape.borderRadius,
             borderColor: 'transparent',
             backgroundColor: theme.palette.grey[100],
             ...theme.applyStyles('dark', {

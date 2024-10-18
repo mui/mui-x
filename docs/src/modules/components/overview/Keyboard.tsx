@@ -469,7 +469,7 @@ export default function Keyboard() {
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
           >
-            More info
+            More about accessibility
           </Button>
         </Stack>
         <Stack spacing={2} sx={{ width: '100%', maxWidth: '500px' }}>

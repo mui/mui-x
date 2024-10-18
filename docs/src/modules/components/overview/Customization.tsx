@@ -11,6 +11,9 @@ import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
 import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
 import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
+import DensityLargeIcon from '@mui/icons-material/DensityLarge';
+import DensityMediumIcon from '@mui/icons-material/DensityMedium';
+import DensitySmallIcon from '@mui/icons-material/DensitySmall';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,7 +21,15 @@ import CustomLayoutRangePicker from './CustomLayoutRangePicker';
 import { getMD3Theme } from './themes/md3';
 import { getCustomTheme } from './themes/customTheme';
 import ConfigToggleButtons from './ConfigToggleButtons';
-import { Config, Themes, TypographyType, Corner, Layout, PaletteMode } from './themes/themes.types';
+import {
+  Config,
+  Themes,
+  TypographyType,
+  Corner,
+  Layout,
+  PaletteMode,
+  Density,
+} from './themes/themes.types';
 
 function RectangularCornersIcon() {
   return (
@@ -175,6 +186,9 @@ export default function Customization() {
   const handleChangeCorner = (_event: React.MouseEvent<HTMLElement>, newCorner: Corner) => {
     setStyleConfig((prev) => ({ ...prev, corner: newCorner }));
   };
+  const handleChangeDensity = (_event: React.MouseEvent<HTMLElement>, newDensity: Density) => {
+    setStyleConfig((prev) => ({ ...prev, density: newDensity }));
+  };
 
   const handleChangeTypography = (
     _event: React.MouseEvent<HTMLElement>,
@@ -319,6 +333,29 @@ export default function Customization() {
               </Stack>
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
+                  Density
+                </Typography>
+                <ConfigToggleButtons
+                  selectedValue={styleConfig.density}
+                  handleValueSwitch={handleChangeDensity}
+                  values={[
+                    {
+                      key: 'compact',
+                      icon: <DensitySmallIcon />,
+                    },
+                    {
+                      key: 'medium',
+                      icon: <DensityMediumIcon />,
+                    },
+                    {
+                      key: 'spacious',
+                      icon: <DensityLargeIcon />,
+                    },
+                  ]}
+                />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary" gutterBottom>
                   Typography
                 </Typography>
                 <ConfigToggleButtons
@@ -330,11 +367,11 @@ export default function Customization() {
                       label: 'Default',
                     },
                     {
-                      key: 'inter',
+                      key: 'Inter',
                       label: 'Inter',
                     },
                     {
-                      key: 'menlo',
+                      key: 'Menlo',
                       label: 'Menlo',
                     },
                   ]}
