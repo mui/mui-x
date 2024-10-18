@@ -8,6 +8,7 @@ const GridPanelAnchor = styled('div')({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,
   left: 0,
+  width: '100%',
 });
 
 type OwnerState = DataGridProcessedProps;
