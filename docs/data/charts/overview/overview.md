@@ -21,6 +21,10 @@ They also have access to all [MUI System](https://mui.com/system/getting-starte
 
 {{"demo": "ChartsOverviewDemo.js", "defaultCodeOpen": true}}
 
+## All MUI X Charts
+
+{{"component": "modules/components/ChartComponentsGrid.js"}}
+
 ## Using this documentation
 
 Each Chart type has two accompanying documents:
@@ -28,8 +32,8 @@ Each Chart type has two accompanying documents:
 1. **Overview** – a general description of built-in features
 2. **Demo** – a collection of custom examples
 
-See the **Common features** section for details on features that are shared across all Charts.
+### Supported features
 
-## All MUI X Charts components
+Features shared across Chart components such as axes and legends are described in standalone documents:
 
-{{"component": "modules/components/ChartComponentsGrid.js"}}
+{{"component": "modules/components/ChartFeaturesGrid.js"}}
