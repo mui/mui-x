@@ -526,6 +526,10 @@ export default function PopularFeaturesDemo() {
           [`& > div > div > div > div > div > .${gridClasses.cell}`]: {
             py: 1.5,
           },
+          // See https://github.com/mui/mui-x/issues/14989
+          [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+            boxSizing: 'content-box',
+          },
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 'medium',
           },
