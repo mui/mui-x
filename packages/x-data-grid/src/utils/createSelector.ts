@@ -61,10 +61,6 @@ function checkIsAPIRef(value: any) {
   return 'current' in value && 'instanceId' in value.current;
 }
 
-function checkIsInstanceId(value: any) {
-  return typeof value === 'object' && 'id' in value && Object.keys(value).length === 1;
-}
-
 const DEFAULT_INSTANCE_ID = { id: 'default' };
 
 export const createSelector = ((
@@ -152,15 +148,7 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (...Args: any[]) => {
-    const [stateOrApiRef, other] = Args;
-    let instanceId: any;
-    let selectorArgs: any;
-    if (checkIsInstanceId(other)) {
-      instanceId = other;
-    } else {
-      selectorArgs = other;
-    }
+  const selector = (stateOrApiRef: any, selectorArgs: any, instanceId?: any) => {
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
       ? stateOrApiRef.current.instanceId
