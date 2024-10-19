@@ -81,7 +81,7 @@ export const createSelector = ((
 
   // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
-    selector = (stateOrApiRef: any, args?: any, instanceIdParam?: any) => {
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
@@ -95,7 +95,7 @@ export const createSelector = ((
     };
     // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
-    selector = (stateOrApiRef: any, args?: any, instanceIdParam?: any) => {
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
@@ -107,7 +107,7 @@ export const createSelector = ((
       return e(va, vb, vc, vd, args);
     };
   } else if (a && b && c && d) {
-    selector = (stateOrApiRef: any, args?: any, instanceIdParam?: any) => {
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
@@ -118,7 +118,7 @@ export const createSelector = ((
       return d(va, vb, vc, args);
     };
   } else if (a && b && c) {
-    selector = (stateOrApiRef: any, args?: any, instanceIdParam?: any) => {
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
@@ -128,7 +128,7 @@ export const createSelector = ((
       return c(va, vb, args);
     };
   } else if (a && b) {
-    selector = (stateOrApiRef: any, args?: any, instanceIdParam?: any) => {
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
@@ -148,7 +148,7 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (stateOrApiRef: any, selectorArgs?: any, instanceId?: any) => {
+  const selector = (stateOrApiRef: any, selectorArgs: any, instanceId?: any) => {
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
       ? stateOrApiRef.current.instanceId
