@@ -10,7 +10,7 @@ export interface GridControlStateItem<
   stateId: string;
   propModel?: GridEventLookup[E]['params'];
   stateSelector:
-    | OutputSelector<State, GridControlledStateEventLookup[E]['params']>
+    | OutputSelector<State, any, GridControlledStateEventLookup[E]['params']>
     | ((state: State) => GridControlledStateEventLookup[E]['params']);
   propOnChange?: (
     model: GridControlledStateEventLookup[E]['params'],
