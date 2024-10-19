@@ -19,6 +19,7 @@ describe('createSelector', () => {
     it('should fallback to the default behavior when no cache key is provided', () => {
       const selector = createSelectorMemoized([], () => []) as OutputSelector<
         GridStateCommunity,
+        any,
         any
       >;
       const state = {} as GridStateCommunity;
@@ -48,6 +49,7 @@ describe('createSelector', () => {
     it('should return different selectors for different cache keys', () => {
       const selector = createSelectorMemoized([], () => []) as OutputSelector<
         GridStateCommunity,
+        any,
         any
       >;
       const apiRef1 = {
@@ -62,6 +64,7 @@ describe('createSelector', () => {
     it('should not clear the cache of one selector when another key is passed', () => {
       const selector = createSelectorMemoized([], () => []) as OutputSelector<
         GridStateCommunity,
+        any,
         any
       >;
       const apiRef1 = {
