@@ -148,7 +148,15 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (stateOrApiRef: any, selectorArgs: any, instanceId?: any) => {
+  const selector = (...Args: any[]) => {
+    const [stateOrApiRef, ...other] = Args;
+    let instanceId: any;
+    let selectorArgs: any;
+    if (typeof other === 'object' && 'id' in other && typeof other.id === 'number') {
+      instanceId = other;
+    } else {
+      selectorArgs = other;
+    }
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
       ? stateOrApiRef.current.instanceId
