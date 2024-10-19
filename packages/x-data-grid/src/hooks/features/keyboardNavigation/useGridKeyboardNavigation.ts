@@ -32,7 +32,10 @@ import {
   getRightColumnIndex,
   findNonRowSpannedCell,
 } from './utils';
-import { gridListColumnSelector, gridListViewVisibleColumnSelector } from '../listView/gridListViewSelectors';
+import {
+  gridListColumnSelector,
+  gridListViewVisibleColumnSelector,
+} from '../listView/gridListViewSelectors';
 
 /**
  * @requires useGridSorting (method) - can be after
@@ -91,7 +94,7 @@ export const useGridKeyboardNavigation = (
           colIndex = nextCellColSpanInfo.rightVisibleCellIndex;
         }
       }
-      
+
       const field = listView
         ? gridListColumnSelector(apiRef.current.state)!.field
         : gridVisibleColumnFieldsSelector(apiRef)[colIndex];
@@ -513,7 +516,7 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const visibleColumns = gridListViewVisibleColumnSelector(apiRef,listView);
+      const visibleColumns = gridListViewVisibleColumnSelector(apiRef, listView);
       const lastColIndex = visibleColumns.length - 1;
       let shouldPreventDefault = true;
 

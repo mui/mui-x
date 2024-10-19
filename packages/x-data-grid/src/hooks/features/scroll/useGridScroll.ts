@@ -3,9 +3,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
-import {
-  gridColumnPositionsSelector,
-} from '../columns/gridColumnsSelector';
+import { gridColumnPositionsSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
@@ -67,7 +65,7 @@ export const useGridScroll = (
     (params: Partial<GridCellIndexCoordinates>) => {
       const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = gridListViewVisibleColumnSelector(apiRef,props.unstable_listView);
+      const visibleColumns = gridListViewVisibleColumnSelector(apiRef, props.unstable_listView);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
