@@ -65,21 +65,6 @@ function checkIsInstanceId(value: any) {
   return typeof value === 'object' && 'id' in value && Object.keys(value).length === 1;
 }
 
-function handleSelectorArgs(args: any) {
-  const [stateOrApiRef, other] = args;
-  let instanceId: any;
-  let selectorArgs: any;
-  if (checkIsInstanceId(other)) {
-    instanceId = other;
-  } else {
-    selectorArgs = other;
-  }
-  return {
-    stateOrApiRef,
-    selectorArgs,
-    instanceId,
-  };
-}
 const DEFAULT_INSTANCE_ID = { id: 'default' };
 
 export const createSelector = ((
@@ -100,64 +85,59 @@ export const createSelector = ((
 
   // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
-    selector = (...args: any) => {
-      const { stateOrApiRef, selectorArgs, instanceId: instanceIdParam } = handleSelectorArgs(args);
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, selectorArgs, instanceId);
-      const vb = b(state, selectorArgs, instanceId);
-      const vc = c(state, selectorArgs, instanceId);
-      const vd = d(state, selectorArgs, instanceId);
-      const ve = e(state, selectorArgs, instanceId);
+      const va = a(state, args, instanceId);
+      const vb = b(state, args, instanceId);
+      const vc = c(state, args, instanceId);
+      const vd = d(state, args, instanceId);
+      const ve = e(state, args, instanceId);
       return f(va, vb, vc, vd, ve, args);
     };
     // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
-    selector = (...args: any) => {
-      const { stateOrApiRef, selectorArgs, instanceId: instanceIdParam } = handleSelectorArgs(args);
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, selectorArgs, instanceId);
-      const vb = b(state, selectorArgs, instanceId);
-      const vc = c(state, selectorArgs, instanceId);
-      const vd = d(state, selectorArgs, instanceId);
+      const va = a(state, args, instanceId);
+      const vb = b(state, args, instanceId);
+      const vc = c(state, args, instanceId);
+      const vd = d(state, args, instanceId);
       return e(va, vb, vc, vd, args);
     };
   } else if (a && b && c && d) {
-    selector = (...args: any) => {
-      const { stateOrApiRef, selectorArgs, instanceId: instanceIdParam } = handleSelectorArgs(args);
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, selectorArgs, instanceId);
-      const vb = b(state, selectorArgs, instanceId);
-      const vc = c(state, selectorArgs, instanceId);
+      const va = a(state, args, instanceId);
+      const vb = b(state, args, instanceId);
+      const vc = c(state, args, instanceId);
       return d(va, vb, vc, args);
     };
   } else if (a && b && c) {
-    selector = (...args: any) => {
-      const { stateOrApiRef, selectorArgs, instanceId: instanceIdParam } = handleSelectorArgs(args);
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, selectorArgs, instanceId);
-      const vb = b(state, selectorArgs, instanceId);
+      const va = a(state, args, instanceId);
+      const vb = b(state, args, instanceId);
       return c(va, vb, args);
     };
   } else if (a && b) {
-    selector = (...args: any) => {
-      const { stateOrApiRef, selectorArgs, instanceId: instanceIdParam } = handleSelectorArgs(args);
+    selector = (stateOrApiRef: any, args: any, instanceIdParam?: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
       const instanceId =
         instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, selectorArgs, instanceId);
+      const va = a(state, args, instanceId);
       return b(va, args);
     };
   } else {
@@ -172,8 +152,15 @@ export const createSelector = ((
 }) as unknown as CreateSelectorFunction;
 
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
-  const selector = (...Args: any) => {
-    const { stateOrApiRef, selectorArgs, instanceId } = handleSelectorArgs(Args);
+  const selector = (...Args: any[]) => {
+    const [stateOrApiRef, other] = Args;
+    let instanceId: any;
+    let selectorArgs: any;
+    if (checkIsInstanceId(other)) {
+      instanceId = other;
+    } else {
+      selectorArgs = other;
+    }
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
     const cacheKey = isAPIRef
       ? stateOrApiRef.current.instanceId
