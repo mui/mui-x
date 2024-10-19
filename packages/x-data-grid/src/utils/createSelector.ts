@@ -157,7 +157,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
     let instanceId: any;
     let selectorArgs: any;
     if (checkIsInstanceId(other)) {
-      instanceId = other.id;
+      instanceId = other;
     } else {
       selectorArgs = other;
     }
