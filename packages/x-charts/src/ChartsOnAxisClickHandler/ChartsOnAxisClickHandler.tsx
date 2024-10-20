@@ -6,7 +6,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
 import { useCartesianContext } from '../context/CartesianProvider';
 
-type AxisData = {
+export type AxisData = {
   dataIndex: number;
   axisValue?: number | Date | string;
   seriesValues: Record<string, number | null | undefined>;
