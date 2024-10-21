@@ -2,7 +2,6 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import Badge from '@mui/material/Badge';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -86,9 +85,9 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
       {...rootProps?.slotProps?.baseIconButton}
     >
       <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <Badge variant="dot" color="error" invisible={!error}>
+        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </Badge>
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseTooltip>
     </rootProps.slots.baseIconButton>
   ) : null;
