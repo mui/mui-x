@@ -331,8 +331,7 @@ GridActionsCell.propTypes = {
   value: PropTypes.any,
 } as any;
 
-GridActionsCell.Item = GridActionsCellItem;
-
+GridActionsCell.Item = GridActionsCellItem as React.FC<GridActionsCellItemProps>;
 export { GridActionsCell };
 
 export const renderActionsCell = (params: GridRenderCellParams) => (
