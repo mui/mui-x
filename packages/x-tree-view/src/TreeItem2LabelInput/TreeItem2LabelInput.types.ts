@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItem2LabelInputProps {
   value?: string;
@@ -8,8 +8,8 @@ export interface TreeItem2LabelInputProps {
    */
   'data-element'?: 'labelInput';
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
-  onBlur?: MuiCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLInputElement>>;
+  onBlur?: TreeViewCancellableEventHandler<React.FocusEvent<HTMLInputElement>>;
   autoFocus?: true;
   type?: 'text';
 }
