@@ -110,6 +110,7 @@ export const isEqualTime = <TDate extends PickerValidDate>(
   return (
     utils.getHours(time1) === utils.getHours(time2) &&
     utils.getMinutes(time1) === utils.getMinutes(time2) &&
-    utils.getSeconds(time1) === utils.getSeconds(time2)
+    utils.getSeconds(time1) === utils.getSeconds(time2) &&
+    utils.getMilliseconds(time1) === utils.getMilliseconds(time2)
   );
 };
