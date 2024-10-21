@@ -21,7 +21,7 @@ interface TouchRippleActions {
 interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
-  actions: readonly React.ReactElement<GridActionsCellItemProps>[];
+  children: readonly React.ReactElement<GridActionsCellItemProps>[];
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
@@ -40,7 +40,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     tabIndex,
     position = 'bottom-end',
     focusElementRef,
-    actions,
+    children: actions,
     ...other
   } = props;
   const [focusedButtonIndex, setFocusedButtonIndex] = React.useState(-1);
@@ -330,5 +330,5 @@ export const renderActionsCell = (params: GridRenderCellParams) => {
 
   const actions = colDef.getActions(api.getRowParams(id));
 
-  return <GridActionsCell {...params} actions={actions} />;
+  return <GridActionsCell {...params}>{actions}</GridActionsCell>;
 };
