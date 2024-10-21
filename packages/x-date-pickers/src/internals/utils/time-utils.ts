@@ -98,3 +98,18 @@ export const resolveTimeFormat = <TDate extends PickerValidDate>(
     ? `${formats.hours12h}:${formats.minutes} ${formats.meridiem}`
     : `${formats.hours24h}:${formats.minutes}`;
 };
+
+export const isEqualTime = <TDate extends PickerValidDate>(
+  utils: MuiPickersAdapter<TDate>,
+  time1: TDate | null,
+  time2: TDate | null,
+) => {
+  if (!time1 || !time2) {
+    return false;
+  }
+  return (
+    utils.getHours(time1) === utils.getHours(time2) &&
+    utils.getMinutes(time1) === utils.getMinutes(time2) &&
+    utils.getSeconds(time1) === utils.getSeconds(time2)
+  );
+};

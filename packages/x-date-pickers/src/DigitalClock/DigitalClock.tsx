@@ -22,7 +22,8 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
-import { isEqualTime, mergeDateAndTime } from '../internals/utils/date-utils';
+import { mergeDateAndTime } from '../internals/utils/date-utils';
+import { isEqualTime } from '../internals/utils/time-utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;

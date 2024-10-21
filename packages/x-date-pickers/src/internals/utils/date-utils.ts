@@ -207,18 +207,3 @@ export const getWeekdays = <TDate extends PickerValidDate>(
   const start = utils.startOfWeek(date);
   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
 };
-
-export const isEqualTime = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  time1: TDate | null,
-  time2: TDate | null,
-) => {
-  if (!time1 || !time2) {
-    return false;
-  }
-  return (
-    utils.getHours(time1) === utils.getHours(time2) &&
-    utils.getMinutes(time1) === utils.getMinutes(time2) &&
-    utils.getSeconds(time1) === utils.getSeconds(time2)
-  );
-};
