@@ -55,6 +55,8 @@
   { "name": "TreeItemSlots", "kind": "Interface" },
   { "name": "TreeView", "kind": "Variable" },
   { "name": "TreeViewBaseItem", "kind": "TypeAlias" },
+  { "name": "TreeViewCancellableEvent", "kind": "TypeAlias" },
+  { "name": "TreeViewCancellableEventHandler", "kind": "TypeAlias" },
   { "name": "treeViewClasses", "kind": "Variable" },
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },

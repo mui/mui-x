@@ -3,9 +3,12 @@ import {
   DefaultizedProps,
   TreeViewPluginSignature,
   UseTreeViewItemsSignature,
-  MuiCancellableEventHandler,
 } from '@mui/x-tree-view/internals';
-import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
+import {
+  TreeViewItemId,
+  TreeViewItemsReorderingAction,
+  TreeViewCancellableEventHandler,
+} from '@mui/x-tree-view/models';
 import { TreeItem2DragAndDropOverlayProps } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
 
 export interface UseTreeViewItemsReorderingInstance {
@@ -90,7 +93,7 @@ export interface UseTreeViewItemsReorderingParameters {
     newPosition: TreeViewItemReorderPosition;
   }) => boolean;
   /**
-   * Callback fired when a tree item is moved in the tree.
+   * Callback fired when a Tree Item is moved in the tree.
    * @param {object} params The params describing the item re-ordering.
    * @param {string} params.itemId The id of the item moved.
    * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
@@ -136,14 +139,14 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
 
 export interface UseTreeItem2RootSlotPropsFromItemsReordering {
   draggable?: true;
-  onDragStart?: MuiCancellableEventHandler<React.DragEvent>;
-  onDragOver?: MuiCancellableEventHandler<React.DragEvent>;
-  onDragEnd?: MuiCancellableEventHandler<React.DragEvent>;
+  onDragStart?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragEnd?: TreeViewCancellableEventHandler<React.DragEvent>;
 }
 
 export interface UseTreeItem2ContentSlotPropsFromItemsReordering {
-  onDragEnter?: MuiCancellableEventHandler<React.DragEvent>;
-  onDragOver?: MuiCancellableEventHandler<React.DragEvent>;
+  onDragEnter?: TreeViewCancellableEventHandler<React.DragEvent>;
+  onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
 }
 
 export interface UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering
