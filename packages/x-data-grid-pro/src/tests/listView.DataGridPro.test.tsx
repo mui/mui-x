@@ -22,18 +22,24 @@ describe('<DataGridPro /> - List view', () => {
   const { render } = createRenderer();
 
   it('should not render list column when list view is not enabled', () => {
-    render(<DataGridPro columns={columns} rows={rows} unstable_listColumn={listColumn} />);
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro columns={columns} rows={rows} unstable_listColumn={listColumn} />
+      </div>,
+    );
     expect(screen.queryByTestId('list-column')).to.equal(null);
   });
 
   it('should render list column when list view is enabled', () => {
     render(
-      <DataGridPro
-        columns={columns}
-        rows={rows}
-        unstable_listView
-        unstable_listColumn={listColumn}
-      />,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={columns}
+          rows={rows}
+          unstable_listView
+          unstable_listColumn={listColumn}
+        />
+      </div>,
     );
     expect(screen.getByTestId('list-column')).not.to.equal(null);
     expect(screen.getByTestId('list-column')).to.have.text('Title: test');
@@ -41,7 +47,9 @@ describe('<DataGridPro /> - List view', () => {
 
   it('should render list column when `unstable_listView` prop updates', () => {
     const { setProps } = render(
-      <DataGridPro columns={columns} rows={rows} unstable_listColumn={listColumn} />,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro columns={columns} rows={rows} unstable_listColumn={listColumn} />
+      </div>,
     );
     expect(screen.queryByTestId('list-column')).to.equal(null);
 
@@ -57,12 +65,14 @@ describe('<DataGridPro /> - List view', () => {
 
   it('should update cell contents when the `renderCell` function changes', () => {
     const { setProps } = render(
-      <DataGridPro
-        columns={columns}
-        rows={rows}
-        unstable_listView
-        unstable_listColumn={listColumn}
-      />,
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPro
+          columns={columns}
+          rows={rows}
+          unstable_listView
+          unstable_listColumn={listColumn}
+        />
+      </div>,
     );
 
     setProps({
@@ -77,7 +87,11 @@ describe('<DataGridPro /> - List view', () => {
 
   it('should warn if the `unstable_listColumn` prop is not provided when `unstable_listView` is enabled', () => {
     expect(() => {
-      render(<DataGridPro columns={columns} rows={rows} unstable_listView />);
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro columns={columns} rows={rows} unstable_listView />
+        </div>,
+      );
     }).toWarnDev(
       'MUI X: The `unstable_listColumn` prop must be set if `unstable_listView` is enabled.',
     );
