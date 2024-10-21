@@ -1,27 +1,42 @@
 import {
   DesktopTimePickerProps,
-  DesktopTimePickerSlotsComponent,
-  DesktopTimePickerSlotsComponentsProps,
+  DesktopTimePickerSlots,
+  DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileTimePickerProps,
-  MobileTimePickerSlotsComponent,
-  MobileTimePickerSlotsComponentsProps,
+  MobileTimePickerSlots,
+  MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  PickerValidDate,
+  TimeValidationError,
+} from '../models';
+import { UseTimeFieldProps } from '../TimeField';
 
-export interface TimePickerSlotsComponents<TDate>
-  extends DesktopTimePickerSlotsComponent<TDate>,
-    MobileTimePickerSlotsComponent<TDate, TimeViewWithMeridiem> {}
+export interface TimePickerSlots<TDate extends PickerValidDate>
+  extends DesktopTimePickerSlots<TDate>,
+    MobileTimePickerSlots<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerSlotsComponentsProps<TDate>
-  extends DesktopTimePickerSlotsComponentsProps<TDate>,
-    MobileTimePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
+export interface TimePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends DesktopTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    MobileTimePickerSlotProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure> {}
 
-export interface TimePickerProps<TDate>
-  extends DesktopTimePickerProps<TDate>,
-    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem>, 'views'> {
+export interface TimePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    Omit<
+      MobileTimePickerProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
+      'views'
+    > {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -29,25 +44,26 @@ export interface TimePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: TimePickerSlotsComponents<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: TimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate>>;
+  slots?: TimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotsComponentsProps<TDate>;
+  slotProps?: TimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }
+
+/**
+ * Props the field can receive when used inside a time picker.
+ * (`TimePicker`, `DesktopTimePicker` or `MobileTimePicker` component).
+ */
+export type TimePickerFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> = DefaultizedProps<
+  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
+> &
+  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;

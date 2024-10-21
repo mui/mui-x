@@ -1,9 +1,0 @@
-<DataGrid
-  {...data}
-  checkboxSelection
-  loading={loading}
-  slots={{ toolbar: GridToolbar }}
-  slotProps={{
-    toolbar: { printOptions: { getRowsToExport: getSelectedRowsToExport } },
-  }}
-/>

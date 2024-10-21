@@ -1,57 +1,50 @@
-import { SlotComponentProps } from '@mui/base/utils';
+import * as React from 'react';
+import { SlotComponentProps } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { DigitalClockClasses } from './digitalClockClasses';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   BaseClockProps,
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/clock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 
-export interface ExportedDigitalClockProps<TDate>
+export interface ExportedDigitalClockProps<TDate extends PickerValidDate>
   extends ExportedBaseClockProps<TDate>,
     DigitalClockOnlyProps {}
 
-export interface DigitalClockSlotsComponent {
+export interface DigitalClockSlots {
   /**
    * Component responsible for rendering a single digital clock item.
    * @default MenuItem from '@mui/material'
    */
-  DigitalClockItem?: React.ElementType;
+  digitalClockItem?: React.ElementType;
 }
 
-export interface DigitalClockSlotsComponentsProps {
+export interface DigitalClockSlotProps {
   digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
-export interface DigitalClockProps<TDate>
+export interface DigitalClockProps<TDate extends PickerValidDate>
   extends ExportedDigitalClockProps<TDate>,
     BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
+  /**
+   * Available views.
+   * @default ['hours']
+   */
+  views?: readonly 'hours'[];
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DigitalClockClasses>;
   /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DigitalClockSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DigitalClockSlotsComponentsProps;
-  /**
    * Overrideable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DigitalClockSlotsComponent>;
+  slots?: DigitalClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DigitalClockSlotsComponentsProps;
+  slotProps?: DigitalClockSlotProps;
 }

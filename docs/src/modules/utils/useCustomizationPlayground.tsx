@@ -9,18 +9,23 @@ export type CustomizationLabelType = {
 };
 
 type CustomizationItemType = {
-  type: 'warning' | 'success';
+  type: 'warning' | 'success' | 'info';
   comments?: string;
   componentProps?: any;
   parentSlot?: string;
   parentComponent?: string;
+  current?: boolean;
 };
 export type CustomizationItemsType = Partial<{
   [k in keyof CustomizationLabelType]: CustomizationItemType;
 }>;
 
 export type PickersSubcomponentType = {
-  [k: string]: { examples: CustomizationItemsType; slots: string[] };
+  [k: string]: {
+    examples: CustomizationItemsType;
+    slots: string[];
+    moreInformation?: React.ReactElement | string;
+  };
 };
 
 export interface UseCustomizationPlaygroundProps {
@@ -67,6 +72,7 @@ export type UseCustomizationPlaygroundReturnType = {
   handleTokenChange: HandleTokenChangeType;
   selectedTokens: StyleTokensType;
   selectedExample?: CustomizationItemType | null;
+  moreInformation?: React.ReactElement | string | null;
 };
 
 export function withStyles(
@@ -85,7 +91,7 @@ export function withStyles(
       border: `${selectedTokens.borderWidth}px solid`,
       backgroundColor:
         defaultTheme.palette.mode === 'light'
-          ? DEFAULT_COLORS[selectedTokens.color][100]
+          ? DEFAULT_COLORS[selectedTokens.color][200]
           : DEFAULT_COLORS[selectedTokens.color][900],
       color:
         defaultTheme.palette.mode === 'light'
@@ -194,11 +200,13 @@ const getCodeExample = ({
 }: Props) => {
   const tokens = {
     ...selectedTokens,
+    borderRadius: `${selectedTokens.borderRadius}px`,
+    borderWidth: `${selectedTokens.borderWidth}px`,
     borderColor: DEFAULT_COLORS[selectedTokens.color][500],
     border: `${selectedTokens.borderWidth}px solid`,
     backgroundColor:
       theme.palette.mode === 'light'
-        ? DEFAULT_COLORS[selectedTokens.color][100]
+        ? DEFAULT_COLORS[selectedTokens.color][200]
         : DEFAULT_COLORS[selectedTokens.color][900],
     color:
       theme.palette.mode === 'light'
@@ -255,7 +263,9 @@ const getCodeExample = ({
         slotProps: {
           ...examples.componentProps?.slotProps,
           [selectedExample?.parentSlot]: {
-            sx: { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
+            sx: selectedExample?.parentSlot
+              ? tokens
+              : { [`'.Mui${selectedDemo}-${selectedSlot}'`]: tokens },
           },
         },
       };
@@ -294,10 +304,16 @@ const newTheme = (theme) => createTheme({
           [selectedExample?.parentSlot]: `Styled${selectedExample?.parentComponent}`,
         },
       };
-      return `import { styled } from '@mui/material/styles'\n${code}
-const Styled${selectedExample?.parentComponent} = styled(${selectedExample?.parentComponent})({
+      const example = selectedExample?.current
+        ? getTokensString(1)
+        : `
   '.Mui${selectedDemo}-${selectedSlot}': {${getTokensString(2)}
-  }
+  }`;
+
+      return `import { styled } from '@mui/material/styles'\n${code}
+const Styled${selectedExample?.parentComponent} = styled(${
+        selectedExample?.parentComponent
+      })({${example}
 })
 
 export default function StyledPickerContainer() {
@@ -354,10 +370,15 @@ export function useCustomizationPlayground({
       // set the array of customization options to the available options for the selected subcomponent
       setCustomizationOptions(pick(customizationLabels, customizationExamples));
       // set the selected customization option to the first available option for the selected subcomponent
-      setSelectedCustomizationOption(customizationExamples[0]);
+      if (
+        !selectedCustomizationOption ||
+        !customizationExamples.includes(selectedCustomizationOption)
+      ) {
+        setSelectedCustomizationOption(customizationExamples[0]);
+      }
       setSelectedSlot(slot);
     },
-    [examples, setSelectedCustomizationOption, setSelectedSlot],
+    [examples, setSelectedCustomizationOption, setSelectedSlot, selectedCustomizationOption],
   );
 
   React.useEffect(() => {
@@ -427,5 +448,6 @@ export function useCustomizationPlayground({
       selectedDemo && selectedCustomizationOption
         ? examples[selectedDemo]?.examples[selectedCustomizationOption]
         : null,
+    moreInformation: selectedDemo && examples[selectedDemo]?.moreInformation,
   };
 }

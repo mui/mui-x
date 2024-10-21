@@ -57,7 +57,7 @@ To change the icon used for the row reordering, you can provide a different comp
 Another way to customize is to add a column with `field: __reorder__` to your set of columns.
 That way, you can overwrite any of the properties from the `GRID_REORDER_COL_DEF` column.
 The grid will detect that there is already a reorder column defined and it will not add another one in the default position.
-If you only set the `field`, then it is up to you to configure the remaining options (e.g. disable the column menu, filtering, sorting).
+If you only set the `field`, then it is up to you to configure the remaining options (for example disable the column menu, filtering, sorting).
 To start with our suggested configuration, spread `GRID_REORDER_COL_DEF` when defining the column.
 
 ```tsx
@@ -74,7 +74,7 @@ To start with our suggested configuration, spread `GRID_REORDER_COL_DEF` when de
 This approach can also be used to change the location of the toggle column.
 
 :::warning
-For now, row reordering is disabled if sorting is applied to the data grid.
+For now, row reordering is disabled if sorting is applied to the Data Grid.
 :::
 
 ## Reordering rows with row grouping 🚧

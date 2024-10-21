@@ -20,9 +20,13 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year' ? '年份檢視表已打開，切換以檢視日曆' : '日曆檢視表已打開，切換以檢視年份',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '開始',
   end: '結束',
+  startDate: '開始日期',
+  startTime: '開始時間',
+  endDate: '結束日期',
+  endTime: '結束時間',
 
   // Action bar
   cancelButtonLabel: '取消',
@@ -37,10 +41,8 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '選擇時間範圍',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `選擇 ${views[view]}. ${
-      time === null ? '未選擇時間' : `已選擇${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `選擇 ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? '未選擇時間' : `已選擇${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours}小時`,
   minutesClockNumberText: (minutes) => `${minutes}分鐘`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -55,15 +57,15 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇日期，已選擇${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `選擇日期，已選擇${formattedDate ?? utils.format(value, 'fullDate')}`
       : '選擇日期',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `選擇時間，已選擇${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `選擇時間，已選擇${formattedTime ?? utils.format(value, 'fullTime')}`
       : '選擇時間',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: '清除',
 
   // Table labels
   timeTableLabel: '選擇時間',
@@ -78,6 +80,19 @@ const zhHKPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: '年',
+  month: '月',
+  day: '日',
+  weekDay: '星期',
+  hours: '小時',
+  minutes: '分鐘',
+  seconds: '秒',
+  meridiem: '子午線',
+
+  // Common
+  empty: '空值',
 };
 
 export const zhHK = getPickersLocalization(zhHKPickers);

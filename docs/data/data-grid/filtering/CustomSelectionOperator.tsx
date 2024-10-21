@@ -5,7 +5,6 @@ import {
   GridFilterModel,
   GridRowId,
   GridFilterOperator,
-  GridCellParams,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,
 } from '@mui/x-data-grid';
@@ -69,12 +68,13 @@ export default function CustomSelectionOperator() {
           return innerFilterFn;
         }
 
-        return (params: GridCellParams) => {
-          if (rowSelectionModelLookupRef.current[params.id]) {
+        return (value, row, col, apiRef) => {
+          const rowId = apiRef.current.getRowId(row);
+          if (rowSelectionModelLookupRef.current[rowId]) {
             return true;
           }
 
-          return innerFilterFn(params);
+          return innerFilterFn(value, row, col, apiRef);
         };
       };
 

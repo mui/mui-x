@@ -3,14 +3,18 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils } from './useUtils';
 import type { PickerValueManager } from './usePicker';
-import { PickersTimezone } from '../../models';
+import { PickersTimezone, PickerValidDate } from '../../models';
 
 /**
  * Hooks making sure that:
  * - The value returned by `onChange` always have the timezone of `props.value` or `props.defaultValue` if defined
  * - The value rendered is always the one from `props.timezone` if defined
  */
-export const useValueWithTimezone = <TDate, TValue, TChange extends (...params: any[]) => void>({
+export const useValueWithTimezone = <
+  TDate extends PickerValidDate,
+  TValue,
+  TChange extends (...params: any[]) => void,
+>({
   timezone: timezoneProp,
   value: valueProp,
   defaultValue,
@@ -60,7 +64,7 @@ export const useValueWithTimezone = <TDate, TValue, TChange extends (...params: 
  * Wrapper around `useControlled` and `useValueWithTimezone`
  */
 export const useControlledValueWithTimezone = <
-  TDate,
+  TDate extends PickerValidDate,
   TValue,
   TChange extends (...params: any[]) => void,
 >({

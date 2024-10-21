@@ -1,15 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@mui/x-license-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
-// This license key is only valid for use with Material UI SAS's projects
-// See the terms: https://mui.com/r/x-license-eula
-LicenseInfo.setLicenseKey(
-  'd483a722e0dc68f4d483487da0ccac45Tz1NVUktRG9jLEU9MTcxNTE2MzgwOTMwNyxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-);
+import { setupTestLicenseKey } from '../utils/testLicense';
+
+setupTestLicenseKey();
 
 Globals.assign({
   skipAnimation: true,
@@ -17,9 +14,11 @@ Globals.assign({
 
 const blacklist = [
   /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
+  /^docs-data-grid-custom-columns-cell-renderers\/(.*)\.png$/, // Custom components used to build docs pages
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  /^docs-charts-tooltip\/(.*).png/, // Needs interaction
   'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
   // 'docs-system-typography',
 ];
@@ -56,31 +55,54 @@ function excludeTest(suite, name) {
   });
 }
 
+const tests = [];
+
 // Also use some of the demos to avoid code duplication.
 const requireDocs = require.context('docsx/data', true, /\.js$/);
-const tests = requireDocs.keys().reduce((res, path) => {
+requireDocs.keys().forEach((path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
   if (excludeTest(suite, name)) {
-    return res;
+    return;
   }
 
   // TODO: Why does webpack include a key for the absolute and relative path?
   // We just want the relative path
   if (!path.startsWith('./')) {
-    return res;
+    return;
   }
 
-  res.push({
+  if (requireDocs(path).default === undefined) {
+    return;
+  }
+
+  tests.push({
     path,
     suite,
     name,
     case: requireDocs(path).default,
   });
+});
 
-  return res;
-}, []);
+const requireRegressions = require.context('./data-grid', true, /\.js$/);
+requireRegressions.keys().forEach((path) => {
+  // "./DataGridRTLVirtualization.js"
+  // "test/regressions/data-grid/DataGridRTLVirtualization.js"
+  if (!path.startsWith('./')) {
+    return;
+  }
+
+  const name = path.replace('./', '').replace('.js', '');
+  const suite = `test-regressions-data-grid`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: requireRegressions(path).default,
+  });
+});
 
 clock.restore();
 
@@ -130,7 +152,9 @@ function App() {
             return null;
           }
 
-          const isDataGridTest = path.indexOf('/docs-data-grid') === 0;
+          const isDataGridTest =
+            path.indexOf('/docs-data-grid') === 0 ||
+            path.indexOf('test-regressions-data-grid') !== -1;
 
           return (
             <Route

@@ -1,0 +1,1 @@
+<RichTreeView disableSelection items={MUI_X_PRODUCTS} />

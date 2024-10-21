@@ -8,13 +8,13 @@ packageName: '@mui/x-date-pickers'
 
 # Digital Clock
 
-<p class="description">The Digital Clock components let the user select a time without any input or popper / modal.</p>
+<p class="description">The Digital Clock lets the user select a time without any input or popper / modal.</p>
 
 ## Description
 
 There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
 
-The `DigitalClock` is more appropriate when there is a limited amount of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
+The `DigitalClock` is more appropriate when there is a limited number of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
 
 ## Basic usage
 
@@ -52,7 +52,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-The components use the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The components use the hour format of the locale's time setting, that is the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 
@@ -77,7 +77,7 @@ The prop accepts:
 
 ## Skip rendering disabled options
 
-With the `skipDisabled` prop, the components don't render options that are not available to the user (e.g. through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
+With the `skipDisabled` prop, the components don't render options that are not available to the user (for example through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
 
 The following example combines these properties to customize which options are rendered.
 
@@ -86,6 +86,10 @@ The following example combines these properties to customize which options are r
 
 {{"demo": "DigitalClockSkipDisabled.js"}}
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

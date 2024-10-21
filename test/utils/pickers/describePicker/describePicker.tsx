@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, fireEvent, createDescribe } from '@mui-internal/test-utils';
+import { screen, fireEvent, createDescribe } from '@mui/internal-test-utils';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { DescribePickerOptions } from './describePicker.types';
 
@@ -11,13 +11,13 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
 
   const propsToOpen = variant === 'static' ? {} : { open: true };
 
-  it('should forward the `inputRef` prop to the text field', function test() {
+  it('should forward the `inputRef` prop to the text field (<input /> textfield DOM structure only)', function test() {
     if (fieldType === 'multi-input' || variant === 'static') {
       this.skip();
     }
 
     const inputRef = React.createRef<HTMLInputElement>();
-    render(<ElementToTest inputRef={inputRef} />);
+    render(<ElementToTest inputRef={inputRef} enableAccessibleFieldDOMStructure={false} />);
 
     expect(inputRef.current).to.have.tagName('input');
   });
@@ -134,12 +134,17 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         this.skip();
       }
 
-      render(<ElementToTest {...propsToOpen} />);
+      render(
+        <ElementToTest
+          {...propsToOpen}
+          slotProps={{ toolbar: { 'data-testid': 'pickers-toolbar' } }}
+        />,
+      );
 
       if (variant === 'desktop') {
-        expect(screen.queryByMuiTest('picker-toolbar')).to.equal(null);
+        expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
       } else {
-        expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+        expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
       }
     });
 
@@ -148,9 +153,14 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         this.skip();
       }
 
-      render(<ElementToTest {...propsToOpen} slotProps={{ toolbar: { hidden: false } }} />);
+      render(
+        <ElementToTest
+          {...propsToOpen}
+          slotProps={{ toolbar: { hidden: false, 'data-testid': 'pickers-toolbar' } }}
+        />,
+      );
 
-      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+      expect(screen.getByTestId('pickers-toolbar')).toBeVisible();
     });
 
     it('should not render toolbar when `hidden` is `true`', function test() {
@@ -158,9 +168,42 @@ function innerDescribePicker(ElementToTest: React.ElementType, options: Describe
         this.skip();
       }
 
-      render(<ElementToTest {...propsToOpen} slotProps={{ toolbar: { hidden: true } }} />);
+      render(
+        <ElementToTest
+          {...propsToOpen}
+          slotProps={{ toolbar: { hidden: true, 'data-testid': 'pickers-toolbar' } }}
+        />,
+      );
 
-      expect(screen.queryByMuiTest('picker-toolbar')).to.equal(null);
+      expect(screen.queryByTestId('pickers-toolbar')).to.equal(null);
+    });
+  });
+
+  describe('prop: disableOpenPicker', () => {
+    it('should not render the open picker button, but still render the picker if its open', function test() {
+      if (variant === 'static') {
+        this.skip();
+      }
+
+      render(
+        <ElementToTest
+          disableOpenPicker
+          {...propsToOpen}
+          slotProps={{
+            layout: {
+              classes: {
+                contentWrapper: 'test-pickers-content-wrapper',
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /Choose/ })).to.equal(null);
+      // check if anything has been rendered inside the layout content wrapper
+      expect(document.querySelector('.test-pickers-content-wrapper')?.hasChildNodes()).to.equal(
+        true,
+      );
     });
   });
 }

@@ -5,6 +5,10 @@ import { dateRangePickerDayClasses } from '../DateRangePickerDay';
 import { multiInputDateRangeFieldClasses } from '../MultiInputDateRangeField';
 import { multiInputDateTimeRangeFieldClasses } from '../MultiInputDateTimeRangeField';
 import { multiInputTimeRangeFieldClasses } from '../MultiInputTimeRangeField';
+import {
+  dateTimeRangePickerTabsClasses,
+  dateTimeRangePickerToolbarClasses,
+} from '../DateTimeRangePicker';
 
 createTheme({
   components: {
@@ -27,6 +31,7 @@ createTheme({
         },
       },
     },
+
     MuiDateRangePickerDay: {
       defaultProps: {
         color: 'red',
@@ -46,11 +51,32 @@ createTheme({
         },
       },
     },
+
+    MuiDateTimeRangePickerTabs: {
+      defaultProps: {
+        className: 'empty',
+        // @ts-expect-error invalid MuiDateTimeRangePickerTabs prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${dateTimeRangePickerTabsClasses.filler}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiDateTimeRangePickerTabs class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+
     MuiDateRangePickerToolbar: {
       defaultProps: {
         toolbarPlaceholder: 'empty',
         // @ts-expect-error invalid MuiDateRangePickerToolbar prop
-        someRandomProp: true,
+        view: 'day',
       },
       styleOverrides: {
         root: {
@@ -60,6 +86,26 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiDateRangePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+
+    MuiDateTimeRangePickerToolbar: {
+      defaultProps: {
+        toolbarPlaceholder: 'empty',
+        // @ts-expect-error invalid MuiDateTimeRangePickerToolbar prop
+        view: 'day',
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${dateTimeRangePickerToolbarClasses.startToolbar}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiDateTimeRangePickerToolbar class key
         content: {
           backgroundColor: 'blue',
         },
@@ -86,6 +132,7 @@ createTheme({
         },
       },
     },
+
     MuiMultiInputDateTimeRangeField: {
       defaultProps: {
         disabled: true,
@@ -105,6 +152,7 @@ createTheme({
         },
       },
     },
+
     MuiMultiInputTimeRangeField: {
       defaultProps: {
         disabled: true,
@@ -133,6 +181,7 @@ createTheme({
         someRandomProp: true,
       },
     },
+
     MuiSingleInputDateTimeRangeField: {
       defaultProps: {
         disabled: true,
@@ -140,6 +189,7 @@ createTheme({
         someRandomProp: true,
       },
     },
+
     MuiSingleInputTimeRangeField: {
       defaultProps: {
         disabled: true,
@@ -156,6 +206,7 @@ createTheme({
         someRandomProp: true,
       },
     },
+
     MuiDesktopDateRangePicker: {
       defaultProps: {
         open: true,
@@ -163,6 +214,7 @@ createTheme({
         someRandomProp: true,
       },
     },
+
     MuiMobileDateRangePicker: {
       defaultProps: {
         open: true,
@@ -170,10 +222,36 @@ createTheme({
         someRandomProp: true,
       },
     },
+
     MuiStaticDateRangePicker: {
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticDateRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    // Date Time Range Pickers
+    MuiDateTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDateTimeRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    MuiDesktopDateTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopDateTimeRangePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    MuiMobileDateTimeRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileDateTimeRangePicker prop
         someRandomProp: true,
       },
     },

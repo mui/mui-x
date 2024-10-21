@@ -1,23 +1,15 @@
-import * as React from 'react';
-import { spy } from 'sinon';
 import dayjs, { Dayjs } from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
-import { screen, userEvent } from '@mui-internal/test-utils';
 import { expect } from 'chai';
 import {
-  buildPickerDragInteractions,
-  MockedDataTransfer,
-  expectInputPlaceholder,
-  expectInputValue,
+  expectFieldValueV7,
   createPickerRenderer,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
+  buildFieldInteractions,
 } from 'test/utils/pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
 // We import the plugins here just to have the typing
@@ -47,16 +39,21 @@ describe('<AdapterDayjs />', () => {
     },
   });
 
+  describe('Adapter timezone', () => {
+    it('setTimezone: should throw warning if no plugin is available', () => {
+      const modifiedAdapter = new AdapterDayjs();
+      // @ts-ignore
+      modifiedAdapter.hasTimezonePlugin = () => false;
+
+      const date = modifiedAdapter.date(TEST_DATE_ISO_STRING)!;
+      expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
+  });
+
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDayjs({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
-
-      // TODO v7: can be removed after v7 release
-      it('getWeekdays: should start on Sunday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
-      });
 
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
@@ -70,11 +67,6 @@ describe('<AdapterDayjs />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterDayjs({ locale: 'ru' });
-
-      it('getWeekDays: should start on Monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
-      });
 
       it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO_STRING)!;
@@ -107,10 +99,6 @@ describe('<AdapterDayjs />', () => {
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
-      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
-      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г., 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г. 11:44 вечера');
-      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 февр. 2020 г. 23:44');
       expectDate('keyboardDate', '02/01/2020', '01.02.2020');
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
@@ -126,7 +114,7 @@ describe('<AdapterDayjs />', () => {
   });
 
   describe('Picker localization', () => {
-    const testDate = new Date(2018, 4, 15, 9, 35);
+    const testDate = '2018-05-15T09:35:00';
     const localizedTexts = {
       undefined: {
         placeholder: 'MM/DD/YYYY hh:mm aa',
@@ -147,89 +135,33 @@ describe('<AdapterDayjs />', () => {
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
 
       describe(`test with the ${localeName} locale`, () => {
-        const { render, adapter } = createPickerRenderer({
+        const { render, clock, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'dayjs',
           locale: localeObject,
         });
 
-        it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+        const { renderWithProps } = buildFieldInteractions({
+          render,
+          clock,
+          Component: DateTimeField,
+        });
 
-          expectInputPlaceholder(
-            screen.getByRole('textbox'),
-            localizedTexts[localeKey].placeholder,
-          );
+        it('should have correct placeholder', () => {
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          const view = renderWithProps({
+            enableAccessibleFieldDOMStructure: true,
+            value: adapter.date(testDate),
+          });
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
-    });
-  });
-
-  // TODO v7: Remove
-  describe('UTC plugin - LEGACY APPROACH', () => {
-    const { render } = createPickerRenderer({
-      clock: 'fake',
-      adapterName: 'dayjs',
-    });
-
-    it('should not create UTC dates when no instance passed', () => {
-      const onChange = spy();
-      render(<DateCalendar defaultValue={dayjs('2022-04-17')} onChange={onChange} />);
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-
-      const date = onChange.lastCall.firstArg;
-      expect(date).to.not.equal(null);
-      expect(date!.isUTC()).to.equal(false);
-    });
-
-    it('should create UTC dates when the instance is a UTC instance', () => {
-      const onChange = spy();
-      render(
-        <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateCalendar defaultValue={dayjs.utc('2022-04-17')} onChange={onChange} />
-        </LocalizationProvider>,
-      );
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-
-      const date = onChange.lastCall.firstArg;
-      expect(date).to.not.equal(null);
-      expect(date!.isUTC()).to.equal(true);
-    });
-
-    it('should not loose UTC when dragging', function test() {
-      if (!document.elementFromPoint) {
-        this.skip();
-      }
-
-      const dataTransfer = new MockedDataTransfer();
-      const { executeDateDrag } = buildPickerDragInteractions(() => dataTransfer);
-
-      const onChange = spy();
-      const initialValue: [any, any] = [dayjs.utc('2022-04-17'), dayjs.utc('2022-04-21')];
-      render(
-        <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateRangeCalendar onChange={onChange} defaultValue={initialValue} calendars={1} />
-        </LocalizationProvider>,
-      );
-
-      executeDateDrag(
-        screen.getByRole('gridcell', { name: '21', selected: true }),
-        screen.getByRole('gridcell', { name: '22' }),
-        screen.getByRole('gridcell', { name: '23' }),
-      );
-
-      expect(onChange.callCount).to.equal(1);
-      const [startDate, endDate] = onChange.lastCall.firstArg;
-      expect(startDate.isUTC()).to.equal(true);
-      expect(endDate.isUTC()).to.equal(true);
     });
   });
 });

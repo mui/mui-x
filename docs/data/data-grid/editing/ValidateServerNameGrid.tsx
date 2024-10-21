@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import {
   GridColDef,
@@ -11,30 +10,40 @@ import {
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
   height: 400,
   width: '100%',
   '& .MuiDataGrid-cell--editable': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
+    backgroundColor: 'rgb(217 243 190)',
     '& .MuiInputBase-root': {
       height: '100%',
     },
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#376331',
+    }),
   },
   '& .Mui-error': {
-    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
-    color: theme.palette.mode === 'dark' ? '#ff4343' : '#750f0f',
+    backgroundColor: 'rgb(126,10,15, 0.1)',
+    color: '#750f0f',
+    ...theme.applyStyles('dark', {
+      backgroundColor: 'rgb(126,10,15, 0)',
+      color: '#ff4343',
+    }),
   },
 }));
 
-let promiseTimeout: any;
+let promiseTimeout: ReturnType<typeof setTimeout>;
 function validateName(username: string): Promise<boolean> {
   const existingUsers = rows.map((row) => row.name.toLowerCase());
 
   return new Promise<any>((resolve) => {
-    promiseTimeout = setTimeout(() => {
-      const exists = existingUsers.includes(username.toLowerCase());
-      resolve(exists ? `${username} is already taken.` : null);
-    }, Math.random() * 500 + 100); // simulate network latency
+    promiseTimeout = setTimeout(
+      () => {
+        const exists = existingUsers.includes(username.toLowerCase());
+        resolve(exists ? `${username} is already taken.` : null);
+      },
+      Math.random() * 500 + 100,
+    ); // simulate network latency
   });
 }
 

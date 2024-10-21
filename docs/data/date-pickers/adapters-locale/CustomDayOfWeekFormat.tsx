@@ -12,7 +12,7 @@ export default function CustomDayOfWeekFormat() {
       <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        dayOfWeekFormatter={(_day, weekday) => `${weekday.format('dd')}.`}
+        dayOfWeekFormatter={(weekday) => `${weekday.format('dd')}.`}
       />
     </LocalizationProvider>
   );

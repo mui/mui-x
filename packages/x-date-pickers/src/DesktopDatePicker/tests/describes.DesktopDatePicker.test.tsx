@@ -1,15 +1,16 @@
-import { screen, userEvent } from '@mui-internal/test-utils';
+import * as React from 'react';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
-  getTextbox,
+  expectFieldValueV7,
   describeValidation,
   describeValue,
   describePicker,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -24,35 +25,49 @@ describe('<DesktopDatePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
+  describeConformance(<DesktopDatePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiDesktopDatePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
+  }));
+
   describeValue(DesktopDatePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date',
     variant: 'desktop',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, 'MM/DD/YYYY');
-      }
-      expectInputValue(
-        input,
-        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-      );
+      const fieldRoot = getFieldInputRoot();
+
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, 'keyboardDate')
+        : 'MM/DD/YYYY';
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireEvent.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
         selectSection('day');
-        const input = getTextbox();
-        userEvent.keyPress(input, { key: 'ArrowUp' });
+        pressKey(undefined, 'ArrowUp');
       }
 
       return newValue;

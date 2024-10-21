@@ -1,0 +1,9 @@
+<DataGridPremium
+  {...data}
+  slots={{ toolbar: GridToolbar }}
+  slotProps={{
+    columnsManagement: {
+      toggleAllMode: 'filteredOnly',
+    },
+  }}
+/>

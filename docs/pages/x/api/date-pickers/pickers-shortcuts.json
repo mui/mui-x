@@ -4,14 +4,14 @@
       "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
       "default": "\"accept\""
     },
-    "dense": { "type": { "name": "bool" } },
-    "disablePadding": { "type": { "name": "bool" } },
+    "dense": { "type": { "name": "bool" }, "default": "false" },
+    "disablePadding": { "type": { "name": "bool" }, "default": "false" },
     "items": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ getValue: func, label: string }&gt;"
+        "description": "Array&lt;{ getValue: func, id?: string, label: string }&gt;"
       },
-      "default": "`[]`"
+      "default": "[]"
     },
     "subheader": { "type": { "name": "node" } },
     "sx": {
@@ -22,18 +22,41 @@
       "additionalInfo": { "sx": true }
     }
   },
-  "slots": [],
   "name": "PickersShortcuts",
   "imports": [
     "import { PickersShortcuts } from '@mui/x-date-pickers/PickersShortcuts';",
     "import { PickersShortcuts } from '@mui/x-date-pickers';",
     "import { PickersShortcuts } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "padding", "dense", "subheader"],
-    "globalClasses": {},
-    "name": "MuiPickersShortcuts"
-  },
+  "classes": [
+    {
+      "key": "dense",
+      "className": "MuiPickersShortcuts-dense",
+      "description": "Styles applied to the root element if dense.",
+      "isGlobal": false
+    },
+    {
+      "key": "padding",
+      "className": "MuiPickersShortcuts-padding",
+      "description": "Styles applied to the root element unless `disablePadding={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiPickersShortcuts-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "subheader",
+      "className": "MuiPickersShortcuts-subheader",
+      "description": "Styles applied to the root element if a `subheader` is provided.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiPickersShortcuts",
   "filename": "/packages/x-date-pickers/src/PickersShortcuts/PickersShortcuts.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li>\n<li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>",
+  "cssComponent": false
 }

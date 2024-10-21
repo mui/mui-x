@@ -20,16 +20,22 @@ import {
   randomCommodity,
 } from '@mui/x-data-grid-generator';
 
+const getDetailPanelWidth = (gridDimensions) => {
+  return (
+    gridDimensions.viewportInnerSize.width +
+    gridDimensions.leftPinnedWidth +
+    gridDimensions.rightPinnedWidth
+  );
+};
+
 function DetailPanelContent({ row: rowProp }) {
   const apiRef = useGridApiContext();
-  const [width, setWidth] = React.useState(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    return dimensions.viewportInnerSize.width;
-  });
+  const [width, setWidth] = React.useState(() =>
+    getDetailPanelWidth(apiRef.current.getRootDimensions()),
+  );
 
   const handleViewportInnerSizeChange = React.useCallback(() => {
-    const dimensions = apiRef.current.getRootDimensions();
-    setWidth(dimensions.viewportInnerSize.width);
+    setWidth(getDetailPanelWidth(apiRef.current.getRootDimensions()));
   }, [apiRef]);
 
   React.useEffect(() => {
@@ -69,7 +75,7 @@ function DetailPanelContent({ row: rowProp }) {
                 field: 'total',
                 headerName: 'Total',
                 type: 'number',
-                valueGetter: ({ row }) => row.quantity * row.unitPrice,
+                valueGetter: (value, row) => row.quantity * row.unitPrice,
               },
             ]}
             rows={rowProp.products}
@@ -92,13 +98,13 @@ const columns = [
   {
     field: 'city',
     headerName: 'City',
-    valueGetter: ({ row }) => `${row.city}, ${row.country.label}`,
+    valueGetter: (value, row) => `${row.city}, ${row.country.label}`,
   },
   {
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc, product) => product.unitPrice * product.quantity,
         0,
@@ -201,8 +207,11 @@ export default function FullWidthDetailPanel() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThreshold={0}
-        pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
+        initialState={{
+          pinnedColumns: {
+            left: [GRID_DETAIL_PANEL_TOGGLE_FIELD],
+          },
+        }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
         sx={{

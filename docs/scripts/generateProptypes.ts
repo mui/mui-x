@@ -1,19 +1,43 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
 import {
   getPropTypesFromFile,
   injectPropTypesInFile,
-} from '@mui/monorepo/packages/typescript-to-proptypes';
-import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
+} from '@mui/internal-scripts/typescript-to-proptypes';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
-  config: path.join(__dirname, '../../prettier.config.js'),
-});
+const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
+  const isTDate = (name: string) => {
+    if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
+      const T_DATE_PROPS = [
+        'value',
+        'defaultValue',
+        'minDate',
+        'maxDate',
+        'minDateTime',
+        'maxDateTime',
+        'minTime',
+        'maxTime',
+        'referenceDate',
+        'day',
+        'currentMonth',
+        'month',
+      ];
+
+      if (T_DATE_PROPS.includes(name)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   const components = getPropTypesFromFile({
     filePath: sourceFile,
     project,
@@ -21,8 +45,6 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     shouldResolveObject: ({ name }) => {
       const propsToNotResolve = [
         'classes',
-        'components',
-        'componentsProps',
         'slots',
         'slotProps',
         'columns',
@@ -40,17 +62,31 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'column',
         'groupingColDef',
         'rowNode',
+        'pinnedColumns',
         'localeText',
         'columnGroupingModel',
         'unstableFieldRef',
         'unstableStartFieldRef',
         'unstableEndFieldRef',
+        'series',
+        'axis',
+        'bottomAxis',
+        'topAxis',
+        'leftAxis',
+        'rightAxis',
+        'plugins',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
       }
+
+      if (isTDate(name)) {
+        return false;
+      }
+
       return undefined;
     },
+    shouldUseObjectForDate: ({ name }) => isTDate(name),
   });
 
   if (components.length === 0) {
@@ -67,7 +103,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
       comment: [
         '----------------------------- Warning --------------------------------',
         '| These PropTypes are generated from the TypeScript type definitions |',
-        '| To update them edit the TypeScript types and run "yarn proptypes"  |',
+        '| To update them edit the TypeScript types and run "pnpm proptypes"  |',
         '----------------------------------------------------------------------',
       ].join('\n'),
       reconcilePropTypes: (prop, previous, generated) => {
@@ -82,6 +118,15 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
           return false;
         }
         let shouldExclude = false;
+
+        if (prop.propType.type === 'InterfaceNode') {
+          if (prop.propType.types.some((type) => type[0] === '_lastToId')) {
+            // Try to catch proptypes from react-spring.
+            // Better solution should be to simplify the proptype instead of ignoring it.
+            return false;
+          }
+        }
+
         prop.filenames.forEach((filename) => {
           const definedInNodeModule = /node_modules/.test(filename);
 
@@ -113,7 +158,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
     throw new Error('Unable to produce inject propTypes into code.');
   }
 
-  const prettified = prettier.format(result, { ...prettierConfig, filepath: sourceFile });
+  const prettierConfig = await prettier.resolveConfig(process.cwd(), {
+    config: path.join(__dirname, '../../prettier.config.js'),
+  });
+
+  const prettified = await prettier.format(result, { ...prettierConfig, filepath: sourceFile });
   const formatted = fixBabelGeneratorIssues(prettified);
   const correctedLineEndings = fixLineEndings(sourceContent, formatted);
 
@@ -129,14 +178,20 @@ async function run() {
     }
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
-    return componentsWithPropTypes.map<Promise<void>>(async (filename) => {
-      try {
-        await generateProptypes(project, filename);
-      } catch (error: any) {
-        error.message = `${filename}: ${error.message}`;
-        throw error;
-      }
-    });
+    return componentsWithPropTypes
+      .filter((filename) =>
+        COMPONENTS_WITHOUT_PROPTYPES.every(
+          (ignoredComponent) => !filename.includes(ignoredComponent),
+        ),
+      )
+      .map<Promise<void>>(async (filename) => {
+        try {
+          await generateProptypes(project, filename);
+        } catch (error: any) {
+          error.message = `${filename}: ${error.message}`;
+          throw error;
+        }
+      });
   });
 
   const results = await Promise.allSettled(promises);
@@ -153,7 +208,7 @@ async function run() {
   }
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generates Component.propTypes from TypeScript declarations',

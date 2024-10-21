@@ -1,57 +1,82 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import {
   TreeViewAnyPluginSignature,
   TreeViewInstance,
   TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
+  MergeSignaturesProperty,
+  TreeViewPublicAPI,
+  ConvertSignaturesIntoPlugins,
 } from '../models';
 import {
-  UseTreeViewDefaultizedParameters,
+  UseTreeViewBaseProps,
   UseTreeViewParameters,
   UseTreeViewReturnValue,
   UseTreeViewRootSlotProps,
 } from './useTreeView.types';
-import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
-import { TreeViewContextValue } from '../TreeViewProvider';
-import { TREE_VIEW_CORE_PLUGINS } from '../corePlugins';
+import { TREE_VIEW_CORE_PLUGINS, TreeViewCorePluginSignatures } from '../corePlugins';
+import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
+import { useTreeViewBuildContext } from './useTreeViewBuildContext';
 
-export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[]>(
-  inParams: UseTreeViewParameters<Plugins>,
-): UseTreeViewReturnValue<ConvertPluginsIntoSignatures<Plugins>> => {
-  const plugins = [...TREE_VIEW_CORE_PLUGINS, ...inParams.plugins];
-  type Signatures = ConvertPluginsIntoSignatures<typeof plugins>;
+export function useTreeViewApiInitialization<T>(
+  inputApiRef: React.MutableRefObject<T | undefined> | undefined,
+): T {
+  const fallbackPublicApiRef = React.useRef({}) as React.MutableRefObject<T>;
 
-  const params = plugins.reduce((acc, plugin) => {
-    if (plugin.getDefaultizedParams) {
-      return plugin.getDefaultizedParams(acc);
+  if (inputApiRef) {
+    if (inputApiRef.current == null) {
+      inputApiRef.current = {} as T;
     }
+    return inputApiRef.current;
+  }
 
-    return acc;
-  }, inParams) as unknown as UseTreeViewDefaultizedParameters<Plugins>;
+  return fallbackPublicApiRef.current;
+}
 
-  const models = useTreeViewModels(
+export const useTreeView = <
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TProps extends Partial<UseTreeViewBaseProps<TSignatures>>,
+>({
+  plugins: inPlugins,
+  rootRef,
+  props,
+}: UseTreeViewParameters<TSignatures, TProps>): UseTreeViewReturnValue<TSignatures> => {
+  type TSignaturesWithCorePluginSignatures = readonly [
+    ...TreeViewCorePluginSignatures,
+    ...TSignatures,
+  ];
+  const plugins = [
+    ...TREE_VIEW_CORE_PLUGINS,
+    ...inPlugins,
+  ] as unknown as ConvertSignaturesIntoPlugins<TSignaturesWithCorePluginSignatures>;
+
+  const { pluginParams, forwardedProps, apiRef, experimentalFeatures, slots, slotProps } =
+    extractPluginParamsFromProps<TSignatures, typeof props>({
+      plugins,
+      props,
+    });
+
+  const models = useTreeViewModels<TSignatures>(plugins, pluginParams);
+  const instanceRef = React.useRef({} as TreeViewInstance<TSignatures>);
+  const instance = instanceRef.current as TreeViewInstance<TSignatures>;
+  const publicAPI = useTreeViewApiInitialization<TreeViewPublicAPI<TSignatures>>(apiRef);
+  const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
+  const handleRootRef = useForkRef(innerRootRef, rootRef);
+
+  const contextValue = useTreeViewBuildContext({
     plugins,
-    params as MergePluginsProperty<Signatures, 'defaultizedParams'>,
-  );
-  const instanceRef = React.useRef<TreeViewInstance<Signatures>>(
-    {} as TreeViewInstance<Signatures>,
-  );
-  const instance = instanceRef.current;
-  const innerRootRef = React.useRef(null);
-  const handleRootRef = useForkRef(innerRootRef, inParams.rootRef);
+    instance,
+    publicAPI,
+    rootRef: innerRootRef,
+  });
 
   const [state, setState] = React.useState(() => {
-    const temp = {} as MergePluginsProperty<Signatures, 'state'>;
+    const temp = {} as MergeSignaturesProperty<TSignaturesWithCorePluginSignatures, 'state'>;
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(
-          temp,
-          plugin.getInitialState(params as UseTreeViewDefaultizedParameters<any>),
-        );
+        Object.assign(temp, plugin.getInitialState(pluginParams));
       }
     });
 
@@ -61,18 +86,34 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
   ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
-  let contextValue: TreeViewContextValue<Signatures> = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
-
-  const runPlugin = (plugin: TreeViewPlugin<any>) => {
-    const pluginResponse =
-      plugin({ instance, params, state, setState, rootRef: innerRootRef, models }) || {};
+  const runPlugin = (plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
+    const pluginResponse = plugin({
+      instance,
+      params: pluginParams,
+      slots,
+      slotProps,
+      experimentalFeatures,
+      state,
+      setState,
+      rootRef: innerRootRef,
+      models,
+      plugins,
+    });
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
     }
 
+    if (pluginResponse.publicAPI) {
+      Object.assign(publicAPI, pluginResponse.publicAPI);
+    }
+
+    if (pluginResponse.instance) {
+      Object.assign(instance, pluginResponse.instance);
+    }
+
     if (pluginResponse.contextValue) {
-      contextValue = pluginResponse.contextValue;
+      Object.assign(contextValue, pluginResponse.contextValue);
     }
   };
 
@@ -83,7 +124,7 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
   ) => {
     const rootProps: UseTreeViewRootSlotProps = {
       role: 'tree',
-      tabIndex: 0,
+      ...forwardedProps,
       ...otherHandlers,
       ref: handleRootRef,
     };
@@ -95,5 +136,10 @@ export const useTreeView = <Plugins extends readonly TreeViewPlugin<TreeViewAnyP
     return rootProps;
   };
 
-  return { getRootProps, rootRef: handleRootRef, contextValue };
+  return {
+    getRootProps,
+    rootRef: handleRootRef,
+    contextValue,
+    instance,
+  };
 };

@@ -20,7 +20,8 @@ const yargs = require('yargs');
 const ts = require('typescript');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
-const tsConfigPath = path.resolve(__dirname, '../tsconfig.json');
+const DOCS_ROOT = path.resolve(__dirname, '..');
+const tsConfigPath = path.resolve(DOCS_ROOT, './tsconfig.json');
 const tsConfigFile = ts.readConfigFile(tsConfigPath, (filePath) =>
   fs.readFileSync(filePath).toString(),
 );
@@ -46,9 +47,7 @@ async function getFiles(root) {
 
   try {
     await Promise.all(
-      (
-        await fse.readdir(root)
-      ).map(async (name) => {
+      (await fse.readdir(root)).map(async (name) => {
         const filePath = path.join(root, name);
         const stat = await fse.stat(filePath);
 
@@ -97,25 +96,25 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
     if (enableJSXPreview) {
       transformOptions.plugins = transformOptions.plugins.concat([
         [
-          require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
+          path.resolve(DOCS_ROOT, './src/modules/utils/babel-plugin-jsx-preview'),
           { maxLines: 16, outputFilename: `${tsxPath}.preview` },
         ],
       ]);
     }
     const { code } = await babel.transformAsync(source, transformOptions);
 
-    const prettierConfig = prettier.resolveConfig.sync(jsPath, {
+    const prettierConfig = await prettier.resolveConfig(jsPath, {
       config: path.join(workspaceRoot, 'prettier.config.js'),
     });
-    const prettierFormat = (jsSource) =>
+    const prettierFormat = async (jsSource) =>
       prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
 
-    const prettified = prettierFormat(code);
+    const prettified = await prettierFormat(code);
     const formatted = fixBabelGeneratorIssues(prettified);
     const correctedLineEndings = fixLineEndings(source, formatted);
 
     // removed blank lines change potential formatting
-    await fse.writeFile(jsPath, prettierFormat(correctedLineEndings));
+    await fse.writeFile(jsPath, await prettierFormat(correctedLineEndings));
     return TranspileResult.Success;
   } catch (err) {
     console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);
@@ -199,12 +198,12 @@ yargs
       return command
         .option('watch', {
           default: false,
-          description: 'transpiles demos as soon as they changed',
+          description: 'Transpile demos as soon as they change',
           type: 'boolean',
         })
         .option('disable-cache', {
           default: false,
-          description: 'transpiles all demos even if they didnt change',
+          description: "Transpile all demos even if they didn't change",
           type: 'boolean',
         });
     },

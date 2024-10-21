@@ -22,9 +22,13 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
       ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
       : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'شروع',
   end: 'ختم',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'کینسل',
@@ -39,10 +43,8 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'تاریخوں کی رینج منتخب کریں',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} منتخب کریں ${
-      time === null ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} منتخب کریں ${!formattedTime && (time === null || !utils.isValid(time)) ? 'کوئی وقت منتخب نہیں' : `منتخب وقت ہے ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} گھنٹے`,
   minutesClockNumberText: (minutes) => `${minutes} منٹ`,
   secondsClockNumberText: (seconds) => `${seconds} سیکنڈ`,
@@ -57,15 +59,15 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `تاریخ منتخب کریں، منتخب شدہ تاریخ ہے ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'تاریخ منتخب کریں',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `وقت منتخب کریں، منتخب شدہ وقت ہے ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'وقت منتخب کریں',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'وقت منتخب کریں',
@@ -80,6 +82,19 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
   // fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const urPK = getPickersLocalization(urPKPickers);

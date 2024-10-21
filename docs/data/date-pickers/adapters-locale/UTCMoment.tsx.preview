@@ -1,2 +1,0 @@
-<DateTimePicker value={value} onChange={(newValue) => setValue(newValue)} />
-<Typography>Value: {value == null ? 'null' : value.format()}</Typography>

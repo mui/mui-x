@@ -1,26 +1,50 @@
-import * as React from 'react';
-import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  getTextbox,
+  expectFieldPlaceholderV6,
+  expectFieldValueV7,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 import { DesktopTimePicker, DesktopTimePickerProps } from '@mui/x-date-pickers/DesktopTimePicker';
 
 describe('<DesktopTimePicker /> - Field', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer();
+  const { renderWithProps } = buildFieldInteractions({
+    clock,
+    render,
+    Component: DesktopTimePicker,
+  });
 
   it('should pass the ampm prop to the field', () => {
-    const { setProps } = render(<DesktopTimePicker ampm />);
+    const view = renderWithProps(
+      { enableAccessibleFieldDOMStructure: true as const, ampm: true },
+      { componentFamily: 'picker' },
+    );
 
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'hh:mm aa');
+    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm aa');
 
-    setProps({ ampm: false });
-    expectInputPlaceholder(input, 'hh:mm');
+    view.setProps({ ampm: false });
+    expectFieldValueV7(view.getSectionsContainer(), 'hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
-    const testFormat = (props: DesktopTimePickerProps<any>, expectedFormat: string) => {
-      const { unmount } = render(<DesktopTimePicker {...props} />);
+    const testFormat = (props: DesktopTimePickerProps<any, any>, expectedFormat: string) => {
+      // Test with v7 input
+      let view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: true as const },
+        { componentFamily: 'picker' },
+      );
+      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      view.unmount();
+
+      // Test with v6 input
+      view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: false as const },
+        { componentFamily: 'picker' },
+      );
       const input = getTextbox();
-      expectInputPlaceholder(input, expectedFormat);
-      unmount();
+      expectFieldPlaceholderV6(input, expectedFormat);
+      view.unmount();
     };
 
     testFormat({ views: ['hours'], ampm: false }, 'hh');

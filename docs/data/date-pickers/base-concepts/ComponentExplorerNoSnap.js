@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// eslint-disable-next-line no-restricted-imports
 import * as exportedElements from '@mui/x-date-pickers-pro';
 import Typography from '@mui/material/Typography';
 
@@ -70,7 +71,11 @@ const COMPONENTS = {
   dateTimeRange: {
     field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],
     view: [],
-    picker: [],
+    picker: [
+      'DateTimeRangePicker',
+      'DesktopDateTimeRangePicker',
+      'MobileDateTimeRangePicker',
+    ],
   },
 };
 

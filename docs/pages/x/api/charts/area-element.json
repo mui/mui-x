@@ -1,19 +1,50 @@
 {
   "props": {
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [],
   "name": "AreaElement",
   "imports": [
     "import { AreaElement } from '@mui/x-charts/LineChart';",
-    "import { AreaElement } from '@mui/x-charts';"
+    "import { AreaElement } from '@mui/x-charts';",
+    "import { AreaElement } from '@mui/x-charts-pro';"
   ],
-  "styles": {
-    "classes": ["root", "highlighted", "faded"],
-    "globalClasses": {},
-    "name": "MuiAreaElement"
-  },
+  "slots": [
+    {
+      "name": "area",
+      "description": "The component that renders the area.",
+      "default": "AnimatedArea",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiAreaElement-faded",
+      "description": "Styles applied to the root element when faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiAreaElement-highlighted",
+      "description": "Styles applied to the root element when highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiAreaElement-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiAreaElement",
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

@@ -62,7 +62,20 @@ function CustomHeaderFilter(props) {
 
   return (
     <Stack
-      sx={{ outline: hasFocus ? 'solid #1976d2 1px' : '' }}
+      sx={[
+        {
+          borderTop: `1px solid var(--DataGrid-rowBorderColor)`,
+        },
+        hasFocus
+          ? {
+              outline: 'solid #1976d2 1px',
+              outlineOffset: -2,
+            }
+          : {
+              outline: '',
+              outlineOffset: 0,
+            },
+      ]}
       tabIndex={tabIndex}
       ref={cellRef}
       data-field={colDef.field}
@@ -107,7 +120,7 @@ export default function CustomHeaderFilterDataGridPro() {
         slots={{
           headerFilterCell: CustomHeaderFilter,
         }}
-        unstable_headerFilters
+        headerFilters
       />
     </div>
   );

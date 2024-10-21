@@ -1,6 +1,6 @@
 <DataGridPro
   rows={rows}
   columns={columns}
-  slots={{ columnMenu: CustomColumnMenu }}
-  initialState={{ pinnedColumns: { left: ['name'], right: ['actions'] } }}
+  initialState={{ pinnedColumns: { left: ['name'] } }}
+  disableColumnPinning
 />

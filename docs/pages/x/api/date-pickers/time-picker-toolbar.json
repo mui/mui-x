@@ -12,32 +12,84 @@
       },
       "required": true
     },
-    "className": { "type": { "name": "string" } },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "TimePickerToolbar",
   "imports": [
     "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePicker';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "separator",
-      "hourMinuteLabel",
-      "hourMinuteLabelLandscape",
-      "hourMinuteLabelReverse",
-      "ampmSelection",
-      "ampmLandscape",
-      "ampmLabel"
-    ],
-    "globalClasses": {},
-    "name": "MuiTimePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "ampmLabel",
+      "className": "MuiTimePickerToolbar-ampmLabel",
+      "description": "Styles applied to the meridiem label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLandscape",
+      "className": "MuiTimePickerToolbar-ampmLandscape",
+      "description": "Styles applied to the meridiem selection element in landscape mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmSelection",
+      "className": "MuiTimePickerToolbar-ampmSelection",
+      "description": "Styles applied to the meridiem selection element.",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabel",
+      "className": "MuiTimePickerToolbar-hourMinuteLabel",
+      "description": "Styles applied to the time sections element.",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabelLandscape",
+      "className": "MuiTimePickerToolbar-hourMinuteLabelLandscape",
+      "description": "Styles applied to the time sections element in landscape mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "hourMinuteLabelReverse",
+      "className": "MuiTimePickerToolbar-hourMinuteLabelReverse",
+      "description": "Styles applied to the time sections element in \"rtl\" theme mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiTimePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiTimePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiTimePickerToolbar",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

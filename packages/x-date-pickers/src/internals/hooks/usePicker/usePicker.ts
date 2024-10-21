@@ -1,34 +1,29 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { InferError } from '../useValidation';
-import { buildWarning } from '../../utils/warning';
-import { FieldSection } from '../../../models';
+import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-
-const warnRenderInputIsDefined = buildWarning([
-  'The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
-  'You can replace it with the `textField` component slot in most cases.',
-  'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v5/#input-renderer-required-in-v5).',
-]);
+import { usePickerOwnerState } from './usePickerOwnerState';
 
 export const usePicker = <
   TValue,
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, TSection, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   valueManager,
   valueType,
   wrapperVariant,
-  inputRef,
   additionalViewProps,
   validator,
   autoFocusView,
+  rendererInterceptor,
+  fieldRef,
 }: UsePickerParams<
   TValue,
   TDate,
@@ -39,7 +34,11 @@ export const usePicker = <
 >): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
-      warnRenderInputIsDefined();
+      warnOnce([
+        'MUI X: The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
+        'You can replace it with the `textField` component slot in most cases.',
+        'For more information, please have a look at the migration guide (https://mui.com/x/migration/migration-pickers-v5/#input-renderer-required-in-v5).',
+      ]);
     }
   }
   const pickerValueResponse = usePickerValue({
@@ -54,14 +53,16 @@ export const usePicker = <
     TValue,
     TDate,
     TView,
+    TSection,
     TExternalProps,
     TAdditionalProps
   >({
     props,
-    inputRef,
     additionalViewProps,
     autoFocusView,
+    fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,
+    rendererInterceptor,
   });
 
   const pickerLayoutResponse = usePickerLayoutProps({
@@ -70,6 +71,8 @@ export const usePicker = <
     propsFromPickerValue: pickerValueResponse.layoutProps,
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });
+
+  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
 
   return {
     // Picker value
@@ -84,5 +87,11 @@ export const usePicker = <
 
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
+
+    // Picker context
+    contextValue: pickerValueResponse.contextValue,
+
+    // Picker owner state
+    ownerState: pickerOwnerState,
   };
 };

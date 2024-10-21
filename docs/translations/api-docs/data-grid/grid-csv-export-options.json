@@ -1,0 +1,28 @@
+{
+  "interfaceDescription": "The options to apply on the CSV export.",
+  "propertiesDescriptions": {
+    "allColumns": {
+      "description": "If <code>true</code>, the hidden columns will also be exported."
+    },
+    "delimiter": { "description": "The character used to separate fields." },
+    "escapeFormulas": {
+      "description": "If <code>false</code>, the formulas in the cells will not be escaped.<br />It is not recommended to disable this option as it exposes the user to potential CSV injection attacks.<br />See <a href=\"https://owasp.org/www-community/attacks/CSV_Injection\">https://owasp.org/www-community/attacks/CSV_Injection</a> for more information."
+    },
+    "fields": {
+      "description": "The columns exported.<br />This should only be used if you want to restrict the columns exports."
+    },
+    "fileName": { "description": "The string used as the file name." },
+    "getRowsToExport": {
+      "description": "Function that returns the list of row ids to export on the order they should be exported."
+    },
+    "includeColumnGroupsHeaders": {
+      "description": "If <code>true</code>, the CSV will include the column groups."
+    },
+    "includeHeaders": {
+      "description": "If <code>true</code>, the CSV will include the column headers and column groups.<br />Use <code>includeColumnGroupsHeaders</code> to control whether the column groups are included."
+    },
+    "utf8WithBom": {
+      "description": "If <code>true</code>, the UTF-8 Byte Order Mark (BOM) prefixes the exported file.<br />This can allow Excel to automatically detect file encoding as UTF-8."
+    }
+  }
+}

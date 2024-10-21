@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers',
+    'docsx/translations/api-docs/date-pickers/day-calendar-skeleton',
     false,
-    /\.\/day-calendar-skeleton(-[a-z]{2})?\.json$/,
+    /\.\/day-calendar-skeleton.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

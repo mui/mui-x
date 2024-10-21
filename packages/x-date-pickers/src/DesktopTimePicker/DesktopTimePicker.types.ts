@@ -1,67 +1,59 @@
 import {
-  UseDesktopPickerSlotsComponent,
-  ExportedUseDesktopPickerSlotsComponentsProps,
+  UseDesktopPickerSlots,
+  ExportedUseDesktopPickerSlotProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseTimePickerProps,
-  BaseTimePickerSlotsComponent,
-  BaseTimePickerSlotsComponentsProps,
+  BaseTimePickerSlots,
+  BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
-import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
+import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import {
-  MultiSectionDigitalClockSlotsComponent,
-  MultiSectionDigitalClockSlotsComponentsProps,
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
-import { TimeView } from '../models';
+import { PickerValidDate, TimeView } from '../models';
 
-export interface DesktopTimePickerSlotsComponent<TDate>
-  extends BaseTimePickerSlotsComponent<TDate>,
-    MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, TimeViewWithMeridiem>,
-      'Field' | 'OpenPickerIcon'
+export interface DesktopTimePickerSlots<TDate extends PickerValidDate>
+  extends BaseTimePickerSlots<TDate>,
+    MakeOptional<UseDesktopPickerSlots<TDate, TimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
+    DigitalClockSlots,
+    MultiSectionDigitalClockSlots {}
+
+export interface DesktopTimePickerSlotProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends BaseTimePickerSlotProps,
+    ExportedUseDesktopPickerSlotProps<
+      TDate,
+      TimeViewWithMeridiem,
+      TEnableAccessibleFieldDOMStructure
     >,
-    DigitalClockSlotsComponent,
-    MultiSectionDigitalClockSlotsComponent {}
+    DigitalClockSlotProps,
+    MultiSectionDigitalClockSlotProps {}
 
-export interface DesktopTimePickerSlotsComponentsProps<TDate>
-  extends BaseTimePickerSlotsComponentsProps,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeViewWithMeridiem>,
-    DigitalClockSlotsComponentsProps,
-    MultiSectionDigitalClockSlotsComponentsProps {}
-
-export interface DesktopTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
-    DesktopOnlyPickerProps<TDate>,
+export interface DesktopTimePickerProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+> extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
+    DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate> {
   /**
    * Available views.
    */
   views?: readonly TimeView[];
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: DesktopTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: DesktopTimePickerSlotsComponentsProps<TDate>;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DesktopTimePickerSlotsComponent<TDate>>;
+  slots?: DesktopTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
 }

@@ -1,0 +1,15 @@
+<Gauge
+  {...settings}
+  cornerRadius="50%"
+  sx={(theme) => ({
+    [`& .${gaugeClasses.valueText}`]: {
+      fontSize: 40,
+    },
+    [`& .${gaugeClasses.valueArc}`]: {
+      fill: '#52b202',
+    },
+    [`& .${gaugeClasses.referenceArc}`]: {
+      fill: theme.palette.text.disabled,
+    },
+  })}
+/>

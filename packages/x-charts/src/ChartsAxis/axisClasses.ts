@@ -8,7 +8,7 @@ export interface ChartsAxisClasses {
   root: string;
   /** Styles applied to the main line element. */
   line: string;
-  /** Styles applied to group ingruding the tick and its label. */
+  /** Styles applied to group including the tick and its label. */
   tickContainer: string;
   /** Styles applied to ticks. */
   tick: string;
@@ -16,9 +16,9 @@ export interface ChartsAxisClasses {
   tickLabel: string;
   /** Styles applied to the group containing the axis label. */
   label: string;
-  /** Styles applied to x axes. */
+  /** Styles applied to x-axes. */
   directionX: string;
-  /** Styles applied to y axes. */
+  /** Styles applied to y-axes. */
   directionY: string;
   /** Styles applied to the top axis. */
   top: string;

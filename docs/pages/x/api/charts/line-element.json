@@ -1,19 +1,50 @@
 {
   "props": {
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
   },
-  "slots": [],
   "name": "LineElement",
   "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
-    "import { LineElement } from '@mui/x-charts';"
+    "import { LineElement } from '@mui/x-charts';",
+    "import { LineElement } from '@mui/x-charts-pro';"
   ],
-  "styles": {
-    "classes": ["root", "highlighted", "faded"],
-    "globalClasses": {},
-    "name": "MuiLineElement"
-  },
+  "slots": [
+    {
+      "name": "line",
+      "description": "The component that renders the line.",
+      "default": "LineElementPath",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiLineElement-faded",
+      "description": "Styles applied to the root element when faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiLineElement-highlighted",
+      "description": "Styles applied to the root element when highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiLineElement-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiLineElement",
   "filename": "/packages/x-charts/src/LineChart/LineElement.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

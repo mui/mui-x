@@ -1,0 +1,9 @@
+<BarChart
+  {...props}
+  series={[
+    {
+      data: [2400, 1398, 9800],
+      label: 'label 1',
+    },
+  ]}
+/>

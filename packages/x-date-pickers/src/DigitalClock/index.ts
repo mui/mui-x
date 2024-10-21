@@ -1,8 +1,8 @@
 export { DigitalClock } from './DigitalClock';
 export type {
   DigitalClockProps,
-  DigitalClockSlotsComponent,
-  DigitalClockSlotsComponentsProps,
+  DigitalClockSlots,
+  DigitalClockSlotProps,
   ExportedDigitalClockProps,
 } from './DigitalClock.types';
 

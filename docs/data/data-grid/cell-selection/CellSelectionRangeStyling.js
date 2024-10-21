@@ -4,18 +4,20 @@ import { DataGridPremium, gridClasses } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const StyledDataGridPremium = styled(DataGridPremium)(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light'
-      ? lighten(alpha(theme.palette.divider, 1), 0.88)
-      : darken(alpha(theme.palette.divider, 1), 0.68);
+  const lightBorderColor = lighten(alpha(theme.palette.divider, 1), 0.88);
+  const darkBorderColor = darken(alpha(theme.palette.divider, 1), 0.68);
 
   const selectedCellBorder = alpha(theme.palette.primary.main, 0.5);
 
   return {
     [`& .${gridClasses.cell}`]: {
       border: `1px solid transparent`,
-      borderRight: `1px solid ${borderColor}`,
-      borderBottom: `1px solid ${borderColor}`,
+      borderRight: `1px solid ${lightBorderColor}`,
+      borderBottom: `1px solid ${lightBorderColor}`,
+      ...theme.applyStyles('dark', {
+        borderRightColor: `${darkBorderColor}`,
+        borderBottomColor: `${darkBorderColor}`,
+      }),
     },
     [`& .${gridClasses.cell}.Mui-selected`]: {
       borderColor: alpha(theme.palette.primary.main, 0.1),
@@ -44,7 +46,7 @@ export default function CellSelectionRangeStyling() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <StyledDataGridPremium rowSelection={false} unstable_cellSelection {...data} />
+      <StyledDataGridPremium rowSelection={false} cellSelection {...data} />
     </div>
   );
 }

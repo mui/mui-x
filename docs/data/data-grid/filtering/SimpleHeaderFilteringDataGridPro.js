@@ -22,7 +22,7 @@ export default function SimpleHeaderFilteringDataGridPro() {
           },
         }}
         disableColumnFilter
-        unstable_headerFilters
+        headerFilters
         slots={{
           headerFilterMenu: null,
         }}

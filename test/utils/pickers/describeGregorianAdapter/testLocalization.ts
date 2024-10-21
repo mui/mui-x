@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
@@ -12,25 +11,19 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
     expect(adapter.formatNumber('1')).to.equal('1');
   });
 
-  it('Method: getMeridiemText', () => {
-    expect(adapter.getMeridiemText('am')).to.equal('AM');
-    expect(adapter.getMeridiemText('pm')).to.equal('PM');
-
-    // Moment only translates for 12-hour cycle.
-    if (adapter.lib === 'moment') {
-      const sinonStub = stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
-      expect(adapter.getMeridiemText('am')).to.equal('AM');
-      expect(adapter.getMeridiemText('pm')).to.equal('PM');
-      sinonStub.restore();
-    }
-  });
-
   it('Method: expandFormat', () => {
     const testFormat = (formatKey: keyof AdapterFormats) => {
       const formatString = adapter.formats[formatKey];
       const expandedFormat = cleanText(adapter.expandFormat(formatString));
 
-      if (expandedFormat === formatString) {
+      if (
+        expandedFormat === formatString ||
+        (adapter.lib === 'luxon' && formatString === 'ccccc')
+      ) {
+        // Luxon format 'ccccc' is not supported by the field components since multiple day can have the same one-letter value (e.g: Tuesday and Thursday).
+        // It is used in the calendar header to display the day of the weeks.
+        // Format 'ccccc' is not supported for the field fomrat since multiple day can have the same short
+        // It's used to display calendar days.
         return;
       }
 
@@ -46,15 +39,6 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
     Object.keys(adapter.formats).forEach((formatKey) => {
       testFormat(formatKey as keyof AdapterFormats);
     });
-  });
-
-  it('Method: getFormatHelperText', () => {
-    expect(adapter.getFormatHelperText(adapter.formats.keyboardDate)).to.equal(
-      adapter.lib === 'luxon' ? 'm/d/yyyy' : 'mm/dd/yyyy',
-    );
-    expect(adapter.getFormatHelperText(adapter.formats.keyboardDateTime12h)).to.equal(
-      adapter.lib === 'luxon' ? 'm/d/yyyy hh:mm (a|p)m' : 'mm/dd/yyyy hh:mm (a|p)m',
-    );
   });
 
   it('Method: getCurrentLocaleCode', () => {

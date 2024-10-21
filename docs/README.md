@@ -1,16 +1,20 @@
-# MUI X docs
+# MUI X docs
 
-This is the documentation website of MUI X.
+This is the documentation website of MUI X.
 
 To start the docs site in development mode, from the project root, run:
 
 ```bash
-yarn && yarn docs:dev
+pnpm i && pnpm docs:dev
 ```
 
-If you do not have yarn installed, select your OS and follow the instructions on the [Yarn website](https://yarnpkg.com/lang/en/docs/install/#mac-stable).
+If you do not have pnpm installed, follow the instructions on the [pnpm website](https://pnpm.io/installation).
 
-_DO NOT USE NPM, use Yarn to install the dependencies._
+<!-- vale MUI.CorrectReferenceAllCases = NO -->
+
+_DO NOT USE NPM, use pnpm to install the dependencies._
+
+<!-- vale MUI.CorrectReferenceAllCases = YES -->
 
 ## How can I add a new demo to the documentation?
 

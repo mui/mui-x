@@ -27,7 +27,7 @@ const COLUMNS: GridColDef[] = [
     type: 'number',
     width: 150,
     groupable: false,
-    valueFormatter: ({ value }) => {
+    valueFormatter: (value) => {
       if (!value) {
         return value;
       }
@@ -48,7 +48,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
       return sortedValue[0];
     },
     label: 'first alphabetical',
-    valueFormatter: (params) => `Agg: ${params.value}`,
+    valueFormatter: (value) => `Agg: ${value}`,
     columnTypes: ['string'],
   };
 

@@ -1,23 +1,21 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "types": ["react", "node"],
     "incremental": true
   },
   "include": [
     "pages/**/*.ts*",
     "data/**/*",
     "src/modules/components/**/*",
-    "../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../node_modules/dayjs/plugin/utc.d.ts",
-    "../node_modules/dayjs/plugin/timezone.d.ts",
-    "../node_modules/moment-timezone/index.d.ts"
+    "next.config.mjs",
+    "docs-env.d.ts"
   ],
   "exclude": ["docs/.next", "docs/export", "pages/playground"]
 }

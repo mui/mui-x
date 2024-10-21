@@ -8,9 +8,17 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "build",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": [
+      "node",
+      "@mui/material/themeCssVarsAugmentation",
+      "@emotion/styled",
+      "@react-spring/shared",
+      "@react-spring/core",
+      "csstype"
+    ]
   },
-  "references": [{ "path": "../x-license-pro/tsconfig.build.json" }],
-  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
+  "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

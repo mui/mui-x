@@ -1,46 +1,38 @@
+'use client';
 import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
-import {
-  UseTimeFieldProps,
-  UseTimeFieldDefaultizedProps,
-  UseTimeFieldParams,
-} from './TimeField.types';
-import { validateTime } from '../internals/utils/validation/validateTime';
-import { useUtils } from '../internals/hooks/useUtils';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { UseTimeFieldProps } from './TimeField.types';
+import { validateTime } from '../validation';
+import { useSplitFieldProps } from '../hooks';
+import { PickerValidDate, FieldSection } from '../models';
+import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
-const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
-  props: UseTimeFieldProps<TDate>,
-): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
-  const utils = useUtils<TDate>();
+export const useTimeField = <
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+>(
+  inProps: TAllProps,
+) => {
+  const props = useDefaultizedTimeField<
+    TDate,
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    TAllProps
+  >(inProps);
 
-  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? defaultFormat,
-  } as any;
-};
-
-export const useTimeField = <TDate, TChildProps extends {}>({
-  props: inProps,
-  inputRef,
-}: UseTimeFieldParams<TDate, TChildProps>) => {
-  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
-
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseTimeFieldProps<any>
-  >(props, 'time');
-
-  return useField({
-    inputRef,
+  return useField<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalProps
+  >({
     forwardedProps,
     internalProps,
     valueManager: singleItemValueManager,

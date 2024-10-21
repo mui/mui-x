@@ -1,92 +1,101 @@
+'use client';
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-  FieldsTextFieldProps,
-  useLocaleText,
-} from '../internals';
+import { usePickersTranslations } from './usePickersTranslations';
 
-type UseClearableFieldProps<
-  TFieldProps extends FieldsTextFieldProps,
-  TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlots extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
-> = {
-  clearable: boolean;
-  fieldProps: TFieldProps;
-  InputProps: TInputProps;
-  onClear: React.MouseEventHandler<HTMLButtonElement>;
-  slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
-  slotProps?: TFieldSlotsComponentsProps;
-  components?: TFieldSlots;
-  componentsProps?: TFieldSlotsComponentsProps;
-};
+export interface ExportedUseClearableFieldProps {
+  /**
+   * If `true`, a clear button will be shown in the field allowing value clearing.
+   * @default false
+   */
+  clearable?: boolean;
+  /**
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+}
 
-export const useClearableField = <
-  TFieldProps extends FieldsTextFieldProps,
-  TInputProps extends { endAdornment?: React.ReactNode } | undefined,
-  TFieldSlotsComponents extends FieldSlotsComponents,
-  TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
->({
-  clearable,
-  fieldProps: forwardedFieldProps,
-  InputProps: ForwardedInputProps,
-  onClear,
-  slots,
-  slotProps,
-  components,
-  componentsProps,
-}: UseClearableFieldProps<
+export interface UseClearableFieldSlots {
+  /**
+   * Icon to display inside the clear button.
+   * @default ClearIcon
+   */
+  clearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  clearButton?: React.ElementType;
+}
+
+export interface UseClearableFieldSlotProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof MuiIconButton, {}, {}>;
+}
+
+interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
+  InputProps?: { endAdornment?: React.ReactNode };
+  sx?: SxProps<any>;
+  slots?: UseClearableFieldSlots;
+  slotProps?: UseClearableFieldSlotProps;
+}
+
+export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps> = Omit<
   TFieldProps,
-  TInputProps,
-  TFieldSlotsComponents,
-  TFieldSlotsComponentsProps
->) => {
-  const localeText = useLocaleText();
+  'clearable' | 'onClear' | 'slots' | 'slotProps'
+>;
 
-  const IconButton = slots?.clearButton ?? components?.ClearButton ?? MuiIconButton;
+export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
+  props: TFieldProps,
+): UseClearableFieldResponse<TFieldProps> => {
+  const translations = usePickersTranslations();
+
+  const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
+
+  const IconButton = slots?.clearButton ?? MuiIconButton;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState, ...iconButtonProps } = useSlotProps({
     elementType: IconButton,
-    externalSlotProps: slotProps?.clearButton ?? componentsProps?.clearButton,
+    externalSlotProps: slotProps?.clearButton,
     ownerState: {},
     className: 'clearButton',
     additionalProps: {
-      title: localeText.fieldClearLabel,
+      title: translations.fieldClearLabel,
     },
   });
-  const EndClearIcon = slots?.clearIcon ?? components?.ClearIcon ?? ClearIcon;
+  const EndClearIcon = slots?.clearIcon ?? ClearIcon;
   const endClearIconProps = useSlotProps({
     elementType: EndClearIcon,
-    externalSlotProps: slotProps?.clearIcon ?? componentsProps?.clearIcon,
+    externalSlotProps: slotProps?.clearIcon,
     ownerState: {},
   });
 
-  const InputProps = {
-    ...ForwardedInputProps,
-    endAdornment: clearable ? (
-      <React.Fragment>
-        <InputAdornment
-          position="end"
-          sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
-        >
-          <IconButton {...iconButtonProps} onClick={onClear}>
-            <EndClearIcon fontSize="small" {...endClearIconProps} />
-          </IconButton>
-        </InputAdornment>
-        {ForwardedInputProps?.endAdornment}
-      </React.Fragment>
-    ) : (
-      ForwardedInputProps?.endAdornment
-    ),
-  };
+  return {
+    ...other,
+    InputProps: {
+      ...InputProps,
+      endAdornment: (
+        <React.Fragment>
+          {clearable && (
+            <InputAdornment
+              position="end"
+              sx={{ marginRight: InputProps?.endAdornment ? -1 : -1.5 }}
+            >
+              <IconButton {...iconButtonProps} onClick={onClear}>
+                <EndClearIcon fontSize="small" {...endClearIconProps} />
+              </IconButton>
+            </InputAdornment>
+          )}
 
-  const fieldProps: TFieldProps = {
-    ...forwardedFieldProps,
+          {InputProps?.endAdornment}
+        </React.Fragment>
+      ),
+    },
     sx: [
       {
         '& .clearButton': {
@@ -103,11 +112,7 @@ export const useClearableField = <
           },
         },
       },
-      ...(Array.isArray(forwardedFieldProps.sx)
-        ? forwardedFieldProps.sx
-        : [forwardedFieldProps.sx]),
+      ...(Array.isArray(sx) ? sx : [sx]),
     ],
-  };
-
-  return { InputProps, fieldProps };
+  } as unknown as TFieldProps;
 };

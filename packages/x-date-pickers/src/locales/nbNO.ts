@@ -15,16 +15,20 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Neste måned',
 
   // View navigation
-  openPreviousView: 'åpne forrige visning',
-  openNextView: 'åpne neste visning',
+  openPreviousView: 'Åpne forrige visning',
+  openNextView: 'Åpne neste visning',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Start',
   end: 'Slutt',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
@@ -39,10 +43,8 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Velg datoperiode',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Velg ${timeViews[view]}. ${
-      time === null ? 'Ingen tid valgt' : `Valgt tid er ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Velg ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ingen tid valgt' : `Valgt tid er ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
@@ -57,15 +59,15 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velg dato, valgt dato er ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Velg dato, valgt dato er ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Velg dato',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Velg tid, valgt tid er ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Velg tid, valgt tid er ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Velg tid',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'velg tid',
@@ -80,6 +82,19 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const nbNO = getPickersLocalization(nbNOPickers);

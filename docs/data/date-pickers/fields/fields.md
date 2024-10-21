@@ -25,6 +25,201 @@ All fields to edit a range are available in a single input version and in a mult
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
+## Accessible DOM structure
+
+By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+
+From v7 version, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
+
+```tsx
+<DateField enableAccessibleFieldDOMStructure />
+<DatePicker enableAccessibleFieldDOMStructure />
+<DateRangePicker enableAccessibleFieldDOMStructure />
+```
+
+This new feature allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+
+{{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
+
+### Usage with `slotProps.field`
+
+When using `slotProps.field` to pass props to your field component,
+the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+
+- For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
+
+  Both components below will respect the leading zeroes on digit sections:
+
+  ```js
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+    enableAccessibleFieldDOMStructure
+  />
+  <DatePicker
+    slotProps={{ field: { shouldRespectLeadingZeros: true } }}
+  />
+  ```
+
+- For the props forwarded to the `TextField`,
+  you can have a look at the next section to see how the migration impact them.
+
+  Both components below will render a small size UI:
+
+  ```js
+  <DatePicker
+    slotProps={{ field: { size: 'small' } }}
+    enableAccessibleFieldDOMStructure
+  />
+  <DatePicker
+    slotProps={{ field: { size: 'small' } }}
+  />
+  ```
+
+### Usage with `slotProps.textField`
+
+If you are passing props to `slotProps.textField`,
+these props will now be received by `PickersTextField` and should keep working the same way as before.
+
+Both components below will render a small size UI:
+
+```js
+<DatePicker
+  slotProps={{ textField: { size: 'small' } }}
+  enableAccessibleFieldDOMStructure
+/>
+<DatePicker
+  slotProps={{ textField: { size: 'small' } }}
+/>
+```
+
+:::info
+If you are passing `inputProps` to `slotProps.textField`,
+these props will now be passed to the hidden `<input />` element.
+:::
+
+### Usage with `slots.field`
+
+If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
+This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
+
+You can have a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) to have a concrete example.
+
+:::info
+If your custom field was used to create a Joy UI design component,
+you may want to wait a few weeks for the release of an out-of-the-box Joy `PickersTextField` component instead of implementing it yourself.
+:::
+
+### Usage with `slots.textField`
+
+If you are passing a custom `TextField` component to your fields and pickers,
+you need to create a new one that is using the accessible DOM structure.
+
+You can have a look at the second demo of the [Material PickersTextField section](/x/react-date-pickers/custom-field/#using-material-pickerstextfield) to have a concrete example.
+
+:::info
+If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
+please consider having a look at the [custom PickersTextField](/x/react-date-pickers/custom-field/#using-custom-pickerstextfield) section which uses `slots.field`.
+This approach can be more appropriate for deeper changes.
+:::
+
+### Usage with theme
+
+If you are using the theme to customize `MuiTextField`,
+you need to pass the same config to `MuiPickersTextField`:
+
+```js
+const theme = createTheme({
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+      styleOverrides: {
+        root: {
+          '& .MuiInputLabel-outlined.Mui-focused': {
+            color: 'red',
+          },
+        },
+      },
+    },
+    MuiPickersTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+      styleOverrides: {
+        root: {
+          '& .MuiInputLabel-outlined.Mui-focused': {
+            color: 'red',
+          },
+        },
+      },
+    },
+  },
+});
+```
+
+If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
+you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
+
+```js
+const theme = createTheme({
+  components: {
+    // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
+    MuiInput: {
+      defaultProps: {
+        margin: 'dense',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+    // Replace with `MuiPickersOutlinedInput` or `MuiPickersFilledInput` if needed
+    MuiPickersInput: {
+      defaultProps: {
+        margin: 'dense',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+  },
+});
+```
+
+If you are using the theme to customize `MuiInputBase`,
+you need to pass the same config to `MuiPickersInputBase`:
+
+```js
+const theme = createTheme({
+  components: {
+    MuiInputBase: {
+      defaultProps: {
+        margin: 'dense',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+    MuiPickersInputBase: {
+      defaultProps: {
+        margin: 'dense',
+      },
+      styleOverrides: {
+        root: {
+          color: 'red',
+        },
+      },
+    },
+  },
+});
+```
+
 ## Advanced
 
 ### What is a section?

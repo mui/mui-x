@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GridColDef,
   DataGrid,
-  GridValueGetterParams,
   gridNumberComparator,
   gridStringOrNumberComparator,
   GridComparatorFn,
@@ -50,12 +49,11 @@ export default function ExtendedSortComparator() {
       {
         field: 'nameAdmin',
         headerName: 'Name',
-        valueGetter: (params: GridValueGetterParams) => ({
-          name: params.row.name,
-          isAdmin: params.row.isAdmin,
+        valueGetter: (value, row) => ({
+          name: row.name,
+          isAdmin: row.isAdmin,
         }),
-        valueFormatter: (params) => {
-          const value = params.value as NameAdminCellValue;
+        valueFormatter: (value: NameAdminCellValue) => {
           if (value.isAdmin) {
             return `${value.name} (admin)`;
           }

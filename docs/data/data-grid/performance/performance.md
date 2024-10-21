@@ -4,10 +4,10 @@
 
 ## Extract static objects and memoize root props
 
-The `DataGrid` component uses `React.memo` to optimize its performance, which means itself and its subcomponents only
+The Data Grid component uses `React.memo` to optimize its performance, which means itself and its subcomponents only
 re-render when their props change. But it's very easy to cause unnecessary re-renders if the root props of your
-`DataGrid` aren't memoized. Take the example below, the `slots` and `initialState` objects are re-created on every
-render, which means the `DataGrid` itself has no choice but to re-render as well.
+Data Grid aren't memoized. Take the example below, the `slots` and `initialState` objects are re-created on every
+render, which means the Data Grid itself has no choice but to re-render as well.
 
 ```tsx
 function Component(props) {
@@ -49,10 +49,6 @@ The DataGrid memoizes some of its subcomponents to avoid re-rendering more than 
 shows you which cells re-render in reaction to your interaction with the grid.
 
 {{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Filtering
-
-For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization/#optimize-performance).
 
 ## API
 

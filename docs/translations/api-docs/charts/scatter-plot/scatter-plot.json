@@ -1,0 +1,16 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "onItemClick": {
+      "description": "Callback fired when clicking on a scatter item.",
+      "typeDescriptions": {
+        "event": "Mouse event recorded on the <code>&lt;svg/&gt;</code> element.",
+        "scatterItemIdentifier": "The scatter item identifier."
+      }
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "scatter": "" }
+}

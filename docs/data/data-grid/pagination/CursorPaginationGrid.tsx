@@ -1,5 +1,15 @@
 import * as React from 'react';
-import { DataGrid, GridRowId, GridPaginationModel } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridRowId,
+  GridPaginationModel,
+  GridPaginationMeta,
+} from '@mui/x-data-grid';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const PAGE_SIZE = 5;
@@ -10,7 +20,11 @@ const SERVER_OPTIONS = {
 
 const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 
+type RowCountType = 'known' | 'unknown' | 'estimated';
+
 export default function CursorPaginationGrid() {
+  const [rowCountType, setRowCountType] = React.useState<RowCountType>('known');
+
   const mapPageToNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
 
   const [paginationModel, setPaginationModel] = React.useState({
@@ -25,7 +39,11 @@ export default function CursorPaginationGrid() {
     }),
     [paginationModel],
   );
-  const { isLoading, rows, pageInfo } = useQuery(queryOptions);
+  const {
+    isLoading,
+    rows,
+    pageInfo: { hasNextPage, nextCursor, totalRowCount },
+  } = useQuery(queryOptions);
 
   const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
     // We have the cursor, we can allow the page transition.
@@ -37,38 +55,94 @@ export default function CursorPaginationGrid() {
     }
   };
 
-  React.useEffect(() => {
-    if (!isLoading && pageInfo?.nextCursor) {
-      // We add nextCursor when available
-      mapPageToNextCursor.current[paginationModel.page] = pageInfo?.nextCursor;
+  const paginationMetaRef = React.useRef<GridPaginationMeta>();
+
+  // Memoize to avoid flickering when the `hasNextPage` is `undefined` during refetch
+  const paginationMeta = React.useMemo(() => {
+    if (
+      hasNextPage !== undefined &&
+      paginationMetaRef.current?.hasNextPage !== hasNextPage
+    ) {
+      paginationMetaRef.current = { hasNextPage };
     }
-  }, [paginationModel.page, isLoading, pageInfo?.nextCursor]);
+    return paginationMetaRef.current;
+  }, [hasNextPage]);
+
+  React.useEffect(() => {
+    if (!isLoading && nextCursor) {
+      // We add nextCursor when available
+      mapPageToNextCursor.current[paginationModel.page] = nextCursor;
+    }
+  }, [paginationModel.page, isLoading, nextCursor]);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
-  const [rowCountState, setRowCountState] = React.useState(
-    pageInfo?.totalRowCount || 0,
-  );
+  const [rowCountState, setRowCountState] = React.useState(totalRowCount || 0);
   React.useEffect(() => {
-    setRowCountState((prevRowCountState) =>
-      pageInfo?.totalRowCount !== undefined
-        ? pageInfo?.totalRowCount
-        : prevRowCountState,
-    );
-  }, [pageInfo?.totalRowCount, setRowCountState]);
+    if (rowCountType === 'known') {
+      setRowCountState((prevRowCountState) =>
+        totalRowCount !== undefined ? totalRowCount : prevRowCountState,
+      );
+    }
+    if (
+      (rowCountType === 'unknown' || rowCountType === 'estimated') &&
+      paginationMeta?.hasNextPage !== false
+    ) {
+      setRowCountState(-1);
+    }
+  }, [paginationMeta?.hasNextPage, rowCountType, totalRowCount]);
+
+  const prevEstimatedRowCount = React.useRef<number | undefined>(undefined);
+  const estimatedRowCount = React.useMemo(() => {
+    if (rowCountType === 'estimated') {
+      if (totalRowCount !== undefined) {
+        if (prevEstimatedRowCount.current === undefined) {
+          prevEstimatedRowCount.current = totalRowCount / 2;
+        }
+        return totalRowCount / 2;
+      }
+      return prevEstimatedRowCount.current;
+    }
+    return undefined;
+  }, [rowCountType, totalRowCount]);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        {...data}
-        pageSizeOptions={[PAGE_SIZE]}
-        rowCount={rowCountState}
-        paginationMode="server"
-        onPaginationModelChange={handlePaginationModelChange}
-        paginationModel={paginationModel}
-        loading={isLoading}
-      />
+    <div style={{ width: '100%' }}>
+      <FormControl>
+        <FormLabel id="demo-cursor-pagination-buttons-group-label">
+          Row count
+        </FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-cursor-pagination-buttons-group-label"
+          name="cursor-pagination-buttons-group"
+          value={rowCountType}
+          onChange={(event) => setRowCountType(event.target.value as RowCountType)}
+        >
+          <FormControlLabel value="known" control={<Radio />} label="Known" />
+          <FormControlLabel value="unknown" control={<Radio />} label="Unknown" />
+          <FormControlLabel
+            value="estimated"
+            control={<Radio />}
+            label="Estimated"
+          />
+        </RadioGroup>
+      </FormControl>
+      <div style={{ height: 400 }}>
+        <DataGrid
+          rows={rows}
+          {...data}
+          pageSizeOptions={[PAGE_SIZE]}
+          rowCount={rowCountState}
+          onRowCountChange={(newRowCount) => setRowCountState(newRowCount)}
+          estimatedRowCount={estimatedRowCount}
+          paginationMeta={paginationMeta}
+          paginationMode="server"
+          onPaginationModelChange={handlePaginationModelChange}
+          paginationModel={paginationModel}
+          loading={isLoading}
+        />
+      </div>
     </div>
   );
 }

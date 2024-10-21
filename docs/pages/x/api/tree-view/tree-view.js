@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/tree-view',
+    'docsx/translations/api-docs/tree-view/tree-view',
     false,
-    /\.\/tree-view(-[a-z]{2})?\.json$/,
+    /\.\/tree-view.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

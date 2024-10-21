@@ -50,6 +50,9 @@ const defaultFormats: AdapterFormats = {
   month: 'iMMMM',
   monthShort: 'iMMM',
   dayOfMonth: 'iD',
+  // Full day of the month format (i.e. 3rd) is not supported
+  // Falling back to regular format
+  dayOfMonthFull: 'iD',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -59,21 +62,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'iYYYY, iMMMM Do',
-  fullDateWithWeekday: 'iYYYY, iMMMM Do, dddd',
   keyboardDateTime: 'iYYYY/iMM/iDD LT',
   shortDate: 'iD iMMM',
   normalDate: 'dddd, iD iMMM',
   normalDateWithWeekday: 'DD iMMMM',
-  monthAndYear: 'iMMMM iYYYY',
-  monthAndDate: 'iD iMMMM',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
-  fullDateTime12h: 'iD iMMMM hh:mm A',
-  fullDateTime24h: 'iD iMMMM HH:mm',
   keyboardDate: 'iYYYY/iMM/iDD',
   keyboardDateTime12h: 'iYYYY/iMM/iDD hh:mm A',
   keyboardDateTime24h: 'iYYYY/iMM/iDD HH:mm',
@@ -91,6 +88,12 @@ const NUMBER_SYMBOL_MAP = {
   '9': '٩',
   '0': '٠',
 };
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    'moment-hijri': Moment;
+  }
+}
 
 /**
  * Based on `@date-io/hijri`
@@ -134,18 +137,15 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  public date = (value?: any) => {
+  public date = <T extends string | null | undefined>(
+    value?: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
-    return this.moment(value).locale('ar-SA');
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-  ): DateBuilderReturnType<T, Moment> => {
-    return <DateBuilderReturnType<T, Moment>>this.date(value);
+    return <R>this.moment(value).locale('ar-SA');
   };
 
   public getTimezone = (): string => {
@@ -164,27 +164,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value, format, true).locale('ar-SA');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format)
-      .replace(/a/gi, '(a|p)m')
-      .replace('iY', 'Y')
-      .replace('iM', 'M')
-      .replace('iD', 'D')
-      .toLocaleLowerCase();
-  };
-
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat
       .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
       .replace(/,/g, '،');
-  };
-
-  public isEqual = (value: any, comparing: any) => {
-    if (value === null && comparing === null) {
-      return true;
-    }
-
-    return this.moment(value).isSame(comparing);
   };
 
   public startOfYear = (value: Moment) => {
@@ -239,46 +222,11 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return value.clone().iDate(date);
   };
 
-  public getNextMonth = (value: Moment) => {
-    return value.clone().add(1, 'iMonth');
-  };
-
-  public getPreviousMonth = (value: Moment) => {
-    return value.clone().subtract(1, 'iMonth');
-  };
-
-  public getWeekdays = () => {
-    return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.date()!.weekday(dayOfWeek).format('dd');
-    });
-  };
-
-  public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('iMonth').startOf('week');
-
-    const end = value.clone().endOf('iMonth').endOf('week');
-
-    let count = 0;
-    let current = start;
-    const nestedWeeks: Moment[][] = [];
-
-    while (current.isBefore(end)) {
-      const weekNumber = Math.floor(count / 7);
-      nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      nestedWeeks[weekNumber].push(current);
-
-      current = current.clone().add(1, 'day');
-      count += 1;
-    }
-
-    return nestedWeeks;
-  };
-
   public getWeekNumber = (value: Moment) => {
     return value.iWeek();
   };
 
-  public getYearRange = (start: Moment, end: Moment) => {
+  public getYearRange = ([start, end]: [Moment, Moment]) => {
     // moment-hijri only supports dates between 1356-01-01 H and 1499-12-29 H
     // We need to throw if outside min/max bounds, otherwise the while loop below will be infinite.
     if (start.isBefore('1937-03-14')) {
@@ -288,20 +236,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
       throw new Error('max date must be on or before 1499-12-29 H (2076-11-26)');
     }
 
-    const startDate = this.moment(start).startOf('iYear');
-    const endDate = this.moment(end).endOf('iYear');
-    const years: Moment[] = [];
-
-    let current = startDate;
-    while (current.isBefore(endDate)) {
-      years.push(current);
-      current = current.clone().add(1, 'iYear');
-    }
-
-    return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
+    return super.getYearRange([start, end]);
   };
 }

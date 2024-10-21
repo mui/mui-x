@@ -3,9 +3,9 @@ import { useUtils } from './useUtils';
 import { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
 import { PickerSelectionState } from './usePicker';
-import { PickersTimezone } from '../../models';
+import { PickersTimezone, PickerValidDate } from '../../models';
 
-export interface MonthValidationOptions<TDate> {
+export interface MonthValidationOptions<TDate extends PickerValidDate> {
   disablePast?: boolean;
   disableFuture?: boolean;
   minDate: TDate;
@@ -13,7 +13,7 @@ export interface MonthValidationOptions<TDate> {
   timezone: PickersTimezone;
 }
 
-export function useNextMonthDisabled<TDate>(
+export function useNextMonthDisabled<TDate extends PickerValidDate>(
   month: TDate,
   {
     disableFuture,
@@ -23,7 +23,7 @@ export function useNextMonthDisabled<TDate>(
 ) {
   const utils = useUtils<TDate>();
   return React.useMemo(() => {
-    const now = utils.dateWithTimezone(undefined, timezone);
+    const now = utils.date(undefined, timezone);
     const lastEnabledMonth = utils.startOfMonth(
       disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
     );
@@ -31,7 +31,7 @@ export function useNextMonthDisabled<TDate>(
   }, [disableFuture, maxDate, month, utils, timezone]);
 }
 
-export function usePreviousMonthDisabled<TDate>(
+export function usePreviousMonthDisabled<TDate extends PickerValidDate>(
   month: TDate,
   {
     disablePast,
@@ -42,7 +42,7 @@ export function usePreviousMonthDisabled<TDate>(
   const utils = useUtils<TDate>();
 
   return React.useMemo(() => {
-    const now = utils.dateWithTimezone(undefined, timezone);
+    const now = utils.date(undefined, timezone);
     const firstEnabledMonth = utils.startOfMonth(
       disablePast && utils.isAfter(now, minDate) ? now : minDate,
     );
@@ -50,7 +50,7 @@ export function usePreviousMonthDisabled<TDate>(
   }, [disablePast, minDate, month, utils, timezone]);
 }
 
-export function useMeridiemMode<TDate>(
+export function useMeridiemMode<TDate extends PickerValidDate>(
   date: TDate | null,
   ampm: boolean | undefined,
   onChange: PickerOnChangeFn<TDate>,

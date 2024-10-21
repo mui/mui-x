@@ -1,5 +1,7 @@
 ---
 title: Charts - Custom components
+productId: x-charts
+components: ChartsClipPath, ChartsSurface
 ---
 
 # Charts - Custom components
@@ -12,7 +14,7 @@ title: Charts - Custom components
 
 Charts dimensions are defined by a few props:
 
-- `height` and `width` for the `<svg />` size. If not provided those values are derived from the container.
+- `height` and `width` for the `<svg />` size. If not provided, those values are derived from the container.
 - `margin` for adding space between the `<svg />` border and the **drawing area**.
 
 The term **drawing area** refers to the space available to plot data (scatter points, lines, or pie arcs).
@@ -53,7 +55,7 @@ You don't need extra work to take into account the drawing area.
 #### Value to coordinate
 
 The `d3-scale` default method maps from values to coordinates.
-For example, you can get the `x=0` coordinate as follow:
+For example, you can get the `x=0` coordinate as follows:
 
 ```jsx
 const xAxisScale = useXScale(); // get the default X scale

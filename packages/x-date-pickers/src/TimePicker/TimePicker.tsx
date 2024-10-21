@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -7,9 +8,14 @@ import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
+import { PickerValidDate } from '../models';
 
-type TimePickerComponent = (<TDate>(
-  props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  props: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -22,8 +28,11 @@ type TimePickerComponent = (<TDate>(
  *
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
-const TimePicker = React.forwardRef(function TimePicker<TDate>(
-  inProps: TimePickerProps<TDate>,
+const TimePicker = React.forwardRef(function TimePicker<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = false,
+>(
+  inProps: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
@@ -43,11 +52,11 @@ const TimePicker = React.forwardRef(function TimePicker<TDate>(
 TimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
   /**
@@ -62,9 +71,6 @@ TimePicker.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
@@ -72,22 +78,10 @@ TimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overridable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * The default value.
    * Used when the component is not controlled.
    */
-  defaultValue: PropTypes.any,
+  defaultValue: PropTypes.object,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -120,6 +114,10 @@ TimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * @default false
+   */
+  enableAccessibleFieldDOMStructure: PropTypes.any,
+  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -147,27 +145,33 @@ TimePicker.propTypes = {
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  maxTime: PropTypes.any,
+  maxTime: PropTypes.object,
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
-  minTime: PropTypes.any,
+  minTime: PropTypes.object,
   /**
    * Step over minutes.
    * @default 1
    */
   minutesStep: PropTypes.number,
   /**
+   * Name attribute used by the `input` element in the Field.
+   */
+  name: PropTypes.string,
+  /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -178,13 +182,13 @@ TimePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**
@@ -228,20 +232,21 @@ TimePicker.propTypes = {
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
-  referenceDate: PropTypes.any,
+  referenceDate: PropTypes.object,
   /**
    * The currently selected sections.
-   * This prop accept four formats:
+   * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
+   * 2. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
+   * 3. If `"all"` is provided, all the sections will be selected.
+   * 4. If `null` is provided, no section will be selected.
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
     PropTypes.oneOf([
       'all',
       'day',
+      'empty',
       'hours',
       'meridiem',
       'minutes',
@@ -251,19 +256,7 @@ TimePicker.propTypes = {
       'year',
     ]),
     PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
   ]),
-  /**
-   * Disable specific clock time.
-   * @param {number} clockValue The value to check.
-   * @param {TimeView} view The clock type of the timeValue.
-   * @returns {boolean} If `true` the time will be disabled.
-   * @deprecated Consider using `shouldDisableTime`.
-   */
-  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
    * @template TDate
@@ -315,7 +308,7 @@ TimePicker.propTypes = {
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
    * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
-   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documentation} for more details.
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
@@ -323,7 +316,7 @@ TimePicker.propTypes = {
    * The selected value.
    * Used when the component is controlled.
    */
-  value: PropTypes.any,
+  value: PropTypes.object,
   /**
    * The visible view.
    * Used when the component view is controlled.
@@ -333,7 +326,7 @@ TimePicker.propTypes = {
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
-   * If `undefined`, internally defined view will be the used.
+   * If `undefined`, internally defined view will be used.
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,

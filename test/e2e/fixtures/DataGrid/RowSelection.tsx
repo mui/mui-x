@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 
-const baselineProps = {
+const baselineProps: DataGridProps = {
   rows: [
     {
       id: 0,
@@ -35,7 +35,7 @@ export default function RowSelection() {
     <div style={{ width: 400, height: 200 }}>
       <DataGrid
         {...baselineProps}
-        headerHeight={50}
+        columnHeaderHeight={50}
         rowHeight={50}
         hideFooter
         disableVirtualization

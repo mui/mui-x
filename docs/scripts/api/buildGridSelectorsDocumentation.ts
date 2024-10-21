@@ -23,75 +23,78 @@ interface Selector {
   supportsApiRef?: boolean;
 }
 
-export default function buildGridSelectorsDocumentation(
+export default async function buildGridSelectorsDocumentation(
   options: BuildSelectorsDocumentationOptions,
 ) {
   const { project, apiPagesFolder } = options;
 
-  const selectors = Object.values(project.exports)
-    .map((symbol): Selector | null => {
-      if (!symbol.name.endsWith('Selector')) {
-        return null;
-      }
+  const selectors = (
+    await Promise.all(
+      Object.values(project.exports).map(async (symbol): Promise<Selector | null> => {
+        if (!symbol.name.endsWith('Selector')) {
+          return null;
+        }
 
-      symbol = resolveExportSpecifier(symbol, project);
+        symbol = resolveExportSpecifier(symbol, project);
 
-      const tags = getSymbolJSDocTags(symbol);
-      if (tags.ignore) {
-        return null;
-      }
+        const tags = getSymbolJSDocTags(symbol);
+        if (tags.ignore) {
+          return null;
+        }
 
-      const type = project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
-      const signature = project.checker.getSignaturesOfType(type, ts.SignatureKind.Call)?.[0];
+        const type = project.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
+        const signature = project.checker.getSignaturesOfType(type, ts.SignatureKind.Call)?.[0];
 
-      if (!signature) {
-        return null;
-      }
+        if (!signature) {
+          return null;
+        }
 
-      const parameterSymbol = signature.getParameters()[0];
+        const parameterSymbol = signature.getParameters()[0];
 
-      let isSelector = false;
-      let supportsApiRef = false;
+        let isSelector = false;
+        let supportsApiRef = false;
 
-      const firstParamName = project.checker.getTypeOfSymbolAtLocation(
-        parameterSymbol,
-        parameterSymbol.valueDeclaration!,
-      ).symbol?.name;
+        const firstParamName = project.checker.getTypeOfSymbolAtLocation(
+          parameterSymbol,
+          parameterSymbol.valueDeclaration!,
+        ).symbol?.name;
 
-      if (['GridStatePro', 'GridStateCommunity'].includes(firstParamName)) {
-        // Selector not wrapped in `createSelector`
-        isSelector = true;
-      } else if (
-        // Selector wrapped in `createSelector`
-        type.symbol.name === 'OutputSelector'
-      ) {
-        isSelector = true;
-        supportsApiRef = true;
-      }
+        if (['GridStatePro', 'GridStateCommunity'].includes(firstParamName)) {
+          // Selector not wrapped in `createSelector`
+          isSelector = true;
+        } else if (
+          // Selector wrapped in `createSelector`
+          type.symbol.name === 'OutputSelector'
+        ) {
+          isSelector = true;
+          supportsApiRef = true;
+        }
 
-      if (!isSelector) {
-        return null;
-      }
+        if (!isSelector) {
+          return null;
+        }
 
-      const returnType = formatType(
-        project.checker
-          .typeToString(signature.getReturnType(), undefined, ts.TypeFormatFlags.NoTruncation)
-          // For now the community selectors are not overloading when exported from the pro
-          .replace(/<GridApi(Community|Pro)>/g, ''),
-      );
-      const category = tags.category?.text?.[0].text;
-      const deprecated = tags.deprecated?.text?.[0].text;
-      const description = getSymbolDescription(symbol, project);
+        const returnType = await formatType(
+          project.checker
+            .typeToString(signature.getReturnType(), undefined, ts.TypeFormatFlags.NoTruncation)
+            // For now the community selectors are not overloading when exported from the pro
+            .replace(/<GridApi(Community|Pro)>/g, ''),
+        );
+        const category = tags.category?.text?.[0].text;
+        const deprecated = tags.deprecated?.text?.[0].text;
+        const description = getSymbolDescription(symbol, project);
 
-      return {
-        name: symbol.name,
-        returnType,
-        category,
-        deprecated,
-        description,
-        supportsApiRef,
-      };
-    })
+        return {
+          name: symbol.name,
+          returnType,
+          category,
+          deprecated,
+          description,
+          supportsApiRef,
+        };
+      }),
+    )
+  )
     .filter((el): el is Selector => !!el)
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 

@@ -16,16 +16,20 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Další měsíc',
 
   // View navigation
-  openPreviousView: 'otevřít předchozí zobrazení',
-  openNextView: 'otevřít další zobrazení',
+  openPreviousView: 'Otevřít předchozí zobrazení',
+  openNextView: 'Otevřít další zobrazení',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
       : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Začátek',
   end: 'Konec',
+  startDate: 'Datum začátku',
+  startTime: 'Čas začátku',
+  endDate: 'Datum konce',
+  endTime: 'Čas konce',
 
   // Action bar
   cancelButtonLabel: 'Zrušit',
@@ -40,10 +44,8 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybrány. ${
-      time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view} vybrány. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Není vybrán čas' : `Vybraný čas je ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hodin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
@@ -58,15 +60,15 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vyberte datum, vybrané datum je ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Vyberte datum, vybrané datum je ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Vyberte datum',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Vyberte čas, vybraný čas je ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Vymazat',
 
   // Table labels
   timeTableLabel: 'vyberte čas',
@@ -76,11 +78,24 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Rok',
+  month: 'Měsíc',
+  day: 'Den',
+  weekDay: 'Pracovní den',
+  hours: 'Hodiny',
+  minutes: 'Minuty',
+  seconds: 'Sekundy',
+  meridiem: 'Odpoledne',
+
+  // Common
+  empty: 'Prázdný',
 };
 
 export const csCZ = getPickersLocalization(csCZPickers);

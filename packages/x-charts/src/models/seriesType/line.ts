@@ -1,8 +1,10 @@
 import { DefaultizedProps } from '../helpers';
+import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,
   CommonDefaultizedProps,
   CommonSeriesType,
+  SeriesId,
   StackableSeriesType,
 } from './common';
 
@@ -40,21 +42,29 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number>,
+  extends CommonSeriesType<number | null>,
     CartesianSeriesType,
     StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
    */
-  data?: number[];
+  data?: (number | null)[];
   /**
-   * The key used to retrive data from the dataset.
+   * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
   stack?: string;
   area?: boolean;
-  label?: string;
+  /**
+   * The label to display on the tooltip or the legend. It can be a string or a function.
+   */
+  label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
+   */
   curve?: CurveType;
   /**
    * Define which items of the series should display a mark.
@@ -67,6 +77,26 @@ export interface LineSeriesType
    * @default false
    */
   disableHighlight?: boolean;
+  /**
+   * If `true`, line and area connect points separated by `null` values.
+   * @default false
+   */
+  connectNulls?: boolean;
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'none'
+   */
+  stackOffset?: StackOffsetType;
+  /**
+   * The value of the line at the base of the series area.
+   *
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
+   *
+   * @default 0
+   */
+  baseline?: number | 'min' | 'max';
 }
 
 /**
@@ -75,7 +105,7 @@ export interface LineSeriesType
  */
 export type LineItemIdentifier = {
   type: 'line';
-  seriesId: DefaultizedLineSeriesType['id'];
+  seriesId: SeriesId;
   /**
    * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
    */

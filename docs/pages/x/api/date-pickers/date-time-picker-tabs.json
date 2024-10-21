@@ -18,16 +18,32 @@
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`"
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
-  "slots": [],
   "name": "DateTimePickerTabs",
   "imports": [
     "import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';",
     "import { DateTimePickerTabs } from '@mui/x-date-pickers';",
     "import { DateTimePickerTabs } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiDateTimePickerTabs-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimePickerTabs",
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

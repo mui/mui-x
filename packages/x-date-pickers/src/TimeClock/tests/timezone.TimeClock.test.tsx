@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, fireTouchChangedEvent } from '@mui-internal/test-utils';
+import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import {
   getClockTouchEvent,
@@ -23,10 +23,10 @@ describe('<TimeClock /> - Timezone', () => {
       render(<TimeClock onChange={onChange} />);
 
       const hourClockEvent = getClockTouchEvent(8, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
-      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 8);
+      const expectedDate = adapter.setHours(adapter.date(), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -44,23 +44,25 @@ describe('<TimeClock /> - Timezone', () => {
           render(<TimeClock onChange={onChange} timezone={timezone} />);
 
           const hourClockEvent = getClockTouchEvent(8, '12hours');
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
           const expectedDate = adapter.setHours(
-            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)),
+            adapter.startOfDay(adapter.date(undefined, timezone)),
             8,
           );
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          const value = adapter.dateWithTimezone('2022-04-17T04:30', timezone);
+          const value = adapter.date('2022-04-17T04:30', timezone);
 
           render(
             <TimeClock
@@ -81,8 +83,8 @@ describe('<TimeClock /> - Timezone', () => {
           );
 
           const hourClockEvent = getClockTouchEvent(8, '12hours');
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-          fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+          fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
 
           const actualDate = onChange.lastCall.firstArg;
 

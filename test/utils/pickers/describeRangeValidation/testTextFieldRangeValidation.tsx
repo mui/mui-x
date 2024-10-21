@@ -1,23 +1,18 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui-internal/test-utils';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse, getAllFieldInputRoot } from 'test/utils/pickers';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
 const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
 
-  const textBoxes = screen.getAllByRole('textbox');
+  const fields = getAllFieldInputRoot();
   answers.forEach((answer, index) => {
-    const textBox = textBoxes[index];
+    const fieldRoot = fields[index];
 
-    expect(textBox).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
+    expect(fieldRoot).to.have.attribute('aria-invalid', answer ? 'true' : 'false');
   });
-};
-
-const dateParser = (value: (null | number[])[]) => {
-  return value.map((date) => (date === null ? date : adapterToUse.date(new Date(...(date as [])))));
 };
 
 export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
@@ -35,11 +30,12 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 0, 1, 10, 15, 0],
-            [2018, 0, 1, 10, 15, 0],
-          ])}
+          value={[
+            adapterToUse.date('2018-01-01T10:15:00'),
+            adapterToUse.date('2018-01-01T10:15:00'),
+          ]}
         />,
       );
 
@@ -51,11 +47,9 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 0, 2],
-            [2018, 0, 1],
-          ])}
+          value={[adapterToUse.date('2018-01-02'), adapterToUse.date('2018-01-01')]}
         />,
       );
 
@@ -72,14 +66,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 9],
-            [2018, 2, 10],
-          ])}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
-          }
+          value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
+          shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))}
         />,
       );
 
@@ -87,10 +77,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 9],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -98,10 +85,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 12],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -112,12 +96,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 12],
-          [2018, 2, 13],
-        ]),
-        shouldDisableDate: (date) =>
-          adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13))),
+        value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
+        shouldDisableDate: (date) => adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')),
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -133,15 +113,11 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 9],
-            [2018, 2, 10],
-          ])}
+          value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
-            position === 'end'
-              ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
-              : false
+            position === 'end' ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10')) : false
           }
         />,
       );
@@ -150,10 +126,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 9],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -161,10 +134,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 12],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -172,14 +142,9 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 12],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
         shouldDisableDate: (date, position) =>
-          position === 'end'
-            ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
-            : false,
+          position === 'end' ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13')) : false,
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -195,14 +160,12 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 9],
-            [2018, 2, 10],
-          ])}
+          value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
           shouldDisableDate={(date, position) =>
             position === 'start'
-              ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
               : false
           }
         />,
@@ -212,10 +175,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 9],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(0);
@@ -223,10 +183,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 12],
-          [2018, 2, 13],
-        ]),
+        value: [adapterToUse.date('2018-03-12'), adapterToUse.date('2018-03-13')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -236,7 +193,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       setProps({
         shouldDisableDate: (date, position) =>
           position === 'start'
-            ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
+            ? adapterToUse.isBefore(date, adapterToUse.date('2018-03-13'))
             : false,
       });
 
@@ -248,8 +205,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
-        return <ElementToTest value={[now, now]} {...props} />;
+        now = adapterToUse.date();
+        return <ElementToTest enableAccessibleFieldDOMStructure value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
@@ -286,8 +243,8 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       let now;
       function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
-        return <ElementToTest value={[now, now]} {...props} />;
+        now = adapterToUse.date();
+        return <ElementToTest enableAccessibleFieldDOMStructure value={[now, now]} {...props} />;
       }
 
       const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
@@ -329,12 +286,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 9],
-            [2018, 2, 10],
-          ])}
-          minDate={adapterToUse.date(new Date(2018, 2, 15))}
+          value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
+          minDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -343,10 +298,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 9],
-          [2018, 2, 15],
-        ]),
+        value: [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-15')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -354,10 +306,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 16],
-          [2018, 2, 17],
-        ]),
+        value: [adapterToUse.date('2018-03-16'), adapterToUse.date('2018-03-17')],
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -373,9 +322,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([[2018, 2, 9], null])}
-          minDate={adapterToUse.date(new Date(2018, 2, 11))}
+          value={[adapterToUse.date('2018-03-09'), null]}
+          minDate={adapterToUse.date('2018-03-11')}
         />,
       );
 
@@ -384,7 +334,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
 
       setProps({
-        value: dateParser([[2018, 2, 16], null]),
+        value: [adapterToUse.date('2018-03-16'), null],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -400,9 +350,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([null, [2018, 2, 9]])}
-          minDate={adapterToUse.date(new Date(2018, 2, 15))}
+          value={[null, adapterToUse.date('2018-03-09')]}
+          minDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -411,7 +362,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([null, [2018, 2, 16]]),
+        value: [null, adapterToUse.date('2018-03-16')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -427,12 +378,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 9],
-            [2018, 2, 10],
-          ])}
-          maxDate={adapterToUse.date(new Date(2018, 2, 15))}
+          value={[adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')]}
+          maxDate={adapterToUse.date('2018-03-15')}
         />,
       );
 
@@ -440,10 +389,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 15],
-          [2018, 2, 17],
-        ]),
+        value: [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -451,10 +397,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 16],
-          [2018, 2, 17],
-        ]),
+        value: [adapterToUse.date('2018-03-16'), adapterToUse.date('2018-03-17')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -470,12 +413,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 10, 9, 0, 0],
-            [2018, 2, 10, 10, 0, 0],
-          ])}
-          minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          value={[
+            adapterToUse.date('2018-03-10T09:00:00'),
+            adapterToUse.date('2018-03-10T10:00:00'),
+          ]}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -484,10 +428,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 10, 9, 0, 0],
-          [2018, 2, 10, 12, 5, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-10T09:00:00'), adapterToUse.date('2018-03-10T12:05:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -495,10 +436,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 10, 12, 15, 0],
-          [2018, 2, 10, 18, 0, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-10T12:15:00'), adapterToUse.date('2018-03-10T18:00:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(3);
@@ -513,12 +451,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 5, 9, 0, 0],
-            [2018, 2, 15, 10, 0, 0],
-          ])}
-          minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          value={[
+            adapterToUse.date('2018-03-05T09:00:00'),
+            adapterToUse.date('2018-03-15T10:00:00'),
+          ]}
+          minTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -527,10 +466,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([true, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 5, 15, 0, 0],
-          [2018, 2, 15, 16, 5, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-05T15:00:00'), adapterToUse.date('2018-03-15T16:05:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -546,9 +482,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([[2018, 1, 1, 15], null])}
-          minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          value={[adapterToUse.date('2018-02-01T15:00:00'), null]}
+          minTime={adapterToUse.date('2018-03-01T12:00:00')}
         />,
       );
 
@@ -556,7 +493,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([[2018, 1, 1, 5], null]),
+        value: [adapterToUse.date('2018-02-01T05:00:00'), null],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -572,9 +509,10 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([null, [2018, 1, 1, 15]])}
-          minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          value={[null, adapterToUse.date('2018-02-01T15:00:00')]}
+          minTime={adapterToUse.date('2018-03-01T12:00:00')}
         />,
       );
 
@@ -582,7 +520,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([null, [2018, 1, 1, 5]]),
+        value: [null, adapterToUse.date('2018-02-01T05:00:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -598,12 +536,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 10, 9, 0, 0],
-            [2018, 2, 10, 10, 0, 0],
-          ])}
-          maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          value={[
+            adapterToUse.date('2018-03-10T09:00:00'),
+            adapterToUse.date('2018-03-10T10:00:00'),
+          ]}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -611,10 +550,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 10, 9, 0, 0],
-          [2018, 2, 10, 12, 5, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-10T09:00:00'), adapterToUse.date('2018-03-10T12:05:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -622,16 +558,14 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, true], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 10, 12, 15, 0],
-          [2018, 2, 10, 18, 0, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-10T12:15:00'), adapterToUse.date('2018-03-10T18:00:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
       testInvalidStatus([true, true], isSingleInput);
     });
+
     it('should ignore date when applying maxTime', function test() {
       if (!withTime) {
         return;
@@ -640,12 +574,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 5, 9, 0, 0],
-            [2018, 2, 15, 10, 0, 0],
-          ])}
-          maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
+          value={[
+            adapterToUse.date('2018-03-05T09:00:00'),
+            adapterToUse.date('2018-03-15T10:00:00'),
+          ]}
+          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
         />,
       );
 
@@ -653,10 +588,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       testInvalidStatus([false, false], isSingleInput);
 
       setProps({
-        value: dateParser([
-          [2018, 2, 5, 15, 0, 0],
-          [2018, 2, 15, 16, 5, 0],
-        ]),
+        value: [adapterToUse.date('2018-03-05T15:00:00'), adapterToUse.date('2018-03-15T16:05:00')],
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -673,25 +605,26 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 1, 9, 0, 0],
-            [2018, 2, 2, 12, 0, 0],
-          ])}
-          maxDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          value={[
+            adapterToUse.date('2018-03-01T09:00:00'),
+            adapterToUse.date('2018-03-02T12:00:00'),
+          ]}
+          maxDateTime={adapterToUse.date('2018-03-02T13:00:00')}
         />,
       );
 
       expect(onErrorMock.callCount).to.equal(0);
       testInvalidStatus([false, false], isSingleInput);
 
-      setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+      setProps({ maxDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
       testInvalidStatus([false, true], isSingleInput);
 
-      setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+      setProps({ maxDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxDate']);
@@ -707,12 +640,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={dateParser([
-            [2018, 2, 1, 9, 0, 0],
-            [2018, 2, 2, 12, 0, 0],
-          ])}
-          minDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          value={[
+            adapterToUse.date('2018-03-01T09:00:00'),
+            adapterToUse.date('2018-03-02T12:00:00'),
+          ]}
+          minDateTime={adapterToUse.date('2018-03-02T13:00:00')}
         />,
       );
 
@@ -720,13 +654,13 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minTime']);
       testInvalidStatus([true, true], isSingleInput);
 
-      setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+      setProps({ minDateTime: adapterToUse.date('2018-03-02T08:00:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
       testInvalidStatus([true, false], isSingleInput);
 
-      setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+      setProps({ minDateTime: adapterToUse.date('2018-03-01T05:00:00') });
 
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);

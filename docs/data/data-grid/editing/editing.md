@@ -1,10 +1,10 @@
 # Data Grid - Editing
 
-<p class="description">The data grid has built-in support for cell and row editing.</p>
+<p class="description">The Data Grid has built-in support for cell and row editing.</p>
 
 ## Full-featured CRUD
 
-The data grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
+The Data Grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
 The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
 
 :::info
@@ -41,7 +41,7 @@ To enable this behavior, set the `editMode` prop on the Data Grid to `"row"`. No
 ```
 
 The following demo illustrates how row editing works.
-The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (e.g. double-clicking a cell).
+The user can [start](#start-editing) and [stop](#stop-editing) editing a row using the same actions as those provided for cell editing (for example double-clicking a cell).
 
 {{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -155,10 +155,11 @@ The editable cells have a green background for better visibility.
 
 When the user performs an action to [stop editing](#stop-editing), the `processRowUpdate` callback is triggered.
 Use it to send the new values to the server and save them into a database or other storage method.
-The callback is called with two arguments:
+The callback is called with three arguments:
 
 1. The updated row with the new values returned by the [`valueSetter`](#value-parser-and-value-setter).
 2. The original values of the row before editing.
+3. An object with additional properties such as `rowId`.
 
 Please note that the `processRowUpdate` must return the row object to update the Data Grid internal state.
 The value returned is used later as an argument on a call to `apiRef.current.updateRows`.
@@ -173,6 +174,24 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
   onProcessRowUpdateError={handleProcessRowUpdateError}
 />
 ```
+
+If you want to delete a row from the internal state of the Data Grid, you can return an additional property `_action: 'delete'` in the row object from the `processRowUpdate` callback. This will remove the row from the internal state of the Data Grid.
+It is a more performant way to delete a row as compared to updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or using `setRows` API method because `processRowUpdate` uses the [`updateRows`](https://mui.com/x/react-data-grid/row-updates/#the-updaterows-method) under the hood which doesn't cause a full regeneration of the row tree.
+
+```tsx
+<DataGrid
+  {...otherProps}
+  processRowUpdate={(updatedRow, originalRow) => {
+    if (shouldDeleteRow(updatedRow)) {
+      return { ...updatedRow, _action: 'delete' };
+    }
+    return updatedRow;
+  }}
+/>
+```
+
+In the example above, `shouldDeleteRow` is a function that determines whether a row should be deleted based on the updated row data.
+If `shouldDeleteRow` returns `true`, the row will be deleted from the Data Grid's internal state.
 
 ### Server-side validation
 
@@ -212,7 +231,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: any, params: GridCellParams) => {
+    valueParser: (value, row, column, apiRef) => {
       return value.toLowerCase();
     },
   },
@@ -227,9 +246,9 @@ If you are already using a `valueGetter` to extract the value from a nested obje
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueSetter: (params: GridValueSetterParams) => {
-      const [firstName, lastName] = params.value!.toString().split(' ');
-      return { ...params.row, firstName, lastName };
+    valueSetter: (value, row) => {
+      const [firstName, lastName] = value!.toString().split(' ');
+      return { ...row, firstName, lastName };
     },
   },
 ];
@@ -358,7 +377,7 @@ These are the most important params to consider:
 - `error`: the error added during validation
 - `isProcessingProps`: whether `preProcessEditCellProps` is being executed or not
 
-Once a new value is entered into the input, it must be sent to the data grid.
+Once a new value is entered into the input, it must be sent to the Data Grid.
 To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue`.
 The new value will be parsed and validated, and the `value` prop will reflect the changes in the next render.
 
@@ -395,16 +414,16 @@ The following demo implements a custom edit component, based on the [`Rating`](h
 ### With debounce
 
 By default, each call to `apiRef.current.setEditCellValue` triggers a new render.
-If the edit component requires the user to type a new value, re-rendering the data grid too often will drastically reduce performance.
+If the edit component requires the user to type a new value, re-rendering the Data Grid too often will drastically reduce performance.
 One way to avoid this is to debounce the API calls.
 You can use `apiRef.current.setEditCellValue` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
-No matter how many times the API method is called, the data grid will only be re-rendered after that period of time has passed.
+No matter how many times the API method is called, the Data Grid will only be re-rendered after that period of time has passed.
 
 ```tsx
 apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 });
 ```
 
-When the data grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
+When the Data Grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
 To avoid a frozen UI, the edit component can keep the current value in an internal state and sync it once `value` changes.
 Modify the edit component to enable this feature:
 

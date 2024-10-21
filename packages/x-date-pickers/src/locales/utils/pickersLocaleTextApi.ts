@@ -1,5 +1,11 @@
 import { TimeViewWithMeridiem } from '../../internals/models';
-import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
+import {
+  DateView,
+  TimeView,
+  MuiPickersAdapter,
+  FieldSectionContentType,
+  PickerValidDate,
+} from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -24,7 +30,7 @@ export interface PickersComponentSpecificLocaleText {
   dateRangePickerToolbarTitle: string;
 }
 
-export interface PickersComponentAgnosticLocaleText<TDate> {
+export interface PickersComponentAgnosticLocaleText<TDate extends PickerValidDate> {
   // Calendar navigation
   previousMonth: string;
   nextMonth: string;
@@ -40,9 +46,13 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
 
-  // DateRange placeholders
+  // DateRange labels
   start: string;
   end: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
 
   // Action bar
   cancelButtonLabel: string;
@@ -51,7 +61,19 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   todayButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;
+  clockLabelText: (
+    view: TimeView,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    time: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedTime?: string | null,
+  ) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
@@ -60,8 +82,30 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   selectViewText: (view: TimeViewWithMeridiem) => string;
 
   // Open picker labels
-  openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
-  openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  openDatePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedDate: string | null,
+  ) => string;
+  openTimePickerDialogue: (
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    date: TDate | null,
+    /**
+     * @deprecated Use `formattedTime` instead
+     */
+    utils: MuiPickersAdapter<TDate>,
+    // TODO v8: Make it required
+    formattedTime: string | null,
+  ) => string;
 
   // Clear button label
   fieldClearLabel: string;
@@ -71,28 +115,49 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   dateTableLabel: string;
 
   // Field section placeholders
-  fieldYearPlaceholder: (params: { digitAmount: number }) => string;
-  fieldMonthPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
-  fieldDayPlaceholder: () => string;
-  fieldWeekDayPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
-  fieldHoursPlaceholder: () => string;
-  fieldMinutesPlaceholder: () => string;
-  fieldSecondsPlaceholder: () => string;
-  fieldMeridiemPlaceholder: () => string;
+  fieldYearPlaceholder: (params: { digitAmount: number; format: string }) => string;
+  fieldMonthPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldDayPlaceholder: (params: { format: string }) => string;
+  fieldWeekDayPlaceholder: (params: {
+    contentType: FieldSectionContentType;
+    format: string;
+  }) => string;
+  fieldHoursPlaceholder: (params: { format: string }) => string;
+  fieldMinutesPlaceholder: (params: { format: string }) => string;
+  fieldSecondsPlaceholder: (params: { format: string }) => string;
+  fieldMeridiemPlaceholder: (params: { format: string }) => string;
+
+  // View names - reflects available `FieldSectionType` options
+  year: string;
+  month: string;
+  day: string;
+  weekDay: string;
+  hours: string;
+  minutes: string;
+  seconds: string;
+  meridiem: string;
+
+  // Common
+  empty: string;
 }
 
-export interface PickersLocaleText<TDate>
+export interface PickersLocaleText<TDate extends PickerValidDate>
   extends PickersComponentAgnosticLocaleText<TDate>,
     PickersComponentSpecificLocaleText {}
 
-export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
+export type PickersInputLocaleText<TDate extends PickerValidDate> = Partial<
+  PickersLocaleText<TDate>
+>;
 
 /**
  * Translations that can be provided directly to the picker components.
  * It contains some generic translations like `toolbarTitle`
  * which will be dispatched to various translations keys in `PickersLocaleText`, depending on the pickers received them.
  */
-export interface PickersInputComponentLocaleText<TDate>
+export interface PickersInputComponentLocaleText<TDate extends PickerValidDate>
   extends Partial<PickersComponentAgnosticLocaleText<TDate>> {
   /**
    * Title displayed in the toolbar of this picker.
@@ -104,6 +169,6 @@ export interface PickersInputComponentLocaleText<TDate>
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;
 
 export type LocalizedComponent<
-  TDate,
+  TDate extends PickerValidDate,
   Props extends { localeText?: PickersInputComponentLocaleText<TDate> },
 > = Omit<Props, 'localeText'> & { localeText?: PickersInputLocaleText<TDate> };

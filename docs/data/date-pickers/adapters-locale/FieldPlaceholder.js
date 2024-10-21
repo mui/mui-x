@@ -19,7 +19,7 @@ export default function FieldPlaceholder() {
         dateAdapter={AdapterDayjs}
         // Define the date locale to have the right format `day.month.year`.
         adapterLocale="de"
-        // Define the translations to have the right placeholders (e.g. `JJJJ` for the year).
+        // Define the translations to have the right placeholders (for example `JJJJ` for the year).
         localeText={germanLocale}
       >
         <DemoItem label="German locale">

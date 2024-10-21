@@ -1,12 +1,15 @@
 {
   "props": {},
-  "slots": [],
   "name": "ChartsClipPath",
   "imports": [
     "import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';",
-    "import { ChartsClipPath } from '@mui/x-charts';"
+    "import { ChartsClipPath } from '@mui/x-charts';",
+    "import { ChartsClipPath } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsClipPath" },
+  "classes": [],
+  "muiName": "MuiChartsClipPath",
   "filename": "/packages/x-charts/src/ChartsClipPath/ChartsClipPath.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>",
+  "cssComponent": false
 }

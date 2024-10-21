@@ -1,0 +1,11 @@
+<SimpleTreeView defaultExpandedItems={['3']}>
+  <CustomTreeItem itemId="1" label="Amelia Hart">
+    <CustomTreeItem itemId="2" label="Jane Fisher" />
+  </CustomTreeItem>
+  <CustomTreeItem itemId="3" label="Bailey Monroe">
+    <CustomTreeItem itemId="4" label="Freddie Reed" />
+    <CustomTreeItem itemId="5" label="Georgia Johnson">
+      <CustomTreeItem itemId="6" label="Samantha Malone" />
+    </CustomTreeItem>
+  </CustomTreeItem>
+</SimpleTreeView>

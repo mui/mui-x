@@ -13,6 +13,9 @@ import {
 
 export type SlideDirection = 'right' | 'left';
 export interface ExportedSlideTransitionProps {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersSlideTransitionClasses>;
 }
 export interface SlideTransitionProps

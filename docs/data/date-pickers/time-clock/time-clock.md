@@ -46,7 +46,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-The component uses the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The component uses the hour format of the locale's time setting, that is the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 
@@ -54,6 +54,10 @@ You can find more information about 12h/24h format in the [Date localization pag
 
 {{"demo": "TimeClockAmPm.js"}}
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.

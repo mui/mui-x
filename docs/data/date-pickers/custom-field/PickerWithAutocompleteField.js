@@ -97,8 +97,8 @@ function AutocompleteDatePicker(props) {
 
   return (
     <DatePicker
-      slots={{ field: AutocompleteField, ...props.slots }}
-      slotProps={{ field: { options } }}
+      slots={{ ...props.slots, field: AutocompleteField }}
+      slotProps={{ ...props.slotProps, field: { options } }}
       shouldDisableDate={(date) => !optionsLookup[date.startOf('day').toISOString()]}
       {...other}
     />

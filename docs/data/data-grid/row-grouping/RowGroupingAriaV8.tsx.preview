@@ -1,0 +1,6 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  initialState={initialState}
+  experimentalFeatures={{ ariaV8: true }}
+/>

@@ -21,7 +21,7 @@ export default function CellSelectionGrid() {
         <DataGridPremium
           rowSelection={rowSelection}
           checkboxSelection={rowSelection}
-          unstable_cellSelection
+          cellSelection
           {...data}
         />
       </div>

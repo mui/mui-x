@@ -1,24 +1,19 @@
 import * as React from 'react';
-import {
-  describeConformance,
-  screen,
-  userEvent,
-  fireTouchChangedEvent,
-} from '@mui-internal/test-utils';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
-  expectInputValue,
-  expectInputPlaceholder,
+  expectFieldValueV7,
   openPicker,
   getClockTouchEvent,
-  getTextbox,
   describeValidation,
   describeValue,
   describePicker,
+  formatFullTimeValue,
+  getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -36,11 +31,10 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker />, () => ({
+  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
@@ -50,8 +44,6 @@ describe('<MobileTimePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
@@ -60,23 +52,21 @@ describe('<MobileTimePicker /> - Describes', () => {
     componentFamily: 'picker',
     type: 'time',
     variant: 'mobile',
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = getTextbox();
-      if (!expectedValue) {
-        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
-      }
-      const expectedValueStr = expectedValue
-        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
-        : '';
+      const fieldRoot = getFieldInputRoot();
 
-      expectInputValue(input, expectedValueStr);
+      let expectedValueStr: string;
+      if (expectedValue) {
+        expectedValueStr = formatFullTimeValue(adapterToUse, expectedValue);
+      } else {
+        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
+      }
+
+      expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
@@ -92,26 +82,27 @@ describe('<MobileTimePicker /> - Describes', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
       if (!isOpened) {
-        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        userEvent.mousePress(screen.getByRole('button', { name: 'open previous view' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;

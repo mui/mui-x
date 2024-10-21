@@ -4,30 +4,31 @@ productId: x-tree-view
 
 # Migration from the lab
 
-<p class="description">MUI Tree View is now available on MUI X!</p>
+<p class="description">Material UI Tree View is now available on MUI X!</p>
 
 ## Introduction
 
-This is a reference for migrating your site's tree view from `@mui/lab` to `@mui/x-tree-view`.
+This is a reference for migrating your site's Tree View from `@mui/lab` to `@mui/x-tree-view`.
 This migration is about the npm packages used, it **does not** affect the behavior of the components in your application.
 
 [//]: # 'You can find why we are moving in this direction in the [announcement blog post](/blog/lab-tree-view-to-mui-x/).'
 
 ## Migration steps
 
-### 1. Install MUI X package
+### 1. Install MUI X package
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-tree-view
 ```
 
-```bash yarn
-yarn add @mui/x-tree-view
-```
-
 ```bash pnpm
 pnpm add @mui/x-tree-view
+```
+
+```bash yarn
+yarn add @mui/x-tree-view
 ```
 
 </codeblock>

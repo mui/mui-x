@@ -5,41 +5,97 @@
       "required": true,
       "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
-    "view": {
+    "views": {
       "type": {
-        "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+        "name": "arrayOf",
+        "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'&gt;"
       },
       "required": true
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" },
+    "toolbarTitle": { "type": { "name": "node" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+      }
+    }
   },
-  "slots": [],
   "name": "DateTimePickerToolbar",
   "imports": [
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';",
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": [
-      "root",
-      "dateContainer",
-      "timeContainer",
-      "timeDigitsContainer",
-      "timeLabelReverse",
-      "separator",
-      "ampmSelection",
-      "ampmLandscape",
-      "ampmLabel"
-    ],
-    "globalClasses": {},
-    "name": "MuiDateTimePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "ampmLabel",
+      "className": "MuiDateTimePickerToolbar-ampmLabel",
+      "description": "Styles applied to am/pm labels.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmLandscape",
+      "className": "MuiDateTimePickerToolbar-ampmLandscape",
+      "description": "Styles applied to am/pm section in landscape mode.",
+      "isGlobal": false
+    },
+    {
+      "key": "ampmSelection",
+      "className": "MuiDateTimePickerToolbar-ampmSelection",
+      "description": "Styles applied to the am/pm section.",
+      "isGlobal": false
+    },
+    {
+      "key": "dateContainer",
+      "className": "MuiDateTimePickerToolbar-dateContainer",
+      "description": "Styles applied to the date container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateTimePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiDateTimePickerToolbar-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "timeContainer",
+      "className": "MuiDateTimePickerToolbar-timeContainer",
+      "description": "Styles applied to the time container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "timeDigitsContainer",
+      "className": "MuiDateTimePickerToolbar-timeDigitsContainer",
+      "description": "Styles applied to the time (except am/pm) container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "timeLabelReverse",
+      "className": "MuiDateTimePickerToolbar-timeLabelReverse",
+      "description": "Styles applied to the time container if rtl.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateTimePickerToolbar",
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

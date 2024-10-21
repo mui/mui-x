@@ -69,7 +69,7 @@ function DetailPanelContent({ row: rowProp }) {
         field: 'total',
         headerName: 'Total',
         type: 'number',
-        valueGetter: ({ row }) => row.quantity * row.unitPrice,
+        valueGetter: (value, row) => row.quantity * row.unitPrice,
       },
       {
         field: 'actions',
@@ -118,14 +118,14 @@ function DetailPanelContent({ row: rowProp }) {
               Add Product
             </Button>
           </div>
-          <DataGridPro
-            density="compact"
-            autoHeight
-            columns={columns}
-            rows={rowProp.products}
-            sx={{ flex: 1 }}
-            hideFooter
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <DataGridPro
+              density="compact"
+              columns={columns}
+              rows={rowProp.products}
+              hideFooter
+            />
+          </div>
         </Stack>
       </Paper>
     </Stack>
@@ -141,7 +141,7 @@ const columns = [
     field: 'total',
     type: 'number',
     headerName: 'Total',
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       const subtotal = row.products.reduce(
         (acc, product) => product.unitPrice * product.quantity,
         0,
@@ -228,7 +228,6 @@ export default function DetailPanelAutoHeight() {
       <DataGridPro
         columns={columns}
         rows={rows}
-        rowThreshold={0}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
       />

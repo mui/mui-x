@@ -1,5 +1,5 @@
-import createDescribe from '@mui-internal/test-utils/createDescribe';
-import { MuiPickersAdapter } from '@mui/x-date-pickers';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
@@ -8,11 +8,11 @@ import {
   DescribeGregorianAdapterTestSuiteParams,
 } from './describeGregorianAdapter.types';
 
-function innerGregorianDescribeAdapter<TDate, TLocale>(
+function innerGregorianDescribeAdapter<TDate extends PickerValidDate, TLocale>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeGregorianAdapterParams<TDate, TLocale>,
 ) {
-  const prepareAdapter = params.prepareAdapter ?? ((e) => e);
+  const prepareAdapter = params.prepareAdapter ?? ((adapter) => adapter);
 
   const adapter = new Adapter();
   const adapterTZ = params.dateLibInstanceWithTimezoneSupport
@@ -42,15 +42,15 @@ function innerGregorianDescribeAdapter<TDate, TLocale>(
   });
 }
 
-type Params<TDate, TLocale> = [
+type Params<TDate extends PickerValidDate, TLocale> = [
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeGregorianAdapterParams<TDate, TLocale>,
 ];
 
 type DescribeGregorianAdapter = {
-  <TDate, TLocale>(...args: Params<TDate, TLocale>): void;
-  skip: <TDate, TLocale>(...args: Params<TDate, TLocale>) => void;
-  only: <TDate, TLocale>(...args: Params<TDate, TLocale>) => void;
+  <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>): void;
+  skip: <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>) => void;
+  only: <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>) => void;
 };
 
 export const describeGregorianAdapter = createDescribe(

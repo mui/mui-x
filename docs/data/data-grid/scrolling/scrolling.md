@@ -6,7 +6,7 @@
 
 You can scroll to a specific cell by calling `apiRef.current.scrollToIndexes()`.
 The only argument that must be passed is an object containing the row index and the column index of the cell to scroll.
-If the row or column index is not present, the data grid will not do any movement in the missing axis.
+If the row or column index is not present, the Data Grid will not do any movement in the missing axis.
 
 The following demo explores the usage of this API:
 
@@ -17,7 +17,7 @@ The following demo explores the usage of this API:
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "ScrollApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

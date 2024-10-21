@@ -23,9 +23,13 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
 
-  // DateRange placeholders
+  // DateRange labels
   start: '開始',
   end: '終了',
+  startDate: '開始日',
+  startTime: '開始時間',
+  endDate: '終了日',
+  endTime: '終了時間',
 
   // Action bar
   cancelButtonLabel: 'キャンセル',
@@ -40,12 +44,8 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: '日付の範囲を選択',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view}を選択してください ${
-      time === null
-        ? '時間が選択されていません'
-        : `選択した時間は ${adapter.format(time, 'fullTime')} です`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view] ?? view}を選択してください ${!formattedTime && (time === null || !utils.isValid(time)) ? '時間が選択されていません' : `選択した時間は ${formattedTime ?? utils.format(time, 'fullTime')} です`}`,
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
@@ -60,15 +60,15 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `日付を選択してください。選択した日付は ${utils.format(value, 'fullDate')} です`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `日付を選択してください。選択した日付は ${formattedDate ?? utils.format(value, 'fullDate')} です`
       : '日付を選択してください',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `時間を選択してください。選択した時間は ${utils.format(value, 'fullTime')} です`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `時間を選択してください。選択した時間は ${formattedTime ?? utils.format(value, 'fullTime')} です`
       : '時間を選択してください',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'クリア',
 
   // Table labels
   timeTableLabel: '時間を選択',
@@ -83,6 +83,19 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: '年',
+  month: '月',
+  day: '日',
+  weekDay: '平日',
+  hours: '時間',
+  minutes: '分',
+  seconds: '秒',
+  meridiem: 'メリディム',
+
+  // Common
+  empty: '空',
 };
 
 export const jaJP = getPickersLocalization(jaJPPickers);

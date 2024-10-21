@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, fireEvent } from '@mui-internal/test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
-function WrappedDateCalendar<TDate extends any>(
+function WrappedDateCalendar<TDate extends PickerValidDate>(
   props: Omit<DateCalendarProps<TDate>, 'value' | 'onChange'> & { initialValue: TDate },
 ) {
   const { initialValue, ...other } = props;
@@ -26,7 +27,7 @@ describe('<DateCalendar /> - Validation', () => {
     it('should disable all the dates on the "day" view when `shouldDisableMonth` returns false for its month`', () => {
       render(
         <WrappedDateCalendar
-          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          initialValue={adapterToUse.date('2018-06-01')}
           shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 6}
           views={['day']}
           openTo={'day'}
@@ -34,7 +35,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -42,7 +43,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
 
@@ -50,7 +51,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // No date should be disabled in the month after the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
     });
@@ -61,7 +62,7 @@ describe('<DateCalendar /> - Validation', () => {
     it('should disable all the dates on the "day" view when `shouldDisableYear` returns false for its year`', () => {
       render(
         <WrappedDateCalendar
-          initialValue={adapterToUse.date(new Date(2017, 11, 1))}
+          initialValue={adapterToUse.date('2017-12-01')}
           shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
           views={['day']}
           openTo={'day'}
@@ -69,7 +70,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -77,7 +78,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
     });

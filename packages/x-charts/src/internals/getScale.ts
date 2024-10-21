@@ -1,11 +1,18 @@
-import { scaleLog, scalePow, scaleSqrt, scaleTime, scaleUtc, scaleLinear } from 'd3-scale';
-import { ContinuouseScaleName, D3ContinuouseScale } from '../models/axis';
+import {
+  scaleLog,
+  scalePow,
+  scaleSqrt,
+  scaleTime,
+  scaleUtc,
+  scaleLinear,
+} from '@mui/x-charts-vendor/d3-scale';
+import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
 
 export function getScale(
-  scaleType: ContinuouseScaleName,
+  scaleType: ContinuousScaleName,
   domain: any[],
   range: any[],
-): D3ContinuouseScale {
+): D3ContinuousScale {
   switch (scaleType) {
     case 'log':
       return scaleLog(domain, range);

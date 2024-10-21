@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { createPickerRenderer, openPicker } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer({
@@ -71,12 +71,13 @@ describe('<DesktopTimePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
         />,
       );
 
       openPicker({ type: 'time', variant: 'desktop' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '09:00 AM' }));
+      fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onAccept.callCount).to.equal(1);
@@ -89,21 +90,28 @@ describe('<DesktopTimePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
       openPicker({ type: 'time', variant: 'desktop' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '2 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '15 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
@@ -115,26 +123,33 @@ describe('<DesktopTimePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
       openPicker({ type: 'time', variant: 'desktop' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: '15 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '2 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '25 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '25 minutes' }));
       expect(onChange.callCount).to.equal(3);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
@@ -146,11 +161,18 @@ describe('<DesktopTimePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(<DesktopTimePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <DesktopTimePicker
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+          referenceDate={adapterToUse.date('2018-01-01')}
+        />,
+      );
 
       openPicker({ type: 'time', variant: 'desktop' });
 
-      userEvent.mousePress(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));

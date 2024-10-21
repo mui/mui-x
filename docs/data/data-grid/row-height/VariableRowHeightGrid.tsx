@@ -4,6 +4,7 @@ import {
   GridRowHeightParams,
   GridToolbarContainer,
   GridToolbarDensitySelector,
+  GridColDef,
 } from '@mui/x-data-grid';
 import { randomInt, randomUserName } from '@mui/x-data-grid-generator';
 
@@ -21,7 +22,7 @@ const createRandomRow = () => {
   return { id: idCounter, username: randomUserName(), age: randomInt(10, 80) };
 };
 
-const columns = [
+const columns: GridColDef[] = [
   { field: 'id' },
   { field: 'username', width: 150 },
   { field: 'age', width: 80, type: 'number' },

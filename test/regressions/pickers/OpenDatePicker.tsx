@@ -27,10 +27,10 @@ export default function OpenDatePicker() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
         open
-        components={{
-          DesktopTransition: NoTransition,
+        slots={{
+          desktopTransition: NoTransition,
         }}
-        componentsProps={{
+        slotProps={{
           popper: {
             // @ts-expect-error
             'data-testid': 'screenshot-target',

@@ -1,35 +1,22 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
-    "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "object" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disableOpenPicker": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
+    "disableOpenPicker": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
@@ -38,12 +25,16 @@
     "inputRef": { "type": { "name": "custom", "description": "ref" } },
     "label": { "type": { "name": "node" } },
     "localeText": { "type": { "name": "object" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "name": { "type": { "name": "string" } },
     "onAccept": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
     },
     "onChange": {
       "type": { "name": "func" },
@@ -72,7 +63,7 @@
       "type": { "name": "func" },
       "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
-    "open": { "type": { "name": "bool" } },
+    "open": { "type": { "name": "bool" }, "default": "false" },
     "openTo": {
       "type": {
         "name": "enum",
@@ -87,23 +78,13 @@
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
-    },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableTime": {
@@ -114,9 +95,13 @@
         "returned": "boolean"
       }
     },
-    "skipDisabled": { "type": { "name": "bool" } },
+    "skipDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -134,9 +119,13 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "object" } },
     "view": {
       "type": {
         "name": "enum",
@@ -156,157 +145,161 @@
       }
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "actionBar",
-      "description": "Custom component for the action bar, it is placed below the picker views.",
-      "default": "PickersActionBar"
-    },
-    {
-      "class": null,
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon"
-    },
-    {
-      "class": null,
-      "name": "desktopPaper",
-      "description": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
-      "default": "PickersPopperPaper"
-    },
-    {
-      "class": null,
-      "name": "desktopTransition",
-      "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
-    },
-    {
-      "class": null,
-      "name": "desktopTrapFocus",
-      "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "FocusTrap from '@mui/base'."
-    },
-    {
-      "class": null,
-      "name": "dialog",
-      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
-      "default": "PickersModalDialogRoot"
-    },
-    {
-      "class": null,
-      "name": "digitalClockItem",
-      "description": "Component responsible for rendering a single digital clock item.",
-      "default": "MenuItem from '@mui/material'"
-    },
-    {
-      "class": null,
-      "name": "digitalClockSectionItem",
-      "description": "Component responsible for rendering a single multi section digital clock section item.",
-      "default": "MenuItem from '@mui/material'"
-    },
-    {
-      "class": null,
-      "name": "field",
-      "description": "Component used to enter the date with the keyboard."
-    },
-    {
-      "class": null,
-      "name": "inputAdornment",
-      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
-      "default": "InputAdornment"
-    },
-    {
-      "class": null,
-      "name": "layout",
-      "description": "Custom component for wrapping the layout. It wraps the toolbar, views, action bar, and shortcuts."
-    },
-    {
-      "class": null,
-      "name": "leftArrowIcon",
-      "description": "Icon displayed in the left view switch button.",
-      "default": "ArrowLeft"
-    },
-    {
-      "class": null,
-      "name": "mobilePaper",
-      "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-      "default": "Paper from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "mobileTransition",
-      "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Fade from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "openPickerButton",
-      "description": "Button to open the picker on desktop.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "openPickerIcon",
-      "description": "Icon displayed in the open picker button on desktop."
-    },
-    {
-      "class": null,
-      "name": "popper",
-      "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from '@mui/material'."
-    },
-    {
-      "class": null,
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "rightArrowIcon",
-      "description": "Icon displayed in the right view switch button.",
-      "default": "ArrowRight"
-    },
-    {
-      "class": null,
-      "name": "shortcuts",
-      "description": "Custom component for the shortcuts.",
-      "default": "PickersShortcuts"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render the value inside the default field. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    },
-    {
-      "class": null,
-      "name": "toolbar",
-      "description": "Custom component for the toolbar rendered above the views.",
-      "default": "TimePickerToolbar"
-    }
-  ],
   "name": "TimePicker",
   "imports": [
     "import { TimePicker } from '@mui/x-date-pickers/TimePicker';",
     "import { TimePicker } from '@mui/x-date-pickers';",
     "import { TimePicker } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
+  "slots": [
+    {
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar",
+      "class": null
+    },
+    {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon",
+      "class": null
+    },
+    {
+      "name": "desktopPaper",
+      "description": "Custom component for the paper rendered inside the desktop picker's Popper.",
+      "default": "PickersPopperPaper",
+      "class": null
+    },
+    {
+      "name": "desktopTransition",
+      "description": "Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.",
+      "class": null
+    },
+    {
+      "name": "desktopTrapFocus",
+      "description": "Custom component for trapping the focus inside the views on desktop.",
+      "default": "TrapFocus from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot",
+      "class": null
+    },
+    {
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'",
+      "class": null
+    },
+    {
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard.",
+      "class": null
+    },
+    {
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the picker on desktop.",
+      "default": "InputAdornment",
+      "class": null
+    },
+    {
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+      "class": null
+    },
+    {
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft",
+      "class": null
+    },
+    {
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker's Dialog.",
+      "default": "Paper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).",
+      "default": "Fade from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerButton",
+      "description": "Button to open the picker on desktop.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "openPickerIcon",
+      "description": "Icon displayed in the open picker button on desktop.",
+      "class": null
+    },
+    {
+      "name": "popper",
+      "description": "Custom component for the popper inside which the views are rendered on desktop.",
+      "default": "Popper from '@mui/material'.",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight",
+      "class": null
+    },
+    {
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value inside the default field.",
+      "default": "TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "TimePickerToolbar",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiTimePicker",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Date and Time Pickers - Validation</a></li></ul>",
+  "cssComponent": false
 }

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Stack, { StackProps, stackClasses } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
+import { pickersTextFieldClasses } from '../../PickersTextField';
 
 interface DemoGridProps {
   children: React.ReactNode;
@@ -63,27 +64,28 @@ interface DemoItemProps {
   label?: React.ReactNode;
   component?: string;
   children: React.ReactNode;
+  sx?: SxProps<Theme>;
 }
 /**
  * WARNING: This is an internal component used in documentation to achieve a desired layout.
  * Please do not use it in your application.
  */
 export function DemoItem(props: DemoItemProps) {
-  const { label, children, component } = props;
+  const { label, children, component, sx: sxProp } = props;
 
   let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
+  let sx = sxProp;
 
   if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
     spacing = 1.5;
     sx = {
+      ...sx,
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
       },
     };
   } else {
     spacing = 1;
-    sx = undefined;
   }
 
   return (
@@ -94,6 +96,15 @@ export function DemoItem(props: DemoItemProps) {
   );
 }
 
+DemoItem.displayName = 'DemoItem';
+
+const isDemoItem = (child: React.ReactNode): child is React.ReactElement<DemoItemProps> => {
+  if (React.isValidElement(child) && typeof child.type !== 'string') {
+    // @ts-ignore
+    return child.type.displayName === 'DemoItem';
+  }
+  return false;
+};
 /**
  * WARNING: This is an internal component used in documentation to achieve a desired layout.
  * Please do not use it in your application.
@@ -119,7 +130,9 @@ export function DemoContainer(props: DemoGridProps) {
 
   let direction: StackProps['direction'];
   let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'] = {
+  let extraSx: SxProps<Theme> = {};
+  let demoItemSx: SxProps<Theme> = {};
+  const sx: SxProps<Theme> = {
     overflow: 'auto',
     // Add padding as overflow can hide the outline text field label.
     pt: 1,
@@ -145,29 +158,52 @@ export function DemoContainer(props: DemoGridProps) {
     // noop
   } else if (childrenTypes.has('single-input-range-field')) {
     if (!childrenSupportedSections.has('date-time')) {
-      sx = {
-        ...sx,
-        [`& > .${textFieldClasses.root}`]: {
+      extraSx = {
+        [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
           minWidth: 300,
         },
       };
     } else {
-      sx = {
-        ...sx,
-        [`& > .${textFieldClasses.root}`]: {
-          minWidth: { xs: 300, md: 400 },
+      extraSx = {
+        [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: {
+          minWidth: {
+            xs: 300,
+            // If demo also contains MultiInputDateTimeRangeField, increase width to avoid cutting off the value.
+            md: childrenTypes.has('multi-input-range-field') ? 460 : 400,
+          },
         },
       };
     }
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
+    extraSx = {
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 270 },
+    };
+    if (childrenTypes.has('multi-input-range-field')) {
+      // increase width for the multi input date time range fields
+      demoItemSx = {
+        [`& > .${stackClasses.root} > .${textFieldClasses.root}, & > .${stackClasses.root} > .${pickersTextFieldClasses.root}`]:
+          { minWidth: 210 },
+      };
+    }
   } else {
-    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+    extraSx = {
+      [`& > .${textFieldClasses.root}, & > .${pickersTextFieldClasses.root}`]: { minWidth: 200 },
+    };
   }
-
+  const finalSx = {
+    ...sx,
+    ...extraSx,
+  };
   return (
-    <Stack direction={direction} spacing={spacing} sx={sx}>
-      {children}
+    <Stack direction={direction} spacing={spacing} sx={finalSx}>
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child) && isDemoItem(child)) {
+          // Inject sx styles to the `DemoItem` if it is a direct child of `DemoContainer`.
+          // @ts-ignore
+          return React.cloneElement(child, { sx: { ...extraSx, ...demoItemSx } });
+        }
+        return child;
+      })}
     </Stack>
   );
 }

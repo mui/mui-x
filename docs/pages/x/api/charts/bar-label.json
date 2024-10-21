@@ -1,0 +1,42 @@
+{
+  "props": {},
+  "name": "BarLabel",
+  "imports": [
+    "import { BarLabel } from '@mui/x-charts/BarChart';",
+    "import { BarLabel } from '@mui/x-charts';",
+    "import { BarLabel } from '@mui/x-charts-pro';"
+  ],
+  "slots": [
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "faded",
+      "className": "MuiBarLabel-faded",
+      "description": "Styles applied to the root element if it is faded.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlighted",
+      "className": "MuiBarLabel-highlighted",
+      "description": "Styles applied to the root element if it is highlighted.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiBarLabel-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiBarLabel",
+  "filename": "/packages/x-charts/src/BarChart/BarLabel/BarLabel.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
+}

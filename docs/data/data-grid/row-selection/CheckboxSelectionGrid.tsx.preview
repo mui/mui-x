@@ -1,9 +1,0 @@
-<Button
-  sx={{ mb: 1 }}
-  onClick={() => setCheckboxSelection(!checkboxSelection)}
->
-  Toggle checkbox selection
-</Button>
-<div style={{ height: 400 }}>
-  <DataGrid checkboxSelection={checkboxSelection} {...data} />
-</div>

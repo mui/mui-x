@@ -4,7 +4,6 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   GridFilterInputValueProps,
   DataGrid,
-  GridFilterItem,
   GridFilterModel,
   GridFilterOperator,
   useGridRootProps,
@@ -88,19 +87,18 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
   );
 }
 
-const quantityOnlyOperators: GridFilterOperator[] = [
+const quantityOnlyOperators: GridFilterOperator<any, number>[] = [
   {
     label: 'Between',
     value: 'between',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
+    getApplyFilterFn: (filterItem) => {
       if (!Array.isArray(filterItem.value) || filterItem.value.length !== 2) {
         return null;
       }
       if (filterItem.value[0] == null || filterItem.value[1] == null) {
         return null;
       }
-
-      return ({ value }) => {
+      return (value) => {
         return (
           value !== null &&
           filterItem.value[0] <= value &&

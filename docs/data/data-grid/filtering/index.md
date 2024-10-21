@@ -2,10 +2,10 @@
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified through the data grid interface in several ways:
+The filters can be modified through the Data Grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button in the data grid toolbar (if enabled).
+- By clicking the _Filters_ button in the Data Grid toolbar (if enabled).
 
 Each column type has its own filter operators.
 The demo below lets you explore all the operators for each built-in column type.
@@ -17,7 +17,7 @@ _See [the dedicated section](/x/react-data-grid/filtering/customization/) to lea
 ## Single and multi-filters
 
 :::warning
-The `DataGrid` can only filter the rows according to one criterion at the time.
+The Data Grid can only filter the rows according to one criterion at the time.
 
 To use [multi-filters](/x/react-data-grid/filtering/multi-filters/), you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -36,7 +36,7 @@ A filter item represents a filtering rule and is composed of several elements:
 
 - `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
-- `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
+- `filterItem.operator`: name of the operator method to use (for example _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')): required when multiple filter items are used.
 
 :::info
@@ -45,7 +45,7 @@ Some operators do not need any value (for instance the `isEmpty` operator of the
 
 #### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+The `logicOperator` tells the Data Grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
@@ -67,7 +67,7 @@ const filterModel: GridFilterModel = {
 };
 ```
 
-If no `logicOperator` is provided, the data grid will use `GridLogicOperator.Or` by default.
+If no `logicOperator` is provided, the Data Grid will use `GridLogicOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -119,7 +119,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
 
-In the example below, the _rating_ column can not be filtered.
+In the example below, the _rating_ column cannot be filtered.
 
 ```js
 <DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
@@ -127,12 +127,36 @@ In the example below, the _rating_ column can not be filtered.
 
 {{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Filter non-filterable columns programmatically
+
+You can initialize the `filterModel`, set the `filterModel` prop, or use the API method `apiRef.current.setFilterModel` to set the filters for non-filterable columns. These filters will be applied but will be read-only on the UI and the user won't be able to change them.
+
+```jsx
+const columns = [
+  { field: 'name', filterable: false },
+  ...otherColumns,
+]
+
+<DataGrid
+  filterModel={{
+    items: [{ field: 'name', operator: 'contains', value: 'a' }],
+  }}
+  columns={columns}
+/>
+```
+
+{{"demo": "ReadOnlyFilters.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Ignore diacritics (accents)
+
+You can ignore diacritics (accents) when filtering the rows. See [Quick filter - Ignore diacritics (accents)](/x/react-data-grid/filtering/quick-filter/#ignore-diacritics-accents).
+
 ## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

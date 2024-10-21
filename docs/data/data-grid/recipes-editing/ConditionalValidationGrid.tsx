@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled('div')(({ theme }) => ({
   height: 300,
   width: '100%',
   '& .MuiDataGrid-cell--editing': {
@@ -15,8 +14,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
   },
   '& .Mui-error': {
-    backgroundColor: `rgb(126,10,15, ${theme.palette.mode === 'dark' ? 0 : 0.1})`,
+    backgroundColor: 'rgb(126,10,15, 0.1)',
     color: theme.palette.error.main,
+    ...theme.applyStyles('dark', {
+      backgroundColor: 'rgb(126,10,15, 0)',
+    }),
   },
 }));
 

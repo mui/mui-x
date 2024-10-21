@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { StackOrderType } from '@mui/x-charts/models';
 
-// Data comming from https://www.insee.fr/fr/statistiques/5013868
+// Data coming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
   6.5, 12.5, 17.2, 19.6, 20.1, 20.0, 19.5, 18.8, 18.2, 17.3, 16.4, 15.9, 15.2, 14.7,
   14.3, 14.3, 14.3, 14.1, 14.2, 14.2, 14.0, 13.8, 13.8, 13.9, 13.6, 14.0, 14.9, 14.8,

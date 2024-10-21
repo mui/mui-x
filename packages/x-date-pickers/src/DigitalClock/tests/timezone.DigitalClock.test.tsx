@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset, describeAdapters } from 'test/utils/pickers';
 
@@ -25,9 +25,9 @@ describe('<DigitalClock /> - Timezone', () => {
       const onChange = spy();
       render(<DigitalClock onChange={onChange} />);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+      fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
-      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 8);
+      const expectedDate = adapter.setHours(adapter.date(), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -118,22 +118,24 @@ describe('<DigitalClock /> - Timezone', () => {
           const onChange = spy();
           render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
-          userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
           const expectedDate = adapter.setHours(
-            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)),
+            adapter.startOfDay(adapter.date(undefined, timezone)),
             8,
           );
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          const value = adapter.dateWithTimezone('2022-04-17T04:30', timezone);
+          const value = adapter.date('2022-04-17T04:30', timezone);
 
           render(
             <DigitalClock defaultValue={value} onChange={onChange} timezone="America/Chicago" />,
@@ -149,7 +151,7 @@ describe('<DigitalClock /> - Timezone', () => {
             (adapter.getHours(value) + offsetDiff / 60 + 24) % 24,
           );
 
-          userEvent.mousePress(screen.getByRole('option', { name: '08:30 PM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:30 PM' }));
 
           const actualDate = onChange.lastCall.firstArg;
 

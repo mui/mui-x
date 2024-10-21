@@ -1,10 +1,10 @@
 # Roadmap
 
-<p class="description">Find out about our plans for MUI X.</p>
+<p class="description">Find out about our plans for MUI X.</p>
 
-## MUI X roadmap
+## MUI X roadmap
 
-To learn more about our plans for MUI X, visit the [public roadmap](https://github.com/mui/mui-x/projects/1).
+To learn more about our plans for MUI X, visit the [public roadmap](https://github.com/orgs/mui/projects/35).
 
 :::warning
 We operate in a dynamic environment,so things are subject to change.
@@ -17,4 +17,6 @@ The roadmap does not represent a commitment, obligation, or promise to deliver a
 
 ## Global roadmap
 
-To learn more about our plans for MUI in general, visit the [global roadmap](/material-ui/discover-more/roadmap/).
+To learn more about our plans for MUI in general, visit the:
+
+- [Material UI roadmap](/material-ui/discover-more/roadmap/).

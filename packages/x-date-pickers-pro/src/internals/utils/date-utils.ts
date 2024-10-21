@@ -1,14 +1,14 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
-import { DateRange, NonEmptyDateRange } from '../models/range';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateRange, NonEmptyDateRange } from '../../models';
 
-export const isRangeValid = <TDate>(
+export const isRangeValid = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   range: DateRange<TDate> | null,
 ): range is NonEmptyDateRange<TDate> => {
   return Boolean(range && range[0] && range[1] && !utils.isBefore(range[1], range[0]));
 };
 
-export const isWithinRange = <TDate>(
+export const isWithinRange = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   day: TDate,
   range: DateRange<TDate> | null,
@@ -16,7 +16,7 @@ export const isWithinRange = <TDate>(
   return isRangeValid(utils, range) && utils.isWithinRange(day, range);
 };
 
-export const isStartOfRange = <TDate>(
+export const isStartOfRange = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   day: TDate,
   range: DateRange<TDate> | null,
@@ -24,7 +24,7 @@ export const isStartOfRange = <TDate>(
   return isRangeValid(utils, range) && utils.isSameDay(day, range[0]!);
 };
 
-export const isEndOfRange = <TDate>(
+export const isEndOfRange = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
   day: TDate,
   range: DateRange<TDate> | null,

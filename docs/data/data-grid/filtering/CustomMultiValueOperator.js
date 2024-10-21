@@ -90,8 +90,7 @@ const quantityOnlyOperators = [
       if (filterItem.value[0] == null || filterItem.value[1] == null) {
         return null;
       }
-
-      return ({ value }) => {
+      return (value) => {
         return (
           value !== null &&
           filterItem.value[0] <= value &&

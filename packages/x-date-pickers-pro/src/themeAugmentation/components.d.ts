@@ -9,23 +9,34 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerDay'];
   };
+  MuiDateTimeRangePickerTabs?: {
+    defaultProps?: ComponentsProps['MuiDateTimeRangePickerTabs'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerTabs'];
+  };
   MuiDateRangePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerToolbar'];
+  };
+  MuiDateTimeRangePickerToolbar?: {
+    defaultProps?: ComponentsProps['MuiDateTimeRangePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimeRangePickerToolbar'];
+  };
+  MuiPickersRangeCalendarHeader?: {
+    defaultProps?: ComponentsProps['MuiPickersRangeCalendarHeader'];
   };
 
   // Multi input range fields
   MuiMultiInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateRangeField'];
   };
   MuiMultiInputDateTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiMultiInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateTimeRangeField'];
   };
   MuiMultiInputTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiMultiInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputTimeRangeField'];
   };
 
   // Single input range fields
@@ -51,6 +62,17 @@ export interface PickersProComponents<Theme = unknown> {
   };
   MuiStaticDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDateRangePicker'];
+  };
+
+  // Date Time Range Pickers
+  MuiDateTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDateTimeRangePicker'];
+  };
+  MuiDesktopDateTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopDateTimeRangePicker'];
+  };
+  MuiMobileDateTimeRangePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileDateTimeRangePicker'];
   };
 }
 

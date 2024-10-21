@@ -1,11 +1,11 @@
+'use client';
 import * as React from 'react';
-import {
-  DateComponentValidationProps,
-  validateDate,
-} from '../internals/utils/validation/validateDate';
+import { ValidateDateProps, validateDate } from '../validation';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
+import { PickerValidDate, TimezoneProps } from '../models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
-export const useIsDateDisabled = <TDate>({
+export const useIsDateDisabled = <TDate extends PickerValidDate>({
   shouldDisableDate,
   shouldDisableMonth,
   shouldDisableYear,
@@ -14,7 +14,7 @@ export const useIsDateDisabled = <TDate>({
   disableFuture,
   disablePast,
   timezone,
-}: DateComponentValidationProps<TDate>) => {
+}: ValidateDateProps<TDate> & DefaultizedProps<TimezoneProps, 'timezone'>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -22,6 +22,7 @@ export const useIsDateDisabled = <TDate>({
       validateDate({
         adapter,
         value: day,
+        timezone,
         props: {
           shouldDisableDate,
           shouldDisableMonth,
@@ -30,7 +31,6 @@ export const useIsDateDisabled = <TDate>({
           maxDate,
           disableFuture,
           disablePast,
-          timezone,
         },
       }) !== null,
     [

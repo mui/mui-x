@@ -1,38 +1,39 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui-internal/test-utils';
-import { getExpectedOnChangeCount, getTextbox, openPicker } from 'test/utils/pickers';
+import { fireEvent, screen } from '@mui/internal-test-utils';
+import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
+import { fireUserEvent } from '../../fireUserEvent';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, clock, ...pickerParams } =
     options;
 
   if (componentFamily !== 'picker') {
     return;
   }
 
-  const viewWrapperRole =
-    pickerParams.type === 'date-range' && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
+  const isRangeType = pickerParams.type === 'date-range' || pickerParams.type === 'date-time-range';
+  const viewWrapperRole = isRangeType && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
   describe('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
-      render(<ElementToTest />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
     });
 
     it('should open on mount if `prop.open` is true', () => {
-      render(<ElementToTest open />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure open />);
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest disabled onOpen={onOpen} />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure disabled onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -40,7 +41,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should not open when `prop.readOnly` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest readOnly onOpen={onOpen} />);
+      render(<ElementToTest enableAccessibleFieldDOMStructure readOnly onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -51,28 +52,37 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        defaultValue: values[0],
-        open: true,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+        },
+        { componentFamily },
+      );
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = setNewValue(values[0], { isOpened: true, selectSection });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
-      if (pickerParams.type === 'date-range') {
-        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
+      if (isRangeType) {
+        newValue = setNewValue(newValue, {
+          isOpened: true,
+          setEndDate: true,
+          selectSection,
+          pressKey,
+        });
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
@@ -83,17 +93,15 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
         return;
       }
 
-      const { selectSection } = renderWithProps({ defaultValue: values[0] });
+      const { selectSection, pressKey } = renderWithProps(
+        { enableAccessibleFieldDOMStructure: true, defaultValue: values[0] },
+        { componentFamily },
+      );
 
       // Change the value
-      setNewValue(values[0], { selectSection });
-      let textbox: HTMLInputElement;
-      if (pickerParams.type === 'date-range') {
-        textbox = screen.getAllByRole<HTMLInputElement>('textbox')[0];
-      } else {
-        textbox = getTextbox();
-      }
-      expect(textbox.scrollLeft).to.be.equal(0);
+      setNewValue(values[0], { selectSection, pressKey });
+      const fieldRoot = getFieldInputRoot();
+      expect(fieldRoot.scrollLeft).to.be.equal(0);
     });
 
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', () => {
@@ -101,29 +109,38 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        defaultValue: values[0],
-        open: true,
-        closeOnSelect: true,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+          closeOnSelect: true,
+        },
+        { componentFamily },
+      );
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = setNewValue(values[0], { isOpened: true, selectSection });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
-      if (pickerParams.type === 'date-range') {
-        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
+      if (isRangeType) {
+        newValue = setNewValue(newValue, {
+          isOpened: true,
+          setEndDate: true,
+          selectSection,
+          pressKey,
+        });
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
@@ -134,23 +151,28 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        open: true,
-        value: values[0],
-        closeOnSelect: true,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          open: true,
+          value: values[0],
+          closeOnSelect: true,
+        },
+        { componentFamily },
+      );
 
       // Change the value (same value)
-      setNewValue(values[0], { isOpened: true, applySameValue: true, selectSection });
-      if (pickerParams.type === 'date-range') {
+      setNewValue(values[0], { isOpened: true, applySameValue: true, selectSection, pressKey });
+      if (isRangeType) {
         setNewValue(values[0], {
           isOpened: true,
           applySameValue: true,
           setEndDate: true,
           selectSection,
+          pressKey,
         });
       }
 
@@ -159,40 +181,60 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', () => {
+    it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', function test() {
+      // increase the timeout of this test as it tends to sometimes fail on CI with `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker`
+      this.timeout(10000);
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        defaultValue: values[0],
-        open: true,
-        closeOnSelect: false,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
 
       // Change the value
-      let newValue = setNewValue(values[0], { isOpened: true, selectSection });
+      let newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
       const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
       expect(onChange.callCount).to.equal(initialChangeCount);
-      if (pickerParams.type === 'date-range') {
-        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
+      if (isRangeType) {
+        newValue = setNewValue(newValue, {
+          isOpened: true,
+          setEndDate: true,
+          selectSection,
+          pressKey,
+        });
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValueBis = setNewValue(newValue, { isOpened: true, selectSection });
-      if (pickerParams.type === 'date-range') {
-        expect(onChange.callCount).to.equal(3);
-        newValueBis = setNewValue(newValueBis, { isOpened: true, setEndDate: true, selectSection });
+      let newValueBis = setNewValue(newValue, { isOpened: true, selectSection, pressKey });
+      if (isRangeType) {
+        expect(onChange.callCount).to.equal(
+          initialChangeCount +
+            getExpectedOnChangeCount(componentFamily, pickerParams) * 2 -
+            (pickerParams.type === 'date-time-range' ? 1 : 0),
+        );
+        newValueBis = setNewValue(newValueBis, {
+          isOpened: true,
+          setEndDate: true,
+          selectSection,
+          pressKey,
+        });
         newValueBis.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
@@ -203,7 +245,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
             // meridiem does not change this time in case of multi section digital clock
             (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
       }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -214,35 +256,39 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        defaultValue: values[0],
-        open: true,
-        closeOnSelect: false,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
 
       // Change the value (already tested)
-      const newValue = setNewValue(values[0], { isOpened: true, selectSection });
+      const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
-      if (pickerParams.type === 'date-range') {
+      if (isRangeType) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose when clicking outside of the picker without prior change', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
-      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
+      if (pickerParams.variant === 'mobile' || isRangeType) {
         this.skip();
       }
 
@@ -252,6 +298,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -262,7 +309,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -270,7 +317,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
-      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
+      if (pickerParams.variant === 'mobile' || isRangeType) {
         this.skip();
       }
 
@@ -278,23 +325,27 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderWithProps({
-        onChange,
-        onAccept,
-        onClose,
-        defaultValue: values[0],
-        open: true,
-        closeOnSelect: false,
-      });
+      const { selectSection, pressKey } = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true,
+          onChange,
+          onAccept,
+          onClose,
+          defaultValue: values[0],
+          open: true,
+          closeOnSelect: false,
+        },
+        { componentFamily },
+      );
 
       // Change the value (already tested)
-      const newValue = setNewValue(values[0], { isOpened: true, selectSection });
+      const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue);
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -305,6 +356,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -313,7 +365,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      fireEvent.click(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -324,10 +376,17 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      render(<ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <ElementToTest
+          enableAccessibleFieldDOMStructure
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+        />,
+      );
 
       // Dismiss the picker
-      userEvent.keyPress(document.body, { key: 'Escape' });
+      fireEvent.keyDown(document.body, { key: 'Escape' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

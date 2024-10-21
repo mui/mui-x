@@ -1,0 +1,21 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "debounceMs": { "description": "The debounce time in milliseconds." },
+    "quickFilterFormatter": {
+      "description": "Function responsible for formatting values of quick filter in a string when the model is modified",
+      "typeDescriptions": {
+        "values": "The new values passed to the quick filter model",
+        "string": "The string to display in the text field"
+      }
+    },
+    "quickFilterParser": {
+      "description": "Function responsible for parsing text input in an array of independent values for quick filtering.",
+      "typeDescriptions": {
+        "input": "The value entered by the user",
+        "Array<any>": "The array of value on which quick filter is applied"
+      }
+    }
+  },
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+}

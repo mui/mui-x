@@ -1,0 +1,16 @@
+<Button onClick={() => apiRef.current.setRowCount(1000)}>Set Row Count</Button>
+<div style={{ height: 400 }}>
+  <DataGrid
+    apiRef={apiRef}
+    rows={rows}
+    {...data}
+    initialState={{ ...data.initialState, pagination: { rowCount: -1 } }}
+    estimatedRowCount={100}
+    paginationMeta={paginationMeta}
+    loading={isLoading}
+    pageSizeOptions={[10, 25, 50, 100]}
+    paginationModel={paginationModel}
+    paginationMode="server"
+    onPaginationModelChange={setPaginationModel}
+  />
+</div>

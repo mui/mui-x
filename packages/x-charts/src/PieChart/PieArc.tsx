@@ -1,23 +1,20 @@
+'use client';
 import * as React from 'react';
-import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import PropTypes from 'prop-types';
+import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
+import { animated, SpringValue, to } from '@react-spring/web';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { HighlightScope } from '../context/HighlightProvider';
-import { InteractionContext } from '../context/InteractionProvider';
-import {
-  getIsFaded,
-  getIsHighlighted,
-  useInteractionItemProps,
-} from '../hooks/useInteractionItemProps';
-import { PieSeriesType } from '../models/seriesType/pie';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { PieItemId } from '../models';
+import { HighlightScope } from '../context';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element when higlighted. */
+  /** Styles applied to the root element when highlighted. */
   highlighted: string;
   /** Styles applied to the root element when faded. */
   faded: string;
@@ -26,7 +23,7 @@ export interface PieArcClasses {
 export type PieArcClassKey = keyof PieArcClasses;
 
 interface PieArcOwnerState {
-  id: string;
+  id: PieItemId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -53,58 +50,49 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieArcRoot = styled('path', {
+const PieArcRoot = styled(animated.path, {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
   stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
-  fill: ownerState.color,
-  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
-export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> &
-  D3PieArcDatum<any> & {
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
+  PieArcOwnerState & {
+    cornerRadius: SpringValue<number>;
+    endAngle: SpringValue<number>;
+    /**
+     * @deprecated Use the `isFaded` or `isHighlighted` props instead.
+     */
     highlightScope?: Partial<HighlightScope>;
-    innerRadius: PieSeriesType['innerRadius'];
-    outerRadius: number;
-    cornerRadius: PieSeriesType['cornerRadius'];
-    highlighted: PieSeriesType['highlighted'];
-    faded: PieSeriesType['faded'];
+    innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+    outerRadius: SpringValue<number>;
+    paddingAngle: SpringValue<number>;
+    startAngle: SpringValue<number>;
   };
 
-export default function PieArc(props: PieArcProps) {
+function PieArc(props: PieArcProps) {
   const {
-    id,
-    dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,
-    innerRadius: baseInnerRadius = 0,
-    outerRadius: baseOuterRadius,
-    cornerRadius: baseCornerRadius = 0,
-    highlighted,
-    faded = { additionalRadius: -5 },
+    cornerRadius,
+    dataIndex,
+    endAngle,
+    id,
+    innerRadius,
+    isFaded,
+    isHighlighted,
     onClick,
+    outerRadius,
+    paddingAngle,
+    startAngle,
+    highlightScope,
     ...other
   } = props;
-
-  const getInteractionItemProps = useInteractionItemProps(highlightScope);
-
-  const { item } = React.useContext(InteractionContext);
-
-  const isHighlighted = getIsHighlighted(
-    item,
-    { type: 'pie', seriesId: id, dataIndex },
-    highlightScope,
-  );
-
-  const isFaded =
-    !isHighlighted && getIsFaded(item, { type: 'pie', seriesId: id, dataIndex }, highlightScope);
 
   const ownerState = {
     id,
@@ -116,31 +104,27 @@ export default function PieArc(props: PieArcProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const attibuesOverride = {
-    additionalRadius: 0,
-    ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
-  };
-  const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
-
-  const outerRadius = Math.max(
-    0,
-    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
-  );
-  const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
+  const getInteractionItemProps = useInteractionItemProps();
 
   return (
     <PieArcRoot
-      d={
-        d3Arc().cornerRadius(cornerRadius)({
-          ...other,
-          innerRadius,
-          outerRadius,
-        })!
-      }
+      d={to(
+        [startAngle, endAngle, paddingAngle, innerRadius, outerRadius, cornerRadius],
+        (sA, eA, pA, iR, oR, cR) =>
+          d3Arc().cornerRadius(cR)({
+            padAngle: pA,
+            startAngle: sA,
+            endAngle: eA,
+            innerRadius: iR,
+            outerRadius: oR,
+          })!,
+      )}
+      visibility={to([startAngle, endAngle], (sA, eA) => (sA === eA ? 'hidden' : 'visible'))}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
       className={classes.root}
+      {...other}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
     />
   );
@@ -149,15 +133,22 @@ export default function PieArc(props: PieArcProps) {
 PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  cornerRadius: PropTypes.number,
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * @deprecated Use the `isFaded` or `isHighlighted` props instead.
+   */
   highlightScope: PropTypes.shape({
+    fade: PropTypes.oneOf(['global', 'none', 'series']),
     faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlight: PropTypes.oneOf(['item', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
-  innerRadius: PropTypes.number,
-  outerRadius: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  isFaded: PropTypes.bool.isRequired,
+  isHighlighted: PropTypes.bool.isRequired,
 } as any;
+
+export { PieArc };

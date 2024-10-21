@@ -1,14 +1,14 @@
 ---
 product: date-pickers
-title: Date and Time Picker React components
+title: Date and Time Pickers - Customization playground
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# Date and Time Pickers playground
+# Customization playground
 
-<p class="description">You can test all the props that affect the layout of the various components.</p>
+<p class="description">Use this playground to experiment with the props that affect the layout of the Date and Time Picker components.</p>
 
-{{"demo": "PickersPlaygroundWrapper.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "PickersPlaygroundWrapper.js", "hideToolbar": true, "bg": "playground"}}

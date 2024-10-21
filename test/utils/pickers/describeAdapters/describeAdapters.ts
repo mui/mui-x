@@ -1,7 +1,7 @@
 import * as React from 'react';
 import moment from 'moment';
 import momentTZ from 'moment-timezone';
-import createDescribe from '@mui-internal/test-utils/createDescribe';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
 import {
   AdapterName,
   buildFieldInteractions,

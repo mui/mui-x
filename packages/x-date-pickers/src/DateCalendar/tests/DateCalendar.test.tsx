@@ -1,22 +1,24 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, userEvent, screen } from '@mui-internal/test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createPickerRenderer, AdapterClassToUse, adapterToUse } from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date('2019-01-02'),
+  });
 
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
     render(
       <DateCalendar
-        defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
+        defaultValue={adapterToUse.date('2019-01-01')}
         onViewChange={handleViewChange}
       />,
     );
@@ -33,7 +35,7 @@ describe('<DateCalendar />', () => {
     const onMonthChangeMock = spy();
     render(
       <DateCalendar
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         readOnly
@@ -60,7 +62,7 @@ describe('<DateCalendar />', () => {
     const onMonthChangeMock = spy();
     render(
       <DateCalendar
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -86,7 +88,7 @@ describe('<DateCalendar />', () => {
     const onMonthChangeMock = spy();
     render(
       <DateCalendar
-        value={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date('2019-01-01')}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -103,28 +105,12 @@ describe('<DateCalendar />', () => {
     expect(disabledDays.length).to.equal(31);
   });
 
-  it('should render header label text according to monthAndYear format', () => {
-    render(
-      <LocalizationProvider
-        dateAdapter={AdapterClassToUse}
-        dateFormats={{ monthAndYear: 'yyyy/MM' }}
-      >
-        <DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />,
-      </LocalizationProvider>,
-    );
-
-    expect(screen.getByText('2019/01')).toBeVisible();
-  });
-
   it('should render column header according to dayOfWeekFormatter', () => {
     render(
-      <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
-          dayOfWeekFormatter={(day) => `${day}.`}
-        />
-        ,
-      </LocalizationProvider>,
+      <DateCalendar
+        defaultValue={adapterToUse.date('2019-01-01')}
+        dayOfWeekFormatter={(day) => `${adapterToUse.format(day, 'weekdayShort')}.`}
+      />,
     );
 
     ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
@@ -134,24 +120,62 @@ describe('<DateCalendar />', () => {
 
   it('should render week number when `displayWeekNumber=true`', () => {
     render(
-      <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 1))}
-          onChange={() => {}}
-          displayWeekNumber
-        />
-      </LocalizationProvider>,
+      <DateCalendar
+        value={adapterToUse.date('2019-01-01')}
+        onChange={() => {}}
+        displayWeekNumber
+      />,
     );
 
     expect(screen.getAllByRole('rowheader').length).to.equal(5);
   });
 
+  describe('with fake timers', () => {
+    clock.withFakeTimers();
+
+    // test: https://github.com/mui/mui-x/issues/12373
+    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
+      const onChange = spy();
+      const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
+      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
+      );
+      fireEvent.click(screen.getByRole('radio', { name: '2020' }));
+      // Finish the transition to the day view
+      clock.runToLast();
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
+      );
+      // select the current year with a date in the past to trigger "findClosestEnabledDate"
+      fireEvent.click(screen.getByRole('radio', { name: '2019' }));
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
+    });
+  });
+
+  describe('Slot: calendarHeader', () => {
+    it('should allow to override the format', () => {
+      render(
+        <DateCalendar
+          defaultValue={adapterToUse.date('2019-01-01')}
+          slotProps={{ calendarHeader: { format: 'yyyy/MM' } }}
+        />,
+      );
+
+      expect(screen.getByText('2019/01')).toBeVisible();
+    });
+  });
+
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
-      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
-      expect(screen.getAllByMuiTest('day')).to.have.length(31);
+      expect(screen.getAllByTestId('day')).to.have.length(31);
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
@@ -160,37 +184,23 @@ describe('<DateCalendar />', () => {
       ).to.have.text('1');
     });
 
-    // TODO v7: Remove
-    it('should use `defaultCalendarMonth` for the month and year when no value defined', () => {
-      const onChange = spy();
-
-      render(
-        <DateCalendar
-          onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
-          view="day"
-        />,
-      );
-
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 2));
-    });
-
     it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
 
       render(
         <DateCalendar
           onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          referenceDate={adapterToUse.date('2022-04-17T12:30:00')}
           view="day"
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      // should make the reference day firstly focusable
+      expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 2, 12, 30));
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
 
     it('should not use `referenceDate` when a value is defined', () => {
@@ -199,13 +209,13 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           view="day"
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -216,13 +226,13 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           view="day"
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -232,25 +242,23 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
+          value={adapterToUse.date('2018-01-03T11:11:11.111')}
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),
+        adapterToUse.date('2018-01-02T11:11:11.111'),
       );
     });
 
     it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
-          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
         />,
@@ -261,8 +269,7 @@ describe('<DateCalendar />', () => {
     it('should complete weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
-          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
           fixedWeekNumber={6}
@@ -272,13 +279,13 @@ describe('<DateCalendar />', () => {
     });
 
     it('should open after `minDate` if now is outside', () => {
-      render(<DateCalendar view="day" minDate={adapterToUse.date(new Date(2031, 2, 3))} />);
+      render(<DateCalendar view="day" minDate={adapterToUse.date('2031-03-03')} />);
 
       expect(screen.getByText('March 2031')).not.to.equal(null);
     });
 
     it('should open before `maxDate` if now is outside', () => {
-      render(<DateCalendar view="day" maxDate={adapterToUse.date(new Date(1534, 2, 3))} />);
+      render(<DateCalendar view="day" maxDate={adapterToUse.date('1534-03-03')} />);
 
       expect(screen.getByText('March 1534')).not.to.equal(null);
     });
@@ -290,7 +297,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 1))}
+          value={adapterToUse.date('2019-01-01')}
           onChange={onChange}
           shouldDisableDate={(date) =>
             adapterToUse.getMonth(date) === 3 && adapterToUse.getDate(date) < 6
@@ -312,8 +319,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 5, 1))}
-          minDate={adapterToUse.date(new Date(2019, 3, 7))}
+          value={adapterToUse.date('2019-06-01')}
+          minDate={adapterToUse.date('2019-04-07')}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -332,8 +339,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 29))}
-          maxDate={adapterToUse.date(new Date(2019, 3, 22))}
+          value={adapterToUse.date('2019-01-29')}
+          maxDate={adapterToUse.date('2019-04-22')}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -352,7 +359,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 29))}
+          value={adapterToUse.date('2019-01-29')}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getMonth(date) === 3}
           views={['month', 'day']}
@@ -365,7 +372,7 @@ describe('<DateCalendar />', () => {
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('April 2019');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
     it('should use `referenceDate` when no value defined', () => {
@@ -374,7 +381,7 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          referenceDate={adapterToUse.date('2018-01-01T12:30:00')}
           views={['month', 'day']}
           openTo="month"
         />,
@@ -393,8 +400,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           views={['month', 'day']}
           openTo="month"
         />,
@@ -413,8 +420,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           views={['month', 'day']}
           openTo="month"
         />,
@@ -430,9 +437,9 @@ describe('<DateCalendar />', () => {
 
   describe('view: year', () => {
     it('renders year selection standalone', () => {
-      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} openTo="year" />);
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} openTo="year" />);
 
-      expect(screen.getAllByMuiTest('year')).to.have.length(200);
+      expect(screen.getAllByTestId('year')).to.have.length(200);
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', () => {
@@ -440,7 +447,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 3, 29))}
+          value={adapterToUse.date('2019-04-29')}
           onChange={onChange}
           shouldDisableDate={(date) =>
             adapterToUse.getYear(date) === 2022 && adapterToUse.getMonth(date) === 3
@@ -462,8 +469,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 3, 29))}
-          minDate={adapterToUse.date(new Date(2017, 4, 12))}
+          value={adapterToUse.date('2019-04-29')}
+          minDate={adapterToUse.date('2017-05-12')}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -482,8 +489,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 3, 29))}
-          maxDate={adapterToUse.date(new Date(2022, 2, 31))}
+          value={adapterToUse.date('2019-04-29')}
+          maxDate={adapterToUse.date('2022-03-31')}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -502,7 +509,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 3, 29))}
+          value={adapterToUse.date('2019-04-29')}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getYear(date) === 2022}
           views={['year', 'day']}
@@ -515,7 +522,7 @@ describe('<DateCalendar />', () => {
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
     it('should scroll to show the selected year', function test() {
@@ -524,7 +531,7 @@ describe('<DateCalendar />', () => {
       }
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
+          defaultValue={adapterToUse.date('2019-04-29')}
           views={['year']}
           openTo="year"
         />,
@@ -549,7 +556,7 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          referenceDate={adapterToUse.date('2018-01-01T12:30:00')}
           views={['year']}
           openTo="year"
         />,
@@ -568,8 +575,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           views={['year']}
           openTo="year"
         />,
@@ -588,8 +595,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
           views={['year']}
           openTo="year"
         />,
@@ -616,7 +623,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -625,7 +632,7 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
+          defaultValue={adapterToUse.date('2019-04-29')}
           slots={{
             day: React.memo(RenderCount),
           }}
@@ -633,7 +640,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
     });
   });

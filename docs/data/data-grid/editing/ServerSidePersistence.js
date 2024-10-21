@@ -14,7 +14,7 @@ const useFakeMutation = () => {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
-            reject(new Error("Error while saving user: name can't be empty."));
+            reject(new Error('Error while saving user: name cannot be empty.'));
           } else {
             resolve({ ...user, name: user.name?.toUpperCase() });
           }

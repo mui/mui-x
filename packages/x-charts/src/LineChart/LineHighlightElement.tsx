@@ -1,9 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { SeriesId } from '../models/seriesType/common';
 
 export interface LineHighlightElementClasses {
   /** Styles applied to the root element. */
@@ -13,7 +15,7 @@ export interface LineHighlightElementClasses {
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
 interface LineHighlightElementOwnerState {
-  id: string;
+  id: SeriesId;
   color: string;
   x: number;
   y: number;
@@ -49,7 +51,7 @@ const HighlightElement = styled('circle', {
 }));
 
 export type LineHighlightElementProps = LineHighlightElementOwnerState &
-  React.ComponentPropsWithoutRef<'circle'> & {};
+  Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>;
 
 /**
  * Demos:
@@ -75,12 +77,13 @@ function LineHighlightElement(props: LineHighlightElementProps) {
 
   return (
     <HighlightElement
-      {...other}
+      pointerEvents="none"
       ownerState={ownerState}
       className={classes.root}
       cx={0}
       cy={0}
       r={other.r === undefined ? 5 : other.r}
+      {...other}
     />
   );
 }
@@ -88,9 +91,10 @@ function LineHighlightElement(props: LineHighlightElementProps) {
 LineHighlightElement.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 } as any;
 
 export { LineHighlightElement };

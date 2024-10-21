@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
@@ -11,6 +11,7 @@ import BaseFocusTrap, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
 import {
+  SlotComponentProps,
   unstable_useForkRef as useForkRef,
   unstable_useEventCallback as useEventCallback,
   unstable_ownerDocument as ownerDocument,
@@ -20,7 +21,6 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
-import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
 
@@ -28,30 +28,30 @@ interface PickersPopperOwnerState extends PickerPopperProps {
   placement: PopperPlacementType;
 }
 
-export interface PickersPopperSlotsComponent {
+export interface PickersPopperSlots {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
    */
-  DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
+  desktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
    * @default Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.
    */
-  DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
+  desktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default FocusTrap from '@mui/base'.
+   * @default TrapFocus from '@mui/material'.
    */
-  DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
+  desktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
    * @default Popper from '@mui/material'.
    */
-  Popper?: React.ElementType<MuiPopperProps>;
+  popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps {
+export interface PickersPopperSlotProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -78,8 +78,11 @@ export interface PickerPopperProps extends UsePickerValueActions {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
-  slotProps?: PickersPopperSlotsComponentsProps;
+  slots?: PickersPopperSlots;
+  slotProps?: PickersPopperSlotProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
   reduceAnimations?: boolean;
@@ -110,13 +113,19 @@ const PickersPopperPaper = styled(MuiPaper, {
   overridesResolver: (_, styles) => styles.paper,
 })<{
   ownerState: PickersPopperOwnerState;
-}>(({ ownerState }) => ({
+}>({
   outline: 0,
   transformOrigin: 'top center',
-  ...(ownerState.placement.includes('top') && {
-    transformOrigin: 'bottom center',
-  }),
-}));
+  variants: [
+    {
+      props: ({ placement }: PickersPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(placement),
+      style: {
+        transformOrigin: 'bottom center',
+      },
+    },
+  ],
+});
 
 function clickedRootScrollbar(event: MouseEvent, doc: Document) {
   return (
@@ -244,7 +253,7 @@ function useClickAwayListener(
     // TODO This behavior is not tested automatically
     // It's unclear whether this is due to different update semantics in test (batched in act() vs discrete on click).
     // Or if this is a timing related issues due to different Transition components
-    // Once we get rid of all the manual scheduling (e.g. setTimeout(update, 0)) we can revisit this code+test.
+    // Once we get rid of all the manual scheduling (for example setTimeout(update, 0)) we can revisit this code+test.
     if (active) {
       const doc = ownerDocument(nodeRef.current);
 
@@ -270,7 +279,7 @@ interface PickersPopperPaperProps {
   paperClasses: string;
   onPaperClick: React.MouseEventHandler<HTMLDivElement>;
   onPaperTouchStart: React.TouchEventHandler<HTMLDivElement>;
-  paperSlotProps?: PickersPopperSlotsComponentsProps['desktopPaper'];
+  paperSlotProps?: PickersPopperSlotProps['desktopPaper'];
 }
 
 const PickersPopperPaperWrapper = React.forwardRef(
@@ -339,8 +348,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
-      // IE11, Edge (prior to using Blink?) use 'Esc'
-      if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
+      if (open && nativeEvent.key === 'Escape') {
         onDismiss();
       }
     }
@@ -395,7 +403,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
+  const Transition = (slots?.desktopTransition ?? reduceAnimations) ? Fade : Grow;
   const FocusTrap = slots?.desktopTrapFocus ?? BaseFocusTrap;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;

@@ -1,19 +1,9 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "direction": {
       "type": {
         "name": "union",
@@ -21,17 +11,17 @@
       },
       "default": "'column'"
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
@@ -53,15 +43,15 @@
         "describedArgs": ["newValue"]
       }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableDate": {
@@ -72,9 +62,13 @@
         "returned": "boolean"
       }
     },
-    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "spacing": {
       "type": {
         "name": "union",
@@ -91,41 +85,40 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
-    "useFlexGap": { "type": { "name": "bool" } },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
+    "useFlexGap": { "type": { "name": "bool" }, "default": "false" },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "root",
-      "description": "Element rendered at the root.",
-      "default": "MultiInputDateRangeFieldRoot"
-    },
-    {
-      "class": null,
-      "name": "separator",
-      "description": "Element rendered between the two inputs.",
-      "default": "MultiInputDateRangeFieldSeparator"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render a date. It is rendered twice: once for the start date and once for the end date. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    }
-  ],
   "name": "MultiInputDateRangeField",
   "imports": [
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
     "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "separator"],
-    "globalClasses": {},
-    "name": "MuiMultiInputDateRangeField"
-  },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiMultiInputDateRangeField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiMultiInputDateRangeField-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiMultiInputDateRangeField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "cssComponent": false
 }

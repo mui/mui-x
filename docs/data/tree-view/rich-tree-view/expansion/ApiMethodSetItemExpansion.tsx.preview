@@ -1,0 +1,7 @@
+<Stack spacing={2} direction="row">
+  <Button onClick={handleExpandClick}>Expand Data Grid</Button>
+  <Button onClick={handleCollapseClick}>Collapse Data Grid</Button>
+</Stack>
+<Box sx={{ minHeight: 352, minWidth: 250 }}>
+  <RichTreeView items={MUI_X_PRODUCTS} apiRef={apiRef} />
+</Box>

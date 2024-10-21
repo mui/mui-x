@@ -1,0 +1,41 @@
+{
+  "name": "PieSeriesType",
+  "imports": ["import { PieSeriesType } from '@mui/x-charts'"],
+  "properties": {
+    "data": { "type": { "description": "TData[]" }, "required": true },
+    "type": { "type": { "description": "'pie'" }, "required": true },
+    "arcLabel": {
+      "type": {
+        "description": "'formattedValue' | 'label' | 'value' | ((item: Omit&lt;DefaultizedPieValueType, 'label'&gt; & { label?: string }) =&gt; string)"
+      }
+    },
+    "arcLabelMinAngle": { "type": { "description": "number" }, "default": "0" },
+    "arcLabelRadius": {
+      "type": { "description": "number | string" },
+      "default": "(innerRadius - outerRadius) / 2"
+    },
+    "color": { "type": { "description": "string" } },
+    "cornerRadius": { "type": { "description": "number" }, "default": "0" },
+    "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
+    "cy": { "type": { "description": "number | string" }, "default": "'50%'" },
+    "endAngle": { "type": { "description": "number" }, "default": "360" },
+    "faded": {
+      "type": {
+        "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `faded.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
+      }
+    },
+    "highlighted": {
+      "type": {
+        "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
+      }
+    },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
+    "outerRadius": { "type": { "description": "number | string" }, "default": "'100%'" },
+    "paddingAngle": { "type": { "description": "number" }, "default": "0" },
+    "sortingValues": { "type": { "description": "ChartsPieSorting" }, "default": "'none'" },
+    "startAngle": { "type": { "description": "number" }, "default": "0" },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } }
+  }
+}

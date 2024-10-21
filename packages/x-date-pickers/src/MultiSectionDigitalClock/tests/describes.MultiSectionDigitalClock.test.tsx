@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, describeConformance } from '@mui-internal/test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  wrapPickerMount,
   adapterToUse,
   multiSectionDigitalClockHandler,
   describeValidation,
   describeValue,
 } from 'test/utils/pickers';
-import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
+import {
+  MultiSectionDigitalClock,
+  multiSectionDigitalClockClasses as classes,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { formatMeridiem } from '@mui/x-date-pickers/internals';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -24,22 +27,12 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
   }));
 
   describeConformance(<MultiSectionDigitalClock />, () => ({
-    classes: {} as any,
+    classes,
+    inheritComponent: 'div',
     render,
     muiName: 'MuiMultiSectionDigitalClock',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(MultiSectionDigitalClock, () => ({
@@ -47,10 +40,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     componentFamily: 'multi-section-digital-clock',
     type: 'time',
     variant: 'desktop',
-    values: [
-      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
-    ],
+    values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {

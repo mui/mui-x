@@ -6,7 +6,7 @@ export type {
 export { PickersCalendarHeader } from './PickersCalendarHeader';
 export type {
   PickersCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
+  PickersCalendarHeaderSlots,
+  PickersCalendarHeaderSlotProps,
   ExportedPickersCalendarHeaderProps,
-} from './PickersCalendarHeader';
+} from './PickersCalendarHeader.types';

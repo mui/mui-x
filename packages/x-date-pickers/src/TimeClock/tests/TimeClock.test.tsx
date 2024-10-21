@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  fireTouchChangedEvent,
-  screen,
-  within,
-  getAllByRole,
-} from '@mui-internal/test-utils';
+import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
 
@@ -22,18 +16,14 @@ describe('<TimeClock />', () => {
   });
 
   it('has a name depending on the `date`', () => {
-    render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
-    );
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. Selected time is 4:20 AM');
   });
 
   it('renders the current value as an accessible option', () => {
-    render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
-    );
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     const selectedOption = within(listbox).getByRole('option', { selected: true });
@@ -60,9 +50,7 @@ describe('<TimeClock />', () => {
   });
 
   it('selects the current date on mount', () => {
-    render(
-      <TimeClock value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
-    );
+    render(<TimeClock value={adapterToUse.date('2019-01-01T04:20:00')} onChange={() => {}} />);
 
     const selectedOption = screen.getByRole('option', { selected: true });
     expect(selectedOption).toHaveAccessibleName('4 hours');
@@ -73,7 +61,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -96,7 +84,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -116,7 +104,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -136,7 +124,7 @@ describe('<TimeClock />', () => {
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
@@ -151,27 +139,85 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableClock` with the hours with meridiem', () => {
-    const shouldDisableClock = spy(() => false);
-
+  it('should increase hour selection by 5 on PageUp press', () => {
+    const handleChange = spy();
     render(
       <TimeClock
         autoFocus
-        value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
-        onChange={() => {}}
-        shouldDisableClock={shouldDisableClock}
-        ampm
+        value={adapterToUse.date('2019-01-01T22:20:00')}
+        onChange={handleChange}
       />,
     );
+    const listbox = screen.getByRole('listbox');
 
-    const hours = shouldDisableClock
-      .getCalls()
-      .filter((el) => el.lastArg === 'hours')
-      .map((el) => el.firstArg);
+    fireEvent.keyDown(listbox, { key: 'PageUp' });
 
-    // Should be called with every hour post meridiem (from 12 to 23) since current date hour is 6PM
-    expect(Math.min(...hours)).to.equal(12);
-    expect(Math.max(...hours)).to.equal(23);
+    expect(handleChange.callCount).to.equal(1);
+    const [newDate, reason] = handleChange.firstCall.args;
+    expect(adapterToUse.getHours(newDate)).to.equal(3);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
+  it('should decrease hour selection by 5 on PageDown press', () => {
+    const handleChange = spy();
+    render(
+      <TimeClock
+        autoFocus
+        value={adapterToUse.date('2019-01-01T02:20:00')}
+        onChange={handleChange}
+      />,
+    );
+    const listbox = screen.getByRole('listbox');
+
+    fireEvent.keyDown(listbox, { key: 'PageDown' });
+
+    expect(handleChange.callCount).to.equal(1);
+    const [newDate, reason] = handleChange.firstCall.args;
+    expect(adapterToUse.getHours(newDate)).to.equal(21);
+    expect(adapterToUse.getMinutes(newDate)).to.equal(20);
+    expect(reason).to.equal('partial');
+  });
+
+  [
+    {
+      keyName: 'Enter',
+      keyValue: 'Enter',
+    },
+    {
+      keyName: 'Space',
+      keyValue: ' ',
+    },
+  ].forEach(({ keyName, keyValue }) => {
+    it(`sets value on ${keyName} press`, () => {
+      const handleChange = spy();
+      render(
+        <TimeClock
+          autoFocus
+          defaultValue={adapterToUse.date('2019-01-01T04:20:00')}
+          onChange={handleChange}
+        />,
+      );
+      const listbox = screen.getByRole('listbox');
+
+      fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+      fireEvent.keyDown(listbox, { key: keyValue });
+
+      expect(handleChange.callCount).to.equal(2);
+      let [newDate, reason] = handleChange.lastCall.args;
+
+      expect(adapterToUse.getHours(newDate)).to.equal(3);
+      expect(reason).to.equal('partial');
+
+      fireEvent.keyDown(listbox, { key: 'ArrowUp' });
+      fireEvent.keyDown(listbox, { key: keyValue });
+
+      expect(handleChange.callCount).to.equal(4);
+      [newDate, reason] = handleChange.lastCall.args;
+
+      expect(adapterToUse.getMinutes(newDate)).to.equal(21);
+      expect(reason).to.equal('finish');
+    });
   });
 
   it('should display options, but not update value when readOnly prop is passed', function test() {
@@ -188,20 +234,14 @@ describe('<TimeClock />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(
-      <TimeClock
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChangeMock}
-        readOnly
-      />,
-    );
+    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} readOnly />);
 
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
 
     // hours are not disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -222,20 +262,14 @@ describe('<TimeClock />', () => {
       ],
     };
     const onChangeMock = spy();
-    render(
-      <TimeClock
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChangeMock}
-        disabled
-      />,
-    );
+    render(<TimeClock value={adapterToUse.date('2019-01-01')} onChange={onChangeMock} disabled />);
 
-    fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', selectEvent);
+    fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', selectEvent);
     expect(onChangeMock.callCount).to.equal(0);
 
     // hours are disabled
     const hoursContainer = screen.getByRole('listbox');
-    const hours = getAllByRole(hoursContainer, 'option');
+    const hours = within(hoursContainer).getAllByRole('option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
     expect(hours.length).to.equal(12);
@@ -258,7 +292,7 @@ describe('<TimeClock />', () => {
           },
         ],
       },
-      '20:--': {
+      '19:--': {
         changedTouches: [
           {
             clientX: 66,
@@ -290,15 +324,15 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -313,16 +347,16 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:00:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
           view="minutes"
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -336,15 +370,15 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 20))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T01:20:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="minutes"
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -355,14 +389,14 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="minutes"
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -372,15 +406,15 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:00:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="hours"
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['19:--']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -391,14 +425,14 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           view="hours"
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['20:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['19:--']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -407,7 +441,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
+          value={adapterToUse.date('2018-01-01T13:20:00')}
           minutesStep={15}
           onChange={() => {}}
           view="minutes"
@@ -424,16 +458,16 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01T13:20:00')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           onViewChange={handleViewChange}
           views={['seconds']}
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:10']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:10']);
 
       expect(handleChange.callCount).to.equal(1);
       const [date, selectionState] = handleChange.firstCall.args;
@@ -447,15 +481,15 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           ampm={false}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          value={adapterToUse.date('2018-01-01')}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           views={['seconds']}
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
     });
@@ -466,16 +500,60 @@ describe('<TimeClock />', () => {
         <TimeClock
           ampm={false}
           value={null}
-          minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
-          maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
+          minTime={adapterToUse.date('2018-01-01T12:15:00')}
+          maxTime={adapterToUse.date('2018-01-01T15:45:30')}
           onChange={handleChange}
           views={['seconds']}
         />,
       );
 
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', clockTouchEvent['--:20']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['--:20']);
 
       expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should select enabled hour on touch and drag', () => {
+      const handleChange = spy();
+      const handleViewChange = spy();
+      render(
+        <TimeClock
+          ampm={false}
+          value={adapterToUse.date('2018-01-01')}
+          onChange={handleChange}
+          onViewChange={handleViewChange}
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', clockTouchEvent['19:--']);
+
+      expect(handleChange.callCount).to.equal(2);
+      const [date, selectionState] = handleChange.lastCall.args;
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 19));
+      expect(selectionState).to.equal('shallow');
+      expect(handleViewChange.callCount).to.equal(0);
+    });
+
+    it('should select enabled hour and move to next view on touch end', () => {
+      const handleChange = spy();
+      const handleViewChange = spy();
+      render(
+        <TimeClock
+          ampm={false}
+          value={adapterToUse.date('2018-01-01')}
+          onChange={handleChange}
+          onViewChange={handleViewChange}
+        />,
+      );
+
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchstart', clockTouchEvent['13:--']);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', clockTouchEvent['13:--']);
+
+      expect(handleChange.callCount).to.equal(2);
+      const [date, selectionState] = handleChange.lastCall.args;
+      expect(date).toEqualDateTime(new Date(2018, 0, 1, 13));
+      expect(selectionState).to.equal('partial');
+      expect(handleViewChange.callCount).to.equal(1);
     });
   });
 
@@ -485,7 +563,7 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           autoFocus
-          value={adapterToUse.date(new Date(2019, 0, 1, 4, 19, 47))}
+          value={adapterToUse.date('2019-01-01T04:19:47')}
           onChange={handleChange}
         />,
       );
@@ -520,10 +598,7 @@ describe('<TimeClock />', () => {
       const onChange = spy();
 
       render(
-        <TimeClock
-          onChange={onChange}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
-        />,
+        <TimeClock onChange={onChange} referenceDate={adapterToUse.date('2018-01-01T12:30:00')} />,
       );
 
       timeClockHandler.setViewValue(
@@ -541,8 +616,8 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          value={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 
@@ -561,8 +636,8 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock
           onChange={onChange}
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
-          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
+          referenceDate={adapterToUse.date('2018-01-01T15:30:00')}
         />,
       );
 

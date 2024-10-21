@@ -1,0 +1,22 @@
+{
+  "name": "GridCsvExportOptions",
+  "imports": [
+    "import { GridCsvExportOptions } from '@mui/x-data-grid-premium'",
+    "import { GridCsvExportOptions } from '@mui/x-data-grid-pro'",
+    "import { GridCsvExportOptions } from '@mui/x-data-grid'"
+  ],
+  "demos": "<ul><li><a href=\"/x/react-data-grid/export/#csv-export\">CSV export</a></li></ul>",
+  "properties": {
+    "allColumns": { "type": { "description": "boolean" }, "default": "false" },
+    "delimiter": { "type": { "description": "string" }, "default": "','" },
+    "escapeFormulas": { "type": { "description": "boolean" }, "default": "true" },
+    "fields": { "type": { "description": "string[]" } },
+    "fileName": { "type": { "description": "string" }, "default": "document.title" },
+    "getRowsToExport": {
+      "type": { "description": "(params: GridCsvGetRowsToExportParams) =&gt; GridRowId[]" }
+    },
+    "includeColumnGroupsHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "includeHeaders": { "type": { "description": "boolean" }, "default": "true" },
+    "utf8WithBom": { "type": { "description": "boolean" }, "default": "false" }
+  }
+}

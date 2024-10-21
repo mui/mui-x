@@ -18,7 +18,7 @@ export default function FullyCustomSortComparator() {
     () => [
       {
         field: 'dateCreatedCustom',
-        valueGetter: (params) => params.row.dateCreated,
+        valueGetter: (value, row) => row.dateCreated,
         headerName: 'Created on',
         width: 180,
         type: 'date',

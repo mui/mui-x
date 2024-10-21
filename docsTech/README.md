@@ -1,10 +1,6 @@
 # Tech Doc
 
-<p align="center">
-  <a href="https://mui.com/" rel="noopener" target="_blank"><img width="150" src="https://mui.com/static/logo.svg" alt="MUI logo"></a>
-</p>
-
-<h1 align="center">MUI X DataGrid overview</h1>
+<h1 align="center">MUI X DataGrid overview</h1>
 
 Welcome in the documentation for contributors. If you want to use DataGrid components for your project, the [documentation for developers](https://mui.com/x/react-data-grid/getting-started/) is more appropriate.
 Here we will discuss how the code is structured, to simplify codebase navigation, and onboard new contributors.
@@ -17,7 +13,7 @@ Since `@mui/x-data-grid-pro` is an extension of `@mui/x-data-grid`, it imports a
 
 In each package, the most used folders are:
 
-- `components` which contains all the React components. These files are responsible for displaying the data grid and listening for user interactions.
+- `components` which contains all the React components. These files are responsible for displaying the Data Grid and listening for user interactions.
 - `hooks` which contains all the logic of the DataGrid.
   - `hooks/core` defines logics for developers: initialization of the grid, error handling, translations, ...
   - `hooks/utils` defines logics for contributors: manipulating the state, managing events, ...

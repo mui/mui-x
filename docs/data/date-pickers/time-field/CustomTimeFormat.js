@@ -6,27 +6,22 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 export default function CustomTimeFormat() {
-  const [value, setValue] = React.useState(dayjs('2022-04-17T15:30'));
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
         <TimeField
           label="Format with meridiem"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+          defaultValue={dayjs('2022-04-17T15:30')}
           format="hh:mm a"
         />
         <TimeField
           label="Format without meridiem"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+          defaultValue={dayjs('2022-04-17T15:30')}
           format="HH:mm"
         />
         <TimeField
           label="Format with seconds"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+          defaultValue={dayjs('2022-04-17T15:30')}
           format="HH:mm:ss"
         />
       </DemoContainer>

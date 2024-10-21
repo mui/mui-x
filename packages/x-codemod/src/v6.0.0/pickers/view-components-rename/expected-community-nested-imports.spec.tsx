@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import {
   DateCalendar,
@@ -42,6 +43,7 @@ import {
   getDayCalendarSkeletonUtilityClass,
 } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
+// prettier-ignore
 function App() {
   type DateProps = DateCalendarProps<any>;
   type MonthProps = MonthCalendarProps<any>;
@@ -56,12 +58,12 @@ function App() {
   getDayCalendarSkeletonUtilityClass('root');
 
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DateCalendar value={null} onChange={() => {}} />
       <MonthCalendar value={null} onChange={() => {}} />
       <YearCalendar value={null} onChange={() => {}} />
       <TimeClock value={null} onChange={() => {}} />
       <DayCalendarSkeleton />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }

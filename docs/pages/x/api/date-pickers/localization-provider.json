@@ -1,25 +1,34 @@
 {
   "props": {
     "adapterLocale": { "type": { "name": "any" } },
-    "dateAdapter": { "type": { "name": "func" } },
+    "dateAdapter": {
+      "type": { "name": "func" },
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter",
+        "text": "date adapter setup section"
+      }
+    },
     "dateFormats": {
       "type": {
         "name": "shape",
-        "description": "{ dayOfMonth?: string, fullDate?: string, fullDateTime?: string, fullDateTime12h?: string, fullDateTime24h?: string, fullDateWithWeekday?: string, fullTime?: string, fullTime12h?: string, fullTime24h?: string, hours12h?: string, hours24h?: string, keyboardDate?: string, keyboardDateTime?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string, meridiem?: string, minutes?: string, month?: string, monthAndDate?: string, monthAndYear?: string, monthShort?: string, normalDate?: string, normalDateWithWeekday?: string, seconds?: string, shortDate?: string, weekday?: string, weekdayShort?: string, year?: string }"
+        "description": "{ dayOfMonth?: string, dayOfMonthFull?: string, fullDate?: string, fullTime?: string, fullTime12h?: string, fullTime24h?: string, hours12h?: string, hours24h?: string, keyboardDate?: string, keyboardDateTime?: string, keyboardDateTime12h?: string, keyboardDateTime24h?: string, meridiem?: string, minutes?: string, month?: string, monthShort?: string, normalDate?: string, normalDateWithWeekday?: string, seconds?: string, shortDate?: string, weekday?: string, weekdayShort?: string, year?: string }"
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
     "localeText": { "type": { "name": "object" } }
   },
-  "slots": [],
   "name": "LocalizationProvider",
   "imports": [
     "import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';",
     "import { LocalizationProvider } from '@mui/x-date-pickers';",
     "import { LocalizationProvider } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiLocalizationProvider",
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/adapters-locale/\">Date format and localization</a></li>\n<li><a href=\"/x/react-date-pickers/calendar-systems/\">Calendar systems</a></li>\n<li><a href=\"/x/react-date-pickers/localization/\">Translated components</a></li>\n<li><a href=\"/x/react-date-pickers/timezone/\">UTC and timezones</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/adapters-locale/\">Date format and localization</a></li>\n<li><a href=\"/x/react-date-pickers/calendar-systems/\">Calendar systems</a></li>\n<li><a href=\"/x/react-date-pickers/localization/\">Translated components</a></li>\n<li><a href=\"/x/react-date-pickers/timezone/\">UTC and timezones</a></li></ul>",
+  "cssComponent": false
 }

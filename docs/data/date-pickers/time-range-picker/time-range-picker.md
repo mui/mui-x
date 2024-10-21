@@ -8,7 +8,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Time Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
-<p class="description">The Time Range Picker let the user select a range of time.</p>
+<p class="description">The Time Range Picker lets the user select a range of time.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.

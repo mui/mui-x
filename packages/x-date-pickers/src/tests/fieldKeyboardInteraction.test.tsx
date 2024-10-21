@@ -1,26 +1,24 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { userEvent } from '@mui-internal/test-utils';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { fireEvent } from '@mui/internal-test-utils';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
   getTextbox,
   createPickerRenderer,
-  expectInputValue,
+  expectFieldValueV7,
 } from 'test/utils/pickers';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { FieldSectionType, MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   getDateSectionConfigFromFormatToken,
   cleanLeadingZeros,
 } from '../internals/hooks/useField/useField.utils';
 
-const testDate = new Date(2018, 4, 15, 9, 35, 10);
+const testDate = '2018-05-15T09:35:10';
 
-function updateDate<TDate>(
+function updateDate<TDate extends PickerValidDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
   sectionType: FieldSectionType,
@@ -57,10 +55,6 @@ const adapterToTest = [
   'moment-jalaali',
 ] as const;
 
-const theme = createTheme({
-  direction: 'rtl',
-});
-
 describe(`RTL - test arrows navigation`, () => {
   const { render, clock, adapter } = createPickerRenderer({
     clock: 'fake',
@@ -75,75 +69,139 @@ describe(`RTL - test arrows navigation`, () => {
     moment.locale('en');
   });
 
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
   it('should move selected section to the next section respecting RTL order in empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 24);
-
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
+    // Test with v7 input
+    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
+
+    view.selectSection('hours');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
+
+    view.unmount();
+
+    // Test with v6 input
+    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
+
+    const input = getTextbox();
+    view.selectSection('hours');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
     });
   });
 
   it('should move selected section to the previous section respecting RTL order in empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 18);
-
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
+    // Test with v7 input
+    let view = renderWithProps({ enableAccessibleFieldDOMStructure: true }, { direction: 'rtl' });
+
+    view.selectSection('day');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
+
+    view.unmount();
+
+    // Test with v6 input
+    view = renderWithProps({ enableAccessibleFieldDOMStructure: false }, { direction: 'rtl' });
+
+    const input = getTextbox();
+    view.selectSection('day');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
     });
   });
 
   it('should move selected section to the next section respecting RTL order in non-empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 24);
-
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
+    // Test with v7 input
+    let view = renderWithProps(
+      {
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+      },
+      { direction: 'rtl' },
+    );
+
+    view.selectSection('hours');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
+
+    view.unmount();
+
+    // Test with v6 input
+    view = renderWithProps(
+      {
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+        enableAccessibleFieldDOMStructure: false,
+      },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    view.selectSection('hours');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
     });
   });
 
   it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
-    render(
-      <ThemeProvider theme={theme}>
-        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
-      </ThemeProvider>,
-    );
-    const input = getTextbox();
-    clickOnInput(input, 18);
-
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
+    // Test with v7 input
+    let view = renderWithProps(
+      {
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+      },
+      { direction: 'rtl' },
+    );
+
+    view.selectSection('day');
+
     expectedValues.forEach((expectedValue) => {
-      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
-      userEvent.keyPress(input, { key: 'ArrowLeft' });
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
+
+    view.unmount();
+
+    // Test with v6 input
+    view = renderWithProps(
+      {
+        defaultValue: adapter.date('2018-04-25T11:54:00'),
+        enableAccessibleFieldDOMStructure: false,
+      },
+      { direction: 'rtl' },
+    );
+
+    const input = getTextbox();
+    view.selectSection('day');
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent()).to.equal(expectedValue);
+      fireEvent.keyDown(input, { key: 'ArrowLeft' });
     });
   });
 });
@@ -169,20 +227,20 @@ adapterToTest.forEach((adapterName) => {
       }
     });
 
-    const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+    const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
     const cleanValueStr = (
       valueStr: string,
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>,
     ) => {
       if (sectionConfig.contentType === 'digit' && sectionConfig.maxLength != null) {
-        return cleanLeadingZeros(adapter, valueStr, sectionConfig.maxLength);
+        return cleanLeadingZeros(valueStr, sectionConfig.maxLength);
       }
 
       return valueStr;
     };
 
-    const testKeyPress = <TDate extends unknown>({
+    const testKeyPress = <TDate extends PickerValidDate>({
       key,
       format,
       initialValue,
@@ -195,13 +253,16 @@ adapterToTest.forEach((adapterName) => {
       expectedValue: TDate;
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
-      render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = getTextbox();
-      clickOnInput(input, 1);
-      userEvent.keyPress(input, { key });
+      const view = renderWithProps({
+        enableAccessibleFieldDOMStructure: true,
+        defaultValue: initialValue,
+        format,
+      });
+      view.selectSection(sectionConfig.type);
+      fireEvent.keyDown(view.getActiveSection(0), { key });
 
-      expectInputValue(
-        input,
+      expectFieldValueV7(
+        view.getSectionsContainer(),
         cleanValueStr(adapter.formatByString(expectedValue, format), sectionConfig),
       );
     };

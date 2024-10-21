@@ -7,7 +7,7 @@ const originalDocument = global.document;
 global.document = undefined;
 
 const path = require('path');
-const { TSESLint } = require('@typescript-eslint/experimental-utils');
+const { TSESLint } = require('@typescript-eslint/utils');
 const rule = require('./no-direct-state-access');
 
 const ruleTester = new TSESLint.RuleTester({

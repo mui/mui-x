@@ -1,4 +1,4 @@
-import { RangeFieldSection } from '../models/fields';
+import { RangeFieldSection } from '../../models';
 
 export const splitDateRangeSections = (sections: RangeFieldSection[]) => {
   const startDateSections: RangeFieldSection[] = [];

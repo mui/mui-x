@@ -5,11 +5,11 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 function App() {
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DataGrid />
       <DataGridPro />
       <DataGridPremium />
-    </React.Fragment>
+    </React.Fragment>)
   );
 }
 

@@ -1,0 +1,20 @@
+{
+  "props": {
+    "text": { "type": { "name": "string" }, "required": true },
+    "lineHeight": { "type": { "name": "number" } },
+    "needsComputation": { "type": { "name": "bool" }, "default": "false" },
+    "style": { "type": { "name": "object" } }
+  },
+  "name": "ChartsText",
+  "imports": [
+    "import { ChartsText } from '@mui/x-charts/ChartsText';",
+    "import { ChartsText } from '@mui/x-charts';",
+    "import { ChartsText } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsText",
+  "filename": "/packages/x-charts/src/ChartsText/ChartsText.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/axis/\">Charts - Axis</a></li>\n<li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}

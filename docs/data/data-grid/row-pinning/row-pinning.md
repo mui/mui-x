@@ -6,7 +6,7 @@ title: Data Grid - Row pinning
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
-Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the data grid vertically.
+Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the Data Grid vertically.
 
 You can pin rows at the top or bottom of the Data Grid by passing pinned rows data through the `pinnedRows` prop:
 
@@ -30,7 +30,7 @@ Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-defini
 
 :::warning
 Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
-Otherwise, the data grid will re-apply heavy work like sorting and filtering.
+Otherwise, the Data Grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Controlling pinned rows

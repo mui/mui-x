@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
   pickersToolbarTextClasses,
@@ -56,7 +56,7 @@ export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolb
     return (
       <PickersToolbarTextRoot
         ref={ref}
-        className={clsx(className, classes.root)}
+        className={clsx(classes.root, className)}
         component="span"
         {...other}
       >

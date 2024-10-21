@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Getting started
 
-The default locale of MUI is English (United States). If you want to use other locales—follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
 This page focuses on date format localization.
@@ -40,9 +40,23 @@ import 'dayjs/locale/de';
 
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
+:::info
+We support `date-fns` package v2.x, v3.x, and v4.x major versions.
+
+A single adapter cannot work for all `date-fns` versions, because the way functions are exported has been changed in v3.x.
+
+To use `date-fns` v3.x or v4.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+:::
+
 ```tsx
+// with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+// with date-fns v3.x or v4.x
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+// with date-fns v2.x
 import de from 'date-fns/locale/de';
+// with date-fns v3.x or v4.x
+import { de } from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
   {children}
@@ -65,6 +79,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 {{"demo": "LocalizationLuxon.js"}}
 
+:::warning
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+
+👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
+
+Don't hesitate to leave feedback on how you would like the data entry to behave.
+:::
+
 ### With `moment`
 
 For `moment`, import the locale and then pass its name to `LocalizationProvider`:
@@ -80,41 +102,15 @@ import 'moment/locale/de';
 
 {{"demo": "LocalizationMoment.js"}}
 
-:::warning
-Some of the `moment` methods do not support scoped locales.
-For accurate localization, you will have to manually update the global locale before updating it in `LocalizationProvider`.
-
-```tsx
-function App({ children }) {
-  const [locale, setLocale] = React.useState('en-us');
-
-  if (moment.locale() !== locale) {
-    moment.locale(locale);
-  }
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={locale}>
-      <Stack>
-        <Button onClick={() => setLocale('de')}>Switch to German</Button>
-        {children}
-      </Stack>
-    </LocalizationProvider>
-  );
-}
-```
-
-:::
-
 ## Meridiem — 12h/24h format
 
-All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+All the time and datetime components will automatically adjust to the locale's time setting, that is the 12-hour or 24-hour format.
 You can override the default setting with the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
 
 ## Custom formats
 
-:::warning
 The format received by the props described below depends on the date library you are using.
 Please refer to each library's documentation for the full format table:
 
@@ -122,8 +118,6 @@ Please refer to each library's documentation for the full format table:
 - [date-fns](https://date-fns.org/docs/format)
 - [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
 - [Moment.js](https://momentjs.com/docs/#/displaying/format/)
-
-:::
 
 ### Custom field format
 
@@ -155,7 +149,7 @@ Here is the list of the currently supported formats:
 - The month
 
   - ✅ 1-based digit (e.g: `08`)
-  - ✅ Multi-letter values (e.g. `Aug`, `August`)
+  - ✅ Multi-letter values (for example `Aug`, `August`)
   - ❌ 1-letter values (e.g: `A`) because several months are represented with the same letter
 
 - The day of the month
@@ -217,9 +211,28 @@ Placeholders translations depend on locale.
 Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
+You can customize the specific placeholder section translation to your needs.
+All the available placeholder translation methods and their parameters are available in [the source file](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts).
+You can override them using the `localeText` prop defined on the `LocalizationProvider` or on a specific Picker component if you need more fine-grained control.
+
+A common use case is to change the placeholder of the month section to a short letter form (Jan, Feb, etc.).
+The default translation implementation might not be what you want, so you can override it:
+
+```tsx
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  localeText={{
+    fieldMonthPlaceholder: (params) =>
+      params.contentType === 'digit' ? 'MM' : params.format,
+  }}
+>
+  <DatePicker />
+</LocalizationProvider>
+```
+
 ### Custom toolbar format
 
-To customize the format used in the toolbar, use the `toolbarFormat` prop of the toolbar slot.
+To customize the format used in the toolbar, use the `toolbarFormat` prop of the `toolbar` slot.
 
 :::info
 This prop is available on all pickers.
@@ -235,6 +248,7 @@ The default formatter only keeps the first letter of the name and capitalises it
 
 :::warning
 The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.
+:::
 
 :::info
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
@@ -243,3 +257,124 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+### Custom calendar header format
+
+To customize the format used on the calendar header, use the `format` prop of the `calendarHeader` slot.
+
+:::info
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
+:::
+
+{{"demo": "CustomCalendarHeaderFormat.js"}}
+
+## Custom start of week
+
+The Date and Time Pickers are using the week settings provided by your date libraries.
+Each adapter uses its locale to define the start of the week.
+
+If the default start of the week defined in your adapter's locale is not the one you want, you can override it as shown in the following examples.
+
+:::warning
+If you want to update the start of the week after the first render of a component,
+you will have to manually remount your component to apply the new locale configuration.
+
+:::
+
+### With `dayjs`
+
+For `dayjs`, use the `updateLocale` plugin:
+
+```ts
+import updateLocale from 'dayjs/plugin/updateLocale';
+
+dayjs.extend(updateLocale);
+
+// Replace "en" with the name of the locale you want to update.
+dayjs.updateLocale('en', {
+  // Sunday = 0, Monday = 1.
+  weekStart: 1,
+});
+```
+
+### With `date-fns`
+
+For `date-fns`, override the `options.weekStartsOn` of the used locale:
+
+```ts
+import { Locale } from 'date-fns';
+// with date-fns v2.x
+import enUS from 'date-fns/locale/en-US';
+// with date-fns v3.x
+import { enUS } from 'date-fns/locale/en-US';
+
+const customEnLocale: Locale = {
+  ...enUS,
+  options: {
+    ...enUS.options,
+    // Sunday = 0, Monday = 1.
+    weekStartsOn: 1,
+  },
+};
+
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={customEnLocale}>
+```
+
+### With `luxon`
+
+For `luxon`, use the `Settings.defaultWeekSettings` object:
+
+```ts
+import { Settings, Info } from 'luxon';
+
+Settings.defaultWeekSettings = {
+  // Sunday = 7, Monday = 1.
+  firstDay: 1,
+  // Makes sure we don't lose the other information from `defaultWeekSettings`
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::warning
+The [browser API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo) used by Luxon to determine the start of the week in the current locale is not yet supported by Firefox.
+Users on this browser will always see Monday as the start of the week.
+If you want to have the same start of week on all browsers,
+you will have to manually override the `defaultWeekSettings` to set the `firstDay` corresponding to your locale.
+
+For example, when using the `en-US` locale:
+
+```ts
+Settings.defaultWeekSettings = {
+  firstDay: 7,
+  minimalDays: Info.getMinimumDaysInFirstWeek(),
+  weekend: Info.getWeekendWeekdays(),
+};
+```
+
+:::
+
+### With `moment`
+
+For `moment`, use the `moment.updateLocale` method:
+
+```ts
+import moment from 'moment';
+
+// Replace "en" with the name of the locale you want to update.
+moment.updateLocale('en', {
+  week: {
+    // Sunday = 0, Monday = 1.
+    dow: 1,
+  },
+});
+```
+
+## RTL Support
+
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow [this guide](/material-ui/customization/right-to-left/) to use them.
+
+The example below demonstrates how to use an RTL language (Arabic) with some of the Date and Time Pickers components.
+
+{{"demo": "PickersRTL.js"}}

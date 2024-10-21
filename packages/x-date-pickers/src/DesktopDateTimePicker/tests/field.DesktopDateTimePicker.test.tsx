@@ -1,29 +1,53 @@
-import * as React from 'react';
-import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  getTextbox,
+  expectFieldPlaceholderV6,
+  expectFieldValueV7,
+  buildFieldInteractions,
+} from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
 } from '@mui/x-date-pickers/DesktopDateTimePicker';
 
 describe('<DesktopDateTimePicker /> - Field', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer();
+  const { renderWithProps } = buildFieldInteractions({
+    clock,
+    render,
+    Component: DesktopDateTimePicker,
+  });
 
   it('should pass the ampm prop to the field', () => {
-    const { setProps } = render(<DesktopDateTimePicker ampm />);
+    const view = renderWithProps({
+      enableAccessibleFieldDOMStructure: true as const,
+      ampm: true,
+    });
 
-    const input = getTextbox();
-    expectInputPlaceholder(input, 'MM/DD/YYYY hh:mm aa');
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm aa');
 
-    setProps({ ampm: false });
-    expectInputPlaceholder(input, 'MM/DD/YYYY hh:mm');
+    view.setProps({ ampm: false });
+    expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY hh:mm');
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
-    const testFormat = (props: DesktopDateTimePickerProps<any>, expectedFormat: string) => {
-      const { unmount } = render(<DesktopDateTimePicker {...props} />);
+    const testFormat = (props: DesktopDateTimePickerProps<any, any>, expectedFormat: string) => {
+      // Test with v7 input
+      let view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: true as const },
+        { componentFamily: 'picker' },
+      );
+      expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
+      view.unmount();
+
+      // Test with v6 input
+      view = renderWithProps(
+        { ...props, enableAccessibleFieldDOMStructure: false as const },
+        { componentFamily: 'picker' },
+      );
       const input = getTextbox();
-      expectInputPlaceholder(input, expectedFormat);
-      unmount();
+      expectFieldPlaceholderV6(input, expectedFormat);
+      view.unmount();
     };
 
     testFormat({ views: ['day', 'hours', 'minutes'], ampm: false }, 'DD hh:mm');

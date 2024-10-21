@@ -1,7 +1,0 @@
-<DataGrid
-  slots={{
-    loadingOverlay: LinearProgress,
-  }}
-  loading
-  {...data}
-/>

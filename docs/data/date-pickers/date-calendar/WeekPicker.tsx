@@ -26,10 +26,16 @@ const CustomPickersDay = styled(PickersDay, {
     },
   }),
   ...(isHovered && {
-    backgroundColor: theme.palette.primary[theme.palette.mode],
+    backgroundColor: theme.palette.primary.light,
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary[theme.palette.mode],
+      backgroundColor: theme.palette.primary.light,
     },
+    ...theme.applyStyles('dark', {
+      backgroundColor: theme.palette.primary.dark,
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.dark,
+      },
+    }),
   }),
   ...(day.day() === 0 && {
     borderTopLeftRadius: '50%',
@@ -89,7 +95,7 @@ export default function WeekPicker() {
               hoveredDay,
               onPointerEnter: () => setHoveredDay(ownerState.day),
               onPointerLeave: () => setHoveredDay(null),
-            } as any),
+            }) as any,
         }}
       />
     </LocalizationProvider>

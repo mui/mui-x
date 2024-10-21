@@ -1,0 +1,42 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "bottomAxis": {
+      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    },
+    "leftAxis": {
+      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "rightAxis": {
+      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "topAxis": {
+      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
+    }
+  },
+  "classDescriptions": {
+    "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
+    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
+    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group containing the axis label"
+    },
+    "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
+    "line": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main line element"
+    },
+    "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" },
+    "root": { "description": "Styles applied to the root element." },
+    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
+    "tickContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "group including the tick and its label"
+    },
+    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
+    "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
+  }
+}

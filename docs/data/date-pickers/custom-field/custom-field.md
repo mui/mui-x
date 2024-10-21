@@ -3,11 +3,16 @@ productId: x-date-pickers
 title: Date and Time Pickers - Custom field
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
+components: PickersSectionList, PickersTextField
 ---
 
 # Custom field
 
 <p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
+
+:::success
+See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+:::
 
 ## Customize the default field
 
@@ -17,7 +22,7 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Customize the separator of multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
 
@@ -38,7 +43,7 @@ You can pass the single input fields to the range picker to use it for keyboard 
 If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
 Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
 
-{{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
+{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
 
 You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
 
@@ -48,6 +53,12 @@ You can manually add an `endAdornment` if you want your range picker to look exa
 This adornment is purely decorative, the focus remains on the field when the picker is opened.
 :::
 
+### Change the separator of range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+You can use the `dateSeparator` prop to change the separator rendered between the start and end dates:
+
+{{"demo": "RangeFieldDateSeparator.js"}}
+
 ### Change the format density
 
 You can control the field format spacing using the `formatDensity` prop.
@@ -55,29 +66,90 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 {{"demo": "FieldFormatDensity.js"}}
 
-## Commonly used custom field
+## Usage with Material UI
 
-### Using another input
+### Using Material `TextField`
 
-#### With the Joy UI input
+You can import the `TextField` component to create custom wrappers:
 
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+{{"demo": "MaterialV6FieldWrapped.js"}}
 
-:::info
-A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
+:::success
+This approach is only recommended if you need complex customizations on your `TextField`,
+or if you already have a wrapper also used outside the Date and Time Pickers.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
 :::
 
-{{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
+### Using Material `PickersTextField`
 
-#### With the browser input
+Pass the `enableAccessibleFieldDOMStructure` to any Field or Picker component to enable the accessible DOM structure:
 
-You can also use any other input:
+{{"demo": "MaterialV7Field.js"}}
 
-{{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
+:::success
+Learn more about the [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
+:::
+
+You can import the `PickersTextField` component to create custom wrappers:
+
+{{"demo": "MaterialV7FieldWrapped.js"}}
+
+:::success
+This approach is only recommended if you need complex customizations on your `PickersTextField`.
+
+If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
+:::
+
+## Usage with Joy UI
+
+### Using Joy `Input`
+
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
+
+:::info
+A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
+:::
+
+{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
+
+### Using Joy `PickersTextField`
+
+:::warning
+This component is not available yet.
+:::
+
+## Usage with an unstyled input
+
+### Using the browser input
+
+{{"demo": "BrowserV6Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV6SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV6MultiInputRangeField.js", "defaultCodeOpen": false}}
 
 :::warning
 You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
+
+### Using custom `PickersTextField`
+
+:::success
+Learn more about the accessible DOM structure and its difference compared to the current one on the [dedicated doc section](/x/react-date-pickers/fields/#accessible-dom-structure).
+:::
+
+{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+
+{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
+
+## Usage with another UI
 
 ### Using an `Autocomplete`
 
@@ -86,10 +158,17 @@ you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a read-only `TextField`
+
+If you want users to select a value exclusively through the views
+but you still want the UI to look like a `TextField`, you can replace the field with a read-only `TextField`:
+
+{{"demo": "custom-behavior/ReadOnlyMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a `Button`
 
-If you only want to allow the user to pick a value through the views,
-you can replace the field with a `Button`:
+If you want users to select a value exclusively through the views
+and you don't want the UI to look like a `TextField`, you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 
@@ -105,20 +184,22 @@ On the examples below, you can see that the typing of the props received by a cu
 
 ```tsx
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs>, // The headless field props
+  extends UseDateFieldProps<Dayjs, false>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false, // `true` for `enableAccessibleFieldDOMStructure`
       DateValidationError
     > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
-  extends UseDateTimeFieldProps<Dayjs>, // The headless field props
+  extends UseDateTimeFieldProps<Dayjs, false>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
       Dayjs,
       FieldSection,
+      false, // `true` for `enableAccessibleFieldDOMStructure`
       DateTimeValidationError
     > {} // The DOM field props
 ```

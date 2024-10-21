@@ -1,10 +1,11 @@
-import createDescribe from '@mui-internal/test-utils/createDescribe';
-import { MuiPickersAdapter } from '@mui/x-date-pickers';
+import createDescribe from '@mui/internal-test-utils/createDescribe';
+import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
+import { testFormat } from './testFormat';
 import { DescribeHijriAdapterParams } from './describeHijriAdapter.types';
 
-function innerJalaliDescribeAdapter<TDate>(
+function innerJalaliDescribeAdapter<TDate extends PickerValidDate>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeHijriAdapterParams,
 ) {
@@ -26,6 +27,7 @@ function innerJalaliDescribeAdapter<TDate>(
 
     testCalculations(testSuitParams);
     testLocalization(testSuitParams);
+    testFormat(testSuitParams);
   });
 }
 

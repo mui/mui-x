@@ -19,12 +19,6 @@ export interface UseTreeViewInstanceEventsInstance {
   $$publishEvent: (eventName: string, params: any) => void;
 }
 
-export type UseTreeViewInstanceEventsSignature = TreeViewPluginSignature<
-  {},
-  {},
-  UseTreeViewInstanceEventsInstance,
-  {},
-  {},
-  never,
-  []
->;
+export type UseTreeViewInstanceEventsSignature = TreeViewPluginSignature<{
+  instance: UseTreeViewInstanceEventsInstance;
+}>;

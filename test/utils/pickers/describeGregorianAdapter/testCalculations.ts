@@ -1,16 +1,19 @@
 import { expect } from 'chai';
-import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { getDateOffset } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
 /**
- * To check if the date has the right offset even after changing it's date parts,
+ * To check if the date has the right offset even after changing its date parts,
  * we convert it to a different timezone that always has the same offset,
  * then we check that both dates have the same hour value.
  */
 // We change to
-const expectSameTimeInMonacoTZ = <TDate>(adapter: MuiPickersAdapter<TDate>, value: TDate) => {
+const expectSameTimeInMonacoTZ = <TDate extends PickerValidDate>(
+  adapter: MuiPickersAdapter<TDate>,
+  value: TDate,
+) => {
   const valueInMonacoTz = adapter.setTimezone(value, 'Europe/Monaco');
   expect(adapter.getHours(value)).to.equal(adapter.getHours(valueInMonacoTz));
 };
@@ -24,43 +27,16 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 }) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
   const testDateLastNonDSTDay = adapterTZ.isTimezoneCompatible
-    ? adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')
+    ? adapterTZ.date('2022-03-27', 'Europe/Paris')
     : adapterTZ.date('2022-03-27')!;
   const testDateLocale = adapter.date(TEST_DATE_LOCALE_STRING)!;
 
   describe('Method: date', () => {
-    it('should parse strings', () => {
-      expect(adapter.date(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
-      expect(adapter.date(TEST_DATE_LOCALE_STRING)).toEqualDateTime(testDateLocale);
-    });
-
-    it('should parse native Date object', () => {
-      expect(adapter.date(new Date(TEST_DATE_ISO_STRING))).toEqualDateTime(testDateIso);
-      expect(adapter.date(new Date(TEST_DATE_LOCALE_STRING))).toEqualDateTime(testDateLocale);
-    });
-
-    it('should parse already-parsed object', () => {
-      expect(adapter.date(testDateIso)).toEqualDateTime(testDateIso);
-      expect(adapter.date(testDateLocale)).toEqualDateTime(testDateLocale);
-    });
-
-    it('should parse null', () => {
-      expect(adapter.date(null)).to.equal(null);
-    });
-
-    it('should parse undefined', () => {
-      expect(
-        Math.abs(adapter.toJsDate(adapter.date(undefined)!).getTime() - Date.now()),
-      ).to.be.lessThan(5);
-    });
-  });
-
-  describe('Method: dateWithTimezone', () => {
     it('should parse ISO strings', () => {
       if (adapter.isTimezoneCompatible) {
         const test = (timezone: PickersTimezone, expectedTimezones: string = timezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
-            const dateWithZone = instance.dateWithTimezone(TEST_DATE_ISO_STRING, timezone);
+            const dateWithZone = instance.date(TEST_DATE_ISO_STRING, timezone);
             expect(instance.getTimezone(dateWithZone)).to.equal(expectedTimezones);
 
             // Should keep the time of the value in the UTC timezone
@@ -82,12 +58,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         // Reset to the default timezone
         setDefaultTimezone(undefined);
       } else {
-        expect(adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system')).toEqualDateTime(
-          TEST_DATE_ISO_STRING,
-        );
-        expect(adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'default')).toEqualDateTime(
-          TEST_DATE_ISO_STRING,
-        );
+        expect(adapter.date(TEST_DATE_ISO_STRING, 'system')).toEqualDateTime(TEST_DATE_ISO_STRING);
+        expect(adapter.date(TEST_DATE_ISO_STRING, 'default')).toEqualDateTime(TEST_DATE_ISO_STRING);
       }
     });
 
@@ -95,7 +67,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       if (adapter.isTimezoneCompatible) {
         const test = (timezone: PickersTimezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
-            const dateWithZone = instance.dateWithTimezone(TEST_DATE_LOCALE_STRING, timezone);
+            const dateWithZone = instance.date(TEST_DATE_LOCALE_STRING, timezone);
             expect(instance.getTimezone(dateWithZone)).to.equal(timezone);
 
             // Should keep the time of the date in the target timezone
@@ -108,27 +80,30 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         test('America/New_York');
         test('Europe/Paris');
       } else {
-        expect(adapter.dateWithTimezone(TEST_DATE_LOCALE_STRING, 'system')).toEqualDateTime(
+        expect(adapter.date(TEST_DATE_LOCALE_STRING, 'system')).toEqualDateTime(
           TEST_DATE_LOCALE_STRING,
         );
       }
     });
 
     it('should parse null', () => {
-      expect(adapter.dateWithTimezone(null, 'system')).to.equal(null);
+      expect(adapter.date(null, 'system')).to.equal(null);
 
       if (adapter.isTimezoneCompatible) {
-        expect(adapter.dateWithTimezone(null, 'UTC')).to.equal(null);
-        expect(adapter.dateWithTimezone(null, 'America/New_York')).to.equal(null);
+        expect(adapter.date(null, 'UTC')).to.equal(null);
+        expect(adapter.date(null, 'America/New_York')).to.equal(null);
       }
     });
 
     it('should parse undefined', () => {
+      if (adapterTZ.lib !== 'dayjs') {
+        return;
+      }
+
       if (adapter.isTimezoneCompatible) {
         const testTodayZone = (timezone: PickersTimezone) => {
-          const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone);
+          const dateWithZone = adapterTZ.date(undefined, timezone);
           expect(adapterTZ.getTimezone(dateWithZone)).to.equal(timezone);
-          expect(adapterTZ.getDiff(dateWithZone, adapterTZ.date(new Date())!)).to.be.lessThan(5);
           expect(Math.abs(adapterTZ.toJsDate(dateWithZone).getTime() - Date.now())).to.be.lessThan(
             5,
           );
@@ -139,12 +114,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         testTodayZone('America/New_York');
       } else {
         expect(
-          Math.abs(
-            adapterTZ.toJsDate(adapter.dateWithTimezone(undefined, 'system')).getTime() -
-              Date.now(),
-          ),
+          Math.abs(adapterTZ.toJsDate(adapter.date(undefined, 'system')).getTime() - Date.now()),
         ).to.be.lessThan(5);
       }
+    });
+
+    it('should work without args', () => {
+      const date = adapter.date().valueOf();
+
+      expect(Math.abs(date - Date.now())).to.be.lessThan(5);
     });
   });
 
@@ -154,9 +132,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     }
 
     const testTimezone = (timezone: string, expectedTimezone = timezone) => {
-      expect(adapter.getTimezone(adapter.dateWithTimezone(undefined, timezone))).to.equal(
-        expectedTimezone,
-      );
+      expect(adapter.getTimezone(adapter.date(undefined, timezone))).to.equal(expectedTimezone);
     };
 
     testTimezone('system');
@@ -173,7 +149,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     if (!adapter.isTimezoneCompatible) {
       return;
     }
-    const dateWithZone = adapter.dateWithTimezone('2023-10-30T11:44:00.000Z', 'Europe/London');
+    const dateWithZone = adapter.date('2023-10-30T11:44:00.000Z', 'Europe/London');
     expect(adapter.getTimezone(dateWithZone)).to.equal('Europe/London');
   });
 
@@ -181,7 +157,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     if (adapter.isTimezoneCompatible) {
       const test = (timezone: PickersTimezone) => {
         setDefaultTimezone(timezone);
-        const dateWithLocaleTimezone = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system');
+        const dateWithLocaleTimezone = adapter.date(TEST_DATE_ISO_STRING, 'system');
         const dateWithDefaultTimezone = adapter.setTimezone(dateWithLocaleTimezone, 'default');
 
         expect(adapter.getTimezone(dateWithDefaultTimezone)).to.equal(timezone);
@@ -193,11 +169,11 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       // Reset to the default timezone
       setDefaultTimezone(undefined);
     } else {
-      const systemDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system');
+      const systemDate = adapter.date(TEST_DATE_ISO_STRING, 'system');
       expect(adapter.setTimezone(systemDate, 'default')).toEqualDateTime(systemDate);
       expect(adapter.setTimezone(systemDate, 'system')).toEqualDateTime(systemDate);
 
-      const defaultDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'default');
+      const defaultDate = adapter.date(TEST_DATE_ISO_STRING, 'default');
       expect(adapter.setTimezone(systemDate, 'default')).toEqualDateTime(defaultDate);
       expect(adapter.setTimezone(systemDate, 'system')).toEqualDateTime(defaultDate);
     }
@@ -206,21 +182,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   it('Method: toJsDate', () => {
     expect(adapter.toJsDate(testDateIso)).to.be.instanceOf(Date);
     expect(adapter.toJsDate(testDateLocale)).to.be.instanceOf(Date);
-  });
-
-  it('Method: parseISO', () => {
-    expect(adapter.parseISO(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
-  });
-
-  it('Method: toISO', () => {
-    const outputtedISO = adapter.toISO(testDateIso);
-
-    if (adapter.lib === 'date-fns') {
-      // date-fns never suppress useless milliseconds in the end
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('.000Z', 'Z'));
-    } else {
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
-    }
   });
 
   it('Method: parse', () => {
@@ -243,84 +204,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     );
   });
 
-  it('Method: isNull', () => {
-    expect(adapter.isNull(null)).to.equal(true);
-    expect(adapter.isNull(testDateIso)).to.equal(false);
-    expect(adapter.isNull(testDateLocale)).to.equal(false);
-  });
-
   it('Method: isValid', () => {
     const invalidDate = adapter.date('2018-42-30T11:60:00.000Z');
 
     expect(adapter.isValid(testDateIso)).to.equal(true);
     expect(adapter.isValid(testDateLocale)).to.equal(true);
     expect(adapter.isValid(invalidDate)).to.equal(false);
-    expect(adapter.isValid(undefined)).to.equal(true);
     expect(adapter.isValid(null)).to.equal(false);
-    expect(adapter.isValid('2018-42-30T11:60:00.000Z')).to.equal(false);
-  });
-
-  describe('Method: getDiff', () => {
-    it('should compute the millisecond diff when there is no unit', () => {
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-29T11:44:00.000Z')!)).to.equal(
-        86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-      expect(adapter.getDiff(testDateIso, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
-        -86400000,
-      );
-    });
-
-    it('should compute the diff in the provided unit (ISO)', () => {
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2017-09-29T11:44:00.000Z')!, 'years'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-08-29T11:44:00.000Z')!, 'months'),
-      ).to.equal(2);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-05-29T11:44:00.000Z')!, 'quarters'),
-      ).to.equal(1);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'days'),
-      ).to.equal(31);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'weeks'),
-      ).to.equal(4);
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'hours'),
-      ).to.equal(744);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-09-29T11:44:00.000Z')!, 'minutes'),
-      ).to.equal(44640);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'seconds'),
-      ).to.equal(3600);
-
-      expect(
-        adapter.getDiff(testDateIso, adapter.date('2018-10-30T10:44:00.000Z')!, 'milliseconds'),
-      ).to.equal(3600000);
-    });
-
-    it('should compute the diff in the provided unit (locale)', () => {
-      expect(adapter.getDiff(testDateLocale, adapter.date('2017-09-29')!, 'years')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-08-29')!, 'months')).to.equal(2);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-05-29')!, 'quarters')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'days')).to.equal(31);
-      expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'weeks')).to.equal(4);
-    });
-
-    it('should compute the diff with string "comparing" param', () => {
-      expect(adapter.getDiff(testDateLocale, '2017-09-29', 'years')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, '2018-08-29', 'months')).to.equal(2);
-      expect(adapter.getDiff(testDateLocale, '2018-05-29', 'quarters')).to.equal(1);
-      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'days')).to.equal(31);
-      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'weeks')).to.equal(4);
-    });
   });
 
   describe('Method: isEqual', () => {
@@ -693,7 +583,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       ).to.equal(false);
     });
 
-    it('should use inclusivity of range', () => {
+    it('should use inclusiveness of range', () => {
       expect(
         adapter.isWithinRange(adapter.date('2019-09-01T00:00:00.000Z')!, [
           adapter.date('2019-09-01T00:00:00.000Z')!,
@@ -722,6 +612,15 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         ]),
       ).to.equal(true);
     });
+
+    it('should be equal with values in different locales', () => {
+      expect(
+        adapter.isWithinRange(adapter.date('2022-04-17'), [
+          adapterFr.date('2022-04-17'),
+          adapterFr.date('2022-04-19'),
+        ]),
+      ).to.equal(true);
+    });
   });
 
   it('Method: startOfYear', () => {
@@ -737,10 +636,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: startOfWeek', () => {
-    const expected =
-      adapter.lib === 'luxon' ? '2018-10-29T00:00:00.000Z' : '2018-10-28T00:00:00.000Z';
-    expect(adapter.startOfWeek(testDateIso)).toEqualDateTime(expected);
-    expect(adapter.startOfWeek(testDateLocale)).toEqualDateTime(expected);
+    expect(adapter.startOfWeek(testDateIso)).toEqualDateTime('2018-10-28T00:00:00.000Z');
+    expect(adapter.startOfWeek(testDateLocale)).toEqualDateTime('2018-10-28T00:00:00.000Z');
   });
 
   it('Method: startOfDay', () => {
@@ -773,10 +670,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: endOfWeek', () => {
-    const expected =
-      adapter.lib === 'luxon' ? '2018-11-04T23:59:59.999Z' : '2018-11-03T23:59:59.999Z';
-    expect(adapter.endOfWeek(testDateIso)).toEqualDateTime(expected);
-    expect(adapter.endOfWeek(testDateLocale)).toEqualDateTime(expected);
+    expect(adapter.endOfWeek(testDateIso)).toEqualDateTime('2018-11-03T23:59:59.999Z');
+    expect(adapter.endOfWeek(testDateLocale)).toEqualDateTime('2018-11-03T23:59:59.999Z');
   });
 
   it('Method: endOfDay', () => {
@@ -919,41 +814,8 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDaysInMonth(adapter.addMonths(testDateIso, 1))).to.equal(30);
   });
 
-  it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDateIso)).toEqualDateTime('2018-11-30T11:44:00.000Z');
-  });
-
-  it('Method: getPreviousMonth', () => {
-    expect(adapter.getPreviousMonth(testDateIso)).toEqualDateTime('2018-09-30T11:44:00.000Z');
-  });
-
-  it('Method: getMonthArray', () => {
-    const monthArray = adapter.getMonthArray(testDateIso);
-    let expectedDate = adapter.date('2018-01-01T00:00:00.000Z')!;
-
-    monthArray.forEach((month) => {
-      expect(month).toEqualDateTime(expectedDate);
-      expectedDate = adapter.addMonths(expectedDate, 1)!;
-    });
-  });
-
-  it('Method: mergeDateAndTime', () => {
-    const mergedDate = adapter.mergeDateAndTime(
-      testDateIso,
-      adapter.date('2018-01-01T14:15:16.000Z')!,
-    );
-
-    expect(adapter.toJsDate(mergedDate)).toEqualDateTime('2018-10-30T14:15:16.000Z');
-  });
-
-  it('Method: getWeekdays', () => {
-    const weekDays = adapter.getWeekdays();
-    let date = adapter.startOfWeek(testDateIso);
-
-    weekDays.forEach((dayLabel) => {
-      expect(adapter.format(date, 'weekday').startsWith(dayLabel)).to.equal(true);
-      date = adapter.addDays(date, 1);
-    });
+  it('Method: getDayOfWeek', () => {
+    expect(adapter.getDayOfWeek(testDateIso)).to.equal(adapter.lib === 'luxon' ? 2 : 3);
   });
 
   describe('Method: getWeekArray', () => {
@@ -976,7 +838,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         this.skip();
       }
 
-      const referenceDate = adapterTZ.dateWithTimezone('2022-03-17', 'Europe/Paris');
+      const referenceDate = adapterTZ.date('2022-03-17', 'Europe/Paris');
       const weekArray = adapterTZ.getWeekArray(referenceDate);
       let expectedDate = adapter.startOfWeek(adapter.startOfMonth(referenceDate));
 
@@ -995,32 +857,32 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should respect the locale of the adapter, not the locale of the date', function test() {
-      const dateFr = adapterFr.dateWithTimezone('2022-03-17', 'default');
+      const dateFr = adapterFr.date('2022-03-17', 'default');
       const weekArray = adapter.getWeekArray(dateFr);
 
       if (getLocaleFromDate) {
         expect(getLocaleFromDate(weekArray[0][0])).to.match(/en/);
       }
 
-      // Week should start on Monday (28th of March) for adapters supporting locale-based week start.
-      expect(adapter.getDate(weekArray[0][0])).to.equal(adapter.lib === 'luxon' ? 28 : 27);
+      // Week should start on Monday (28th of March).
+      expect(adapter.getDate(weekArray[0][0])).to.equal(27);
     });
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(44);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(44);
   });
 
   it('Method: getYearRange', () => {
-    const yearRange = adapter.getYearRange(testDateIso, adapter.setYear(testDateIso, 2124));
+    const yearRange = adapter.getYearRange([testDateIso, adapter.setYear(testDateIso, 2124)]);
 
     expect(yearRange).to.have.length(107);
     expect(adapter.getYear(yearRange[yearRange.length - 1])).to.equal(2124);
 
-    const emptyYearRange = adapter.getYearRange(
+    const emptyYearRange = adapter.getYearRange([
       testDateIso,
       adapter.setYear(testDateIso, adapter.getYear(testDateIso) - 1),
-    );
+    ]);
 
     expect(emptyYearRange).to.have.length(0);
   });

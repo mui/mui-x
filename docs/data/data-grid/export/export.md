@@ -65,7 +65,7 @@ In the following example, the print export is disabled.
 
 ## Exported columns
 
-By default, the export will only contain the visible columns of the data grid.
+By default, the export will only contain the visible columns of the Data Grid.
 There are a few ways to include or hide other columns.
 
 - Set the `disableExport` attribute to `true` in `GridColDef` for columns you don't want to be exported.
@@ -88,16 +88,7 @@ There are a few ways to include or hide other columns.
 
 ## Exported rows
 
-### Print export
-
-The print export always prints all rows regardless of whether or not some rows are selected.
-To export only selected rows via print you can use the `getRowsToExport` function.
-
-{{"demo": "PrintExportSelectedRows.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### CSV and Excel export
-
-By default, the data grid exports the selected rows if there are any.
+By default, the Data Grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 ### Customizing the rows to export
@@ -131,7 +122,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
   columns={[
     {
       field: 'progress',
-      valueFormatter: ({ value }) => `${value * 100}%`,
+      valueFormatter: (value) => `${value * 100}%`,
       renderCell: ({ value }) => <ProgressBar value={value} />,
     },
   ]}
@@ -153,14 +144,29 @@ For more details on these options, please visit the [`csvOptions` API page](/x/a
 />
 ```
 
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the CSV file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGrid slotProps={{ toolbar: { csvOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport csvOptions={{ escapeFormulas: false }} />
+```
+
 ## Print export
 
-### Modify the data grid style
+### Modify the Data Grid style
 
-By default, the printed grid is equivalent to printing a page containing only the data grid.
+By default, the printed grid is equivalent to printing a page containing only the Data Grid.
 To modify the styles used for printing, such as colors, you can either use the `@media print` media query or the `pageStyle` property of `printOptions`.
 
-For example, if the data grid is in dark mode, the text color will be inappropriate for printing (too light).
+For example, if the Data Grid is in dark mode, the text color will be inappropriate for printing (too light).
 
 With media query, you have to start your `sx` object with `@media print` key, such that all the style inside are only applied when printing.
 
@@ -307,10 +313,10 @@ function exceljsPostProcess({ worksheet }) {
 />;
 ```
 
-Since `exceljsPreProcess` is applied before adding the content of the data grid, you can use it to add some informative rows on top of the document.
-The content of the data grid will start on the next row after those added by `exceljsPreProcess`.
+Since `exceljsPreProcess` is applied before adding the content of the Data Grid, you can use it to add some informative rows on top of the document.
+The content of the Data Grid will start on the next row after those added by `exceljsPreProcess`.
 
-To customize the rows after the data grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
+To customize the rows after the Data Grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
 
 In the following demo, both methods are used to set a custom header and a custom footer.
 
@@ -320,7 +326,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 :::warning
 This feature only works with `@mui/styled-engine` v5.11.8 or newer.
-Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
 :::
 
 Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
@@ -404,9 +410,24 @@ setupExcelExportWebWorker({
 
 :::
 
+### Escape formulas
+
+By default, the formulas in the cells are escaped.
+This is to prevent the formulas from being executed when [the file is opened in Excel](https://owasp.org/www-community/attacks/CSV_Injection).
+
+If you want to keep the formulas working, you can set the `escapeFormulas` option to `false`.
+
+```jsx
+<DataGridPremium slotProps={{ toolbar: { excelOptions: { escapeFormulas: false } } }} />
+
+// or
+
+<GridToolbarExport excelOptions={{ escapeFormulas: false }} />
+```
+
 ## Clipboard
 
-The clipboard export allows you to copy the content of the data grid to the clipboard.
+The clipboard export allows you to copy the content of the Data Grid to the clipboard.
 For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
 
 ## apiRef
@@ -414,7 +435,7 @@ For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#c
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the data grid.
+Only use this API as the last option. Give preference to the props to control the Data Grid.
 :::
 
 ### CSV

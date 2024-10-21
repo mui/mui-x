@@ -1,12 +1,22 @@
 {
   "props": {},
-  "slots": [],
   "name": "LineHighlightElement",
   "imports": [
     "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
-    "import { LineHighlightElement } from '@mui/x-charts';"
+    "import { LineHighlightElement } from '@mui/x-charts';",
+    "import { LineHighlightElement } from '@mui/x-charts-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiLineHighlightElement" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiLineHighlightElement-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiLineHighlightElement",
   "filename": "/packages/x-charts/src/LineChart/LineHighlightElement.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demonstration</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demonstration</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
 }

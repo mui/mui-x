@@ -1,27 +1,21 @@
 import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
-import type { FieldSection } from '../../models';
+import { FieldSection, PickerValidDate } from '../../models';
+import type { ExportedUseClearableFieldProps } from '../../hooks/useClearableField';
 
-export interface BaseFieldProps<TValue, TDate, TSection extends FieldSection, TError>
-  extends Omit<UseFieldInternalProps<TValue, TDate, TSection, TError>, 'format'> {
+export interface BaseFieldProps<
+  TValue,
+  TDate extends PickerValidDate,
+  TSection extends FieldSection,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TError,
+> extends Omit<
+      UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      'format'
+    >,
+    ExportedUseClearableFieldProps {
   className?: string;
   format?: string;
   disabled?: boolean;
   ref?: React.Ref<HTMLDivElement>;
 }
-
-export interface FieldsTextFieldProps
-  extends Omit<
-    TextFieldProps,
-    | 'autoComplete'
-    | 'error'
-    | 'maxRows'
-    | 'minRows'
-    | 'multiline'
-    | 'placeholder'
-    | 'rows'
-    | 'select'
-    | 'SelectProps'
-    | 'type'
-  > {}

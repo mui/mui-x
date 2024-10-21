@@ -1,25 +1,25 @@
 import * as React from 'react';
 import {
   TreeViewAnyPluginSignature,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
   TreeViewPlugin,
-  ConvertPluginsIntoSignatures,
-  MergePluginsProperty,
 } from '../models';
+import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
- * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
+ * The controlled models are never stored in the state, and the state is only updated if the model is not controlled.
  */
-export const useTreeViewModels = <
-  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
->(
-  plugins: TPlugins,
-  props: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
+export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
+  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>,
+  props: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>,
 ) => {
+  type DefaultizedParams = MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
+
   const modelsRef = React.useRef<{
     [modelName: string]: {
-      controlledProp: keyof typeof props;
-      defaultProp: keyof typeof props;
+      getDefaultValue: (params: DefaultizedParams) => any;
       isControlled: boolean;
     };
   }>({});
@@ -27,15 +27,14 @@ export const useTreeViewModels = <
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
     const initialState: { [modelName: string]: any } = {};
 
-    plugins.forEach((plugin) => {
+    plugins.forEach((plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
       if (plugin.models) {
-        Object.entries(plugin.models).forEach(([modelName, model]) => {
+        Object.entries(plugin.models).forEach(([modelName, modelInitializer]) => {
           modelsRef.current[modelName] = {
-            controlledProp: model.controlledProp as keyof typeof props,
-            defaultProp: model.defaultProp as keyof typeof props,
-            isControlled: props[model.controlledProp as keyof typeof props] !== undefined,
+            isControlled: props[modelName as keyof DefaultizedParams] !== undefined,
+            getDefaultValue: modelInitializer.getDefaultValue,
           };
-          initialState[modelName] = props[model.defaultProp as keyof typeof props];
+          initialState[modelName] = modelInitializer.getDefaultValue(props);
         });
       }
     });
@@ -45,13 +44,13 @@ export const useTreeViewModels = <
 
   const models = Object.fromEntries(
     Object.entries(modelsRef.current).map(([modelName, model]) => {
-      const value = model.isControlled ? props[model.controlledProp] : modelsState[modelName];
+      const value = props[modelName as keyof DefaultizedParams] ?? modelsState[modelName];
 
       return [
         modelName,
         {
           value,
-          setValue: (newValue: any) => {
+          setControlledValue: (newValue: any) => {
             if (!model.isControlled) {
               setModelsState((prevState) => ({
                 ...prevState,
@@ -62,20 +61,20 @@ export const useTreeViewModels = <
         },
       ];
     }),
-  ) as MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'models'>;
+  ) as MergeSignaturesProperty<TSignatures, 'models'>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     Object.entries(modelsRef.current).forEach(([modelName, model]) => {
-      const controlled = props[model.controlledProp];
-      const defaultProp = props[model.defaultProp];
+      const controlled = props[modelName as keyof DefaultizedParams];
+      const newDefaultValue = model.getDefaultValue(props);
 
       React.useEffect(() => {
         if (model.isControlled !== (controlled !== undefined)) {
           console.error(
             [
-              `MUI: A component is changing the ${
+              `MUI X: A component is changing the ${
                 model.isControlled ? '' : 'un'
               }controlled ${modelName} state of TreeView to be ${
                 model.isControlled ? 'un' : ''
@@ -90,18 +89,18 @@ export const useTreeViewModels = <
         }
       }, [controlled]);
 
-      const { current: defaultValue } = React.useRef(defaultProp);
+      const { current: defaultValue } = React.useRef(newDefaultValue);
 
       React.useEffect(() => {
-        if (!model.isControlled && defaultValue !== defaultProp) {
+        if (!model.isControlled && defaultValue !== newDefaultValue) {
           console.error(
             [
-              `MUI: A component is changing the default ${modelName} state of an uncontrolled TreeView after being initialized. ` +
+              `MUI X: A component is changing the default ${modelName} state of an uncontrolled TreeView after being initialized. ` +
                 `To suppress this warning opt to use a controlled TreeView.`,
             ].join('\n'),
           );
         }
-      }, [JSON.stringify(defaultValue)]);
+      }, [JSON.stringify(newDefaultValue)]);
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */

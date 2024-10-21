@@ -1,27 +1,18 @@
 import * as React from 'react';
-import { describeConformance } from '@mui-internal/test-utils';
 import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
-import { createPickerRenderer, wrapPickerMount, describeRangeValidation } from 'test/utils/pickers';
+import { createPickerRenderer, describeRangeValidation } from 'test/utils/pickers';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<SingleInputTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<SingleInputTimeRangeField />, () => ({
+  describeConformance(<SingleInputTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,
     muiName: 'MuiSingleInputTimeRangeField',
-    wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: [
-      'reactTestRenderer',
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeRangeValidation(SingleInputTimeRangeField, () => ({

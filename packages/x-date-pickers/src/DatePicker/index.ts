@@ -1,8 +1,9 @@
 export { DatePicker } from './DatePicker';
 export type {
   DatePickerProps,
-  DatePickerSlotsComponents,
-  DatePickerSlotsComponentsProps,
+  DatePickerSlots,
+  DatePickerSlotProps,
+  DatePickerFieldProps,
 } from './DatePicker.types';
 
 export { DatePickerToolbar } from './DatePickerToolbar';

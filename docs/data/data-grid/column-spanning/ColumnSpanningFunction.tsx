@@ -50,7 +50,7 @@ const columns: GridColDef<Row>[] = [
     headerName: 'Item/Description',
     ...baseColumnOptions,
     flex: 3,
-    colSpan: ({ row }) => {
+    colSpan: (value, row) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TOTAL') {
         return 3;
       }
@@ -59,7 +59,7 @@ const columns: GridColDef<Row>[] = [
       }
       return undefined;
     },
-    valueGetter: ({ value, row }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'SUBTOTAL' || row.id === 'TAX' || row.id === 'TOTAL') {
         return row.label;
       }
@@ -78,7 +78,7 @@ const columns: GridColDef<Row>[] = [
     headerName: 'Price',
     flex: 1,
     ...baseColumnOptions,
-    valueGetter: ({ row, value }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'TAX') {
         return `${row.taxRate}%`;
       }
@@ -90,7 +90,7 @@ const columns: GridColDef<Row>[] = [
     headerName: 'Total',
     flex: 1,
     ...baseColumnOptions,
-    valueGetter: ({ row }) => {
+    valueGetter: (value, row) => {
       if (row.id === 'SUBTOTAL') {
         return row.subtotal;
       }
@@ -118,6 +118,8 @@ export default function ColumnSpanningFunction() {
   return (
     <Box
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
         width: '100%',
         '& .bold': {
           fontWeight: 600,
@@ -125,7 +127,6 @@ export default function ColumnSpanningFunction() {
       }}
     >
       <DataGrid
-        autoHeight
         disableColumnFilter
         disableRowSelectionOnClick
         hideFooter

@@ -1,8 +1,8 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "autoFocus": { "type": { "name": "bool" } },
-    "clearable": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
+    "autoFocus": { "type": { "name": "bool" }, "default": "false" },
+    "clearable": { "type": { "name": "bool" }, "default": "false" },
     "color": {
       "type": {
         "name": "enum",
@@ -10,23 +10,12 @@
       },
       "default": "'primary'"
     },
-    "components": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
-    },
-    "componentsProps": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
-    },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
+    "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableFuture": { "type": { "name": "bool" }, "default": "false" },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" }, "default": "false" },
+    "disablePast": { "type": { "name": "bool" }, "default": "false" },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
@@ -34,9 +23,9 @@
       "default": "\"dense\""
     },
     "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" } },
+    "fullWidth": { "type": { "name": "bool" }, "default": "false" },
     "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" } },
+    "hiddenLabel": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "InputLabelProps": { "type": { "name": "object" } },
     "inputProps": { "type": { "name": "object" } },
@@ -50,8 +39,8 @@
       },
       "default": "'none'"
     },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
+    "maxTime": { "type": { "name": "object" } },
+    "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
     "onChange": {
@@ -76,26 +65,16 @@
         "describedArgs": ["newValue"]
       }
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "referenceDate": {
-      "type": { "name": "any" },
+      "type": { "name": "object" },
       "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
     },
-    "required": { "type": { "name": "bool" } },
+    "required": { "type": { "name": "bool" }, "default": "false" },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
-    },
-    "shouldDisableClock": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
-      "signature": {
-        "type": "function(clockValue: number, view: TimeView) => boolean",
-        "describedArgs": ["clockValue", "view"],
-        "returned": "boolean"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'empty'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number"
       }
     },
     "shouldDisableTime": {
@@ -106,10 +85,14 @@
         "returned": "boolean"
       }
     },
-    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "false" },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -119,12 +102,16 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-date-pickers/timezone/",
+        "text": "timezones documentation"
+      }
     },
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "variant": {
       "type": {
         "name": "enum",
@@ -133,35 +120,25 @@
       "default": "'outlined'"
     }
   },
-  "slots": [
-    {
-      "class": null,
-      "name": "clearButton",
-      "description": "Button to clear the value.",
-      "default": "IconButton"
-    },
-    {
-      "class": null,
-      "name": "clearIcon",
-      "description": "Icon to display inside the clear button.",
-      "default": "ClearIcon"
-    },
-    {
-      "class": null,
-      "name": "textField",
-      "description": "Form control with an input to render the value. Receives the same props as <code>@mui/material/TextField</code>.",
-      "default": "TextField from '@mui/material'"
-    }
-  ],
   "name": "SingleInputTimeRangeField",
   "imports": [
     "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';",
     "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputTimeRangeField" },
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiSingleInputTimeRangeField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiSingleInputTimeRangeField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field <span class=\"plan-pro\"></span></a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

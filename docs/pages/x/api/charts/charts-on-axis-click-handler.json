@@ -1,0 +1,23 @@
+{
+  "props": {
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | AxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    }
+  },
+  "name": "ChartsOnAxisClickHandler",
+  "imports": [
+    "import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';",
+    "import { ChartsOnAxisClickHandler } from '@mui/x-charts';",
+    "import { ChartsOnAxisClickHandler } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsOnAxisClickHandler",
+  "filename": "/packages/x-charts/src/ChartsOnAxisClickHandler/ChartsOnAxisClickHandler.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,7 +1,7 @@
 ---
 productId: x-date-pickers
 title: React Date Picker component
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, DateCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -18,12 +18,14 @@ materialDesign: https://m2.material.io/components/date-pickers
 ## Component composition
 
 The component is built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
-All the documented props of those two components can also be passed to the Date Picker component.
 
 Check-out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
+
+You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-picker/#props).
+Some [DateField props](/x/api/date-pickers/date-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
@@ -86,8 +88,15 @@ Use the `openTo` prop to change this behavior:
 :::success
 The views will appear in the order defined by the `views` array.
 If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
-(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+(for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
+
+## Order of years
+
+By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
+Set the `yearsOrder` prop to `desc` to show the years in descending order.
+
+{{"demo": "DatePickerYearsOrder.js"}}
 
 ## Landscape orientation
 
@@ -112,13 +121,23 @@ You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
 
-## Validation
+:::info
+See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
+:::
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+:::warning
+The clearable prop is not supported yet by the mobile Picker variants.
+
+See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
+:::
 
 ## Localization
 
-You can find the documentation about localization in the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/).
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
+## Validation
+
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
 
 ## Customization
 

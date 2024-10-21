@@ -3,7 +3,6 @@ import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
 import {
   AdapterFormats,
   AdapterOptions,
-  AdapterUnits,
   DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
@@ -30,6 +29,7 @@ const formatTokenMap: FieldFormatTokenMap = {
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },
@@ -60,6 +60,7 @@ const defaultFormats: AdapterFormats = {
   month: 'MMMM',
   monthShort: 'MMM',
   dayOfMonth: 'D',
+  dayOfMonthFull: 'Do',
   weekday: 'dddd',
   weekdayShort: 'ddd',
   hours24h: 'HH',
@@ -69,21 +70,15 @@ const defaultFormats: AdapterFormats = {
   seconds: 'ss',
 
   fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
   keyboardDate: 'L',
   shortDate: 'MMM D',
   normalDate: 'D MMMM',
   normalDateWithWeekday: 'ddd, MMM D',
-  monthAndYear: 'MMMM YYYY',
-  monthAndDate: 'MMMM D',
 
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  fullDateTime: 'lll',
-  fullDateTime12h: 'll hh:mm A',
-  fullDateTime24h: 'll HH:mm',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -94,6 +89,12 @@ const MISSING_TIMEZONE_PLUGIN = [
   'To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`',
   'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
 ].join('\n');
+
+declare module '@mui/x-date-pickers/models' {
+  interface PickerValidDateLookup {
+    moment: Moment;
+  }
+}
 
 /**
  * Based on `@date-io/moment`
@@ -152,23 +153,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.locale(expectedLocale);
   };
 
-  /**
-   * Some methods from moment can't take the locale as a parameter and always use the current locale.
-   * To respect the adapter locale, we need to set it as the current locale and then reset the previous locale.
-   */
-  private syncMomentLocale = <R>(runner: () => R): R => {
-    const momentLocale = defaultMoment.locale();
-    const adapterLocale = this.locale ?? 'en-us';
-    if (momentLocale !== adapterLocale) {
-      defaultMoment.locale(adapterLocale);
-      const result = runner();
-      defaultMoment.locale(momentLocale);
-      return result;
-    }
-
-    return runner();
-  };
-
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
   private createSystemDate = (value: string | undefined): Moment => {
@@ -207,20 +191,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return parsedValue.locale(this.locale);
   };
 
-  public date = (value?: any) => {
-    if (value === null) {
-      return null;
-    }
-
-    const moment = this.moment(value);
-    moment.locale(this.getCurrentLocaleCode());
-
-    return moment;
-  };
-
-  public dateWithTimezone = <T extends string | null | undefined>(
-    value: T,
-    timezone: PickersTimezone,
+  public date = <T extends string | null | undefined>(
+    value?: T,
+    timezone: PickersTimezone = 'default',
   ): DateBuilderReturnType<T, Moment> => {
     type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
@@ -237,6 +210,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
     return <R>this.createTZDate(value, timezone);
   };
+
+  public getInvalidDate = () => this.moment(new Date('Invalid Date'));
 
   public getTimezone = (value: Moment): string => {
     // @ts-ignore
@@ -273,7 +248,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     const cleanZone =
       timezone === 'default'
         ? // @ts-ignore
-          this.moment.defaultZone?.name ?? 'system'
+          (this.moment.defaultZone?.name ?? 'system')
         : timezone;
 
     if (cleanZone === 'system') {
@@ -288,14 +263,6 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public toJsDate = (value: Moment) => {
     return value.toDate();
-  };
-
-  public parseISO = (isoString: string) => {
-    return this.moment(isoString, true);
-  };
-
-  public toISO = (value: Moment) => {
-    return value.toISOString();
   };
 
   public parse = (value: string, format: string) => {
@@ -337,16 +304,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       .join('');
   };
 
-  public getFormatHelperText = (format: string) => {
-    return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
-  };
+  public isValid = (value: Moment | null) => {
+    if (value == null) {
+      return false;
+    }
 
-  public isNull = (value: Moment | null) => {
-    return value === null;
-  };
-
-  public isValid = (value: any) => {
-    return this.moment(value).isValid();
+    return value.isValid();
   };
 
   public format = (value: Moment, formatKey: keyof AdapterFormats) => {
@@ -363,16 +326,16 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return numberToFormat;
   };
 
-  public getDiff = (value: Moment, comparing: Moment | string, unit?: AdapterUnits) => {
-    return value.diff(comparing, unit);
-  };
-
-  public isEqual = (value: any, comparing: any) => {
+  public isEqual = (value: Moment | null, comparing: Moment | null) => {
     if (value === null && comparing === null) {
       return true;
     }
 
-    return this.moment(value).isSame(comparing);
+    if (value === null || comparing === null) {
+      return false;
+    }
+
+    return value.isSame(comparing);
   };
 
   public isSameYear = (value: Moment, comparing: Moment) => {
@@ -428,7 +391,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public startOfWeek = (value: Moment) => {
-    return value.clone().startOf('week');
+    return this.setLocaleToValue(value.clone()).startOf('week');
   };
 
   public startOfDay = (value: Moment) => {
@@ -444,7 +407,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public endOfWeek = (value: Moment) => {
-    return value.clone().endOf('week');
+    return this.setLocaleToValue(value.clone()).endOf('week');
   };
 
   public endOfDay = (value: Moment) => {
@@ -553,40 +516,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.daysInMonth();
   };
 
-  public getNextMonth = (value: Moment) => {
-    return value.clone().add(1, 'month');
-  };
-
-  public getPreviousMonth = (value: Moment) => {
-    return value.clone().subtract(1, 'month');
-  };
-
-  public getMonthArray = (value: Moment) => {
-    const firstMonth = this.startOfYear(value);
-    const monthArray = [firstMonth];
-
-    while (monthArray.length < 12) {
-      const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
-    }
-
-    return monthArray;
-  };
-
-  public mergeDateAndTime = (dateParam: Moment, timeParam: Moment) => {
-    return dateParam
-      .clone()
-      .hour(timeParam.hour())
-      .minute(timeParam.minute())
-      .second(timeParam.second());
-  };
-
-  public getWeekdays = () => this.syncMomentLocale(() => defaultMoment.weekdaysShort(true));
-
   public getWeekArray = (value: Moment) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = cleanValue.clone().startOf('month').startOf('week');
-    const end = cleanValue.clone().endOf('month').endOf('week');
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;
@@ -597,7 +529,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
-      current = current.clone().add(1, 'day');
+      current = this.addDays(current, 1);
       count += 1;
     }
 
@@ -608,28 +540,21 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.week();
   };
 
-  public getYearRange = (start: Moment, end: Moment) => {
-    const startDate = this.moment(start).startOf('year');
-    const endDate = this.moment(end).endOf('year');
+  public getDayOfWeek = (value: Moment) => {
+    return value.day() + 1;
+  };
+
+  public getYearRange([start, end]: [Moment, Moment]) {
+    const startDate = this.startOfYear(start);
+    const endDate = this.endOfYear(end);
     const years: Moment[] = [];
 
     let current = startDate;
-    while (current.isBefore(endDate)) {
+    while (this.isBefore(current, endDate)) {
       years.push(current);
-      current = current.clone().add(1, 'year');
+      current = this.addYears(current, 1);
     }
 
     return years;
-  };
-
-  public getMeridiemText = (ampm: 'am' | 'pm') => {
-    if (this.is12HourCycleInCurrentLocale()) {
-      // AM/PM translation only possible in those who have 12 hour cycle in locale.
-      return defaultMoment
-        .localeData(this.getCurrentLocaleCode())
-        .meridiem(ampm === 'am' ? 0 : 13, 0, false);
-    }
-
-    return ampm === 'am' ? 'AM' : 'PM'; // fallback for de, ru, ...etc
-  };
+  }
 }

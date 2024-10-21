@@ -2,6 +2,8 @@ import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,8 +12,7 @@ import {
   PickersShortcutsItem,
   PickersShortcutsProps,
 } from '@mui/x-date-pickers/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro';
-import { Divider, Box } from '@mui/material';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
@@ -55,7 +56,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
 ];
 
 function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
-  const { items, onChange, isValid } = props;
+  const { items, onChange, isValid, changeImportance = 'accept' } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -67,7 +68,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, changeImportance, item);
       },
       disabled: !isValid(newValue),
     };

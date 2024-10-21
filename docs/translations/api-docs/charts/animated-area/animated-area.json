@@ -1,0 +1,7 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." }
+  },
+  "classDescriptions": {}
+}

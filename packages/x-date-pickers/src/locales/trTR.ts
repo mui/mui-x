@@ -15,16 +15,20 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Sonraki ay',
 
   // View navigation
-  openPreviousView: 'sonraki görünüm',
-  openNextView: 'önceki görünüm',
+  openPreviousView: 'Sonraki görünüm',
+  openNextView: 'Önceki görünüm',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Başlangıç',
   end: 'Bitiş',
+  // startDate: 'Start date',
+  // startTime: 'Start time',
+  // endDate: 'End date',
+  // endTime: 'End time',
 
   // Action bar
   cancelButtonLabel: 'iptal',
@@ -39,10 +43,8 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `${timeViews[view]} seç.  ${
-      time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `${timeViews[view]} seç.  ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Zaman seçilmedi' : `Seçilen zaman: ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
@@ -57,15 +59,15 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tarih seçin, seçilen tarih: ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Tarih seçin, seçilen tarih: ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Tarih seç',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Saat seçin, seçilen saat: ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Saat seçin, seçilen saat: ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Saat seç',
-  // fieldClearLabel: 'Clear value',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'saat seç',
@@ -80,6 +82,19 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'dd',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  // year: 'Year',
+  // month: 'Month',
+  // day: 'Day',
+  // weekDay: 'Week day',
+  // hours: 'Hours',
+  // minutes: 'Minutes',
+  // seconds: 'Seconds',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const trTR = getPickersLocalization(trTRPickers);

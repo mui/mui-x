@@ -1,0 +1,41 @@
+{
+  "interfaceDescription": "",
+  "propertiesDescriptions": {
+    "data": { "description": "" },
+    "type": { "description": "" },
+    "arcLabel": { "description": "The label displayed into the arc." },
+    "arcLabelMinAngle": { "description": "The minimal angle required to display the arc label." },
+    "arcLabelRadius": {
+      "description": "The radius between circle center and the arc label.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+    },
+    "color": { "description": "" },
+    "cornerRadius": {
+      "description": "The radius applied to arc corners (similar to border radius)."
+    },
+    "cx": {
+      "description": "The x coordinate of the pie center.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the width the drawing area."
+    },
+    "cy": {
+      "description": "The y coordinate of the pie center.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the height the drawing area."
+    },
+    "endAngle": { "description": "The end angle (deg) of the last item." },
+    "faded": { "description": "Override the arc attributes when it is faded." },
+    "highlighted": { "description": "Override the arc attributes when it is highlighted." },
+    "highlightScope": { "description": "The scope to apply when the series is highlighted." },
+    "id": { "description": "" },
+    "innerRadius": {
+      "description": "The radius between circle center and the beginning of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+    },
+    "outerRadius": {
+      "description": "The radius between circle center and the end of the arc.<br />Can be a number (in px) or a string with a percentage such as &#39;50%&#39;.<br />The &#39;100%&#39; is the maximal radius that fit into the drawing area."
+    },
+    "paddingAngle": { "description": "The padding angle (deg) between two arcs." },
+    "sortingValues": {
+      "description": "The sorting strategy used to order pie slices.<br />Can be &#39;none&#39;, &#39;asc&#39;, &#39;desc&#39;, or a sorting function."
+    },
+    "startAngle": { "description": "The start angle (deg) of the first item." },
+    "valueFormatter": {
+      "description": "Formatter used to render values in tooltip or other data display."
+    }
+  }
+}

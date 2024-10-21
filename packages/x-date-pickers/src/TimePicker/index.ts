@@ -1,8 +1,9 @@
 export { TimePicker } from './TimePicker';
 export type {
   TimePickerProps,
-  TimePickerSlotsComponents,
-  TimePickerSlotsComponentsProps,
+  TimePickerSlots,
+  TimePickerSlotProps,
+  TimePickerFieldProps,
 } from './TimePicker.types';
 
 export { TimePickerToolbar } from './TimePickerToolbar';

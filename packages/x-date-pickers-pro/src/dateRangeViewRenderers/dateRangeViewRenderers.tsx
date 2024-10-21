@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
-  extends DateRangeCalendarProps<TDate> {
-  view: TView;
-  onViewChange?: (view: TView) => void;
+export interface DateRangeViewRendererProps<
+  TDate extends PickerValidDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Omit<DateRangeCalendarProps<TDate>, 'views'> {
   views: readonly TView[];
 }
 
@@ -13,7 +14,7 @@ export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewW
  * We don't pass all the props down to `DateRangeCalendar`,
  * because otherwise some unwanted props would be passed to the HTML element.
  */
-export const renderDateRangeViewCalendar = <TDate extends unknown>({
+export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   value,
   defaultValue,
   referenceDate,
@@ -27,14 +28,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   shouldDisableDate,
   reduceAnimations,
   onMonthChange,
-  defaultCalendarMonth,
   rangePosition,
   defaultRangePosition,
   onRangePositionChange,
   calendars,
   currentMonthCalendarPosition,
-  components,
-  componentsProps,
   slots,
   slotProps,
   loading,
@@ -51,7 +49,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   disableDragEditing,
   displayWeekNumber,
   timezone,
-}: DateRangeViewRendererProps<TDate, any>) => (
+  availableRangePositions,
+  views,
+  view,
+  onViewChange,
+}: DateRangeViewRendererProps<TDate, 'day'>) => (
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
@@ -66,14 +68,11 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     shouldDisableDate={shouldDisableDate}
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
-    defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     currentMonthCalendarPosition={currentMonthCalendarPosition}
-    components={components}
-    componentsProps={componentsProps}
     slots={slots}
     slotProps={slotProps}
     loading={loading}
@@ -90,5 +89,9 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
     timezone={timezone}
+    availableRangePositions={availableRangePositions}
+    view={view}
+    views={views}
+    onViewChange={onViewChange}
   />
 );

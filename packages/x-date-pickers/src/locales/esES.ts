@@ -3,28 +3,32 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 const views: Record<TimeViewWithMeridiem, string> = {
-  hours: 'las horas',
-  minutes: 'los minutos',
-  seconds: 'los segundos',
-  meridiem: 'meridiano',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
 };
 
 const esESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Último mes',
-  nextMonth: 'Próximo mes',
+  previousMonth: 'Mes anterior',
+  nextMonth: 'Mes siguiente',
 
   // View navigation
-  openPreviousView: 'abrir la última vista',
-  openNextView: 'abrir la siguiente vista',
+  openPreviousView: 'Abrir la última vista',
+  openNextView: 'Abrir la siguiente vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'la vista del año está abierta, cambie a la vista de calendario'
-      : 'la vista de calendario está abierta, cambie a la vista del año',
+      ? 'la vista anual está abierta, cambie a la vista de calendario'
+      : 'la vista de calendario está abierta, cambie a la vista anual',
 
-  // DateRange placeholders
+  // DateRange labels
   start: 'Empezar',
   end: 'Terminar',
+  startDate: 'Fecha inicio',
+  startTime: 'Hora inicio',
+  endDate: 'Fecha final',
+  endTime: 'Hora final',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -39,12 +43,8 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Seleccione ${views[view]}. ${
-      time === null
-        ? 'Sin tiempo seleccionado'
-        : `El tiempo seleccionado es ${adapter.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Seleccione ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'No hay hora seleccionada' : `La hora seleccionada es ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -59,19 +59,19 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
-      : 'Elige la fecha',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
-      : 'Elige la hora',
-  // fieldClearLabel: 'Clear value',
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Elige fecha, la fecha elegida es ${formattedDate ?? utils.format(value, 'fullDate')}`
+      : 'Elige fecha',
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Elige hora, la hora elegida es ${formattedTime ?? utils.format(value, 'fullTime')}`
+      : 'Elige hora',
+  fieldClearLabel: 'Limpiar valor',
 
   // Table labels
-  timeTableLabel: 'elige la fecha',
-  dateTableLabel: 'elige la hora',
+  timeTableLabel: 'elige hora',
+  dateTableLabel: 'elige fecha',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
@@ -82,6 +82,19 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Año',
+  month: 'Mes',
+  day: 'Dia',
+  weekDay: 'Dia de la semana',
+  hours: 'Horas',
+  minutes: 'Minutos',
+  seconds: 'Segundos',
+  meridiem: 'Meridiano',
+
+  // Common
+  empty: 'Vacío',
 };
 
 export const esES = getPickersLocalization(esESPickers);

@@ -3,12 +3,28 @@ import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
+import materialPackageJson from '@mui/material/package.json';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
     setTimeout(() => resolve(), timeoutMS);
   });
 }
+
+const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
+
+const isConsoleWarningIgnored = (msg) => {
+  if (
+    msg &&
+    isMaterialUIv6 &&
+    msg.startsWith(
+      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+    )
+  ) {
+    return true;
+  }
+  return false;
+};
 
 async function main() {
   const baseUrl = 'http://localhost:5001';
@@ -67,6 +83,16 @@ async function main() {
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
+  function navigateToTest(testIndex) {
+    // Use client-side routing which is much faster than full page navigation via page.goto().
+    // Could become an issue with test isolation.
+    // If tests are flaky due to global pollution switch to page.goto(route);
+    // puppeteers built-in click() times out
+    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
+      link.click();
+    });
+  }
+
   describe('visual regressions', () => {
     after(async () => {
       await browser.close();
@@ -75,6 +101,9 @@ async function main() {
     it('should have no errors after the initial render', () => {
       const msg = errorConsole;
       errorConsole = undefined;
+      if (isConsoleWarningIgnored(msg)) {
+        return;
+      }
       expect(msg).to.equal(undefined);
     });
 
@@ -91,38 +120,17 @@ async function main() {
           this.timeout(6000);
         }
 
-        // Use client-side routing which is much faster than full page navigation via page.goto().
-        // Could become an issue with test isolation.
-        // If tests are flaky due to global pollution switch to page.goto(route);
-        // puppeteers built-in click() times out
-        await page.$eval(`#tests li:nth-of-type(${index + 1}) a`, (link) => {
-          link.click();
-        });
+        try {
+          await navigateToTest(index + 1);
+        } catch (error) {
+          // When one demo crashes, the page becomes empty and there are no links to demos,
+          // so navigation to the next demo throws an error.
+          // Reloading the page fixes this.
+          await page.reload();
+          await navigateToTest(index + 1);
+        }
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
-
-        const pathsToNotWaitForFlagCDN = [
-          '/docs-data-grid-filtering/HeaderFilteringDataGridPro', // No flag column
-          '/docs-data-grid-filtering/CustomHeaderFilterDataGridPro', // No flag column
-          '/docs-data-grid-filtering/CustomHeaderFilterSingleDataGridPro', // No flag column
-          '/docs-data-grid-filtering/SimpleHeaderFilteringDataGridPro', // No flag column
-          '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
-          '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
-          '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
-          '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
-          '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
-          '/docs-data-grid-filtering/QuickFilteringExcludeHiddenColumns', // No flag column
-        ];
-
-        if (
-          /^\/docs-data-grid-(filtering|sorting)/.test(pathURL) &&
-          !pathsToNotWaitForFlagCDN.includes(pathURL)
-        ) {
-          // Wait for the flags to load
-          await page.waitForResponse((response) =>
-            response.url().startsWith('https://flagcdn.com'),
-          );
-        }
 
         if (/^\docs-charts-.*/.test(pathURL)) {
           // Run one tick of the clock to get the final animation state
@@ -136,12 +144,31 @@ async function main() {
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
 
+        // Wait for the flags to load
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images.every((img) => {
+              if (!img.complete && img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              return img.complete;
+            });
+          },
+          undefined,
+          { timeout: 1000 },
+        );
+
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
       it(`should have no errors rendering ${pathURL}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
+        if (isConsoleWarningIgnored(msg)) {
+          return;
+        }
         expect(msg).to.equal(undefined);
       });
     });
@@ -202,7 +229,7 @@ async function main() {
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,85 -vframes 1 ${screenshotPath}`;
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,95 -vframes 1 ${screenshotPath}`;
         const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
 
         ffmpeg.on('close', (code) => {

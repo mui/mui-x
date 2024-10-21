@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui-internal/test-utils';
 import { TimeView } from '@mui/x-date-pickers/models';
-import { adapterToUse } from 'test/utils/pickers';
+import { adapterToUse, getFieldInputRoot } from 'test/utils/pickers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
@@ -22,26 +21,27 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
-          shouldDisableDate={(date) =>
-            adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
+          value={adapterToUse.date('2018-03-12')}
+          shouldDisableDate={(date: any) =>
+            adapterToUse.isAfter(date, adapterToUse.date('2018-03-10'))
           }
         />,
       );
 
       if (withDate) {
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableDate');
 
-        setProps({ value: adapterToUse.date(new Date(2018, 2, 9)) });
+        setProps({ value: adapterToUse.date('2018-03-09') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       } else {
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
         expect(onErrorMock.callCount).to.equal(0);
       }
     });
@@ -55,21 +55,22 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
-          shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
+          value={adapterToUse.date('2018-03-12')}
+          shouldDisableYear={(date: any) => adapterToUse.getYear(date) === 2018}
         />,
       );
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableYear');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 9)) });
+      setProps({ value: adapterToUse.date('2019-03-09') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it('should apply shouldDisableMonth', function test() {
@@ -81,69 +82,27 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
-          value={adapterToUse.date(new Date(2018, 2, 12))}
+          shouldDisableMonth={(date: any) => adapterToUse.getMonth(date) === 2}
+          value={adapterToUse.date('2018-03-12')}
         />,
       );
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableMonth');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 9)) });
+      setProps({ value: adapterToUse.date('2019-03-09') });
 
       expect(onErrorMock.callCount).to.equal(1);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 3, 9)) });
+      setProps({ value: adapterToUse.date('2018-04-09') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-    });
-
-    it('should apply shouldDisableClock', function test() {
-      if (!withTime) {
-        return;
-      }
-
-      const onErrorMock = spy();
-      const { setProps } = render(
-        <ElementToTest
-          onError={onErrorMock}
-          shouldDisableClock={(value: number) => value === 10}
-          value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
-        />,
-      );
-
-      expect(onErrorMock.callCount).to.equal(1);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-hours');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 12, 9, 5, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(2);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 10, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(3);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-minutes');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 0)) });
-
-      expect(onErrorMock.callCount).to.equal(4);
-      expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
-
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 10)) });
-
-      expect(onErrorMock.callCount).to.equal(5);
-      expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableClock-seconds');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it('should apply shouldDisableTime', function test() {
@@ -154,8 +113,9 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          shouldDisableTime={(value, view: TimeView) => {
+          shouldDisableTime={(value: any, view: TimeView) => {
             let comparingValue = adapterToUse.getHours(value);
             if (view === 'minutes') {
               comparingValue = adapterToUse.getMinutes(value);
@@ -164,37 +124,37 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
             }
             return comparingValue === 10;
           }}
-          value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
+          value={adapterToUse.date('2018-03-12T10:05:00')}
         />,
       );
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-hours');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2019, 2, 12, 9, 5, 0)) });
+      setProps({ value: adapterToUse.date('2019-03-12T09:05:00') });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 10, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:10:00') });
 
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-minutes');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 0)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:00') });
 
       expect(onErrorMock.callCount).to.equal(4);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
-      setProps({ value: adapterToUse.date(new Date(2018, 2, 12, 9, 9, 10)) });
+      setProps({ value: adapterToUse.date('2018-03-12T09:09:10') });
 
       expect(onErrorMock.callCount).to.equal(5);
       expect(onErrorMock.lastCall.args[0]).to.equal('shouldDisableTime-seconds');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
     it('should apply disablePast', function test() {
@@ -203,9 +163,9 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       }
 
       let now;
-      function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
-        return <ElementToTest value={now} {...props} />;
+      function WithFakeTimer(props: any) {
+        now = adapterToUse.date();
+        return <ElementToTest enableAccessibleFieldDOMStructure value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -215,19 +175,19 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const yesterday = adapterToUse.addDays(now, -1);
 
       expect(onErrorMock.callCount).to.equal(0);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       setProps({ value: yesterday });
 
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('disablePast');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: tomorrow });
 
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it('should apply disableFuture', function test() {
@@ -236,9 +196,9 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       }
 
       let now;
-      function WithFakeTimer(props) {
-        now = adapterToUse.date(new Date());
-        return <ElementToTest value={now} {...props} />;
+      function WithFakeTimer(props: any) {
+        now = adapterToUse.date();
+        return <ElementToTest enableAccessibleFieldDOMStructure value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -248,17 +208,17 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const yesterday = adapterToUse.addDays(now, -1);
 
       expect(onErrorMock.callCount).to.equal(0);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       setProps({ value: tomorrow });
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('disableFuture');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       setProps({ value: yesterday });
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it('should apply minDate', function test() {
@@ -269,25 +229,26 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 1))}
-          minDate={adapterToUse.date(new Date(2019, 5, 15))}
+          value={adapterToUse.date('2019-06-01')}
+          minDate={adapterToUse.date('2019-06-15')}
         />,
       );
 
       if (withDate) {
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 20)) });
+        setProps({ value: adapterToUse.date('2019-06-20') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       } else {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       }
     });
 
@@ -299,25 +260,26 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 25))}
-          maxDate={adapterToUse.date(new Date(2019, 5, 15))}
+          value={adapterToUse.date('2019-06-25')}
+          maxDate={adapterToUse.date('2019-06-15')}
         />,
       );
 
       if (withDate) {
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-10') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       } else {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       }
     });
 
@@ -329,24 +291,25 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
-          minTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
+          minTime={adapterToUse.date('2010-01-01T12:00:00')}
         />,
       );
       if (withTime) {
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 13, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       } else {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       }
     });
 
@@ -358,23 +321,24 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          maxTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
+          maxTime={adapterToUse.date('2010-01-01T12:00:00')}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
         />,
       );
       if (withTime) {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 13, 10)) });
+        setProps({ value: adapterToUse.date('2019-06-15T13:10:00') });
 
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('maxTime');
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
       } else {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       }
     });
 
@@ -387,31 +351,32 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
-          maxDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
+          value={adapterToUse.date('2019-06-15T13:15:00')}
+          maxDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('maxTime');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 5 minutes before
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 11, 55)) });
+      setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day before
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 14, 20, 10)) });
+      setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
       expect(onErrorMock.callCount).to.equal(2);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 1 day after
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 16, 10, 0)) });
+      setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal('maxDate');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
     });
 
     it('should apply minDateTime', function test() {
@@ -423,31 +388,32 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
-          minDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
+          value={adapterToUse.date('2019-06-15T13:15:00')}
+          minDateTime={adapterToUse.date('2019-06-15T12:00:00')}
         />,
       );
       expect(onErrorMock.callCount).to.equal(0);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
 
       // Test 5 minutes before (invalid)
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 11, 55)) });
+      setProps({ value: adapterToUse.date('2019-06-15T11:55:00') });
       expect(onErrorMock.callCount).to.equal(1);
       expect(onErrorMock.lastCall.args[0]).to.equal('minTime');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day before (invalid)
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 14, 20, 10)) });
+      setProps({ value: adapterToUse.date('2019-06-14T20:10:00') });
       expect(onErrorMock.callCount).to.equal(2);
       expect(onErrorMock.lastCall.args[0]).to.equal('minDate');
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
       // Test 1 day after
-      setProps({ value: adapterToUse.date(new Date(2019, 5, 16, 10, 0)) });
+      setProps({ value: adapterToUse.date('2019-06-16T10:00:00') });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
-      expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
     });
 
     it('should apply minutesStep', function test() {
@@ -458,24 +424,25 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
-          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
+          value={adapterToUse.date('2019-06-15T10:15:00')}
           minutesStep={30}
         />,
       );
       if (withTime) {
         expect(onErrorMock.callCount).to.equal(1);
         expect(onErrorMock.lastCall.args[0]).to.equal('minutesStep');
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
 
-        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 10, 30)) });
+        setProps({ value: adapterToUse.date('2019-06-15T10:30:00') });
 
         expect(onErrorMock.callCount).to.equal(2);
         expect(onErrorMock.lastCall.args[0]).to.equal(null);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       } else {
         expect(onErrorMock.callCount).to.equal(0);
-        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+        expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
       }
     });
   });

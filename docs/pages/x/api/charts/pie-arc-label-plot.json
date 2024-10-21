@@ -1,0 +1,52 @@
+{
+  "props": {
+    "outerRadius": { "type": { "name": "number" }, "required": true },
+    "arcLabel": {
+      "type": {
+        "name": "union",
+        "description": "'formattedValue'<br>&#124;&nbsp;'label'<br>&#124;&nbsp;'value'<br>&#124;&nbsp;func"
+      }
+    },
+    "arcLabelMinAngle": { "type": { "name": "number" }, "default": "0" },
+    "arcLabelRadius": {
+      "type": { "name": "number" },
+      "default": "(innerRadius - outerRadius) / 2"
+    },
+    "cornerRadius": { "type": { "name": "number" }, "default": "0" },
+    "faded": {
+      "type": {
+        "name": "shape",
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+      },
+      "default": "{ additionalRadius: -5 }"
+    },
+    "highlighted": {
+      "type": {
+        "name": "shape",
+        "description": "{ additionalRadius?: number, arcLabelRadius?: number, color?: string, cornerRadius?: number, innerRadius?: number, outerRadius?: number, paddingAngle?: number }"
+      }
+    },
+    "innerRadius": { "type": { "name": "number" }, "default": "0" },
+    "paddingAngle": { "type": { "name": "number" }, "default": "0" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "PieArcLabelPlot",
+  "imports": [
+    "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
+    "import { PieArcLabelPlot } from '@mui/x-charts';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-pro';"
+  ],
+  "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiPieArcLabelPlot",
+  "filename": "/packages/x-charts/src/PieChart/PieArcLabelPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "cssComponent": false
+}

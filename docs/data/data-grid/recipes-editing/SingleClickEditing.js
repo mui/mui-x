@@ -72,7 +72,7 @@ export default function SingleClickEditing() {
     }
 
     // Ignore portal
-    if (!event.currentTarget.contains(event.target)) {
+    if (event.target.nodeType === 1 && !event.currentTarget.contains(event.target)) {
       return;
     }
 

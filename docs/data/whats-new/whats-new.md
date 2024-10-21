@@ -1,5 +1,5 @@
-# What's new in MUI X
+# What's new in MUI X
 
-<p class="description">Discover what's new in the latest versions.</p>
+<p class="description">Discover all the latest new features and other highlights.</p>
 
-{{"demo": "WhatsNewLayout.js", "hideToolbar": true, "bg": "inline"}}
+{{"component": "modules/components/WhatsNewLayout.js"}}

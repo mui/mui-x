@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-const columns: GridColDef[] = [
+const columns: GridColDef<(typeof rows)[number]>[] = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'firstName',
@@ -29,16 +29,15 @@ const columns: GridColDef[] = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 160,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
   },
 ];
 
 const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
+  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },

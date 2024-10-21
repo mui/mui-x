@@ -1,107 +1,30 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
-import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, useThemeProps } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
 import IconButton from '@mui/material/IconButton';
-import SvgIcon from '@mui/material/SvgIcon';
-import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from '../DateCalendar/PickersFadeTransitionGroup';
 import { ArrowDropDownIcon } from '../icons';
-import {
-  PickersArrowSwitcher,
-  ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
-} from '../internals/components/PickersArrowSwitcher';
+import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-  MonthValidationOptions,
 } from '../internals/hooks/date-helpers-hooks';
-import { DateView } from '../models';
 import {
   getPickersCalendarHeaderUtilityClass,
   pickersCalendarHeaderClasses,
-  PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-
-export type ExportedPickersCalendarHeaderProps<TDate> = Pick<
-  PickersCalendarHeaderProps<TDate>,
-  'classes' | 'slots' | 'slotProps'
->;
-
-export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
-  /**
-   * Button displayed to switch between different calendar views.
-   * @default IconButton
-   */
-  SwitchViewButton?: React.ElementType;
-  /**
-   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
-   * @default ArrowDropDown
-   */
-  SwitchViewIcon?: React.ElementType;
-}
-
-// We keep the interface to allow module augmentation
-export interface PickersCalendarHeaderComponentsPropsOverrides {}
-
-type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
-
-export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
-  extends PickersArrowSwitcherSlotsComponentsProps {
-  switchViewButton?: SlotComponentProps<
-    typeof IconButton,
-    PickersCalendarHeaderComponentsPropsOverrides,
-    PickersCalendarHeaderOwnerState<TDate>
-  >;
-
-  switchViewIcon?: SlotComponentProps<
-    typeof SvgIcon,
-    PickersCalendarHeaderComponentsPropsOverrides,
-    undefined
-  >;
-}
-
-export interface PickersCalendarHeaderProps<TDate>
-  extends ExportedPickersArrowSwitcherProps,
-    MonthValidationOptions<TDate> {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
-  currentMonth: TDate;
-  disabled?: boolean;
-  views: readonly DateView[];
-  onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  view: DateView;
-  reduceAnimations: boolean;
-  onViewChange?: (view: DateView) => void;
-  labelId?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<PickersCalendarHeaderClasses>;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-}
+import {
+  PickersCalendarHeaderOwnerState,
+  PickersCalendarHeaderProps,
+} from './PickersCalendarHeader.types';
+import { PickerValidDate } from '../models';
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
@@ -125,13 +48,13 @@ const PickersCalendarHeaderRoot = styled('div', {
 }>({
   display: 'flex',
   alignItems: 'center',
-  marginTop: 16,
-  marginBottom: 8,
+  marginTop: 12,
+  marginBottom: 4,
   paddingLeft: 24,
   paddingRight: 12,
   // prevent jumping in safari
-  maxHeight: 30,
-  minHeight: 30,
+  maxHeight: 40,
+  minHeight: 40,
 });
 
 const PickersCalendarHeaderLabelContainer = styled('div', {
@@ -166,27 +89,34 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
-}>(({ ownerState }) => ({
+}>({
   marginRight: 'auto',
-  ...(ownerState.view === 'year' && {
-    [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
-      transform: 'rotate(180deg)',
+  variants: [
+    {
+      props: { view: 'year' },
+      style: {
+        [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
+          transform: 'rotate(180deg)',
+        },
+      },
     },
-  }),
-}));
+  ],
+});
 
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
-})(({ theme }) => ({
+})<{
+  ownerState: PickersCalendarHeaderOwnerState<any>;
+}>(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
 }));
 
-type PickersCalendarHeaderComponent = (<TDate>(
-  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+type PickersCalendarHeaderComponent = (<TDate extends PickerValidDate>(
+  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -200,11 +130,10 @@ type PickersCalendarHeaderComponent = (<TDate>(
  *
  * - [PickersCalendarHeader API](https://mui.com/x/api/date-pickers/pickers-calendar-header/)
  */
-const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TDate>(
-  inProps: PickersCalendarHeaderProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const localeText = useLocaleText<TDate>();
+const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
+  TDate extends PickerValidDate,
+>(inProps: PickersCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+  const translations = usePickersTranslations<TDate>();
   const utils = useUtils<TDate>();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
@@ -226,6 +155,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     labelId,
     className,
     timezone,
+    format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
@@ -239,7 +169,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     externalSlotProps: slotProps?.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
+      'aria-label': translations.calendarViewSwitchingButtonAriaLabel(view),
     },
     ownerState,
     className: classes.switchViewButton,
@@ -250,7 +180,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
     externalSlotProps: slotProps?.switchViewIcon,
-    ownerState: undefined,
+    ownerState,
     className: classes.switchViewIcon,
   });
 
@@ -287,11 +217,13 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
     return null;
   }
 
+  const label = utils.formatByString(month, format);
+
   return (
     <PickersCalendarHeaderRoot
       {...other}
       ownerState={ownerState}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ref={ref}
     >
       <PickersCalendarHeaderLabelContainer
@@ -302,17 +234,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
         aria-live="polite"
         className={classes.labelContainer}
       >
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'monthAndYear')}
-        >
+        <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
-            data-mui-test="calendar-month-and-year-text"
+            data-testid="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >
-            {utils.format(month, 'monthAndYear')}
+            {label}
           </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (
@@ -327,10 +256,10 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
           slotProps={slotProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
-          previousLabel={localeText.previousMonth}
+          previousLabel={translations.previousMonth}
           onGoToNext={selectNextMonth}
           isNextDisabled={isNextMonthDisabled}
-          nextLabel={localeText.nextMonth}
+          nextLabel={translations.nextMonth}
         />
       </Fade>
     </PickersCalendarHeaderRoot>
@@ -340,23 +269,29 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TD
 PickersCalendarHeader.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * className applied to the root element.
-   */
   className: PropTypes.string,
-  currentMonth: PropTypes.any.isRequired,
+  currentMonth: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   disableFuture: PropTypes.bool,
   disablePast: PropTypes.bool,
+  /**
+   * Format used to display the date.
+   * @default `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  format: PropTypes.string,
+  /**
+   * Id of the calendar text element.
+   * It is used to establish an `aria-labelledby` relationship with the calendar `grid` element.
+   */
   labelId: PropTypes.string,
-  maxDate: PropTypes.any.isRequired,
-  minDate: PropTypes.any.isRequired,
+  maxDate: PropTypes.object.isRequired,
+  minDate: PropTypes.object.isRequired,
   onMonthChange: PropTypes.func.isRequired,
   onViewChange: PropTypes.func,
   reduceAnimations: PropTypes.bool.isRequired,

@@ -1,15 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPro,
-  GridColDef,
-  GridRowsProp,
-  GridColumnMenuContainer,
-  GridColumnMenuSortItem,
-  GridColumnMenuHideItem,
-  GridColumnMenuColumnsItem,
-  GridColumnMenuFilterItem,
-  GridColumnMenuProps,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -17,27 +7,14 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-export function CustomColumnMenu(props: GridColumnMenuProps) {
-  const { hideMenu, colDef, color, ...other } = props;
-
-  return (
-    <GridColumnMenuContainer hideMenu={hideMenu} colDef={colDef} {...other}>
-      <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
-      <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
-      <GridColumnMenuHideItem onClick={hideMenu} colDef={colDef} />
-      <GridColumnMenuColumnsItem onClick={hideMenu} colDef={colDef} />
-    </GridColumnMenuContainer>
-  );
-}
-
 export default function DisableColumnPinningButtons() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         rows={rows}
         columns={columns}
-        slots={{ columnMenu: CustomColumnMenu }}
-        initialState={{ pinnedColumns: { left: ['name'], right: ['actions'] } }}
+        initialState={{ pinnedColumns: { left: ['name'] } }}
+        disableColumnPinning
       />
     </div>
   );

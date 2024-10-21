@@ -1,8 +1,10 @@
 import sinon from 'sinon';
-import { LicenseInfo } from '@mui/x-license-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
+import { unstable_cleanupDOM as unstable_cleanupDOMCharts } from '@mui/x-charts/internals';
+import { clearWarningsCache } from '@mui/x-internals/warning';
+import { generateTestLicenseKey, setupTestLicenseKey } from './testLicense';
 
 export function createXMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
@@ -12,23 +14,28 @@ export function createXMochaHooks(coreMochaHooks = {}) {
     afterEach: [...(coreMochaHooks.afterEach ?? [])],
   };
 
-  mochaHooks.beforeEach.push(function setLicenseKey() {
-    // This license key is only valid for use with Material UI SAS's projects
-    // See the terms: https://mui.com/r/x-license-eula
-    LicenseInfo.setLicenseKey(
-      'd483a722e0dc68f4d483487da0ccac45Tz1NVUktRG9jLEU9MTcxNTE2MzgwOTMwNyxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
-    );
+  let licenseKey;
+
+  mochaHooks.beforeAll.push(function func() {
+    licenseKey = generateTestLicenseKey();
+  });
+
+  mochaHooks.beforeEach.push(function setupLicenseKey() {
+    setupTestLicenseKey(licenseKey);
   });
 
   mochaHooks.afterEach.push(function resetCleanupTracking() {
     unstable_resetCleanupTrackingDataGrid();
     unstable_resetCleanupTrackingDataGridPro();
     unstable_resetCleanupTrackingTreeView();
+    unstable_cleanupDOMCharts();
 
     // Restore Sinon default sandbox to avoid memory leak
     // See https://github.com/sinonjs/sinon/issues/1866
     sinon.restore();
   });
+
+  mochaHooks.afterEach.push(clearWarningsCache);
 
   return mochaHooks;
 }

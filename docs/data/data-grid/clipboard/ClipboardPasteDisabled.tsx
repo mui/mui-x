@@ -12,11 +12,7 @@ export default function ClipboardPasteDisabled() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium
-        {...data}
-        experimentalFeatures={{ clipboardPaste: true }}
-        disableClipboardPaste
-      />
+      <DataGridPremium {...data} disableClipboardPaste />
     </div>
   );
 }

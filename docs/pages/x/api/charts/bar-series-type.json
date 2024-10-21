@@ -1,0 +1,24 @@
+{
+  "name": "BarSeriesType",
+  "imports": ["import { BarSeriesType } from '@mui/x-charts'"],
+  "properties": {
+    "type": { "type": { "description": "'bar'" }, "required": true },
+    "color": { "type": { "description": "string" } },
+    "data": { "type": { "description": "(number | null)[]" } },
+    "dataKey": { "type": { "description": "string" } },
+    "highlightScope": { "type": { "description": "Partial&lt;HighlightScope&gt;" } },
+    "id": { "type": { "description": "SeriesId" } },
+    "label": {
+      "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
+    },
+    "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
+    "stack": { "type": { "description": "string" } },
+    "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
+    "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
+    "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "xAxisId": { "type": { "description": "string" } },
+    "xAxisKey": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } },
+    "yAxisKey": { "type": { "description": "string" } }
+  }
+}

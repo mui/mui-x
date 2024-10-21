@@ -1,0 +1,22 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
+  "classDescriptions": {
+    "faded": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "faded"
+    },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "highlighted"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": { "line": "The component that renders the line." }
+}

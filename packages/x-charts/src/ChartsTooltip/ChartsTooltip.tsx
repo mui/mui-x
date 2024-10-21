@@ -1,49 +1,74 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
-import { Popper, PopperProps } from '@mui/base/Popper';
-import { NoSsr } from '@mui/base/NoSsr';
-import { useSlotProps } from '@mui/base/utils';
+import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
+import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
+import NoSsr from '@mui/material/NoSsr';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   AxisInteractionData,
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { generateVirtualElement, useMouseTracker, getTootipHasData, TriggerOptions } from './utils';
+import {
+  generateVirtualElement,
+  useMouseTracker,
+  getTooltipHasData,
+  TriggerOptions,
+} from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
+import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
 
-export interface ChartsTooltipSlotsComponent {
+export type PopperProps = BasePopperProps & {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+};
+
+export interface ChartsTooltipSlots<T extends ChartSeriesType> {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
   popper?: React.ElementType<PopperProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by axis event.
+   * @default DefaultChartsAxisTooltipContent
+   */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
-  itemContent?: React.ElementType<ChartsItemContentProps>;
+  /**
+   * Custom component for displaying tooltip content when triggered by item event.
+   * @default DefaultChartsItemTooltipContent
+   */
+  itemContent?: React.ElementType<ChartsItemContentProps<T>>;
 }
 
-export interface ChartsTooltipSlotComponentProps {
+export interface ChartsTooltipSlotProps<T extends ChartSeriesType> {
   popper?: Partial<PopperProps>;
   axisContent?: Partial<ChartsAxisContentProps>;
-  itemContent?: Partial<ChartsItemContentProps>;
+  itemContent?: Partial<ChartsItemContentProps<T>>;
 }
 
-export type ChartsTooltipProps = {
+export interface ChartsTooltipProps<T extends ChartSeriesType> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger?: TriggerOptions;
   /**
-   * Component to override the tooltip content when triger is set to 'item'.
+   * Component to override the tooltip content when trigger is set to 'item'.
    * @deprecated Use slots.itemContent instead
    */
   itemContent?: React.ElementType<ChartsItemContentProps<any>>;
   /**
-   * Component to override the tooltip content when triger is set to 'axis'.
+   * Component to override the tooltip content when trigger is set to 'axis'.
    * @deprecated Use slots.axisContent instead
    */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
@@ -55,25 +80,32 @@ export type ChartsTooltipProps = {
    * Overridable component slots.
    * @default {}
    */
-  slots?: ChartsTooltipSlotsComponent;
+  slots?: ChartsTooltipSlots<T>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: ChartsTooltipSlotComponentProps;
-};
+  slotProps?: ChartsTooltipSlotProps<T>;
+}
 
-const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
+const useUtilityClasses = <T extends ChartSeriesType>(ownerState: {
+  classes: ChartsTooltipProps<T>['classes'];
+}) => {
   const { classes } = ownerState;
 
   const slots = {
     root: ['root'],
+    paper: ['paper'],
+    table: ['table'],
+    row: ['row'],
+    cell: ['cell'],
+    mark: ['mark'],
     markCell: ['markCell'],
     labelCell: ['labelCell'],
     valueCell: ['valueCell'],
   };
 
-  return composeClasses(slots, getTooltipUtilityClass, classes);
+  return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
 
 const ChartsTooltipRoot = styled(Popper, {
@@ -85,7 +117,20 @@ const ChartsTooltipRoot = styled(Popper, {
   zIndex: theme.zIndex.modal,
 }));
 
-function ChartsTooltip(props: ChartsTooltipProps) {
+/**
+ * Demos:
+ *
+ * - [ChartsTooltip](https://mui.com/x/react-charts/tooltip/)
+ *
+ * API:
+ *
+ * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
+ */
+function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiChartsTooltip',
+  });
   const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
   const mousePosition = useMouseTracker();
@@ -94,7 +139,7 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 
   const displayedData = trigger === 'item' ? item : axis;
 
-  const tooltipHasData = getTootipHasData(trigger, displayedData);
+  const tooltipHasData = getTooltipHasData(trigger, displayedData);
   const popperOpen = mousePosition !== null && tooltipHasData;
 
   const classes = useUtilityClasses({ classes: props.classes });
@@ -105,8 +150,17 @@ function ChartsTooltip(props: ChartsTooltipProps) {
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       open: popperOpen,
-      placement: 'right-start' as const,
+      placement:
+        mousePosition?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
       anchorEl: generateVirtualElement(mousePosition),
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, mousePosition?.pointerType === 'touch' ? 40 - mousePosition.height : 0],
+          },
+        },
+      ],
     },
     ownerState: {},
   });
@@ -118,12 +172,12 @@ function ChartsTooltip(props: ChartsTooltipProps) {
   return (
     <NoSsr>
       {popperOpen && (
-        <PopperComponent {...popperProps}>
+        <PopperComponent {...popperProps} className={classes.root}>
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
-              itemData={displayedData as ItemInteractionData<ChartSeriesType>}
-              content={slots?.itemContent ?? itemContent}
-              contentProps={slotProps?.itemContent}
+              itemData={displayedData as ItemInteractionData<T>}
+              content={(slots?.itemContent ?? itemContent) as any}
+              contentProps={slotProps?.itemContent as Partial<ChartsItemContentProps<T>>}
               sx={{ mx: 2 }}
               classes={classes}
             />
@@ -145,10 +199,10 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 ChartsTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Component to override the tooltip content when triger is set to 'axis'.
+   * Component to override the tooltip content when trigger is set to 'axis'.
    * @deprecated Use slots.axisContent instead
    */
   axisContent: PropTypes.elementType,
@@ -157,7 +211,7 @@ ChartsTooltip.propTypes = {
    */
   classes: PropTypes.object,
   /**
-   * Component to override the tooltip content when triger is set to 'item'.
+   * Component to override the tooltip content when trigger is set to 'item'.
    * @deprecated Use slots.itemContent instead
    */
   itemContent: PropTypes.elementType,
@@ -176,7 +230,7 @@ ChartsTooltip.propTypes = {
    * - 'item': Shows data about the item below the mouse.
    * - 'axis': Shows values associated with the hovered x value
    * - 'none': Does not display tooltip
-   * @default 'item'
+   * @default 'axis'
    */
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;

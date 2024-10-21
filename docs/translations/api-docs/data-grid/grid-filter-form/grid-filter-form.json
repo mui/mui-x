@@ -1,0 +1,55 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "applyFilterChanges": {
+      "description": "Callback called when the operator, column field or value is changed.",
+      "typeDescriptions": {
+        "item": "The updated <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+      }
+    },
+    "applyMultiFilterOperatorChanges": {
+      "description": "Callback called when the logic operator is changed.",
+      "typeDescriptions": { "operator": "The new logic operator." }
+    },
+    "columnInputProps": { "description": "Props passed to the column input component." },
+    "columnsSort": {
+      "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop."
+    },
+    "deleteFilter": {
+      "description": "Callback called when the delete button is clicked.",
+      "typeDescriptions": {
+        "item": "The deleted <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a>."
+      }
+    },
+    "deleteIconProps": { "description": "Props passed to the delete icon." },
+    "disableMultiFilterOperator": {
+      "description": "If <code>true</code>, disables the logic operator field but still renders it."
+    },
+    "filterColumns": {
+      "description": "Allows to filter the columns displayed in the filter form.",
+      "typeDescriptions": { "args": "The columns of the grid and name of field." }
+    },
+    "focusElementRef": {
+      "description": "A ref allowing to set imperative focus. It can be passed to the el"
+    },
+    "hasMultipleFilters": {
+      "description": "If <code>true</code>, the logic operator field is rendered. The field will be invisible if <code>showMultiFilterOperators</code> is also <code>true</code>."
+    },
+    "item": {
+      "description": "The <a href='/x/api/data-grid/grid-filter-item/'>GridFilterItem</a> representing this form."
+    },
+    "logicOperatorInputProps": {
+      "description": "Props passed to the logic operator input component."
+    },
+    "logicOperators": { "description": "Sets the available logic operators." },
+    "operatorInputProps": { "description": "Props passed to the operator input component." },
+    "readOnly": {
+      "description": "<code>true</code> if the filter is disabled/read only. i.e. <code>colDef.fiterable = false</code> but passed in <code>filterModel</code>"
+    },
+    "showMultiFilterOperators": {
+      "description": "If <code>true</code>, the logic operator field is visible."
+    },
+    "valueInputProps": { "description": "Props passed to the value input component." }
+  },
+  "classDescriptions": {}
+}

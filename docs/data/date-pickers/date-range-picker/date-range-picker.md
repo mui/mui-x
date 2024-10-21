@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The Date Range Picker let the user select a range of dates.</p>
+<p class="description">The Date Range Picker lets the user select a range of dates.</p>
 
 ## Basic usage
 
@@ -18,12 +18,14 @@ materialDesign: https://m2.material.io/components/date-pickers
 ## Component composition
 
 The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
-All the documented props of those two components can also be passed to the Date Range Picker component.
 
 Check-out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
+
+You can check the available props of the combined component on the dedicated [API page](/x/api/date-pickers/date-range-picker/#props).
+Some [MultiInputDateRangeField props](/x/api/date-pickers/multi-input-date-range-field/#props) are not available on the Picker component, you can use `slotProps.field` to pass them to the field.
 
 ## Uncontrolled vs. controlled value
 
@@ -83,7 +85,8 @@ This prop will be ignored on the mobile picker.
 
 ### Use a single input field
 
-You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
+In such case the Picker component can pass the `name` prop to the input.
 
 {{"demo": "SingleInputDateRangePicker.js"}}
 
@@ -101,9 +104,13 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 You can find the documentation in the [Custom field page](/x/react-date-pickers/custom-field/).
 
+## Localization
+
+See the [Date format and localization](/x/react-date-pickers/adapters-locale/) and [Translated components](/x/react-date-pickers/localization/) documentation pages for more details.
+
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+See the [Validation](/x/react-date-pickers/validation/) documentation page for more details.
 
 ## Month Range Picker 🚧
 

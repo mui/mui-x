@@ -1,21 +1,49 @@
 {
   "props": {
-    "className": { "type": { "name": "string" } },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "view": { "type": { "name": "enum", "description": "'day'" }, "required": true },
+    "views": {
+      "type": { "name": "arrayOf", "description": "Array&lt;'day'&gt;" },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": [],
   "name": "DateRangePickerToolbar",
   "imports": [
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro/DateRangePicker';",
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],
-  "styles": {
-    "classes": ["root", "container"],
-    "globalClasses": {},
-    "name": "MuiDateRangePickerToolbar"
-  },
+  "classes": [
+    {
+      "key": "container",
+      "className": "MuiDateRangePickerToolbar-container",
+      "description": "Styles applied to the container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiDateRangePickerToolbar-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiDateRangePickerToolbar",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePickerToolbar.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom slots and subcomponents</a></li></ul>",
+  "cssComponent": false
 }

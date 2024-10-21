@@ -2,19 +2,20 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { PickersLayout, PickersLayoutSlotProps } from '@mui/x-date-pickers/PickersLayout';
 import {
-  PickersLayout,
-  PickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
-import { usePicker, DIALOG_WIDTH, ExportedBaseToolbarProps } from '@mui/x-date-pickers/internals';
-import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+  usePicker,
+  DIALOG_WIDTH,
+  ExportedBaseToolbarProps,
+  DateOrTimeViewWithMeridiem,
+} from '@mui/x-date-pickers/internals';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange } from '../../models/range';
+import { DateRange, RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
-import { RangeFieldSection } from '../../models/fields';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -27,7 +28,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticDateRangePicker
  */
 export const useStaticRangePicker = <
-  TDate,
+  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
@@ -50,6 +51,7 @@ export const useStaticRangePicker = <
     ...pickerParams,
     props,
     autoFocusView: autoFocus ?? false,
+    fieldRef: undefined,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -58,7 +60,7 @@ export const useStaticRangePicker = <
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,

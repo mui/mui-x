@@ -8,6 +8,8 @@ export interface ChartsLegendClasses {
   root: string;
   /** Styles applied to a series element. */
   series: string;
+  /** Styles applied to the item background. */
+  itemBackground: string;
   /** Styles applied to series mark element. */
   mark: string;
   /** Styles applied to the series label. */
@@ -20,13 +22,14 @@ export interface ChartsLegendClasses {
 
 export type ChartsLegendClassKey = keyof ChartsLegendClasses;
 
-export function getChartsLegendUtilityClass(slot: string) {
+export function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLegend', slot);
 }
 
 export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiChartsLegend', [
   'root',
   'series',
+  'itemBackground',
   'mark',
   'label',
   'column',
