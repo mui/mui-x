@@ -6,7 +6,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
 import { useCartesianContext } from '../context/CartesianProvider';
 
-type AxisData = {
+export type ChartsAxisData = {
   dataIndex: number;
   axisValue?: number | Date | string;
   seriesValues: Record<string, number | null | undefined>;
@@ -19,7 +19,7 @@ export interface ChartsOnAxisClickHandlerProps {
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: MouseEvent, data: null | AxisData) => void;
+  onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
 }
 
 function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
