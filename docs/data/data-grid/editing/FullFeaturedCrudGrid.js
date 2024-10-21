@@ -13,6 +13,10 @@ import {
   GridRowEditStopReasons,
   Toolbar,
   ToolbarButton,
+  gridEditRowsStateSelector,
+  useGridSelector,
+  useGridApiContext,
+  GridActionsCell,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -90,6 +94,99 @@ function EditToolbar(props) {
   );
 }
 
+const ActionHandlersContext = React.createContext({
+  handleCancelClick: () => {},
+  handleDeleteClick: () => {},
+  handleEditClick: () => {},
+  handleSaveClick: () => {},
+});
+
+function ActionsCell(props) {
+  const apiRef = useGridApiContext();
+  const rowModesModel = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const isInEditMode = typeof rowModesModel[props.id] !== 'undefined';
+
+  const { handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick } =
+    React.useContext(ActionHandlersContext);
+
+  return (
+    <GridActionsCell
+      {...props}
+      actions={
+        isInEditMode
+          ? [
+              <GridActionsCellItem
+                icon={<SaveIcon />}
+                label="Save"
+                sx={{
+                  color: 'primary.main',
+                }}
+                onClick={() => handleSaveClick(props.id)}
+              />,
+              <GridActionsCellItem
+                icon={<CancelIcon />}
+                label="Cancel"
+                className="textPrimary"
+                onClick={() => handleCancelClick(props.id)}
+                color="inherit"
+              />,
+            ]
+          : [
+              <GridActionsCellItem
+                icon={<EditIcon />}
+                label="Edit"
+                className="textPrimary"
+                onClick={() => handleEditClick(props.id)}
+                color="inherit"
+              />,
+              <GridActionsCellItem
+                icon={<DeleteIcon />}
+                label="Delete"
+                onClick={() => handleDeleteClick(props.id)}
+                color="inherit"
+              />,
+            ]
+      }
+    />
+  );
+}
+
+const columns = [
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 80,
+    align: 'left',
+    headerAlign: 'left',
+    editable: true,
+  },
+  {
+    field: 'joinDate',
+    headerName: 'Join date',
+    type: 'date',
+    width: 180,
+    editable: true,
+  },
+  {
+    field: 'role',
+    headerName: 'Department',
+    width: 220,
+    editable: true,
+    type: 'singleSelect',
+    valueOptions: ['Market', 'Finance', 'Development'],
+  },
+  {
+    field: 'actions',
+    type: 'actions',
+    headerName: 'Actions',
+    width: 100,
+    cellClassName: 'actions',
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+];
+
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
@@ -100,115 +197,50 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const handleEditClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+  const actionHandlers = React.useMemo(
+    () => ({
+      handleEditClick: (id) => {
+        setRowModesModel((prevRowModesModel) => ({
+          ...prevRowModesModel,
+          [id]: { mode: GridRowModes.Edit },
+        }));
+      },
+      handleSaveClick: (id) => {
+        setRowModesModel((prevRowModesModel) => ({
+          ...prevRowModesModel,
+          [id]: { mode: GridRowModes.View },
+        }));
+      },
+      handleDeleteClick: (id) => {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      },
+      handleCancelClick: (id) => {
+        setRowModesModel((prevRowModesModel) => {
+          return {
+            ...prevRowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+          };
+        });
 
-  const handleSaveClick = (id) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
+        setRows((prevRows) => {
+          const editedRow = prevRows.find((row) => row.id === id);
+          if (editedRow.isNew) {
+            return prevRows.filter((row) => row.id !== id);
+          }
+          return prevRows;
+        });
+      },
+    }),
+    [],
+  );
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
+    );
     return updatedRow;
   };
-
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
-
-  const columns = [
-    { field: 'name', headerName: 'Name', width: 180, editable: true },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 80,
-      align: 'left',
-      headerAlign: 'left',
-      editable: true,
-    },
-    {
-      field: 'joinDate',
-      headerName: 'Join date',
-      type: 'date',
-      width: 180,
-      editable: true,
-    },
-    {
-      field: 'role',
-      headerName: 'Department',
-      width: 220,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Market', 'Finance', 'Development'],
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              material={{
-                sx: {
-                  color: 'primary.main',
-                },
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ];
 
   return (
     <Box
@@ -223,20 +255,21 @@ export default function FullFeaturedCrudGrid() {
         },
       }}
     >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        slots={{ toolbar: EditToolbar }}
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }}
-        showToolbar
-      />
+      <ActionHandlersContext.Provider value={actionHandlers}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={setRowModesModel}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{ toolbar: EditToolbar }}
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }}
+        />
+      </ActionHandlersContext.Provider>
     </Box>
   );
 }
