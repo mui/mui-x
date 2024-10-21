@@ -250,6 +250,7 @@ GridActionsCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
   /**
    * The column of the row that the current cell belongs to.
    */
