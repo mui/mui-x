@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
 import {
-  MuiCancellableEvent,
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
@@ -38,7 +38,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           return {};
         }
 
-        const handleDragStart = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
           if (event.defaultMuiPrevented || event.defaultPrevented) {
             return;
@@ -66,7 +66,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           instance.startDraggingItem(itemId);
         };
 
-        const handleRootDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -75,7 +75,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           event.preventDefault();
         };
 
-        const handleRootDragEnd = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnd?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -100,7 +100,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           return {};
         }
 
-        const handleDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented || validActionsRef.current == null) {
             return;
@@ -119,7 +119,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           });
         };
 
-        const handleDragEnter = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragEnter = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnter?.(event);
           if (event.defaultMuiPrevented) {
             return;
