@@ -59,6 +59,7 @@
   { "name": "ChartsAxisClasses", "kind": "Interface" },
   { "name": "ChartsAxisClassKey", "kind": "TypeAlias" },
   { "name": "ChartsAxisContentProps", "kind": "TypeAlias" },
+  { "name": "ChartsAxisData", "kind": "TypeAlias" },
   { "name": "ChartsAxisHighlight", "kind": "Function" },
   { "name": "chartsAxisHighlightClasses", "kind": "Variable" },
   { "name": "ChartsAxisHighlightClasses", "kind": "Interface" },
