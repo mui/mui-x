@@ -40,7 +40,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     tabIndex,
     position = 'bottom-end',
     focusElementRef,
-    children: actions,
+    children,
     ...other
   } = props;
   const [focusedButtonIndex, setFocusedButtonIndex] = React.useState(-1);
@@ -54,6 +54,16 @@ function GridActionsCell(props: GridActionsCellProps) {
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+
+  const actions =
+    children ??
+    (hasActions(colDef) ? colDef.getActions(apiRef.current.getRowParams(id)) : undefined);
+
+  if (!actions) {
+    throw new Error(
+      'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
+    );
+  }
 
   const iconButtons = actions.filter((option) => !option.props.showInMenu);
   const menuButtons = actions.filter((option) => option.props.showInMenu);
@@ -250,7 +260,7 @@ GridActionsCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.arrayOf(PropTypes.element),
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -325,13 +335,6 @@ GridActionsCell.Item = GridActionsCellItem;
 
 export { GridActionsCell };
 
-export const renderActionsCell = (params: GridRenderCellParams) => {
-  const { colDef, id, api } = params;
-  if (!hasActions(colDef)) {
-    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
-  }
-
-  const actions = colDef.getActions(api.getRowParams(id));
-
-  return <GridActionsCell {...params}>{actions}</GridActionsCell>;
-};
+export const renderActionsCell = (params: GridRenderCellParams) => (
+  <GridActionsCell {...params}>{null as any}</GridActionsCell>
+);
