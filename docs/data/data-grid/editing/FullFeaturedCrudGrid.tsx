@@ -135,44 +135,41 @@ function ActionsCell(props: GridRenderCellParams) {
     React.useContext(ActionHandlersContext);
 
   return (
-    <GridActionsCell
-      {...props}
-      actions={
-        isInEditMode
-          ? [
-              <GridActionsCellItem
-                icon={<SaveIcon />}
-                label="Save"
-                sx={{
-                  color: 'primary.main',
-                }}
-                onClick={() => handleSaveClick(props.id)}
-              />,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={() => handleCancelClick(props.id)}
-                color="inherit"
-              />,
-            ]
-          : [
-              <GridActionsCellItem
-                icon={<EditIcon />}
-                label="Edit"
-                className="textPrimary"
-                onClick={() => handleEditClick(props.id)}
-                color="inherit"
-              />,
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                onClick={() => handleDeleteClick(props.id)}
-                color="inherit"
-              />,
-            ]
-      }
-    />
+    <GridActionsCell {...props}>
+      {isInEditMode
+        ? [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={() => handleSaveClick(props.id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={() => handleCancelClick(props.id)}
+              color="inherit"
+            />,
+          ]
+        : [
+            <GridActionsCellItem
+              icon={<EditIcon />}
+              label="Edit"
+              className="textPrimary"
+              onClick={() => handleEditClick(props.id)}
+              color="inherit"
+            />,
+            <GridActionsCellItem
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={() => handleDeleteClick(props.id)}
+              color="inherit"
+            />,
+          ]}
+    </GridActionsCell>
   );
 }
 
