@@ -6,6 +6,11 @@ export type { GridSlotProps } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
+   * The custom Badge component used in the grid for both header and cells.
+   * @default Badge
+   */
+  baseBadge: React.JSXElementConstructor<GridSlotProps['baseBadge']>;
+  /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
@@ -15,6 +20,11 @@ export interface GridBaseSlots {
    * @default Chip
    */
   baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
+  /**
+   * The custom Divider component used in the grid.
+   * @default Divider
+   */
+  baseDivider: React.JSXElementConstructor<GridSlotProps['baseDivider']>;
   /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment

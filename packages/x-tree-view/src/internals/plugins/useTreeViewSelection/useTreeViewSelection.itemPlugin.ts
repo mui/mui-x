@@ -1,9 +1,13 @@
 import * as React from 'react';
 import type { TreeItem2Props } from '../../../TreeItem2';
 import type { TreeItemProps } from '../../../TreeItem';
-import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
+import {
+  TreeViewItemId,
+  TreeViewSelectionPropagation,
+  TreeViewCancellableEvent,
+} from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { MuiCancellableEvent, TreeViewInstance, TreeViewItemPlugin } from '../../models';
+import { TreeViewInstance, TreeViewItemPlugin } from '../../models';
 import {
   UseTreeItem2CheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
@@ -76,7 +80,9 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin<TreeItemProps | 
         interactions,
         status,
       }): UseTreeItem2CheckboxSlotPropsFromSelection => {
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
+        const handleChange = (
+          event: React.ChangeEvent<HTMLInputElement> & TreeViewCancellableEvent,
+        ) => {
           externalEventHandlers.onChange?.(event);
           if (event.defaultMuiPrevented) {
             return;
