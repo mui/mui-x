@@ -9,6 +9,7 @@ import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import type { GridActionsCellItemProps } from './GridActionsCellItem';
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -20,6 +21,7 @@ interface TouchRippleActions {
 interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
+  actions: readonly React.ReactElement<GridActionsCellItemProps>[];
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
@@ -38,6 +40,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     tabIndex,
     position = 'bottom-end',
     focusElementRef,
+    actions,
     ...other
   } = props;
   const [focusedButtonIndex, setFocusedButtonIndex] = React.useState(-1);
@@ -52,13 +55,8 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonId = useId();
   const rootProps = useGridRootProps();
 
-  if (!hasActions(colDef)) {
-    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
-  }
-
-  const options = colDef.getActions(apiRef.current.getRowParams(id));
-  const iconButtons = options.filter((option) => !option.props.showInMenu);
-  const menuButtons = options.filter((option) => option.props.showInMenu);
+  const iconButtons = actions.filter((option) => !option.props.showInMenu);
+  const menuButtons = actions.filter((option) => option.props.showInMenu);
   const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useLayoutEffect(() => {
@@ -98,12 +96,12 @@ function GridActionsCell(props: GridActionsCellProps) {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
           // find the first focusable button and pass the index to the state
-          const focusableButtonIndex = options.findIndex((o) => !o.props.disabled);
+          const focusableButtonIndex = actions.findIndex((o) => !o.props.disabled);
           setFocusedButtonIndex(focusableButtonIndex);
         }
       },
     }),
-    [options],
+    [actions],
   );
 
   React.useEffect(() => {
@@ -155,7 +153,7 @@ function GridActionsCell(props: GridActionsCellProps) {
     }
 
     const getNewIndex = (index: number, direction: 'left' | 'right'): number => {
-      if (index < 0 || index > options.length) {
+      if (index < 0 || index > actions.length) {
         return index;
       }
 
@@ -164,7 +162,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       const indexMod = (direction === 'left' ? -1 : 1) * rtlMod;
 
       // if the button that should receive focus is disabled go one more step
-      return options[index + indexMod]?.props.disabled
+      return actions[index + indexMod]?.props.disabled
         ? getNewIndex(index + indexMod, direction)
         : index + indexMod;
     };
@@ -326,4 +324,13 @@ GridActionsCell.propTypes = {
 
 export { GridActionsCell };
 
-export const renderActionsCell = (params: GridRenderCellParams) => <GridActionsCell {...params} />;
+export const renderActionsCell = (params: GridRenderCellParams) => {
+  const { colDef, id, api } = params;
+  if (!hasActions(colDef)) {
+    throw new Error('MUI X: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const actions = colDef.getActions(api.getRowParams(id));
+
+  return <GridActionsCell {...params} actions={actions} />;
+};
