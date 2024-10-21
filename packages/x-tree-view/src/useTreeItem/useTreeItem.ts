@@ -3,6 +3,7 @@ import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
+import { TreeViewCancellableEvent } from '../models';
 import {
   UseTreeItemParameters,
   UseTreeItemReturnValue,
@@ -20,10 +21,7 @@ import {
   UseTreeItemContentSlotPropsFromUseTreeItem,
 } from './useTreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import {
-  MuiCancellableEvent,
-  TreeViewItemPluginSlotPropsEnhancerParams,
-} from '../internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -66,7 +64,7 @@ export const useTreeItem = <
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.FocusEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onFocus?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -80,7 +78,7 @@ export const useTreeItem = <
 
   const createRootHandleBlur =
     (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.FocusEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onBlur?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -110,7 +108,7 @@ export const useTreeItem = <
 
   const createRootHandleKeyDown =
     (otherHandlers: EventHandlers) =>
-    (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
       if (
         event.defaultMuiPrevented ||
@@ -123,7 +121,7 @@ export const useTreeItem = <
     };
 
   const createLabelHandleDoubleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -132,7 +130,7 @@ export const useTreeItem = <
     };
 
   const createContentHandleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
       onItemClick?.(event, itemId);
 
@@ -149,7 +147,7 @@ export const useTreeItem = <
     };
 
   const createContentHandleMouseDown =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -163,7 +161,7 @@ export const useTreeItem = <
 
   const createCheckboxHandleChange =
     (otherHandlers: EventHandlers) =>
-    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
+    (event: React.ChangeEvent<HTMLInputElement> & TreeViewCancellableEvent) => {
       otherHandlers.onChange?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -177,7 +175,7 @@ export const useTreeItem = <
     };
 
   const createIconContainerHandleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
       if (event.defaultMuiPrevented) {
         return;

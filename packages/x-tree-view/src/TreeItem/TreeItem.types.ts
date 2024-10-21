@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/utils';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItemSlots extends TreeItemIconSlots {
   /**
@@ -87,11 +87,11 @@ export interface TreeItemProps
   /**
    * Callback fired when the item root is blurred.
    */
-  onBlur?: MuiCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
+  onBlur?: TreeViewCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
   /**
    * Callback fired when a key is pressed on the keyboard and the tree is in focus.
    */
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItemOwnerState extends Omit<TreeItemProps, 'disabled'>, UseTreeItemStatus {}
