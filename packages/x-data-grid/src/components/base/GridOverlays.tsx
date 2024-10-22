@@ -37,7 +37,6 @@ const GridOverlayWrapperRoot = styled('div', {
           overlayType === 'loadingOverlay'
             ? 5 // Should be above pinned columns, pinned rows, and detail panel
             : 4, // Should be above pinned columns and detail panel
-        flex: 1,
       }
     : {},
 );
