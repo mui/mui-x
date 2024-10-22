@@ -206,21 +206,26 @@ function AppWrapper(props) {
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+    const productIdSubpathMap = {
+      introduction: '/x/introduction',
+      'x-data-grid': '/x/react-data-grid',
+      'x-date-pickers': '/x/react-date-pickers',
+      'x-charts': '/x/react-charts',
+      'x-tree-view': '/x/react-tree-view',
+    };
+
+    const getVersionOptions = (id, versions) =>
+      versions.map((version) => ({
+        text: version,
+        href: `https://${version !== process.env.LIB_VERSION ? `${version}.` : ''}mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+        current: version.length > 4, // excludes 'next' and all 'vx' versions, but includes 'vx.x.x'
+      }));
 
     let productIdentifier = {
       metadata: '',
       name: 'MUI X',
       versions: [
-        {
-          text: 'next',
-          href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-        },
-        {
-          text: `v${process.env.LIB_VERSION}`,
-          current: true,
-        },
-        { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/introduction/` },
-        { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
+        ...getVersionOptions('introduction', ['next', `v${process.env.LIB_VERSION}`, 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -230,16 +235,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          {
-            text: 'next',
-            href: `https://next.mui.com${languagePrefix}/x/introduction/`,
-          },
-          {
-            text: `v${process.env.DATA_GRID_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-data-grid/` },
-          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/react-data-grid/` },
+          ...getVersionOptions('x-data-grid', [
+            'next',
+            `v${process.env.DATA_GRID_VERSION}`,
+            'v6',
+            'v5',
+          ]),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -248,18 +249,11 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          {
-            text: 'next',
-            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/`,
-          },
-          {
-            text: `v${process.env.DATE_PICKERS_VERSION}`,
-            current: true,
-          },
-          {
-            text: 'v6',
-            href: `https://v6.mui.com${languagePrefix}/x/react-date-pickers/`,
-          },
+          ...getVersionOptions('x-date-pickers', [
+            'next',
+            `v${process.env.DATE_PICKERS_VERSION}`,
+            'v6',
+          ]),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -270,31 +264,14 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [
-          {
-            text: 'next',
-            href: `https://next.mui.com${languagePrefix}/x/react-charts/`,
-          },
-          {
-            text: `v${process.env.CHARTS_VERSION}`,
-            current: true,
-          },
-          { text: 'v6', href: `https://v6.mui.com${languagePrefix}/x/react-charts/` },
-        ],
+        versions: getVersionOptions('x-charts', ['next', `v${process.env.CHARTS_VERSION}`, 'v6']),
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          {
-            text: 'next',
-            href: `https://next.mui.com${languagePrefix}/x/react-tree-view/`,
-          },
-          {
-            text: `v${process.env.TREE_VIEW_VERSION}`,
-            current: true,
-          },
+          ...getVersionOptions('x-tree-view', ['next', `v${process.env.TREE_VIEW_VERSION}`]),
           {
             text: 'v6',
             href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
