@@ -99,7 +99,7 @@ export const useDesktopPicker = <
     additionalProps: {
       position: 'end' as const,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const OpenPickerButton = slots.openPickerButton ?? IconButton;
@@ -112,7 +112,7 @@ export const useDesktopPicker = <
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
       edge: inputAdornmentProps.position,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const OpenPickerIcon = slots.openPickerIcon;

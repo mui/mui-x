@@ -90,12 +90,12 @@ export interface ExportedUseDesktopPickerSlotProps<
     PickerOwnerState<TDate | null>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: SlotComponentProps<
-    typeof IconButton,
+  inputAdornment?: SlotComponentPropsFromProps<
+    InputAdornmentProps,
     {},
-    UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
+    PickerOwnerState<TDate | null>
   >;
+  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState<TDate | null>>;
   openPickerIcon?: SlotComponentPropsFromProps<
     Record<string, any>,
     {},
