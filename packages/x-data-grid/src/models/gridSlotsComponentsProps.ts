@@ -33,6 +33,11 @@ import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
 type DividerProps = {};
+type PopperV8Props = {
+  open: boolean;
+  children: React.ReactNode;
+  onClose: () => void;
+};
 
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}
@@ -81,6 +86,7 @@ export interface GridSlotProps {
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
+  basePopperV8: PopperV8Props;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;
