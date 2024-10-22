@@ -6,7 +6,7 @@ import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { usePickerOwnerState } from './usePickerOwnerState';
-import { usePickerContextValue } from './usePickerContextValue';
+import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
   TValue,
@@ -25,6 +25,7 @@ export const usePicker = <
   autoFocusView,
   rendererInterceptor,
   fieldRef,
+  localeText,
 }: UsePickerParams<
   TValue,
   TDate,
@@ -32,7 +33,7 @@ export const usePicker = <
   TSection,
   TExternalProps,
   TAdditionalProps
->): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
+>): UsePickerResponse<TValue, TDate, TView, TSection, InferError<TExternalProps>> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
@@ -75,9 +76,10 @@ export const usePicker = <
 
   const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
 
-  const pickerContextValue = usePickerContextValue({
+  const providerProps = usePickerProvider({
     pickerValueResponse,
     ownerState: pickerOwnerState,
+    localeText,
   });
 
   return {
@@ -94,8 +96,8 @@ export const usePicker = <
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
 
-    // Picker context
-    contextValue: pickerContextValue,
+    // Picker provider
+    providerProps,
 
     // Picker owner state
     ownerState: pickerOwnerState,

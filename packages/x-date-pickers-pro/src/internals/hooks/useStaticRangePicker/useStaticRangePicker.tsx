@@ -40,7 +40,7 @@ export const useStaticRangePicker = <
 
   const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
-  const { layoutProps, renderCurrentView, contextValue } = usePicker<
+  const { layoutProps, providerProps, renderCurrentView } = usePicker<
     DateRange<TDate>,
     TDate,
     TView,
@@ -52,6 +52,7 @@ export const useStaticRangePicker = <
     props,
     autoFocusView: autoFocus ?? false,
     fieldRef: undefined,
+    localeText,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -70,7 +71,7 @@ export const useStaticRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickersProvider contextValue={contextValue} localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}

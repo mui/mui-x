@@ -9,7 +9,7 @@ import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerValidDate } from '../models';
-import { usePickersContext } from '../hooks';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -51,7 +51,7 @@ const usePickerLayout = <
 >(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState } = usePickersContext<TValue>();
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext<TValue>();
 
   const {
     wrapperVariant,

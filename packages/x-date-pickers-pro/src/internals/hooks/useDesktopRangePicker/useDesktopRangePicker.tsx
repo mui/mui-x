@@ -95,10 +95,10 @@ export const useDesktopRangePicker = <
     open,
     actions,
     layoutProps,
+    providerProps,
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-    contextValue,
     ownerState,
   } = usePicker<
     DateRange<TDate>,
@@ -113,6 +113,7 @@ export const useDesktopRangePicker = <
     wrapperVariant: 'desktop',
     autoFocusView: false,
     fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    localeText,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -216,7 +217,7 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickersProvider contextValue={contextValue} localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"

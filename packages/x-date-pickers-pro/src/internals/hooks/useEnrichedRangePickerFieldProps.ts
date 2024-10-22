@@ -114,7 +114,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Pick<
-      UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
+      UsePickerResponse<DateRange<TDate>, TDate, TView, RangeFieldSection, any>,
       'open' | 'actions'
     >,
     UseRangePositionResponse {
