@@ -184,7 +184,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         getData: () => pasteText,
       };
 
-      fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, ctrlKey: true }); // Ctrl+V
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
       document.activeElement!.dispatchEvent(pasteEvent);
     }
 
@@ -196,7 +196,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
     });
@@ -209,7 +209,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         apiRef.current.subscribeEvent('rowEditStart', listener);
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
-        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
+        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
     });

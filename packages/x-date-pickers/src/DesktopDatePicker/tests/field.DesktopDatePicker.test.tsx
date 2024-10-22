@@ -24,7 +24,7 @@ describe('<DesktopDatePicker /> - Field', () => {
     });
 
     it('should be able to reset a single section', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: true as const,
@@ -47,7 +47,7 @@ describe('<DesktopDatePicker /> - Field', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps(
         {
           enableAccessibleFieldDOMStructure: false as const,
@@ -72,7 +72,7 @@ describe('<DesktopDatePicker /> - Field', () => {
 
     it('should adapt the default field format based on the props of the picker', () => {
       const testFormat = (props: DesktopDatePickerProps<any, any>, expectedFormat: string) => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps(
           { ...props, enableAccessibleFieldDOMStructure: true as const },
           { componentFamily: 'picker' },
@@ -80,7 +80,7 @@ describe('<DesktopDatePicker /> - Field', () => {
         expectFieldValueV7(view.getSectionsContainer(), expectedFormat);
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps(
           { ...props, enableAccessibleFieldDOMStructure: false as const },
           { componentFamily: 'picker' },

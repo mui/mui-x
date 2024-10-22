@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { TreeViewPluginSignature, MuiCancellableEvent } from '../../models';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
-import { TreeViewItemId } from '../../../models';
+import { TreeViewItemId, TreeViewCancellableEvent } from '../../../models';
 import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewKeyboardNavigationInstance {
@@ -18,11 +18,11 @@ export interface UseTreeViewKeyboardNavigationInstance {
   /**
    * Callback fired when a key is pressed on an item.
    * Handles all the keyboard navigation logic.
-   * @param {React.KeyboardEvent<HTMLElement> & MuiCancellableEvent} event The keyboard event that triggered the callback.
+   * @param {React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent} event The keyboard event that triggered the callback.
    * @param {TreeViewItemId} itemId The id of the item that the event was triggered on.
    */
   handleItemKeyDown: (
-    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
+    event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: TreeViewItemId,
   ) => void;
 }
