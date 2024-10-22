@@ -958,7 +958,11 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should consider the spacing when computing the content size', () => {
+    it('should consider the spacing when computing the content size', function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
@@ -975,7 +979,11 @@ describe('<DataGrid /> - Rows', () => {
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
-    it('should update the content size when getRowSpacing is removed', () => {
+    it('should update the content size when getRowSpacing is removed', function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
       const spacingTop = 5;
       const spacingBottom = 10;
       const rowHeight = 50;
