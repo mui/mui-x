@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TreeViewItemId } from '../models';
-import { TreeViewPublicAPI, MuiCancellableEventHandler } from '../internals/models';
+import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
+import { TreeViewPublicAPI } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
@@ -41,9 +41,9 @@ export interface UseTreeItem2RootSlotPropsFromUseTreeItem {
   'aria-expanded': React.AriaAttributes['aria-expanded'];
   'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
-  onFocus: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
-  onBlur: MuiCancellableEventHandler<React.FocusEvent<HTMLElement>>;
-  onKeyDown: MuiCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
+  onFocus: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
+  onKeyDown: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
   /**
    * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
@@ -57,8 +57,8 @@ export type UseTreeItem2RootSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2RootSlotOwnProps;
 
 export interface UseTreeItem2ContentSlotPropsFromUseTreeItem {
-  onClick: MuiCancellableEventHandler<React.MouseEvent>;
-  onMouseDown: MuiCancellableEventHandler<React.MouseEvent>;
+  onClick: TreeViewCancellableEventHandler<React.MouseEvent>;
+  onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItem2Status;
   /**
@@ -74,7 +74,7 @@ export type UseTreeItem2ContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItem2ContentSlotOwnProps;
 
 export interface UseTreeItem2IconContainerSlotOwnProps {
-  onClick: MuiCancellableEventHandler<React.MouseEvent>;
+  onClick: TreeViewCancellableEventHandler<React.MouseEvent>;
 }
 
 export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProps &
@@ -82,7 +82,7 @@ export type UseTreeItemIconContainerSlotProps<ExternalProps = {}> = ExternalProp
 
 export interface UseTreeItem2LabelSlotOwnProps {
   children: React.ReactNode;
-  onDoubleClick: MuiCancellableEventHandler<React.MouseEvent>;
+  onDoubleClick: TreeViewCancellableEventHandler<React.MouseEvent>;
   /**
    * Only defined when the `isItemEditable` experimental feature is enabled.
    */
@@ -100,7 +100,7 @@ export type UseTreeItem2LabelInputSlotProps<ExternalProps = {}> = ExternalProps 
 export interface UseTreeItem2CheckboxSlotOwnProps {
   visible: boolean;
   checked: boolean;
-  onChange: MuiCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
+  onChange: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
   disabled: boolean;
   ref: React.RefObject<HTMLButtonElement>;
   tabIndex: -1;

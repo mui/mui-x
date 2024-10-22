@@ -8,7 +8,7 @@ import {
   TreeItem2DragAndDropOverlayProps,
 } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2LabelInput, TreeItem2LabelInputProps } from '../TreeItem2LabelInput';
-import { MuiCancellableEvent } from '../internals/models';
+import { TreeViewCancellableEvent } from '../models';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -136,7 +136,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
-  const handleLabelDoubleClick = (event: React.MouseEvent & MuiCancellableEvent) => {
+  const handleLabelDoubleClick = (event: React.MouseEvent & TreeViewCancellableEvent) => {
     if (event.defaultMuiPrevented) {
       return;
     }
