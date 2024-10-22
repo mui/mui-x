@@ -16,7 +16,7 @@ export interface TreeItem2IconSlots {
    */
   endIcon?: React.ElementType;
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon?: React.ElementType;
 }

@@ -12,7 +12,7 @@ export interface TreeViewItemToRenderProps {
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
-   * When used in the `SimpleTreeView`, it returns an object with the `id` and `label` properties.
+   * When used in the Simple Tree View, it returns an object with the `id` and `label` properties.
    * @param {string} itemId The id of the item to retrieve.
    * @returns {R} The item with the given id.
    */
@@ -119,7 +119,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   getItemId?: (item: R) => TreeViewItemId;
   /**
-   * Callback fired when the `content` slot of a given tree item is clicked.
+   * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
    * @param {string} itemId The id of the focused item.
    */
