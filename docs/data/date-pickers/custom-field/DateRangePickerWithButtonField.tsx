@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import useForkRef from '@mui/utils/useForkRef';
-import { RangeValue } from '@mui/x-date-pickers/models';
-import { FieldType } from '@mui/x-date-pickers-pro/models';
+import { DateRange, FieldType } from '@mui/x-date-pickers-pro/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -72,7 +71,7 @@ const ButtonDateRangePicker = React.forwardRef(
 );
 
 export default function DateRangePickerWithButtonField() {
-  const [value, setValue] = React.useState<RangeValue>([null, null]);
+  const [value, setValue] = React.useState<DateRange>([null, null]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

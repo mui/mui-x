@@ -4,10 +4,10 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
-import { RangeValue } from '@mui/x-date-pickers/models';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 export default function DateRangeCalendarValue() {
-  const [value, setValue] = React.useState<RangeValue>([
+  const [value, setValue] = React.useState<DateRange>([
     dayjs('2022-04-17'),
     dayjs('2022-04-21'),
   ]);
