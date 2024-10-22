@@ -11,7 +11,7 @@ import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
+import { createIsAfterIgnoreDatePart, isEqualTime } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
@@ -23,7 +23,6 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 import { mergeDateAndTime } from '../internals/utils/date-utils';
-import { isEqualTime } from '../internals/utils/time-utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
