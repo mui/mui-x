@@ -42,7 +42,7 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 // single option
 npx @mui/x-codemod@next --jscodeshift=--run-in-band
 // multiple options
-npx @mui/x-codemod@nexy --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
