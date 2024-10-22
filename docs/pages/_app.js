@@ -218,7 +218,7 @@ function AppWrapper(props) {
         if (version === process.env.LIB_VERSION) {
           return {
             current: true,
-            text: version,
+            text: `v${version}`,
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
