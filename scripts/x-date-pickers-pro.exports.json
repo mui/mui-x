@@ -338,7 +338,6 @@
   { "name": "RangeFieldSection", "kind": "Interface" },
   { "name": "RangeFieldSeparatorProps", "kind": "Interface" },
   { "name": "RangePosition", "kind": "TypeAlias" },
-  { "name": "RangeValue", "kind": "TypeAlias" },
   { "name": "renderDateRangeViewCalendar", "kind": "Variable" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
   { "name": "renderDigitalClockTimeView", "kind": "Variable" },

@@ -5,9 +5,8 @@ import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
-import { TreeViewItemId } from '../models';
+import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
@@ -103,7 +102,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   /**
    * Callback fired when a key of the keyboard is pressed on the item.
    */
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItemOwnerState extends TreeItemProps {

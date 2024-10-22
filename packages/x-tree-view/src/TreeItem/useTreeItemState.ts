@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { MuiCancellableEvent } from '../internals/models/MuiCancellableEvent';
+import { TreeViewCancellableEvent } from '../models';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
@@ -107,7 +107,7 @@ export function useTreeItemState(itemId: string) {
   };
 
   const handleSaveItemLabel = (
-    event: React.SyntheticEvent & MuiCancellableEvent,
+    event: React.SyntheticEvent & TreeViewCancellableEvent,
     label: string,
   ) => {
     if (!hasPlugin(instance, useTreeViewLabel)) {
