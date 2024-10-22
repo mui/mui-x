@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
@@ -43,12 +42,12 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <MenuItem onClick={toggleColumn} disabled={disabled}>
+    <rootProps.slots.baseMenuItem onClick={toggleColumn} disabled={disabled}>
       <ListItemIcon>
         <rootProps.slots.columnMenuHideIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumn')}</ListItemText>
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

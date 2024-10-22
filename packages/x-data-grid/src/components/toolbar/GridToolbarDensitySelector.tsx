@@ -1,10 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
@@ -97,14 +95,14 @@ const GridToolbarDensitySelector = React.forwardRef<
   }
 
   const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
-    <MenuItem
+    <rootProps.slots.baseMenuItem
       key={index}
       onClick={() => handleDensityUpdate(option.value)}
       selected={option.value === density}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
       {option.label}
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   ));
 
   return (
@@ -137,7 +135,7 @@ const GridToolbarDensitySelector = React.forwardRef<
         onClose={handleDensitySelectorClose}
         position="bottom-start"
       >
-        <MenuList
+        <rootProps.slots.baseMenuList
           id={densityMenuId}
           className={gridClasses.menuList}
           aria-labelledby={densityButtonId}
@@ -145,7 +143,7 @@ const GridToolbarDensitySelector = React.forwardRef<
           autoFocusItem={open}
         >
           {densityElements}
-        </MenuList>
+        </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );
