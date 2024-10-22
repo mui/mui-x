@@ -118,6 +118,6 @@
     "@types/stylis": "^4.2.6",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "gm": "^1.25.0",
-    "serve": "^14.2.3"
+    "serve": "^14.2.4"
   }
 }
