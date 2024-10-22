@@ -30,9 +30,9 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch
-    // Use the "latest" npm tag for the master git branch
-    // Use the "next" npm tag for the next git branch
-    return 'latest';
+    // Use the "latest" npm tag for the master git branch after we start working on the next major version
+    // Use this once we branch off the vx branch
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
