@@ -305,7 +305,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   }, [timeStep, utils]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
-    utils.isEqual(option, valueOrReferenceDate),
+    isEqualTime(utils, option, valueOrReferenceDate),
   );
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
