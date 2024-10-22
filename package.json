@@ -62,8 +62,8 @@
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
-    "release:publish": "pnpm publish --recursive --tag latest",
-    "release:publish:dry-run": "pnpm publish --recursive --tag latest --registry=\"http://localhost:4873/\"",
+    "release:publish": "pnpm publish --recursive --tag next",
+    "release:publish:dry-run": "pnpm publish --recursive --tag next --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs",
     "validate": "concurrently \"pnpm prettier && pnpm eslint\" \"pnpm proptypes\" \"pnpm docs:typescript:formatted\" \"pnpm docs:api\"",
     "clean:node_modules": "rimraf --glob \"**/node_modules\""
