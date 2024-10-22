@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import Box from '@mui/material/Box';
+import { useForkRef } from '@mui/x-date-pickers/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
