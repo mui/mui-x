@@ -1177,6 +1177,8 @@
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "baseMenuItem": "The custom MenuItem component used in the grid.",
+    "baseMenuList": "The custom MenuList component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
