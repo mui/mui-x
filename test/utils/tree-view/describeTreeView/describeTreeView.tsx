@@ -325,7 +325,7 @@ type DescribeTreeView = {
  * ```
  *
  * Several things to note:
- * - The `render` function takes an array of items, even for `SimpleTreeView`
+ * - The `render` function takes an array of items, even for Simple Tree View
  * - Except for `items`, all the other properties passed to `render` will be forwarded to the Tree View as props
  * - If an item has no label, its `id` will be used as the label
  */
