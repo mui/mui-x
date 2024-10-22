@@ -60,6 +60,10 @@ const MultiInputTimeRangeFieldSeparator = styled(Typography, {
 });
 
 type MultiInputTimeRangeFieldComponent = (<
+<<<<<<< HEAD
+=======
+  TDate extends PickerValidDate,
+>>>>>>> master
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
@@ -77,6 +81,10 @@ type MultiInputTimeRangeFieldComponent = (<
  * - [MultiInputTimeRangeField API](https://mui.com/x/api/multi-input-time-range-field/)
  */
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
+<<<<<<< HEAD
+=======
+  TDate extends PickerValidDate,
+>>>>>>> master
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,

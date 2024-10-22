@@ -24,8 +24,14 @@ export interface DesktopDateTimeRangePickerSlotProps<
     > {}
 
 export interface DesktopDateTimeRangePickerProps<
+<<<<<<< HEAD
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimeRangePickerProps,
+=======
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> extends BaseDateTimeRangePickerProps<TDate>,
+>>>>>>> master
     DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
