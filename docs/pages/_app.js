@@ -53,7 +53,7 @@ ponyfillGlobal.muiDocConfig = {
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
-    const output = {
+    return {
       ...versions,
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
@@ -68,7 +68,6 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       exceljs: 'latest',
     };
-    return output;
   },
   postProcessImport,
 };
