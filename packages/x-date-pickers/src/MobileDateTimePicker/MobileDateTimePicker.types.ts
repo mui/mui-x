@@ -28,7 +28,7 @@ export interface MobileDateTimePickerSlotProps<
 export interface MobileDateTimePickerProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps {
   /**
