@@ -157,7 +157,7 @@ When the user performs an action to [stop editing](#stop-editing), the `processR
 Use it to send the new values to the server and save them into a database or other storage method.
 The callback is called with three arguments:
 
-1. The updated row with the new values returned by the [`valueSetter`](#value-parser-and-value-setter).
+1. The updated row with the new values returned by the [`valueSetter()`](#value-parser-and-value-setter).
 2. The original values of the row before editing.
 3. An object with additional properties such as `rowId`.
 
@@ -238,10 +238,10 @@ const columns: GridColDef[] = [
 ];
 ```
 
-You can use the `valueSetter` property of the column definition to customize how the row is updated with a new value.
+You can use the `valueSetter()` property of the column definition to customize how the row is updated with a new value.
 This lets you insert a value from a nested object.
 It is called with an object containing the new cell value to be saved as well as the row that the cell belongs to.
-If you are already using a `valueGetter` to extract the value from a nested object, then the `valueSetter` will probably also be necessary.
+If you are already using a `valueGetter` to extract the value from a nested object, then the `valueSetter()` will probably also be necessary.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -254,8 +254,8 @@ const columns: GridColDef[] = [
 ];
 ```
 
-In the following demo, both the `valueParser` and the `valueSetter` are defined for the **Full name** column.
-The `valueParser` capitalizes the value entered, and the `valueSetter` splits the value and saves it correctly into the row model:
+In the following demo, both the `valueParser` and the `valueSetter()` are defined for the **Full name** column.
+The `valueParser` capitalizes the value entered, and the `valueSetter()` splits the value and saves it correctly into the row model:
 
 {{"demo": "ValueParserSetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
