@@ -126,8 +126,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelStyle,
     label,
     labelStyle,
-    tickFontSize,
-    labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
     slots,
@@ -159,7 +157,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
       style: {
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
-        fontSize: tickFontSize ?? 12,
+        fontSize: 12,
         ...tickLabelStyle,
       },
     } as Partial<ChartsTextProps>,
@@ -193,7 +191,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize ?? 14,
+        fontSize: 14,
         textAnchor: 'middle',
         dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
         ...labelStyle,

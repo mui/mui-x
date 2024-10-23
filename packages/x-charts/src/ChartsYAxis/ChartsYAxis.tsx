@@ -39,8 +39,6 @@ const defaultProps = {
   position: 'left',
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 12,
-  labelFontSize: 14,
   tickSize: 6,
 } as const;
 
@@ -68,9 +66,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     position,
     disableLine,
     disableTicks,
-    tickFontSize,
     label,
-    labelFontSize,
     labelStyle,
     tickLabelStyle,
     tickSize: tickSizeProp,
@@ -92,6 +88,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const { left, top, width, height, isPointInside } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
+  const tickFontSize = tickLabelStyle?.fontSize ?? 12;
 
   const yTicks = useTicks({
     scale: yScale,
@@ -135,7 +132,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize,
+        fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
