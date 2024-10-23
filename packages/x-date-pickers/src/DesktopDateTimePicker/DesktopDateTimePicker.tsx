@@ -173,9 +173,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   const views = !shouldHoursRendererContainMeridiemView
     ? resolvedViews.filter((view) => view !== 'meridiem')
     : resolvedViews;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
+  const actionBarActions: PickersActionBarAction[] = ['cancel', 'accept'];
 
   // Props with the default values specific to the desktop variant
   const props = {

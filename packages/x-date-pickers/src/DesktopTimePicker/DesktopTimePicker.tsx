@@ -77,9 +77,8 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
+  const actionBarActions: PickersActionBarAction[] = ['cancel', 'accept'];
+
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
