@@ -51,7 +51,7 @@ Use the `disabled` prop on the Tree Item component to disable interaction and fo
 
 #### The disabledItemsFocusable prop
 
-Note that the demo above also includes a switch.
+Note that the demo below also includes a switch.
 This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
 
 When this prop is set to false:

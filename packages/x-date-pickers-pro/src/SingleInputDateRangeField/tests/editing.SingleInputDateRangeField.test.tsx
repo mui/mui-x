@@ -12,7 +12,7 @@ import {
 describe('<SingleInputDateRangeField /> - Editing', () => {
   describeAdapters(`key: Delete`, SingleInputDateRangeField, ({ adapter, renderWithProps }) => {
     it('should clear all the sections when all sections are selected and all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -33,7 +33,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -51,7 +51,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       let view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -75,7 +75,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       view = renderWithProps({
         format: `${adapter.formats.month} ${adapter.formats.year}`,
         enableAccessibleFieldDOMStructure: false,
@@ -98,7 +98,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -121,7 +121,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -141,7 +141,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should call `onChange` when clearing the first and last section of each date', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -179,7 +179,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -218,7 +218,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     });
 
     it('should not call `onChange` if the section is already empty', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const onChangeV7 = spy();
 
       let view = renderWithProps({
@@ -238,7 +238,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
       view.unmount();
 
-      // Test with v6 input
+      // Test with non-accessible DOM structure
       const onChangeV6 = spy();
 
       view = renderWithProps({
@@ -264,7 +264,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     SingleInputDateRangeField,
     ({ adapter, renderWithProps }) => {
       it('should clear all the sections when all sections are selected and all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
@@ -285,7 +285,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -303,7 +303,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should clear all the sections when all sections are selected and not all sections are completed (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           format: `${adapter.formats.month} ${adapter.formats.year}`,
@@ -327,7 +327,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           format: `${adapter.formats.month} ${adapter.formats.year}`,
           enableAccessibleFieldDOMStructure: false,
@@ -350,7 +350,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` when clearing all sections and both dates are already empty (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -373,7 +373,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -393,7 +393,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should call `onChange` when clearing the first and last section of each date (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -433,7 +433,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
@@ -474,7 +474,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', () => {
-        // Test with v7 input
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
 
         let view = renderWithProps({
@@ -494,7 +494,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         view.unmount();
 
-        // Test with v6 input
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
 
         view = renderWithProps({
