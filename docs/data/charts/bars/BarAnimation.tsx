@@ -5,6 +5,7 @@ import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { HighlightScope } from '@mui/x-charts/context';
 
 export default function BarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);
@@ -70,7 +71,7 @@ export default function BarAnimation() {
 const highlightScope = {
   highlight: 'series',
   fade: 'global',
-} as const;
+} as HighlightScope;
 
 const series = [
   {
