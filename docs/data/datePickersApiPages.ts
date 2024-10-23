@@ -1,6 +1,6 @@
 import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = [
+const datePickersApiPages: MuiPage[] = [
   {
     pathname: '/x/api/date-pickers/date-calendar',
     title: 'DateCalendar',
@@ -233,4 +233,4 @@ const apiPages: MuiPage[] = [
     title: 'YearCalendar',
   },
 ];
-export default apiPages;
+export default datePickersApiPages;
