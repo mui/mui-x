@@ -69,7 +69,7 @@ Same changes as in `@mui/x-charts@7.21.0`.
 
 #### `@mui/x-tree-view@7.21.0`
 
-- [TreeView] Fix `alpha` usage with CSS variables (#14969) @wangkailang
+- [TreeView] Fix `alpha()` usage with CSS variables (#14969) @wangkailang
 - [TreeView] Fix usage of the `aria-selected` attribute (#14991) @flaviendelangle
 - [TreeView] Fix hydration error (#15002) @flaviendelangle
 
