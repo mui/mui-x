@@ -235,6 +235,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     handleExpansion,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
+    handleCheckboxSelection,
   } = useTreeItemState(itemId);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -413,7 +414,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
   > = {
     rootRefObject,
     contentRefObject,
-    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing, handleCheckboxSelection },
+    status: { selected, disabled },
   };
 
   const enhancedRootProps =
@@ -433,6 +435,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     }) ?? {};
   const enhancedLabelInputProps =
     propsEnhancers.labelInput?.({
+      ...sharedPropsEnhancerParams,
+      externalEventHandlers: {},
+    }) ?? {};
+  const { visible: isCheckboxVisible, ...enhancedCheckboxProps } =
+    propsEnhancers.checkbox?.({
       ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
@@ -495,6 +502,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {...((enhancedLabelInputProps as any).value == null
             ? {}
             : { labelInputProps: enhancedLabelInputProps })}
+          {...(isCheckboxVisible ? { checkboxProps: enhancedCheckboxProps } : {})}
           ref={handleContentRef}
         />
         {children && (
