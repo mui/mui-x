@@ -81,7 +81,7 @@ export function CustomAxisTooltip() {
             <tbody>
               {tooltipData.seriesItems.map((seriesItem) => (
                 <tr key={seriesItem.seriesId}>
-                  <td>
+                  <td aria-label={`${seriesItem.formattedLabel}-series-color`}>
                     <div
                       style={{
                         width: 10,

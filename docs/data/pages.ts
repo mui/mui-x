@@ -111,6 +111,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
       { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
       {
+        pathname: '/x/react-data-grid/list-view',
+        title: 'List view',
+        plan: 'pro',
+        unstable: true,
+      },
+      {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
         plan: 'pro',
@@ -532,8 +538,18 @@ const pages: MuiPage[] = [
     title: 'Migration',
     children: [
       {
+        pathname: '/x/migration-v8',
+        subheader: 'Upgrade to v8',
+        children: [
+          {
+            pathname: '/x/migration/migration-pickers-v7',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+        ],
+      },
+      {
         pathname: '/x/migration-v7',
-        subheader: 'Upgrade to v7',
+        title: 'Upgrade to v7',
         children: [
           { pathname: '/x/migration/migration-data-grid-v6', title: 'Breaking changes: Data Grid' },
           {

@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/utils';
 import { UseTreeItem2Parameters, UseTreeItem2Status } from '../useTreeItem2';
 import { TreeItemClasses } from '../TreeItem';
 import { TreeItem2IconSlotProps, TreeItem2IconSlots } from '../TreeItem2Icon';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
+import { TreeViewCancellableEventHandler } from '../models';
 
 export interface TreeItem2Slots extends TreeItem2IconSlots {
   /**
@@ -44,7 +44,7 @@ export interface TreeItem2Slots extends TreeItem2IconSlots {
   labelInput?: React.ElementType;
   /**
    * The component that renders the overlay when an item reordering is ongoing.
-   * Warning: This slot is only useful when using the `RichTreeViewPro` component.
+   * Warning: This slot is only useful when using the `<RichTreeViewPro />` component.
    * @default TreeItem2DragAndDropOverlay
    */
   dragAndDropOverlay?: React.ElementType;
@@ -87,11 +87,11 @@ export interface TreeItem2Props
   /**
    * Callback fired when the item root is blurred.
    */
-  onBlur?: MuiCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
+  onBlur?: TreeViewCancellableEventHandler<React.FocusEvent<HTMLLIElement>>;
   /**
    * Callback fired when a key is pressed on the keyboard and the tree is in focus.
    */
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItem2OwnerState extends Omit<TreeItem2Props, 'disabled'>, UseTreeItem2Status {}

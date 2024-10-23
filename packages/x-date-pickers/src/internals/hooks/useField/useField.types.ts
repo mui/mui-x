@@ -124,7 +124,7 @@ export interface UseFieldInternalProps<
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
   /**

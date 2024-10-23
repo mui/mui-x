@@ -15,7 +15,7 @@ import {
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps<Dayjs, false>) {
+function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const {

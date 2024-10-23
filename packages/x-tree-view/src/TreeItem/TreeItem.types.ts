@@ -5,9 +5,8 @@ import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
-import { TreeViewItemId } from '../models';
+import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models';
-import { MuiCancellableEventHandler } from '../internals/models/MuiCancellableEvent';
 import { UseTreeViewIconsSignature } from '../internals/plugins/useTreeViewIcons';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
 import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
@@ -29,7 +28,7 @@ export interface TreeItemSlots {
    */
   endIcon?: React.ElementType;
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon?: React.ElementType;
   /**
@@ -69,13 +68,13 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   slotProps?: TreeItemSlotProps;
   /**
    * The component used to render the content of the item.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent?: React.JSXElementConstructor<TreeItemContentProps>;
   /**
    * Props applied to ContentComponent.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps?: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> };
   /**
@@ -89,7 +88,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
    */
   onFocus?: null;
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label?: React.ReactNode;
   /**
@@ -103,7 +102,7 @@ export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>,
   /**
    * Callback fired when a key of the keyboard is pressed on the item.
    */
-  onKeyDown?: MuiCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
+  onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
 export interface TreeItemOwnerState extends TreeItemProps {
@@ -115,7 +114,7 @@ export interface TreeItemOwnerState extends TreeItemProps {
 }
 
 /**
- * Plugins that need to be present in the Tree View in order for `TreeItem` to work correctly.
+ * Plugins that need to be present in the Tree View in order for Tree Item to work correctly.
  */
 export type TreeItemMinimalPlugins = readonly [
   UseTreeViewIconsSignature,
@@ -127,6 +126,6 @@ export type TreeItemMinimalPlugins = readonly [
 ];
 
 /**
- * Plugins that `TreeItem` can use if they are present, but are not required.
+ * Plugins that Tree Item can use if they are present, but are not required.
  */
 export type TreeItemOptionalPlugins = readonly [];

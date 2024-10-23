@@ -67,7 +67,7 @@
     },
     {
       "name": "dragAndDropOverlay",
-      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `RichTreeViewPro` component.",
+      "description": "The component that renders the overlay when an item reordering is ongoing.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component.",
       "default": "TreeItem2DragAndDropOverlay",
       "class": "MuiTreeItem2-dragAndDropOverlay"
     },
@@ -76,7 +76,7 @@
     { "name": "endIcon", "description": "The icon displayed next to an end item.", "class": null },
     {
       "name": "icon",
-      "description": "The icon to display next to the tree item's label.",
+      "description": "The icon to display next to the Tree Item's label.",
       "class": null
     }
   ],

@@ -81,7 +81,7 @@ By default, a nested item is indented by `12px` from its parent item.
 {{"demo": "ItemChildrenIndentationProp.js"}}
 
 :::success
-This feature is compatible with both the `TreeItem` and `TreeItem2` components
+This feature is compatible with both the `<TreeItem />` and `<TreeItem2 />` components
 If you are using a custom Tree Item component, and you want to override the padding,
 then apply the following padding to your `groupTransition` element:
 
@@ -116,7 +116,7 @@ It will become the default behavior in the next major version of the Tree View c
 {{"demo": "IndentationAtItemLevel.js"}}
 
 :::success
-This feature is compatible with both the `TreeItem` and `TreeItem2` components and with the `itemChildrenIndentation` prop.
+This feature is compatible with both the `<TreeItem />` and `<TreeItem2 />` components and with the `itemChildrenIndentation` prop.
 If you are using a custom Tree Item component, and you want to override the padding,
 then apply the following padding to your `content` element:
 
