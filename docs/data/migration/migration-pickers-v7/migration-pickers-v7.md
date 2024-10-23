@@ -257,7 +257,7 @@ const theme = createTheme({
 });
 ```
 
-## Deprecated parameters used on translation keys functions
+## Stop passing `utils` and the date object to some translation keys
 
 If you are using a Picker with controlled value and views and you need to compose some of the following translation keys: `openDatePickerDialogue`, `openTimePickerDialogue`, or `clockLabelText`, after upgrading to v8 you only need to pass the formatted value and the time view (only for `clockLabelText`):
 
