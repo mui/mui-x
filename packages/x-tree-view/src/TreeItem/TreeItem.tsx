@@ -199,7 +199,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     icons: contextIcons,
     runItemPlugins,
     items: { disabledItemsFocusable, indentationAtItemLevel },
-    selection: { multiSelect },
+    selection: { disableSelection },
     expansion: { expansionTrigger },
     treeId,
     instance,
@@ -235,6 +235,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     handleExpansion,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
+    handleCheckboxSelection,
   } = useTreeItemState(itemId);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -358,17 +359,17 @@ export const TreeItem = React.forwardRef(function TreeItem(
   });
   const icon = Icon ? <Icon {...iconProps} /> : null;
 
-  let ariaSelected;
-  if (multiSelect) {
-    ariaSelected = selected;
-  } else if (selected) {
-    /* single-selection trees unset aria-selected on un-selected items.
-     *
-     * If the tree does not support multiple selection, aria-selected
-     * is set to true for the selected item and it is not present on any other item in the tree.
-     * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-     */
+  // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+  let ariaSelected: boolean | undefined;
+  if (selected) {
+    // - each selected node has aria-selected set to true.
     ariaSelected = true;
+  } else if (disableSelection || disabled) {
+    // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
+    ariaSelected = undefined;
+  } else {
+    // - all nodes that are selectable but not selected have aria-selected set to false.
+    ariaSelected = false;
   }
 
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
@@ -382,7 +383,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     onBlur?.(event);
     if (
       editing ||
-      // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+      // we can exit the editing state by clicking outside the input (within the Tree Item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
       // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
       (event.relatedTarget &&
         isTargetInDescendants(event.relatedTarget as HTMLElement, rootRefObject.current) &&
@@ -413,7 +414,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
   > = {
     rootRefObject,
     contentRefObject,
-    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing },
+    interactions: { handleSaveItemLabel, handleCancelItemLabelEditing, handleCheckboxSelection },
+    status: { selected, disabled },
   };
 
   const enhancedRootProps =
@@ -433,6 +435,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
     }) ?? {};
   const enhancedLabelInputProps =
     propsEnhancers.labelInput?.({
+      ...sharedPropsEnhancerParams,
+      externalEventHandlers: {},
+    }) ?? {};
+  const { visible: isCheckboxVisible, ...enhancedCheckboxProps } =
+    propsEnhancers.checkbox?.({
       ...sharedPropsEnhancerParams,
       externalEventHandlers: {},
     }) ?? {};
@@ -495,6 +502,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
           {...((enhancedLabelInputProps as any).value == null
             ? {}
             : { labelInputProps: enhancedLabelInputProps })}
+          {...(isCheckboxVisible ? { checkboxProps: enhancedCheckboxProps } : {})}
           ref={handleContentRef}
         />
         {children && (
@@ -523,13 +531,13 @@ TreeItem.propTypes = {
   className: PropTypes.string,
   /**
    * The component used to render the content of the item.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    * @default TreeItemContent
    */
   ContentComponent: elementTypeAcceptingRef,
   /**
    * Props applied to ContentComponent.
-   * @deprecated Consider using the `TreeItem2` component or the `useTreeItem2` hook instead. For more detail, see https://mui.com/x/react-tree-view/tree-item-customization/.
+   * @deprecated Consider using the `<TreeItem2 />` component or the `useTreeItem2` hook instead. For more details, see https://mui.com/x/react-tree-view/tree-item-customization/.
    */
   ContentProps: PropTypes.object,
   /**
@@ -542,7 +550,7 @@ TreeItem.propTypes = {
    */
   itemId: PropTypes.string.isRequired,
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label: PropTypes.node,
   /**

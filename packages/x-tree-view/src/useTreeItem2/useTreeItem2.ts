@@ -2,6 +2,7 @@ import * as React from 'react';
 import { EventHandlers } from '@mui/utils';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
+import { TreeViewCancellableEvent } from '../models';
 import {
   UseTreeItem2Parameters,
   UseTreeItem2ReturnValue,
@@ -19,10 +20,7 @@ import {
   UseTreeItem2ContentSlotPropsFromUseTreeItem,
 } from './useTreeItem2.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
-import {
-  MuiCancellableEvent,
-  TreeViewItemPluginSlotPropsEnhancerParams,
-} from '../internals/models';
+import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
@@ -37,7 +35,7 @@ export const useTreeItem2 = <
   const {
     runItemPlugins,
     items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
-    selection: { multiSelect, disableSelection, checkboxSelection },
+    selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     treeId,
     instance,
@@ -61,11 +59,11 @@ export const useTreeItem2 = <
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
-  > = { rootRefObject, contentRefObject, interactions };
+  > = { rootRefObject, contentRefObject, interactions, status };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.FocusEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onFocus?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -79,7 +77,7 @@ export const useTreeItem2 = <
 
   const createRootHandleBlur =
     (otherHandlers: EventHandlers) =>
-    (event: React.FocusEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.FocusEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onBlur?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -92,7 +90,7 @@ export const useTreeItem2 = <
       // when we enter the editing state, we focus the input -> we don't want to remove the focused item from the state
       if (
         status.editing ||
-        // we can exit the editing state by clicking outside the input (within the tree item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
+        // we can exit the editing state by clicking outside the input (within the Tree Item) or by pressing Enter or Escape -> we don't want to remove the focused item from the state in these cases
         // we can also exit the editing state by clicking on the root itself -> want to remove the focused item from the state in this case
         (event.relatedTarget &&
           isTargetInDescendants(event.relatedTarget as HTMLElement, rootElement) &&
@@ -109,7 +107,7 @@ export const useTreeItem2 = <
 
   const createRootHandleKeyDown =
     (otherHandlers: EventHandlers) =>
-    (event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent) => {
+    (event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent) => {
       otherHandlers.onKeyDown?.(event);
       if (
         event.defaultMuiPrevented ||
@@ -122,7 +120,7 @@ export const useTreeItem2 = <
     };
 
   const createLabelHandleDoubleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onDoubleClick?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -131,7 +129,7 @@ export const useTreeItem2 = <
     };
 
   const createContentHandleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
       onItemClick?.(event, itemId);
 
@@ -148,7 +146,7 @@ export const useTreeItem2 = <
     };
 
   const createContentHandleMouseDown =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onMouseDown?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -160,23 +158,8 @@ export const useTreeItem2 = <
       }
     };
 
-  const createCheckboxHandleChange =
-    (otherHandlers: EventHandlers) =>
-    (event: React.ChangeEvent<HTMLInputElement> & MuiCancellableEvent) => {
-      otherHandlers.onChange?.(event);
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-
-      if (disableSelection || status.disabled) {
-        return;
-      }
-
-      interactions.handleCheckboxSelection(event);
-    };
-
   const createIconContainerHandleClick =
-    (otherHandlers: EventHandlers) => (event: React.MouseEvent & MuiCancellableEvent) => {
+    (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
       if (event.defaultMuiPrevented) {
         return;
@@ -194,17 +177,17 @@ export const useTreeItem2 = <
       ...extractEventHandlers(externalProps),
     };
 
+    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
     let ariaSelected: boolean | undefined;
-    if (multiSelect) {
-      ariaSelected = status.selected;
-    } else if (status.selected) {
-      /* single-selection trees unset aria-selected on un-selected items.
-       *
-       * If the tree does not support multiple selection, aria-selected
-       * is set to true for the selected item and it is not present on any other item in the tree.
-       * Source: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-       */
+    if (status.selected) {
+      // - each selected node has aria-selected set to true.
       ariaSelected = true;
+    } else if (disableSelection || status.disabled) {
+      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
+      ariaSelected = undefined;
+    } else {
+      // - all nodes that are selectable but not selected have aria-selected set to false.
+      ariaSelected = false;
     }
 
     const props: UseTreeItem2RootSlotPropsFromUseTreeItem = {
@@ -270,15 +253,21 @@ export const useTreeItem2 = <
   ): UseTreeItem2CheckboxSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const props = {
       ...externalEventHandlers,
-      visible: checkboxSelection,
       ref: checkboxRef,
-      checked: status.selected,
-      disabled: disableSelection || status.disabled,
-      tabIndex: -1,
       ...externalProps,
-      onChange: createCheckboxHandleChange(externalEventHandlers),
+    };
+
+    const enhancedCheckboxProps =
+      propsEnhancers.checkbox?.({
+        ...sharedPropsEnhancerParams,
+        externalEventHandlers,
+      }) ?? {};
+
+    return {
+      ...props,
+      ...enhancedCheckboxProps,
     };
   };
 
@@ -310,10 +299,8 @@ export const useTreeItem2 = <
 
     const enhancedLabelInputProps =
       propsEnhancers.labelInput?.({
-        rootRefObject,
-        contentRefObject,
+        ...sharedPropsEnhancerParams,
         externalEventHandlers,
-        interactions,
       }) ?? {};
 
     return {

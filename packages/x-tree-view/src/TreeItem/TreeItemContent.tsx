@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useTreeItemState } from './useTreeItemState';
 import {
   TreeItem2DragAndDropOverlay,
   TreeItem2DragAndDropOverlayProps,
 } from '../TreeItem2DragAndDropOverlay';
 import { TreeItem2LabelInput, TreeItem2LabelInputProps } from '../TreeItem2LabelInput';
-import { MuiCancellableEvent } from '../internals/models';
+import { TreeViewCancellableEvent } from '../models';
 
 export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
@@ -26,7 +26,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     focused: string;
     /** State class applied to the element when disabled. */
     disabled: string;
-    /** Styles applied to the tree item icon and collapse/expand icon. */
+    /** Styles applied to the Tree Item icon and collapse/expand icon. */
     iconContainer: string;
     /** Styles applied to the label element. */
     label: string;
@@ -40,7 +40,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
     editable: string;
   };
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label?: React.ReactNode;
   /**
@@ -48,19 +48,20 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
    */
   itemId: string;
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon?: React.ReactNode;
   /**
-   * The icon to display next to the tree item's label. Either an expansion or collapse icon.
+   * The icon to display next to the Tree Item's label. Either an expansion or collapse icon.
    */
   expansionIcon?: React.ReactNode;
   /**
-   * The icon to display next to the tree item's label. Either a parent or end icon.
+   * The icon to display next to the Tree Item's label. Either a parent or end icon.
    */
   displayIcon?: React.ReactNode;
   dragAndDropOverlayProps?: TreeItem2DragAndDropOverlayProps;
   labelInputProps?: TreeItem2LabelInputProps;
+  checkboxProps?: CheckboxProps & { visible?: boolean };
 }
 
 export type TreeItemContentClassKey = keyof NonNullable<TreeItemContentProps['classes']>;
@@ -84,6 +85,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     onMouseDown,
     dragAndDropOverlayProps,
     labelInputProps,
+    checkboxProps,
     ...other
   } = props;
 
@@ -94,11 +96,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     focused,
     editing,
     editable,
-    disableSelection,
     checkboxSelection,
     handleExpansion,
     handleSelection,
-    handleCheckboxSelection,
     handleContentClick,
     preventSelection,
     expansionTrigger,
@@ -136,7 +136,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
-  const handleLabelDoubleClick = (event: React.MouseEvent & MuiCancellableEvent) => {
+  const handleLabelDoubleClick = (event: React.MouseEvent & TreeViewCancellableEvent) => {
     if (event.defaultMuiPrevented) {
       return;
     }
@@ -164,17 +164,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       ref={ref}
     >
       <div className={classes.iconContainer}>{icon}</div>
-      {checkboxSelection && (
-        <Checkbox
-          className={classes.checkbox}
-          checked={selected}
-          onChange={handleCheckboxSelection}
-          disabled={disabled || disableSelection}
-          ref={checkboxRef}
-          tabIndex={-1}
-        />
+      {checkboxProps && (
+        <Checkbox {...checkboxProps} className={classes.checkbox} ref={checkboxRef} />
       )}
-
       {editing ? (
         <TreeItem2LabelInput {...labelInputProps} className={classes.labelInput} />
       ) : (
@@ -193,13 +185,14 @@ TreeItemContent.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  checkboxProps: PropTypes.object,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   /**
-   * The icon to display next to the tree item's label. Either a parent or end icon.
+   * The icon to display next to the Tree Item's label. Either a parent or end icon.
    */
   displayIcon: PropTypes.node,
   dragAndDropOverlayProps: PropTypes.shape({
@@ -207,11 +200,11 @@ TreeItemContent.propTypes = {
     style: PropTypes.object,
   }),
   /**
-   * The icon to display next to the tree item's label. Either an expansion or collapse icon.
+   * The icon to display next to the Tree Item's label. Either an expansion or collapse icon.
    */
   expansionIcon: PropTypes.node,
   /**
-   * The icon to display next to the tree item's label.
+   * The icon to display next to the Tree Item's label.
    */
   icon: PropTypes.node,
   /**
@@ -219,7 +212,7 @@ TreeItemContent.propTypes = {
    */
   itemId: PropTypes.string.isRequired,
   /**
-   * The tree item label.
+   * The Tree Item label.
    */
   label: PropTypes.node,
   labelInputProps: PropTypes.shape({

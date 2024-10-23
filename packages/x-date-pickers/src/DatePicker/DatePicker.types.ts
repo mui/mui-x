@@ -30,7 +30,7 @@ export interface DatePickerSlotProps<
 
 export interface DatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
@@ -61,7 +61,7 @@ export interface DatePickerProps<
  */
 export type DatePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = DefaultizedProps<
   UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | keyof BaseDateValidationProps<TDate>

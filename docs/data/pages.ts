@@ -1,8 +1,8 @@
 import type { MuiPage } from 'docs/src/MuiPage';
-import chartsComponentApi from './charts-component-api-pages';
-import dataGridComponentApi from './data-grid-component-api-pages';
-import pickersComponentApi from './date-pickers-component-api-pages';
-import treeViewComponentApi from './tree-view-component-api-pages';
+import chartsComponentApi from './chartsApiPages';
+import dataGridComponentApi from './dataGridApiPages';
+import pickersComponentApi from './datePickersApiPages';
+import treeViewComponentApi from './treeViewApiPages';
 
 const pages: MuiPage[] = [
   {
@@ -110,6 +110,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
       { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
       { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+      {
+        pathname: '/x/react-data-grid/list-view',
+        title: 'List view',
+        plan: 'pro',
+        unstable: true,
+      },
       {
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',

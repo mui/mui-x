@@ -10,7 +10,7 @@
     "ContentProps": { "description": "Props applied to ContentComponent." },
     "disabled": { "description": "If <code>true</code>, the item is disabled." },
     "itemId": { "description": "The id of the item." },
-    "label": { "description": "The tree item label." },
+    "label": { "description": "The Tree Item label." },
     "onFocus": {
       "description": "This prop isn&#39;t supported. Use the <code>onItemFocus</code> callback on the tree if you need to monitor a item&#39;s focus."
     },
@@ -62,7 +62,7 @@
     },
     "iconContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the tree item icon"
+      "nodeName": "the Tree Item icon"
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
     "labelInput": {
@@ -82,6 +82,6 @@
     "endIcon": "The icon displayed next to an end item.",
     "expandIcon": "The icon used to expand the item.",
     "groupTransition": "The component that animates the appearance / disappearance of the item&#39;s children.",
-    "icon": "The icon to display next to the tree item&#39;s label."
+    "icon": "The icon to display next to the Tree Item&#39;s label."
   }
 }

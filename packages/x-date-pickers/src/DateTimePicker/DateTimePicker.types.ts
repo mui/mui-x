@@ -36,7 +36,7 @@ export interface DateTimePickerSlotProps<
 
 export interface DateTimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     ExportedYearCalendarProps,
     Omit<
@@ -76,7 +76,7 @@ export interface DateTimePickerProps<
  */
 export type DateTimePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = DefaultizedProps<
   UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   | 'format'

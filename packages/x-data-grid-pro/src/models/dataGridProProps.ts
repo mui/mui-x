@@ -7,6 +7,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
+  GridListColDef,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -137,6 +138,11 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: boolean;
 }
 
 interface DataGridProDataSourceProps {
@@ -245,4 +251,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridProSlotProps;
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn?: GridListColDef<R>;
 }
