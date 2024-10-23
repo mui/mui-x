@@ -85,12 +85,12 @@ The demo below shows how to use composition to create a custom Chart that combin
 
 The layout of a Chart is defined by two main spaces: the plot area, and the outer margins.
 
-The `width` and `height` props define the dimensions of the SVG which fills the entire space.
+The `width` and `height` props define the dimensions of the SVG which is the root of the chart.
 Within this SVG, the plot area (or drawing area) serves as the canvas for data visualization, where the lines, bars or other visual elements are rendered.
 The size of the plot area is determined by the `margin = {top, bottom, left, right}` object which defines its outer margins inside the SVG.
 The outer margin space is where information like axes, titles, and legends are displayed.
 
-See the [Styling documentation](/x/react-charts/styling/) for complete details.
+See the [Styling documentation](/x/react-charts/styling/#placement) for complete details.
 
 ## Axis management
 
