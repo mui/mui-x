@@ -165,7 +165,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   ];
 }>;
 
-export interface UseTreeItem2CheckboxSlotPropsFromSelection {
+export interface UseTreeItemCheckboxSlotPropsFromSelection {
   visible?: boolean;
   checked?: boolean;
   disabled?: boolean;
@@ -173,6 +173,6 @@ export interface UseTreeItem2CheckboxSlotPropsFromSelection {
   onChange?: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
 
-declare module '@mui/x-tree-view/useTreeItem2' {
-  interface UseTreeItem2CheckboxSlotOwnProps extends UseTreeItem2CheckboxSlotPropsFromSelection {}
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemCheckboxSlotOwnProps extends UseTreeItemCheckboxSlotPropsFromSelection {}
 }
