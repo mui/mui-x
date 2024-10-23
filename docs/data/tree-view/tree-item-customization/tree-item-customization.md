@@ -16,10 +16,12 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 Each Tree Item component is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
-<!-- TBD which option is the best: interactive or image -->
-<!-- {{"demo": "CustomTreeItemDemo.js", "hideToolbar": true}} -->
-
-{{"component": "modules/components/TreeItemAnatomy.js"}}
+<span class="only-light-mode" style="border: 1px solid rgb(232, 234, 238); border-radius:12px">
+<img src="/static/x/tree-view-illustrations/tree-item-light.png" alt="Tree Item anatomy" loading="lazy"   >
+</span>
+<span class="only-dark-mode" style="border: 1px solid rgb(29, 33, 38); border-radius:12px">
+<img src="/static/x/tree-view-illustrations/tree-item-dark.png" alt="Tree Item anatomy" loading="lazy"   >
+</span>
 
 ### Content
 
