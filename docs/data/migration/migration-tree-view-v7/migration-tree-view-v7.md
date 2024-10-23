@@ -21,7 +21,7 @@ In `package.json`, change the version of the tree view package to `^8.0.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Described below are the steps needed to migrate from v6 to v7.
+Described below are the steps needed to migrate from v7 to v8.
 
 ## Run codemods
 
@@ -40,7 +40,7 @@ npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for tree view](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v800) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for the tree view](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v800) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -85,7 +85,7 @@ This inconsistency has been solved, all the event manager now target the root of
 
 ## Rename the `TreeItem2` (and related utils)
 
-All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore loosing their `2` suffix:
+All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
 
 ```diff
  import * as React from 'react';
