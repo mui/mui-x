@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { TreeViewPlugin } from '@mui/x-tree-view/internals';
+import {
+  TreeViewPlugin,
+  selectorItemIndex,
+  selectorItemMeta,
+  selectorItemOrderedChildrenIds,
+} from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
@@ -49,10 +54,10 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
-      const targetItemMeta = instance.getItemMeta(itemId);
-      const targetItemIndex = instance.getItemIndex(targetItemMeta.id);
-      const draggedItemMeta = instance.getItemMeta(itemsReordering.draggedItemId);
-      const draggedItemIndex = instance.getItemIndex(draggedItemMeta.id);
+      const targetItemMeta = selectorItemMeta(store.value, itemId);
+      const targetItemIndex = selectorItemIndex(store.value, targetItemMeta.id);
+      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId);
+      const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
@@ -108,7 +113,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
             ? null
             : {
                 parentId: targetItemMeta.parentId,
-                index: instance.getItemOrderedChildrenIds(targetItemMeta.parentId).length,
+                index: selectorItemOrderedChildrenIds(store.value, targetItemMeta.parentId).length,
               },
       };
 
@@ -122,7 +127,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
       return validActions;
     },
-    [instance, store, params.canMoveItemToNewPosition],
+    [store, params.canMoveItemToNewPosition],
   );
 
   const startDraggingItem = React.useCallback(
@@ -156,11 +161,11 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return;
       }
 
-      const draggedItemMeta = instance.getItemMeta(itemsReordering.draggedItemId);
+      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId);
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,
-        index: instance.getItemIndex(draggedItemMeta.id),
+        index: selectorItemIndex(store.value, draggedItemMeta.id),
       };
 
       const newPosition = itemsReordering.newPosition;
@@ -183,7 +188,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         oldPosition,
       });
     },
-    [store, instance, params.onItemPositionChange],
+    [store, params.onItemPositionChange],
   );
 
   const setDragTargetItem = React.useCallback<

@@ -51,6 +51,9 @@ export {
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
   selectorItemMetaMap,
+  selectorItemMeta,
+  selectorItemIndex,
+  selectorItemOrderedChildrenIds,
 } from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,

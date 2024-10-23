@@ -4,3 +4,4 @@ export type {
   UseTreeViewSelectionParameters,
   UseTreeViewSelectionDefaultizedParameters,
 } from './useTreeViewSelection.types';
+export { selectorIsItemSelected } from './useTreeViewSelection.selectors';

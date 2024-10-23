@@ -4,8 +4,9 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
-import { selectorExpandedItemsMap } from './useTreeViewExpansion.selectors';
+import { selectorIsItemExpandable, selectorIsItemExpanded } from './useTreeViewExpansion.selectors';
 import { getExpandedItemsMap } from './useTreeViewExpansion.utils';
+import { selectorItemMeta, selectorItemOrderedChildrenIds } from '../useTreeViewItems';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
@@ -30,26 +31,16 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     models.expandedItems.setControlledValue(value);
   };
 
-  const isItemExpanded = React.useCallback(
-    (itemId: string) => selectorExpandedItemsMap(store.value).has(itemId),
-    [store],
-  );
-
-  const isItemExpandable = React.useCallback(
-    (itemId: string) => !!instance.getItemMeta(itemId)?.expandable,
-    [instance],
-  );
-
   const toggleItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: TreeViewItemId) => {
-      const isExpandedBefore = instance.isItemExpanded(itemId);
+      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       instance.setItemExpansion(event, itemId, !isExpandedBefore);
     },
   );
 
   const setItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
-      const isExpandedBefore = instance.isItemExpanded(itemId);
+      const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       if (isExpandedBefore === isExpanded) {
         return;
       }
@@ -70,11 +61,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   );
 
   const expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
-    const itemMeta = instance.getItemMeta(itemId);
-    const siblings = instance.getItemOrderedChildrenIds(itemMeta.parentId);
+    const itemMeta = selectorItemMeta(store.value, itemId);
+    const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
 
     const diff = siblings.filter(
-      (child) => instance.isItemExpandable(child) && !instance.isItemExpanded(child),
+      (child) =>
+        selectorIsItemExpandable(store.value, child) && !selectorIsItemExpanded(store.value, child),
     );
 
     const newExpanded = models.expandedItems.value.concat(diff);
@@ -116,8 +108,6 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       setItemExpansion,
     },
     instance: {
-      isItemExpanded,
-      isItemExpandable,
       setItemExpansion,
       toggleItemExpansion,
       expandAllSiblings,

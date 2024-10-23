@@ -12,6 +12,7 @@ import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import {
+  selectorIsItemDisabled,
   selectorItemChildrenIndexes,
   selectorItemMap,
   selectorItemMeta,
@@ -140,50 +141,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return instance.getItemOrderedChildrenIds(null).map(getItemFromItemId);
   }, [instance, store]);
 
-  const isItemDisabled = React.useCallback(
-    (itemId: string | null): itemId is string => {
-      if (itemId == null) {
-        return false;
-      }
-
-      let itemMeta = instance.getItemMeta(itemId);
-
-      // This can be called before the item has been added to the item map.
-      if (!itemMeta) {
-        return false;
-      }
-
-      if (itemMeta.disabled) {
-        return true;
-      }
-
-      while (itemMeta.parentId != null) {
-        itemMeta = instance.getItemMeta(itemMeta.parentId);
-        if (itemMeta.disabled) {
-          return true;
-        }
-      }
-
-      return false;
-    },
-    [instance],
-  );
-
-  const getItemIndex = React.useCallback(
-    (itemId: string) => {
-      const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      return selectorItemChildrenIndexes(store.value)[parentId][itemId];
-    },
-    [instance, store],
-  );
-
   const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) => selectorItemOrderedChildrenIds(store.value, itemId),
     [store],
   );
 
   const getItemDOMElement = (itemId: string) => {
-    const itemMeta = instance.getItemMeta(itemId);
+    const itemMeta = selectorItemMeta(store.value, itemId);
     if (itemMeta == null) {
       return null;
     }
@@ -200,7 +164,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     if (params.disabledItemsFocusable) {
       return true;
     }
-    return !instance.isItemDisabled(itemId);
+    return !selectorIsItemDisabled(store.value, itemId);
   };
 
   const areItemUpdatesPreventedRef = React.useRef(false);
@@ -235,11 +199,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const getItemsToRender = () => {
     const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
-      const item = instance.getItemMeta(id);
+      const itemMeta = selectorItemMeta(store.value, id);
       return {
-        label: item.label!,
-        itemId: item.id,
-        id: item.idAttribute,
+        label: itemMeta.label!,
+        itemId: itemMeta.id,
+        id: itemMeta.idAttribute,
         children: instance.getItemOrderedChildrenIds(id).map(getPropsFromItemId),
       };
     };
@@ -288,7 +252,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemIndex,
       getItemDOMElement,
       getItemOrderedChildrenIds,
-      isItemDisabled,
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,

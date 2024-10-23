@@ -10,5 +10,6 @@ export { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItem
 export {
   selectorItemMetaMap,
   selectorItemMeta,
+  selectorItemIndex,
   selectorItemOrderedChildrenIds,
 } from './useTreeViewItems.selectors';

@@ -12,6 +12,8 @@ import {
   selectorDefaultFocusableItemId,
   selectorFocusedItemId,
 } from './useTreeViewFocus.selectors';
+import { selectorIsItemExpanded } from '../useTreeViewExpansion';
+import { selectorItemMeta } from '../useTreeViewItems';
 
 const useDefaultFocusableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
@@ -24,12 +26,15 @@ const useDefaultFocusableItemId = (
         return false;
       }
 
-      const itemMeta = instance.getItemMeta(itemId);
-      return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
+      const itemMeta = selectorItemMeta(store.value, itemId);
+      return (
+        itemMeta &&
+        (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+      );
     });
 
     if (defaultFocusableItemId == null) {
-      defaultFocusableItemId = getFirstNavigableItem(instance) ?? null;
+      defaultFocusableItemId = getFirstNavigableItem(instance, store) ?? null;
     }
 
     store.update((prevState) => {
@@ -67,8 +72,11 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   });
 
   const isItemVisible = (itemId: string) => {
-    const itemMeta = instance.getItemMeta(itemId);
-    return itemMeta && (itemMeta.parentId == null || instance.isItemExpanded(itemMeta.parentId));
+    const itemMeta = selectorItemMeta(store.value, itemId);
+    return (
+      itemMeta &&
+      (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+    );
   };
 
   const innerFocusItem = (event: React.SyntheticEvent | null, itemId: string) => {
@@ -97,7 +105,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
       return;
     }
 
-    const itemMeta = instance.getItemMeta(focusedItemId);
+    const itemMeta = selectorItemMeta(store.value, focusedItemId);
     if (itemMeta) {
       const itemElement = instance.getItemDOMElement(focusedItemId);
       if (itemElement) {

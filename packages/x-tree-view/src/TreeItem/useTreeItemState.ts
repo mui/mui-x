@@ -9,7 +9,10 @@ import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems
 import { UseTreeViewLabelSignature, useTreeViewLabel } from '../internals/plugins/useTreeViewLabel';
 import { hasPlugin } from '../internals/utils/plugins';
 import { useSelector } from '../internals/hooks/useSelector';
-import { selectorIsItemExpanded } from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import {
+  selectorIsItemExpandable,
+  selectorIsItemExpanded,
+} from '../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorIsItemFocused } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { selectorIsItemDisabled } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectorIsItemSelected } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
@@ -37,7 +40,7 @@ export function useTreeItemState(itemId: string) {
     label,
   } = useTreeViewContext<UseTreeItemStateMinimalPlugins, UseTreeItemStateOptionalPlugins>();
 
-  const expandable = instance.isItemExpandable(itemId);
+  const expandable = useSelector(store, selectorIsItemExpandable, itemId);
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);
   const isSelected = useSelector(store, selectorIsItemSelected, itemId);
@@ -60,7 +63,7 @@ export function useTreeItemState(itemId: string) {
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       // If already expanded and trying to toggle selection don't close
-      if (expandable && !(multiple && instance.isItemExpanded(itemId))) {
+      if (expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
         instance.toggleItemExpansion(event, itemId);
       }
     }

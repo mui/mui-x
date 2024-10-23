@@ -32,8 +32,8 @@ export const selectorItemChildrenIndexes = createSelector(
 export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items) => items.itemMap);
 
 export const selectorItemMeta = createSelector(
-  [selectorItemMetaMap, (_, itemId: string) => itemId],
-  (itemMetaMap, itemId) => itemMetaMap[itemId],
+  [selectorItemMetaMap, (_, itemId: string | null) => itemId],
+  (itemMetaMap, itemId) => itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
 );
 
 export const selectorIsItemDisabled = createSelector(
@@ -63,4 +63,12 @@ export const selectorIsItemDisabled = createSelector(
 
     return false;
   },
+);
+
+/**
+ * Get the index of a given item in its parent's children list.
+ */
+export const selectorItemIndex = createSelector(
+  [selectorItemMeta, selectorItemChildrenIndexes],
+  (itemMeta, indexes) => indexes[itemMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID][itemMeta.id],
 );
