@@ -65,6 +65,7 @@
   { "name": "TreeViewItemId", "kind": "TypeAlias" },
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },
   { "name": "TreeViewProps", "kind": "Interface" },
+  { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "TreeViewSlotProps", "kind": "Interface" },
   { "name": "TreeViewSlots", "kind": "Interface" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },

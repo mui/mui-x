@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import { useTreeItemState } from './useTreeItemState';
 import {
   TreeItem2DragAndDropOverlay,
@@ -61,6 +61,7 @@ export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> 
   displayIcon?: React.ReactNode;
   dragAndDropOverlayProps?: TreeItem2DragAndDropOverlayProps;
   labelInputProps?: TreeItem2LabelInputProps;
+  checkboxProps?: CheckboxProps & { visible?: boolean };
 }
 
 export type TreeItemContentClassKey = keyof NonNullable<TreeItemContentProps['classes']>;
@@ -84,6 +85,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     onMouseDown,
     dragAndDropOverlayProps,
     labelInputProps,
+    checkboxProps,
     ...other
   } = props;
 
@@ -94,11 +96,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     focused,
     editing,
     editable,
-    disableSelection,
     checkboxSelection,
     handleExpansion,
     handleSelection,
-    handleCheckboxSelection,
     handleContentClick,
     preventSelection,
     expansionTrigger,
@@ -164,17 +164,9 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
       ref={ref}
     >
       <div className={classes.iconContainer}>{icon}</div>
-      {checkboxSelection && (
-        <Checkbox
-          className={classes.checkbox}
-          checked={selected}
-          onChange={handleCheckboxSelection}
-          disabled={disabled || disableSelection}
-          ref={checkboxRef}
-          tabIndex={-1}
-        />
+      {checkboxProps && (
+        <Checkbox {...checkboxProps} className={classes.checkbox} ref={checkboxRef} />
       )}
-
       {editing ? (
         <TreeItem2LabelInput {...labelInputProps} className={classes.labelInput} />
       ) : (
@@ -193,6 +185,7 @@ TreeItemContent.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  checkboxProps: PropTypes.object,
   /**
    * Override or extend the styles applied to the component.
    */
