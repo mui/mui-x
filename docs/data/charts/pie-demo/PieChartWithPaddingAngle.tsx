@@ -24,7 +24,9 @@ export default function PieChartWithPaddingAngle() {
         margin={{ right: 5 }}
         width={200}
         height={200}
-        legend={{ hidden: true }}
+        slotProps={{
+          legend: { hidden: true },
+        }}
       />
       <PieChart
         series={[
