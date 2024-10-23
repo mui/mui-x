@@ -4,7 +4,7 @@ productId: x-tree-view
 
 # Migration from v7 to v8
 
-<p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v6 to v7.</p>
+<p class="description">This guide describes the changes needed to migrate the Tree View from v7 to v8.</p>
 
 ## Introduction
 
@@ -12,7 +12,7 @@ This is a reference guide for upgrading `@mui/x-tree-view` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the tree view package to `^8.0.0`.
+In `package.json`, change the version of the Tree View package to `^8.0.0`.
 
 ```diff
 -"@mui/x-tree-view": "7.x.x",
@@ -40,7 +40,7 @@ npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for the tree view](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v800) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for the Tree View](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-tree-view-v800) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
