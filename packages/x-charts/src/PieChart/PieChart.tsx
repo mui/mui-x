@@ -91,12 +91,6 @@ export interface PieChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
-  /**
    * Callback fired when a pie arc is clicked.
    */
   onItemClick?: PiePlotProps['onItemClick'];
@@ -139,7 +133,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -160,7 +153,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const legend: ChartsLegendProps = {
     direction: 'column',
     position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
-    ...legendProps,
   };
 
   return (

@@ -16,12 +16,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
@@ -79,10 +74,6 @@ export interface BarChartProps
    *
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}

@@ -20,7 +20,6 @@ import {
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
-  ChartsLegendProps,
   ChartsLegendSlotProps,
   ChartsLegendSlots,
 } from '../ChartsLegend';
@@ -90,10 +89,6 @@ export interface LineChartProps
    * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * If `true`, render the line highlight item.
    */

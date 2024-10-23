@@ -23,7 +23,6 @@ import {
 } from '../ChartsTooltip';
 import {
   ChartsLegend,
-  ChartsLegendProps,
   ChartsLegendSlotProps,
   ChartsLegendSlots,
 } from '../ChartsLegend';
@@ -88,10 +87,6 @@ export interface ScatterChartProps
    * @default false
    */
   disableVoronoi?: boolean;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
