@@ -2,11 +2,15 @@ import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
 import { TreeViewPublicAPI } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
-import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
+import {
+  TreeViewItemToRenderProps,
+  UseTreeViewItemsSignature,
+} from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
 import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { UseTreeViewObjectItemsSignature } from '../internals/plugins/useTreeViewObjectItems';
 
 export interface UseTreeItemParameters {
   /**
@@ -31,7 +35,7 @@ export interface UseTreeItemParameters {
   /**
    * The content of the component.
    */
-  children?: React.ReactNode;
+  children?: React.ReactNode | TreeViewItemToRenderProps[];
 }
 
 export interface UseTreeItemContextProviderProps {
@@ -242,4 +246,4 @@ export type UseTreeItemMinimalPlugins = readonly [
 /**
  * Plugins that `UseTreeItem` can use if they are present, but are not required.
  */
-export type UseTreeItemOptionalPlugins = readonly [];
+export type UseTreeItemOptionalPlugins = readonly [UseTreeViewObjectItemsSignature];

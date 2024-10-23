@@ -63,7 +63,7 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
 
 export interface TreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
-    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
+    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus' | 'children'> {
   className?: string;
   /**
    * Override or extend the styles applied to the component.

@@ -1,26 +1,11 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
-import { TreeViewItemId } from '../../models';
 import { TreeViewItemToRenderProps } from '../plugins/useTreeViewItems';
-
-interface RichTreeViewItemsOwnerState {
-  itemId: TreeViewItemId;
-  label: string;
-}
-
-export interface RichTreeViewItemsSlots {
-  /**
-   * Custom component for the item.
-   * @default TreeItem.
-   */
-  item?: React.JSXElementConstructor<TreeItemProps>;
-}
-
-export interface RichTreeViewItemsSlotProps {
-  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
-}
+import {
+  UseTreeViewObjectItemsSlotProps,
+  UseTreeViewObjectItemsSlots,
+} from '../plugins/useTreeViewObjectItems';
 
 export interface RichTreeViewItemsProps {
   itemsToRender: TreeViewItemToRenderProps[];
@@ -28,12 +13,12 @@ export interface RichTreeViewItemsProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: RichTreeViewItemsSlots;
+  slots?: UseTreeViewObjectItemsSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RichTreeViewItemsSlotProps;
+  slotProps?: UseTreeViewObjectItemsSlotProps;
 }
 
 function WrappedTreeItem({
@@ -57,15 +42,7 @@ function WrappedTreeItem({
     ownerState: { itemId, label },
   });
 
-  const children = React.useMemo(
-    () =>
-      itemsToRender?.length ? (
-        <RichTreeViewItems itemsToRender={itemsToRender} slots={slots} slotProps={slotProps} />
-      ) : null,
-    [itemsToRender, slots, slotProps],
-  );
-
-  return <Item {...itemProps}>{children}</Item>;
+  return <Item {...itemProps}>{itemsToRender}</Item>;
 }
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {

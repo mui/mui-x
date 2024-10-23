@@ -3,7 +3,10 @@ import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
 import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
-import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
+import {
+  TreeViewItemToRenderProps,
+  UseTreeViewItemsSignature,
+} from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
 import {
   UseTreeViewLabelSignature,
@@ -59,7 +62,9 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-const isItemExpandable = (reactChildren: React.ReactNode) => {
+const isItemExpandable = (
+  reactChildren: React.ReactNode | TreeViewItemToRenderProps | TreeViewItemToRenderProps[],
+) => {
   if (Array.isArray(reactChildren)) {
     return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
   }
@@ -74,7 +79,7 @@ export const useTreeItemUtils = <
   children,
 }: {
   itemId: string;
-  children: React.ReactNode;
+  children?: React.ReactNode | TreeViewItemToRenderProps[];
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     instance,

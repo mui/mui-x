@@ -58,6 +58,11 @@ export {
   selectorItemIndex,
   selectorItemOrderedChildrenIds,
 } from './plugins/useTreeViewItems/useTreeViewItems.selectors';
+export { useTreeViewObjectItems } from './plugins/useTreeViewObjectItems';
+export type {
+  UseTreeViewObjectItemsSignature,
+  UseTreeViewObjectItemsParameters,
+} from './plugins/useTreeViewObjectItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
