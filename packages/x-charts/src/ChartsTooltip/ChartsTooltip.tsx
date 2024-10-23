@@ -12,7 +12,13 @@ import {
   ItemInteractionData,
 } from '../context/InteractionProvider';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { generateVirtualElement, getTooltipHasData, TriggerOptions, usePointerType } from './utils';
+import {
+  generateVirtualElement,
+  getTooltipHasData,
+  TriggerOptions,
+  usePointerType,
+  VirtualElement,
+} from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
@@ -133,7 +139,11 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
   const pointerType = usePointerType();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
-  const virtualElement = React.useRef(generateVirtualElement({ x: 0, y: 0 }));
+
+  const virtualElement = React.useRef<VirtualElement | null>(null);
+  if (virtualElement.current === null) {
+    virtualElement.current = generateVirtualElement(null);
+  }
 
   const { item, axis } = React.useContext(InteractionContext);
 
