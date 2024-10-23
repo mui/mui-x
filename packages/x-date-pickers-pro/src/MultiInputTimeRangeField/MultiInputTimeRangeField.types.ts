@@ -38,7 +38,7 @@ export type UseMultiInputTimeRangeFieldComponentProps<
 
 export interface MultiInputTimeRangeFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends UseMultiInputTimeRangeFieldComponentProps<
     TDate,
     TEnableAccessibleFieldDOMStructure,
