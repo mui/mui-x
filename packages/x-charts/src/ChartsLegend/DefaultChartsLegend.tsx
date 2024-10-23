@@ -71,17 +71,6 @@ DefaultChartsLegend.propTypes = {
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
   /**
-   * @deprecated Use the `useDrawingArea` hook instead.
-   */
-  drawingArea: PropTypes.shape({
-    bottom: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
-    right: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-  }).isRequired,
-  /**
    * Set to true to hide the legend.
    * @default false
    */
