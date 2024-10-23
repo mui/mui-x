@@ -1,6 +1,6 @@
 import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = [
+const treeViewApiPages: MuiPage[] = [
   {
     pathname: '/x/api/tree-view/rich-tree-view',
     title: 'RichTreeView',
@@ -27,4 +27,4 @@ const apiPages: MuiPage[] = [
     title: 'TreeView',
   },
 ];
-export default apiPages;
+export default treeViewApiPages;
