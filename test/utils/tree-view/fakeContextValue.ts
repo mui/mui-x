@@ -5,9 +5,7 @@ import { TreeViewStore } from '@mui/x-tree-view/internals/utils/TreeViewStore';
 export const getFakeContextValue = (
   features: { checkboxSelection?: boolean } = {},
 ): TreeViewContextValue<SimpleTreeViewPluginSignatures> => ({
-  instance: {
-    isItemExpandable: () => false,
-  } as any,
+  instance: {} as any,
   publicAPI: {} as any,
   runItemPlugins: () => ({
     rootRef: null,

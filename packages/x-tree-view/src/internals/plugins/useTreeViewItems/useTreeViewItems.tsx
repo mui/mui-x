@@ -13,7 +13,6 @@ import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItem
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import {
   selectorIsItemDisabled,
-  selectorItemChildrenIndexes,
   selectorItemMap,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -117,11 +116,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   store,
   experimentalFeatures,
 }) => {
-  const getItemMeta = React.useCallback(
-    (itemId: string) => selectorItemMeta(store.value, itemId),
-    [store],
-  );
-
   const getItem = React.useCallback(
     (itemId: string) => selectorItemMap(store.value)[itemId],
     [store],
@@ -245,11 +239,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemOrderedChildrenIds,
     },
     instance: {
-      getItemMeta,
       getItem,
       getItemTree,
       getItemsToRender,
-      getItemIndex,
       getItemDOMElement,
       getItemOrderedChildrenIds,
       isItemNavigable,
@@ -275,11 +267,11 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
 });
 
-useTreeViewItems.wrapRoot = ({ children, instance }) => {
+useTreeViewItems.wrapRoot = ({ children, store }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const contextValue = React.useCallback(
-    (itemId: TreeViewItemId) => instance.getItemMeta(itemId)?.depth ?? 0,
-    [instance],
+    (itemId: TreeViewItemId) => selectorItemMeta(store.value, itemId)?.depth ?? 0,
+    [store],
   );
   return (
     <TreeViewItemDepthContext.Provider value={contextValue}>

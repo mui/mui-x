@@ -31,6 +31,13 @@ export const selectorItemChildrenIndexes = createSelector(
 
 export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items) => items.itemMap);
 
+/**
+ * Get the meta-information of an item.
+ * Check the `TreeViewItemMeta` type for more information.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>}
+ * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
+ * @returns {TreeViewItemMeta} The meta-information of the item.
+ */
 export const selectorItemMeta = createSelector(
   [selectorItemMetaMap, (_, itemId: string | null) => itemId],
   (itemMetaMap, itemId) => itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID],

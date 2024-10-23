@@ -18,6 +18,7 @@ export type {
   TreeViewInstance,
   DefaultizedProps,
   TreeViewItemPlugin,
+  TreeViewUsedStore,
 } from './models';
 
 // Core plugins
@@ -73,3 +74,4 @@ export type {
 
 export { createSelector } from './utils/selectors';
 export { isTargetInDescendants } from './utils/tree';
+export { TreeViewStore } from './utils/TreeViewStore';

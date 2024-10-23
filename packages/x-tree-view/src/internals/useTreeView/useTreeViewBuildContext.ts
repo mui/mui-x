@@ -125,13 +125,16 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
       for (let i = plugins.length - 1; i >= 0; i -= 1) {
         const plugin = plugins[i];
         if (plugin.wrapRoot) {
-          finalChildren = plugin.wrapRoot({ children: finalChildren, instance });
+          finalChildren = plugin.wrapRoot({
+            children: finalChildren,
+            store: store as TreeViewStore<any>,
+          });
         }
       }
 
       return finalChildren;
     },
-    [instance, plugins],
+    [store, plugins],
   );
 
   return React.useMemo(() => {

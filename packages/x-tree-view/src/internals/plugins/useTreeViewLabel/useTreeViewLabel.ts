@@ -4,17 +4,10 @@ import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
 import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
-import { useSelector } from '../../hooks/useSelector';
-import { selectorEditedItemId } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {
-  const editedItemRef = React.useRef(useSelector(store, selectorEditedItemId));
-
-  const isItemBeingEditedRef = (itemId: TreeViewItemId) => editedItemRef.current === itemId;
-
   const setEditedItemId = (editedItemId: TreeViewItemId | null) => {
     store.update((prevState) => ({ ...prevState, label: { editedItemId } }));
-    editedItemRef.current = editedItemId;
   };
 
   const updateItemLabel = (itemId: TreeViewItemId, label: string) => {
@@ -56,7 +49,6 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
     instance: {
       setEditedItemId,
       updateItemLabel,
-      isItemBeingEditedRef,
     },
     publicAPI: {
       updateItemLabel,

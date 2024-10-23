@@ -156,7 +156,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     // Add to the model the items that are part of the new range and not already part of the model.
     const selectedItemsLookup = getLookupFromArray(newSelectedItems);
-    const range = getNonDisabledItemsInRange(instance, start, end);
+    const range = getNonDisabledItemsInRange(store.value, start, end);
     const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
     newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
 
@@ -166,17 +166,17 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const expandSelectionRange = (event: React.SyntheticEvent, itemId: string) => {
     if (lastSelectedItem.current != null) {
-      const [start, end] = findOrderInTremauxTree(instance, itemId, lastSelectedItem.current);
+      const [start, end] = findOrderInTremauxTree(store.value, itemId, lastSelectedItem.current);
       selectRange(event, [start, end]);
     }
   };
 
   const selectRangeFromStartToItem = (event: React.SyntheticEvent, itemId: string) => {
-    selectRange(event, [getFirstNavigableItem(instance), itemId]);
+    selectRange(event, [getFirstNavigableItem(instance, store.value), itemId]);
   };
 
   const selectRangeFromItemToEnd = (event: React.SyntheticEvent, itemId: string) => {
-    selectRange(event, [itemId, getLastNavigableItem(instance)]);
+    selectRange(event, [itemId, getLastNavigableItem(instance, store.value)]);
   };
 
   const selectAllNavigableItems = (event: React.SyntheticEvent) => {
@@ -184,7 +184,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       return;
     }
 
-    const navigableItems = getAllNavigableItems(instance);
+    const navigableItems = getAllNavigableItems(instance, store.value);
     setSelectedItems(event, navigableItems);
 
     lastSelectedRange.current = getLookupFromArray(navigableItems);

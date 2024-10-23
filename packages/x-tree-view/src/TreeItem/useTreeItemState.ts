@@ -137,8 +137,7 @@ export function useTreeItemState(itemId: string) {
     // As a side effect of `instance.focusItem` called here and in `handleCancelItemLabelEditing` the `labelInput` is blurred
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
-    // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
-    if (instance.isItemBeingEditedRef(itemId)) {
+    if (selectorIsItemBeingEdited(store.value, itemId)) {
       instance.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       instance.focusItem(event, itemId);
@@ -150,7 +149,7 @@ export function useTreeItemState(itemId: string) {
       return;
     }
 
-    if (instance.isItemBeingEditedRef(itemId)) {
+    if (selectorIsItemBeingEdited(store.value, itemId)) {
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }

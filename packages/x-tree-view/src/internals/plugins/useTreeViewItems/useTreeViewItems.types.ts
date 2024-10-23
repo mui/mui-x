@@ -40,13 +40,6 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 
 export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
   /**
-   * Get the meta-information of an item.
-   * Check the `TreeViewItemMeta` type for more information.
-   * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
-   * @returns {TreeViewItemMeta} The meta-information of the item.
-   */
-  getItemMeta: (itemId: TreeViewItemId) => TreeViewItemMeta;
-  /**
    * Get the item that should be rendered.
    * This method is only used on Rich Tree View components.
    * Check the `TreeViewItemToRenderProps` type for more information.

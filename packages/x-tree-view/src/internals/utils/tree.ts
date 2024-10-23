@@ -1,4 +1,4 @@
-import { TreeViewInstance, TreeViewItemMeta } from '../models';
+import { TreeViewInstance, TreeViewItemMeta, TreeViewState } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import {
   selectorIsItemExpandable,
@@ -11,7 +11,6 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { TreeViewStore } from './TreeViewStore';
 
 const getLastNavigableItemInArray = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
@@ -32,12 +31,12 @@ const getLastNavigableItemInArray = (
 
 export const getPreviousNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
-  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ): string | null => {
-  const itemMeta = selectorItemMeta(store.value, itemId);
-  const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
-  const itemIndex = selectorItemIndex(store.value, itemId);
+  const itemMeta = selectorItemMeta(state, itemId);
+  const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
+  const itemIndex = selectorItemIndex(state, itemId);
 
   // TODO: What should we do if the parent is not navigable?
   if (itemIndex === 0) {
@@ -60,18 +59,18 @@ export const getPreviousNavigableItem = (
     }
 
     // Otherwise, we can try to go up a level and find the previous navigable item.
-    return getPreviousNavigableItem(instance, store, itemMeta.parentId);
+    return getPreviousNavigableItem(instance, state, itemMeta.parentId);
   }
 
   // Finds the last navigable ancestor of the previous navigable sibling.
   let currentItemId: string = siblings[previousNavigableSiblingIndex];
   let lastNavigableChild = getLastNavigableItemInArray(
     instance,
-    selectorItemOrderedChildrenIds(store.value, currentItemId),
+    selectorItemOrderedChildrenIds(state, currentItemId),
   );
-  while (selectorIsItemExpanded(store.value, currentItemId) && lastNavigableChild != null) {
+  while (selectorIsItemExpanded(state, currentItemId) && lastNavigableChild != null) {
     currentItemId = lastNavigableChild;
-    lastNavigableChild = selectorItemOrderedChildrenIds(store.value, currentItemId).find(
+    lastNavigableChild = selectorItemOrderedChildrenIds(state, currentItemId).find(
       instance.isItemNavigable,
     );
   }
@@ -81,12 +80,12 @@ export const getPreviousNavigableItem = (
 
 export const getNextNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
   // If the item is expanded and has some navigable children, return the first of them.
-  if (selectorIsItemExpanded(store.value, itemId)) {
-    const firstNavigableChild = selectorItemOrderedChildrenIds(store.value, itemId).find(
+  if (selectorIsItemExpanded(state, itemId)) {
+    const firstNavigableChild = selectorItemOrderedChildrenIds(state, itemId).find(
       instance.isItemNavigable,
     );
     if (firstNavigableChild != null) {
@@ -94,11 +93,11 @@ export const getNextNavigableItem = (
     }
   }
 
-  let itemMeta = selectorItemMeta(store.value, itemId);
+  let itemMeta = selectorItemMeta(state, itemId);
   while (itemMeta != null) {
     // Try to find the first navigable sibling after the current item.
-    const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
-    const currentItemIndex = selectorItemIndex(store.value, itemMeta.id);
+    const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
+    const currentItemIndex = selectorItemIndex(state, itemMeta.id);
 
     if (currentItemIndex < siblings.length - 1) {
       let nextItemIndex = currentItemIndex + 1;
@@ -115,7 +114,7 @@ export const getNextNavigableItem = (
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    itemMeta = selectorItemMeta(store.value, itemMeta.parentId!);
+    itemMeta = selectorItemMeta(state, itemMeta.parentId!);
   }
 
   return null;
@@ -123,11 +122,11 @@ export const getNextNavigableItem = (
 
 export const getLastNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-  store: TreeViewStore<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
+  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) => {
   let itemId: string | null = null;
-  while (itemId == null || selectorIsItemExpanded(store.value, itemId)) {
-    const children = selectorItemOrderedChildrenIds(store.value, itemId);
+  while (itemId == null || selectorIsItemExpanded(state, itemId)) {
+    const children = selectorItemOrderedChildrenIds(state, itemId);
     const lastNavigableChild = getLastNavigableItemInArray(instance, children);
 
     // The item has no navigable children.
@@ -143,8 +142,8 @@ export const getLastNavigableItem = (
 
 export const getFirstNavigableItem = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
-  store: TreeViewStore<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-) => selectorItemOrderedChildrenIds(store.value, null).find(instance.isItemNavigable)!;
+  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
+) => selectorItemOrderedChildrenIds(state, null).find(instance.isItemNavigable)!;
 
 /**
  * This is used to determine the start and end of a selection range so
@@ -161,8 +160,7 @@ export const getFirstNavigableItem = (
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
 export const findOrderInTremauxTree = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
-  store: TreeViewStore<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
+  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
   itemAId: string,
   itemBId: string,
 ) => {
@@ -170,8 +168,8 @@ export const findOrderInTremauxTree = (
     return [itemAId, itemBId];
   }
 
-  const itemMetaA = selectorItemMeta(store.value, itemAId);
-  const itemMetaB = selectorItemMeta(store.value, itemBId);
+  const itemMetaA = selectorItemMeta(state, itemAId);
+  const itemMetaB = selectorItemMeta(state, itemBId);
 
   if (itemMetaA.parentId === itemMetaB.id || itemMetaB.parentId === itemMetaA.id) {
     return itemMetaB.parentId === itemMetaA.id
@@ -197,7 +195,7 @@ export const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = selectorItemMeta(store.value, aAncestor!).parentId;
+        aAncestor = selectorItemMeta(state, aAncestor!).parentId;
       }
     }
 
@@ -206,13 +204,13 @@ export const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = selectorItemMeta(store.value, bAncestor!).parentId;
+        bAncestor = selectorItemMeta(state, bAncestor!).parentId;
       }
     }
   }
 
   const commonAncestor = aAncestorIsCommon ? aAncestor : bAncestor;
-  const ancestorFamily = selectorItemOrderedChildrenIds(store.value, commonAncestor);
+  const ancestorFamily = selectorItemOrderedChildrenIds(state, commonAncestor);
 
   const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
   const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
@@ -223,44 +221,40 @@ export const findOrderInTremauxTree = (
 };
 
 export const getNonDisabledItemsInRange = (
-  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
-  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemAId: string,
   itemBId: string,
 ) => {
   const getNextItem = (itemId: string) => {
     // If the item is expanded and has some children, return the first of them.
-    if (
-      selectorIsItemExpandable(store.value, itemId) &&
-      selectorIsItemExpanded(store.value, itemId)
-    ) {
-      return selectorItemOrderedChildrenIds(store, itemId)[0];
+    if (selectorIsItemExpandable(state, itemId) && selectorIsItemExpanded(state, itemId)) {
+      return selectorItemOrderedChildrenIds(state, itemId)[0];
     }
 
-    let itemMeta: TreeViewItemMeta | null = selectorItemMeta(store.value, itemId);
+    let itemMeta: TreeViewItemMeta | null = selectorItemMeta(state, itemId);
     while (itemMeta != null) {
       // Try to find the first navigable sibling after the current item.
-      const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
-      const currentItemIndex = selectorItemIndex(store.value, itemMeta.id);
+      const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
+      const currentItemIndex = selectorItemIndex(state, itemMeta.id);
 
       if (currentItemIndex < siblings.length - 1) {
         return siblings[currentItemIndex + 1];
       }
 
       // If the item is the last of its siblings, go up a level to the parent and try again.
-      itemMeta = itemMeta.parentId ? selectorItemMeta(store.value, itemMeta.parentId) : null;
+      itemMeta = itemMeta.parentId ? selectorItemMeta(state, itemMeta.parentId) : null;
     }
 
     throw new Error('Invalid range');
   };
 
-  const [first, last] = findOrderInTremauxTree(instance, itemAId, itemBId);
+  const [first, last] = findOrderInTremauxTree(state, itemAId, itemBId);
   const items = [first];
   let current = first;
 
   while (current !== last) {
     current = getNextItem(current);
-    if (!selectorIsItemDisabled(store.value, current)) {
+    if (!selectorIsItemDisabled(state, current)) {
       items.push(current);
     }
   }
@@ -270,13 +264,13 @@ export const getNonDisabledItemsInRange = (
 
 export const getAllNavigableItems = (
   instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
-  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
 ) => {
-  let item: string | null = getFirstNavigableItem(instance);
+  let item: string | null = getFirstNavigableItem(instance, state);
   const navigableItems: string[] = [];
   while (item != null) {
     navigableItems.push(item);
-    item = getNextNavigableItem(instance, store, item);
+    item = getNextNavigableItem(instance, state, item);
   }
 
   return navigableItems;

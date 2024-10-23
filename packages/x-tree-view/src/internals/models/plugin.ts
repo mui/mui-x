@@ -153,7 +153,7 @@ export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
 
 export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
   children: React.ReactNode;
-  instance: TreeViewInstance<TSignatures>;
+  store: TreeViewStore<TSignatures>;
 }) => React.ReactNode;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {

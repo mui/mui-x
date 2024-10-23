@@ -65,10 +65,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const cleanQuery = query.toLowerCase();
 
     const getNextItem = (itemIdToCheck: string) => {
-      const nextItemId = getNextNavigableItem(instance, store, itemIdToCheck);
+      const nextItemId = getNextNavigableItem(instance, store.value, itemIdToCheck);
       // We reached the end of the tree, check from the beginning
       if (nextItemId === null) {
-        return getFirstNavigableItem(instance, store);
+        return getFirstNavigableItem(instance, store.value);
       }
 
       return nextItemId;
@@ -163,7 +163,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focus the next focusable item
       case key === 'ArrowDown': {
-        const nextItem = getNextNavigableItem(instance, store, itemId);
+        const nextItem = getNextNavigableItem(instance, store.value, itemId);
         if (nextItem) {
           event.preventDefault();
           instance.focusItem(event, nextItem);
@@ -180,7 +180,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Focuses the previous focusable item
       case key === 'ArrowUp': {
-        const previousItem = getPreviousNavigableItem(instance, store, itemId);
+        const previousItem = getPreviousNavigableItem(instance, store.value, itemId);
         if (previousItem) {
           event.preventDefault();
           instance.focusItem(event, previousItem);
@@ -202,7 +202,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           return;
         }
         if (selectorIsItemExpanded(store.value, itemId)) {
-          const nextItemId = getNextNavigableItem(instance, store, itemId);
+          const nextItemId = getNextNavigableItem(instance, store.value, itemId);
           if (nextItemId) {
             instance.focusItem(event, nextItemId);
             event.preventDefault();
@@ -242,7 +242,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
           instance.selectRangeFromStartToItem(event, itemId);
         } else {
-          instance.focusItem(event, getFirstNavigableItem(instance, store));
+          instance.focusItem(event, getFirstNavigableItem(instance, store.value));
         }
 
         event.preventDefault();
@@ -256,7 +256,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         if (canToggleItemSelection(itemId) && params.multiSelect && ctrlPressed && event.shiftKey) {
           instance.selectRangeFromItemToEnd(event, itemId);
         } else {
-          instance.focusItem(event, getLastNavigableItem(instance, store));
+          instance.focusItem(event, getLastNavigableItem(instance, store.value));
         }
 
         event.preventDefault();

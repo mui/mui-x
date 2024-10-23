@@ -1,25 +1,26 @@
 import {
-  TreeViewInstance,
-  UseTreeViewItemsSignature,
+  TreeViewUsedStore,
   UseTreeViewItemsState,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
+  selectorItemMeta,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
   TreeViewItemReorderPosition,
+  UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
 
 /**
  * Checks if the item with the id itemIdB is an ancestor of the item with the id itemIdA.
  */
 export const isAncestor = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
+  store: TreeViewUsedStore<UseTreeViewItemsReorderingSignature>,
   itemIdA: string,
   itemIdB: string,
 ): boolean => {
-  const itemMetaA = instance.getItemMeta(itemIdA);
+  const itemMetaA = selectorItemMeta(store.value, itemIdA);
   if (itemMetaA.parentId === itemIdB) {
     return true;
   }
@@ -28,7 +29,7 @@ export const isAncestor = (
     return false;
   }
 
-  return isAncestor(instance, itemMetaA.parentId, itemIdB);
+  return isAncestor(store, itemMetaA.parentId, itemIdB);
 };
 
 /**

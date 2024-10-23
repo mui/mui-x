@@ -23,7 +23,6 @@ import { selectorItemsReordering } from './useTreeViewItemsReordering.selectors'
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
-  instance,
   store,
 }) => {
   const canItemBeDragged = React.useCallback(
@@ -197,7 +196,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
     ({ itemId, validActions, targetHeight, cursorY, cursorX, contentElement }) => {
       store.update((prevState) => {
         const prevSubState = prevState.itemsReordering;
-        if (prevSubState == null || isAncestor(instance, itemId, prevSubState.draggedItemId)) {
+        if (prevSubState == null || isAncestor(store, itemId, prevSubState.draggedItemId)) {
           return prevState;
         }
         const action = chooseActionToApply({
@@ -232,7 +231,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         };
       });
     },
-    [instance, store, params.itemChildrenIndentation],
+    [store, params.itemChildrenIndentation],
   );
 
   const pluginContextValue = React.useMemo(
