@@ -18,11 +18,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
@@ -250,35 +246,6 @@ LineChart.propTypes = {
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemGap: PropTypes.number,
-    itemMarkHeight: PropTypes.number,
-    itemMarkWidth: PropTypes.number,
-    labelStyle: PropTypes.object,
-    markGap: PropTypes.number,
-    onItemClick: PropTypes.func,
-    padding: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        bottom: PropTypes.number,
-        left: PropTypes.number,
-        right: PropTypes.number,
-        top: PropTypes.number,
-      }),
-    ]),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
