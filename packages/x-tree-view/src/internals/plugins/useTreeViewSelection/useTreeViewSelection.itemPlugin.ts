@@ -12,7 +12,8 @@ import {
   UseTreeItem2CheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
-import { selectorItemOrderedChildrenIds, UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { selectorItemOrderedChildrenIds } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
 import { TreeViewStore } from '../../utils/TreeViewStore';
 

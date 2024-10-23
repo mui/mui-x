@@ -16,6 +16,11 @@ export const selectorDefaultFocusableItemId = createSelector(
   (focus) => focus.defaultFocusableItemId,
 );
 
+export const selectorIsItemTheDefaultFocusableItem = createSelector(
+  [selectorDefaultFocusableItemId, (_, itemId: string) => itemId],
+  (defaultFocusableItemId, itemId) => defaultFocusableItemId === itemId,
+);
+
 export const selectorFocusedItemId = createSelector(
   selectorTreeViewFocusState,
   (focus) => focus.focusedItemId,

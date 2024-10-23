@@ -10,6 +10,7 @@ import {
   selectorItemIndex,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
+  selectorItemParentId,
 } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const getLastNavigableItemInArray = (
@@ -35,6 +36,10 @@ export const getPreviousNavigableItem = (
   itemId: string,
 ): string | null => {
   const itemMeta = selectorItemMeta(state, itemId);
+  if (!itemMeta) {
+    return null;
+  }
+
   const siblings = selectorItemOrderedChildrenIds(state, itemMeta.parentId);
   const itemIndex = selectorItemIndex(state, itemId);
 
@@ -171,6 +176,10 @@ export const findOrderInTremauxTree = (
   const itemMetaA = selectorItemMeta(state, itemAId);
   const itemMetaB = selectorItemMeta(state, itemBId);
 
+  if (!itemMetaA || !itemMetaB) {
+    return [itemAId, itemBId];
+  }
+
   if (itemMetaA.parentId === itemMetaB.id || itemMetaB.parentId === itemMetaA.id) {
     return itemMetaB.parentId === itemMetaA.id
       ? [itemMetaA.id, itemMetaB.id]
@@ -195,7 +204,7 @@ export const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = selectorItemMeta(state, aAncestor!).parentId;
+        aAncestor = selectorItemParentId(state, aAncestor!);
       }
     }
 
@@ -204,7 +213,7 @@ export const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = selectorItemMeta(state, bAncestor!).parentId;
+        bAncestor = selectorItemParentId(state, bAncestor!);
       }
     }
   }

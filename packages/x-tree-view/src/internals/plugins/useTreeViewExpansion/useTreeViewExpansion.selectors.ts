@@ -1,5 +1,5 @@
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { selectorItemMeta } from '../useTreeViewItems';
+import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 const selectorExpansion: TreeViewRootSelector<UseTreeViewExpansionSignature> = (state) =>
@@ -17,5 +17,5 @@ export const selectorIsItemExpanded = createSelector(
 
 export const selectorIsItemExpandable = createSelector(
   [selectorItemMeta],
-  (itemMeta) => itemMeta.expandable,
+  (itemMeta) => itemMeta?.expandable ?? false,
 );

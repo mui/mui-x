@@ -51,11 +51,13 @@ export {
   useTreeViewItems,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
+} from './plugins/useTreeViewItems';
+export {
   selectorItemMetaMap,
   selectorItemMeta,
   selectorItemIndex,
   selectorItemOrderedChildrenIds,
-} from './plugins/useTreeViewItems';
+} from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,

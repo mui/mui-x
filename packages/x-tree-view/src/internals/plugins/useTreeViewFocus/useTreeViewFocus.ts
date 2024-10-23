@@ -13,7 +13,7 @@ import {
   selectorFocusedItemId,
 } from './useTreeViewFocus.selectors';
 import { selectorIsItemExpanded } from '../useTreeViewExpansion';
-import { selectorItemMeta } from '../useTreeViewItems';
+import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 const useDefaultFocusableItemId = (
   instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,

@@ -20,14 +20,14 @@ import {
   selectorIsItemBeingEdited,
   selectorIsItemEditable,
 } from '../useTreeViewLabel';
-import { selectorItemMetaMap } from '../useTreeViewItems';
+import {
+  selectorItemMetaMap,
+  selectorIsItemDisabled,
+  selectorItemParentId,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 import { useSelector } from '../../hooks/useSelector';
 import { selectorIsItemSelected } from '../useTreeViewSelection';
 import { selectorIsItemExpandable, selectorIsItemExpanded } from '../useTreeViewExpansion';
-import {
-  selectorIsItemDisabled,
-  selectorItemMeta,
-} from '../useTreeViewItems/useTreeViewItems.selectors';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -225,7 +225,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else {
-          const parent = selectorItemMeta(store.value, itemId).parentId;
+          const parent = selectorItemParentId(store.value, itemId);
           if (parent) {
             instance.focusItem(event, parent);
             event.preventDefault();

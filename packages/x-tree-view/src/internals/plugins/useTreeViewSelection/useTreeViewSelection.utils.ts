@@ -1,8 +1,11 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewUsedStore } from '../../models';
-import { selectorItemMeta, selectorItemOrderedChildrenIds } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
 import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import {
+  selectorItemOrderedChildrenIds,
+  selectorItemParentId,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 
 /**
  * Transform the `selectedItems` model to be an array if it was a string or null.
@@ -115,7 +118,7 @@ export const propagateSelection = ({
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
-        const parentId = selectorItemMeta(store.value, itemId).parentId;
+        const parentId = selectorItemParentId(store.value, itemId);
         if (parentId == null) {
           return;
         }
@@ -133,14 +136,14 @@ export const propagateSelection = ({
 
   changes.removed.forEach((removedItemId) => {
     if (selectionPropagation.parents) {
-      let parentId = selectorItemMeta(store.value, removedItemId).parentId;
+      let parentId = selectorItemParentId(store.value, removedItemId);
       while (parentId != null) {
         if (newModelLookup[parentId]) {
           shouldRegenerateModel = true;
           delete newModelLookup[parentId];
         }
 
-        parentId = selectorItemMeta(store.value, parentId).parentId;
+        parentId = selectorItemParentId(store.value, parentId);
       }
     }
 

@@ -33,25 +33,16 @@ export const selectorItemChildrenIndexes = createSelector(
 export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items) => items.itemMap);
 
 /**
- * Meta to return if `selectorItemMeta` is called during the initial render on a Simple Tree View component and the state is not yet initialized.
- */
-const UNKNOWN_ITEM_META: TreeViewItemMeta = {
-  id: '',
-  idAttribute: undefined,
-  parentId: null,
-  expandable: false,
-  disabled: false,
-};
-/**
  * Get the meta-information of an item.
  * Check the `TreeViewItemMeta` type for more information.
  * @param {TreeViewState<[UseTreeViewItemsSignature]>}
  * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
- * @returns {TreeViewItemMeta} The meta-information of the item.
+ * @returns {TreeViewItemMeta | null} The meta-information of the item.
  */
 export const selectorItemMeta = createSelector(
   [selectorItemMetaMap, (_, itemId: string | null) => itemId],
-  (itemMetaMap, itemId) => itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? UNKNOWN_ITEM_META,
+  (itemMetaMap, itemId) =>
+    (itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? null) as TreeViewItemMeta | null,
 );
 
 export const selectorIsItemDisabled = createSelector(
@@ -88,5 +79,11 @@ export const selectorIsItemDisabled = createSelector(
  */
 export const selectorItemIndex = createSelector(
   [selectorItemMeta, selectorItemChildrenIndexes],
-  (itemMeta, indexes) => indexes[itemMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID][itemMeta.id],
+  (itemMeta, indexes) =>
+    itemMeta == null ? -1 : indexes[itemMeta.parentId ?? TREE_VIEW_ROOT_PARENT_ID][itemMeta.id],
+);
+
+export const selectorItemParentId = createSelector(
+  [selectorItemMeta],
+  (itemMeta) => itemMeta?.parentId ?? null,
 );

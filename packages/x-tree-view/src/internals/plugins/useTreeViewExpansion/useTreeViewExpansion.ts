@@ -6,7 +6,10 @@ import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { selectorIsItemExpandable, selectorIsItemExpanded } from './useTreeViewExpansion.selectors';
 import { getExpandedItemsMap } from './useTreeViewExpansion.utils';
-import { selectorItemMeta, selectorItemOrderedChildrenIds } from '../useTreeViewItems';
+import {
+  selectorItemMeta,
+  selectorItemOrderedChildrenIds,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,

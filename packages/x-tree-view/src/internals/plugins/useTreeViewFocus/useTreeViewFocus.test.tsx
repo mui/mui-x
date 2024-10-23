@@ -17,7 +17,14 @@ describeTreeView<
   [UseTreeViewFocusSignature, UseTreeViewSelectionSignature, UseTreeViewItemsSignature]
 >(
   'useTreeViewFocus plugin',
-  ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
+  ({
+    render,
+    renderFromJSX,
+    TreeItemComponent,
+    treeViewComponentName,
+    TreeViewComponent,
+    setup,
+  }) => {
     describe('basic behavior', () => {
       it('should allow to focus an item', () => {
         const view = render({
@@ -76,7 +83,7 @@ describeTreeView<
         expect(view.getItemRoot('3').tabIndex).to.equal(-1);
       });
 
-      it('should set tabIndex={0} on the first item if the selected item is not visible', () => {
+      it('should set tabIndex={0} on the first item if selected item is not visible', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }],
           selectedItems: '2.1',
@@ -86,7 +93,7 @@ describeTreeView<
         expect(view.getItemRoot('2').tabIndex).to.equal(-1);
       });
 
-      it('should set tabIndex={0} on the first item if the no selected item is visible', () => {
+      it('should set tabIndex={0} on the first item if no selected item is visible', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }, { id: '2.2' }] }],
           selectedItems: ['2.1', '2.2'],

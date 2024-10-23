@@ -25,7 +25,7 @@ import { useTreeItem2Utils } from '../hooks/useTreeItem2Utils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
-import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeItem2 = <
@@ -58,8 +58,10 @@ export const useTreeItem2 = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const rootTabIndex = useSelector(store, (state) =>
-    selectorDefaultFocusableItemId(state) === parameters.itemId ? 0 : -1,
+  const shouldBeAccessibleWithTab = useSelector(
+    store,
+    selectorIsItemTheDefaultFocusableItem,
+    itemId,
   );
 
   const sharedPropsEnhancerParams: Omit<
@@ -202,7 +204,7 @@ export const useTreeItem2 = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: rootTabIndex,
+      tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
