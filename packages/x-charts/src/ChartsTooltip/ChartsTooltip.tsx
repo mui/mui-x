@@ -63,16 +63,6 @@ export interface ChartsTooltipProps<T extends ChartSeriesType> {
    */
   trigger?: TriggerOptions;
   /**
-   * Component to override the tooltip content when trigger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
-   */
-  itemContent?: React.ElementType<ChartsItemContentProps<any>>;
-  /**
-   * Component to override the tooltip content when trigger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
-   */
-  axisContent?: React.ElementType<ChartsAxisContentProps>;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipClasses>;
@@ -131,7 +121,7 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
     props: inProps,
     name: 'MuiChartsTooltip',
   });
-  const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
+  const { trigger = 'axis', slots, slotProps } = props;
 
   const mousePosition = useMouseTracker();
 
@@ -176,15 +166,15 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
           {trigger === 'item' ? (
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<T>}
-              content={(slots?.itemContent ?? itemContent) as any}
-              contentProps={slotProps?.itemContent as Partial<ChartsItemContentProps<T>>}
+              content={slots?.itemContent}
+              contentProps={slotProps?.itemContent}
               sx={{ mx: 2 }}
               classes={classes}
             />
           ) : (
             <ChartsAxisTooltipContent
               axisData={displayedData as AxisInteractionData}
-              content={slots?.axisContent ?? axisContent}
+              content={slots?.axisContent}
               contentProps={slotProps?.axisContent}
               sx={{ mx: 2 }}
               classes={classes}
@@ -202,19 +192,9 @@ ChartsTooltip.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Component to override the tooltip content when trigger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
-   */
-  axisContent: PropTypes.elementType,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * Component to override the tooltip content when trigger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
-   */
-  itemContent: PropTypes.elementType,
   /**
    * The props used for each component slot.
    * @default {}
