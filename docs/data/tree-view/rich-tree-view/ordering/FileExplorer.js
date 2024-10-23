@@ -194,6 +194,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -210,7 +211,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const icon = getIconFromFileType(item.fileType);
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider {...getContextProviderProps()}>
       <StyledTreeItemRoot {...getRootProps(other)}>
         <CustomTreeItemContent
           {...getContentProps({

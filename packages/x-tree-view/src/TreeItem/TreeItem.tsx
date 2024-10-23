@@ -30,6 +30,8 @@ import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext'
 import { useTreeItemState } from './useTreeItemState';
 import { isTargetInDescendants } from '../internals/utils/tree';
 import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorDefaultFocusableItemId } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
@@ -203,6 +205,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     expansion: { expansionTrigger },
     treeId,
     instance,
+    store,
   } = useTreeViewContext<TreeItemMinimalPlugins, TreeItemOptionalPlugins>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
@@ -406,7 +409,9 @@ export const TreeItem = React.forwardRef(function TreeItem(
   };
 
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const tabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const tabIndex = useSelector(store, (state) =>
+    selectorDefaultFocusableItemId(state) === itemId ? 0 : -1,
+  );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -445,7 +450,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     }) ?? {};
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider itemId={itemId} id={id}>
       <TreeItemRoot
         className={clsx(classes.root, className)}
         role="treeitem"

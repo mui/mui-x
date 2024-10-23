@@ -27,6 +27,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getLabelProps,
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
+    getContextProviderProps,
     status,
   } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
 
@@ -40,7 +41,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider {...getContextProviderProps()}>
       <TreeItem2Root {...getRootProps({ sx: { position: 'relative' } })}>
         {status.expandable && (
           <Box

@@ -1,7 +1,8 @@
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
-import { TreeViewInstance } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { TreeViewUsedStore } from '../../models';
+import { selectorItemMeta, selectorItemOrderedChildrenIds } from '../useTreeViewItems';
 import { UseTreeViewSelectionSignature } from './useTreeViewSelection.types';
+import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
 
 /**
  * Transform the `selectedItems` model to be an array if it was a string or null.
@@ -20,6 +21,14 @@ export const convertSelectedItemsToArray = (model: string[] | string | null): st
   return [];
 };
 
+export const getSelectedItemsMap = (selectedItems: string | string[] | null) => {
+  const selectedItemsMap = new Map<TreeViewItemId, true>();
+  convertSelectedItemsToArray(selectedItems).forEach((id) => {
+    selectedItemsMap.set(id, true);
+  });
+  return selectedItemsMap;
+};
+
 export const getLookupFromArray = (array: string[]) => {
   const lookup: { [itemId: string]: true } = {};
   array.forEach((itemId) => {
@@ -29,30 +38,30 @@ export const getLookupFromArray = (array: string[]) => {
 };
 
 export const getAddedAndRemovedItems = ({
-  instance,
+  store,
   oldModel,
   newModel,
 }: {
-  instance: TreeViewInstance<[UseTreeViewSelectionSignature]>;
+  store: TreeViewUsedStore<UseTreeViewSelectionSignature>;
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) => {
-  const newModelLookup = getLookupFromArray(newModel);
+  const newModelLookup = getSelectedItemsMap(newModel);
 
   return {
-    added: newModel.filter((itemId) => !instance.isItemSelected(itemId)),
-    removed: oldModel.filter((itemId) => !newModelLookup[itemId]),
+    added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),
+    removed: oldModel.filter((itemId) => !newModelLookup.has(itemId)),
   };
 };
 
 export const propagateSelection = ({
-  instance,
+  store,
   selectionPropagation,
   newModel,
   oldModel,
   additionalItemsToPropagate,
 }: {
-  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>;
+  store: TreeViewUsedStore<UseTreeViewSelectionSignature>;
   selectionPropagation: TreeViewSelectionPropagation;
   newModel: TreeViewItemId[];
   oldModel: TreeViewItemId[];
@@ -66,7 +75,7 @@ export const propagateSelection = ({
   const newModelLookup = getLookupFromArray(newModel);
 
   const changes = getAddedAndRemovedItems({
-    instance,
+    store,
     newModel,
     oldModel,
   });
@@ -89,7 +98,7 @@ export const propagateSelection = ({
           newModelLookup[itemId] = true;
         }
 
-        instance.getItemOrderedChildrenIds(itemId).forEach(selectDescendants);
+        selectorItemOrderedChildrenIds(store.value, itemId).forEach(selectDescendants);
       };
 
       selectDescendants(addedItemId);
@@ -101,17 +110,17 @@ export const propagateSelection = ({
           return false;
         }
 
-        const children = instance.getItemOrderedChildrenIds(itemId);
+        const children = selectorItemOrderedChildrenIds(store.value, itemId);
         return children.every(checkAllDescendantsSelected);
       };
 
       const selectParents = (itemId: TreeViewItemId) => {
-        const parentId = instance.getItemMeta(itemId).parentId;
+        const parentId = selectorItemMeta(store.value, itemId).parentId;
         if (parentId == null) {
           return;
         }
 
-        const siblings = instance.getItemOrderedChildrenIds(parentId);
+        const siblings = selectorItemOrderedChildrenIds(store.value, parentId);
         if (siblings.every(checkAllDescendantsSelected)) {
           shouldRegenerateModel = true;
           newModelLookup[parentId] = true;
@@ -124,14 +133,14 @@ export const propagateSelection = ({
 
   changes.removed.forEach((removedItemId) => {
     if (selectionPropagation.parents) {
-      let parentId = instance.getItemMeta(removedItemId).parentId;
+      let parentId = selectorItemMeta(store.value, removedItemId).parentId;
       while (parentId != null) {
         if (newModelLookup[parentId]) {
           shouldRegenerateModel = true;
           delete newModelLookup[parentId];
         }
 
-        parentId = instance.getItemMeta(parentId).parentId;
+        parentId = selectorItemMeta(store.value, parentId).parentId;
       }
     }
 
@@ -142,7 +151,7 @@ export const propagateSelection = ({
           delete newModelLookup[itemId];
         }
 
-        instance.getItemOrderedChildrenIds(itemId).forEach(deSelectDescendants);
+        selectorItemOrderedChildrenIds(store.value, itemId).forEach(deSelectDescendants);
       };
 
       deSelectDescendants(removedItemId);

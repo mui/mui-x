@@ -34,6 +34,11 @@ export interface UseTreeItem2Parameters {
   children?: React.ReactNode;
 }
 
+export interface UseTreeItem2ContextProviderProps {
+  itemId: string;
+  id: string | undefined;
+}
+
 export interface UseTreeItem2RootSlotPropsFromUseTreeItem {
   role: 'treeitem';
   tabIndex: 0 | -1;
@@ -141,6 +146,11 @@ export interface UseTreeItem2ReturnValue<
   TSignatures extends UseTreeItem2MinimalPlugins,
   TOptionalSignatures extends UseTreeItem2OptionalPlugins,
 > {
+  /**
+   * Resolver for the context provider's props.
+   * @returns {UseTreeItem2ContextProviderProps} Props that should be spread on the context provider slot.
+   */
+  getContextProviderProps: () => UseTreeItem2ContextProviderProps;
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot.

@@ -50,6 +50,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -73,7 +74,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItem2Provider {...getContextProviderProps()}>
       <TreeItem2Root {...otherRootProps}>
         <TreeItem2Content {...getContentProps()}>
           <TreeItem2IconContainer {...getIconContainerProps()}>

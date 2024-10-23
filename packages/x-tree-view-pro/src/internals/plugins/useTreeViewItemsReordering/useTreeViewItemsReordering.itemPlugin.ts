@@ -5,6 +5,7 @@ import {
   useTreeViewContext,
   UseTreeViewItemsSignature,
   isTargetInDescendants,
+  useSelector,
 } from '@mui/x-tree-view/internals';
 import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
@@ -14,17 +15,28 @@ import {
   TreeViewItemItemReorderingValidActions,
   UseTreeItem2ContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
+import {
+  selectorItemsReorderingForDraggedItem,
+  selectorItemsReorderingIsValidTarget,
+} from './useTreeViewItemsReordering.selectors';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
   props,
 }) => {
-  const { itemsReordering, instance } =
+  const { instance, store, itemsReordering } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
+
+  const itemsReorderingForDraggedItem = useSelector(
+    store,
+    selectorItemsReorderingForDraggedItem,
+    itemId,
+  );
+  const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
 
   return {
     propsEnhancers: {
@@ -33,8 +45,10 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItem2RootSlotPropsFromItemsReordering => {
-        const draggable = instance.canItemBeDragged(itemId);
-        if (!draggable) {
+        if (
+          !itemsReordering.enabled ||
+          (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId))
+        ) {
           return {};
         }
 
@@ -44,9 +58,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
             return;
           }
 
-          // We don't use `event.currentTarget` here.
-          // This is to allow people to pass `onDragStart` to another element than the root.
           if (isTargetInDescendants(event.target as HTMLElement, rootRefObject.current)) {
+            // We don't use `event.currentTarget` here.
+            // This is to allow people to pass `onDragStart` to another element than the root.
             return;
           }
 
@@ -95,8 +109,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItem2ContentSlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.draggedItemId === itemId) {
+        if (!isValidTarget) {
           return {};
         }
 
@@ -134,20 +147,15 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         };
       },
       dragAndDropOverlay: (): UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering => {
-        const currentDrag = itemsReordering.currentDrag;
-        if (!currentDrag || currentDrag.targetItemId !== itemId || currentDrag.action == null) {
+        if (!itemsReorderingForDraggedItem) {
           return {};
         }
 
-        const targetDepth =
-          currentDrag.newPosition?.parentId == null
-            ? 0
-            : // The depth is always defined because drag&drop is only usable with Rich Tree View components.
-              instance.getItemMeta(currentDrag.newPosition.parentId).depth! + 1;
-
         return {
-          action: currentDrag.action,
-          style: { '--TreeView-targetDepth': targetDepth } as React.CSSProperties,
+          action: itemsReorderingForDraggedItem.action,
+          style: {
+            '--TreeView-targetDepth': itemsReorderingForDraggedItem.targetDepth,
+          } as React.CSSProperties,
         };
       },
     },
