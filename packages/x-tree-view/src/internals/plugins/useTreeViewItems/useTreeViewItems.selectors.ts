@@ -1,4 +1,5 @@
 import { TreeViewItemId } from '../../../models';
+import { TreeViewItemMeta } from '../../models';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
@@ -32,6 +33,16 @@ export const selectorItemChildrenIndexes = createSelector(
 export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items) => items.itemMap);
 
 /**
+ * Meta to return if `selectorItemMeta` is called during the initial render on a Simple Tree View component and the state is not yet initialized.
+ */
+const UNKNOWN_ITEM_META: TreeViewItemMeta = {
+  id: '',
+  idAttribute: undefined,
+  parentId: null,
+  expandable: false,
+  disabled: false,
+};
+/**
  * Get the meta-information of an item.
  * Check the `TreeViewItemMeta` type for more information.
  * @param {TreeViewState<[UseTreeViewItemsSignature]>}
@@ -40,7 +51,7 @@ export const selectorItemMap = createSelector(selectorTreeViewItemsState, (items
  */
 export const selectorItemMeta = createSelector(
   [selectorItemMetaMap, (_, itemId: string | null) => itemId],
-  (itemMetaMap, itemId) => itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID],
+  (itemMetaMap, itemId) => itemMetaMap[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? UNKNOWN_ITEM_META,
 );
 
 export const selectorIsItemDisabled = createSelector(
