@@ -60,7 +60,7 @@ export const useTreeItem = <
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
-  > = { rootRefObject, contentRefObject, interactions };
+  > = { rootRefObject, contentRefObject, interactions, status };
 
   const createRootHandleFocus =
     (otherHandlers: EventHandlers) =>
@@ -159,21 +159,6 @@ export const useTreeItem = <
       }
     };
 
-  const createCheckboxHandleChange =
-    (otherHandlers: EventHandlers) =>
-    (event: React.ChangeEvent<HTMLInputElement> & TreeViewCancellableEvent) => {
-      otherHandlers.onChange?.(event);
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-
-      if (disableSelection || status.disabled) {
-        return;
-      }
-
-      interactions.handleCheckboxSelection(event);
-    };
-
   const createIconContainerHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
@@ -269,15 +254,21 @@ export const useTreeItem = <
   ): UseTreeItemCheckboxSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    return {
+    const props = {
       ...externalEventHandlers,
-      visible: checkboxSelection,
       ref: checkboxRef,
-      checked: status.selected,
-      disabled: disableSelection || status.disabled,
-      tabIndex: -1,
       ...externalProps,
-      onChange: createCheckboxHandleChange(externalEventHandlers),
+    };
+
+    const enhancedCheckboxProps =
+      propsEnhancers.checkbox?.({
+        ...sharedPropsEnhancerParams,
+        externalEventHandlers,
+      }) ?? {};
+
+    return {
+      ...props,
+      ...enhancedCheckboxProps,
     };
   };
 
@@ -309,10 +300,8 @@ export const useTreeItem = <
 
     const enhancedLabelInputProps =
       propsEnhancers.labelInput?.({
-        rootRefObject,
-        contentRefObject,
+        ...sharedPropsEnhancerParams,
         externalEventHandlers,
-        interactions,
       }) ?? {};
 
     return {

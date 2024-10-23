@@ -98,12 +98,7 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemLabelInputSlotOwnProps;
 
 export interface UseTreeItemCheckboxSlotOwnProps {
-  visible: boolean;
-  checked: boolean;
-  onChange: TreeViewCancellableEventHandler<React.ChangeEvent<HTMLInputElement>>;
-  disabled: boolean;
   ref: React.RefObject<HTMLButtonElement>;
-  tabIndex: -1;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
+import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 import { TreeViewContext } from '@mui/x-tree-view/internals/TreeViewProvider/TreeViewContext';
 import { describeConformance } from 'test/utils/describeConformance';
@@ -25,11 +26,9 @@ describe('<TreeItem />', () => {
   describeSlotsConformance({
     render,
     getElement: ({ props, slotName }) => (
-      <TreeViewContext.Provider
-        value={getFakeContextValue({ checkboxSelection: slotName === 'checkbox' })}
-      >
+      <SimpleTreeView checkboxSelection={slotName === 'checkbox'}>
         <TreeItem itemId="one" label="one" {...props} />
-      </TreeViewContext.Provider>
+      </SimpleTreeView>
     ),
     slots: {
       label: { className: classes.label },
