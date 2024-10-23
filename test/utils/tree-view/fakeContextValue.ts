@@ -41,6 +41,7 @@ export const getFakeContextValue = (
     multiSelect: false,
     checkboxSelection: features.checkboxSelection ?? false,
     disableSelection: false,
+    selectionPropagation: {},
   },
   treeId: 'mui-tree-view-1',
   rootRef: {

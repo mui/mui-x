@@ -1,9 +1,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils';
-
 import { TreeItem, TreeItemProps } from '../../TreeItem';
-import { TreeItem2Props } from '../../TreeItem2';
 import { TreeViewItemId } from '../../models';
 import { TreeViewItemToRenderProps } from '../plugins/useTreeViewItems';
 
@@ -17,7 +15,7 @@ export interface RichTreeViewItemsSlots {
    * Custom component for the item.
    * @default TreeItem.
    */
-  item?: React.JSXElementConstructor<TreeItemProps> | React.JSXElementConstructor<TreeItem2Props>;
+  item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
 export interface RichTreeViewItemsSlotProps {

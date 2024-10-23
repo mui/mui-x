@@ -5,19 +5,19 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeItem2, UseTreeItem2Parameters } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem, UseTreeItemParameters } from '@mui/x-tree-view/useTreeItem';
 import {
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2GroupTransition,
-  TreeItem2Label,
-  TreeItem2Root,
-  TreeItem2Checkbox,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
-import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
+  TreeItemContent,
+  TreeItemIconContainer,
+  TreeItemGroupTransition,
+  TreeItemLabel,
+  TreeItemRoot,
+  TreeItemCheckbox,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
 
 type Editable = {
   editable?: boolean;
@@ -40,7 +40,7 @@ const AnnotationText = styled(Typography)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(11),
 }));
 
-const CustomTreeItem2Transition = styled(TreeItem2GroupTransition)(({ theme }) => ({
+const CustomTreeItemTransition = styled(TreeItemGroupTransition)(({ theme }) => ({
   padding: 6,
   border: '1px solid transparent',
   '&:hover:not(:has(:hover))': {
@@ -48,34 +48,34 @@ const CustomTreeItem2Transition = styled(TreeItem2GroupTransition)(({ theme }) =
   },
 }));
 
-const CustomTreeItem2LabelInput = styled(TreeItem2LabelInput)(({ theme }) => ({
+const CustomTreeItemLabelInput = styled(TreeItemLabelInput)(({ theme }) => ({
   color: theme.palette.text.primary,
   border: '1px solid transparent',
   '&:hover': {
     borderColor: theme.palette.primary.main,
   },
 }));
-const CustomTreeItem2Content = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   border: '1px solid transparent',
   '&:hover:not(:has(:hover))': {
     borderColor: theme.palette.primary.main,
   },
 }));
-const CustomTreeItem2IconContainer = styled(TreeItem2IconContainer)(({ theme }) => ({
+const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
   '&:hover': {
     borderColor: theme.palette.primary.main,
   },
 }));
-const CustomTreeItem2Label = styled(TreeItem2Label)(({ theme }) => ({
+const CustomTreeItemLabel = styled(TreeItemLabel)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
   '&:hover': {
     borderColor: theme.palette.primary.main,
   },
 }));
-const CustomTreeItem2Checkbox = styled(TreeItem2Checkbox)(({ theme }) => ({
+const CustomTreeItemCheckbox = styled(TreeItemCheckbox)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: '1px solid transparent',
   '&:hover': {
@@ -84,7 +84,7 @@ const CustomTreeItem2Checkbox = styled(TreeItem2Checkbox)(({ theme }) => ({
 }));
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItem2Parameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -112,65 +112,65 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getDragAndDropOverlayProps,
     getLabelInputProps,
     status,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   return (
     <React.Fragment>
-      <TreeItem2Provider itemId={itemId}>
-        <TreeItem2Root
+      <TreeItemProvider itemId={itemId}>
+        <TreeItemRoot
           {...getRootProps({
             ...other,
             onMouseOver: handleMouseOver,
             onMouseLeave: handleMouseLeave,
-            'data-name': 'TreeItem2Root',
+            'data-name': 'TreeItemRoot',
           })}
         >
-          <CustomTreeItem2Content
+          <CustomTreeItemContent
             {...getContentProps({
-              'data-name': 'TreeItem2Content',
+              'data-name': 'TreeItemContent',
             })}
           >
-            <CustomTreeItem2IconContainer
+            <CustomTreeItemIconContainer
               {...getIconContainerProps({
-                'data-name': 'TreeItem2IconContainer',
+                'data-name': 'TreeItemIconContainer',
               })}
             >
-              <TreeItem2Icon status={status} data-name="TreeItem2Icon" />
-            </CustomTreeItem2IconContainer>
-            <CustomTreeItem2Checkbox
+              <TreeItemIcon status={status} data-name="TreeItemIcon" />
+            </CustomTreeItemIconContainer>
+            <CustomTreeItemCheckbox
               {...getCheckboxProps({
-                'data-name': 'TreeItem2Checkbox',
+                'data-name': 'TreeItemCheckbox',
               })}
             />
             {status?.editable ? (
-              <CustomTreeItem2LabelInput
+              <CustomTreeItemLabelInput
                 {...getLabelInputProps({
-                  'data-name': 'TreeItem2LabelInput',
+                  'data-name': 'TreeItemLabelInput',
                 })}
               />
             ) : (
-              <CustomTreeItem2Label
+              <CustomTreeItemLabel
                 {...getLabelProps({
-                  'data-name': 'TreeItem2Label',
+                  'data-name': 'TreeItemLabel',
                 })}
               />
             )}
 
-            <TreeItem2DragAndDropOverlay
+            <TreeItemDragAndDropOverlay
               {...getDragAndDropOverlayProps({
-                'data-name': 'TreeItem2DragAndDropOverlay',
+                'data-name': 'TreeItemDragAndDropOverlay',
               })}
             />
-          </CustomTreeItem2Content>
+          </CustomTreeItemContent>
           {children && (
-            <CustomTreeItem2Transition
+            <CustomTreeItemTransition
               {...getGroupTransitionProps({
-                'data-name': 'TreeItem2GroupTransition',
+                'data-name': 'TreeItemGroupTransition',
               })}
             />
           )}
-        </TreeItem2Root>
-      </TreeItem2Provider>
+        </TreeItemRoot>
+      </TreeItemProvider>
       <Popover
         slotProps={{
           root: {
