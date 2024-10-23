@@ -85,7 +85,7 @@ This inconsistency has been solved, all the event manager now target the root of
 
 ## Rename the `TreeItem2` (and related utils)
 
-All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore loosing their `2` suffix:
+All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
 
 ```diff
  import * as React from 'react';
