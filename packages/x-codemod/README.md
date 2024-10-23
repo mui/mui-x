@@ -89,7 +89,7 @@ The list includes these transformers
 
 #### `rename-tree-item-2`
 
-Renames the `TreeItem2` component to `TreeItem` (same for any sub-components or utils like `useTreeItem2` or `TreeItem2Icon`).
+Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or utils like `useTreeItem2` or `TreeItem2Icon`).
 
 ```diff
 -import { TreeItem2 } from '@mui/x-tree-view';
