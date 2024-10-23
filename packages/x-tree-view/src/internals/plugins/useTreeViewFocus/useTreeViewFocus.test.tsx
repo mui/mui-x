@@ -17,14 +17,7 @@ describeTreeView<
   [UseTreeViewFocusSignature, UseTreeViewSelectionSignature, UseTreeViewItemsSignature]
 >(
   'useTreeViewFocus plugin',
-  ({
-    render,
-    renderFromJSX,
-    TreeItemComponent,
-    treeViewComponentName,
-    TreeViewComponent,
-    setup,
-  }) => {
+  ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
     describe('basic behavior', () => {
       it('should allow to focus an item', () => {
         const view = render({

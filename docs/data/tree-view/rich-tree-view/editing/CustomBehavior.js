@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 import { MUI_X_PRODUCTS } from './products';
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const { interactions } = useTreeItem2Utils({
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
+  const { interactions } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -17,7 +17,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slotProps={{
@@ -34,7 +34,7 @@ export default function CustomBehavior() {
     <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['grid', 'pickers']}

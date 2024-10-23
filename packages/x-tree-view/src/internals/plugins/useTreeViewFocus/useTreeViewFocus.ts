@@ -12,7 +12,7 @@ import {
   selectorDefaultFocusableItemId,
   selectorFocusedItemId,
 } from './useTreeViewFocus.selectors';
-import { selectorIsItemExpanded } from '../useTreeViewExpansion';
+import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
 import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 const useDefaultFocusableItemId = (

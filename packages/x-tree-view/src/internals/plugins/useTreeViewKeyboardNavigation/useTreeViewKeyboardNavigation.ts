@@ -15,19 +15,22 @@ import {
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
-import {
-  useTreeViewLabel,
-  selectorIsItemBeingEdited,
-  selectorIsItemEditable,
-} from '../useTreeViewLabel';
+import { useTreeViewLabel } from '../useTreeViewLabel';
+import { useSelector } from '../../hooks/useSelector';
 import {
   selectorItemMetaMap,
   selectorIsItemDisabled,
   selectorItemParentId,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
-import { useSelector } from '../../hooks/useSelector';
-import { selectorIsItemSelected } from '../useTreeViewSelection';
-import { selectorIsItemExpandable, selectorIsItemExpanded } from '../useTreeViewExpansion';
+import {
+  selectorIsItemBeingEdited,
+  selectorIsItemEditable,
+} from '../useTreeViewLabel/useTreeViewLabel.selectors';
+import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemExpandable,
+  selectorIsItemExpanded,
+} from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
