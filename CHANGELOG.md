@@ -289,7 +289,7 @@ Same changes as in `@mui/x-charts@7.19.0`.
 - [code-infra] Remove custom playwright installation steps (#14728) @Janpot
 - [code-infra] Replace or remove all instances of `e` identifier (#14724) @samuelsycamore
 - [infra] Adds community contribution section to the changelog script (#14799) @michelengelen
-- [infra] Fix line break in Stack Overflow message @oliviertassinari
+- [infra] Fix line break in Stack Overflow message @oliviertassinari
 - [test] Fix `Escape` event firing event (#14797) @oliviertassinari
 
 ## 7.18.0
@@ -381,7 +381,7 @@ Same changes as in `@mui/x-charts@7.18.0`.
 - [core] Fix 301 link to Next.js and git diff @oliviertassinari
 - [core] Fix failing CI on `master` (#14644) @cherniavskii
 - [core] Fix `package.json` repository rule @oliviertassinari
-- [core] MUI X repository moved to a new location @oliviertassinari
+- [core] MUI X repository moved to a new location @oliviertassinari
 - [docs-infra] Strengthen CSP (#14581) @oliviertassinari
 - [license] Finish renaming of LicensingModel (#14615) @oliviertassinari
 
