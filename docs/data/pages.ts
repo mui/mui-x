@@ -545,6 +545,10 @@ const pages: MuiPage[] = [
             pathname: '/x/migration/migration-pickers-v7',
             title: 'Breaking changes: Date and Time Pickers',
           },
+          {
+            pathname: '/x/migration/migration-tree-view-v7',
+            title: 'Breaking changes: Tree View',
+          },
         ],
       },
       {

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import type { TreeItem2Props } from '../../../TreeItem2';
-import type { TreeItemProps } from '../../../TreeItem';
 import {
   TreeViewItemId,
   TreeViewSelectionPropagation,
@@ -9,7 +7,7 @@ import {
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewInstance, TreeViewItemPlugin } from '../../models';
 import {
-  UseTreeItem2CheckboxSlotPropsFromSelection,
+  UseTreeItemCheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
@@ -64,9 +62,7 @@ function getCheckboxStatus({
   };
 }
 
-export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
-  props,
-}) => {
+export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemId } = props;
 
   const {
@@ -79,7 +75,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin<TreeItemProps | 
         externalEventHandlers,
         interactions,
         status,
-      }): UseTreeItem2CheckboxSlotPropsFromSelection => {
+      }): UseTreeItemCheckboxSlotPropsFromSelection => {
         const handleChange = (
           event: React.ChangeEvent<HTMLInputElement> & TreeViewCancellableEvent,
         ) => {
