@@ -1,6 +1,6 @@
 import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = [
+const dataGridApiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/data-grid',
     title: 'DataGrid',
@@ -28,4 +28,4 @@ const apiPages: MuiPage[] = [
     title: 'GridToolbarQuickFilter',
   },
 ];
-export default apiPages;
+export default dataGridApiPages;
