@@ -1,16 +1,6 @@
 {
   "props": {
-    "axisContent": {
-      "type": { "name": "elementType" },
-      "deprecated": true,
-      "deprecationInfo": "Use slots.axisContent instead"
-    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "itemContent": {
-      "type": { "name": "elementType" },
-      "deprecated": true,
-      "deprecationInfo": "Use slots.itemContent instead"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

@@ -364,9 +364,7 @@ SparkLineChart.propTypes = {
   ]),
   title: PropTypes.string,
   tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
     classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
