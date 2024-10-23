@@ -5,7 +5,7 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 const REMOTE_ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:3006' : '';
 
 export function controls(context: string, query: string) {
-  return fetch(`${REMOTE_ENDPOINT}/api/v1`, {
+  return fetch(`${REMOTE_ENDPOINT}/api/proxy`, {
     mode: 'cors',
     method: 'post',
     headers: {
