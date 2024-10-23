@@ -1,4 +1,3 @@
-
 import transformTreeView from '../tree-view/preset-safe';
 import transformCharts from '../charts/preset-safe';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
