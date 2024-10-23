@@ -294,14 +294,14 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const timeOptions = React.useMemo(() => {
     // use `startOfYear` to avoid DST problems: https://github.com/mui/mui-x/issues/10783
     // use today as base to avoid rebuilding the array on each value change
-    const startOfYear = utils.startOfYear(utils.date(undefined, 'default'));
+    const startOfYear = utils.startOfYear(utils.date(undefined, timezone ?? 'default'));
     return [
       startOfYear,
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfYear, timeStep * (index + 1)),
       ),
     ];
-  }, [timeStep, utils]);
+  }, [timeStep, timezone, utils]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
     isEqualTime(utils, option, valueOrReferenceDate),
