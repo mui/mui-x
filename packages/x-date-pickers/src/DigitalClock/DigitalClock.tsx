@@ -283,7 +283,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   );
 
   const timeOptions = React.useMemo(() => {
-    const result: TDate[] = [];
+    const result: PickerValidDate[] = [];
     const startOfDay = utils.startOfDay(valueOrReferenceDate);
     let nextTimeStepOption = startOfDay;
     while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
