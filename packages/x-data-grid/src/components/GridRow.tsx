@@ -67,18 +67,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
 
-function EmptyCell({ width }: { width: number }) {
-  if (!width) {
-    return null;
-  }
-
-  return (
-    <div
-      role="presentation"
-      className={clsx(gridClasses.cell, gridClasses.cellEmpty)}
-      style={{ '--width': `${width}px` } as React.CSSProperties}
-    />
-  );
+function EmptyCell() {
+  return <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />;
 }
 
 EmptyCell.propTypes = {
@@ -454,10 +444,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     : null;
 
-  const expandedWidth =
-    dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
-  const emptyCellWidth = Math.max(0, expandedWidth);
-
   return (
     <div
       ref={handleRef}
@@ -477,8 +463,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         style={{ width: offsetLeft }}
       />
       {cells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
+      <EmptyCell />
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>

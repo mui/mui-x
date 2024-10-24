@@ -564,6 +564,7 @@ export const GridRootStyles = styled('div', {
       lineHeight: 'inherit',
     },
     [`& .${c.cellEmpty}`]: {
+      flex: 1,
       padding: 0,
       height: 'unset',
     },
@@ -743,7 +744,7 @@ export const GridRootStyles = styled('div', {
     },
 
     [`& .${c.filler}`]: {
-      flex: '1 0 auto',
+      flex: 1,
     },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
