@@ -9,7 +9,6 @@ productId: x-data-grid
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-data-grid` from v7 to v8.
-To read more about the changes from the new major, check out [the blog post about the release of MUI X v7](https://mui.com/blog/mui-x-v7-beta/).
 
 ## Start using the new release
 

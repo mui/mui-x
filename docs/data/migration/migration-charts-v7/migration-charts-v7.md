@@ -9,7 +9,7 @@ productId: x-charts
 ## Introduction
 
 This is a reference guide for upgrading `@mui/x-charts` from v7 to v8.
-The change between v6 and v7 is mostly here to match the version with other MUI X packages.
+The change between v7 and v8 is mostly here to match the version with other MUI X packages.
 No big breaking changes are expected.
 
 ## Start using the new release
