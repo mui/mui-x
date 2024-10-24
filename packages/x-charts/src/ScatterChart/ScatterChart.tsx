@@ -84,6 +84,10 @@ export interface ScatterChartProps
    */
   disableVoronoi?: boolean;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -137,7 +141,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
           <ScatterPlot {...scatterPlotProps} />
         </g>
         <ChartsOverlay {...overlayProps} />
-        <ChartsLegend {...legendProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}

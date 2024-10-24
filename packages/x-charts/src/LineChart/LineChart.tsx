@@ -86,6 +86,10 @@ export interface LineChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * If `true`, render the line highlight item.
    */
   disableLineItemHighlight?: boolean;
@@ -168,7 +172,7 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
         <MarkPlot {...markPlotProps} />
       </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}

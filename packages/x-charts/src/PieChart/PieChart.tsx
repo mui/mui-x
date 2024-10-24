@@ -56,6 +56,10 @@ export interface PieChartProps
    */
   tooltip?: ChartsTooltipProps<'pie'>;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * Callback fired when a pie arc is clicked.
    */
   onItemClick?: PiePlotProps['onItemClick'];
@@ -97,6 +101,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     sx,
     tooltip = { trigger: 'item' },
     skipAnimation,
+    hideLegend,
     children,
     slots,
     slotProps,
@@ -135,6 +140,16 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
         slots={slots}
         slotProps={slotProps}
       />
+      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+      {!hideLegend && (
+        <ChartsLegend
+          direction="column"
+          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
+          slots={slots}
+          slotProps={slotProps}
+        />
+      )}
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}
     </ResponsiveChartContainer>

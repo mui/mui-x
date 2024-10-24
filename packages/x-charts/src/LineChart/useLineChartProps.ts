@@ -41,6 +41,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     onMarkClick,
     axisHighlight,
     disableLineItemHighlight,
+    hideLegend,
     grid,
     topAxis,
     leftAxis,

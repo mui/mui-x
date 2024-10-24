@@ -75,6 +75,10 @@ export interface BarChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -129,7 +133,7 @@ const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref)
         <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
