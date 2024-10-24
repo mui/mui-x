@@ -1,17 +1,17 @@
-name: Cherry pick next to master
+name: Cherry pick v7 to v6
 
 on:
   pull_request_target:
     branches:
-      - next
+      - v7.x
     types: ['closed']
 
 permissions: {}
 
 jobs:
-  cherry_pick_to_master:
+  cherry_pick_v7_to_v6:
     runs-on: ubuntu-latest
-    name: Cherry pick into master
+    name: Cherry pick v7 into v6
     permissions:
       pull-requests: write
       contents: write
@@ -26,7 +26,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: carloscastrojumo/github-cherry-pick-action@503773289f4a459069c832dc628826685b75b4b3 # v1.0.10
         with:
-          branch: master
+          branch: v6.x
           body: 'Cherry-pick of #{old_pull_request_id}'
           cherry-pick-branch: ${{ format('cherry-pick-{0}', github.event.number) }}
           title: '{old_title} (@${{ github.event.pull_request.user.login }})'
