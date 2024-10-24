@@ -257,24 +257,26 @@ const theme = createTheme({
 });
 ```
 
-## Stop passing `utils` and the date object to some translation keys
+## Stop passing `utils` and the date/time object to some translation keys
 
-If you are using a Picker with controlled value and views and you need to compose some of the following translation keys: `openDatePickerDialogue`, `openTimePickerDialogue`, or `clockLabelText`, after upgrading to v8 you only need to pass the formatted value and the time view (only for `clockLabelText`):
+The following translation keys expect to receive a function: `openDatePickerDialogue`, `openTimePickerDialogue`, or `clockLabelText`. If you are customizing the translation of those keys, you no longer need to provide `utils` and the date/time object to it, but only the formatted date/time value as a string. This affects the customization of those translation keys that on different contexts:
 
-```js
-const translations = useTranslations();
+Translations on a single component:
 
-const openDatePickerDialogue = translations.openDatePickerDialogue(
-  value == null ? null : value.format('MM/DD/YYY'),
-);
-const openTimePickerDialogue = translations.openTimePickerDialogue(
-  value == null ? null : value.format('HH:mm:ss'),
-);
-const clockLabelText = translations.clockLabelText(
-  view,
-  value == null ? null : value.format('HH:mm:ss'),
-);
+```diff
+-<DatePicker localeText={{ openDatePickerDialogue: (date, utils) => string; }} />
++<DatePicker localeText={{ openDatePickerDialogue: (formattedDate) => string; }} />
 ```
+
+Translations on custom components passed as slots:
+
+```diff
+ const translations = useTranslations();
+-const openDatePickerDialogue = translations.openTimePickerDialogue(value, {} as any, value == null ? null : value.format('MM/DD/YYY'));
++const openDatePickerDialogue = translations.openDatePickerDialogue(value == null ? null : value.format('MM/DD/YYY'));
+```
+
+Notice that `clockLabelText` expects an additional parameter with the time view.
 
 Also the following types and interfaces no longer receive a generic type parameter:
 
