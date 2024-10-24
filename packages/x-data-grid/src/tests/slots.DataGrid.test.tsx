@@ -10,18 +10,9 @@ describe('<DataGrid /> - Slots', () => {
 
   const baselineProps = {
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -123,32 +114,26 @@ describe('<DataGrid /> - Slots', () => {
 
   describe('slots', () => {
     it('should render the cell with the component given in slots.Cell', () => {
+      function Cell({ colIndex }: { colIndex: number }) {
+        return <span role="gridcell" data-colindex={colIndex} />;
+      }
+
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            hideFooter
-            disableVirtualization
-            slots={{
-              cell: ({ rowIndex, colIndex }) => (
-                <span role="gridcell" data-rowindex={rowIndex} data-colindex={colIndex} />
-              ),
-            }}
-          />
+          <DataGrid {...baselineProps} hideFooter disableVirtualization slots={{ cell: Cell }} />
         </div>,
       );
       expect(getCell(0, 0).tagName).to.equal('SPAN');
     });
 
     it('should render the row with the component given in slots.Row', () => {
+      function Row({ index }: { index: number }) {
+        return <span role="row" data-rowindex={index} />;
+      }
+
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            hideFooter
-            disableVirtualization
-            slots={{ row: ({ index }) => <span role="row" data-rowindex={index} /> }}
-          />
+          <DataGrid {...baselineProps} hideFooter disableVirtualization slots={{ row: Row }} />
         </div>,
       );
       expect(getRow(0).tagName).to.equal('SPAN');
@@ -192,5 +177,176 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
     }).not.toErrorDev();
+  });
+
+  describe('should warn if slot is not a React component', () => {
+    it('inline arrow function', () => {
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: () => <div /> }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('named arrow function', () => {
+      function Test() {
+        const myToolbar = () => <div />;
+
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: myToolbar }} />
+          </div>
+        );
+      }
+
+      expect(() => render(<Test />)).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('anonymous function', () => {
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid
+              columns={[]}
+              rows={[]}
+              slots={{
+                // eslint-disable-next-line object-shorthand, func-names
+                toolbar: function () {
+                  return <div />;
+                },
+              }}
+            />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('named function', () => {
+      function Test() {
+        function myToolbar() {
+          return <div />;
+        }
+
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: myToolbar }} />
+          </div>
+        );
+      }
+
+      expect(() => render(<Test />)).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('component factory returning anonymous function', () => {
+      function renderToolbar() {
+        // eslint-disable-next-line react/function-component-definition
+        return () => {
+          return <div />;
+        };
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: renderToolbar() }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+
+    it('component factory named function', () => {
+      function renderComponent() {
+        return function Toolbar() {
+          return <div />;
+        };
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: renderComponent() }} />
+          </div>,
+        ),
+      ).toWarnDev([
+        'MUI X: Slots only accept React components, but `toolbar` slot received a render function.',
+      ]);
+    });
+  });
+
+  describe('should not warn if slot is a React component', () => {
+    it('function component', () => {
+      function Toolbar() {
+        return <div />;
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('class component', () => {
+      // eslint-disable-next-line react/prefer-stateless-function
+      class Toolbar extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('memoized component', () => {
+      const Toolbar = React.memo(() => <div />);
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
+
+    it('stable component factory', () => {
+      function renderToolbar() {
+        // eslint-disable-next-line react/function-component-definition
+        return () => {
+          return <div />;
+        };
+      }
+
+      // eslint-disable-next-line testing-library/render-result-naming-convention
+      const Toolbar = renderToolbar();
+
+      expect(() =>
+        render(
+          <div style={{ width: 300, height: 500 }}>
+            <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+          </div>,
+        ),
+      ).not.toWarnDev();
+    });
   });
 });
