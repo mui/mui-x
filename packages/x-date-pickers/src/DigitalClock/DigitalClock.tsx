@@ -305,7 +305,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
           return (
             <ClockItem
-              key={`${(option).valueOf()}-${formattedValue}`}
+              key={`${(option as any).valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
