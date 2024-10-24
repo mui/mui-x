@@ -12,11 +12,11 @@ This is a reference guide for upgrading `@mui/x-date-pickers` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `^8.0.0`.
+In `package.json`, change the version of the date pickers package to `next`.
 
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
-+"@mui/x-date-pickers": "^8.0.0",
++"@mui/x-date-pickers": "next",
 ```
 
 Since `v8` is a major release, it contains changes that affect the public API.
