@@ -21,8 +21,6 @@ export const gridGetRowsParamsSelector = createSelector(
   (filterModel, sortModel, paginationModel) => {
     return {
       groupKeys: [],
-      // TODO: Implement with `rowGrouping`
-      groupFields: [],
       paginationModel,
       sortModel,
       filterModel,
