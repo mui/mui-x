@@ -51,7 +51,7 @@ const propsAreEqual = (a: WrappedTreeItemProps, b: WrappedTreeItemProps) => {
   for (const key in a) {
     aLength += 1;
 
-    if (key === 'children') {
+    if (key === 'itemsToRender') {
       const childrenA = a[key];
       const childrenB = b[key];
       if (!Array.isArray(childrenA) || !Array.isArray(childrenB)) {
@@ -72,7 +72,7 @@ const propsAreEqual = (a: WrappedTreeItemProps, b: WrappedTreeItemProps) => {
         }
       }
     } else {
-      if (!is(a[key as keyof TreeItemProps], b[key as keyof TreeItemProps])) {
+      if (!is(a[key as keyof WrappedTreeItemProps], b[key as keyof WrappedTreeItemProps])) {
         return false;
       }
       if (!(key in b)) {
