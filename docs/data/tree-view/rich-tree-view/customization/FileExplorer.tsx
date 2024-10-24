@@ -27,6 +27,7 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
@@ -234,7 +235,7 @@ const getIconFromFileType = (fileType: FileType) => {
 
 interface CustomTreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
-    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
+    Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus' | 'children'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
@@ -256,9 +257,8 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const item = publicAPI.getItem(itemId);
-  const expandable = isExpandable(children);
   let icon;
-  if (expandable) {
+  if (status.expandable) {
     icon = FolderRounded;
   } else if (item.fileType) {
     icon = getIconFromFileType(item.fileType);

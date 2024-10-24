@@ -55,9 +55,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
             return;
           }
 
+          // We don't use `event.currentTarget` here.
+          // This is to allow people to pass `onDragStart` to another element than the root.
           if (isTargetInDescendants(event.target as HTMLElement, rootRefObject.current)) {
-            // We don't use `event.currentTarget` here.
-            // This is to allow people to pass `onDragStart` to another element than the root.
             return;
           }
 

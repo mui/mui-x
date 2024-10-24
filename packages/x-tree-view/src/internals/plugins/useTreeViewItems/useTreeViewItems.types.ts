@@ -38,7 +38,8 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getItemTree: () => TreeViewBaseItem[];
 }
 
-export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
+export interface UseTreeViewItemsInstance<R extends {}>
+  extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
   /**
    * Get the item that should be rendered.
    * This method is only used on Rich Tree View components.

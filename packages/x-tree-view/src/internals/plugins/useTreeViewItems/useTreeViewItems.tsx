@@ -122,9 +122,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
 
   const getItemTree = React.useCallback(() => {
-    const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
-      const { children: oldChildren, ...item } = selectorItemMap(store.value)[id];
-      const newChildren = instance.getItemOrderedChildrenIds(id);
+    const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
+      const { children: oldChildren, ...item } = selectorItemMap(store.value)[itemId];
+      const newChildren = selectorItemOrderedChildrenIds(store.value, itemId);
       if (newChildren.length > 0) {
         item.children = newChildren.map(getItemFromItemId);
       }
@@ -132,8 +132,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return item;
     };
 
-    return instance.getItemOrderedChildrenIds(null).map(getItemFromItemId);
-  }, [instance, store]);
+    return selectorItemOrderedChildrenIds(store.value, null).map(getItemFromItemId);
+  }, [store]);
 
   const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) => selectorItemOrderedChildrenIds(store.value, itemId),
@@ -198,11 +198,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: itemMeta!.label!,
         itemId: itemMeta!.id,
         id: itemMeta!.idAttribute,
-        children: instance.getItemOrderedChildrenIds(id).map(getPropsFromItemId),
+        children: selectorItemOrderedChildrenIds(store.value, id).map(getPropsFromItemId),
       };
     };
 
-    return instance.getItemOrderedChildrenIds(null).map(getPropsFromItemId);
+    return selectorItemOrderedChildrenIds(store.value, null).map(getPropsFromItemId);
   };
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
@@ -239,11 +239,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemOrderedChildrenIds,
     },
     instance: {
-      getItem,
-      getItemTree,
       getItemsToRender,
       getItemDOMElement,
-      getItemOrderedChildrenIds,
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
