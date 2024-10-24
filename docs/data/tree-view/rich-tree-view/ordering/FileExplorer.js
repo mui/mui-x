@@ -23,8 +23,7 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const ITEMS = [
   {
@@ -164,13 +163,6 @@ function CustomLabel({ icon: Icon, expandable, children, ...other }) {
   );
 }
 
-const isExpandable = (reactChildren) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 const getIconFromFileType = (fileType) => {
   switch (fileType) {
     case 'image':
@@ -194,6 +186,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -202,15 +195,19 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     status,
-    publicAPI,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = publicAPI.getItem(itemId);
-  const expandable = isExpandable(children);
-  const icon = getIconFromFileType(item.fileType);
+  const item = useTreeItemModel(itemId);
+
+  let icon;
+  if (status.expandable) {
+    icon = FolderRounded;
+  } else if (item.fileType) {
+    icon = getIconFromFileType(item.fileType);
+  }
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <StyledTreeItemRoot {...getRootProps(other)}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -227,7 +224,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           </TreeItemIconContainer>
           <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
-            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
+            {...getLabelProps({
+              icon,
+              expandable: status.expandable && status.expanded,
+            })}
           />
           <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>

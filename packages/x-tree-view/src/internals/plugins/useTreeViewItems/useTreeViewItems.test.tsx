@@ -22,16 +22,25 @@ describeTreeView<
         this.skip();
       }
 
-      expect(() =>
-        render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
-      ).toErrorDev([
-        ...(treeViewComponentName === 'SimpleTreeView'
-          ? ['Encountered two children with the same key']
-          : []),
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        'MUI X: The Tree View component requires all items to have a unique `id` property.',
-        `The above error occurred in the <ForwardRef(${treeViewComponentName})> component`,
-      ]);
+      if (treeViewComponentName === 'SimpleTreeView') {
+        expect(() =>
+          render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
+        ).toErrorDev([
+          'Encountered two children with the same key, `1`',
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          `The above error occurred in the <ForwardRef(TreeItem)> component`,
+          `The above error occurred in the <ForwardRef(TreeItem)> component`,
+        ]);
+      } else {
+        expect(() =>
+          render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
+        ).toErrorDev([
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          `The above error occurred in the <ForwardRef(${treeViewComponentName})> component`,
+        ]);
+      }
     });
 
     it('should be able to use a custom id attribute', function test() {

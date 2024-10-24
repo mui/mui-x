@@ -123,7 +123,7 @@ export interface UseTreeViewItemsReorderingState {
 interface UseTreeViewItemsReorderingContextValue {
   itemsReordering: {
     enabled: boolean;
-    currentDrag: UseTreeViewItemsReorderingState['itemsReordering'];
+    isItemReorderable: ((itemId: string) => boolean) | undefined;
   };
 }
 

@@ -151,7 +151,7 @@
     "collapseIcon": "The default icon used to collapse the item.",
     "endIcon": "The default icon displayed next to an end item. This is applied to all Tree Items and can be overridden by the TreeItem <code>icon</code> slot prop.",
     "expandIcon": "The default icon used to expand the item.",
-    "item": "Custom component for the item.",
+    "item": "Custom component to render a Tree Item.",
     "root": "Element rendered at the root."
   }
 }

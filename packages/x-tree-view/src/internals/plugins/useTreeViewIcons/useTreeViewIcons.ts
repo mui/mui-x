@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIconsSignature } from './useTreeViewIcons.types';
 
@@ -5,8 +6,8 @@ export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({
   slots,
   slotProps,
 }) => {
-  return {
-    contextValue: {
+  const pluginContextValue = React.useMemo(
+    () => ({
       icons: {
         slots: {
           collapseIcon: slots.collapseIcon,
@@ -19,7 +20,19 @@ export const useTreeViewIcons: TreeViewPlugin<UseTreeViewIconsSignature> = ({
           endIcon: slotProps.endIcon,
         },
       },
-    },
+    }),
+    [
+      slots.collapseIcon,
+      slots.expandIcon,
+      slots.endIcon,
+      slotProps.collapseIcon,
+      slotProps.expandIcon,
+      slotProps.endIcon,
+    ],
+  );
+
+  return {
+    contextValue: pluginContextValue,
   };
 };
 

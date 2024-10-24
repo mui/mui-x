@@ -16,15 +16,16 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { isItemExpandable } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
-  setState,
+  store,
 }) => {
   instance.preventItemUpdates();
 
   const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
-    setState((prevState) => {
+    store.update((prevState) => {
       if (prevState.items.itemMetaMap[item.id] != null) {
         throw new Error(
           [
@@ -47,7 +48,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
 
     return () => {
-      setState((prevState) => {
+      store.update((prevState) => {
         const newItemMetaMap = { ...prevState.items.itemMetaMap };
         const newItemMap = { ...prevState.items.itemMap };
         delete newItemMetaMap[item.id];
@@ -68,7 +69,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   const setJSXItemsOrderedChildrenIds = (parentId: string | null, orderedChildrenIds: string[]) => {
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
-    setState((prevState) => ({
+    store.update((prevState) => ({
       ...prevState,
       items: {
         ...prevState.items,
@@ -108,15 +109,8 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
   };
 };
 
-const isItemExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
-  const { instance, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+  const { instance, store, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -142,10 +136,11 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
     return () => {
       unregisterChild(idAttribute);
+      unregisterChild(idAttribute);
     };
-  }, [registerChild, unregisterChild, itemId, id, treeId]);
+  }, [store, instance, registerChild, unregisterChild, itemId, id, treeId]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     return instance.insertJSXItem({
       id: itemId,
       idAttribute: id,
@@ -173,12 +168,12 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
 
 useTreeViewJSXItems.itemPlugin = useTreeViewJSXItemsItemPlugin;
 
-useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
+useTreeViewJSXItems.wrapItem = ({ children, itemId, idAttribute }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   return (
-    <TreeViewChildrenItemProvider itemId={itemId}>
+    <TreeViewChildrenItemProvider itemId={itemId} idAttribute={idAttribute}>
       <TreeViewItemDepthContext.Provider value={(depthContext as number) + 1}>
         {children}
       </TreeViewItemDepthContext.Provider>
@@ -187,7 +182,7 @@ useTreeViewJSXItems.wrapItem = ({ children, itemId }) => {
 };
 
 useTreeViewJSXItems.wrapRoot = ({ children }) => (
-  <TreeViewChildrenItemProvider>
+  <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
     <TreeViewItemDepthContext.Provider value={0}>{children}</TreeViewItemDepthContext.Provider>
   </TreeViewChildrenItemProvider>
 );

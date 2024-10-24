@@ -5,21 +5,24 @@ import {
   TreeViewCancellableEvent,
 } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewInstance, TreeViewItemPlugin } from '../../models';
+import { TreeViewItemPlugin } from '../../models';
 import {
   UseTreeItemCheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
+import { selectorItemOrderedChildrenIds } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
+import { TreeViewStore } from '../../utils/TreeViewStore';
 
 function getCheckboxStatus({
   itemId,
-  instance,
+  store,
   selectionPropagation,
   selected,
 }: {
   itemId: TreeViewItemId;
-  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>;
+  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>;
   selectionPropagation: TreeViewSelectionPropagation;
   selected: boolean;
 }) {
@@ -30,7 +33,7 @@ function getCheckboxStatus({
     };
   }
 
-  const children = instance.getItemOrderedChildrenIds(itemId);
+  const children = selectorItemOrderedChildrenIds(store.value, itemId);
   if (children.length === 0) {
     return {
       indeterminate: false,
@@ -43,14 +46,14 @@ function getCheckboxStatus({
 
   const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
     if (itemToTraverseId !== itemId) {
-      if (instance.isItemSelected(itemToTraverseId)) {
+      if (selectorIsItemSelected(store.value, itemToTraverseId)) {
         hasSelectedDescendant = true;
       } else {
         hasUnSelectedDescendant = true;
       }
     }
 
-    instance.getItemOrderedChildrenIds(itemToTraverseId).forEach(traverseDescendants);
+    selectorItemOrderedChildrenIds(store.value, itemToTraverseId).forEach(traverseDescendants);
   };
 
   traverseDescendants(itemId);
@@ -66,7 +69,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
   const { itemId } = props;
 
   const {
-    instance,
+    store,
     selection: { disableSelection, checkboxSelection, selectionPropagation },
   } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
   return {
@@ -92,7 +95,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
         };
 
         const checkboxStatus = getCheckboxStatus({
-          instance,
+          store,
           itemId,
           selectionPropagation,
           selected: status.selected,

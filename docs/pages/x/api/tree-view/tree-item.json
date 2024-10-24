@@ -1,7 +1,7 @@
 {
   "props": {
     "itemId": { "type": { "name": "string" }, "required": true },
-    "children": { "type": { "name": "node" } },
+    "children": { "type": { "name": "any" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },

@@ -1,14 +1,23 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
+  TreeViewItemToRenderProps,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
+import {
+  selectorIsItemDisabled,
+  selectorItemMap,
+  selectorItemMeta,
+  selectorItemOrderedChildrenIds,
+} from './useTreeViewItems.selectors';
+import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 interface UpdateNodesStateParameters
@@ -104,93 +113,52 @@ const updateItemsState = ({
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
   params,
-  state,
-  setState,
+  store,
   experimentalFeatures,
 }) => {
-  const getItemMeta = React.useCallback(
-    (itemId: string) => state.items.itemMetaMap[itemId],
-    [state.items.itemMetaMap],
-  );
-
   const getItem = React.useCallback(
-    (itemId: string) => state.items.itemMap[itemId],
-    [state.items.itemMap],
+    (itemId: string) => selectorItemMap(store.value)[itemId],
+    [store],
   );
 
   const getItemTree = React.useCallback(() => {
-    const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
-      const { children: oldChildren, ...item } = state.items.itemMap[id];
-      const newChildren = state.items.itemOrderedChildrenIds[id];
-      if (newChildren) {
+    const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
+      const { children: oldChildren, ...item } = selectorItemMap(store.value)[itemId];
+      const newChildren = selectorItemOrderedChildrenIds(store.value, itemId);
+      if (newChildren.length > 0) {
         item.children = newChildren.map(getItemFromItemId);
       }
 
       return item;
     };
 
-    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getItemFromItemId);
-  }, [state.items.itemMap, state.items.itemOrderedChildrenIds]);
-
-  const isItemDisabled = React.useCallback(
-    (itemId: string | null): itemId is string => {
-      if (itemId == null) {
-        return false;
-      }
-
-      let itemMeta = instance.getItemMeta(itemId);
-
-      // This can be called before the item has been added to the item map.
-      if (!itemMeta) {
-        return false;
-      }
-
-      if (itemMeta.disabled) {
-        return true;
-      }
-
-      while (itemMeta.parentId != null) {
-        itemMeta = instance.getItemMeta(itemMeta.parentId);
-        if (itemMeta.disabled) {
-          return true;
-        }
-      }
-
-      return false;
-    },
-    [instance],
-  );
-
-  const getItemIndex = React.useCallback(
-    (itemId: string) => {
-      const parentId = instance.getItemMeta(itemId).parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-      return state.items.itemChildrenIndexes[parentId][itemId];
-    },
-    [instance, state.items.itemChildrenIndexes],
-  );
+    return selectorItemOrderedChildrenIds(store.value, null).map(getItemFromItemId);
+  }, [store]);
 
   const getItemOrderedChildrenIds = React.useCallback(
-    (itemId: string | null) =>
-      state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
-    [state.items.itemOrderedChildrenIds],
+    (itemId: string | null) => selectorItemOrderedChildrenIds(store.value, itemId),
+    [store],
   );
 
   const getItemDOMElement = (itemId: string) => {
-    const itemMeta = instance.getItemMeta(itemId);
+    const itemMeta = selectorItemMeta(store.value, itemId);
     if (itemMeta == null) {
       return null;
     }
 
-    return document.getElementById(
-      generateTreeItemIdAttribute({ treeId: state.id.treeId, itemId, id: itemMeta.idAttribute }),
-    );
+    const idAttribute = generateTreeItemIdAttribute({
+      treeId: selectorTreeViewId(store.value),
+      itemId,
+      id: itemMeta.idAttribute,
+    });
+    return document.getElementById(idAttribute);
   };
 
   const isItemNavigable = (itemId: string) => {
     if (params.disabledItemsFocusable) {
       return true;
     }
-    return !instance.isItemDisabled(itemId);
+    return !selectorIsItemDisabled(store.value, itemId);
   };
 
   const areItemUpdatesPreventedRef = React.useRef(false);
@@ -205,7 +173,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return;
     }
 
-    setState((prevState) => {
+    store.update((prevState) => {
       const newState = updateItemsState({
         items: params.items,
         isItemDisabled: params.isItemDisabled,
@@ -221,30 +189,39 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       return { ...prevState, items: newState };
     });
-  }, [
-    instance,
-    setState,
-    params.items,
-    params.isItemDisabled,
-    params.getItemId,
-    params.getItemLabel,
-  ]);
+  }, [instance, store, params.items, params.isItemDisabled, params.getItemId, params.getItemLabel]);
 
   const getItemsToRender = () => {
-    const getPropsFromItemId = (
-      id: TreeViewItemId,
-    ): ReturnType<typeof instance.getItemsToRender>[number] => {
-      const item = state.items.itemMetaMap[id];
+    const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
+      const itemMeta = selectorItemMeta(store.value, id);
       return {
-        label: item.label!,
-        itemId: item.id,
-        id: item.idAttribute,
-        children: state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
+        label: itemMeta!.label!,
+        itemId: itemMeta!.id,
+        id: itemMeta!.idAttribute,
+        children: selectorItemOrderedChildrenIds(store.value, id).map(getPropsFromItemId),
       };
     };
 
-    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
+    return selectorItemOrderedChildrenIds(store.value, null).map(getPropsFromItemId);
   };
+
+  // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
+  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
+    if (params.onItemClick) {
+      params.onItemClick(event, itemId);
+    }
+  });
+
+  const pluginContextValue = React.useMemo(
+    () => ({
+      items: {
+        onItemClick: handleItemClick,
+        disabledItemsFocusable: params.disabledItemsFocusable,
+        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      },
+    }),
+    [handleItemClick, params.disabledItemsFocusable, experimentalFeatures.indentationAtItemLevel],
+  );
 
   return {
     getRootProps: () => ({
@@ -262,25 +239,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemOrderedChildrenIds,
     },
     instance: {
-      getItemMeta,
-      getItem,
-      getItemTree,
       getItemsToRender,
-      getItemIndex,
       getItemDOMElement,
-      getItemOrderedChildrenIds,
-      isItemDisabled,
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
-    contextValue: {
-      items: {
-        onItemClick: params.onItemClick,
-        disabledItemsFocusable: params.disabledItemsFocusable,
-        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
-      },
-    },
+    contextValue: pluginContextValue,
   };
 };
 
@@ -299,9 +264,14 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
 });
 
-useTreeViewItems.wrapRoot = ({ children, instance }) => {
+useTreeViewItems.wrapRoot = ({ children, store }) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const contextValue = React.useCallback(
+    (itemId: TreeViewItemId) => selectorItemMeta(store.value, itemId)?.depth ?? 0,
+    [store],
+  );
   return (
-    <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
+    <TreeViewItemDepthContext.Provider value={contextValue}>
       {children}
     </TreeViewItemDepthContext.Provider>
   );
