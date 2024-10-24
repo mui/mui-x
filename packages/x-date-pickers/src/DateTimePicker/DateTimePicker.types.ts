@@ -5,7 +5,7 @@ import {
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileDateTimePickerProps,
@@ -77,10 +77,11 @@ export interface DateTimePickerProps<
 export type DateTimePickerFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = DefaultizedProps<
+> = MakeRequired<
   UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   | 'format'
   | 'timezone'
+  | 'value'
   | 'ampm'
   | keyof BaseDateValidationProps<TDate>
   | keyof BaseTimeValidationProps
