@@ -26,6 +26,7 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { useTreeItemObject } from '@mui/x-tree-view/hooks';
 
 const ITEMS = [
   {
@@ -212,10 +213,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     status,
-    publicAPI,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = publicAPI.getItem(itemId);
+  const item = useTreeItemObject(itemId);
+
   let icon;
   if (status.expandable) {
     icon = FolderRounded;

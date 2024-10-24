@@ -23,8 +23,8 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { useTreeItemObject, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
@@ -228,11 +228,16 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     status,
-    publicAPI,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = publicAPI.getItem(itemId);
-  const icon = getIconFromFileType(item.fileType);
+  const item = useTreeItemObject<ExtendedTreeItemProps>(itemId)!;
+
+  let icon;
+  if (status.expandable) {
+    icon = FolderRounded;
+  } else if (item.fileType) {
+    icon = getIconFromFileType(item.fileType);
+  }
 
   return (
     <TreeItemProvider {...getContextProviderProps()}>
