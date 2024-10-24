@@ -18,7 +18,6 @@ To be able to reorder items, you first have to enable the `itemsReordering` expe
 <RichTreeViewPro items={ITEMS} experimentalFeatures={{ itemsReordering: true }} />
 ```
 
-See [Tree Item Customization—Apply the nested item's indentation at the item level](/x/react-tree-view/tree-item-customization/#apply-the-nested-items-indentation-at-the-item-level) for more details.
 :::
 
 ## Enable drag & drop re-ordering
