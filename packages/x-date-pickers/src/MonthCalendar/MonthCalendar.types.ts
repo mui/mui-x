@@ -30,10 +30,10 @@ export interface ExportedMonthCalendarProps {
    */
   monthsPerRow?: 3 | 4;
 }
-export interface MonthCalendarProps<TDate extends PickerValidDate>
+export interface MonthCalendarProps
   extends ExportedMonthCalendarProps,
-    MonthValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
+    MonthValidationProps,
+    BaseDateValidationProps,
     TimezoneProps {
   autoFocus?: boolean;
   className?: string;
@@ -61,23 +61,22 @@ export interface MonthCalendarProps<TDate extends PickerValidDate>
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate} value The new value.
+   * @param {PickerValidDate} value The new value.
    */
-  onChange?: (value: TDate) => void;
+  onChange?: (value: PickerValidDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**

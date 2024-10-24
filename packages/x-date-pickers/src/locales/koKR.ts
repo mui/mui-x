@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: '오전/오후를',
 };
 
-const koKRPickers: Partial<PickersLocaleText<any>> = {
+const koKRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: '이전 달',
   nextMonth: '다음 달',
@@ -44,7 +44,7 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, utils, formattedTime) =>
-    `${views[view]} 선택하세요. ${!formattedTime && (time === null || !utils.isValid(time)) ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${formattedTime ?? utils.format(time, 'fullTime')}입니다.`}`,
+    `${views[view]} 선택하세요. ${!formattedTime && (time === null || !utils.isValid(time)) ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${formattedTime ?? utils.format(time!, 'fullTime')}입니다.`}`,
   hoursClockNumberText: (hours) => `${hours}시`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
@@ -61,11 +61,11 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${formattedDate ?? utils.format(value, 'fullDate')}입니다.`
+      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${formattedDate ?? utils.format(value!, 'fullDate')}입니다.`
       : '날짜를 선택하세요',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime ?? utils.format(value, 'fullTime')}입니다.`
+      ? `시간을 선택하세요. 현재 선택된 시간은 ${formattedTime ?? utils.format(value!, 'fullTime')}입니다.`
       : '시간을 선택하세요',
   fieldClearLabel: '지우기',
 

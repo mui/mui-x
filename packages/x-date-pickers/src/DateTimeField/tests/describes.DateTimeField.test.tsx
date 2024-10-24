@@ -53,7 +53,7 @@ describe('<DateTimeField /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
-      const newValue = adapterToUse.addDays(value, 1);
+      const newValue = adapterToUse.addDays(value!, 1);
       selectSection('day');
       pressKey(undefined, 'ArrowUp');
 

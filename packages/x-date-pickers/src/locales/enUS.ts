@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const enUSPickers: PickersLocaleText<any> = {
+const enUSPickers: PickersLocaleText = {
   // Calendar navigation
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
@@ -41,7 +41,7 @@ const enUSPickers: PickersLocaleText<any> = {
     `Select ${view}. ${
       !formattedTime && (time === null || !utils.isValid(time))
         ? 'No time selected'
-        : `Selected time is ${formattedTime ?? utils.format(time, 'fullTime')}`
+        : `Selected time is ${formattedTime ?? utils.format(time!, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
@@ -59,11 +59,11 @@ const enUSPickers: PickersLocaleText<any> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils, formattedDate) =>
     formattedDate || (value !== null && utils.isValid(value))
-      ? `Choose date, selected date is ${formattedDate ?? utils.format(value, 'fullDate')}`
+      ? `Choose date, selected date is ${formattedDate ?? utils.format(value!, 'fullDate')}`
       : 'Choose date',
   openTimePickerDialogue: (value, utils, formattedTime) =>
     formattedTime || (value !== null && utils.isValid(value))
-      ? `Choose time, selected time is ${formattedTime ?? utils.format(value, 'fullTime')}`
+      ? `Choose time, selected time is ${formattedTime ?? utils.format(value!, 'fullTime')}`
       : 'Choose time',
 
   fieldClearLabel: 'Clear',

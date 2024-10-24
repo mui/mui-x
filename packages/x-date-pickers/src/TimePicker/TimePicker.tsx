@@ -8,14 +8,9 @@ import { DesktopTimePicker } from '../DesktopTimePicker';
 import { MobileTimePicker, MobileTimePickerProps } from '../MobileTimePicker';
 import { TimePickerProps } from './TimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
-import { PickerValidDate } from '../models';
 
-type TimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: TimePickerProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,12 +24,8 @@ type TimePickerComponent = (<
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
 const TimePicker = React.forwardRef(function TimePicker<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: TimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+>(inProps: TimePickerProps<TEnableAccessibleFieldDOMStructure>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -46,7 +37,7 @@ const TimePicker = React.forwardRef(function TimePicker<
     return <DesktopTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileTimePicker ref={ref} {...(other as MobileTimePickerProps<TDate>)} />;
+  return <MobileTimePicker ref={ref} {...(other as MobileTimePickerProps)} />;
 }) as TimePickerComponent;
 
 TimePicker.propTypes = {
@@ -259,8 +250,7 @@ TimePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

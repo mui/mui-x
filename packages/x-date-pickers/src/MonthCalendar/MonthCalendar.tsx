@@ -21,7 +21,7 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerValidDate } from '../models';
 
-const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
+const useUtilityClasses = (ownerState: MonthCalendarProps) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -31,15 +31,12 @@ const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   return composeClasses(slots, getMonthCalendarUtilityClass, classes);
 };
 
-export function useMonthCalendarDefaultizedProps<TDate extends PickerValidDate>(
-  props: MonthCalendarProps<TDate>,
+export function useMonthCalendarDefaultizedProps(
+  props: MonthCalendarProps,
   name: string,
-): DefaultizedProps<
-  MonthCalendarProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
-> {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+): DefaultizedProps<MonthCalendarProps, 'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'> {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,
@@ -58,7 +55,7 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: MonthCalendarProps<any> }>({
+})<{ ownerState: MonthCalendarProps }>({
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
@@ -68,8 +65,8 @@ const MonthCalendarRoot = styled('div', {
   boxSizing: 'border-box',
 });
 
-type MonthCalendarComponent = (<TDate extends PickerValidDate>(
-  props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MonthCalendarComponent = ((
+  props: MonthCalendarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -81,8 +78,8 @@ type MonthCalendarComponent = (<TDate extends PickerValidDate>(
  *
  * - [MonthCalendar API](https://mui.com/x/api/date-pickers/month-calendar/)
  */
-export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate extends PickerValidDate>(
-  inProps: MonthCalendarProps<TDate>,
+export const MonthCalendar = React.forwardRef(function MonthCalendar(
+  inProps: MonthCalendarProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
@@ -117,13 +114,13 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
-    onChange: onChange as (value: TDate | null) => void,
+    onChange,
     valueManager: singleItemValueManager,
   });
 
-  const now = useNow<TDate>(timezone);
+  const now = useNow(timezone);
   const isRtl = useRtl();
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const referenceDate = React.useMemo(
     () =>
@@ -170,7 +167,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   });
 
   const isMonthDisabled = React.useCallback(
-    (dateToValidate: TDate) => {
+    (dateToValidate: PickerValidDate) => {
       const firstEnabledMonth = utils.startOfMonth(
         disablePast && utils.isAfter(now, minDate) ? now : minDate,
       );
@@ -359,8 +356,7 @@ MonthCalendar.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate} value The new value.
+   * @param {PickerValidDate} value The new value.
    */
   onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
@@ -376,8 +372,7 @@ MonthCalendar.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,

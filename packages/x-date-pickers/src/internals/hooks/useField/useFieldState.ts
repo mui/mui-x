@@ -49,11 +49,7 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
+export interface UseFieldStateResponse<TValue, TSection extends FieldSection> {
   state: UseFieldState<TValue, TSection>;
   activeSectionIndex: number | null;
   parsedSelectedSections: FieldParsedSelectedSections;
@@ -63,7 +59,7 @@ export interface UseFieldStateResponse<
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   updateValueFromValueStr: (valueStr: string) => void;
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries;
   getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
   localizedDigits: string[];
   timezone: PickersTimezone;
@@ -71,24 +67,22 @@ export interface UseFieldStateResponse<
 
 export const useFieldState = <
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 >(
   params: UseFieldParams<
     TValue,
-    TDate,
     TSection,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
-): UseFieldStateResponse<TValue, TDate, TSection> => {
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
-  const adapter = useLocalizationContext<TDate>();
+): UseFieldStateResponse<TValue, TSection> => {
+  const utils = useUtils();
+  const translations = usePickersTranslations();
+  const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
   const {
@@ -127,7 +121,7 @@ export const useFieldState = <
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
   const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate>(utils, localizedDigits, timezone),
+    () => getSectionsBoundaries(utils, localizedDigits, timezone),
     [utils, localizedDigits, timezone],
   );
 
@@ -175,7 +169,7 @@ export const useFieldState = <
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      props: internalProps as GetDefaultReferenceDateProps,
       granularity,
       timezone,
     });
@@ -276,7 +270,7 @@ export const useFieldState = <
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
-    const parseDateStr = (dateStr: string, referenceDate: TDate) => {
+    const parseDateStr = (dateStr: string, referenceDate: PickerValidDate) => {
       const date = utils.parse(dateStr, format);
       if (date == null || !utils.isValid(date)) {
         return null;

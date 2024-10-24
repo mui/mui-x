@@ -121,7 +121,7 @@ declare module '@mui/x-date-pickers/models' {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
+export class AdapterMoment implements MuiPickersAdapter<string> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = true;
@@ -194,8 +194,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public date = <T extends string | null | undefined>(
     value?: T,
     timezone: PickersTimezone = 'default',
-  ): DateBuilderReturnType<T, Moment> => {
-    type R = DateBuilderReturnType<T, Moment>;
+  ): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (value === null) {
       return <R>null;
     }

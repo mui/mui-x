@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -37,7 +36,7 @@ export default function ClearableBehavior() {
           <DateField
             sx={{ width: '300px' }}
             value={value}
-            onChange={(newValue) => setValue(newValue)}
+            onChange={setValue}
             onClear={() => setCleared(true)}
             clearable
           />

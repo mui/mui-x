@@ -51,7 +51,7 @@ describe('<TimeField /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
-      const newValue = adapterToUse.addHours(value, 1);
+      const newValue = adapterToUse.addHours(value!, 1);
       selectSection('hours');
       pressKey(undefined, 'ArrowUp');
 

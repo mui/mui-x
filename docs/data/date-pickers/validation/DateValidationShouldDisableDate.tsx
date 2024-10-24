@@ -7,12 +7,13 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
 const lastMonday = dayjs().startOf('week');
 const nextSunday = dayjs().endOf('week').startOf('day');
 
-const isWeekend = (date: Dayjs) => {
-  const day = date.day();
+const isWeekend = (date: PickerValidDate) => {
+  const day = (date as Dayjs).day();
 
   return day === 0 || day === 6;
 };

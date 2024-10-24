@@ -11,13 +11,13 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 
 interface AutoCompleteFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<true>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
+      PickerValidDate | null,
       FieldSection,
       true,
       DateValidationError
@@ -98,13 +98,13 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
         onChange?.(newValue, { validationError: null });
       }}
       isOptionEqualToValue={(option, valueToCheck) =>
-        option.toISOString() === valueToCheck.toISOString()
+        (option as Dayjs).toISOString() === (valueToCheck as Dayjs).toISOString()
       }
     />
   );
 }
 
-interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
+interface AutocompleteDatePickerProps extends DatePickerProps {
   /**
    * @typescript-to-proptypes-ignore
    */
@@ -127,10 +127,12 @@ function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
   );
 
   return (
-    <DatePicker<Dayjs>
+    <DatePicker
       slots={{ ...props.slots, field: AutocompleteField }}
       slotProps={{ ...props.slotProps, field: { options } as any }}
-      shouldDisableDate={(date) => !optionsLookup[date.startOf('day').toISOString()]}
+      shouldDisableDate={(date) =>
+        !optionsLookup[(date as Dayjs).startOf('day').toISOString()]
+      }
       {...other}
     />
   );

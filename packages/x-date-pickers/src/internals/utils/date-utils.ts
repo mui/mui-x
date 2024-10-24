@@ -8,11 +8,11 @@ import {
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
-export const mergeDateAndTime = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateParam: TDate,
-  timeParam: TDate,
-) => {
+export const mergeDateAndTime = (
+  utils: MuiPickersAdapter,
+  dateParam: PickerValidDate,
+  timeParam: PickerValidDate,
+): PickerValidDate => {
   let mergedDate = dateParam;
   mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
   mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
@@ -22,18 +22,18 @@ export const mergeDateAndTime = <TDate extends PickerValidDate>(
   return mergedDate;
 };
 
-interface FindClosestDateParams<TDate extends PickerValidDate> {
-  date: TDate;
+interface FindClosestDateParams {
+  date: PickerValidDate;
   disableFuture?: boolean;
   disablePast?: boolean;
-  maxDate: TDate;
-  minDate: TDate;
-  isDateDisabled: (date: TDate) => boolean;
-  utils: MuiPickersAdapter<TDate>;
+  maxDate: PickerValidDate;
+  minDate: PickerValidDate;
+  isDateDisabled: (date: PickerValidDate) => boolean;
+  utils: MuiPickersAdapter;
   timezone: PickersTimezone;
 }
 
-export const findClosestEnabledDate = <TDate extends PickerValidDate>({
+export const findClosestEnabledDate = ({
   date,
   disableFuture,
   disablePast,
@@ -42,7 +42,7 @@ export const findClosestEnabledDate = <TDate extends PickerValidDate>({
   isDateDisabled,
   utils,
   timezone,
-}: FindClosestDateParams<TDate>) => {
+}: FindClosestDateParams): PickerValidDate | null => {
   const today = mergeDateAndTime(utils, utils.date(undefined, timezone), date);
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
@@ -52,8 +52,8 @@ export const findClosestEnabledDate = <TDate extends PickerValidDate>({
     maxDate = today;
   }
 
-  let forward: TDate | null = date;
-  let backward: TDate | null = date;
+  let forward: PickerValidDate | null = date;
+  let backward: PickerValidDate | null = date;
   if (utils.isBefore(date, minDate)) {
     forward = minDate;
     backward = null;
@@ -93,16 +93,16 @@ export const findClosestEnabledDate = <TDate extends PickerValidDate>({
   return null;
 };
 
-export const replaceInvalidDateByNull = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: TDate | null,
-) => (value == null || !utils.isValid(value) ? null : value);
+export const replaceInvalidDateByNull = (
+  utils: MuiPickersAdapter,
+  value: PickerValidDate | null,
+): PickerValidDate | null => (value == null || !utils.isValid(value) ? null : value);
 
-export const applyDefaultDate = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: TDate | null | undefined,
-  defaultValue: TDate,
-): TDate => {
+export const applyDefaultDate = (
+  utils: MuiPickersAdapter,
+  value: PickerValidDate | null | undefined,
+  defaultValue: PickerValidDate,
+): PickerValidDate => {
   if (value == null || !utils.isValid(value)) {
     return defaultValue;
   }
@@ -110,11 +110,7 @@ export const applyDefaultDate = <TDate extends PickerValidDate>(
   return value;
 };
 
-export const areDatesEqual = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  a: TDate,
-  b: TDate,
-) => {
+export const areDatesEqual = (utils: MuiPickersAdapter, a: PickerValidDate, b: PickerValidDate) => {
   if (!utils.isValid(a) && a != null && !utils.isValid(b) && b != null) {
     return true;
   }
@@ -122,10 +118,10 @@ export const areDatesEqual = <TDate extends PickerValidDate>(
   return utils.isEqual(a, b);
 };
 
-export const getMonthsInYear = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  year: TDate,
-) => {
+export const getMonthsInYear = (
+  utils: MuiPickersAdapter,
+  year: PickerValidDate,
+): PickerValidDate[] => {
   const firstMonth = utils.startOfYear(year);
   const months = [firstMonth];
 
@@ -137,19 +133,16 @@ export const getMonthsInYear = <TDate extends PickerValidDate>(
   return months;
 };
 
-export const getTodayDate = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const getTodayDate = (
+  utils: MuiPickersAdapter,
   timezone: PickersTimezone,
   valueType?: FieldValueType,
-) =>
+): PickerValidDate =>
   valueType === 'date'
     ? utils.startOfDay(utils.date(undefined, timezone))
     : utils.date(undefined, timezone);
 
-export const formatMeridiem = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  meridiem: 'am' | 'pm',
-) => {
+export const formatMeridiem = (utils: MuiPickersAdapter, meridiem: 'am' | 'pm') => {
   const date = utils.setHours(utils.date(), meridiem === 'am' ? 2 : 14);
   return utils.format(date, 'meridiem');
 };
@@ -158,8 +151,8 @@ const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
   dateViews.includes(view);
 
-export const resolveDateFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const resolveDateFormat = (
+  utils: MuiPickersAdapter,
   { format, views }: { format?: string; views: readonly DateView[] },
   isInToolbar: boolean,
 ) => {
@@ -200,10 +193,7 @@ export const resolveDateFormat = <TDate extends PickerValidDate>(
   return formats.keyboardDate;
 };
 
-export const getWeekdays = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-) => {
+export const getWeekdays = (utils: MuiPickersAdapter, date: PickerValidDate): PickerValidDate[] => {
   const start = utils.startOfWeek(date);
   return [0, 1, 2, 3, 4, 5, 6].map((diff) => utils.addDays(start, diff));
 };

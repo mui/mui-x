@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 
 function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -33,11 +34,12 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
 
 const initialValue = dayjs('2022-04-17');
 
-function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }) {
+function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
-    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) >= 0;
+    !props.outsideCurrentMonth &&
+    highlightedDays.indexOf((props.day as Dayjs).date()) >= 0;
 
   return (
     <Badge
@@ -55,9 +57,9 @@ export default function DateCalendarServerRequest() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
 
-  const fetchHighlightedDays = (date: Dayjs) => {
+  const fetchHighlightedDays = (date: PickerValidDate) => {
     const controller = new AbortController();
-    fakeFetch(date, {
+    fakeFetch(date as Dayjs, {
       signal: controller.signal,
     })
       .then(({ daysToHighlight }) => {
@@ -80,7 +82,7 @@ export default function DateCalendarServerRequest() {
     return () => requestAbortController.current?.abort();
   }, []);
 
-  const handleMonthChange = (date: Dayjs) => {
+  const handleMonthChange = (date: PickerValidDate) => {
     if (requestAbortController.current) {
       // make sure that you are aborting useless requests
       // because it is possible to switch between months pretty quickly

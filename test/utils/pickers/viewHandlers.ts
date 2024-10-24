@@ -1,12 +1,10 @@
 import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { getClockTouchEvent, formatFullTimeValue } from 'test/utils/pickers';
-import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import { formatMeridiem } from '@mui/x-date-pickers/internals';
 
-type TDate = any;
-
 interface ViewHandler<TView> {
-  setViewValue: (utils: MuiPickersAdapter<any>, viewValue: TDate, view?: TView) => void;
+  setViewValue: (utils: MuiPickersAdapter, viewValue: PickerValidDate, view?: TView) => void;
 }
 
 export const timeClockHandler: ViewHandler<TimeView> = {

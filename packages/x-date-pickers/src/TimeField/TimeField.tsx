@@ -10,14 +10,9 @@ import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { PickerValidDate } from '../models';
 
-type TimeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -31,12 +26,8 @@ type TimeFieldComponent = (<
  * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
  */
 const TimeField = React.forwardRef(function TimeField<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  inRef: React.Ref<HTMLDivElement>,
-) {
+>(inProps: TimeFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiTimeField',
@@ -57,17 +48,15 @@ const TimeField = React.forwardRef(function TimeField<
     additionalProps: {
       ref: inRef,
     },
-  }) as TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useTimeField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
+    textFieldProps,
+  );
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -295,8 +284,7 @@ TimeField.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

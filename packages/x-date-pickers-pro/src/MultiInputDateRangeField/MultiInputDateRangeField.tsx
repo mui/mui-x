@@ -14,7 +14,6 @@ import {
 } from '@mui/utils';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputDateRangeFieldProps,
@@ -31,7 +30,7 @@ export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = gene
 export const getMultiInputDateRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputDateRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any, any>) => {
+const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -61,10 +60,9 @@ const MultiInputDateRangeFieldSeparator = styled(Typography, {
 });
 
 type MultiInputDateRangeFieldComponent = (<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  props: MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+  props: MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -79,10 +77,9 @@ type MultiInputDateRangeFieldComponent = (<
  * - [MultiInputDateRangeField API](https://mui.com/x/api/multi-input-date-range-field/)
  */
 const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -121,9 +118,9 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
     {},
-    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -133,9 +130,9 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
   const endTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
     {},
-    MultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -156,7 +153,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
 
   const fieldResponse = useMultiInputDateRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startTextFieldProps
   >({
@@ -320,8 +316,7 @@ MultiInputDateRangeField.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */

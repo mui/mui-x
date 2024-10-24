@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Card from '@mui/material/Card';
@@ -14,7 +14,7 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 
-const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange>[] = [
   {
     label: 'This Week',
     getValue: () => {
@@ -55,7 +55,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'> {
+interface CustomLayoutProps extends PickersLayoutProps<DateRange, 'day'> {
   isHorizontal?: boolean;
 }
 function CustomLayout(props: CustomLayoutProps) {

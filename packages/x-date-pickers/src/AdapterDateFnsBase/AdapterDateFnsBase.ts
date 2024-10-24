@@ -151,7 +151,7 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
 export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   implements
     Pick<
-      MuiPickersAdapter<Date, DateFnsLocale>,
+      MuiPickersAdapter<DateFnsLocale>,
       | 'date'
       | 'getInvalidDate'
       | 'getTimezone'
@@ -187,10 +187,8 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
     this.lib = lib || 'date-fns';
   }
 
-  public date = <T extends string | null | undefined>(
-    value?: T,
-  ): DateBuilderReturnType<T, Date> => {
-    type R = DateBuilderReturnType<T, Date>;
+  public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
+    type R = DateBuilderReturnType<T>;
     if (typeof value === 'undefined') {
       return <R>new Date();
     }

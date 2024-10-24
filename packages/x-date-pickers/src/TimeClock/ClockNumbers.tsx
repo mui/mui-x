@@ -3,9 +3,9 @@ import { ClockNumber } from './ClockNumber';
 import { MuiPickersAdapter, PickerValidDate } from '../models';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
-interface GetHourNumbersOptions<TDate extends PickerValidDate> {
+interface GetHourNumbersOptions {
   ampm: boolean;
-  value: TDate | null;
+  value: PickerValidDate | null;
   getClockNumberText: (hour: string) => string;
   isDisabled: (value: number) => boolean;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
@@ -14,20 +14,20 @@ interface GetHourNumbersOptions<TDate extends PickerValidDate> {
    * Should only be `undefined` on the server
    */
   selectedId: string | undefined;
-  utils: MuiPickersAdapter<TDate>;
+  utils: MuiPickersAdapter;
 }
 
 /**
  * @ignore - internal component.
  */
-export const getHourNumbers = <TDate extends PickerValidDate>({
+export const getHourNumbers = ({
   ampm,
   value,
   getClockNumberText,
   isDisabled,
   selectedId,
   utils,
-}: GetHourNumbersOptions<TDate>) => {
+}: GetHourNumbersOptions) => {
   const currentHours = value ? utils.getHours(value) : null;
 
   const hourNumbers: React.JSX.Element[] = [];
@@ -79,13 +79,13 @@ export const getHourNumbers = <TDate extends PickerValidDate>({
   return hourNumbers;
 };
 
-export const getMinutesNumbers = <TDate extends PickerValidDate>({
+export const getMinutesNumbers = ({
   utils,
   value,
   isDisabled,
   getClockNumberText,
   selectedId,
-}: Omit<GetHourNumbersOptions<TDate>, 'ampm' | 'value'> & { value: number }) => {
+}: Omit<GetHourNumbersOptions, 'ampm' | 'value'> & { value: number }) => {
   const f = utils.formatNumber;
 
   return (

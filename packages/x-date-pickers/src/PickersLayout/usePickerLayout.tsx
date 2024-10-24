@@ -8,7 +8,6 @@ import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -16,7 +15,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   return toolbarProps.view !== null;
 }
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -31,21 +30,14 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersLayoutProps<TValue, TDate, TView> {
+interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersLayoutProps<TValue, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
-const usePickerLayout = <
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView>,
+const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
   const {
     wrapperVariant,
@@ -68,9 +60,9 @@ const usePickerLayout = <
     slotProps,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
-    // - For pickers value: TDate | null
-    // - For range pickers value: [TDate | null, TDate | null]
-  } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
+    // - For pickers value: PickerValidDate | null
+    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
+  } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
 
   const classes = useUtilityClasses(props);
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 
-<PickersDay<Date>
+<PickersDay
   day={new Date()}
   outsideCurrentMonth
-  onDaySelect={(date) => date?.getDay()}
+  onDaySelect={() => {}}
   isFirstVisibleCell={false}
   isLastVisibleCell={false}
 />;

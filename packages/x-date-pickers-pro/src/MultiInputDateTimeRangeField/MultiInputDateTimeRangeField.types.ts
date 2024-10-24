@@ -3,44 +3,38 @@ import { SlotComponentProps } from '@mui/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 > = UseMultiInputRangeFieldParams<
-  UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  UseMultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   TTextFieldSlotProps
 >;
 
 export interface UseMultiInputDateTimeRangeFieldProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends Omit<
-      UseDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+      UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
       'unstableFieldRef' | 'clearable' | 'onClear'
     >,
     MultiInputFieldRefs {}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TChildProps extends {},
 > = Omit<
   TChildProps,
-  keyof UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  keyof UseMultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
 > &
-  UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  UseMultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 export interface MultiInputDateTimeRangeFieldProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends UseMultiInputDateTimeRangeFieldComponentProps<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     Omit<StackProps, 'position'>
   > {
@@ -58,7 +52,7 @@ export interface MultiInputDateTimeRangeFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputDateTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MultiInputDateTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface MultiInputDateTimeRangeFieldSlots {
@@ -81,24 +75,23 @@ export interface MultiInputDateTimeRangeFieldSlots {
 }
 
 export interface MultiInputDateTimeRangeFieldSlotProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > {
   root?: SlotComponentProps<
     typeof Stack,
     {},
-    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+    MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
   >;
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >;
   separator?: SlotComponentProps<
     typeof Typography,
     {},
-    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+    MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
   >;
 }

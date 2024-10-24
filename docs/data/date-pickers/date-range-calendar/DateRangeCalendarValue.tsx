@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,7 +7,7 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 export default function DateRangeCalendarValue() {
-  const [value, setValue] = React.useState<DateRange<Dayjs>>([
+  const [value, setValue] = React.useState<DateRange>([
     dayjs('2022-04-17'),
     dayjs('2022-04-21'),
   ]);
@@ -21,10 +21,7 @@ export default function DateRangeCalendarValue() {
           />
         </DemoItem>
         <DemoItem label="Controlled calendar">
-          <DateRangeCalendar
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
+          <DateRangeCalendar value={value} onChange={setValue} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

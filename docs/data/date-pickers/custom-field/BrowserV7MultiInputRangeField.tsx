@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
@@ -108,10 +107,9 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<Dayjs, true>,
+  extends UseDateRangeFieldProps<true>,
     BaseMultiInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
+      DateRange,
       RangeFieldSection,
       true,
       DateRangeValidationError
@@ -157,7 +155,6 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     }) as MultiInputFieldSlotTextFieldProps;
 
     const fieldResponse = useMultiInputDateRangeField<
-      Dayjs,
       true,
       MultiInputFieldSlotTextFieldProps
     >({
@@ -201,7 +198,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

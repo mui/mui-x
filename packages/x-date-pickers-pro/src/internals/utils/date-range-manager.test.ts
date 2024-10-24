@@ -103,7 +103,7 @@ describe('date-range-manager', () => {
         expect(
           calculateRangeChange({
             utils: adapterToUse,
-            range: range as DateRange<Date>,
+            range: range as DateRange,
             newDate,
             rangePosition,
             allowRangeFlip,
@@ -170,7 +170,7 @@ describe('date-range-manager', () => {
       expect(
         calculateRangePreview({
           utils: adapterToUse,
-          range: range as DateRange<Date>,
+          range: range as DateRange,
           newDate,
           rangePosition,
         }),

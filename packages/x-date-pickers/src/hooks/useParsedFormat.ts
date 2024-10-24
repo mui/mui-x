@@ -4,13 +4,12 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useUtils } from '../internals/hooks/useUtils';
 import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectionsFromFormat';
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
-import { PickerValidDate } from '../models';
 import { usePickersTranslations } from './usePickersTranslations';
 import type { UseFieldInternalProps } from '../internals/hooks/useField';
 
 interface UseParsedFormatParameters
   extends Pick<
-    UseFieldInternalProps<any, any, any, any, any>,
+    UseFieldInternalProps<any, any, any, any>,
     'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
   > {}
 
@@ -23,13 +22,11 @@ interface UseParsedFormatParameters
  * @param {boolean} params.shouldRespectLeadingZeros If `true`, the format will respect the leading zeroes, if `false`, the format will always add leading zeroes.
  * @returns
  */
-export const useParsedFormat = <TDate extends PickerValidDate>(
-  parameters: UseParsedFormatParameters,
-) => {
+export const useParsedFormat = (parameters: UseParsedFormatParameters) => {
   const { format, formatDensity = 'dense', shouldRespectLeadingZeros = false } = parameters;
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   const isRtl = useRtl();
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickersTranslations();
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
   return React.useMemo(() => {

@@ -4,15 +4,12 @@ import { validateTime, ValidateTimeProps } from './validateTime';
 import { DateTimeValidationError, PickerValidDate } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface ValidateDateTimeProps<TDate extends PickerValidDate>
-  extends ValidateDateProps<TDate>,
-    ValidateTimeProps<TDate> {}
+export interface ValidateDateTimeProps extends ValidateDateProps, ValidateTimeProps {}
 
 export const validateDateTime: Validator<
-  any | null,
-  any,
+  PickerValidDate | null,
   DateTimeValidationError,
-  ValidateDateTimeProps<any>
+  ValidateDateTimeProps
 > = ({ adapter, value, timezone, props }) => {
   const dateValidationResult = validateDate({
     adapter,

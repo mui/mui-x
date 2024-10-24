@@ -18,13 +18,19 @@ const CustomCalendarHeaderRoot = styled('div')({
   alignItems: 'center',
 });
 
-function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
+function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
+  const currentMonthWithKnownAdapter = currentMonth as Dayjs;
+  const monthWithKnownAdapter = month as Dayjs;
+
   const selectNextMonth = () =>
-    onMonthChange(currentMonth.add(calendars, 'month'), 'left');
+    onMonthChange(currentMonthWithKnownAdapter.add(calendars, 'month'), 'left');
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonth.subtract(calendars, 'month'), 'right');
+    onMonthChange(
+      currentMonthWithKnownAdapter.subtract(calendars, 'month'),
+      'right',
+    );
 
   return (
     <CustomCalendarHeaderRoot>
@@ -43,7 +49,7 @@ function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
       >
         <ChevronLeft />
       </IconButton>
-      <Typography>{month.format('MMMM YYYY')}</Typography>
+      <Typography>{monthWithKnownAdapter.format('MMMM YYYY')}</Typography>
       <IconButton
         onClick={selectNextMonth}
         sx={[

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -13,7 +12,7 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { TimeView } from '@mui/x-date-pickers/models';
+import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -24,7 +23,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
+function CustomLayout(props: PickersLayoutProps<PickerValidDate | null, TimeView>) {
   const { actionBar, content } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={props}>
@@ -57,7 +56,7 @@ export default function DigitalClock() {
               hours: renderMultiSectionDigitalClockTimeView,
               minutes: renderMultiSectionDigitalClockTimeView,
               meridiem: renderMultiSectionDigitalClockTimeView,
-            } as StaticTimePickerProps<Dayjs>['viewRenderers']
+            } as StaticTimePickerProps['viewRenderers']
           }
         />
       </Paper>

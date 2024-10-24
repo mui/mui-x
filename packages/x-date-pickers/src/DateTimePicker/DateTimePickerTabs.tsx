@@ -15,7 +15,6 @@ import {
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
-import { PickerValidDate } from '../models';
 
 type TabValue = 'date' | 'time';
 
@@ -95,9 +94,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
  *
  * - [DateTimePickerTabs API](https://mui.com/x/api/date-pickers/date-time-picker-tabs/)
  */
-const DateTimePickerTabs = function DateTimePickerTabs<TDate extends PickerValidDate>(
-  inProps: DateTimePickerTabsProps,
-) {
+const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
     dateIcon = <DateRangeIcon />,
@@ -109,7 +106,7 @@ const DateTimePickerTabs = function DateTimePickerTabs<TDate extends PickerValid
     sx,
   } = props;
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickersTranslations();
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
