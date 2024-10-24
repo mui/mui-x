@@ -67,10 +67,6 @@ export const useTreeItem = <
     itemId,
   );
 
-  React.useEffect(() => {
-    console.log('RENDER', itemId);
-  });
-
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
