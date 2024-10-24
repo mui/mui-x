@@ -405,7 +405,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [DataGrid] Add "does not equal" and "does not contain" filter operators (#14489) @KenanYusuf
 - [DataGrid] Add demo to the "Custom columns" page that does not use generator (#13695) @arminmeh
-- [DataGrid] Fix Voice Over reading the column name twice (#14482) @arminmeh
+- [DataGrid] Fix VoiceOver reading the column name twice (#14482) @arminmeh
 - [DataGrid] Fix bug in CRUD example (#14513) @michelengelen
 - [DataGrid] Fix failing jsdom tests caused by `:has()` selectors (#14559) @KenanYusuf
 - [DataGrid] Refactor string operator filter functions (#14564) @KenanYusuf
