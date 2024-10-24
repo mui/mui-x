@@ -303,11 +303,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           }
           const isSelected = utils.isEqual(option, value);
           const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
-          const tabIndex =
-            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <ClockItem
-              key={`${option.valueOf()}-${formattedValue}`}
+              key={`${(option).valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
@@ -318,7 +316,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
               aria-selected={isSelected}
               {...clockItemProps}
             >
-              {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
+              {formattedValue}
             </ClockItem>
           );
         })}

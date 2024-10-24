@@ -41,14 +41,17 @@ describe('<DigitalClock /> - Timezone', () => {
     it('should render correct time options when fall back DST occurs', () => {
       render(
         <DigitalClock
-          referenceDate={adapter.date('2023-11-05T12:00:00', 'America/New_York')}
+          referenceDate={adapter.dateWithTimezone('2023-11-05T12:00:00', 'America/New_York')}
           timezone="America/New_York"
           timeStep={30}
         />,
       );
-      const oneAM = adapter.setMinutes(adapter.setHours(adapter.date(undefined, 'default'), 1), 0);
+      const oneAM = adapter.setMinutes(
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 1),
+        0,
+      );
       const elevenPM = adapter.setMinutes(
-        adapter.setHours(adapter.date(undefined, 'default'), 23),
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 23),
         0,
       );
       expect(
@@ -72,17 +75,17 @@ describe('<DigitalClock /> - Timezone', () => {
     it('should contain time options until the end of day when spring forward DST occurs', () => {
       render(
         <DigitalClock
-          referenceDate={adapter.date('2024-03-10T12:00:00', 'America/New_York')}
+          referenceDate={adapter.dateWithTimezone('2024-03-10T12:00:00', 'America/New_York')}
           timezone="America/New_York"
           timeStep={30}
         />,
       );
       const startOfDay = adapter.setMinutes(
-        adapter.setHours(adapter.date(undefined, 'default'), 0),
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 0),
         0,
       );
       const eleven30PM = adapter.setMinutes(
-        adapter.setHours(adapter.date(undefined, 'default'), 23),
+        adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 23),
         30,
       );
       expect(
