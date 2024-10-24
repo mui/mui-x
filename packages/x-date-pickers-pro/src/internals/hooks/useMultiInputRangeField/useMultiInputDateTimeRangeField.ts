@@ -1,8 +1,5 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  unstable_useDateTimeField as useDateTimeField,
-  UseDateTimeFieldComponentProps,
-} from '@mui/x-date-pickers/DateTimeField';
+import { unstable_useDateTimeField as useDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
@@ -104,11 +101,7 @@ export const useMultiInputDateTimeRangeField = <
     unstableEndFieldRef,
   });
 
-  const startFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const startFieldProps = {
     error: !!validationError[0],
     ...startTextFieldProps,
     ...selectedSectionsResponse.start,
@@ -125,11 +118,7 @@ export const useMultiInputDateTimeRangeField = <
     autoFocus, // Do not add on end field.
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const endFieldProps = {
     error: !!validationError[1],
     ...endTextFieldProps,
     ...selectedSectionsResponse.end,

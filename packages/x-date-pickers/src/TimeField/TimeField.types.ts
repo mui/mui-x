@@ -39,32 +39,28 @@ export interface UseTimeFieldProps<
   ampm?: boolean;
 }
 
-export type UseTimeFieldComponentProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
-  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
-
 export type TimeFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = UseTimeFieldComponentProps<
-  TDate,
-  TEnableAccessibleFieldDOMStructure,
-  BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
-> & {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: TimeFieldSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: TimeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
-};
+> =
+  // The hook props
+  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    // The TextField props
+    Omit<
+      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
+      keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+    > & {
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: TimeFieldSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: TimeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+    };
 
 export type TimeFieldOwnerState<
   TDate extends PickerValidDate,
