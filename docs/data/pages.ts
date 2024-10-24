@@ -534,12 +534,12 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/react-tree-view-group',
+    pathname: '/x/toolpad/core-group',
     title: 'Toolpad',
     newFeature: true,
     children: [
-      { pathname: '/x/react-tree-view', title: 'DashboardLayout' },
-      { pathname: '/x/react-tree-view/getting-started',title: 'DashboardLayout2' },
+      { pathname: '/toolpad/core/react-dashboard-layout/', title: 'Dashboard Layout' },
+      { pathname: '/toolpad/core/react-sign-in-page/', title: 'Sign-in Page' },
     ],
   },
   {
