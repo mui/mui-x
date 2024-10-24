@@ -8,10 +8,7 @@ import {
   TreeItemGroupTransition,
   TreeItemProps,
 } from '@mui/x-tree-view/TreeItem';
-import {
-  UseTreeItemContentSlotOwnProps,
-  UseTreeItemStatus,
-} from '@mui/x-tree-view/useTreeItem';
+import { UseTreeItemContentSlotOwnProps } from '@mui/x-tree-view/useTreeItem';
 
 const MUI_X_PRODUCTS = [
   {
