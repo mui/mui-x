@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+
+import type {} from '../typeOverloads';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
