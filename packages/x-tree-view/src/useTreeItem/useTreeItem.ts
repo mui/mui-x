@@ -67,6 +67,10 @@ export const useTreeItem = <
     itemId,
   );
 
+  React.useEffect(() => {
+    console.log('RENDER', itemId);
+  });
+
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
     'externalEventHandlers'
@@ -340,22 +344,16 @@ export const useTreeItem = <
     const externalEventHandlers = extractEventHandlers(externalProps);
 
     let cleanChildren: React.ReactNode;
-    if (Array.isArray(children)) {
-      cleanChildren = children.map((child) => {
-        if (React.isValidElement(child)) {
-          return child;
-        }
+    if (renderItemForRichTreeView) {
+      if (!Array.isArray(children)) {
+        throw new Error(
+          'MUI X: The Tree Item component can only receive object children when used inside a Rich Tree View component.',
+        );
+      }
 
-        if (!renderItemForRichTreeView) {
-          throw new Error(
-            'MUI X: The Tree Item component can only receive object children when used inside a Rich Tree View component.',
-          );
-        }
-
-        return renderItemForRichTreeView(child);
-      });
+      cleanChildren = children.map((child) => renderItemForRichTreeView(child));
     } else {
-      cleanChildren = children;
+      cleanChildren = children as React.ReactNode;
     }
 
     const response: UseTreeItemGroupTransitionSlotProps<ExternalProps> = {

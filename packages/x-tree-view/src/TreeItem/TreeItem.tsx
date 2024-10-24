@@ -10,7 +10,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
+import { TreeItemProps, TreeItemOwnerState, RawTreeItemProps } from './TreeItem.types';
 import {
   useTreeItem,
   UseTreeItemContentSlotOwnProps,
@@ -22,6 +22,7 @@ import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
+import { TreeViewItemToRenderProps } from '../internals/plugins/useTreeViewItems';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -216,7 +217,7 @@ type TreeItemComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 export const TreeItemRaw = React.forwardRef(function TreeItem(
-  inProps: TreeItemProps,
+  inProps: RawTreeItemProps,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
@@ -348,7 +349,82 @@ export const TreeItemRaw = React.forwardRef(function TreeItem(
       </Root>
     </TreeItemProvider>
   );
-}) as TreeItemComponent;
+});
+
+const areChildrenEqual = (childA: TreeViewItemToRenderProps, childB: TreeViewItemToRenderProps) => {
+  if (childA.itemId !== childB.itemId) {
+    return false;
+  }
+  if (childA.id !== childB.id) {
+    return false;
+  }
+  if (childA.label !== childB.label) {
+    return false;
+  }
+  if (childA.children.length !== childB.children.length) {
+    return false;
+  }
+  for (let i = 0; i < childA.children.length; i += 1) {
+    if (!areChildrenEqual(childA.children[i], childB.children[i])) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// Logic copied from `fastObjectShallowCompare` but with a deep comparison for `props.children`
+const is = Object.is;
+const propsAreEqual = (a: RawTreeItemProps, b: RawTreeItemProps) => {
+  if (a === b) {
+    return true;
+  }
+  if (!(a instanceof Object) || !(b instanceof Object)) {
+    return false;
+  }
+
+  let aLength = 0;
+  let bLength = 0;
+
+  /* eslint-disable guard-for-in */
+  for (const key in a) {
+    aLength += 1;
+
+    if (key === 'children') {
+      const childrenA = a[key];
+      const childrenB = b[key];
+      if (!Array.isArray(childrenA) || !Array.isArray(childrenB)) {
+        if (!is(a[key], b[key])) {
+          return false;
+        }
+      } else if (childrenA.length !== childrenB.length) {
+        return false;
+      } else {
+        for (let i = 0; i < childrenA.length; i += 1) {
+          if (React.isValidElement(childrenA[i]) || React.isValidElement(childrenB[i])) {
+            if (!is(a[key], b[key])) {
+              return false;
+            }
+          } else if (!areChildrenEqual(childrenA[i], childrenB[i])) {
+            return false;
+          }
+        }
+      }
+    } else {
+      if (!is(a[key], b[key])) {
+        return false;
+      }
+      if (!(key in b)) {
+        return false;
+      }
+    }
+  }
+
+  /* eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars */
+  for (const _ in b) {
+    bLength += 1;
+  }
+  return aLength === bLength;
+};
 
 /**
  *
@@ -360,7 +436,7 @@ export const TreeItemRaw = React.forwardRef(function TreeItem(
  *
  * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item-2/)
  */
-export const TreeItem = React.memo(TreeItemRaw) as TreeItemComponent;
+export const TreeItem = React.memo(TreeItemRaw, propsAreEqual) as TreeItemComponent;
 
 TreeItem.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -370,7 +446,7 @@ TreeItem.propTypes = {
   /**
    * The content of the component.
    */
-  children: PropTypes.node,
+  children: PropTypes.any,
   /**
    * Override or extend the styles applied to the component.
    */

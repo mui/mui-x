@@ -61,7 +61,7 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
 }
 
-export interface TreeItemProps
+export interface RawTreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus' | 'children'> {
   className?: string;
@@ -94,4 +94,8 @@ export interface TreeItemProps
   onKeyDown?: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLLIElement>>;
 }
 
-export interface TreeItemOwnerState extends Omit<TreeItemProps, 'disabled'>, UseTreeItemStatus {}
+export interface TreeItemProps extends Omit<RawTreeItemProps, 'children'> {
+  children?: React.ReactNode;
+}
+
+export interface TreeItemOwnerState extends Omit<RawTreeItemProps, 'disabled'>, UseTreeItemStatus {}

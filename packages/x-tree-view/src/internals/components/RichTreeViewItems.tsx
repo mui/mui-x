@@ -2,6 +2,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
+import { RawTreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewItemId } from '../../models';
 import { TreeViewItemToRenderProps } from '../plugins/useTreeViewItems';
 
@@ -46,23 +47,25 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const useRichTreeViewItemsContext = () => React.useContext(RichTreeViewItemsContext);
 
+interface WrappedTreeItemProps extends Pick<RawTreeItemProps, 'id' | 'itemId' | 'children'> {
+  itemSlot: React.JSXElementConstructor<RawTreeItemProps> | undefined;
+  itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
+  label: string;
+  itemsToRender: TreeViewItemToRenderProps[] | undefined;
+}
+
 function WrappedTreeItem({
-  slots,
-  slotProps,
+  itemSlot,
+  itemSlotProps,
   label,
   id,
   itemId,
   itemsToRender,
-}: Pick<RichTreeViewItemsProps, 'slots' | 'slotProps'> &
-  Pick<TreeItemProps, 'id' | 'itemId' | 'children'> & {
-    label: string;
-    isContentHidden?: boolean;
-    itemsToRender: TreeViewItemToRenderProps[] | undefined;
-  }) {
-  const Item = slots?.item ?? TreeItem;
+}: WrappedTreeItemProps) {
+  const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<RawTreeItemProps>;
   const { ownerState, ...itemProps } = useSlotProps({
     elementType: Item,
-    externalSlotProps: slotProps?.item,
+    externalSlotProps: itemSlotProps,
     additionalProps: { itemId, id, label },
     ownerState: { itemId, label },
   });
@@ -73,12 +76,15 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
+  const itemSlot = slots?.item as React.JSXElementConstructor<RawTreeItemProps> | undefined;
+  const itemSlotProps = slotProps?.item;
+
   const renderItem = React.useCallback(
     (item: TreeViewItemToRenderProps) => {
       return (
         <WrappedTreeItem
-          slots={slots}
-          slotProps={slotProps}
+          itemSlot={itemSlot}
+          itemSlotProps={itemSlotProps}
           key={item.itemId}
           label={item.label}
           id={item.id}
@@ -87,7 +93,7 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
         />
       );
     },
-    [slots, slotProps],
+    [itemSlot, itemSlotProps],
   );
 
   return (

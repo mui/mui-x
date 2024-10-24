@@ -11,6 +11,7 @@ import {
 } from '../../utils/tree';
 import {
   UseTreeViewSelectionInstance,
+  UseTreeViewSelectionParameters,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import {
@@ -267,6 +268,8 @@ useTreeViewSelection.models = {
 
 const DEFAULT_SELECTED_ITEMS: string[] = [];
 
+const EMPTY_SELECTION_PROPAGATION: UseTreeViewSelectionParameters<true>['selectionPropagation'] =
+  {};
 useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
@@ -274,7 +277,7 @@ useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
-  selectionPropagation: params.selectionPropagation ?? {},
+  selectionPropagation: params.selectionPropagation ?? EMPTY_SELECTION_PROPAGATION,
 });
 
 useTreeViewSelection.getInitialState = (params) => ({
