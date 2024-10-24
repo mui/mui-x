@@ -58,7 +58,7 @@ describe('<DigitalClock /> - Timezone', () => {
             adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
           ),
         ),
-      ).to.have.length(1);
+      ).to.have.length(adapter.lib === 'dayjs' ? 1 : 2);
       expect(
         screen.getAllByText(
           adapter.format(
@@ -69,7 +69,7 @@ describe('<DigitalClock /> - Timezone', () => {
       ).to.have.length(1);
     });
 
-    it('should render correct time options when spring forward DST occurs', () => {
+    it('should contain time options until the end of day when spring forward DST occurs', () => {
       render(
         <DigitalClock
           referenceDate={adapter.date('2024-03-10T12:00:00', 'America/New_York')}
@@ -81,7 +81,10 @@ describe('<DigitalClock /> - Timezone', () => {
         adapter.setHours(adapter.date(undefined, 'default'), 0),
         0,
       );
-      const twoAM = adapter.setMinutes(adapter.setHours(adapter.date(undefined, 'default'), 2), 0);
+      const eleven30PM = adapter.setMinutes(
+        adapter.setHours(adapter.date(undefined, 'default'), 23),
+        30,
+      );
       expect(
         screen.getAllByText(
           adapter.format(
@@ -93,7 +96,7 @@ describe('<DigitalClock /> - Timezone', () => {
       expect(
         screen.getAllByText(
           adapter.format(
-            twoAM,
+            eleven30PM,
             adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
           ),
         ),

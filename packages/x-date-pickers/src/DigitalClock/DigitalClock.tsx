@@ -11,7 +11,7 @@ import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { createIsAfterIgnoreDatePart, isEqualTime } from '../internals/utils/time-utils';
+import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
@@ -22,7 +22,6 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
-import { mergeDateAndTime } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -194,17 +193,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone,
   });
 
-  const handleValueChange = useEventCallback((newValue: TDate | null) => {
-    if (newValue === null) {
-      handleRawValueChange(null, 'finish', 'hours');
-      return;
-    }
-    handleRawValueChange(
-      mergeDateAndTime(utils, valueOrReferenceDate, newValue),
-      'finish',
-      'hours',
-    );
-  });
+  const handleValueChange = useEventCallback((newValue: TDate | null) =>
+    handleRawValueChange(newValue, 'finish', 'hours'),
+  );
 
   const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
     view: inView,
@@ -292,19 +283,18 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    // use `startOfYear` to avoid DST problems: https://github.com/mui/mui-x/issues/10783
-    // use today as base to avoid rebuilding the array on each value change
-    const startOfYear = utils.startOfYear(utils.date(undefined, timezone ?? 'default'));
-    return [
-      startOfYear,
-      ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfYear, timeStep * (index + 1)),
-      ),
-    ];
-  }, [timeStep, timezone, utils]);
+    const result: TDate[] = [];
+    const startOfDay = utils.startOfDay(valueOrReferenceDate);
+    let nextTimeStepOption = startOfDay;
+    while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
+      result.push(nextTimeStepOption);
+      nextTimeStepOption = utils.addMinutes(nextTimeStepOption, timeStep);
+    }
+    return result;
+  }, [valueOrReferenceDate, timeStep, utils]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
-    isEqualTime(utils, option, valueOrReferenceDate),
+    utils.isEqual(option, valueOrReferenceDate),
   );
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -355,14 +345,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
-          const isSelected = isEqualTime(utils, option, value);
+          const isSelected = utils.isEqual(option, value);
           const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
           const tabIndex =
             focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
-
           return (
             <ClockItem
-              key={formattedValue}
+              key={`${option.valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
