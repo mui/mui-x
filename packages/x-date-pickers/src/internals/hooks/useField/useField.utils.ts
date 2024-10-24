@@ -291,16 +291,16 @@ export const adjustSectionValue = <TDate extends PickerValidDate, TSection exten
     if (newSectionValueNumber > sectionBoundaries.maximum) {
       return getCleanValue(
         sectionBoundaries.minimum +
-          ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
+        ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
+          (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
       );
     }
 
     if (newSectionValueNumber < sectionBoundaries.minimum) {
       return getCleanValue(
         sectionBoundaries.maximum -
-          ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
-            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
+        ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
+          (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
       );
     }
 
@@ -484,9 +484,8 @@ export const getDateFromDateSections = <TDate extends PickerValidDate>(
 export const createDateStrForV7HiddenInputFromSections = (sections: FieldSection[]) =>
   sections
     .map((section) => {
-      return `${section.startSeparator}${section.value || section.placeholder}${
-        section.endSeparator
-      }`;
+      return `${section.startSeparator}${section.value || section.placeholder}${section.endSeparator
+        }`;
     })
     .join('');
 
@@ -812,7 +811,8 @@ export const parseSelectedSections = (
   }
 
   if (typeof selectedSections === 'string') {
-    return sections.findIndex((section) => section.type === selectedSections);
+    const index = sections.findIndex((section) => section.type === selectedSections);
+    return index === -1 ? null : index;
   }
 
   return selectedSections;
@@ -836,9 +836,9 @@ export const getSectionValueText = <TDate extends PickerValidDate>(
     case 'day':
       return section.contentType === 'digit'
         ? utils.format(
-            utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
-            'dayOfMonthFull',
-          )
+          utils.setDate(utils.startOfYear(utils.date()), Number(section.value)),
+          'dayOfMonthFull',
+        )
         : section.value;
     case 'weekDay':
       // TODO: improve by providing the label of the week day
