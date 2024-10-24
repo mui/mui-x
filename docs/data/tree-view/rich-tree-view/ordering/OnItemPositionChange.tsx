@@ -53,7 +53,6 @@ export default function OnItemPositionChange() {
           items={MUI_X_PRODUCTS}
           itemsReordering
           experimentalFeatures={{
-            indentationAtItemLevel: true,
             itemsReordering: true,
           }}
           defaultExpandedItems={['grid', 'pickers']}

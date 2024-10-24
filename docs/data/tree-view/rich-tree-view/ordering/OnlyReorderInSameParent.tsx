@@ -41,7 +41,6 @@ export default function OnlyReorderInSameParent() {
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
         experimentalFeatures={{
-          indentationAtItemLevel: true,
           itemsReordering: true,
         }}
         canMoveItemToNewPosition={(params) =>

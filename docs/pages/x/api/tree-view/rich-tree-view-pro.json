@@ -29,10 +29,7 @@
       "default": "'content'"
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ itemsReordering?: bool, labelEditing?: bool }" }
     },
     "getItemId": {
       "type": { "name": "func" },

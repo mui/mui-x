@@ -44,7 +44,6 @@ export default function OnlyReorderLeaves() {
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
         experimentalFeatures={{
-          indentationAtItemLevel: true,
           itemsReordering: true,
         }}
         apiRef={apiRef}

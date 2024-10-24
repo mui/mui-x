@@ -41,7 +41,6 @@ export default function DragAndDrop() {
         itemsReordering
         defaultExpandedItems={['grid', 'pickers']}
         experimentalFeatures={{
-          indentationAtItemLevel: true,
           itemsReordering: true,
         }}
       />

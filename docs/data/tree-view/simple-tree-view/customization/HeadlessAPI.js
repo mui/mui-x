@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
@@ -14,10 +13,6 @@ import {
 } from '@mui/x-tree-view/TreeItem';
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
-
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1),
-}));
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const { id, itemId, label, disabled, children, ...other } = props;
@@ -35,7 +30,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   return (
     <TreeItemProvider itemId={itemId}>
       <TreeItemRoot {...getRootProps(other)}>
-        <CustomTreeItemContent {...getContentProps()}>
+        <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemIconContainer>
@@ -53,7 +48,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             </Avatar>
             <TreeItemLabel {...getLabelProps()} />
           </Box>
-        </CustomTreeItemContent>
+        </TreeItemContent>
         {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
       </TreeItemRoot>
     </TreeItemProvider>

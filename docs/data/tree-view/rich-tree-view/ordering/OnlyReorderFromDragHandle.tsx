@@ -115,7 +115,6 @@ export default function OnlyReorderFromDragHandle() {
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid', 'pickers']}
         experimentalFeatures={{
-          indentationAtItemLevel: true,
           itemsReordering: true,
         }}
         itemsReordering
