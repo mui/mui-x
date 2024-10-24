@@ -67,18 +67,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
 
-function EmptyCell() {
-  return <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />;
-}
-
-EmptyCell.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  width: PropTypes.number.isRequired,
-} as any;
-
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
@@ -463,7 +451,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         style={{ width: offsetLeft }}
       />
       {cells}
-      <EmptyCell />
+      <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>
