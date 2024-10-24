@@ -24,9 +24,7 @@ export default function PieChartWithPaddingAngle() {
         margin={{ right: 5 }}
         width={200}
         height={200}
-        slotProps={{
-          legend: { hidden: true },
-        }}
+        hideLegend
       />
       <PieChart
         series={[
@@ -42,9 +40,7 @@ export default function PieChartWithPaddingAngle() {
         margin={{ right: 5 }}
         width={200}
         height={200}
-        slotProps={{
-          legend: { hidden: true },
-        }}
+        hideLegend
       />
     </Stack>
   );
