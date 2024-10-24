@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
@@ -14,17 +13,14 @@ export const MUI_X_PRODUCTS = [
       {
         id: 'grid-community',
         label: '@mui/x-data-grid',
-        secondaryLabel: 'Community package',
       },
       {
         id: 'grid-pro',
         label: '@mui/x-data-grid-pro',
-        secondaryLabel: 'Pro package',
       },
       {
         id: 'grid-premium',
         label: '@mui/x-data-grid-premium',
-        secondaryLabel: 'Premium package',
       },
     ],
   },
@@ -35,12 +31,11 @@ export const MUI_X_PRODUCTS = [
       {
         id: 'pickers-community',
         label: '@mui/x-date-pickers',
-        secondaryLabel: 'Community package',
       },
       {
         id: 'pickers-pro',
         label: '@mui/x-date-pickers-pro',
-        secondaryLabel: 'Pro package',
+        isHighlighted: true,
       },
     ],
   },
@@ -56,19 +51,6 @@ export const MUI_X_PRODUCTS = [
   },
 ];
 
-function CustomLabel({ children, className, secondaryLabel }) {
-  return (
-    <div className={className}>
-      <Typography>{children}</Typography>
-      {secondaryLabel && (
-        <Typography variant="caption" color="secondary">
-          {secondaryLabel}
-        </Typography>
-      )}
-    </div>
-  );
-}
-
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const item = useTreeItemModel(props.itemId);
 
@@ -76,17 +58,14 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     <TreeItem
       {...props}
       ref={ref}
-      slots={{
-        label: CustomLabel,
-      }}
       slotProps={{
-        label: { secondaryLabel: item?.secondaryLabel || '' },
+        label: { style: item.isHighlighted ? { color: 'red' } : undefined },
       }}
     />
   );
 });
 
-export default function LabelSlot() {
+export default function useTreeItemModelHook() {
   return (
     <Box sx={{ minHeight: 200, minWidth: 350 }}>
       <RichTreeView

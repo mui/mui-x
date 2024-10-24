@@ -1,3 +1,3 @@
 export { useTreeViewApiRef } from './useTreeViewApiRef';
 export { useTreeItemUtils } from './useTreeItemUtils';
-export { useTreeItemObject } from './useTreeItemObject';
+export { useTreeItemModel } from './useTreeItemModel';

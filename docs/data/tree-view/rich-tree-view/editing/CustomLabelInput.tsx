@@ -10,7 +10,7 @@ import {
   UseTreeItemLabelInputSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
 } from '@mui/x-tree-view/useTreeItem';
-import { useTreeItemUtils, useTreeItemObject } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
@@ -94,7 +94,7 @@ const LabelInput = React.forwardRef(function LabelInput(
   }: Omit<CustomLabelInputProps, 'ref'>,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const item = useTreeItemObject<ExtendedTreeItemProps>(itemId)!;
+  const item = useTreeItemModel<ExtendedTreeItemProps>(itemId)!;
 
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,

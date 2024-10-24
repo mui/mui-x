@@ -26,7 +26,7 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { useTreeItemObject } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 const ITEMS = [
   {
@@ -215,7 +215,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = useTreeItemObject(itemId);
+  const item = useTreeItemModel(itemId);
 
   let icon;
   if (status.expandable) {

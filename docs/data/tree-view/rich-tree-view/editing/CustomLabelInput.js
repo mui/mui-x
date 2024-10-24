@@ -7,7 +7,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 
-import { useTreeItemUtils, useTreeItemObject } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
@@ -72,7 +72,7 @@ const LabelInput = React.forwardRef(function LabelInput(
   { itemId, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
   ref,
 ) {
-  const item = useTreeItemObject(itemId);
+  const item = useTreeItemModel(itemId);
 
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
