@@ -77,9 +77,8 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
-    ? []
-    : ['accept'];
+  const actionBarActions: PickersActionBarAction[] = ['cancel', 'accept'];
+
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
     viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
@@ -167,7 +166,7 @@ DesktopTimePicker.propTypes = {
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default false
    */
   closeOnSelect: PropTypes.bool,
   /**

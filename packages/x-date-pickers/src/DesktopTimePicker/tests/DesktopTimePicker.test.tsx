@@ -80,9 +80,8 @@ describe('<DesktopTimePicker />', () => {
       fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
     });
 
     it('should call "onAccept", "onChange", and "onClose" when selecting all section', () => {
@@ -113,9 +112,8 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
     });
 
     it('should allow out of order section selection', () => {
@@ -151,9 +149,8 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
     });
 
     it('should finish selection when selecting only the last section', () => {
@@ -174,9 +171,8 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
-      expect(onClose.callCount).to.equal(1);
+      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
     });
   });
 });
