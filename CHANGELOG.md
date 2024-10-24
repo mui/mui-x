@@ -28,7 +28,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix ugly prop-types for the `pageStyle` prop of the `GridPrintExportMenuItem` component (#15015) @flaviendelangle
 - [DataGrid] Fix value type in filter model for number and boolean column type (#14733) @k-rajat19
 - [DataGrid] Focus next row when the focused row is deleted (#15067) @cherniavskii
-- [DataGrid] Refactor: remove some Box & Badge (#15013) @romgrk
+- [DataGrid] Remove some usages of `<Box />` and `<Badge />` (#15013) @romgrk
 - [DataGrid] Fix number of rows to display for page size options with negative value (#14890) @kalyan90
 - [l10n] Improve Portuguese (pt-BR) locale (#15021) @k-rajat19
 
@@ -54,7 +54,7 @@ Same changes as in `@mui/x-date-pickers@7.21.1`.
 
 #### `@mui/x-charts@7.21.1`
 
-- [charts] Export data type in onAxisClick(_, data) callback (#15038) @clins1994
+- [charts] Export data type in `onAxisClick(_, data)` callback (#15038) @clins1994
 
 #### `@mui/x-charts-pro@7.0.0-beta.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
