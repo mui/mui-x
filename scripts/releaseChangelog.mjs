@@ -355,12 +355,12 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' : ''}
 ### Charts
- 
+
 #### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
 
-#### \`@mui/x-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}

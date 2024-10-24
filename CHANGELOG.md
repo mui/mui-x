@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.0
+
+_Oct 24, 2024_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎉 Start the v8 release process
+- 🌍 Improve Portuguese (pt-BR) locale on the Data Grid component
+- 🐞 Bugfixes
+- 📚 Other documentation improvements
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@clins1994, @GITPHLAP, @k-rajat19, @kalyan90, @merotosc, @noraleonte, @romgrk, @yash49.
+Following are all team members who have contributed to this release:
+@cherniavskii, @flaviendelangle, @LukasTy, @MBilalShafi, @michelengelen, @samuelsycamore.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0-alpha.0`
+
+- [DataGrid] Fix `GridPanelAnchor` positioning (#15022) @k-rajat19
+- [DataGrid] Fix ugly prop-types for the `pageStyle` prop of the `GridPrintExportMenuItem` component (#15015) @flaviendelangle
+- [DataGrid] Fix value type in filter model for number and boolean column type (#14733) @k-rajat19
+- [DataGrid] Focus next row when the focused row is deleted (#15061) @cherniavskii
+- [DataGrid] Refactor: remove some Box & Badge (#15013) @romgrk
+- [DataGrid] Refactor: baseMenuList & baseMenuItem (#15049) @romgrk
+- [DataGrid] Refactor: remove more material imports (#15063) @romgrk
+- [DataGrid] Fix number of rows to display for page size options with negative value (#14890) @kalyan90
+- [l10n] Improve Portuguese (pt-BR) locale (#15021) @k-rajat19
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.0`, plus:
+
+- [DataGridPro] Fix column pinning layout (#14966) @cherniavskii
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-alpha.0`
+
+- [fields] Enable the new field DOM structure by default (#14651) @flaviendelangle
+- [pickers] Fix `DigitalClock` time options on a `DST` switch day (#10793) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.0`
+
+- [charts] Export data type in onAxisClick(_, data) callback (#15038) @clins1994
+
+#### `@mui/x-charts-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.0`
+
+- [TreeView] Automatic parents and children selection (#14899) @flaviendelangle
+- [TreeView] Fix drag and drop color usage (#15042) @LukasTy
+- [TreeView] Make the cancellable event types public (#14992) @flaviendelangle
+- [TreeView] Replace `<TreeItem />` with `<TreeItem2 />` and migrate all the components and utils (#14913) @flaviendelangle
+- [TreeView] Replace the Tree Item anatomy images (#15066) @noraleonte
+
+### Docs
+
+- [docs] Copyedit the Charts Getting Started sequence (#14962) @samuelsycamore
+- [docs] Fix typo in Tree View docs (#15047) @yash49
+- [docs] Start v8 migration guides (#15096) @MBilalShafi
+- [docs] Use `next` instead of `^8.0.0` in the migration guides (#15091) @flaviendelangle
+
+### Core
+
+- [core] Adjust cherry-pick GH actions (#15099) @LukasTy
+- [core] Fix Vale error on master @oliviertassinari
+- [core] Fix changelog reference to VoiceOver @oliviertassinari
+- [release] v8 preparation (#15054) @michelengelen
+- [test] Revert to using `fireEvent` instead of `userEvent` (#14927) @LukasTy
+
 ## 7.21.0
 
 _Oct 17, 2024_
