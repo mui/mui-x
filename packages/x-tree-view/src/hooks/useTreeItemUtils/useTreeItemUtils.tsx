@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';

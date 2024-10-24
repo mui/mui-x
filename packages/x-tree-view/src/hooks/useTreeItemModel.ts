@@ -1,3 +1,4 @@
+'use client';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorItem } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
