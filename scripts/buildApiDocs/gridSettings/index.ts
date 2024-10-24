@@ -63,7 +63,6 @@ export default dataGridApiPages;
       'src/DataGridPremium/DataGridPremium.tsx',
       'src/DataGridPro/DataGridPro.tsx',
       'src/DataGrid/DataGrid.tsx',
-      'src/components/columnsManagement/GridColumnsManagement.tsx',
       'src/components/panel/filterPanel/GridFilterForm.tsx',
       'src/components/panel/filterPanel/GridFilterPanel.tsx',
       'src/components/toolbar/GridToolbarQuickFilter.tsx',
