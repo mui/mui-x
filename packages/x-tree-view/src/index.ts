@@ -1,5 +1,4 @@
 // Tree View
-export * from './TreeView';
 export * from './SimpleTreeView';
 export * from './RichTreeView';
 

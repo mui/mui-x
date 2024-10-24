@@ -65,6 +65,53 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+### ✅ Use Simple Tree View instead of Tree View
+
+The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem itemId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
+
+If you were using theme augmentation, you will also need to migrate it:
+
+```diff
+ const theme = createTheme({
+   components: {
+-    MuiTreeView: {
++    MuiSimpleTreeView: {
+       styleOverrides: {
+         root: {
+           opacity: 0.5,
+         },
+       },
+     },
+   },
+ });
+```
+
+If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
+
+```diff
+ import { treeViewClasses } from '@mui/x-tree-view/TreeView';
+ import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+
+-const rootClass = treeViewClasses.root;
++const rootClass = simpleTreeViewClasses.root;
+```
+
 ## New API to customize the Tree Item
 
 The `ContentComponent` or `ContentProps` props of the `TreeItem` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
@@ -85,7 +132,7 @@ This inconsistency has been solved, all the event manager now target the root of
  </SimpleTreeView>
 ```
 
-## Rename the `TreeItem2` (and related utils)
+## ✅ Rename the `TreeItem2` (and related utils)
 
 All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
 
