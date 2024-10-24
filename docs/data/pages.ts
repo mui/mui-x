@@ -534,6 +534,15 @@ const pages: MuiPage[] = [
     ],
   },
   {
+    pathname: '/x/toolpad/core-group',
+    title: 'Toolpad',
+    newFeature: true,
+    children: [
+      { pathname: '/toolpad/core/react-dashboard-layout/', title: 'Dashboard Layout' },
+      { pathname: '/toolpad/core/react-sign-in-page/', title: 'Sign-in Page' },
+    ],
+  },
+  {
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
