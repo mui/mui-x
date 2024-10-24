@@ -16,7 +16,7 @@ A typical release goes like this:
 
 The following steps must be proposed as a pull request.
 
-1. Compare the last tag with the branch upon which you want to release (`next` for the alpha / beta releases and `master` for the current stable version).
+1. Compare the last tag with the branch upon which you want to release (`master` for the alpha / beta releases and `v*.x` for the current stable versions).
    To do so, use `pnpm release:changelog` The options are the following:
 
 ```bash
@@ -51,7 +51,7 @@ In case of a problem, another method to generate the changelog is available at t
 
 ### Publish the documentation
 
-The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` releases, `docs-v5` for `v5.X` releases, ...)
+The documentation must be updated on the `docs-next` branch (`docs-v4` for `v4.X` releases, `docs-v5` for `v5.X` releases, ...)
 
 Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 

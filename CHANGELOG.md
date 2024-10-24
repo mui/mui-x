@@ -9,15 +9,16 @@ _Oct 24, 2024_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎉 Start the v8 release process
+- 👨🏽‍💻 Start the v8 release process
+- 💫 Automatic parents and children selection on the Tree View component
 - 🌍 Improve Portuguese (pt-BR) locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Other documentation improvements
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@clins1994, @GITPHLAP, @k-rajat19, @kalyan90, @merotosc, @noraleonte, @romgrk, @yash49.
+@clins1994, @GITPHLAP, @k-rajat19, @kalyan90, @merotosc, @yash49.
 Following are all team members who have contributed to this release:
-@cherniavskii, @flaviendelangle, @LukasTy, @MBilalShafi, @michelengelen, @samuelsycamore.
+@cherniavskii, @flaviendelangle, @LukasTy, @MBilalShafi, @michelengelen, @samuelsycamore, @noraleonte, @romgrk.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
