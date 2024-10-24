@@ -126,9 +126,9 @@ const parseInterfaceSymbol = async (
 const isPro = (project: string) => project.includes('-pro');
 const isPremium = (project: string) => project.includes('-premium');
 
-function getPlanLevel(property: ParsedProperty) {
+function getPlanLevel(property: ParsedProperty): 'community' | 'pro' | 'premium' {
   if (property.projects.some((project) => !isPro(project) && !isPremium(project))) {
-    return '';
+    return 'community';
   }
   if (property.projects.some(isPro)) {
     return 'pro';
@@ -221,8 +221,7 @@ export interface InterfaceApiContent {
       type: { description: string };
       default?: string;
       required?: true;
-      isProPlan?: true;
-      isPremiumPlan?: true;
+      plan?: 'pro' | 'premium';
     };
   };
 }
@@ -375,18 +374,15 @@ export async function buildInterfacesDocumentationPage(
         return 1;
       })
       .forEach(({ name, description, type, default: defaultValue, required, planLevel }) => {
-        content.properties[name] = { type };
+        content.properties[name] = {
+          type,
+          ...(planLevel === 'community' ? {} : { plan: planLevel }), // Don't add noise with community plan as default
+        };
         if (defaultValue) {
           content.properties[name].default = defaultValue;
         }
         if (required) {
           content.properties[name].required = required;
-        }
-        if (planLevel === 'pro') {
-          content.properties[name].isProPlan = true;
-        }
-        if (planLevel === 'premium') {
-          content.properties[name].isPremiumPlan = true;
         }
         translations.propertiesDescriptions[name] = { description };
       });

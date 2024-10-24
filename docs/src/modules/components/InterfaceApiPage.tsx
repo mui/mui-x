@@ -84,6 +84,7 @@ export function getInterfaceApiDefinitions(
     const isRequired = propertyData.required && !showOptionalAbbr;
     const isOptional = !propertyData.required && showOptionalAbbr;
 
+    const plan = propertyData.plan;
     const typeName = propertyData.type.description;
     const propDefault = propertyData.default;
     const propDescription = propertiesDescriptions[propertyName];
@@ -97,8 +98,7 @@ export function getInterfaceApiDefinitions(
       isRequired,
       typeName,
       propDefault,
-      isProPlan: propertyData.isProPlan,
-      isPremiumPlan: propertyData.isPremiumPlan,
+      plan
     };
   });
 }
