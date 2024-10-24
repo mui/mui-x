@@ -31,6 +31,7 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "shape",

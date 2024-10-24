@@ -56,5 +56,5 @@ export default function PieColor() {
 const pieParams = {
   height: 200,
   margin: { right: 5 },
-  slotProps: { legend: { hidden: true } },
+  hideLegend: true,
 };
