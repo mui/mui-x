@@ -389,6 +389,7 @@ export interface GridControlledStateReasonLookup {
     | 'restoreState'
     | 'removeAllFilterItems';
   pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
+  rows: 'addSkeletonRows';
 }
 
 export interface GridEventLookup
