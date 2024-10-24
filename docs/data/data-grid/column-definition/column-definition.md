@@ -137,7 +137,7 @@ It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
 2. `valueFormatter() => string`
-3. `valueGetter => string`
+3. `valueGetter() => string`
 4. `row[field]`
 
 The `renderCell` method of the column definitions is similar to `valueFormatter`.
