@@ -10,8 +10,28 @@ type MousePosition = {
   height: number;
 };
 
-export function generateVirtualElement(mousePosition: MousePosition | null) {
-  if (mousePosition === null) {
+export type VirtualElement = {
+  getBoundingClientRect: () => {
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+    toJSON: () => string;
+  };
+};
+/**
+ * Generate a virtual element for the tooltip.
+ * Default to (0, 0) is the argument is not provided, or null.
+ * @param mousePosition { x: number, y: number}
+ */
+export function generateVirtualElement(
+  mousePosition?: Pick<MousePosition, 'x' | 'y'> | null,
+): VirtualElement {
+  if (!mousePosition) {
     return {
       getBoundingClientRect: () => ({
         width: 0,
@@ -47,6 +67,9 @@ export function generateVirtualElement(mousePosition: MousePosition | null) {
 
 export type UseMouseTrackerReturnValue = null | MousePosition;
 
+/**
+ * @deprecated We recommend using vanilla JS to let popper track mouse position.
+ */
 export function useMouseTracker(): UseMouseTrackerReturnValue {
   const svgRef = useSvgRef();
 
@@ -58,6 +81,8 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
     if (element === null) {
       return () => {};
     }
+
+    const controller = new AbortController();
 
     const handleOut = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') {
@@ -74,18 +99,57 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
       });
     };
 
-    element.addEventListener('pointerdown', handleMove);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerup', handleOut);
+    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
+    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
+    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
 
     return () => {
-      element.removeEventListener('pointerdown', handleMove);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerup', handleOut);
+      // Calling `.abort()` removes ALL event listeners
+      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
+      controller.abort();
     };
   }, [svgRef]);
 
   return mousePosition;
+}
+
+type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+
+export function usePointerType(): null | PointerType {
+  const svgRef = useSvgRef();
+
+  // Use a ref to avoid rerendering on every mousemove event.
+  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+
+    const handleEnter = (event: PointerEvent) => {
+      setPointerType({
+        height: event.height,
+        pointerType: event.pointerType as PointerType['pointerType'],
+      });
+    };
+
+    element.addEventListener('pointerenter', handleEnter);
+    element.addEventListener('pointerup', handleOut);
+
+    return () => {
+      element.removeEventListener('pointerenter', handleEnter);
+      element.removeEventListener('pointerup', handleOut);
+    };
+  }, [svgRef]);
+
+  return pointerType;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';

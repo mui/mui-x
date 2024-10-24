@@ -11,11 +11,13 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
+import { useSvgRef } from '../hooks/useSvgRef';
 import {
   generateVirtualElement,
-  useMouseTracker,
   getTooltipHasData,
   TriggerOptions,
+  usePointerType,
+  VirtualElement,
 } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
@@ -133,14 +135,22 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
   });
   const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
-  const mousePosition = useMouseTracker();
+  const svgRef = useSvgRef();
+  const pointerType = usePointerType();
+
+  const popperRef: PopperProps['popperRef'] = React.useRef(null);
+
+  const virtualElement = React.useRef<VirtualElement | null>(null);
+  if (virtualElement.current === null) {
+    virtualElement.current = generateVirtualElement(null);
+  }
 
   const { item, axis } = React.useContext(InteractionContext);
 
   const displayedData = trigger === 'item' ? item : axis;
 
   const tooltipHasData = getTooltipHasData(trigger, displayedData);
-  const popperOpen = mousePosition !== null && tooltipHasData;
+  const popperOpen = pointerType !== null && tooltipHasData;
 
   const classes = useUtilityClasses({ classes: props.classes });
 
@@ -150,20 +160,40 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       open: popperOpen,
-      placement:
-        mousePosition?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
-      anchorEl: generateVirtualElement(mousePosition),
+      placement: pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
+      popperRef,
+      anchorEl: virtualElement.current,
       modifiers: [
         {
           name: 'offset',
           options: {
-            offset: [0, mousePosition?.pointerType === 'touch' ? 40 - mousePosition.height : 0],
+            offset: [0, pointerType?.pointerType === 'touch' ? 40 - pointerType.height : 0],
           },
         },
       ],
     },
     ownerState: {},
   });
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleMove = (event: PointerEvent) => {
+      virtualElement.current = generateVirtualElement({
+        x: event.clientX,
+        y: event.clientY,
+      });
+      popperRef.current?.update();
+    };
+    element.addEventListener('pointermove', handleMove);
+
+    return () => {
+      element.removeEventListener('pointermove', handleMove);
+    };
+  }, [svgRef]);
 
   if (trigger === 'none') {
     return null;
