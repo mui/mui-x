@@ -534,6 +534,15 @@ const pages: MuiPage[] = [
     ],
   },
   {
+    pathname: '/x/react-tree-view-group',
+    title: 'Toolpad',
+    newFeature: true,
+    children: [
+      { pathname: '/x/react-tree-view', title: 'DashboardLayout' },
+      { pathname: '/x/react-tree-view/getting-started',title: 'DashboardLayout2' },
+    ],
+  },
+  {
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
