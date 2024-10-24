@@ -1,15 +1,15 @@
-<DataGrid
-  rows={rows}
-  columns={columns}
-  editMode="row"
-  rowModesModel={rowModesModel}
-  onRowModesModelChange={handleRowModesModelChange}
-  onRowEditStop={handleRowEditStop}
-  processRowUpdate={processRowUpdate}
-  slots={{
-    toolbar: EditToolbar as GridSlots['toolbar'],
-  }}
-  slotProps={{
-    toolbar: { setRows, setRowModesModel },
-  }}
-/>
+<ActionHandlersContext.Provider value={actionHandlers}>
+  <DataGrid
+    rows={rows}
+    columns={columns}
+    editMode="row"
+    rowModesModel={rowModesModel}
+    onRowModesModelChange={setRowModesModel}
+    onRowEditStop={handleRowEditStop}
+    processRowUpdate={processRowUpdate}
+    slots={{ toolbar: EditToolbar as GridSlots['toolbar'] }}
+    slotProps={{
+      toolbar: { setRows, setRowModesModel },
+    }}
+  />
+</ActionHandlersContext.Provider>

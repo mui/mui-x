@@ -251,8 +251,8 @@ describe('<DataGrid /> - Rows', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        'MUI X: Missing the `getActions` property in the `GridColDef`.',
+        'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
+        'MUI X: Missing the `getActions` property in the `GridColDef` or `children` prop in the `GridActionsCell` component.',
         'The above error occurred in the <GridActionsCell> component',
       ]);
     });

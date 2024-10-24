@@ -13,12 +13,16 @@ import {
   DataGrid,
   GridColDef,
   GridToolbarContainer,
-  GridActionsCellItem,
   GridEventListener,
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
   GridSlots,
+  gridEditRowsStateSelector,
+  useGridSelector,
+  useGridApiContext,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
@@ -101,6 +105,103 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
+interface ActionHandlers {
+  handleCancelClick: (id: GridRowId) => void;
+  handleDeleteClick: (id: GridRowId) => void;
+  handleEditClick: (id: GridRowId) => void;
+  handleSaveClick: (id: GridRowId) => void;
+}
+
+const ActionHandlersContext = React.createContext<ActionHandlers>({
+  handleCancelClick: () => {},
+  handleDeleteClick: () => {},
+  handleEditClick: () => {},
+  handleSaveClick: () => {},
+});
+
+function ActionsCell(props: GridRenderCellParams) {
+  const apiRef = useGridApiContext();
+  const rowModesModel = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const isInEditMode = typeof rowModesModel[props.id] !== 'undefined';
+
+  const { handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick } =
+    React.useContext(ActionHandlersContext);
+
+  return (
+    <GridActionsCell {...props}>
+      {isInEditMode
+        ? [
+            <GridActionsCell.Item
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={() => handleSaveClick(props.id)}
+            />,
+            <GridActionsCell.Item
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={() => handleCancelClick(props.id)}
+              color="inherit"
+            />,
+          ]
+        : [
+            <GridActionsCell.Item
+              icon={<EditIcon />}
+              label="Edit"
+              className="textPrimary"
+              onClick={() => handleEditClick(props.id)}
+              color="inherit"
+            />,
+            <GridActionsCell.Item
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={() => handleDeleteClick(props.id)}
+              color="inherit"
+            />,
+          ]}
+    </GridActionsCell>
+  );
+}
+
+const columns: GridColDef[] = [
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 80,
+    align: 'left',
+    headerAlign: 'left',
+    editable: true,
+  },
+  {
+    field: 'joinDate',
+    headerName: 'Join date',
+    type: 'date',
+    width: 180,
+    editable: true,
+  },
+  {
+    field: 'role',
+    headerName: 'Department',
+    width: 220,
+    editable: true,
+    type: 'singleSelect',
+    valueOptions: ['Market', 'Finance', 'Development'],
+  },
+  {
+    field: 'actions',
+    type: 'actions',
+    headerName: 'Actions',
+    width: 100,
+    cellClassName: 'actions',
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+];
+
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -111,113 +212,50 @@ export default function FullFeaturedCrudGrid() {
     }
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+  const actionHandlers = React.useMemo<ActionHandlers>(
+    () => ({
+      handleEditClick: (id: GridRowId) => {
+        setRowModesModel((prevRowModesModel) => ({
+          ...prevRowModesModel,
+          [id]: { mode: GridRowModes.Edit },
+        }));
+      },
+      handleSaveClick: (id: GridRowId) => {
+        setRowModesModel((prevRowModesModel) => ({
+          ...prevRowModesModel,
+          [id]: { mode: GridRowModes.View },
+        }));
+      },
+      handleDeleteClick: (id: GridRowId) => {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      },
+      handleCancelClick: (id: GridRowId) => {
+        setRowModesModel((prevRowModesModel) => {
+          return {
+            ...prevRowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+          };
+        });
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
-  const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
+        setRows((prevRows) => {
+          const editedRow = prevRows.find((row) => row.id === id);
+          if (editedRow!.isNew) {
+            return prevRows.filter((row) => row.id !== id);
+          }
+          return prevRows;
+        });
+      },
+    }),
+    [],
+  );
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows((prevRows) =>
+      prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
+    );
     return updatedRow;
   };
-
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-    setRowModesModel(newRowModesModel);
-  };
-
-  const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', width: 180, editable: true },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 80,
-      align: 'left',
-      headerAlign: 'left',
-      editable: true,
-    },
-    {
-      field: 'joinDate',
-      headerName: 'Join date',
-      type: 'date',
-      width: 180,
-      editable: true,
-    },
-    {
-      field: 'role',
-      headerName: 'Department',
-      width: 220,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Market', 'Finance', 'Development'],
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    },
-  ];
 
   return (
     <Box
@@ -232,21 +270,21 @@ export default function FullFeaturedCrudGrid() {
         },
       }}
     >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        slots={{
-          toolbar: EditToolbar as GridSlots['toolbar'],
-        }}
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }}
-      />
+      <ActionHandlersContext.Provider value={actionHandlers}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={setRowModesModel}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{ toolbar: EditToolbar as GridSlots['toolbar'] }}
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }}
+        />
+      </ActionHandlersContext.Provider>
     </Box>
   );
 }
