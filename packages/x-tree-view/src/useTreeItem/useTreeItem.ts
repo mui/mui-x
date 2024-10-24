@@ -200,11 +200,12 @@ export const useTreeItem = <
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
+      ...externalProps,
       style: {
+        ...(externalProps.style ?? {}),
         '--TreeView-itemDepth':
           typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
       } as React.CSSProperties,
-      ...externalProps,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
