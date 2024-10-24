@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
@@ -55,26 +54,26 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   return (
     <React.Fragment>
       {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
-        <MenuItem onClick={onSortMenuItemClick} data-value="asc">
+        <rootProps.slots.baseMenuItem onClick={onSortMenuItemClick} data-value="asc">
           <ListItemIcon>
             <rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{getLabel('columnMenuSortAsc')}</ListItemText>
-        </MenuItem>
+        </rootProps.slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
-        <MenuItem onClick={onSortMenuItemClick} data-value="desc">
+        <rootProps.slots.baseMenuItem onClick={onSortMenuItemClick} data-value="desc">
           <ListItemIcon>
             <rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{getLabel('columnMenuSortDesc')}</ListItemText>
-        </MenuItem>
+        </rootProps.slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (
-        <MenuItem onClick={onSortMenuItemClick}>
+        <rootProps.slots.baseMenuItem onClick={onSortMenuItemClick}>
           <ListItemIcon />
           <ListItemText>{apiRef.current.getLocaleText('columnMenuUnsort')}</ListItemText>
-        </MenuItem>
+        </rootProps.slots.baseMenuItem>
       ) : null}
     </React.Fragment>
   );

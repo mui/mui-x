@@ -84,6 +84,9 @@
     "selectedItems": {
       "description": "Selected item ids. (Controlled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
+    "selectionPropagation": {
+      "description": "When <code>selectionPropagation.descendants</code> is set to <code>true</code>.<br>- Selecting a parent selects all its descendants automatically. - Deselecting a parent deselects all its descendants automatically.<br>When <code>selectionPropagation.parents</code> is set to <code>true</code>.<br>- Selecting all the descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Only works when <code>multiSelect</code> is <code>true</code>. On the &lt;SimpleTreeView /&gt;, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)"
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {

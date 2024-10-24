@@ -4,16 +4,16 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
-  TreeItem2Content,
-  TreeItem2Label,
-  TreeItem2Root,
-  TreeItem2GroupTransition,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+  TreeItemContent,
+  TreeItemLabel,
+  TreeItemRoot,
+  TreeItemGroupTransition,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -27,9 +27,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     getGroupTransitionProps,
     getDragAndDropOverlayProps,
     status,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const { interactions } = useTreeItem2Utils({
+  const { interactions } = useTreeItemUtils({
     itemId,
     children,
   });
@@ -39,8 +39,8 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   };
 
   return (
-    <TreeItem2Provider itemId={itemId}>
-      <TreeItem2Root {...getRootProps({ sx: { position: 'relative' } })}>
+    <TreeItemProvider itemId={itemId}>
+      <TreeItemRoot {...getRootProps({ sx: { position: 'relative' } })}>
         {status.expandable && (
           <Box
             sx={{
@@ -78,13 +78,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           </Box>
         )}
 
-        <TreeItem2Content {...getContentProps()}>
-          <TreeItem2Label {...getLabelProps()} />
-          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
-        </TreeItem2Content>
-        {children && <TreeItem2GroupTransition {...getGroupTransitionProps()} />}
-      </TreeItem2Root>
-    </TreeItem2Provider>
+        <TreeItemContent {...getContentProps()}>
+          <TreeItemLabel {...getLabelProps()} />
+          <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
+        </TreeItemContent>
+        {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
+      </TreeItemRoot>
+    </TreeItemProvider>
   );
 });
 
