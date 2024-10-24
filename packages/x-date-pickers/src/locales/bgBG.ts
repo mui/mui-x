@@ -59,8 +59,8 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (formattedTime) =>
-    formattedTime ? `Избери дата, избраната дата е ${formattedTime}` : 'Избери дата',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Избери дата, избраната дата е ${formattedDate}` : 'Избери дата',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Избери час, избраният час е ${formattedTime}` : 'Избери час',
   fieldClearLabel: 'Изчисти стойност',
