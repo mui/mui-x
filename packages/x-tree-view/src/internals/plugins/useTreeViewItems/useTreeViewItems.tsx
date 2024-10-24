@@ -195,9 +195,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
       const itemMeta = selectorItemMeta(store.value, id);
       return {
-        label: itemMeta.label!,
-        itemId: itemMeta.id,
-        id: itemMeta.idAttribute,
+        label: itemMeta!.label!,
+        itemId: itemMeta!.id,
+        id: itemMeta!.idAttribute,
         children: instance.getItemOrderedChildrenIds(id).map(getPropsFromItemId),
       };
     };

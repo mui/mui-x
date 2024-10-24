@@ -2,6 +2,10 @@ export { useTreeView } from './useTreeView';
 export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
 export { RichTreeViewItems } from './components/RichTreeViewItems';
+export type {
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from './components/RichTreeViewItems';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 export { useSelector } from './hooks/useSelector';
@@ -58,11 +62,6 @@ export {
   selectorItemIndex,
   selectorItemOrderedChildrenIds,
 } from './plugins/useTreeViewItems/useTreeViewItems.selectors';
-export { useTreeViewObjectItems } from './plugins/useTreeViewObjectItems';
-export type {
-  UseTreeViewObjectItemsSignature,
-  UseTreeViewObjectItemsParameters,
-} from './plugins/useTreeViewObjectItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,

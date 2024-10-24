@@ -1,8 +1,6 @@
 import {
   useTreeViewItems,
   UseTreeViewItemsParameters,
-  useTreeViewObjectItems,
-  UseTreeViewObjectItemsParameters,
   useTreeViewExpansion,
   UseTreeViewExpansionParameters,
   useTreeViewSelection,
@@ -25,7 +23,6 @@ import {
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewItems,
-  useTreeViewObjectItems,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
@@ -53,7 +50,6 @@ export type RichTreeViewProPluginSlotProps = MergeSignaturesProperty<
 export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends boolean | undefined>
   extends TreeViewCorePluginParameters,
     UseTreeViewItemsParameters<R>,
-    UseTreeViewObjectItemsParameters,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,

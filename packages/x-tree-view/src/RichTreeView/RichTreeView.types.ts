@@ -10,8 +10,12 @@ import {
   RichTreeViewPluginSignatures,
 } from './RichTreeView.plugins';
 import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
+import {
+  RichTreeViewItemsSlotProps,
+  RichTreeViewItemsSlots,
+} from '../internals/components/RichTreeViewItems';
 
-export interface RichTreeViewSlots extends RichTreeViewPluginSlots {
+export interface RichTreeViewSlots extends RichTreeViewPluginSlots, RichTreeViewItemsSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewRoot
@@ -20,7 +24,8 @@ export interface RichTreeViewSlots extends RichTreeViewPluginSlots {
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewPluginSlotProps {
+  extends RichTreeViewPluginSlotProps,
+    RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
 }
 

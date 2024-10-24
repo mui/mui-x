@@ -1,11 +1,26 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
+import { TreeViewItemId } from '../../models';
 import { TreeViewItemToRenderProps } from '../plugins/useTreeViewItems';
-import {
-  UseTreeViewObjectItemsSlotProps,
-  UseTreeViewObjectItemsSlots,
-} from '../plugins/useTreeViewObjectItems';
+
+interface RichTreeViewItemsOwnerState {
+  itemId: TreeViewItemId;
+  label: string;
+}
+
+export interface RichTreeViewItemsSlots {
+  /**
+   * Custom component to render a Tree Item.
+   * @default TreeItem.
+   */
+  item?: React.JSXElementConstructor<TreeItemProps>;
+}
+
+export interface RichTreeViewItemsSlotProps {
+  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
+}
 
 export interface RichTreeViewItemsProps {
   itemsToRender: TreeViewItemToRenderProps[];
@@ -13,13 +28,23 @@ export interface RichTreeViewItemsProps {
    * Overridable component slots.
    * @default {}
    */
-  slots?: UseTreeViewObjectItemsSlots;
+  slots?: RichTreeViewItemsSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseTreeViewObjectItemsSlotProps;
+  slotProps?: RichTreeViewItemsSlotProps;
 }
+
+const RichTreeViewItemsContext = React.createContext<
+  ((item: TreeViewItemToRenderProps) => React.ReactNode) | null
+>(null);
+
+if (process.env.NODE_ENV !== 'production') {
+  RichTreeViewItemsContext.displayName = 'RichTreeViewItemsProvider';
+}
+
+export const useRichTreeViewItemsContext = () => React.useContext(RichTreeViewItemsContext);
 
 function WrappedTreeItem({
   slots,
@@ -48,9 +73,9 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
-  return (
-    <React.Fragment>
-      {itemsToRender.map((item) => (
+  const renderItem = React.useCallback(
+    (item: TreeViewItemToRenderProps) => {
+      return (
         <WrappedTreeItem
           slots={slots}
           slotProps={slotProps}
@@ -60,7 +85,14 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
           itemId={item.itemId}
           itemsToRender={item.children}
         />
-      ))}
-    </React.Fragment>
+      );
+    },
+    [slots, slotProps],
+  );
+
+  return (
+    <RichTreeViewItemsContext.Provider value={renderItem}>
+      {itemsToRender.map(renderItem)}
+    </RichTreeViewItemsContext.Provider>
   );
 }

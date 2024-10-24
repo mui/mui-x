@@ -2,7 +2,12 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
-import { TreeViewPublicAPI, TreeViewExperimentalFeatures } from '@mui/x-tree-view/internals';
+import {
+  TreeViewPublicAPI,
+  TreeViewExperimentalFeatures,
+  RichTreeViewItemsSlots,
+  RichTreeViewItemsSlotProps,
+} from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import {
   RichTreeViewProPluginParameters,
@@ -11,7 +16,7 @@ import {
   RichTreeViewProPluginSignatures,
 } from './RichTreeViewPro.plugins';
 
-export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots {
+export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots, RichTreeViewItemsSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewProRoot
@@ -20,7 +25,8 @@ export interface RichTreeViewProSlots extends RichTreeViewProPluginSlots {
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewProPluginSlotProps {
+  extends RichTreeViewProPluginSlotProps,
+    RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
 }
 
