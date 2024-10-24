@@ -2,5 +2,5 @@
 
 module.exports = {
   SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
-  SOURCE_GITHUB_BRANCH: 'master', // #default-branch-switch
+  SOURCE_GITHUB_BRANCH: 'v7.x', // #default-branch-switch
 };
