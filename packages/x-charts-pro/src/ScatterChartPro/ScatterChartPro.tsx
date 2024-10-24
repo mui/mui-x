@@ -64,7 +64,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <ScatterPlot {...scatterPlotProps} />
         </g>
         <ChartsOverlay {...overlayProps} />
-        <ChartsLegend {...legendProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         <ZoomSetup />

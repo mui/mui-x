@@ -185,7 +185,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(inProps: LineChartPr
         <MarkPlotZoom {...markPlotProps} />
       </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />

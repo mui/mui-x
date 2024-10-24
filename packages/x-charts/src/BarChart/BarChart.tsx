@@ -16,12 +16,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
@@ -80,9 +75,9 @@ export interface BarChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * @deprecated Consider using `slotProps.legend` instead.
+   * If `true`, the legend is not rendered.
    */
-  legend?: ChartsLegendProps;
+  hideLegend?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -138,7 +133,7 @@ const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref)
         <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}

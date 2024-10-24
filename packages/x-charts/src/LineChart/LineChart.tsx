@@ -18,12 +18,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
@@ -91,9 +86,9 @@ export interface LineChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * @deprecated Consider using `slotProps.legend` instead.
+   * If `true`, the legend is not rendered.
    */
-  legend?: ChartsLegendProps;
+  hideLegend?: boolean;
   /**
    * If `true`, render the line highlight item.
    */
@@ -177,7 +172,7 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
         <MarkPlot {...markPlotProps} />
       </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
