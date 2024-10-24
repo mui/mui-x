@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { PickerValidDate } from '../../models';
+import { PickerOwnerState, PickerValidDate } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 
 export const PickersContext = React.createContext<PickersContextValue | null>(null);
+
+export const PickersPrivateContext = React.createContext<PickersPrivateContextValue<any> | null>(
+  null,
+);
 
 /**
  * Provides the context for the various parts of a picker component:
@@ -12,20 +16,23 @@ export const PickersContext = React.createContext<PickersContextValue | null>(nu
  *
  * @ignore - do not document.
  */
-export function PickersProvider<TDate extends PickerValidDate>(
-  props: PickersFieldProviderProps<TDate>,
+export function PickersProvider<TValue, TDate extends PickerValidDate>(
+  props: PickersProviderProps<TValue, TDate>,
 ) {
-  const { contextValue, localeText, children } = props;
+  const { contextValue, privateContextValue, localeText, children } = props;
 
   return (
     <PickersContext.Provider value={contextValue}>
-      <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+      <PickersPrivateContext.Provider value={privateContextValue}>
+        <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+      </PickersPrivateContext.Provider>
     </PickersContext.Provider>
   );
 }
 
-interface PickersFieldProviderProps<TDate extends PickerValidDate> {
+export interface PickersProviderProps<TValue, TDate extends PickerValidDate> {
   contextValue: PickersContextValue;
+  privateContextValue: PickersPrivateContextValue<TValue>;
   localeText: PickersInputLocaleText<TDate> | undefined;
   children: React.ReactNode;
 }
@@ -45,4 +52,10 @@ export interface PickersContextValue {
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
+}
+export interface PickersPrivateContextValue<TValue> {
+  /**
+   * The ownerState of the picker.
+   */
+  ownerState: PickerOwnerState<TValue>;
 }
