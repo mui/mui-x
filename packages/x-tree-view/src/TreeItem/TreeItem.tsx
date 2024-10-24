@@ -477,7 +477,7 @@ const propsAreEqual = (a: TreeItemProps, b: TreeItemProps) => {
         }
       }
     } else {
-      if (!is(a[key], b[key])) {
+      if (!is(a[key as keyof TreeItemProps], b[key as keyof TreeItemProps])) {
         return false;
       }
       if (!(key in b)) {

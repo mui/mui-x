@@ -27,7 +27,6 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
@@ -205,13 +204,6 @@ function CustomLabel({
   );
 }
 
-const isExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 const getIconFromFileType = (fileType: FileType) => {
   switch (fileType) {
     case 'image':
@@ -282,7 +274,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           </TreeItemIconContainer>
           <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
-            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
+            {...getLabelProps({
+              icon,
+              expandable: status.expandable && status.expanded,
+            })}
           />
           <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>

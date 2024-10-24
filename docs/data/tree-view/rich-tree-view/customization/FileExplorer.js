@@ -178,13 +178,6 @@ function CustomLabel({ icon: Icon, expandable, children, ...other }) {
   );
 }
 
-const isExpandable = (reactChildren) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isExpandable);
-  }
-  return Boolean(reactChildren);
-};
-
 const getIconFromFileType = (fileType) => {
   switch (fileType) {
     case 'image':
@@ -223,9 +216,8 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const item = publicAPI.getItem(itemId);
-  const expandable = isExpandable(children);
   let icon;
-  if (expandable) {
+  if (status.expandable) {
     icon = FolderRounded;
   } else if (item.fileType) {
     icon = getIconFromFileType(item.fileType);
@@ -249,7 +241,10 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
           </TreeItemIconContainer>
           <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
-            {...getLabelProps({ icon, expandable: expandable && status.expanded })}
+            {...getLabelProps({
+              icon,
+              expandable: status.expandable && status.expanded,
+            })}
           />
           <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>
