@@ -2,13 +2,14 @@ import { getStringSize } from './domUtils';
 
 export type ChartsTextBaseline = 'hanging' | 'central' | 'auto';
 
-export interface ChartsTextStyle extends React.CSSProperties {
+export interface ChartsTextStyle extends Omit<React.CSSProperties, 'fontSize'> {
   angle?: number;
   /**
    * The text baseline
    * @default 'central'
    */
   dominantBaseline?: ChartsTextBaseline;
+  fontSize?: number;
 }
 
 export interface GetWordsByLinesParams {

@@ -26,11 +26,6 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
   disableHover?: boolean;
   /**
    * The id of the z-axis used to render the series.
-   * @deprecated Use `zAxisId` instead.
-   */
-  zAxisKey?: string;
-  /**
-   * The id of the z-axis used to render the series.
    */
   zAxisId?: string;
 

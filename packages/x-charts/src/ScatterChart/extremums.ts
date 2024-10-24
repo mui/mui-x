@@ -15,7 +15,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
 
   return Object.keys(series)
     .filter((seriesId) => {
-      const axisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey;
+      const axisId = series[seriesId].xAxisId;
       return axisId === axis.id || (axisId === undefined && isDefaultAxis);
     })
     .reduce(
@@ -23,8 +23,8 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
         const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
-          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
         });
 
         const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
@@ -47,7 +47,7 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
 
   return Object.keys(series)
     .filter((seriesId) => {
-      const axisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      const axisId = series[seriesId].yAxisId;
       return axisId === axis.id || (axisId === undefined && isDefaultAxis);
     })
     .reduce(
@@ -55,8 +55,8 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
         const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
-          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
         });
 
         const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(

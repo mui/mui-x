@@ -56,18 +56,13 @@ const useAggregatedData = () => {
         .reverse() // Revert stacked area for a more pleasant animation
         .map((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             connectNulls,
             baseline,
           } = series[seriesId];
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;

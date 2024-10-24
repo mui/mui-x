@@ -22,8 +22,6 @@
       "description": "Formatter used to render values in tooltip or other data display."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
-    "xAxisKey": { "description": "The id of the x-axis used to render the series." },
-    "yAxisId": { "description": "The id of the y-axis used to render the series." },
-    "yAxisKey": { "description": "The id of the y-axis used to render the series." }
+    "yAxisId": { "description": "The id of the y-axis used to render the series." }
   }
 }

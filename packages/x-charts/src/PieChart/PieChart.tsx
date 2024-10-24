@@ -91,12 +91,6 @@ export interface PieChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
-  /**
    * Callback fired when a pie arc is clicked.
    */
   onItemClick?: PiePlotProps['onItemClick'];
@@ -139,7 +133,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -160,7 +153,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const legend: ChartsLegendProps = {
     direction: 'column',
     position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
-    ...legendProps,
   };
 
   return (
@@ -267,37 +259,6 @@ PieChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemGap: PropTypes.number,
-    itemMarkHeight: PropTypes.number,
-    itemMarkWidth: PropTypes.number,
-    labelStyle: PropTypes.object,
-    markGap: PropTypes.number,
-    onItemClick: PropTypes.func,
-    padding: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        bottom: PropTypes.number,
-        left: PropTypes.number,
-        right: PropTypes.number,
-        top: PropTypes.number,
-      }),
-    ]),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -372,9 +333,7 @@ PieChart.propTypes = {
    * @default { trigger: 'item' }
    */
   tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
     classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
@@ -438,7 +397,6 @@ PieChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -453,7 +411,6 @@ PieChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -513,7 +470,6 @@ PieChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -528,7 +484,6 @@ PieChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

@@ -14,7 +14,6 @@ const data = Array.from({ length: 200 }, () => ({
 const defaultXAxis = {
   disableLine: false,
   disableTicks: false,
-  fontSize: 12,
   label: 'My axis',
   tickSize: 6,
 };

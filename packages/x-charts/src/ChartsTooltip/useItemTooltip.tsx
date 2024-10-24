@@ -29,9 +29,9 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 
-  const xAxisId = (series as any).xAxisId ?? (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisId = (series as any).yAxisId ?? (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisId = (series as any).zAxisId ?? (series as any).zAxisKey ?? zAxisIds[0];
+  const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
+  const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
+  const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
 
   if (!item || item.dataIndex === undefined) {
     return null;

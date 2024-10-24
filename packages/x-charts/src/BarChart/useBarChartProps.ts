@@ -34,7 +34,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     tooltip,
     onAxisClick,
     axisHighlight,
-    legend,
     grid,
     topAxis,
     leftAxis,
@@ -146,7 +145,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
     slots,
     slotProps,
   };

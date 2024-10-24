@@ -18,8 +18,8 @@ export default function ControlledHighlight() {
     seriesId: 'A',
     dataIndex: 0,
   });
-  const [highlighted, setHighlighted] = React.useState('item');
-  const [faded, setFaded] = React.useState('global');
+  const [highlight, setHighlight] = React.useState('item');
+  const [fade, setFade] = React.useState('global');
 
   const handleHighLightedSeries = (event, newHighLightedSeries) => {
     if (newHighLightedSeries !== null) {
@@ -80,8 +80,8 @@ export default function ControlledHighlight() {
           series={barChartsProps.series.map((series) => ({
             ...series,
             highlightScope: {
-              highlighted,
-              faded,
+              highlight,
+              fade,
             },
           }))}
           highlightedItem={highlightedItem}
@@ -98,8 +98,8 @@ export default function ControlledHighlight() {
         <TextField
           select
           label="highlighted"
-          value={highlighted}
-          onChange={(event) => setHighlighted(event.target.value)}
+          value={highlight}
+          onChange={(event) => setHighlight(event.target.value)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
@@ -109,8 +109,8 @@ export default function ControlledHighlight() {
         <TextField
           select
           label="faded"
-          value={faded}
-          onChange={(event) => setFaded(event.target.value)}
+          value={fade}
+          onChange={(event) => setFade(event.target.value)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>

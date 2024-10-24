@@ -36,16 +36,6 @@ export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 export type CartesianSeriesType = {
   /**
    * The id of the x-axis used to render the series.
-   * @deprecated Use `xAxisId` instead
-   */
-  xAxisKey?: string;
-  /**
-   * The id of the y-axis used to render the series.
-   * @deprecated Use `xAxisId` instead
-   */
-  yAxisKey?: string;
-  /**
-   * The id of the x-axis used to render the series.
    */
   xAxisId?: string;
   /**

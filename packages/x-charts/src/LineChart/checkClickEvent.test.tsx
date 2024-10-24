@@ -77,7 +77,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onMarkClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to mark elements', function test() {
       render(
         <LineChart
           {...config}
@@ -155,7 +155,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onAreaClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to area elements', function test() {
       render(
         <LineChart
           {...config}
@@ -218,7 +218,7 @@ describe('LineChart - click event', () => {
   });
 
   describe('onLineClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to line elements', function test() {
       render(
         <LineChart
           {...config}

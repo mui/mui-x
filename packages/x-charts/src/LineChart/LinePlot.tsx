@@ -54,17 +54,12 @@ const useAggregatedData = () => {
     return stackingGroups.flatMap(({ ids: groupIds }) => {
       return groupIds.flatMap((seriesId) => {
         const {
-          xAxisId: xAxisIdProp,
-          yAxisId: yAxisIdProp,
-          xAxisKey = defaultXAxisId,
-          yAxisKey = defaultYAxisId,
+          xAxisId = defaultXAxisId,
+          yAxisId = defaultYAxisId,
           stackedData,
           data,
           connectNulls,
         } = series[seriesId];
-
-        const xAxisId = xAxisIdProp ?? xAxisKey;
-        const yAxisId = yAxisIdProp ?? yAxisKey;
 
         const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
         const yScale = yAxis[yAxisId].scale;

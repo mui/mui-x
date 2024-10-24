@@ -35,10 +35,6 @@ export type FadeOptions = 'none' | 'series' | 'global';
 
 export type HighlightScope = {
   /**
-   * @deprecated Use `highlight` instead.
-   */
-  highlighted?: HighlightOptions;
-  /**
    * The scope of highlighted elements.
    * - 'none': no highlight.
    * - 'item': only highlight the item.
@@ -46,10 +42,6 @@ export type HighlightScope = {
    * @default 'none'
    */
   highlight?: HighlightOptions;
-  /**
-   * @deprecated Use `fade` instead.
-   */
-  faded?: FadeOptions;
   /**
    * The scope of faded elements.
    * - 'none': no fading.

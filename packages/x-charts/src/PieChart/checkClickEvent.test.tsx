@@ -13,7 +13,7 @@ describe('PieChart - click event', () => {
   const { render } = createRenderer();
 
   describe('onItemClick', () => {
-    it('should add cursor="pointer" to bar elements', function test() {
+    it('should add cursor="pointer" to slice elements', function test() {
       render(
         <PieChart
           {...config}
