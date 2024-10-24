@@ -13,14 +13,7 @@ describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
 >(
   'useTreeViewItems plugin',
-  ({
-    render,
-    renderFromJSX,
-    treeViewComponentName,
-    treeItemComponentName,
-    TreeViewComponent,
-    TreeItemComponent,
-  }) => {
+  ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     it('should throw an error when two items have the same ID', function test() {
       // TODO is this fixed?
       if (!/jsdom/.test(window.navigator.userAgent)) {
@@ -36,8 +29,8 @@ describeTreeView<
           'Encountered two children with the same key, `1`',
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          `The above error occurred in the <ForwardRef(${treeItemComponentName})> component`,
-          `The above error occurred in the <ForwardRef(${treeItemComponentName})> component`,
+          `The above error occurred in the <ForwardRef(TreeItem)> component`,
+          `The above error occurred in the <ForwardRef(TreeItem)> component`,
         ]);
       } else {
         expect(() =>

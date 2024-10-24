@@ -74,6 +74,7 @@
   { "name": "UseTreeItemIconContainerSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItemLabelInputSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItemLabelSlotOwnProps", "kind": "Interface" },
+  { "name": "useTreeItemModel", "kind": "Variable" },
   { "name": "UseTreeItemParameters", "kind": "Interface" },
   { "name": "UseTreeItemReturnValue", "kind": "Interface" },
   { "name": "UseTreeItemRootSlotOwnProps", "kind": "Interface" },
