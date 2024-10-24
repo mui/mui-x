@@ -534,7 +534,8 @@ export const useGridVirtualScroller = () => {
   const contentSize = React.useMemo(() => {
     const size: React.CSSProperties = {
       width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
-      height: contentHeight,
+      flexBasis: contentHeight,
+      flexShrink: 0,
     };
 
     if (rootProps.autoHeight && currentPage.rows.length === 0) {
