@@ -66,6 +66,7 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
+      tabIndex: -1,
     },
   });
   const EndClearIcon = slots?.clearIcon ?? ClearIcon;
