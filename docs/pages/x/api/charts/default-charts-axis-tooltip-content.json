@@ -25,7 +25,8 @@
   "name": "DefaultChartsAxisTooltipContent",
   "imports": [
     "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
-    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';"
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts';",
+    "import { DefaultChartsAxisTooltipContent } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
@@ -50,6 +51,12 @@
       "key": "markCell",
       "className": "MuiDefaultChartsAxisTooltipContent-markCell",
       "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiDefaultChartsAxisTooltipContent-paper",
+      "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {

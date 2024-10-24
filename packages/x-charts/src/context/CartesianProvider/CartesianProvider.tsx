@@ -1,66 +1,42 @@
+'use client';
 import * as React from 'react';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
-import { DatasetType } from '../../models/seriesType/config';
-import { MakeOptional } from '../../models/helpers';
+import { computeAxisValue } from '../../internals/computeAxisValue';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useSeries } from '../../hooks/useSeries';
 import { CartesianContext } from './CartesianContext';
-import { normalizeAxis } from './normalizeAxis';
-import { computeValue } from './computeValue';
-import { ExtremumGettersConfig } from '../../models';
+import { useXExtremumGetter } from '../PluginProvider/useXExtremumGetter';
+import { useYExtremumGetter } from '../PluginProvider';
+import { CartesianProviderProps } from './Cartesian.types';
 
-export type CartesianContextProviderProps = {
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
-  dataset?: DatasetType;
-  /**
-   * An object with x-axis extremum getters per series type.
-   */
-  xExtremumGetters: ExtremumGettersConfig;
-  /**
-   * An object with y-axis extremum getters per series type.
-   */
-  yExtremumGetters: ExtremumGettersConfig;
-  children: React.ReactNode;
-};
-
-function CartesianContextProvider(props: CartesianContextProviderProps) {
-  const {
-    xAxis: inXAxis,
-    yAxis: inYAxis,
-    dataset,
-    xExtremumGetters,
-    yExtremumGetters,
-    children,
-  } = props;
+function CartesianProvider(props: CartesianProviderProps) {
+  const { xAxis, yAxis, children } = props;
 
   const formattedSeries = useSeries();
   const drawingArea = useDrawingArea();
-
-  const xAxis = React.useMemo(() => normalizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
-
-  const yAxis = React.useMemo(() => normalizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
+  const xExtremumGetters = useXExtremumGetter();
+  const yExtremumGetters = useYExtremumGetter();
 
   const xValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, xAxis, xExtremumGetters, 'x'),
+    () =>
+      computeAxisValue({
+        drawingArea,
+        formattedSeries,
+        axis: xAxis,
+        extremumGetters: xExtremumGetters,
+        axisDirection: 'x',
+      }),
     [drawingArea, formattedSeries, xAxis, xExtremumGetters],
   );
 
   const yValues = React.useMemo(
-    () => computeValue(drawingArea, formattedSeries, yAxis, yExtremumGetters, 'y'),
+    () =>
+      computeAxisValue({
+        drawingArea,
+        formattedSeries,
+        axis: yAxis,
+        extremumGetters: yExtremumGetters,
+        axisDirection: 'y',
+      }),
     [drawingArea, formattedSeries, yAxis, yExtremumGetters],
   );
 
@@ -80,4 +56,4 @@ function CartesianContextProvider(props: CartesianContextProviderProps) {
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
 
-export { CartesianContextProvider };
+export { CartesianProvider };

@@ -134,7 +134,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 type TabsProps = {
   value: string;
-  onChange: (e: React.SyntheticEvent, value: any) => void;
+  onChange: (event: React.SyntheticEvent, value: any) => void;
   options: Partial<CustomizationLabelType>;
 };
 
@@ -351,7 +351,6 @@ const CustomizationPlayground = function CustomizationPlayground({
           {moreInformation}
         </PlaygroundDemoArea>
         {shouldBeInteractive && (
-          // @ts-expect-error - should no longer be a problem when `BrandingProvider` supports `undefined`: https://github.com/mui/material-ui/pull/42833
           <BrandingProvider>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
@@ -361,7 +360,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                     id="select-component"
                     label=""
                     value={selectedDemo}
-                    onChange={(e) => selectDemo(e.target.value as string)}
+                    onChange={(event) => selectDemo(event.target.value as string)}
                   >
                     {Object.keys(examples || {}).map((item) => (
                       <MenuItem key={item} value={item}>
@@ -405,7 +404,6 @@ const CustomizationPlayground = function CustomizationPlayground({
         )}
       </PlaygroundWrapper>
       {selectedDemo && customizationOptions && selectedCustomizationOption && (
-        // @ts-expect-error - should no longer be a problem when `BrandingProvider` supports `undefined`: https://github.com/mui/material-ui/pull/42833
         <BrandingProvider>
           <TabsWrapper>
             <StylingApproachTabs

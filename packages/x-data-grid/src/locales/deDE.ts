@@ -42,7 +42,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Suche',
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Zurücksetzen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
@@ -58,7 +58,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'enthält',
+  filterOperatorDoesNotContain: 'enthält nicht',
   filterOperatorEquals: 'ist gleich',
+  filterOperatorDoesNotEqual: 'ist ungleich',
   filterOperatorStartsWith: 'beginnt mit',
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
@@ -79,7 +81,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Enthält',
+  headerFilterOperatorDoesNotContain: 'Enthält nicht',
   headerFilterOperatorEquals: 'Gleich',
+  headerFilterOperatorDoesNotEqual: 'Ungleich',
   headerFilterOperatorStartsWith: 'Beginnt mit',
   headerFilterOperatorEndsWith: 'Endet mit',
   headerFilterOperatorIs: 'Ist',

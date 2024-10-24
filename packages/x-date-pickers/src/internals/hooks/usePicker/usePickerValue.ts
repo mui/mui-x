@@ -3,8 +3,13 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
-import { InferError, useValidation } from '../useValidation';
-import { FieldSection, PickerChangeHandlerContext, PickerValidDate } from '../../../models';
+import { useValidation } from '../../../validation';
+import {
+  FieldSection,
+  PickerChangeHandlerContext,
+  PickerValidDate,
+  InferError,
+} from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -23,6 +28,7 @@ import {
   PickerValueUpdaterParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
+import { PickersContextValue } from '../../components/PickersProvider';
 
 /**
  * Decide if the new value should be published
@@ -241,12 +247,13 @@ export const usePickerValue = <
     };
   });
 
-  useValidation(
-    { ...props, value: dateState.draft, timezone },
+  const { getValidationErrorForNewValue } = useValidation({
+    props,
     validator,
-    valueManager.isSameError,
-    valueManager.defaultErrorState,
-  );
+    timezone,
+    value: dateState.draft,
+    onError: props.onError,
+  });
 
   const updateDate = useEventCallback((action: PickerValueUpdateAction<TValue, TError>) => {
     const updaterParams: PickerValueUpdaterParams<TValue, TError> = {
@@ -275,11 +282,7 @@ export const usePickerValue = <
         const validationError =
           action.name === 'setValueFromField'
             ? action.context.validationError
-            : validator({
-                adapter,
-                value: action.value,
-                props: { ...props, value: action.value, timezone },
-              });
+            : getValidationErrorForNewValue(action.value);
 
         cachedContext = {
           validationError,
@@ -440,7 +443,8 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue, timezone },
+      timezone,
+      props,
     });
 
     return !valueManager.hasError(error);
@@ -454,11 +458,21 @@ export const usePickerValue = <
     isValid,
   };
 
+  const contextValue = React.useMemo<PickersContextValue>(
+    () => ({
+      onOpen: handleOpen,
+      onClose: handleClose,
+      open: isOpen,
+    }),
+    [isOpen, handleClose, handleOpen],
+  );
+
   return {
     open: isOpen,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
+    contextValue,
   };
 };

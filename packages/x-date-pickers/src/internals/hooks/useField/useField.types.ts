@@ -7,12 +7,13 @@ import {
   TimezoneProps,
   FieldSectionContentType,
   FieldValueType,
-  PickersTimezone,
   PickerValidDate,
   FieldRef,
+  OnErrorProps,
+  InferError,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
-import { InferError, Validator } from '../useValidation';
+import type { Validator } from '../../../validation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
@@ -37,12 +38,7 @@ export interface UseFieldParams<
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
-  validator: Validator<
-    TValue,
-    TDate,
-    InferError<TInternalProps>,
-    UseFieldValidationProps<TValue, TInternalProps>
-  >;
+  validator: Validator<TValue, TDate, InferError<TInternalProps>, TInternalProps>;
   valueType: FieldValueType;
 }
 
@@ -52,7 +48,8 @@ export interface UseFieldInternalProps<
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends TimezoneProps {
+> extends TimezoneProps,
+    OnErrorProps<TValue, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -70,20 +67,12 @@ export interface UseFieldInternalProps<
   referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: FieldChangeHandler<TValue, TError>;
-  /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
-   */
-  onError?: (error: TError, value: TValue) => void;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -135,7 +124,7 @@ export interface UseFieldInternalProps<
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
   /**
@@ -395,14 +384,6 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    */
   tempValueStrAndroid: string | null;
 }
-
-export type UseFieldValidationProps<
-  TValue,
-  TInternalProps extends { value?: TValue; defaultValue?: TValue; timezone?: PickersTimezone },
-> = Omit<TInternalProps, 'value' | 'defaultValue' | 'timezone'> & {
-  value: TValue;
-  timezone: PickersTimezone;
-};
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'

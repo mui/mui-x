@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {
@@ -36,21 +35,21 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
-      <MenuItem onClick={ungroupColumn}>
+      <rootProps.slots.baseMenuItem onClick={ungroupColumn}>
         <ListItemIcon>
           <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
-      </MenuItem>
+      </rootProps.slots.baseMenuItem>
     );
   }
 
   return (
-    <MenuItem onClick={groupColumn}>
+    <rootProps.slots.baseMenuItem onClick={groupColumn}>
       <ListItemIcon>
         <rootProps.slots.columnMenuGroupIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }

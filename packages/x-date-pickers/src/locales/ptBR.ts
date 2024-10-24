@@ -15,8 +15,8 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Próximo mês',
 
   // View navigation
-  openPreviousView: 'Abrir próxima seleção',
-  openNextView: 'Abrir seleção anterior',
+  openPreviousView: 'Abrir seleção anterior',
+  openNextView: 'Abrir próxima seleção',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
@@ -43,8 +43,8 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selecione ${timeViews[view]}. ${time === null ? 'Hora não selecionada' : `Selecionado a hora ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Selecione ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -59,15 +59,15 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Escolha uma data, data selecionada ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Escolha uma data, data selecionada ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Escolha uma hora, hora selecionada ${formattedTime ?? utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
-  // fieldClearLabel: 'Clear value',
+  fieldClearLabel: 'Limpar valor',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',

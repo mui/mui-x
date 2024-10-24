@@ -25,8 +25,8 @@
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -74,7 +74,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "default": "() => <span>...</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -140,6 +140,10 @@
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
     },
+    "yearsOrder": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "default": "'asc'"
+    },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
@@ -159,27 +163,9 @@
       "class": null
     },
     {
-      "name": "switchViewButton",
-      "description": "Button displayed to switch between different calendar views.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
-      "default": "ArrowDropDown",
-      "class": null
-    },
-    {
-      "name": "previousIconButton",
-      "description": "Button allowing to switch to the left view.",
-      "default": "IconButton",
-      "class": null
-    },
-    {
-      "name": "nextIconButton",
-      "description": "Button allowing to switch to the right view.",
-      "default": "IconButton",
+      "name": "day",
+      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
+      "default": "PickersDay",
       "class": null
     },
     {
@@ -189,26 +175,44 @@
       "class": null
     },
     {
+      "name": "monthButton",
+      "description": "Button displayed to render a single month in the `month` view.",
+      "default": "MonthCalendarButton",
+      "class": null
+    },
+    {
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
       "name": "rightArrowIcon",
       "description": "Icon displayed in the right view switch button.",
       "default": "ArrowRight",
       "class": null
     },
     {
-      "name": "day",
-      "description": "Custom component for day.\nCheck the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.",
-      "default": "PickersDay",
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton",
       "class": null
     },
     {
-      "name": "monthButton",
-      "description": "Button displayed to render a single month in the \"month\" view.",
-      "default": "MonthCalendarButton",
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
+      "default": "ArrowDropDown",
       "class": null
     },
     {
       "name": "yearButton",
-      "description": "Button displayed to render a single year in the \"year\" view.",
+      "description": "Button displayed to render a single year in the `year` view.",
       "default": "YearCalendarButton",
       "class": null
     }

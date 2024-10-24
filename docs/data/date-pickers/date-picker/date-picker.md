@@ -91,6 +91,13 @@ If the view defined in `openTo` is not the first view, then the views before wil
 (for example view the default behaviors, the `year` is only accessible when clicking on the toolbar).
 :::
 
+## Order of years
+
+By default, years are displayed in ascending order, chronologically from the minimum year to the maximum.
+Set the `yearsOrder` prop to `desc` to show the years in descending order.
+
+{{"demo": "DatePickerYearsOrder.js"}}
+
 ## Landscape orientation
 
 By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.
@@ -113,6 +120,16 @@ You can show a helper text with the date format accepted:
 You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
+
+:::info
+See [Field components—Clearable behavior](/x/react-date-pickers/fields/#clearable-behavior) for more details.
+:::
+
+:::warning
+The clearable prop is not supported yet by the mobile Picker variants.
+
+See discussion [in this GitHub issue](https://github.com/mui/mui-x/issues/10842#issuecomment-1951887408) for more information.
+:::
 
 ## Localization
 

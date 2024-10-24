@@ -26,7 +26,8 @@
   "name": "ChartsAxis",
   "imports": [
     "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
-    "import { ChartsAxis } from '@mui/x-charts';"
+    "import { ChartsAxis } from '@mui/x-charts';",
+    "import { ChartsAxis } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

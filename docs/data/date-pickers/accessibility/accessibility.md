@@ -24,6 +24,19 @@ Level AA exceeds the basic criteria for accessibility and is a common target for
 
 The WAI-ARIA Authoring Practices includes examples on [Date Picker Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/) and [Date Picker Spin Button](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) patterns, which provide valuable information on how to optimize the accessibility of these components.
 
+### Dialog considerations
+
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
+This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
+A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
+
+- Use `toolbar` id if the toolbar is visible;
+- Use the id of the input label if the toolbar is hidden;
+
+:::info
+Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` slots in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
+:::
+
 ## Screen reader compatibility
 
 Date and Time Pickers use ARIA roles and robust focus management across the interactive elements to convey the necessary information to users, being optimized for use with assistive technologies.

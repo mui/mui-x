@@ -1,3 +1,4 @@
+'use client';
 import { PickerValidDate } from '../models';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 

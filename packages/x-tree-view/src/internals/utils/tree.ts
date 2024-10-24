@@ -259,3 +259,14 @@ export const getAllNavigableItems = (
 
   return navigableItems;
 };
+
+/**
+ * Checks if the target is in a descendant of this item.
+ * This can prevent from firing some logic on the ancestors on the interacted item when the event handler is on the root.
+ * @param {HTMLElement} target The target to check
+ * @param {HTMLElement | null} itemRoot The root of the item to check if the event target is in its descendants
+ * @returns {boolean} Whether the target is in a descendant of this item
+ */
+export const isTargetInDescendants = (target: HTMLElement, itemRoot: HTMLElement | null) => {
+  return itemRoot !== target.closest('*[role="treeitem"]');
+};

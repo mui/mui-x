@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../hooks/useColor';
+import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { useSeries } from '../hooks/useSeries';
 
 export interface ChartsItemContentProps<T extends ChartSeriesType> {
@@ -16,7 +16,7 @@ export interface ChartsItemContentProps<T extends ChartSeriesType> {
    */
   itemData: ItemInteractionData<T>;
   /**
-   * The series linked to the triggered axis.
+   * The series linked to the triggered item.
    */
   series: ChartSeriesDefaultized<T>;
   /**
@@ -54,16 +54,16 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 
-  const xAxisKey = (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisKey = (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisKey = (series as any).zAxisKey ?? zAxisIds[0];
+  const xAxisId = (series as any).xAxisId ?? (series as any).xAxisKey ?? xAxisIds[0];
+  const yAxisId = (series as any).yAxisId ?? (series as any).yAxisKey ?? yAxisIds[0];
+  const zAxisId = (series as any).zAxisId ?? (series as any).zAxisKey ?? zAxisIds[0];
 
   const getColor =
     colorProcessors[series.type]?.(
       series as any,
-      xAxisKey && xAxis[xAxisKey],
-      yAxisKey && yAxis[yAxisKey],
-      zAxisKey && zAxis[zAxisKey],
+      xAxisId && xAxis[xAxisId],
+      yAxisId && yAxis[yAxisId],
+      zAxisId && zAxis[zAxisId],
     ) ?? (() => '');
 
   const Content = content ?? DefaultChartsItemTooltipContent;

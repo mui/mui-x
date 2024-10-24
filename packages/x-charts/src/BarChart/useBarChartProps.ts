@@ -1,3 +1,4 @@
+'use client';
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -50,6 +51,8 @@ export const useBarChartProps = (props: BarChartProps) => {
     onHighlightChange,
     borderRadius,
     barLabel,
+    className,
+    ...rest
   } = props;
 
   const id = useId();
@@ -68,6 +71,7 @@ export const useBarChartProps = (props: BarChartProps) => {
   } as const;
 
   const chartContainerProps: ResponsiveChartContainerProps = {
+    ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
       ...s,
@@ -92,13 +96,14 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
+    className,
+    skipAnimation,
   };
 
   const barPlotProps: BarPlotProps = {
     onItemClick,
     slots,
     slotProps,
-    skipAnimation,
     borderRadius,
     barLabel,
   };

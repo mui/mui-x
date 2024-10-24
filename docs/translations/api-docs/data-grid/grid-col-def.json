@@ -73,6 +73,9 @@
       "description": "Allows to render a component in the column header filter cell."
     },
     "resizable": { "description": "If <code>true</code>, the column is resizable." },
+    "rowSpanValueGetter": {
+      "description": "Function that allows to provide a specific value to be used in row spanning."
+    },
     "sortable": { "description": "If <code>true</code>, the column is sortable." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
@@ -108,7 +108,7 @@ export function ClockPointer(inProps: ClockPointerProps) {
   return (
     <ClockPointerRoot
       style={getAngleStyle()}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >

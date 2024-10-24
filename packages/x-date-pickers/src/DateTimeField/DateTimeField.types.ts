@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import {
   DateTimeValidationError,
@@ -61,7 +61,7 @@ export type UseDateTimeFieldComponentProps<
 
 export type DateTimeFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = UseDateTimeFieldComponentProps<
   TDate,
   TEnableAccessibleFieldDOMStructure,

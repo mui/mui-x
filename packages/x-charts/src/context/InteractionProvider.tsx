@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
 
@@ -10,11 +11,13 @@ export type ItemInteractionData<T extends ChartSeriesType> = ChartItemIdentifier
 export type AxisInteractionData = {
   x: null | {
     value: number | Date | string;
-    index?: number;
+    // Set to -1 if no index.
+    index: number;
   };
   y: null | {
     value: number | Date | string;
-    index?: number;
+    // Set to -1 if no index.
+    index: number;
   };
 };
 

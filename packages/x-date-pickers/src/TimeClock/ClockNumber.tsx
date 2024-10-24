@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import {
   ClockNumberClasses,
@@ -88,7 +88,7 @@ export function ClockNumber(inProps: ClockNumberProps) {
 
   return (
     <ClockNumberRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       aria-disabled={disabled ? true : undefined}
       aria-selected={selected ? true : undefined}
       role="option"

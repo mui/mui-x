@@ -6,17 +6,14 @@ export default function ZoomBarChart() {
     <BarChartPro
       width={600}
       height={300}
-      zoom
-      series={[
+      xAxis={[
         {
-          label: 'Series A',
-          data: data.map((v) => v.y1),
-        },
-        {
-          label: 'Series B',
-          data: data.map((v) => v.y2),
+          scaleType: 'band',
+          data: data.map((v, i) => i),
+          zoom: true,
         },
       ]}
+      series={series}
     />
   );
 }
@@ -113,5 +110,16 @@ const data = [
   {
     y1: 330.72,
     y2: 488.06,
+  },
+];
+
+const series = [
+  {
+    label: 'Series A',
+    data: data.map((v) => v.y1),
+  },
+  {
+    label: 'Series B',
+    data: data.map((v) => v.y2),
   },
 ];

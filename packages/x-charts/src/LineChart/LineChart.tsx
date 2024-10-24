@@ -1,5 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
 import {
@@ -84,7 +86,7 @@ export interface LineChartProps
   grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -123,6 +125,10 @@ export interface LineChartProps
    * @default false
    */
   skipAnimation?: boolean;
+  /**
+   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
+   */
+  experimentalMarkRendering?: boolean;
 }
 
 /**
@@ -135,7 +141,8 @@ export interface LineChartProps
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
+const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartContainerProps,
     axisClickHandlerProps,
@@ -157,15 +164,18 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
   return (
     <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <AreaPlot {...areaPlotProps} />
         <LinePlot {...linePlotProps} />
         <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsAxisHighlight {...axisHighlightProps} />
-      <MarkPlot {...markPlotProps} />
+      <g data-drawing-container>
+        {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+        <MarkPlot {...markPlotProps} />
+      </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
       <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
@@ -182,7 +192,7 @@ LineChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
@@ -218,6 +228,10 @@ LineChart.propTypes = {
    */
   disableLineItemHighlight: PropTypes.bool,
   /**
+   * If `true` marks will render `<circle />` instead of `<path />` and drop theme override for faster rendering.
+   */
+  experimentalMarkRendering: PropTypes.bool,
+  /**
    * Option to display a cartesian grid in the background.
    */
   grid: PropTypes.shape({
@@ -248,6 +262,21 @@ LineChart.propTypes = {
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
+    itemGap: PropTypes.number,
+    itemMarkHeight: PropTypes.number,
+    itemMarkWidth: PropTypes.number,
+    labelStyle: PropTypes.object,
+    markGap: PropTypes.number,
+    onItemClick: PropTypes.func,
+    padding: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        bottom: PropTypes.number,
+        left: PropTypes.number,
+        right: PropTypes.number,
+        top: PropTypes.number,
+      }),
+    ]),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
@@ -297,6 +326,16 @@ LineChart.propTypes = {
    * Callback fired when a mark element is clicked.
    */
   onMarkClick: PropTypes.func,
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -365,7 +404,6 @@ LineChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -412,6 +450,11 @@ LineChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -436,7 +479,6 @@ LineChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -483,6 +525,11 @@ LineChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

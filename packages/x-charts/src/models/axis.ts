@@ -8,7 +8,8 @@ import type {
   ScaleOrdinal,
   ScaleSequential,
   ScaleThreshold,
-} from 'd3-scale';
+} from '@mui/x-charts-vendor/d3-scale';
+import { SxProps } from '@mui/system';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';
@@ -140,6 +141,7 @@ export interface ChartsAxisProps extends TickParams {
    * @default {}
    */
   slotProps?: Partial<ChartsAxisSlotProps>;
+  sx?: SxProps;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
@@ -154,6 +156,28 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
    * Position of the axis.
    */
   position?: 'top' | 'bottom';
+}
+
+export interface ChartsRotationAxisProps extends ChartsAxisProps {
+  /**
+   * The start angle (in deg).
+   */
+  startAngle?: number;
+  /**
+   * The end angle (in deg).
+   */
+  endAngle?: number;
+}
+
+export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+  /**
+   * The minimal radius.
+   */
+  minRadius?: number;
+  /**
+   * The maximal radius.
+   */
+  maxRadius?: number;
 }
 
 export type ScaleName = keyof AxisScaleConfig;
@@ -214,6 +238,10 @@ export interface AxisScaleConfig {
   };
 }
 
+/**
+ * Use this type instead of `AxisScaleConfig` when the values
+ * shouldn't be provided by the user.
+ */
 export interface AxisScaleComputedConfig {
   band: {
     colorScale?:
@@ -252,13 +280,15 @@ export interface AxisScaleComputedConfig {
     colorScale?: ScaleSequential<string, string | null> | ScaleThreshold<number, string | null>;
   };
 }
+
 export type AxisValueFormatterContext = {
   /**
    * Location indicates where the value will be displayed.
    * - `'tick'` The value is displayed on the axis ticks.
    * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+   * - `'legend'` The value is displayed in the legend when using color legend.
    */
-  location: 'tick' | 'tooltip';
+  location: 'tick' | 'tooltip' | 'legend';
 };
 
 export type AxisConfig<
@@ -303,9 +333,12 @@ export type AxisConfig<
    * If `true`, Reverse the axis scaleBand.
    */
   reverse?: boolean;
-} & Partial<AxisProps> &
+} & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  TickParams;
+  TickParams &
+  AxisConfigExtension;
+
+export interface AxisConfigExtension {}
 
 export type AxisDefaultized<
   S extends ScaleName = ScaleName,

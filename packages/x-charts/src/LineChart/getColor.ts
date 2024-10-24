@@ -1,11 +1,6 @@
-import { AxisDefaultized } from '../models/axis';
-import { DefaultizedLineSeriesType } from '../models/seriesType/line';
+import { ColorProcessor } from '../context/PluginProvider/ColorProcessor.types';
 
-export default function getColor(
-  series: DefaultizedLineSeriesType,
-  xAxis?: AxisDefaultized,
-  yAxis?: AxisDefaultized,
-) {
+const getColor: ColorProcessor<'line'> = (series, xAxis, yAxis) => {
   const yColorScale = yAxis?.colorScale;
   const xColorScale = xAxis?.colorScale;
 
@@ -31,4 +26,6 @@ export default function getColor(
   }
 
   return () => series.color;
-}
+};
+
+export default getColor;

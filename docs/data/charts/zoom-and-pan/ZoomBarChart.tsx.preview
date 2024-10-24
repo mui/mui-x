@@ -1,15 +1,12 @@
 <BarChartPro
   width={600}
   height={300}
-  zoom
-  series={[
+  xAxis={[
     {
-      label: 'Series A',
-      data: data.map((v) => v.y1),
-    },
-    {
-      label: 'Series B',
-      data: data.map((v) => v.y2),
+      scaleType: 'band',
+      data: data.map((v, i) => i),
+      zoom: true,
     },
   ]}
+  series={series}
 />

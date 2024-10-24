@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DatasetType } from '../models/seriesType/config';
@@ -18,7 +19,7 @@ export type ZAxisContextProviderProps = {
 };
 
 type DefaultizedZAxisConfig = {
-  [axisKey: string]: ZAxisDefaultized;
+  [axisId: string]: ZAxisDefaultized;
 };
 
 export const ZAxisContext = React.createContext<{
@@ -47,7 +48,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
+          throw new Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,

@@ -1,3 +1,3 @@
 export * from './ZoomContext';
 export * from './ZoomProvider';
-export * from './useSetupZoom';
+export * from './Zoom.types';

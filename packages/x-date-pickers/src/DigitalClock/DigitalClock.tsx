@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -20,6 +21,7 @@ import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { getFocusedListItemIndex } from '../internals/utils/utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -114,6 +116,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
+  const listRef = React.useRef<HTMLUListElement>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -293,6 +296,36 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     utils.isEqual(option, valueOrReferenceDate),
   );
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'PageUp': {
+        const newIndex = getFocusedListItemIndex(listRef.current!) - 5;
+        const children = listRef.current!.children;
+        const newFocusedIndex = Math.max(0, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      case 'PageDown': {
+        const newIndex = getFocusedListItemIndex(listRef.current!) + 5;
+        const children = listRef.current!.children;
+        const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      default:
+    }
+  };
+
   return (
     <DigitalClockRoot
       ref={handleRef}
@@ -301,9 +334,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
+        ref={listRef}
         role="listbox"
         aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
+        onKeyDown={handleKeyDown}
       >
         {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {
@@ -405,7 +440,7 @@ DigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.

@@ -1,19 +1,23 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
 import {
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
+import { useGridSelectorV8 } from '@mui/x-data-grid/internals';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPrivateApiPro } from '../models/gridApiPro';
 import { GridStatePro } from '../models/gridStatePro';
+import {
+  gridDataSourceErrorSelector,
+  gridDataSourceLoadingIdSelector,
+} from '../hooks/features/dataSource/gridDataSourceSelector';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -50,10 +54,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const loadingSelector = (state: GridStatePro) => state.dataSource.loading[id] ?? false;
-  const errorSelector = (state: GridStatePro) => state.dataSource.errors[id];
-  const isDataLoading = useGridSelector(apiRef, loadingSelector);
-  const error = useGridSelector(apiRef, errorSelector);
+  const isDataLoading = useGridSelectorV8(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelectorV8(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
@@ -90,9 +92,9 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
       {...rootProps?.slotProps?.baseIconButton}
     >
       <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <Badge variant="dot" color="error" invisible={!error}>
+        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </Badge>
+        </rootProps.slots.baseBadge>
       </rootProps.slots.baseTooltip>
     </rootProps.slots.baseIconButton>
   ) : null;

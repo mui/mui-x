@@ -36,8 +36,8 @@
       },
       "default": "'none'"
     },
-    "maxDate": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "name": { "type": { "name": "string" } },
     "onChange": {
       "type": { "name": "func" },
@@ -147,7 +147,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiDateField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",

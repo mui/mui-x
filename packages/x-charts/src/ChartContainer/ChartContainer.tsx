@@ -1,17 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
+import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { ColorProvider } from '../context/ColorProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianProvider';
+import { CartesianProvider, CartesianProviderProps } from '../context/CartesianProvider';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
@@ -19,96 +13,69 @@ import {
   ZAxisContextProvider,
   ZAxisContextProviderProps,
 } from '../context';
-import { ChartsPluginType } from '../models/plugin';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { useChartContainerHooks } from './useChartContainerHooks';
+import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
+import { useChartContainerProps } from './useChartContainerProps';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
+import { MakeOptional } from '../models/helpers';
+import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
 
 export type ChartContainerProps = Omit<
   ChartsSurfaceProps &
-    Omit<SeriesContextProviderProps, 'seriesFormatters'> &
+    Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
-    Omit<CartesianContextProviderProps, 'xExtremumGetters' | 'yExtremumGetters'> &
+    Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
-    HighlightedProviderProps,
+    HighlightedProviderProps &
+    PluginProviderProps &
+    AnimationProviderProps,
   'children'
 > & {
-  children?: React.ReactNode;
   /**
-   * An array of plugins defining how to preprocess data.
-   * If not provided, the container supports line, bar, scatter and pie charts.
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
    */
-  plugins?: ChartsPluginType<ChartSeriesType>[];
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  children?: React.ReactNode;
 };
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    zAxis,
-    colors,
-    dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-    highlightedItem,
-    onHighlightChange,
-    plugins,
     children,
-  } = props;
-  const {
-    svgRef,
-    handleRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
+    drawingProviderProps,
+    seriesProviderProps,
+    cartesianProviderProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+    pluginProviderProps,
+    animationProviderProps,
+  } = useChartContainerProps(props, ref);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
-      <ColorProvider colorProcessors={colorProcessors}>
-        <SeriesContextProvider
-          series={series}
-          colors={colors}
-          dataset={dataset}
-          seriesFormatters={seriesFormatters}
-        >
-          <CartesianContextProvider
-            xAxis={xAxis}
-            yAxis={yAxis}
-            dataset={dataset}
-            xExtremumGetters={xExtremumGetters}
-            yExtremumGetters={yExtremumGetters}
-          >
-            <ZAxisContextProvider zAxis={zAxis} dataset={dataset}>
+    <DrawingProvider {...drawingProviderProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
+          <CartesianProvider {...cartesianProviderProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
-                <HighlightedProvider
-                  highlightedItem={highlightedItem}
-                  onHighlightChange={onHighlightChange}
-                >
-                  <ChartsSurface
-                    width={width}
-                    height={height}
-                    ref={handleRef}
-                    sx={sx}
-                    title={title}
-                    desc={desc}
-                    disableAxisListener={disableAxisListener}
-                  >
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <ChartsSurface {...chartsSurfaceProps}>
                     <ChartsAxesGradients />
-                    {children}
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </ChartsSurface>
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
-          </CartesianContextProvider>
-        </SeriesContextProvider>
-      </ColorProvider>
+          </CartesianProvider>
+        </SeriesProvider>
+      </PluginProvider>
     </DrawingProvider>
   );
 });
@@ -176,6 +143,11 @@ ChartContainer.propTypes = {
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -199,7 +171,6 @@ ChartContainer.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -246,6 +217,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -270,7 +246,6 @@ ChartContainer.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -317,6 +292,11 @@ ChartContainer.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

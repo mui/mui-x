@@ -4,6 +4,7 @@ import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
   DataGridProProps,
+  GridSignature,
 } from '@mui/x-data-grid-pro';
 import { computeSlots, useProps } from '@mui/x-data-grid-pro/internals';
 import {
@@ -25,7 +26,7 @@ type GetDataGridProForcedProps = (
 ) => DataGridProForcedProps;
 
 const getDataGridPremiumForcedProps: GetDataGridProForcedProps = (themedProps) => ({
-  signature: 'DataGridPremium',
+  signature: GridSignature.DataGridPremium,
   ...(themedProps.unstable_dataSource
     ? {
         filterMode: 'server',

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import FocusTrap, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -55,7 +55,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
         <GridPanelWrapperRoot
           ref={ref}
           tabIndex={-1}
-          className={clsx(className, classes.root)}
+          className={clsx(classes.root, className)}
           ownerState={rootProps}
           {...other}
         />

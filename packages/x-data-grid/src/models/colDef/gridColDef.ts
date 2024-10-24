@@ -134,7 +134,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * The order of the sorting sequence.
    */
-  sortingOrder?: GridSortDirection[];
+  sortingOrder?: readonly GridSortDirection[];
   /**
    * If `true`, the column is resizable.
    * @default true
@@ -184,6 +184,10 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Function that allows to get a specific data instead of field to render in the cell.
    */
   valueGetter?: GridValueGetter<R, V, F>;
+  /**
+   * Function that allows to provide a specific value to be used in row spanning.
+   */
+  rowSpanValueGetter?: GridValueGetter<R, V, F>;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -264,7 +268,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Allows setting the filter operators for this column.
    */
-  filterOperators?: GridFilterOperator<R, V, F>[];
+  filterOperators?: readonly GridFilterOperator<R, V, F>[];
   /**
    * The callback that generates a filtering function for a given quick filter value.
    * This function can return `null` to skip filtering for this value and column.
@@ -306,9 +310,9 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
   /**
    * Function that returns the actions to be shown.
    * @param {GridRowParams} params The params for each row.
-   * @returns {React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   * @returns {readonly React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
    */
-  getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
+  getActions: (params: GridRowParams<R>) => readonly React.ReactElement<GridActionsCellItemProps>[];
 }
 
 /**
@@ -350,6 +354,16 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>
   | GridSingleSelectColDef<R, V, F>;
+
+/**
+ * Column Definition interface used for the list view column.
+ * @demos
+ *   - [List view](/x/react-data-grid/list-view/)
+ */
+export type GridListColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
+  GridBaseColDef<R, V, F>,
+  'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
+>;
 
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 

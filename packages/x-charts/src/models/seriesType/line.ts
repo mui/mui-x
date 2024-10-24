@@ -60,6 +60,11 @@ export interface LineSeriesType
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
+   */
   curve?: CurveType;
   /**
    * Define which items of the series should display a mark.
@@ -82,6 +87,16 @@ export interface LineSeriesType
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The value of the line at the base of the series area.
+   *
+   * - `'min'` the area will fill the space **under** the line.
+   * - `'max'` the area will fill the space **above** the line.
+   * - `number` the area will fill the space between this value and the line
+   *
+   * @default 0
+   */
+  baseline?: number | 'min' | 'max';
 }
 
 /**

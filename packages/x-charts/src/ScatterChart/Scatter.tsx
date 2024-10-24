@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -43,7 +44,7 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, onItemClick } = props;
 
-  const { left, width } = useDrawingArea();
+  const drawingArea = useDrawingArea();
 
   const { useVoronoiInteraction } = React.useContext(InteractionContext);
 
@@ -54,11 +55,6 @@ function Scatter(props: ScatterProps) {
   const cleanData = React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
-
-    const yRange = yScale.range();
-
-    const minYRange = Math.min(...yRange);
-    const maxYRange = Math.max(...yRange);
 
     const temp: (ScatterValueType & {
       dataIndex: number;
@@ -74,7 +70,7 @@ function Scatter(props: ScatterProps) {
       const x = getXPosition(scatterPoint.x);
       const y = getYPosition(scatterPoint.y);
 
-      const isInRange = x >= left && x <= left + width && y >= minYRange && y <= maxYRange;
+      const isInRange = drawingArea.isPointInside({ x, y });
 
       const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
 
@@ -101,8 +97,7 @@ function Scatter(props: ScatterProps) {
   }, [
     xScale,
     yScale,
-    left,
-    width,
+    drawingArea,
     series.data,
     series.id,
     isHighlighted,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import {
   ExportedUseClearableFieldProps,
@@ -49,7 +49,7 @@ export type UseDateFieldComponentProps<
 
 export type DateFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = UseDateFieldComponentProps<
   TDate,
   TEnableAccessibleFieldDOMStructure,

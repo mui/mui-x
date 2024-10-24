@@ -9,7 +9,6 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import {
-  buildWarning,
   GridStateColDef,
   GridSingleSelectColDef,
   isObject,
@@ -17,6 +16,7 @@ import {
   isSingleSelectColDef,
   gridHasColSpanSelector,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
@@ -24,11 +24,6 @@ const getExcelJs = async () => {
   const excelJsModule = await import('exceljs');
   return excelJsModule.default ?? excelJsModule;
 };
-
-const warnInvalidFormattedValue = buildWarning([
-  'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
-  'You can provide a `valueFormatter` with a string representation to be used.',
-]);
 
 const getFormattedValueOptions = (
   colDef: GridSingleSelectColDef,
@@ -151,7 +146,10 @@ export const serializeRowUnsafe = (
         const formattedValue = apiRef.current.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
-            warnInvalidFormattedValue();
+            warnOnce([
+              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+              'You can provide a `valueFormatter` with a string representation to be used.',
+            ]);
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
@@ -194,7 +192,10 @@ export const serializeRowUnsafe = (
         cellValue = apiRef.current.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
-            warnInvalidFormattedValue();
+            warnOnce([
+              'MUI X: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
+              'You can provide a `valueFormatter` with a string representation to be used.',
+            ]);
           }
         }
         break;
@@ -263,7 +264,7 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
+      row.map((group) => (group.groupId === null ? null : (group?.headerName ?? group.groupId))),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`

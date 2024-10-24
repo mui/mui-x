@@ -2,7 +2,7 @@ import * as React from 'react';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -13,7 +13,7 @@ import { UsePickerParams, UsePickerProps } from '../usePicker';
 import {
   BaseSingleInputFieldProps,
   FieldSection,
-  MuiPickersAdapter,
+  PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
 import {
@@ -96,7 +96,11 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
   >;
-  openPickerIcon?: Record<string, any>;
+  openPickerIcon?: SlotComponentPropsFromProps<
+    Record<string, any>,
+    {},
+    PickerOwnerState<TDate | null>
+  >;
 }
 
 export interface DesktopOnlyPickerProps
@@ -147,5 +151,5 @@ export interface UseDesktopPickerParams<
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText: (date: TDate | null) => string;
 }

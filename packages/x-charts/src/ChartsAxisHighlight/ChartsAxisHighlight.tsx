@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
@@ -37,16 +38,34 @@ export const ChartsAxisHighlightPath = styled('path', {
   name: 'MuiChartsAxisHighlight',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: { axisHighlight: AxisHighlight } }>(({ ownerState, theme }) => ({
+})<{ ownerState: { axisHighlight: AxisHighlight } }>(({ theme }) => ({
   pointerEvents: 'none',
-  ...(ownerState.axisHighlight === 'band' && {
-    fill: theme.palette.mode === 'light' ? 'gray' : 'white',
-    fillOpacity: 0.1,
-  }),
-  ...(ownerState.axisHighlight === 'line' && {
-    strokeDasharray: '5 2',
-    stroke: theme.palette.mode === 'light' ? '#000000' : '#ffffff',
-  }),
+  variants: [
+    {
+      props: {
+        axisHighlight: 'band',
+      },
+      style: {
+        fill: 'white',
+        fillOpacity: 0.1,
+        ...theme.applyStyles('light', {
+          fill: 'gray',
+        }),
+      },
+    },
+    {
+      props: {
+        axisHighlight: 'line',
+      },
+      style: {
+        strokeDasharray: '5 2',
+        stroke: '#ffffff',
+        ...theme.applyStyles('light', {
+          stroke: '#000000',
+        }),
+      },
+    },
+  ],
 }));
 
 type AxisHighlight = 'none' | 'line' | 'band';
@@ -94,7 +113,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
     if (isXError || isYError) {
       console.error(
         [
-          `MUI X Charts: The position value provided for the axis is not valid for the current scale.`,
+          `MUI X: The position value provided for the axis is not valid for the current scale.`,
           `This probably means something is wrong with the data passed to the chart.`,
           `The ChartsAxisHighlight component will not be displayed.`,
         ].join('\n'),

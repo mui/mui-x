@@ -1,9 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
@@ -21,10 +23,10 @@ import {
   PickerSelectionState,
   useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  buildWarning,
   useControlledValueWithTimezone,
   useViews,
 } from '@mui/x-date-pickers/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
@@ -77,12 +79,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const warnInvalidCurrentMonthCalendarPosition = buildWarning([
-  'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
-  'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
-]);
-
-const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
@@ -102,7 +99,9 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
       },
     },
   },
-})) as typeof DayCalendar;
+}));
+
+const DayCalendarForRange = InnerDayCalendarForRange as typeof DayCalendar;
 
 function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
@@ -119,7 +118,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   return {
     ...themeProps,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
@@ -390,7 +389,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       return;
     }
 
-    const displayingMonthRange = calendars - 1;
+    const displayingMonthRange = calendars - currentMonthCalendarPosition;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
     const requestedMonthNumber = utils.getMonth(date);
 
@@ -506,7 +505,10 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   const visibleMonths = React.useMemo(() => {
     if (process.env.NODE_ENV !== 'production') {
       if (currentMonthCalendarPosition > calendars || currentMonthCalendarPosition < 1) {
-        warnInvalidCurrentMonthCalendarPosition();
+        warnOnce([
+          'MUI X: The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
+          'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
+        ]);
       }
     }
 
@@ -543,7 +545,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   return (
     <DateRangeCalendarRoot
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
@@ -696,15 +698,17 @@ DateRangeCalendar.propTypes = {
   loading: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.

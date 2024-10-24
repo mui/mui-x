@@ -16,9 +16,17 @@ import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 const releaseInfo = getReleaseInfo();
 
 const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
@@ -33,7 +41,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
     validateProps(props, propValidatorsDataGridPro);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}
@@ -89,6 +97,11 @@ DataGridProRaw.propTypes = {
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -140,6 +153,11 @@ DataGridProRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -376,7 +394,7 @@ DataGridProRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
@@ -420,6 +438,14 @@ DataGridProRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
+   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
+   * Works only if `checkboxSelection` is enabled.
+   * @default "deselect"
+   */
+  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
+  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -441,7 +467,7 @@ DataGridProRaw.propTypes = {
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {boolean} A boolean indicating if the cell is selectable.
+   * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
   /**
@@ -459,6 +485,7 @@ DataGridProRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -536,6 +563,12 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderClick: PropTypes.func,
+  /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -806,6 +839,7 @@ DataGridProRaw.propTypes = {
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
+   * @param {{ rowId: GridRowId }} params Additional parameters.
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
@@ -839,6 +873,7 @@ DataGridProRaw.propTypes = {
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
   rowPositionsDebounceMs: PropTypes.number,
   /**
@@ -865,6 +900,22 @@ DataGridProRaw.propTypes = {
     PropTypes.string,
   ]),
   /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
+   *
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
+  /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
@@ -886,12 +937,12 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: PropTypes.bool,
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
@@ -954,5 +1005,25 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;

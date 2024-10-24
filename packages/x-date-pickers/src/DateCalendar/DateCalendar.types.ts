@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -78,7 +78,7 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading?: () => React.ReactNode;
   /**

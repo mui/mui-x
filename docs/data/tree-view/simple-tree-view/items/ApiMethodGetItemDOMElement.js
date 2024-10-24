@@ -12,7 +12,7 @@ export default function ApiMethodGetItemDOMElement() {
     apiRef.current.focusItem(event, 'charts-community');
     apiRef.current
       .getItemDOMElement('charts-community')
-      ?.scrollIntoView({ block: 'center' });
+      ?.scrollIntoView({ block: 'nearest' });
   };
 
   return (

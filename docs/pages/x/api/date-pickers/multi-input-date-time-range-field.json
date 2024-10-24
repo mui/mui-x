@@ -22,10 +22,10 @@
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"dense\""
     },
-    "maxDate": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "object" }, "default": "2099-12-31" },
     "maxDateTime": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },
-    "minDate": { "type": { "name": "object" } },
+    "minDate": { "type": { "name": "object" }, "default": "1900-01-01" },
     "minDateTime": { "type": { "name": "object" } },
     "minTime": { "type": { "name": "object" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -128,7 +128,10 @@
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiMultiInputDateTimeRangeField",
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",

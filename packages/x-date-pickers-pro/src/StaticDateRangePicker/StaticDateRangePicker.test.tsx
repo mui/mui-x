@@ -16,7 +16,7 @@ describe('<StaticDateRangePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticDateRangePicker',
-    refInstanceof: undefined,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -25,9 +25,6 @@ describe('<StaticDateRangePicker />', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'refForwarding',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
@@ -50,7 +47,7 @@ describe('<StaticDateRangePicker />', () => {
 
     expect(
       screen
-        .getAllByMuiTest('DateRangePickerDay')
+        .getAllByTestId('DateRangePickerDay')
         .filter((day) => day.getAttribute('disabled') !== undefined),
     ).to.have.length(31);
   });

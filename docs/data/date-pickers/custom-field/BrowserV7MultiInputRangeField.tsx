@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -201,7 +201,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 ) as BrowserMultiInputDateRangeFieldComponent;
 
 const BrowserDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, true>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

@@ -1,5 +1,7 @@
+'use client';
 import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
+import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useXScale } from '../hooks';
 import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
 import { ChartsText } from '../ChartsText';
@@ -7,7 +9,6 @@ import {
   ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
-import { buildWarning } from '../internals/warning';
 
 export type ChartsXReferenceLineProps<
   TValue extends string | number | Date = string | number | Date,
@@ -73,12 +74,6 @@ export function getXReferenceLineClasses(classes?: Partial<ChartsReferenceLineCl
   );
 }
 
-const valueError = buildWarning(
-  (value, id) =>
-    `MUI X Charts: the value ${value} does not exist in the data of x axis with id ${id}.`,
-  'error',
-);
-
 function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
   const {
     x,
@@ -98,7 +93,10 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   if (xPosition === undefined) {
     if (process.env.NODE_ENV !== 'production') {
-      valueError(x, axisId);
+      warnOnce(
+        `MUI X: the value ${x} does not exist in the data of x axis with id ${axisId}.`,
+        'error',
+      );
     }
     return null;
   }
@@ -106,8 +104,8 @@ function ChartsXReferenceLine(props: ChartsXReferenceLineProps) {
 
   const classes = getXReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? spacing.x ?? 0 : spacing;
-  const spacingY = typeof spacing === 'object' ? spacing.y ?? 0 : spacing;
+  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
+  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
 
   const textParams = {
     x: xPosition + spacingX,

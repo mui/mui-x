@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
 import {
@@ -27,8 +27,7 @@ describe('<DateCalendar /> - Describes', () => {
     render,
     muiName: 'MuiDateCalendar',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(DateCalendar, () => ({
@@ -48,7 +47,7 @@ describe('<DateCalendar /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
-      userEvent.mousePress(
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

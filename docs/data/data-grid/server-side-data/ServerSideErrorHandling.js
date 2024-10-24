@@ -10,13 +10,6 @@ const pageSizeOptions = [5, 10, 50];
 const serverOptions = { useCursorPagination: false };
 const datasetOptions = {};
 
-function getBorderColor(theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
 const StyledDiv = styled('div')(({ theme: t }) => ({
   position: 'absolute',
   zIndex: 10,
@@ -28,8 +21,11 @@ const StyledDiv = styled('div')(({ theme: t }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
+  border: `1px solid ${lighten(alpha(t.palette.divider, 1), 0.88)}`,
   backgroundColor: t.palette.background.default,
+  ...t.applyStyles('dark', {
+    borderColor: darken(alpha(t.palette.divider, 1), 0.68),
+  }),
 }));
 
 function ErrorOverlay({ error }) {
@@ -54,11 +50,9 @@ export default function ServerSideErrorHandling() {
     () => ({
       getRows: async (params) => {
         const urlParams = new URLSearchParams({
-          paginationModel: encodeURIComponent(
-            JSON.stringify(params.paginationModel),
-          ),
-          filterModel: encodeURIComponent(JSON.stringify(params.filterModel)),
-          sortModel: encodeURIComponent(JSON.stringify(params.sortModel)),
+          paginationModel: JSON.stringify(params.paginationModel),
+          filterModel: JSON.stringify(params.filterModel),
+          sortModel: JSON.stringify(params.sortModel),
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
@@ -100,7 +94,7 @@ export default function ServerSideErrorHandling() {
           control={
             <Checkbox
               checked={shouldRequestsFail}
-              onChange={(e) => setShouldRequestsFail(e.target.checked)}
+              onChange={(event) => setShouldRequestsFail(event.target.checked)}
             />
           }
           label="Make the requests fail"
@@ -110,7 +104,9 @@ export default function ServerSideErrorHandling() {
         <DataGridPro
           {...props}
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(e) => setError(e.message)}
+          unstable_onDataSourceError={(dataSourceError) =>
+            setError(dataSourceError.message)
+          }
           unstable_dataSourceCache={null}
           apiRef={apiRef}
           pagination

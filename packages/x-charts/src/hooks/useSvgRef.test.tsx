@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
 import { DrawingProvider } from '../context/DrawingProvider';
 
@@ -52,11 +52,11 @@ describe('useSvgRef', () => {
       );
     }
 
-    const { findByText, forceUpdate } = render(<RenderDrawingProvider />);
+    const { forceUpdate } = render(<RenderDrawingProvider />);
 
     // Ref is not available on first render.
     forceUpdate();
 
-    expect(await findByText('test-id')).toBeVisible();
+    expect(await screen.findByText('test-id')).toBeVisible();
   });
 });

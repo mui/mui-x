@@ -32,16 +32,17 @@ If you already have a license for `@mui/x-data-grid-pro`, you can use the same o
 #### Community plan
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-date-pickers
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers
 ```
 
 </codeblock>
@@ -54,12 +55,12 @@ pnpm add @mui/x-date-pickers
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
-```bash yarn
-yarn add @mui/x-date-pickers-pro @mui/x-license-pro
-```
-
 ```bash pnpm
 pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash yarn
+yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 </codeblock>
@@ -132,7 +133,7 @@ The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to m
 
 #### Translation
 
-Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the data grid.
+Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the Data Grid.
 We already have ten locales provided by the community. (Thank you!)
 
 #### Use slot for `ActionBar`

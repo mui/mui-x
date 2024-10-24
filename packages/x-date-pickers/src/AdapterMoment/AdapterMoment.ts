@@ -29,6 +29,7 @@ const formatTokenMap: FieldFormatTokenMap = {
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },
@@ -247,7 +248,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     const cleanZone =
       timezone === 'default'
         ? // @ts-ignore
-          this.moment.defaultZone?.name ?? 'system'
+          (this.moment.defaultZone?.name ?? 'system')
         : timezone;
 
     if (cleanZone === 'system') {
@@ -390,7 +391,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public startOfWeek = (value: Moment) => {
-    return value.clone().startOf('week');
+    return this.setLocaleToValue(value.clone()).startOf('week');
   };
 
   public startOfDay = (value: Moment) => {
@@ -406,7 +407,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public endOfWeek = (value: Moment) => {
-    return value.clone().endOf('week');
+    return this.setLocaleToValue(value.clone()).endOf('week');
   };
 
   public endOfDay = (value: Moment) => {
@@ -516,9 +517,8 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanValue = this.setLocaleToValue(value);
-    const start = this.startOfWeek(this.startOfMonth(cleanValue));
-    const end = this.endOfWeek(this.endOfMonth(cleanValue));
+    const start = this.startOfWeek(this.startOfMonth(value));
+    const end = this.endOfWeek(this.endOfMonth(value));
 
     let count = 0;
     let current = start;

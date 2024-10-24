@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { BarPlot } from '../BarChart';
@@ -16,7 +17,7 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
-import { LineSeriesType } from '../models/seriesType/line';
+import { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
@@ -155,6 +156,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     valueFormatter = (value: number | null) => (value === null ? '' : value.toString()),
     area,
     curve = 'linear',
+    className,
+    ...other
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -166,6 +169,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
 
   return (
     <ResponsiveChartContainer
+      {...other}
       ref={ref}
       series={[
         {
@@ -173,11 +177,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           data,
           valueFormatter,
           ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
-        },
+        } as LineSeriesType | BarSeriesType,
       ]}
       width={width}
       height={height}
       margin={margin}
+      className={className}
       xAxis={[
         {
           id: DEFAULT_X_AXIS_KEY,
@@ -316,6 +321,16 @@ SparkLineChart.propTypes = {
    */
   plotType: PropTypes.oneOf(['bar', 'line']),
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * Set to `true` to highlight the value.
    * With line, it shows a point.
    * With bar, it shows a highlight band.
@@ -327,6 +342,11 @@ SparkLineChart.propTypes = {
    * @default false
    */
   showTooltip: PropTypes.bool,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -373,7 +393,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   xAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -418,6 +437,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
@@ -435,7 +459,6 @@ SparkLineChart.propTypes = {
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis: PropTypes.shape({
-    axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     classes: PropTypes.object,
     colorMap: PropTypes.oneOfType([
       PropTypes.shape({
@@ -480,6 +503,11 @@ SparkLineChart.propTypes = {
     slotProps: PropTypes.object,
     slots: PropTypes.object,
     stroke: PropTypes.string,
+    sx: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+      PropTypes.func,
+      PropTypes.object,
+    ]),
     tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),

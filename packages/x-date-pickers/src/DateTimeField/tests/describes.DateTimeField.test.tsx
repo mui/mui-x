@@ -21,21 +21,13 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateTimeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DateTimeField />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,
     muiName: 'MuiDateTimeField',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: [
-      'reactTestRenderer',
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeValue(DateTimeField, () => ({

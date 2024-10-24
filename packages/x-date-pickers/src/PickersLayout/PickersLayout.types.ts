@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
@@ -116,10 +116,6 @@ export interface PickersLayoutProps<
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * Ref to pass to the root element
-   */
-  ref?: React.Ref<HTMLDivElement>;
   /**
    * Override or extend the styles applied to the component.
    */

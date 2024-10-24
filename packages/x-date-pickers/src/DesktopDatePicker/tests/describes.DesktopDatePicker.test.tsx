@@ -1,4 +1,5 @@
-import { screen, userEvent } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -9,6 +10,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -21,6 +23,22 @@ describe('<DesktopDatePicker /> - Describes', () => {
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
     variant: 'desktop',
+  }));
+
+  describeConformance(<DesktopDatePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiDesktopDatePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
   }));
 
   describeValue(DesktopDatePicker, () => ({
@@ -44,7 +62,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireEvent.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {

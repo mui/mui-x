@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -121,7 +121,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
   });
 
   it('should not hide column when resizing a column after hiding it and showing it again', () => {
-    const { getByRole } = render(
+    render(
       <TestDataGridPro
         initialState={{
           columns: { columnVisibilityModel: {} },
@@ -130,7 +130,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       />,
     );
 
-    const showHideAllCheckbox = getByRole('checkbox', { name: 'Show/Hide All' });
+    const showHideAllCheckbox = screen.getByRole('checkbox', { name: 'Show/Hide All' });
     fireEvent.click(showHideAllCheckbox);
     expect(getColumnHeadersTextContent()).to.deep.equal([]);
     fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);

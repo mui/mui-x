@@ -37,7 +37,7 @@ describe('<DataGrid /> - Filter panel', () => {
     act(() => apiRef.current.showFilterPanel('brand'));
     const model = gridFilterModelSelector(apiRef);
     expect(model.items).to.have.length(1);
-    expect(model.items[0].id).to.not.equal(null);
-    expect(model.items[0].operator).to.not.equal(null);
+    expect(model.items[0].id).not.to.equal(null);
+    expect(model.items[0].operator).not.to.equal(null);
   });
 });

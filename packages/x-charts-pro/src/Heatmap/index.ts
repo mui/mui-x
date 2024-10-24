@@ -1,4 +1,6 @@
-export { Heatmap as UnstableHeatmap } from './Heatmap';
-export { HeatmapPlot as UnstableHeatmapPlot } from './HeatmapPlot';
+import type {} from '../typeOverloads';
+
+export { Heatmap } from './Heatmap';
+export { HeatmapPlot } from './HeatmapPlot';
 export * from './DefaultHeatmapTooltip';
 export * from './heatmapClasses';

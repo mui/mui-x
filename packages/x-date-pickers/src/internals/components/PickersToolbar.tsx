@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { DateOrTimeViewWithMeridiem } from '../models';
@@ -119,13 +119,13 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   return (
     <PickersToolbarRoot
       ref={ref}
-      data-mui-test="picker-toolbar"
+      data-testid="picker-toolbar"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
       <Typography
-        data-mui-test="picker-toolbar-title"
+        data-testid="picker-toolbar-title"
         color="text.secondary"
         variant="overline"
         id={titleId}

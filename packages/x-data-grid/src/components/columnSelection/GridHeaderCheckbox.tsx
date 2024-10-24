@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -129,11 +129,16 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
     );
 
+    const checked =
+      rootProps.indeterminateCheckboxAction === 'select'
+        ? isChecked && !isIndeterminate
+        : isChecked;
+
     return (
       <rootProps.slots.baseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
-        checked={isChecked}
+        checked={checked}
         onChange={handleChange}
         className={classes.root}
         inputProps={{ 'aria-label': label }}

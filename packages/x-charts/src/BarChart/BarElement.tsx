@@ -1,12 +1,14 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
-import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { AnimatedProps, animated } from '@react-spring/web';
+import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
@@ -78,9 +80,8 @@ export interface BarElementSlots {
    */
   bar?: React.ElementType<BarProps>;
 }
-
 export interface BarElementSlotProps {
-  bar?: Partial<BarProps>;
+  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &

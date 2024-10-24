@@ -7,7 +7,12 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
+    "autoHeight": {
+      "type": { "name": "bool" },
+      "default": "false",
+      "deprecated": true,
+      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
+    },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
@@ -21,6 +26,7 @@
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBufferPx": { "type": { "name": "number" }, "default": "150" },
+    "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "density": {
@@ -123,6 +129,10 @@
       },
       "default": "false"
     },
+    "indeterminateCheckboxAction": {
+      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
+      "default": "\"deselect\""
+    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -141,7 +151,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "loading": { "type": { "name": "bool" } },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
       "type": {
@@ -209,6 +219,13 @@
       "signature": {
         "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -412,8 +429,8 @@
     "processRowUpdate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
-        "describedArgs": ["newRow", "oldRow"],
+        "type": "function(newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow", "params"],
         "returned": "Promise<R> | R"
       }
     },
@@ -422,7 +439,11 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": { "type": { "name": "number" }, "default": "166" },
+    "rowPositionsDebounceMs": {
+      "type": { "name": "number" },
+      "default": "166",
+      "deprecated": true
+    },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
@@ -463,7 +484,8 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    }
+    },
+    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
   "imports": [
@@ -594,9 +616,33 @@
       "class": "MuiDataGrid-row"
     },
     {
+      "name": "baseBadge",
+      "description": "The custom Badge component used in the grid for both header and cells.",
+      "default": "Badge",
+      "class": null
+    },
+    {
       "name": "baseCheckbox",
       "description": "The custom Checkbox component used in the grid for both header and cells.",
       "default": "Checkbox",
+      "class": null
+    },
+    {
+      "name": "baseDivider",
+      "description": "The custom Divider component used in the grid.",
+      "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseMenuList",
+      "description": "The custom MenuList component used in the grid.",
+      "default": "MenuList",
+      "class": null
+    },
+    {
+      "name": "baseMenuItem",
+      "description": "The custom MenuItem component used in the grid.",
+      "default": "MenuItem",
       "class": null
     },
     {
@@ -1565,6 +1611,12 @@
       "key": "rowReorderCellPlaceholder",
       "className": "MuiDataGrid-rowReorderCellPlaceholder",
       "description": "Styles applied to the row's draggable placeholder element inside the special row reorder cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "rowSkeleton",
+      "className": "MuiDataGrid-rowSkeleton",
+      "description": "Styles applied to the skeleton row element.",
       "isGlobal": false
     },
     {

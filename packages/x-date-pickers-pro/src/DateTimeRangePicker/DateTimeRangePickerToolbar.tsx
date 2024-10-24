@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
@@ -111,6 +112,10 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   ],
 }) as DateTimeRangePickerStartOrEndToolbarComponent;
 
+type DateTimeRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
+  props: DateTimeRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
   TDate extends PickerValidDate,
 >(inProps: DateTimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
@@ -203,7 +208,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
 
   return (
     <DateTimeRangePickerToolbarRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
       sx={sx}
@@ -235,7 +240,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       />
     </DateTimeRangePickerToolbarRoot>
   );
-});
+}) as DateTimeRangePickerToolbarComponent;
 
 DateTimeRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

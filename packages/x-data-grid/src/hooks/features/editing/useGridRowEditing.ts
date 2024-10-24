@@ -3,6 +3,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -36,7 +37,6 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { buildWarning } from '../../../utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -46,15 +46,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
-
-const missingOnProcessRowUpdateErrorWarning = buildWarning(
-  [
-    'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
-    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
-  ],
-  'error',
-);
+import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -194,7 +186,7 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is deprecated but this is a temporary workaround
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
         if (event.which === 229) {
           return;
         }
@@ -442,7 +434,11 @@ export const useGridRowEditing = (
 
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
-          newValue = deleteValue ? '' : initialValue;
+          if (deleteValue) {
+            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+          } else if (initialValue) {
+            newValue = initialValue;
+          }
         }
 
         acc[field] = {
@@ -522,12 +518,19 @@ export const useGridRowEditing = (
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
           } else if (process.env.NODE_ENV !== 'production') {
-            missingOnProcessRowUpdateErrorWarning();
+            warnOnce(
+              [
+                'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+                'To handle the error pass a callback to the `onProcessRowUpdateError` prop, for example `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+                'For more detail, see https://mui.com/x/react-data-grid/editing/#server-side-persistence.',
+              ],
+              'error',
+            );
           }
         };
 
         try {
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishRowEditMode();

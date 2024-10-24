@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -343,10 +344,12 @@ MonthCalendar.propTypes = {
   hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**

@@ -46,8 +46,8 @@ const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'
   getCellAggregationResult,
 }) => {
   const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = apiRef.current.getRowId(row);
-    const cellAggregationResult = getCellAggregationResult(rowId, column.field);
+    const rowId = apiRef.current.getRowId?.(row);
+    const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
     }
@@ -209,7 +209,7 @@ export const wrapColumnWithAggregationValue = ({
     }
 
     // TODO: Add custom root id
-    const groupId = cellAggregationPosition === 'inline' ? id : rowNode.parent ?? '';
+    const groupId = cellAggregationPosition === 'inline' ? id : (rowNode.parent ?? '');
 
     const aggregationResult = gridAggregationLookupSelector(apiRef)?.[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {

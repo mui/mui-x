@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
@@ -48,7 +48,7 @@ export type UseTimeFieldComponentProps<
 
 export type TimeFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = UseTimeFieldComponentProps<
   TDate,
   TEnableAccessibleFieldDOMStructure,

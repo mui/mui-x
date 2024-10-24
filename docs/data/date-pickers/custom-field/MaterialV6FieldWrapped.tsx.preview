@@ -1,2 +1,0 @@
-<DateField slots={{ textField: TextField }} />
-<DatePicker slots={{ textField: TextField }} />

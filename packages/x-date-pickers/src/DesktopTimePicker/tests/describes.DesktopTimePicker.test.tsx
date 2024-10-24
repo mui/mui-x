@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -30,7 +30,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DesktopTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',
@@ -43,8 +43,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
@@ -78,16 +76,14 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        userEvent.mousePress(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-        userEvent.mousePress(
+        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        fireEvent.click(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
-          userEvent.mousePress(
-            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
-          );
+          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {
         selectSection('hours');

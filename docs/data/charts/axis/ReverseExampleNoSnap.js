@@ -30,7 +30,7 @@ const dataset = [
 const series = [
   { type: 'line', dataKey: 'min', color: '#577399' },
   { type: 'line', dataKey: 'max', color: '#fe5f55' },
-  { type: 'bar', dataKey: 'precip', color: '#bfdbf7', yAxisKey: 'rightAxis' },
+  { type: 'bar', dataKey: 'precip', color: '#bfdbf7', yAxisId: 'rightAxis' },
 ];
 
 export default function ReverseExampleNoSnap() {

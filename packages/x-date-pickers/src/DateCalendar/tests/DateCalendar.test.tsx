@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
@@ -130,28 +130,31 @@ describe('<DateCalendar />', () => {
     expect(screen.getAllByRole('rowheader').length).to.equal(5);
   });
 
-  // test: https://github.com/mui/mui-x/issues/12373
-  it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
-    const onChange = spy();
-    const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
-    render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
+  describe('with fake timers', () => {
+    clock.withFakeTimers();
 
-    userEvent.mousePress(
-      screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
-    );
-    userEvent.mousePress(screen.getByRole('radio', { name: '2020' }));
+    // test: https://github.com/mui/mui-x/issues/12373
+    it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', () => {
+      const onChange = spy();
+      const defaultDate = adapterToUse.date('2019-01-02T11:12:13.550Z');
+      render(<DateCalendar onChange={onChange} disablePast defaultValue={defaultDate} />);
 
-    // Finish the transition to the day view
-    clock.runToLast();
+      fireEvent.click(
+        screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
+      );
+      fireEvent.click(screen.getByRole('radio', { name: '2020' }));
+      // Finish the transition to the day view
+      clock.runToLast();
 
-    userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
-    userEvent.mousePress(
-      screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
-    );
-    // select the current year with a date in the past to trigger "findClosestEnabledDate"
-    userEvent.mousePress(screen.getByRole('radio', { name: '2019' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
+      fireEvent.click(
+        screen.getByRole('button', { name: 'calendar view is open, switch to year view' }),
+      );
+      // select the current year with a date in the past to trigger "findClosestEnabledDate"
+      fireEvent.click(screen.getByRole('radio', { name: '2019' }));
 
-    expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(defaultDate);
+    });
   });
 
   describe('Slot: calendarHeader', () => {
@@ -172,7 +175,7 @@ describe('<DateCalendar />', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
-      expect(screen.getAllByMuiTest('day')).to.have.length(31);
+      expect(screen.getAllByTestId('day')).to.have.length(31);
       // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
@@ -195,7 +198,7 @@ describe('<DateCalendar />', () => {
       // should make the reference day firstly focusable
       expect(screen.getByRole('gridcell', { name: '17' })).to.have.attribute('tabindex', '0');
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 3, 2, 12, 30));
     });
@@ -212,7 +215,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -229,7 +232,7 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
@@ -245,15 +248,17 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.firstArg).toEqualDateTime(adapterToUse.date('2018-01-02T11:11:11'));
+      expect(onChange.lastCall.firstArg).toEqualDateTime(
+        adapterToUse.date('2018-01-02T11:11:11.111'),
+      );
     });
 
     it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
         />,
@@ -264,7 +269,7 @@ describe('<DateCalendar />', () => {
     it('should complete weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
-          defaultValue={adapterToUse.date('2018-01-03T11:11:11:111')}
+          defaultValue={adapterToUse.date('2018-01-03T11:11:11.111')}
           view="day"
           showDaysOutsideCurrentMonth
           fixedWeekNumber={6}
@@ -367,7 +372,7 @@ describe('<DateCalendar />', () => {
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('April 2019');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('April 2019');
     });
 
     it('should use `referenceDate` when no value defined', () => {
@@ -434,7 +439,7 @@ describe('<DateCalendar />', () => {
     it('renders year selection standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} openTo="year" />);
 
-      expect(screen.getAllByMuiTest('year')).to.have.length(200);
+      expect(screen.getAllByTestId('year')).to.have.length(200);
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', () => {
@@ -517,7 +522,7 @@ describe('<DateCalendar />', () => {
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
-      expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+      expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2022');
     });
 
     it('should scroll to show the selected year', function test() {
@@ -618,7 +623,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -635,7 +640,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
     });
   });

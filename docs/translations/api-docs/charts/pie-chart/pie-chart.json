@@ -34,13 +34,18 @@
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
+    "resolveSizeBeforeRender": {
+      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
+    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
     },
-    "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "tooltip": {

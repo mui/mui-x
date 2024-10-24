@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
@@ -164,7 +164,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
 
   return (
     <PickersYearRoot
-      data-mui-test="year"
+      data-testid="year"
       className={clsx(classes.root, className)}
       ownerState={props}
       {...other}

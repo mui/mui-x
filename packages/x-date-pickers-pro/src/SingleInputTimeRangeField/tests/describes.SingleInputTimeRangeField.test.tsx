@@ -6,21 +6,13 @@ import { describeConformance } from 'test/utils/describeConformance';
 describe('<SingleInputTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<SingleInputTimeRangeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<SingleInputTimeRangeField />, () => ({
     classes: {} as any,
     inheritComponent: 'div',
     render,
     muiName: 'MuiSingleInputTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: [
-      'reactTestRenderer',
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-    ],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeRangeValidation(SingleInputTimeRangeField, () => ({

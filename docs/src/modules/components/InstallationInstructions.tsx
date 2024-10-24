@@ -1,14 +1,13 @@
 import * as React from 'react';
-// @ts-expect-error
-import HighlightedCodeWithTabs from 'docs/src/modules/components/HighlightedCodeWithTabs';
+import HighlightedCodeWithTabs from '@mui/docs/HighlightedCodeWithTabs';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import ToggleOptions from './ToggleOptions';
 
 const defaultPackageManagers: Record<string, string> = {
   npm: 'npm install',
-  yarn: 'yarn add',
   pnpm: 'pnpm add',
+  yarn: 'yarn add',
 };
 
 export default function InstallationInstructions(props: {

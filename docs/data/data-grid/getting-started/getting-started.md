@@ -1,6 +1,6 @@
 # Data Grid - Getting started
 
-<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
+<p class="description">Get started with the last React Data Grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 
@@ -14,16 +14,17 @@ The Data Grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-```bash yarn
-yarn add @mui/material @emotion/react @emotion/styled
-```
-
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
+```
+
+```bash yarn
+yarn add @mui/material @emotion/react @emotion/styled
 ```
 
 </codeblock>
@@ -44,16 +45,17 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
@@ -65,7 +67,7 @@ Take a look at the [Styled Components guide](/material-ui/integrations/styled-co
 ## Quickstart
 
 First, you have to import the component as below.
-To avoid name conflicts the component is named `DataGridPro` for the full-featured enterprise grid, and `DataGrid` for the free community version.
+To avoid name conflicts the component is named Data Grid Pro for the full-featured enterprise grid, and Data Grid for the free community version.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
@@ -136,7 +138,6 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-data-grid-premium/themeAugmentation';
@@ -172,7 +173,7 @@ You can find more information about the plans in [the Licensing page](/x/introdu
 
 ### Feature comparison
 
-The following table summarizes the features available in the community `DataGrid` and enterprise `DataGridPro` components.
+The following table summarizes the features available in the community Data Grid and enterprise Data Grid Pro components.
 All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
@@ -187,7 +188,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | **Row**                                                                                |           |                                                                                      |                                                                                                      |
 | [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                                          ✅                                          |                                                  ✅                                                  |
-| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                                          🚧                                          |                                                  🚧                                                  |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    ✅     |                                          ✅                                          |                                                  ✅                                                  |
 | [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                                          ✅                                          |                                                  ✅                                                  |
 | **Selection**                                                                          |           |                                                                                      |                                                                                                      |

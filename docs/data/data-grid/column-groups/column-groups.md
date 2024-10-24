@@ -57,6 +57,14 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
 
+## Group header height
+
+By default, column group headers are the same height as [column headers](/x/react-data-grid/column-header/#header-height). This will be the default 56 pixels or a custom value set with the `columnHeaderHeight` prop.
+
+The `columnGroupHeaderHeight` prop can be used to size column group headers independently of column headers.
+
+{{"demo": "GroupHeaderHeight.js", "bg": "inline"}}
+
 ## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, the columns that are part of a group cannot be dragged to outside their group.
@@ -65,6 +73,12 @@ You can customize this behavior on specific groups by setting `freeReordering: t
 In the example below, the `Full name` column group can be divided, but not other column groups.
 
 {{"demo": "BreakingGroupDemo.js", "disableAd": true, "bg": "inline"}}
+
+## Collapsible column groups
+
+The demo below uses [`renderHeaderGroup`](/x/react-data-grid/column-groups/#customize-column-group) to add a button to collapse/expand the column group.
+
+{{"demo": "CollapsibleColumnGroups.js", "bg": "inline"}}
 
 ## Manage group visibility 🚧
 
