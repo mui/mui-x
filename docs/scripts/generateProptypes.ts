@@ -10,11 +10,7 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
-const COMPONENTS_WITHOUT_PROPTYPES = [
-  'ChartsAxisTooltipContent',
-  'ChartsItemTooltipContent',
-  'TreeItemRaw',
-];
+const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
   const isTDate = (name: string) => {
