@@ -62,7 +62,7 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-const isItemExpandable = (
+export const isItemExpandable = (
   reactChildren: React.ReactNode | TreeViewItemToRenderProps | TreeViewItemToRenderProps[],
 ) => {
   if (Array.isArray(reactChildren)) {

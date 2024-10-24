@@ -2,9 +2,9 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
-import { RawTreeItemProps } from '../../TreeItem/TreeItem.types';
 import { TreeViewItemId } from '../../models';
 import { TreeViewItemToRenderProps } from '../plugins/useTreeViewItems';
+import { RichTreeViewItemsContext } from '../hooks/useRichTreeViewItemsContext';
 
 interface RichTreeViewItemsOwnerState {
   itemId: TreeViewItemId;
@@ -37,18 +37,8 @@ export interface RichTreeViewItemsProps {
   slotProps?: RichTreeViewItemsSlotProps;
 }
 
-const RichTreeViewItemsContext = React.createContext<
-  ((item: TreeViewItemToRenderProps) => React.ReactNode) | null
->(null);
-
-if (process.env.NODE_ENV !== 'production') {
-  RichTreeViewItemsContext.displayName = 'RichTreeViewItemsProvider';
-}
-
-export const useRichTreeViewItemsContext = () => React.useContext(RichTreeViewItemsContext);
-
-interface WrappedTreeItemProps extends Pick<RawTreeItemProps, 'id' | 'itemId' | 'children'> {
-  itemSlot: React.JSXElementConstructor<RawTreeItemProps> | undefined;
+interface WrappedTreeItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
+  itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
   itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
   label: string;
   itemsToRender: TreeViewItemToRenderProps[] | undefined;
@@ -62,7 +52,7 @@ function WrappedTreeItem({
   itemId,
   itemsToRender,
 }: WrappedTreeItemProps) {
-  const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<RawTreeItemProps>;
+  const Item = (itemSlot ?? TreeItem) as React.JSXElementConstructor<TreeItemProps>;
   const { ownerState, ...itemProps } = useSlotProps({
     elementType: Item,
     externalSlotProps: itemSlotProps,
@@ -76,7 +66,7 @@ function WrappedTreeItem({
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const { itemsToRender, slots, slotProps } = props;
 
-  const itemSlot = slots?.item as React.JSXElementConstructor<RawTreeItemProps> | undefined;
+  const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
 
   const renderItem = React.useCallback(

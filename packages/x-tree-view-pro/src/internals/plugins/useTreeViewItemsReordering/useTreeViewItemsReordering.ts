@@ -53,9 +53,9 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
       }
 
       const canMoveItemToNewPosition = params.canMoveItemToNewPosition;
-      const targetItemMeta = selectorItemMeta(store.value, itemId);
+      const targetItemMeta = selectorItemMeta(store.value, itemId)!;
       const targetItemIndex = selectorItemIndex(store.value, targetItemMeta.id);
-      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId);
+      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId)!;
       const draggedItemIndex = selectorItemIndex(store.value, draggedItemMeta.id);
 
       const oldPosition: TreeViewItemReorderPosition = {
@@ -160,7 +160,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
         return;
       }
 
-      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId);
+      const draggedItemMeta = selectorItemMeta(store.value, itemsReordering.draggedItemId)!;
 
       const oldPosition: TreeViewItemReorderPosition = {
         parentId: draggedItemMeta.parentId,

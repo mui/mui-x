@@ -20,6 +20,7 @@ TreeItemProvider.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  id: PropTypes.string,
   itemId: PropTypes.string.isRequired,
 } as any;
 

@@ -10,7 +10,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { TreeItemProps, TreeItemOwnerState, RawTreeItemProps } from './TreeItem.types';
+import { TreeItemProps, TreeItemOwnerState } from './TreeItem.types';
 import {
   useTreeItem,
   UseTreeItemContentSlotOwnProps,
@@ -216,8 +216,18 @@ type TreeItemComponent = ((
   props: TreeItemProps & React.RefAttributes<HTMLLIElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-export const TreeItemRaw = React.forwardRef(function TreeItem(
-  inProps: RawTreeItemProps,
+/**
+ *
+ * Demos:
+ *
+ * - [Tree View](https://mui.com/x/react-tree-view/)
+ *
+ * API:
+ *
+ * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item-2/)
+ */
+const TreeItem = React.forwardRef(function TreeItem(
+  inProps: TreeItemProps,
   forwardedRef: React.Ref<HTMLLIElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTreeItem' });
@@ -351,6 +361,63 @@ export const TreeItemRaw = React.forwardRef(function TreeItem(
   );
 });
 
+TreeItem.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
+  children: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * If `true`, the item is disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
+   * The id attribute of the item. If not provided, it will be generated.
+   */
+  id: PropTypes.string,
+  /**
+   * The id of the item.
+   * Must be unique.
+   */
+  itemId: PropTypes.string.isRequired,
+  /**
+   * The label of the item.
+   */
+  label: PropTypes.node,
+  /**
+   * Callback fired when the item root is blurred.
+   */
+  onBlur: PropTypes.func,
+  /**
+   * This prop isn't supported.
+   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
+   */
+  onFocus: unsupportedProp,
+  /**
+   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
+   */
+  onKeyDown: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
 const areChildrenEqual = (childA: TreeViewItemToRenderProps, childB: TreeViewItemToRenderProps) => {
   if (childA.itemId !== childB.itemId) {
     return false;
@@ -374,7 +441,7 @@ const areChildrenEqual = (childA: TreeViewItemToRenderProps, childB: TreeViewIte
 
 // Logic copied from `fastObjectShallowCompare` but with a deep comparison for `props.children`
 const is = Object.is;
-const propsAreEqual = (a: RawTreeItemProps, b: RawTreeItemProps) => {
+const propsAreEqual = (a: TreeItemProps, b: TreeItemProps) => {
   if (a === b) {
     return true;
   }
@@ -426,71 +493,6 @@ const propsAreEqual = (a: RawTreeItemProps, b: RawTreeItemProps) => {
   return aLength === bLength;
 };
 
-/**
- *
- * Demos:
- *
- * - [Tree View](https://mui.com/x/react-tree-view/)
- *
- * API:
- *
- * - [TreeItem API](https://mui.com/x/api/tree-view/tree-item-2/)
- */
-export const TreeItem = React.memo(TreeItemRaw, propsAreEqual) as TreeItemComponent;
+const MemoizedTreeItem = React.memo(TreeItem, propsAreEqual) as TreeItemComponent;
 
-TreeItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.any,
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes: PropTypes.object,
-  className: PropTypes.string,
-  /**
-   * If `true`, the item is disabled.
-   * @default false
-   */
-  disabled: PropTypes.bool,
-  /**
-   * The id attribute of the item. If not provided, it will be generated.
-   */
-  id: PropTypes.string,
-  /**
-   * The id of the item.
-   * Must be unique.
-   */
-  itemId: PropTypes.string.isRequired,
-  /**
-   * The label of the item.
-   */
-  label: PropTypes.node,
-  /**
-   * Callback fired when the item root is blurred.
-   */
-  onBlur: PropTypes.func,
-  /**
-   * This prop isn't supported.
-   * Use the `onItemFocus` callback on the tree if you need to monitor an item's focus.
-   */
-  onFocus: unsupportedProp,
-  /**
-   * Callback fired when a key is pressed on the keyboard and the tree is in focus.
-   */
-  onKeyDown: PropTypes.func,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
+export { MemoizedTreeItem as TreeItem };

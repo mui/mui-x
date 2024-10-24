@@ -65,6 +65,10 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
 
   const expandAllSiblings = (event: React.KeyboardEvent, itemId: TreeViewItemId) => {
     const itemMeta = selectorItemMeta(store.value, itemId);
+    if (itemMeta == null) {
+      return;
+    }
+
     const siblings = selectorItemOrderedChildrenIds(store.value, itemMeta.parentId);
 
     const diff = siblings.filter(

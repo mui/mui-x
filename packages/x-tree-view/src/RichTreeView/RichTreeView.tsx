@@ -11,7 +11,6 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
-import { TreeItem } from '../TreeItem';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 

@@ -20,7 +20,7 @@ export const isAncestor = (
   itemIdA: string,
   itemIdB: string,
 ): boolean => {
-  const itemMetaA = selectorItemMeta(store.value, itemIdA);
+  const itemMetaA = selectorItemMeta(store.value, itemIdA)!;
   if (itemMetaA.parentId === itemIdB) {
     return true;
   }

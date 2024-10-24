@@ -10,10 +10,10 @@ import {
 } from '../models';
 import { TreeViewStore } from '../utils/TreeViewStore';
 import { TreeViewCorePluginSignatures } from '../corePlugins';
-import type { RawTreeItemProps } from '../../TreeItem/TreeItem.types';
+import type { TreeItemProps } from '../../TreeItem/TreeItem.types';
 
 export type TreeViewItemPluginsRunner = (
-  props: RawTreeItemProps,
+  props: TreeItemProps,
 ) => Required<TreeViewItemPluginResponse>;
 
 export type TreeViewContextValue<

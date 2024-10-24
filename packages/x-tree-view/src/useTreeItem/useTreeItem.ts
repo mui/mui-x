@@ -28,7 +28,7 @@ import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { useRichTreeViewItemsContext } from '../internals/components/RichTreeViewItems';
+import { useRichTreeViewItemsContext } from '../internals/hooks/useRichTreeViewItemsContext';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,

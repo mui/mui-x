@@ -16,6 +16,7 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
+import { isItemExpandable } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -106,13 +107,6 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
       mapFirstCharFromJSX,
     },
   };
-};
-
-const isItemExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-  }
-  return Boolean(reactChildren);
 };
 
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
