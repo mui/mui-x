@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.21.1
+
+_Oct 24, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🌍 Improve Portuguese (pt-BR) locale on the Data Grid component
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@clins1994, @GITPHLAP, @k-rajat19, @kalyan90, @merotosc, @yash49.
+Following are all team members who have contributed to this release:
+@cherniavskii, @flaviendelangle, @LukasTy, @MBilalShafi, @romgrk.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.21.1`
+
+- [DataGrid] Fix `GridPanelAnchor` positioning (#15022) @k-rajat19
+- [DataGrid] Fix ugly prop-types for the `pageStyle` prop of the `GridPrintExportMenuItem` component (#15015) @flaviendelangle
+- [DataGrid] Fix value type in filter model for number and boolean column type (#14733) @k-rajat19
+- [DataGrid] Focus next row when the focused row is deleted (#15067) @cherniavskii
+- [DataGrid] Refactor: remove some Box & Badge (#15013) @romgrk
+- [DataGrid] Fix number of rows to display for page size options with negative value (#14890) @kalyan90
+- [l10n] Improve Portuguese (pt-BR) locale (#15021) @k-rajat19
+
+#### `@mui/x-data-grid-pro@7.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.21.1`.
+
+#### `@mui/x-data-grid-premium@7.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.21.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.21.1`
+
+- [pickers] Fix `DigitalClock` time options on a `DST` switch day (#15092) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.21.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.21.1`
+
+- [charts] Export data type in onAxisClick(_, data) callback (#15038) @clins1994
+
+#### `@mui/x-charts-pro@7.0.0-beta.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.21.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.21.1`
+
+- [TreeView] Make the cancellable event types public (#14992) @flaviendelangle
+
+### Docs
+
+- [docs] Fix typo in Tree View docs (#15047) @yash49
+
+### Core
+
+- [core] Update prettier target branch (#15100) @MBilalShafi
+- [core] Update some `default-branch-switch` instances for `v7.x` (#15085) @MBilalShafi
+- [test] Revert to using `fireEvent` instead of `userEvent` (#14927) @LukasTy
+
 ## 7.21.0
 
 _Oct 17, 2024_
