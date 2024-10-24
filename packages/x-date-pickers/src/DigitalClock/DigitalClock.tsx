@@ -274,13 +274,14 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
+    const result: TDate[] = [];
     const startOfDay = utils.startOfDay(valueOrReferenceDate);
-    return [
-      startOfDay,
-      ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfDay, timeStep * (index + 1)),
-      ),
-    ];
+    let nextTimeStepOption = startOfDay;
+    while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
+      result.push(nextTimeStepOption);
+      nextTimeStepOption = utils.addMinutes(nextTimeStepOption, timeStep);
+    }
+    return result;
   }, [valueOrReferenceDate, timeStep, utils]);
 
   return (
@@ -301,9 +302,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
             return null;
           }
           const isSelected = utils.isEqual(option, value);
+          const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
+          const tabIndex =
+            focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
           return (
             <ClockItem
-              key={utils.toISO(option)}
+              key={`${option.valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
