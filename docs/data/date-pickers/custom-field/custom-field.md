@@ -132,6 +132,13 @@ you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a masked `TextField`
+
+If you want to use a simple mask approach for the field editing instead of the built-in logic,
+you can replace the field with a masked-based `TextField` built using the [rifm](https://www.npmjs.com/package/rifm) package.
+
+{{"demo": "custom-behavior/MaskedMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a read-only `TextField`
 
 If you want users to select a value exclusively through the views
