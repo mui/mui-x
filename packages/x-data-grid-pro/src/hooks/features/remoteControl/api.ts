@@ -2,10 +2,10 @@ import { Response } from './apiTypes';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
-const REMOTE_ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:3006' : '';
+const REMOTE_ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:3007' : '';
 
 export function controls(context: string, query: string) {
-  return fetch(`${REMOTE_ENDPOINT}/api/proxy`, {
+  return fetch(`${REMOTE_ENDPOINT}/api/datagrid-remote`, {
     mode: 'cors',
     method: 'post',
     headers: {
