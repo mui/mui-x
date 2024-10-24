@@ -112,7 +112,6 @@ type UseDateTimePickerDefaultizedProps<
   TView extends DateOrTimeViewWithMeridiem,
   Props extends BaseDateTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
-  TDate,
   DefaultizedProps<
     Props,
     | 'views'
@@ -138,7 +137,7 @@ export function useDateTimePickerDefaultizedProps<
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }

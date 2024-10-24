@@ -12,7 +12,7 @@ export interface MuiPickersAdapterContextValue<TDate extends PickerValidDate> {
   };
 
   utils: MuiPickersAdapter<TDate>;
-  localeText: PickersInputLocaleText<TDate> | undefined;
+  localeText: PickersInputLocaleText | undefined;
 }
 
 export type MuiPickersAdapterContextNullableValue<TDate extends PickerValidDate> = {
@@ -49,7 +49,7 @@ export interface LocalizationProviderProps<TDate extends PickerValidDate, TLocal
   /**
    * Locale for components texts
    */
-  localeText?: PickersInputLocaleText<TDate>;
+  localeText?: PickersInputLocaleText;
 }
 
 type LocalizationProviderComponent = (<TDate extends PickerValidDate, TLocale>(

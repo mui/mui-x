@@ -258,3 +258,32 @@ const theme = createTheme({
   },
 });
 ```
+
+## Stop passing `utils` and the date/time object to some translation keys
+
+The following translation keys expect to receive a function: `openDatePickerDialogue`, `openTimePickerDialogue`, or `clockLabelText`. If you are customizing the translation of those keys, you no longer need to provide `utils` and the date/time object to it, but only the formatted date/time value as a string. This affects the customization of those translation keys that on different contexts:
+
+Translations on a single component:
+
+```diff
+-<DatePicker localeText={{ openDatePickerDialogue: (date, utils) => string; }} />
++<DatePicker localeText={{ openDatePickerDialogue: (formattedDate) => string; }} />
+```
+
+Translations on custom components passed as slots:
+
+```diff
+ const translations = useTranslations();
+-const openDatePickerDialogue = translations.openTimePickerDialogue(value, {} as any, value == null ? null : value.format('MM/DD/YYY'));
++const openDatePickerDialogue = translations.openDatePickerDialogue(value == null ? null : value.format('MM/DD/YYY'));
+```
+
+Notice that `clockLabelText` expects an additional parameter with the time view.
+
+Also the following types and interfaces no longer receive a generic type parameter:
+
+- `PickersComponentAgnosticLocaleText`
+- `PickersInputComponentLocaleText`
+- `PickersInputLocaleText`
+- `PickersLocaleText`
+- `PickersTranslationKeys`
