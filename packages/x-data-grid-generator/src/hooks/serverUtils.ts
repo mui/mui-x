@@ -522,7 +522,7 @@ export const processRowGroupingRows = (
   const groupFields = queryOptions.groupFields;
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => row[field] as string);
+      const partialPath = groupFields.map((field) => String(row[field]));
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
         if (value === undefined) {
