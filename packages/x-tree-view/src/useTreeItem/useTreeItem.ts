@@ -28,7 +28,6 @@ import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
-import { useRichTreeViewItemsContext } from '../internals/hooks/useRichTreeViewItemsContext';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -47,7 +46,6 @@ export const useTreeItem = <
     publicAPI,
     store,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
-  const renderItemForRichTreeView = useRichTreeViewItemsContext();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
@@ -339,26 +337,13 @@ export const useTreeItem = <
   ): UseTreeItemGroupTransitionSlotProps<ExternalProps> => {
     const externalEventHandlers = extractEventHandlers(externalProps);
 
-    let cleanChildren: React.ReactNode;
-    if (renderItemForRichTreeView) {
-      if (!Array.isArray(children)) {
-        throw new Error(
-          'MUI X: The Tree Item component can only receive object children when used inside a Rich Tree View component.',
-        );
-      }
-
-      cleanChildren = children.map((child) => renderItemForRichTreeView(child));
-    } else {
-      cleanChildren = children as React.ReactNode;
-    }
-
     const response: UseTreeItemGroupTransitionSlotProps<ExternalProps> = {
       ...externalEventHandlers,
       unmountOnExit: true,
       component: 'ul',
       role: 'group',
       in: status.expanded,
-      children: cleanChildren,
+      children,
       ...externalProps,
     };
 

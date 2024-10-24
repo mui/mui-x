@@ -2,10 +2,7 @@ import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
 import { TreeViewPublicAPI } from '../internals/models';
 import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
-import {
-  TreeViewItemToRenderProps,
-  UseTreeViewItemsSignature,
-} from '../internals/plugins/useTreeViewItems';
+import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
 import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
 import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
@@ -34,7 +31,7 @@ export interface UseTreeItemParameters {
   /**
    * The content of the component.
    */
-  children?: React.ReactNode | TreeViewItemToRenderProps[];
+  children?: React.ReactNode;
 }
 
 export interface UseTreeItemContextProviderProps {
