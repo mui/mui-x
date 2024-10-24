@@ -21,9 +21,7 @@
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
       "default": "'content'"
     },
-    "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
-    },
+    "experimentalFeatures": { "type": { "name": "object" } },
     "id": { "type": { "name": "string" } },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },

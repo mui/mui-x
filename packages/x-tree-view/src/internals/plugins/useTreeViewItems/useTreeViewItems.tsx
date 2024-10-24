@@ -278,7 +278,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       items: {
         onItemClick: params.onItemClick,
         disabledItemsFocusable: params.disabledItemsFocusable,
-        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
       },
     },
   };
