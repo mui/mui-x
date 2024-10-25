@@ -29,6 +29,49 @@ describe('<DateCalendar /> - Timezone', () => {
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
+    it('should use "default" timezone for onChange when provided', () => {
+      const onChange = spy();
+      const value = adapter.date('2022-04-25T15:30');
+
+      render(<DateCalendar value={value} onChange={onChange} timezone="default" />);
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
+      const expectedDate = adapter.setDate(value, 25);
+
+      // Check the `onChange` value (uses timezone prop)
+      const actualDate = onChange.lastCall.firstArg;
+      expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
+      expect(actualDate).toEqualDateTime(expectedDate);
+    });
+
+    it('should correctly render month days when timezone changes', () => {
+      function DateCalendarWithControlledTimezone() {
+        const [timezone, setTimezone] = React.useState('Europe/Paris');
+        return (
+          <React.Fragment>
+            <DateCalendar timezone={timezone} />
+            <button onClick={() => setTimezone('America/New_York')}>Switch timezone</button>
+          </React.Fragment>
+        );
+      }
+      render(<DateCalendarWithControlledTimezone />);
+
+      expect(
+        screen.getAllByRole('gridcell', {
+          name: (_, element) => element.nodeName === 'BUTTON',
+        }).length,
+      ).to.equal(30);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Switch timezone' }));
+
+      // the amount of rendered days should remain the same after changing timezone
+      expect(
+        screen.getAllByRole('gridcell', {
+          name: (_, element) => element.nodeName === 'BUTTON',
+        }).length,
+      ).to.equal(30);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange when no value is provided', () => {
