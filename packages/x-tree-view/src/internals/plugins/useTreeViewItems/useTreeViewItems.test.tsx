@@ -8,6 +8,7 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewSelectionSignature,
 } from '@mui/x-tree-view/internals';
+import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 
 describeTreeView<
   [UseTreeViewItemsSignature, UseTreeViewExpansionSignature, UseTreeViewSelectionSignature]
@@ -218,6 +219,50 @@ describeTreeView<
         fireEvent.click(view.getItemContent('1.1'));
         expect(onItemClick.callCount).to.equal(1);
         expect(onItemClick.lastCall.lastArg).to.equal('1.1');
+      });
+    });
+
+    describe('Memoization (Rich Tree View only)', () => {
+      it('should not re-render any children when the Tree View re-renders', function test() {
+        if (!treeViewComponentName.startsWith('RichTreeView')) {
+          this.skip();
+        }
+
+        const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+        const view = render({
+          items: Array.from({ length: 10 }, (_, i) => ({ id: i.toString() })),
+          slotProps: { item: { slots: { label: spyLabel } } },
+        });
+
+        spyLabel.resetHistory();
+
+        view.setProps({ onClick: () => {} });
+
+        const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+        expect(renders).to.deep.equal([]);
+      });
+
+      it('should not re-render every children when updating the state on an item', function test() {
+        if (!treeViewComponentName.startsWith('RichTreeView')) {
+          this.skip();
+        }
+
+        const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+        const view = render({
+          items: Array.from({ length: 10 }, (_, i) => ({ id: i.toString() })),
+          selectedItems: [],
+          slotProps: { item: { slots: { label: spyLabel } } },
+        });
+
+        spyLabel.resetHistory();
+
+        view.setProps({ selectedItems: ['1'] });
+
+        const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+
+        // 2 renders of the 1st item to remove to tabIndex={0}
+        // 2 renders of the selected item to change its visual state
+        expect(renders).to.deep.equal(['0', '0', '1', '1']);
       });
     });
 

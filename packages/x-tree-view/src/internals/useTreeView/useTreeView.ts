@@ -159,6 +159,5 @@ export const useTreeView = <
     getRootProps,
     rootRef: handleRootRef,
     contextValue,
-    store: storeRef.current as TreeViewStore<any>,
   };
 };
