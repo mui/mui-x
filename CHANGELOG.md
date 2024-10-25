@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🛰 Introduce server-side data source support for Data Grid row grouping
 
-Check the [documentation](https://mui.com/x/react-data-grid/server-side-data/row-grouping/) for more details.
+  Check the [documentation](https://mui.com/x/react-data-grid/server-side-data/row-grouping/) for more details.
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
