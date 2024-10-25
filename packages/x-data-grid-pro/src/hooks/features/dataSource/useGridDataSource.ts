@@ -275,6 +275,7 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIfServerMode(props.paginationMode, fetchRows),
   );
+  // @ts-ignore - Event is not defined in the Pro API
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () => fetchRows());
 
   const isFirstRender = React.useRef(true);
