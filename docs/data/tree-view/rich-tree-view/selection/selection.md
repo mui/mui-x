@@ -117,13 +117,13 @@ const apiRef = useTreeViewApiRef();
 return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
+When your component first renders, `apiRef` is `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
 ### Select or deselect an item
 
-Use the `selectItem` API method to select or deselect an item:
+Use the `selectItem()` API method to select or deselect an item:
 
 ```ts
 apiRef.current.selectItem({

@@ -69,7 +69,7 @@ Same changes as in `@mui/x-charts@7.21.0`.
 
 #### `@mui/x-tree-view@7.21.0`
 
-- [TreeView] Fix `alpha` usage with CSS variables (#14969) @wangkailang
+- [TreeView] Fix `alpha()` usage with CSS variables (#14969) @wangkailang
 - [TreeView] Fix usage of the `aria-selected` attribute (#14991) @flaviendelangle
 - [TreeView] Fix hydration error (#15002) @flaviendelangle
 
@@ -405,7 +405,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [DataGrid] Add "does not equal" and "does not contain" filter operators (#14489) @KenanYusuf
 - [DataGrid] Add demo to the "Custom columns" page that does not use generator (#13695) @arminmeh
-- [DataGrid] Fix Voice Over reading the column name twice (#14482) @arminmeh
+- [DataGrid] Fix VoiceOver reading the column name twice (#14482) @arminmeh
 - [DataGrid] Fix bug in CRUD example (#14513) @michelengelen
 - [DataGrid] Fix failing jsdom tests caused by `:has()` selectors (#14559) @KenanYusuf
 - [DataGrid] Refactor string operator filter functions (#14564) @KenanYusuf
@@ -1225,7 +1225,7 @@ _Jul 5, 2024_
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔄 Add loading overlay variants, including a skeleton loader option to the Data Grid component. See [Loading overlay docs](https://mui.com/x/react-data-grid/overlays/#loading-overlay) for more details.
-- 🌳 Add `selectItem` and `getItemDOMElement` methods to the TreeView component public API
+- 🌳 Add `selectItem()` and `getItemDOMElement()` methods to the TreeView component public API
 - ⛏️ Make the `usePickersTranslations` hook public in the pickers component
 - 🐞 Bugfixes
 
@@ -1270,7 +1270,7 @@ Same changes as in `@mui/x-date-pickers@7.9.0`.
 
 #### `@mui/x-tree-view@7.9.0`
 
-- [TreeView] Add `selectItem` and `getItemDOMElement` methods to the public API (#13485) @flaviendelangle
+- [TreeView] Add `selectItem()` and `getItemDOMElement()` methods to the public API (#13485) @flaviendelangle
 
 ### Docs
 

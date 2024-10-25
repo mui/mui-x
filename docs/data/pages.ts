@@ -541,6 +541,7 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v8',
         subheader: 'Upgrade to v8',
         children: [
+          { pathname: '/x/migration/migration-data-grid-v7', title: 'Breaking changes: Data Grid' },
           {
             pathname: '/x/migration/migration-pickers-v7',
             title: 'Breaking changes: Date and Time Pickers',
@@ -548,6 +549,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/migration/migration-tree-view-v7',
             title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/migration-charts-v7',
+            title: 'Breaking changes: Charts',
           },
         ],
       },
