@@ -15,7 +15,6 @@ import {
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import {
-  selectorIsItemDisabled,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
   selectorItemModel,

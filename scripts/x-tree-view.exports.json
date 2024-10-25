@@ -58,6 +58,7 @@
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
   { "name": "TreeViewCollapseIcon", "kind": "Variable" },
+  { "name": "TreeViewDefaultItemModelProperties", "kind": "TypeAlias" },
   { "name": "TreeViewExpandIcon", "kind": "Variable" },
   { "name": "TreeViewItemId", "kind": "TypeAlias" },
   { "name": "TreeViewItemsReorderingAction", "kind": "TypeAlias" },

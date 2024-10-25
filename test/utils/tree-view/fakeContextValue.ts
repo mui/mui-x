@@ -37,6 +37,7 @@ export const getFakeContextValue = (
     cacheKey: { id: 1 },
     id: { treeId: 'mui-tree-view-1', providedTreeId: undefined },
     items: {
+      disabledItemsFocusable: false,
       itemMetaLookup: {},
       itemModelLookup: {},
       itemOrderedChildrenIdsLookup: {},
