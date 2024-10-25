@@ -43,6 +43,5 @@ export const getFakeContextValue = (
       selection: { selectedItemsMap: new Map() },
       focus: { focusedItemId: null, defaultFocusableItemId: null },
     },
-    forceUpdate: () => {},
   }),
 });
