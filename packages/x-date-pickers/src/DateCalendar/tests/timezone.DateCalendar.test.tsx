@@ -40,7 +40,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
       // Check the `onChange` value (uses timezone prop)
       const actualDate = onChange.lastCall.firstArg;
-      expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
+      expect(adapter.getTimezone(actualDate)).to.equal('system');
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
