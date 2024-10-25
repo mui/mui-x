@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.21.1
+## 7.22.0
 
 _Oct 25, 2024_
 
@@ -50,13 +50,13 @@ Same changes as in `@mui/x-data-grid-pro@7.22.0`, plus:
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@7.21.1`
+#### `@mui/x-date-pickers@7.22.0`
 
 - [pickers] Fix `DigitalClock` time options on a `DST` switch day (#15092) @LukasTy
 
-#### `@mui/x-date-pickers-pro@7.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@7.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@7.21.1`.
+Same changes as in `@mui/x-date-pickers@7.22.0`.
 
 ### Charts
 
