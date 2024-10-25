@@ -275,7 +275,6 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIfServerMode(props.paginationMode, fetchRows),
   );
-  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () => fetchRows());
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
