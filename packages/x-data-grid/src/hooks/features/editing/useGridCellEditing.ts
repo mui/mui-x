@@ -333,25 +333,40 @@ export const useGridCellEditing = (
   );
 
   const updateStateToStartCellEditMode = useEventCallback<[GridStartCellEditModeParams], void>(
-    (params) => {
+    async (params) => {
       const { id, field, deleteValue, initialValue } = params;
 
-      let newValue = apiRef.current.getCellValue(id, field);
+      const value = apiRef.current.getCellValue(id, field);
+      let newValue = value;
       if (deleteValue) {
         newValue = getDefaultCellValue(apiRef.current.getColumn(field));
       } else if (initialValue) {
         newValue = initialValue;
       }
 
-      const newProps = {
+      const column = apiRef.current.getColumn(field);
+
+      let newProps: GridEditCellProps = {
         value: newValue,
         error: false,
-        isProcessingProps: false,
+        isProcessingProps: !!column.preProcessEditCellProps,
       };
 
       updateOrDeleteFieldState(id, field, newProps);
 
       apiRef.current.setCellFocus(id, field);
+
+      if (column.preProcessEditCellProps) {
+        newProps = await Promise.resolve(
+          column.preProcessEditCellProps({
+            id,
+            row: apiRef.current.getRow(id),
+            props: newProps,
+            hasChanged: newValue !== value,
+          }),
+        );
+        updateOrDeleteFieldState(id, field, { ...newProps, isProcessingProps: false });
+      }
     },
   ) as GridCellEditingApi['startCellEditMode'];
 
