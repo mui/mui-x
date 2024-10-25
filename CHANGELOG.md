@@ -10,7 +10,6 @@ _Oct 25, 2024_
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🛰 Introduce [server-side support for Data Grid row grouping](https://mui.com/x/react-data-grid/server-side-data/row-grouping/)
-
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🌍 Improve Portuguese (pt-BR) locale on the Data Grid component
