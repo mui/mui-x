@@ -130,6 +130,6 @@ export const selectorCanItemBeFocused = createSelector(
       return true;
     }
 
-    return isItemDisabled;
+    return !isItemDisabled;
   },
 );
