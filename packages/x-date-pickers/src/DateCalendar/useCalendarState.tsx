@@ -43,7 +43,7 @@ export const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'changeMonth', ChangeMonthPayload<TDate>>
-      | ReducerAction<'changeMonthTimezone', { newMonth: TDate }>
+      | ReducerAction<'changeMonthTimezone', { newTimezone: string }>
       | ReducerAction<'changeFocusedDay', ChangeFocusedDayPayload<TDate>>,
   ): CalendarState<TDate> => {
     switch (action.type) {
@@ -56,7 +56,7 @@ export const createCalendarStateReducer =
         };
 
       case 'changeMonthTimezone': {
-        const newTimezone = utils.getTimezone(action.newMonth);
+        const newTimezone = action.newTimezone;
         if (utils.getTimezone(state.currentMonth) === newTimezone) {
           return state;
         }
@@ -182,9 +182,9 @@ export const useCalendarState = <TDate extends PickerValidDate>(
   React.useEffect(() => {
     dispatch({
       type: 'changeMonthTimezone',
-      newMonth: referenceDate,
+      newTimezone: utils.getTimezone(referenceDate),
     });
-  }, [referenceDate]);
+  }, [referenceDate, utils]);
 
   const handleChangeMonth = React.useCallback(
     (payload: ChangeMonthPayload<TDate>) => {
