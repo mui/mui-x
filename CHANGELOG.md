@@ -52,6 +52,7 @@ Same changes as in `@mui/x-data-grid-pro@7.22.0`, plus:
 
 #### `@mui/x-date-pickers@7.22.0`
 
+- [pickers] Fix `DateCalendar` timezone management (#15119) @LukasTy
 - [pickers] Fix `DigitalClock` time options on a `DST` switch day (#15092) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
