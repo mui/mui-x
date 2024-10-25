@@ -110,7 +110,7 @@ export const useTreeView = <
       rootRef: innerRootRef,
       models,
       plugins,
-      store: storeRef.current as any,
+      store: storeRef.current as TreeViewStore<any>,
     });
 
     if (pluginResponse.getRootProps) {
@@ -159,6 +159,6 @@ export const useTreeView = <
     getRootProps,
     rootRef: handleRootRef,
     contextValue,
-    instance,
+    store: storeRef.current as TreeViewStore<any>,
   };
 };
