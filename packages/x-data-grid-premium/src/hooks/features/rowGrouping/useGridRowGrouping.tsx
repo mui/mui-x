@@ -19,7 +19,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
-  ROW_GROUPING_STRATEGY,
+  RowGroupingStrategy,
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,
@@ -63,6 +63,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
     | 'slotProps'
     | 'slots'
+    | 'unstable_dataSource'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -73,7 +74,7 @@ export const useGridRowGrouping = (
     changeEvent: 'rowGroupingModelChange',
   });
 
-  /**
+  /*
    * API METHODS
    */
   const setRowGroupingModel = React.useCallback<GridRowGroupingApi['setRowGroupingModel']>(
@@ -165,6 +166,16 @@ export const useGridRowGrouping = (
     [props.disableRowGrouping],
   );
 
+  const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
+    (params) => {
+      return {
+        ...params,
+        groupFields: gridRowGroupingModelSelector(apiRef),
+      };
+    },
+    [apiRef],
+  );
+
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, context) => {
       const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
@@ -209,10 +220,11 @@ export const useGridRowGrouping = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'getRowsParams', addGetRowsParams);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  /**
+  /*
    * EVENTS
    */
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
@@ -233,10 +245,15 @@ export const useGridRowGrouping = (
           return;
         }
 
+        if (props.unstable_dataSource && !params.rowNode.childrenExpanded) {
+          apiRef.current.unstable_dataSource.fetchRows(params.id);
+          return;
+        }
+
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, props.rowGroupingColumnMode],
+    [apiRef, props.rowGroupingColumnMode, props.unstable_dataSource],
   );
 
   const checkGroupingColumnsModelDiff = React.useCallback<
@@ -258,7 +275,7 @@ export const useGridRowGrouping = (
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.getActiveStrategy('rowTree') === RowGroupingStrategy.Default) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }
@@ -268,7 +285,7 @@ export const useGridRowGrouping = (
   useGridApiEventHandler(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridApiEventHandler(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);
 
-  /**
+  /*
    * EFFECTS
    */
   React.useEffect(() => {

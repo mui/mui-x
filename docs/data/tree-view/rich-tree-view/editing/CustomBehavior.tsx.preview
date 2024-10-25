@@ -1,6 +1,6 @@
 <RichTreeView
   items={MUI_X_PRODUCTS}
-  slots={{ item: CustomTreeItem2 }}
+  slots={{ item: CustomTreeItem }}
   experimentalFeatures={{ labelEditing: true }}
   isItemEditable
   defaultExpandedItems={['grid', 'pickers']}

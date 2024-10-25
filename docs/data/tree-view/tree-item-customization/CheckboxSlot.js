@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomCheckbox = React.forwardRef(function CustomCheckbox(props, ref) {
@@ -10,7 +10,7 @@ const CustomCheckbox = React.forwardRef(function CustomCheckbox(props, ref) {
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{
