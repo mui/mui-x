@@ -35,7 +35,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
       render(<DateCalendar value={value} onChange={onChange} timezone="default" />);
 
-      fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
       const expectedDate = adapter.setDate(value, 25);
 
       // Check the `onChange` value (uses timezone prop)
@@ -62,7 +62,7 @@ describe('<DateCalendar /> - Timezone', () => {
         }).length,
       ).to.equal(30);
 
-      fireEvent.click(screen.getByRole('button', { name: 'Switch timezone' }));
+      userEvent.mousePress(screen.getByRole('button', { name: 'Switch timezone' }));
 
       // the amount of rendered days should remain the same after changing timezone
       expect(
