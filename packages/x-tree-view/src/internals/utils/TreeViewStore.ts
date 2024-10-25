@@ -2,15 +2,17 @@ import type { TreeViewAnyPluginSignature, TreeViewState } from '../models';
 
 type Listener<T> = (value: T) => void;
 
-export type StoreUpdater<TValue> = (value: TValue) => TValue;
+export type StoreUpdater<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (
+  prevState: TreeViewState<TSignatures>,
+) => TreeViewState<TSignatures>;
 
 export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignature[]> {
   public value: TreeViewState<TSignatures>;
 
   private listeners: Set<Listener<TreeViewState<TSignatures>>>;
 
-  constructor({ initialState }: { initialState: TreeViewState<TSignatures> }) {
-    this.value = initialState;
+  constructor(value: TreeViewState<TSignatures>) {
+    this.value = value;
     this.listeners = new Set();
   }
 
@@ -25,7 +27,7 @@ export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignatu
     return this.value;
   };
 
-  public update = (updater: StoreUpdater<TreeViewState<TSignatures>>) => {
+  public update = (updater: StoreUpdater<TSignatures>) => {
     const newState = updater(this.value);
     if (newState !== this.value) {
       this.value = newState;

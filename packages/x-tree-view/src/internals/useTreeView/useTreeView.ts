@@ -84,7 +84,7 @@ export const useTreeView = <
       }
     });
 
-    storeRef.current = new TreeViewStore({ initialState });
+    storeRef.current = new TreeViewStore(initialState);
   }
 
   const baseContextValue = useTreeViewBuildContext<TSignatures>({
