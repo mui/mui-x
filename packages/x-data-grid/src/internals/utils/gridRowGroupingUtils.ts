@@ -1,7 +1,4 @@
-// Can't import from pro/premium package - hence duplication
-
-export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
-export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
+import { GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD } from '../constants';
 
 export const getRowGroupingCriteriaFromGroupingField = (groupingColDefField: string) => {
   const match = groupingColDefField.match(/^__row_group_by_columns_group_(.*)__$/);
