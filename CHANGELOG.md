@@ -46,7 +46,7 @@ Same changes as in `@mui/x-data-grid@7.22.0`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@7.22.0`, plus:
 
-- [DataGridPremium] Server-side data source with row grouping (@MBilalShafi) (#15109)
+- [DataGridPremium] Server-side data source with row grouping (#15109) @MBilalShafi
 
 ### Date and Time Pickers
 
