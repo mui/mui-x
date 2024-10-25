@@ -42,26 +42,11 @@ const PickersToolbarRoot = styled('div', {
     {
       props: { isLandscape: true },
       style: {
-        gridColumn: 1,
-        gridRow: '2 / 3',
         height: 'auto',
         maxWidth: 160,
         padding: 16,
         justifyContent: 'flex-start',
         flexWrap: 'wrap',
-      },
-    },
-    {
-      props: { isLandscape: true, isRtl: true },
-      style: {
-        gridColumn: 3,
-      },
-    },
-    {
-      props: { isLandscape: false },
-      style: {
-        gridColumn: '2 / 4',
-        gridRow: 1,
       },
     },
   ],
