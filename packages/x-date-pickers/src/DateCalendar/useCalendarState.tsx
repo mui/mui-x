@@ -43,6 +43,7 @@ export const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'changeMonth', ChangeMonthPayload<TDate>>
+      | ReducerAction<'changeMonthTimezone', { newMonth: TDate }>
       | ReducerAction<'changeFocusedDay', ChangeFocusedDayPayload<TDate>>,
   ): CalendarState<TDate> => {
     switch (action.type) {
@@ -53,6 +54,21 @@ export const createCalendarStateReducer =
           currentMonth: action.newMonth,
           isMonthSwitchingAnimating: !reduceAnimations,
         };
+
+      case 'changeMonthTimezone': {
+        const newTimezone = utils.getTimezone(action.newMonth);
+        if (utils.getTimezone(state.currentMonth) === newTimezone) {
+          return state;
+        }
+        let newCurrentMonth = utils.setTimezone(state.currentMonth, newTimezone);
+        if (utils.getMonth(newCurrentMonth) !== utils.getMonth(state.currentMonth)) {
+          newCurrentMonth = utils.setMonth(newCurrentMonth, utils.getMonth(state.currentMonth));
+        }
+        return {
+          ...state,
+          currentMonth: newCurrentMonth,
+        };
+      }
 
       case 'finishMonthSwitchingAnimation':
         return {
@@ -161,15 +177,13 @@ export const useCalendarState = <TDate extends PickerValidDate>(
     slideDirection: 'left',
   });
 
-  // Ensure that `calendarState.currentMonth` is updated when `referenceDate` (or timezone changes)
+  // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
   // https://github.com/mui/mui-x/issues/10804
   React.useEffect(() => {
     dispatch({
-      type: 'changeMonth',
-      newMonth: utils.startOfMonth(referenceDate),
-      direction: calendarState.slideDirection,
+      type: 'changeMonthTimezone',
+      newMonth: referenceDate,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referenceDate, utils]);
 
   const handleChangeMonth = React.useCallback(
