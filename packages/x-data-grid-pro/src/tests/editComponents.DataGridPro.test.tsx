@@ -273,7 +273,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10),
@@ -394,7 +394,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('2022-02-18T14:30');
       await act(async () => {
-        await apiRef.current.setEditCellValue({
+        apiRef.current.setEditCellValue({
           id: 0,
           field: 'createdAt',
           value: new Date(2022, 1, 10, 15, 10, 0),
@@ -542,7 +542,9 @@ describe('<DataGridPro /> - Edit components', () => {
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' }));
+      await act(async () => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+      });
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
@@ -642,7 +644,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      await waitFor(() => expect(onValueChange.callCount).to.equal(1));
+      expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });

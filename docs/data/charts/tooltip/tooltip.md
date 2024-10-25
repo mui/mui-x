@@ -1,7 +1,7 @@
 ---
 title: Charts - Tooltip
 productId: x-charts
-components: ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent, ChartsAxisHighlight
+components: ChartsTooltip, DefaultChartsAxisTooltipContent, DefaultChartsItemTooltipContent
 ---
 
 # Charts - Tooltip
@@ -15,61 +15,11 @@ If you are using composition, you can add the `<ChartsTooltip />` component and 
 
 The tooltip can be triggered by two kinds of events:
 
-- `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
-- `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
+- `'item'`—when the user's mouse hovers over an item on the chart, the tooltip displays data about this specific item.
+- `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip displays data about all series at this specific x value.
 - `'none'`—disable the tooltip.
 
 {{"demo": "Interaction.js"}}
-
-## Highlights
-
-### Highlighting axis
-
-You can highlight data based on mouse position.
-By default, those highlights are lines, but it can also be a vertical band if your x-axis use `scaleType: 'band'`.
-
-On the chart, to customize this behavior, you can use:
-
-```jsx
-axisHighlight={{
-  x: 'line', // Or 'none', or 'band'
-  y: 'line', // Or 'none'
-}}
-```
-
-{{"demo": "BandHighlight.js" }}
-
-### Highlighting series
-
-In parallel with the tooltip, you can highlight and fade elements.
-
-This kind of interaction is controlled by series properties `highlightScope` which contains two options:
-
-- `highlighted` Indicates which item to highlight. Its value can be
-  - `'none'` Do nothing (default one).
-  - `'item'` Only highlight the item itself.
-  - `'series'` Highlight all items of the series.
-- `faded` Indicates which item to fade (if they are not already highlighted). Its value can be
-  - `'none'` Do nothing (default one).
-  - `'series'` Fade all the items of the series.
-  - `'global'` Fade all the items of the chart.
-
-{{"demo": "ElementHighlights.js"}}
-
-### Controlled Highlight
-
-The highlight can be controlled by the user when they set `highlightedItem` and `onHighlightChange`.
-
-You can set the `highlightedItem` value based on inputs, and sync it when the user hover over an item themselves.
-
-{{"demo": "ControlledHighlight.js"}}
-
-#### Synchronizing Highlights
-
-Having a controlled highlight allows you to control it in multiple charts at the same time.
-You just need to ensure that the `series` have the same `ids` and the data is in the same order.
-
-{{"demo": "SyncHighlight.js"}}
 
 ## Customization
 
@@ -129,7 +79,7 @@ See [Label—Conditional formatting](/x/react-charts/label/#conditional-formatti
 ### Hiding values
 
 You can hide the axis value with `hideTooltip` in the `xAxis` props.
-It will remove the header showing the x-axis value from the tooltip.
+It removes the header showing the x-axis value from the tooltip.
 
 ```jsx
 <LineChart
@@ -166,10 +116,10 @@ The second one when trigger is set to `"axis"`.
 
 ## Composition
 
-If you're using composition, by default, the axis will be listening for mouse events to get its current x/y values.
+If you're using composition, by default, the axis listens for mouse events to get its current x/y values.
 If you don't need it, you can disable those listeners with the `disableAxisListener` prop.
 
-You need those listeners if you are using [axes highlight](/x/react-charts/tooltip/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
+You need those listeners if you are using [axes highlight](/x/react-charts/highlighting/#highlighting-axis) or you have a tooltip [triggered by axis](/x/react-charts/tooltip/#tooltip-trigger).
 
 ```jsx
 <ChartContainer {...} disableAxisListener>
@@ -181,7 +131,7 @@ You need those listeners if you are using [axes highlight](/x/react-charts/toolt
 
 #### Item Tooltip
 
-You can create your own tooltip by using `useItemTooltip`.
+You can create your own tooltip by using `useItemTooltip()`.
 This hook returns the information about the current item user is interacting with.
 It contains:
 
@@ -189,13 +139,13 @@ It contains:
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can use the `useMouseTracker`, or track events on the SVG thanks to `useSvgRef`.
+To follow the mouse position, you can use the `useMouseTracker()`, or track events on the SVG thanks to `useSvgRef()`.
 
 {{"demo": "CustomTooltipContent.js"}}
 
 #### Axis Tooltip
 
-Like in previous section, you can create your own tooltip by using `useAxisTooltip`.
+Like in previous section, you can create your own tooltip by using `useAxisTooltip()`.
 This hook returns the information about the current axis user is interacting with and the relevant series.
 It contains:
 
@@ -203,12 +153,12 @@ It contains:
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can use the `useMouseTracker`, or track events on the SVG thanks to `useSvgRef`.
+To follow the mouse position, you can use the `useMouseTracker()`, or track events on the SVG thanks to `useSvgRef()`.
 
 {{"demo": "CustomAxisTooltipContent.js"}}
 
 ### Tooltip position
 
-This demo show example about how to use additional hooks such as `useXAxis` or `useDrawingArea` to customize the tooltip position.
+This demo show example about how to use additional hooks such as `useXAxis()` or `useDrawingArea()` to customize the tooltip position.
 
 {{"demo": "CustomTooltipPosition.js"}}

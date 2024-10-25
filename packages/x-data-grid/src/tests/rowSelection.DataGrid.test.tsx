@@ -232,14 +232,11 @@ describe('<DataGrid /> - Row selection', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 
-      // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
       fireUserEvent.mousePress(checkboxInput!);
 
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -384,9 +381,7 @@ describe('<DataGrid /> - Row selection', () => {
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       fireEvent.click(selectAllCheckbox);
-      await act(() => {
-        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      });
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
       fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
@@ -607,7 +602,7 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: isRowSelectable', () => {
-    it('should update the selected rows when the isRowSelectable prop changes', async () => {
+    it('should update the selected rows when the isRowSelectable prop changes', () => {
       const { setProps } = render(
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );
@@ -685,6 +680,27 @@ describe('<DataGrid /> - Row selection', () => {
         rows: data.rows.slice(0, 1),
       });
       expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+
+    // Related to https://github.com/mui/mui-x/issues/14964
+    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChangeSpy = spy();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          rowSelectionModel={[0, 1, 2]}
+          onRowSelectionModelChange={onRowSelectionModelChangeSpy}
+          checkboxSelection
+          {...data}
+        />,
+      );
+
+      setProps({
+        rows: data.rows.slice(0, 1),
+      });
+
+      expect(onRowSelectionModelChangeSpy.called).to.equal(true);
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
@@ -865,7 +881,7 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
-      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).not.to.throw();
     });
   });
 

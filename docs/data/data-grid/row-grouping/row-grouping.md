@@ -11,6 +11,10 @@ In the following example, movies are grouped based on their production `company`
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::info
+If you are looking for row grouping on the server-side, see [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+:::
+
 ## Grouping criteria
 
 ### Initialize the row grouping
@@ -43,7 +47,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the data grid will display a single column holding all grouping columns.
+By default, the Data Grid will display a single column holding all grouping columns.
 If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -226,7 +230,7 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the data grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If the grouping key of a grouping criteria is `null` or `undefined` for a row, the Data Grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -251,6 +255,10 @@ isGroupExpandedByDefault={
 Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+The `apiRef.current.setRowChildrenExpansion` method is not compatible with the [server-side tree data](/x/react-data-grid/server-side-data/tree-data/) and [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/). Use `apiRef.current.unstable_dataSource.fetchRows` instead.
+:::
 
 ### Customize grouping cell indent
 
@@ -279,10 +287,6 @@ When using `rowGroupingColumnMode = "single"`, the default behavior is to:
 If you are rendering leaves with the `leafField` property of `groupingColDef`, the sorting and filtering will be applied on the leaves based on the `sortComparator` and `filterOperators` of their original column.
 
 You can force the filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupingColDef`
-
-:::warning
-This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`.
-:::
 
 {{"demo": "RowGroupingFilteringSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -321,13 +325,13 @@ type GridRowSelectionPropagation = {
 
 When `rowSelectionPropagation.descendants` is set to `true`.
 
-- Selecting a parent would auto-select all its filtered descendants.
-- Deselecting a parent row would auto-deselect all its filtered descendants.
+- Selecting a parent selects all its filtered descendants automatically.
+- Deselecting a parent row deselects all its filtered descendants automatically.
 
 When `rowSelectionPropagation.parents` is set to `true`.
 
-- Selecting all the filtered descendants of a parent would auto-select the parent.
-- Deselecting a descendant of a selected parent would auto-deselect the parent.
+- Selecting all the filtered descendants of a parent selects the parent automatically.
+- Deselecting a descendant of a selected parent deselects the parent automatically.
 
 The example below demonstrates the usage of the `rowSelectionPropagation` prop.
 
@@ -375,6 +379,10 @@ const rows = apiRef.current.getRowGroupChildren({
 ```
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+The `apiRef.current.getRowGroupChildren` method is not compatible with the [server-side row grouping](/x/react-data-grid/server-side-data/row-grouping/) since all the rows might not be available to get at a given instance.
+:::
 
 ## Row group panel 🚧
 

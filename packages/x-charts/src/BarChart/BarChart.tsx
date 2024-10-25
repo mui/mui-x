@@ -75,7 +75,7 @@ export interface BarChartProps
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    *
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -155,7 +155,7 @@ BarChart.propTypes = {
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -314,7 +314,7 @@ BarChart.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**

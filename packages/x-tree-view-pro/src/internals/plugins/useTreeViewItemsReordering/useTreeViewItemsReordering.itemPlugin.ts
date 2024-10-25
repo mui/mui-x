@@ -1,25 +1,22 @@
 import * as React from 'react';
+import { TreeViewCancellableEvent } from '@mui/x-tree-view/models';
 import {
-  MuiCancellableEvent,
   TreeViewItemPlugin,
   useTreeViewContext,
   UseTreeViewItemsSignature,
   isTargetInDescendants,
 } from '@mui/x-tree-view/internals';
-import { TreeItem2Props } from '@mui/x-tree-view/TreeItem2';
 import {
-  UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering,
-  UseTreeItem2RootSlotPropsFromItemsReordering,
+  UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
+  UseTreeItemRootSlotPropsFromItemsReordering,
   UseTreeViewItemsReorderingSignature,
   TreeViewItemItemReorderingValidActions,
-  UseTreeItem2ContentSlotPropsFromItemsReordering,
+  UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().includes('android');
 
-export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2Props> = ({
-  props,
-}) => {
+export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { itemsReordering, instance } =
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
   const { itemId } = props;
@@ -32,13 +29,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
         rootRefObject,
         contentRefObject,
         externalEventHandlers,
-      }): UseTreeItem2RootSlotPropsFromItemsReordering => {
+      }): UseTreeItemRootSlotPropsFromItemsReordering => {
         const draggable = instance.canItemBeDragged(itemId);
         if (!draggable) {
           return {};
         }
 
-        const handleDragStart = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
           if (event.defaultMuiPrevented || event.defaultPrevented) {
             return;
@@ -66,7 +63,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           instance.startDraggingItem(itemId);
         };
 
-        const handleRootDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -75,7 +72,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           event.preventDefault();
         };
 
-        const handleRootDragEnd = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleRootDragEnd = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnd?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -94,13 +91,13 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
       content: ({
         externalEventHandlers,
         contentRefObject,
-      }): UseTreeItem2ContentSlotPropsFromItemsReordering => {
+      }): UseTreeItemContentSlotPropsFromItemsReordering => {
         const currentDrag = itemsReordering.currentDrag;
         if (!currentDrag || currentDrag.draggedItemId === itemId) {
           return {};
         }
 
-        const handleDragOver = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
           if (event.defaultMuiPrevented || validActionsRef.current == null) {
             return;
@@ -119,7 +116,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           });
         };
 
-        const handleDragEnter = (event: React.DragEvent & MuiCancellableEvent) => {
+        const handleDragEnter = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragEnter?.(event);
           if (event.defaultMuiPrevented) {
             return;
@@ -133,7 +130,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin<TreeItem2P
           onDragOver: handleDragOver,
         };
       },
-      dragAndDropOverlay: (): UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering => {
+      dragAndDropOverlay: (): UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering => {
         const currentDrag = itemsReordering.currentDrag;
         if (!currentDrag || currentDrag.targetItemId !== itemId || currentDrag.action == null) {
           return {};
