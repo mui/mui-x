@@ -9,6 +9,10 @@ _Oct 25, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- 🛰 Introduce server-side data source support for Data Grid row grouping
+
+Check the [documentation](https://mui.com/x/react-data-grid/server-side-data/row-grouping/) for more details.
+
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🌍 Improve Portuguese (pt-BR) locale on the Data Grid component
@@ -22,7 +26,7 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@7.21.1`
+#### `@mui/x-data-grid@7.22.0`
 
 - [DataGrid] Fix `GridPanelAnchor` positioning (#15022) @k-rajat19
 - [DataGrid] Fix ugly prop-types for the `pageStyle` prop of the `GridPrintExportMenuItem` component (#15015) @flaviendelangle
@@ -32,13 +36,17 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix number of rows to display for page size options with negative value (#14890) @kalyan90
 - [l10n] Improve Portuguese (pt-BR) locale (#15021) @k-rajat19
 
-#### `@mui/x-data-grid-pro@7.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@7.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@7.21.1`.
+Same changes as in `@mui/x-data-grid@7.22.0`, plus:
 
-#### `@mui/x-data-grid-premium@7.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+- [DataGridPro] Fix column pinning layout (#15073) @cherniavskii
 
-Same changes as in `@mui/x-data-grid-pro@7.21.1`.
+#### `@mui/x-data-grid-premium@7.22.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.0`, plus:
+
+- [DataGridPremium] Server-side data source with row grouping (@MBilalShafi) (#15109)
 
 ### Date and Time Pickers
 
@@ -52,17 +60,17 @@ Same changes as in `@mui/x-date-pickers@7.21.1`.
 
 ### Charts
 
-#### `@mui/x-charts@7.21.1`
+#### `@mui/x-charts@7.22.0`
 
 - [charts] Export data type in `onAxisClick(_, data)` callback (#15038) @clins1994
 
 #### `@mui/x-charts-pro@7.0.0-beta.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@7.21.1`.
+Same changes as in `@mui/x-charts@7.22.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@7.21.1`
+#### `@mui/x-tree-view@7.22.0`
 
 - [TreeView] Make the cancellable event types public (#14992) @flaviendelangle
 
@@ -72,6 +80,7 @@ Same changes as in `@mui/x-charts@7.21.1`.
 
 ### Core
 
+- [core] Adjust cherry-pick GH actions (#15101) @LukasTy
 - [core] Update prettier target branch (#15100) @MBilalShafi
 - [core] Update some `default-branch-switch` instances for `v7.x` (#15085) @MBilalShafi
 - [test] Revert to using `fireEvent` instead of `userEvent` (#14927) @LukasTy
