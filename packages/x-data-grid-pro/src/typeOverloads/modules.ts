@@ -43,16 +43,17 @@ export interface GridEventLookupPro {
   rowOrderChange: { params: GridRowOrderChangeParams };
   /**
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
+   * Used to trigger `onFetchRows`.
    */
   fetchRows: { params: GridFetchRowsParams };
   // Data source
   /**
-   * Fired when the grid needs to fetch a new batch of rows from the data source.
+   * Fired to make a new request through the data source's `getRows` method.
    * @ignore - do not document.
    */
   getRows: { params: GridGetRowsParams };
   /**
-   * Fired when the new data is successfully added to the grid either directly from the data source or from the cache
+   * Fired when the data request is resolved either via the data source or from the cache.
    * @ignore - do not document.
    */
   rowsFetched: {};
