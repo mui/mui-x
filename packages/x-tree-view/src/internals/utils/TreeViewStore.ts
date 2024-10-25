@@ -9,18 +9,9 @@ export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignatu
 
   private listeners: Set<Listener<TreeViewState<TSignatures>>>;
 
-  private readonly forceUpdate: (state: TreeViewState<TSignatures>) => void;
-
-  constructor({
-    initialState,
-    forceUpdate,
-  }: {
-    initialState: TreeViewState<TSignatures>;
-    forceUpdate: (state: TreeViewState<TSignatures>) => void;
-  }) {
+  constructor({ initialState }: { initialState: TreeViewState<TSignatures> }) {
     this.value = initialState;
     this.listeners = new Set();
-    this.forceUpdate = forceUpdate;
   }
 
   public subscribe = (fn: Listener<TreeViewState<TSignatures>>) => {
@@ -39,7 +30,6 @@ export class TreeViewStore<TSignatures extends readonly TreeViewAnyPluginSignatu
     if (newState !== this.value) {
       this.value = newState;
       this.listeners.forEach((l) => l(newState));
-      this.forceUpdate(newState);
     }
   };
 }

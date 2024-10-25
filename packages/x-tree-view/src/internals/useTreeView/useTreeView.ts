@@ -71,7 +71,6 @@ export const useTreeView = <
   const innerRootRef: React.RefObject<HTMLUListElement> = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, rootRef);
 
-  const [, forceUpdate] = React.useState({});
   const storeRef = React.useRef<TreeViewStore<TSignaturesWithCorePluginSignatures> | null>(null);
   if (storeRef.current == null) {
     globalId += 1;
@@ -85,7 +84,7 @@ export const useTreeView = <
       }
     });
 
-    storeRef.current = new TreeViewStore({ initialState, forceUpdate });
+    storeRef.current = new TreeViewStore({ initialState });
   }
 
   const baseContextValue = useTreeViewBuildContext<TSignatures>({

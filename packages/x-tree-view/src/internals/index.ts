@@ -61,6 +61,7 @@ export {
   selectorItemMeta,
   selectorItemIndex,
   selectorItemOrderedChildrenIds,
+  selectorAllItemsToRender,
 } from './plugins/useTreeViewItems/useTreeViewItems.selectors';
 export type {
   UseTreeViewItemsSignature,

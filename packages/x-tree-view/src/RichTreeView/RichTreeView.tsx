@@ -11,6 +11,8 @@ import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RICH_TREE_VIEW_PLUGINS, RichTreeViewPluginSignatures } from './RichTreeView.plugins';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorAllItemsToRender } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeView');
 
@@ -68,7 +70,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView<
+  const { getRootProps, contextValue, store } = useTreeView<
     RichTreeViewPluginSignatures,
     typeof props
   >({
@@ -89,14 +91,12 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     ownerState: props as RichTreeViewProps<any, any>,
   });
 
+  const itemsToRender = useSelector(store, selectorAllItemsToRender);
+
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          itemsToRender={instance.getItemsToRender()}
-        />
+        <RichTreeViewItems slots={slots} slotProps={slotProps} itemsToRender={itemsToRender} />
       </Root>
     </TreeViewProvider>
   );
