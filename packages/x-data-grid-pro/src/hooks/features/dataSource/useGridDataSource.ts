@@ -85,7 +85,10 @@ export const useGridDataSource = (
         apiRef.current.resetDataSourceState();
       }
 
-      const fetchParams = gridGetRowsParamsSelector(apiRef);
+      const fetchParams = {
+        ...gridGetRowsParamsSelector(apiRef),
+        ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
+      };
 
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
@@ -122,7 +125,8 @@ export const useGridDataSource = (
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApi['fetchRowChildren']>(
     async (id) => {
-      if (!props.treeData) {
+      const pipedParams = apiRef.current.unstable_applyPipeProcessors('getRowsParams', {});
+      if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
         nestedDataManager.clearPendingRequest(id);
         return;
       }
@@ -138,7 +142,11 @@ export const useGridDataSource = (
         return;
       }
 
-      const fetchParams = { ...gridGetRowsParamsSelector(apiRef), groupKeys: rowNode.path };
+      const fetchParams = {
+        ...gridGetRowsParamsSelector(apiRef),
+        ...pipedParams,
+        groupKeys: rowNode.path,
+      };
 
       const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
 
@@ -267,6 +275,7 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIfServerMode(props.paginationMode, fetchRows),
   );
+  useGridApiEventHandler(apiRef, 'rowGroupingModelChange', () => fetchRows());
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
