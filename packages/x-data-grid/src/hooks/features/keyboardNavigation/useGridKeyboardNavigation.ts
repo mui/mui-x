@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
-import { isGroupingColumn } from '@mui/x-data-grid-premium';
+import { isGroupingColumn, GRID_TREE_DATA_GROUPING_FIELD } from '../../../constants/grouping';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -588,8 +588,7 @@ export const useGridKeyboardNavigation = (
           const colDef = (params as GridCellParams).colDef;
           if (
             colDef &&
-            // `GRID_TREE_DATA_GROUPING_FIELD` from the Pro package
-            colDef.field === '__tree_data_group__' || isGroupingColumn(colDef.field)
+            (colDef.field === GRID_TREE_DATA_GROUPING_FIELD || isGroupingColumn(colDef.field))
           ) {
             break;
           }
