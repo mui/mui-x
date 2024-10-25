@@ -15,7 +15,7 @@ const selectorTreeViewLabelState: TreeViewRootSelector<UseTreeViewLabelSignature
  */
 export const selectorIsItemEditable = createSelector(
   [
-    (args: { itemId: string; isItemEditable: ((item: any) => boolean) | boolean }) => args,
+    (_, args: { itemId: string; isItemEditable: ((item: any) => boolean) | boolean }) => args,
     (state, args) => selectorItemModel(state, args.itemId),
   ],
   (args, itemModel) => {
