@@ -5,7 +5,6 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
-  TreeViewItemToRenderProps,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -191,20 +190,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     });
   }, [instance, store, params.items, params.isItemDisabled, params.getItemId, params.getItemLabel]);
 
-  const getItemsToRender = () => {
-    const getPropsFromItemId = (id: TreeViewItemId): TreeViewItemToRenderProps => {
-      const itemMeta = selectorItemMeta(store.value, id);
-      return {
-        label: itemMeta!.label!,
-        itemId: itemMeta!.id,
-        id: itemMeta!.idAttribute,
-        children: selectorItemOrderedChildrenIds(store.value, id).map(getPropsFromItemId),
-      };
-    };
-
-    return selectorItemOrderedChildrenIds(store.value, null).map(getPropsFromItemId);
-  };
-
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
     if (params.onItemClick) {
@@ -239,7 +224,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemOrderedChildrenIds,
     },
     instance: {
-      getItemsToRender,
       getItemDOMElement,
       isItemNavigable,
       preventItemUpdates,

@@ -2,13 +2,6 @@ import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
-export interface TreeViewItemToRenderProps {
-  label: string;
-  itemId: string;
-  id: string | undefined;
-  children: TreeViewItemToRenderProps[];
-}
-
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
@@ -33,20 +26,13 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Get all the items in the same format as provided by `props.items`.
-   * @returns {TreeViewItemToRenderProps[]} The items in the tree.
+   * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>
   extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
-  /**
-   * Get the item that should be rendered.
-   * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemToRenderProps` type for more information.
-   * @returns {TreeViewItemToRenderProps[]} The items to render.
-   */
-  getItemsToRender: () => TreeViewItemToRenderProps[];
   /**
    * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
    * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.

@@ -1,7 +1,7 @@
 import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
-import { TreeViewItemToRenderProps, UseTreeViewItemsSignature } from './useTreeViewItems.types';
+import { UseTreeViewItemsSignature } from './useTreeViewItems.types';
 import { TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 
 const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature> = (state) =>
@@ -91,21 +91,4 @@ export const selectorItemIndex = createSelector(
 export const selectorItemParentId = createSelector(
   [selectorItemMeta],
   (itemMeta) => itemMeta?.parentId ?? null,
-);
-
-export const selectorAllItemsToRender = createSelector(
-  [selectorItemMetaMap, selectorItemOrderedChildrenIdsMap],
-  (itemMetaMap, itemOrderedChildrenIdsMap) => {
-    const getPropsFromItemId = (itemId: TreeViewItemId): TreeViewItemToRenderProps => {
-      const itemMeta = itemMetaMap[itemId];
-      return {
-        label: itemMeta!.label!,
-        itemId: itemMeta!.id,
-        id: itemMeta!.idAttribute,
-        children: itemOrderedChildrenIdsMap[itemId].map(getPropsFromItemId),
-      };
-    };
-
-    return selectorItemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getPropsFromItemId);
-  },
 );
