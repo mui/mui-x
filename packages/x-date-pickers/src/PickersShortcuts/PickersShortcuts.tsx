@@ -55,27 +55,7 @@ const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',
   slot: 'Shortcuts',
   overridesResolver: (_, styles) => [styles.shortcuts],
-})({
-  variants: [
-    {
-      props: { isLandscape: true },
-      style: { gridColumn: '2 / 4', gridRow: 1 },
-    },
-    {
-      props: { isLandscape: false },
-      style: {
-        gridColumn: 1,
-        gridRow: '2 / 3',
-      },
-    },
-    {
-      props: { isLandscape: false, isRtl: true },
-      style: {
-        gridColumn: 3,
-      },
-    },
-  ],
-});
+})({});
 
 /**
  * Demos:
