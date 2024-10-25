@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
 import { unstable_capitalize as capitalize, HTMLElementType } from '@mui/utils';
 import {
+  useGridRootProps,
   useGridApiContext,
   GridMenu,
   GridFilterOperator,
@@ -33,6 +32,7 @@ function GridHeaderFilterMenu({
   labelledBy,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const hideMenu = React.useCallback(() => {
     apiRef.current.hideHeaderFilterMenu();
@@ -56,7 +56,11 @@ function GridHeaderFilterMenu({
 
   return (
     <GridMenu placement="bottom-end" open={open} target={target} onClose={hideMenu}>
-      <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
+      <rootProps.slots.baseMenuList
+        aria-labelledby={labelledBy}
+        id={id}
+        onKeyDown={handleListKeyDown}
+      >
         {operators.map((op, i) => {
           const label =
             op?.headerLabel ??
@@ -65,7 +69,7 @@ function GridHeaderFilterMenu({
             );
 
           return (
-            <MenuItem
+            <rootProps.slots.baseMenuItem
               onClick={() => {
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
@@ -75,10 +79,10 @@ function GridHeaderFilterMenu({
               key={`${field}-${op.value}`}
             >
               {label}
-            </MenuItem>
+            </rootProps.slots.baseMenuItem>
           );
         })}
-      </MenuList>
+      </rootProps.slots.baseMenuList>
     </GridMenu>
   );
 }

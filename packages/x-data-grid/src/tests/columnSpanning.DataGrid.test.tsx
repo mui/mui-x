@@ -51,10 +51,10 @@ describe('<DataGrid /> - Column spanning', () => {
         />
       </div>,
     );
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
     expect(() => getCell(0, 2)).to.throw(/not found/);
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
   });
 
   it('should support `colSpan` function signature', () => {
@@ -73,21 +73,21 @@ describe('<DataGrid /> - Column spanning', () => {
       </div>,
     );
     // Nike
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
-    expect(() => getCell(0, 2)).to.not.throw();
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Adidas
-    expect(() => getCell(1, 0)).to.not.throw();
-    expect(() => getCell(1, 1)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
+    expect(() => getCell(1, 1)).not.to.throw();
     expect(() => getCell(1, 2)).to.throw(/not found/);
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
 
     // Puma
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
-    expect(() => getCell(2, 2)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
+    expect(() => getCell(2, 2)).not.to.throw();
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
@@ -106,9 +106,9 @@ describe('<DataGrid /> - Column spanning', () => {
       </div>,
     );
     // First Nike row
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
-    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
   });
 
   describe('key navigation', () => {
@@ -358,7 +358,7 @@ describe('<DataGrid /> - Column spanning', () => {
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
 
-      expect(() => getCell(0, 3)).to.not.throw();
+      expect(() => getCell(0, 3)).not.to.throw();
       // should not be rendered because of first column colSpan
       expect(() => getCell(0, 2)).to.throw(/not found/);
     });
@@ -551,16 +551,16 @@ describe('<DataGrid /> - Column spanning', () => {
       </div>,
     );
     // First Nike row
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
-    expect(() => getCell(0, 2)).to.not.throw();
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Second Nike row
-    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
     expect(() => getCell(1, 1)).to.throw(/not found/);
-    expect(() => getCell(1, 2)).to.not.throw();
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
   });
 
   it('should apply `colSpan` properly after hiding a column', () => {
@@ -584,18 +584,18 @@ describe('<DataGrid /> - Column spanning', () => {
     clock.runToLast();
 
     // Nike row
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
-    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
 
     // Adidas row
-    expect(() => getCell(1, 0)).to.not.throw();
-    expect(() => getCell(1, 1)).to.not.throw();
-    expect(() => getCell(1, 2)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
+    expect(() => getCell(1, 1)).not.to.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
 
     // Puma row
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
     expect(() => getCell(2, 2)).to.throw(/not found/);
   });
 
@@ -677,19 +677,19 @@ describe('<DataGrid /> - Column spanning', () => {
       rowsList.forEach((rowName, index) => {
         const rowIndex = pageNumber * pageSize + index;
         if (rowName === 'Nike') {
-          expect(() => getCell(rowIndex, 0)).to.not.throw();
+          expect(() => getCell(rowIndex, 0)).not.to.throw();
           expect(() => getCell(rowIndex, 1)).to.throw(/not found/);
-          expect(() => getCell(rowIndex, 2)).to.not.throw();
-          expect(() => getCell(rowIndex, 3)).to.not.throw();
+          expect(() => getCell(rowIndex, 2)).not.to.throw();
+          expect(() => getCell(rowIndex, 3)).not.to.throw();
         } else if (rowName === 'Adidas') {
-          expect(() => getCell(rowIndex, 0)).to.not.throw();
-          expect(() => getCell(rowIndex, 1)).to.not.throw();
+          expect(() => getCell(rowIndex, 0)).not.to.throw();
+          expect(() => getCell(rowIndex, 1)).not.to.throw();
           expect(() => getCell(rowIndex, 2)).to.throw(/not found/);
-          expect(() => getCell(rowIndex, 3)).to.not.throw();
+          expect(() => getCell(rowIndex, 3)).not.to.throw();
         } else if (rowName === 'Puma') {
-          expect(() => getCell(rowIndex, 0)).to.not.throw();
-          expect(() => getCell(rowIndex, 1)).to.not.throw();
-          expect(() => getCell(rowIndex, 2)).to.not.throw();
+          expect(() => getCell(rowIndex, 0)).not.to.throw();
+          expect(() => getCell(rowIndex, 1)).not.to.throw();
+          expect(() => getCell(rowIndex, 2)).not.to.throw();
           expect(() => getCell(rowIndex, 3)).to.throw(/not found/);
         }
       });

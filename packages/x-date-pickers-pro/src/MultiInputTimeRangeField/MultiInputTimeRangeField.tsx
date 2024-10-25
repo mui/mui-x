@@ -62,7 +62,7 @@ const MultiInputTimeRangeFieldSeparator = styled(Typography, {
 
 type MultiInputTimeRangeFieldComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -80,7 +80,7 @@ type MultiInputTimeRangeFieldComponent = (<
  */
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -118,7 +118,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
     typeof TextField,
     MultiInputTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
@@ -244,7 +244,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**

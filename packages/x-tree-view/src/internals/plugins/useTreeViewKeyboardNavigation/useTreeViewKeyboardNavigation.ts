@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewItemMeta, TreeViewPlugin, MuiCancellableEvent } from '../../models';
+import { TreeViewCancellableEvent } from '../../../models';
+import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
@@ -16,7 +17,7 @@ import {
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
 
-function isPrintableCharacter(string: string) {
+function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
@@ -85,7 +86,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const handleItemKeyDown = (
-    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
+    event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: string,
   ) => {
     if (event.defaultMuiPrevented) {
@@ -256,7 +257,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Multi select behavior when pressing Ctrl + a
       // Selects all the items
-      case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+      case String.fromCharCode(event.keyCode) === 'A' &&
+        ctrlPressed &&
+        params.multiSelect &&
+        !params.disableSelection: {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
@@ -264,7 +268,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Type-ahead
       // TODO: Support typing multiple characters
-      case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+      case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
         const matchingItem = getFirstMatchingItem(itemId, key);
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);
