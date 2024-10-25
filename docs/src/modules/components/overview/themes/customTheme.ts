@@ -239,15 +239,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           shortcuts: ({ theme }) => ({
             padding: '12px 24px 12px 12px',
             height: 'fit-content',
-            ...(config.layout === 'horizontal'
-              ? { gridColumn: 2, gridRow: 2 }
-              : {
-                  gridColumn: 1,
-                  gridRow: 2,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: '4px',
-                }),
+
             '&.MuiList-root': {
               maxWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 48,
             },
@@ -260,18 +252,14 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             ...(config.layout === 'horizontal'
               ? {
                   borderRight: `1px solid ${theme.palette.divider}`,
-                  gridColumn: 1,
-                  gridRow: 2,
                   padding: '12px 12px 12px 24px',
                 }
-              : { gridColumn: 1, gridRow: 3, padding: '6px 24px' }),
+              : { padding: '6px 24px' }),
           }),
           actionBar: ({ theme }) => ({
             padding: '12px 24px',
             borderTop: `1px solid ${theme.palette.divider}`,
-            ...(config.layout === 'horizontal'
-              ? { gridColumnStart: 1, gridColumnEnd: 3, gridRow: 3 }
-              : { gridColumn: 1, gridRow: 4, padding: '6px 24px' }),
+            ...(config.layout === 'vertical' && { padding: '6px 24px' }),
           }),
         },
       },
@@ -282,9 +270,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             paddingTop: 16,
             paddingBottom: 16,
             paddingLeft: 24,
-            ...(config.layout === 'horizontal'
-              ? { gridColumnStart: 1, gridColumnEnd: 3, gridRow: 1 }
-              : { gridColumn: 1, gridRow: 1, paddingTop: 8, paddingBottom: 8 }),
+            ...(config.layout === 'vertical' && { paddingTop: 8, paddingBottom: 8 }),
             '& .MuiTypography-overline': {
               color: theme.palette.primary.main,
             },

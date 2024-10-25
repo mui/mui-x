@@ -56,18 +56,41 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
-  shouldForwardProp: (prop) => prop !== 'layout',
-})(({ ownerState }: any) => {
-  return {
-    overflow: 'auto',
-  };
-});
-
 interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'> {
   // eslint-disable-next-line react/no-unused-prop-types
   layout: Layout;
 }
+
+const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
+  shouldForwardProp: (prop) => prop !== 'layout',
+})(({ ownerState }: { ownerState: CustomLayoutProps }) => ({
+  [`.${pickersLayoutClasses.shortcuts}`]:
+    ownerState.layout === 'horizontal'
+      ? { gridColumn: 2, gridRow: 2 }
+      : {
+          gridColumn: 1,
+          gridRow: 2,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '4px',
+        },
+  [`.${pickersLayoutClasses.contentWrapper}`]:
+    ownerState.layout === 'horizontal'
+      ? {
+          gridColumn: 1,
+          gridRow: 2,
+        }
+      : { gridColumn: 1, gridRow: 3 },
+  [`.${pickersLayoutClasses.actionBar}`]:
+    ownerState.layout === 'horizontal'
+      ? { gridColumnStart: 1, gridColumnEnd: 3, gridRow: 3 }
+      : { gridColumn: 1, gridRow: 4 },
+
+  [`.${pickersLayoutClasses.toolbar}`]:
+    ownerState.layout === 'horizontal'
+      ? { gridColumnStart: 1, gridColumnEnd: 3, gridRow: 1 }
+      : { gridColumn: 1, gridRow: 1 },
+}));
 
 function CustomLayout(props: CustomLayoutProps) {
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);

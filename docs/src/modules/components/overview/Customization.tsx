@@ -4,7 +4,6 @@ import { ThemeOptions, ThemeProvider, createTheme, useTheme } from '@mui/materia
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -30,6 +29,7 @@ import {
   PaletteMode,
   Density,
 } from './themes/themes.types';
+import { getDefaultTheme } from './themes/defaultTheme';
 
 function RectangularCornersIcon() {
   return (
@@ -55,16 +55,16 @@ function RoundedCornersIcon() {
 
 const MD3Colors = {
   default: '#6750A4',
-  red: '#5d3f3f',
-  green: '#3e4a36',
+  pink: '#B54C9B',
+  green: '#588E5B',
 };
 const MD2Colors = {
   default: '#1976d2',
   purple: '#9c27b0',
-  green: '#fe0265',
+  pink: '#fe0265',
 };
 const customColors = {
-  default: 'hsl(240, 83%, 65%)',
+  default: '#5C5CF0',
   orange: '#E08151',
   green: '#306A5E',
 };
@@ -93,24 +93,16 @@ function ColorSwatch({ color }: { color: string }) {
   );
 }
 
-function getDefaultTheme(mode: PaletteMode): ThemeOptions {
-  return {
-    palette: {
-      mode,
-    },
-  };
-}
-
 const getTheme = (mode: PaletteMode, config: Config, selectedTheme: Themes): ThemeOptions => {
   if (selectedTheme === 'md3') {
-    return createTheme(getMD3Theme(mode));
+    return createTheme(getMD3Theme(mode, config));
   }
 
   if (selectedTheme === 'custom') {
     return createTheme(getCustomTheme(mode, config));
   }
 
-  return createTheme(getDefaultTheme(mode));
+  return createTheme(getDefaultTheme(mode, config));
 };
 
 function CustomTheme({
@@ -125,31 +117,23 @@ function CustomTheme({
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container
-        maxWidth="xl"
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: { xs: 'flex-start', md: 'center' },
-          alignItems: 'center',
-          gap: 4,
-          minHeight: '560px',
-        }}
-      >
-        <Box sx={{ order: { xs: 2, md: 1 } }}>
-          <ThemeProvider theme={getTheme(mode, config, selectedTheme)}>
-            {selectedTheme === 'custom' || selectedTheme === 'default' ? (
-              <Card elevation={0} sx={{ padding: 0 }}>
-                <CustomLayoutRangePicker layout={config.layout} />
-              </Card>
-            ) : (
-              <Card elevation={0} sx={{ padding: 0 }}>
-                <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-              </Card>
-            )}
-          </ThemeProvider>
-        </Box>
-      </Container>
+
+      <Stack sx={{ minHeight: '600px', justifyContent: 'center' }}>
+        <ThemeProvider theme={getTheme(mode, config, selectedTheme)}>
+          {selectedTheme === 'custom' || selectedTheme === 'default' ? (
+            <Card elevation={0} sx={{ padding: 0 }} variant="outlined">
+              <CustomLayoutRangePicker layout={config.layout} />
+            </Card>
+          ) : (
+            <Card elevation={0} sx={{ padding: 0 }}>
+              <StaticDatePicker
+                defaultValue={dayjs('2022-04-17')}
+                slotProps={{ layout: { sx: { minWidth: 'initial' } } }}
+              />
+            </Card>
+          )}
+        </ThemeProvider>
+      </Stack>
     </React.Fragment>
   );
 }
@@ -159,7 +143,7 @@ const initialState: Config = {
   color: 'default',
   layout: 'horizontal',
   density: 'medium',
-  corner: 'rounded',
+  corner: 'medium',
   typography: 'default',
 };
 
@@ -219,20 +203,32 @@ export default function Customization() {
             out-of-the-box elegance and support extensive customization to perfectly align with your
             branding.
           </Typography>
+
           <Stack
+            maxWidth="xl"
             direction={{ xs: 'column', md: 'row' }}
-            sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+            sx={{
+              display: 'flex',
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1,
+            }}
           >
             <Box
               component="div"
               sx={(theme) => ({
                 display: 'flex',
-                alignItems: 'center',
-                borderTopLeftRadius: theme.shape.borderRadius,
-                borderBottomLeftRadius: theme.shape.borderRadius,
+                borderRadius: {
+                  xs: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`,
+                  md: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
+                },
+
                 flexBasis: '70%',
                 backgroundImage: `radial-gradient(${theme.palette.divider} 0.8px, ${theme.palette.background.paper} 0.8px)`,
                 backgroundSize: '10px 10px',
+                order: { xs: 2, md: 1 },
+                alignItems: 'center',
+                justifyContent: 'center',
               })}
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -252,11 +248,14 @@ export default function Customization() {
                 borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
                 borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
                 flexBasis: '30%',
-                borderTopRightRadius: theme.shape.borderRadius,
-                borderBottomRightRadius: theme.shape.borderRadius,
+                borderRadius: {
+                  xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+                  md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+                },
                 padding: 2,
                 gap: 1.5,
                 background: theme.palette.gradients.linearSubtle,
+                order: { xs: 1, md: 2 },
               })}
             >
               <Stack spacing={1}>
@@ -273,6 +272,7 @@ export default function Customization() {
                   ]}
                 />
               </Stack>
+
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Color
@@ -286,50 +286,53 @@ export default function Customization() {
                   }))}
                 />
               </Stack>
-              {styleConfig.selectedTheme !== 'md3' && (
-                <Stack spacing={1}>
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Layout
-                  </Typography>
-                  <ConfigToggleButtons
-                    selectedValue={styleConfig.layout}
-                    handleValueSwitch={handleChangeLayout}
-                    values={[
-                      {
-                        key: 'horizontal',
-                        icon: <AlignHorizontalLeftIcon />,
-                      },
-                      {
-                        key: 'vertical',
-                        icon: <AlignVerticalBottomIcon />,
-                      },
-                    ]}
-                  />
-                </Stack>
-              )}
-
-              <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Corners
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.corner}
-                  handleValueSwitch={handleChangeCorner}
-                  values={[
-                    {
-                      key: 'rectangular',
-                      icon: <RectangularCornersIcon />,
-                    },
-                    {
-                      key: 'medium',
-                      icon: <MediumCornersIcon />,
-                    },
-                    {
-                      key: 'rounded',
-                      icon: <RoundedCornersIcon />,
-                    },
-                  ]}
-                />
+              <Stack spacing={{ xs: 3, md: 0 }} direction={{ xs: 'row', md: 'column' }}>
+                {styleConfig.selectedTheme !== 'md3' && (
+                  <Stack spacing={1}>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                      Layout
+                    </Typography>
+                    <ConfigToggleButtons
+                      selectedValue={styleConfig.layout}
+                      handleValueSwitch={handleChangeLayout}
+                      values={[
+                        {
+                          key: 'horizontal',
+                          icon: <AlignHorizontalLeftIcon />,
+                        },
+                        {
+                          key: 'vertical',
+                          icon: <AlignVerticalBottomIcon />,
+                        },
+                      ]}
+                    />
+                  </Stack>
+                )}
+                {styleConfig.selectedTheme !== 'default' && (
+                  <Stack spacing={1}>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                      Corners
+                    </Typography>
+                    <ConfigToggleButtons
+                      selectedValue={styleConfig.corner}
+                      handleValueSwitch={handleChangeCorner}
+                      values={[
+                        {
+                          key: 'rectangular',
+                          icon: <RectangularCornersIcon />,
+                        },
+                        {
+                          key: 'medium',
+                          icon: <MediumCornersIcon />,
+                        },
+                        {
+                          key: 'rounded',
+                          icon: <RoundedCornersIcon />,
+                        },
+                      ]}
+                    />
+                  </Stack>
+                )}
               </Stack>
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
