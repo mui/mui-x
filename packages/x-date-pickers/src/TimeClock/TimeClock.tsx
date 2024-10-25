@@ -202,6 +202,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
         case 'hours': {
           const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+
+          if (utils.getHours(dateWithNewHours) !== valueWithMeridiem) {
+            return true;
+          }
+
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
