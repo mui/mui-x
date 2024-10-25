@@ -184,7 +184,7 @@ export const useCalendarState = <TDate extends PickerValidDate>(
       type: 'changeMonthTimezone',
       newMonth: referenceDate,
     });
-  }, [referenceDate, utils]);
+  }, [referenceDate]);
 
   const handleChangeMonth = React.useCallback(
     (payload: ChangeMonthPayload<TDate>) => {
