@@ -61,7 +61,6 @@ export const createCalendarStateReducer =
           return state;
         }
         let newCurrentMonth = utils.setTimezone(state.currentMonth, newTimezone);
-        /* istanbul ignore next */
         if (utils.getMonth(newCurrentMonth) !== utils.getMonth(state.currentMonth)) {
           newCurrentMonth = utils.setMonth(newCurrentMonth, utils.getMonth(state.currentMonth));
         }
