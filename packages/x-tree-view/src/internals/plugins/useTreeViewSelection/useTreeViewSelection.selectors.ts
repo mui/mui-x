@@ -5,12 +5,12 @@ const selectorTreeViewSelectionState: TreeViewRootSelector<UseTreeViewSelectionS
   state,
 ) => state.selection;
 
-export const selectorSelectedItemsMap = createSelector(
-  selectorTreeViewSelectionState,
-  (selection) => selection.selectedItemsMap,
-);
-
+/**
+ * Check if an item is selected.
+ * @param {TreeViewState<[UseTreeViewSelectionSignature]>} state The state of the tree view.
+ * @returns {boolean} `true` if the item is selected, `false` otherwise.
+ */
 export const selectorIsItemSelected = createSelector(
-  [selectorSelectedItemsMap, (_, itemId: string) => itemId],
-  (selectedItemsMap, itemId) => selectedItemsMap.has(itemId),
+  [selectorTreeViewSelectionState, (_, itemId: string) => itemId],
+  (selectionState, itemId) => selectionState.selectedItemsMap.has(itemId),
 );

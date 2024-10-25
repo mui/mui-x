@@ -19,7 +19,7 @@ import {
   propagateSelection,
   getAddedAndRemovedItems,
   getLookupFromArray,
-  getSelectedItemsMap,
+  createSelectedItemsMap,
 } from './useTreeViewSelection.utils';
 import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
@@ -37,7 +37,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     store.update((prevState) => ({
       ...prevState,
       selection: {
-        selectedItemsMap: getSelectedItemsMap(models.selectedItems.value),
+        selectedItemsMap: createSelectedItemsMap(models.selectedItems.value),
       },
     }));
   }, [store, models.selectedItems.value]);
@@ -282,7 +282,7 @@ useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
 
 useTreeViewSelection.getInitialState = (params) => ({
   selection: {
-    selectedItemsMap: getSelectedItemsMap(
+    selectedItemsMap: createSelectedItemsMap(
       params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
     ),
   },
@@ -290,7 +290,7 @@ useTreeViewSelection.getInitialState = (params) => ({
 
 useTreeViewSelection.getInitialState = (params) => ({
   selection: {
-    selectedItemsMap: getSelectedItemsMap(
+    selectedItemsMap: createSelectedItemsMap(
       params.selectedItems === undefined ? params.defaultSelectedItems : params.selectedItems,
     ),
   },

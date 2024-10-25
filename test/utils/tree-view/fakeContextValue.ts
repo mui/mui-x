@@ -37,7 +37,12 @@ export const getFakeContextValue = (
   store: new TreeViewStore({
     cacheKey: { id: 1 },
     id: { treeId: 'mui-tree-view-1', providedTreeId: undefined },
-    items: { itemMetaMap: {}, itemMap: {}, itemOrderedChildrenIds: {}, itemChildrenIndexes: {} },
+    items: {
+      itemMetaLookup: {},
+      itemModelLookup: {},
+      itemOrderedChildrenIdsLookup: {},
+      itemChildrenIndexesLookup: {},
+    },
     expansion: { expandedItemsMap: new Map() },
     selection: { selectedItemsMap: new Map() },
     focus: { focusedItemId: null, defaultFocusableItemId: null },

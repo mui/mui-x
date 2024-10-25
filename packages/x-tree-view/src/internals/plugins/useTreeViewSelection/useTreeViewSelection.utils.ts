@@ -24,7 +24,7 @@ export const convertSelectedItemsToArray = (model: string[] | string | null): st
   return [];
 };
 
-export const getSelectedItemsMap = (selectedItems: string | string[] | null) => {
+export const createSelectedItemsMap = (selectedItems: string | string[] | null) => {
   const selectedItemsMap = new Map<TreeViewItemId, true>();
   convertSelectedItemsToArray(selectedItems).forEach((id) => {
     selectedItemsMap.set(id, true);
@@ -49,7 +49,7 @@ export const getAddedAndRemovedItems = ({
   oldModel: TreeViewItemId[];
   newModel: TreeViewItemId[];
 }) => {
-  const newModelLookup = getSelectedItemsMap(newModel);
+  const newModelLookup = createSelectedItemsMap(newModel);
 
   return {
     added: newModel.filter((itemId) => !selectorIsItemSelected(store.value, itemId)),

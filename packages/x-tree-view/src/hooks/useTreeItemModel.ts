@@ -1,10 +1,12 @@
 'use client';
 import { useTreeViewContext } from '../internals/TreeViewProvider';
 import { useSelector } from '../internals/hooks/useSelector';
-import { selectorItem } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
-import { TreeViewItemId } from '../models';
+import { selectorItemModel } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '../models';
 
-export const useTreeItemModel = <R extends {}>(itemId: TreeViewItemId) => {
+export const useTreeItemModel = <R extends {} = TreeViewDefaultItemModelProperties>(
+  itemId: TreeViewItemId,
+) => {
   const { store } = useTreeViewContext();
-  return useSelector(store, selectorItem, itemId) as R | null;
+  return useSelector(store, selectorItemModel, itemId) as unknown as TreeViewBaseItem<R> | null;
 };

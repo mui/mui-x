@@ -203,7 +203,7 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
           itemChildrenIndentation: params.itemChildrenIndentation,
           validActions,
           targetHeight,
-          targetDepth: prevState.items.itemMetaMap[itemId].depth!,
+          targetDepth: prevState.items.itemMetaLookup[itemId].depth!,
           cursorY,
           cursorX,
           contentElement,

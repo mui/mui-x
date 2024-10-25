@@ -21,13 +21,13 @@ export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ st
       );
     }
     store.update((prevState) => {
-      const item = prevState.items.itemMetaMap[itemId];
+      const item = prevState.items.itemMetaLookup[itemId];
       if (item.label !== label) {
         return {
           ...prevState,
           items: {
             ...prevState.items,
-            itemMetaMap: { ...prevState.items.itemMetaMap, [itemId]: { ...item, label } },
+            itemMetaLookup: { ...prevState.items.itemMetaLookup, [itemId]: { ...item, label } },
           },
         };
       }

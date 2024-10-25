@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import {
+  TreeViewBaseItem,
+  TreeViewDefaultItemModelProperties,
+  TreeViewItemId,
+} from '../../../models';
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
@@ -112,10 +116,10 @@ interface UseTreeViewItemsEventLookup {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    itemMetaMap: TreeViewItemMetaMap;
-    itemMap: TreeViewItemMap<R>;
-    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
-    itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
+    itemModelLookup: TreeViewItemModelLookup<R>;
+    itemMetaLookup: TreeViewItemMetaLookup;
+    itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
   };
 }
 
@@ -132,11 +136,11 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
-  state: UseTreeViewItemsState<any>;
+  state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
   contextValue: UseTreeViewItemsContextValue;
   experimentalFeatures: 'indentationAtItemLevel';
 }>;
 
-export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
+export type TreeViewItemMetaLookup = { [itemId: string]: TreeViewItemMeta };
 
-export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
+export type TreeViewItemModelLookup<R extends {}> = { [itemId: string]: TreeViewBaseItem<R> };

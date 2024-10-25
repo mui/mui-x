@@ -7,14 +7,18 @@ import {
   UseTreeViewItemsState,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
+import {
+  TreeViewBaseItem,
+  TreeViewDefaultItemModelProperties,
+  TreeViewItemId,
+} from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import {
   selectorIsItemDisabled,
-  selectorItemMap,
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
+  selectorItemModel,
 } from './useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
@@ -25,16 +29,16 @@ interface UpdateNodesStateParameters
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
   > {}
 
-type State = UseTreeViewItemsState<any>['items'];
+type State = UseTreeViewItemsState<TreeViewDefaultItemModelProperties>['items'];
 const updateItemsState = ({
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
 }: UpdateNodesStateParameters): State => {
-  const itemMetaMap: State['itemMetaMap'] = {};
-  const itemMap: State['itemMap'] = {};
-  const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
+  const itemMetaLookup: State['itemMetaLookup'] = {};
+  const itemModelLookup: State['itemModelLookup'] = {};
+  const itemOrderedChildrenIds: State['itemOrderedChildrenIdsLookup'] = {
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
@@ -52,7 +56,7 @@ const updateItemsState = ({
       );
     }
 
-    if (itemMetaMap[id] != null) {
+    if (itemMetaLookup[id] != null) {
       throw new Error(
         [
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -74,7 +78,7 @@ const updateItemsState = ({
       );
     }
 
-    itemMetaMap[id] = {
+    itemMetaLookup[id] = {
       id,
       label,
       parentId,
@@ -84,7 +88,7 @@ const updateItemsState = ({
       depth,
     };
 
-    itemMap[id] = item;
+    itemModelLookup[id] = item;
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
@@ -96,16 +100,16 @@ const updateItemsState = ({
 
   items.forEach((item) => processItem(item, 0, null));
 
-  const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
+  const itemChildrenIndexes: State['itemChildrenIndexesLookup'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
     itemChildrenIndexes[parentId] = buildSiblingIndexes(itemOrderedChildrenIds[parentId]);
   });
 
   return {
-    itemMetaMap,
-    itemMap,
-    itemOrderedChildrenIds,
-    itemChildrenIndexes,
+    itemMetaLookup,
+    itemModelLookup,
+    itemOrderedChildrenIdsLookup: itemOrderedChildrenIds,
+    itemChildrenIndexesLookup: itemChildrenIndexes,
   };
 };
 
@@ -116,16 +120,18 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   experimentalFeatures,
 }) => {
   const getItem = React.useCallback(
-    (itemId: string) => selectorItemMap(store.value)[itemId],
+    (itemId: string) => selectorItemModel(store.value, itemId),
     [store],
   );
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (itemId: TreeViewItemId): TreeViewBaseItem => {
-      const { children: oldChildren, ...item } = selectorItemMap(store.value)[itemId];
+      const item = selectorItemModel(store.value, itemId);
       const newChildren = selectorItemOrderedChildrenIds(store.value, itemId);
       if (newChildren.length > 0) {
         item.children = newChildren.map(getItemFromItemId);
+      } else {
+        delete item.children;
       }
 
       return item;
@@ -180,8 +186,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         getItemLabel: params.getItemLabel,
       });
 
-      Object.values(prevState.items.itemMetaMap).forEach((item) => {
-        if (!newState.itemMetaMap[item.id]) {
+      Object.values(prevState.items.itemMetaLookup).forEach((item) => {
+        if (!newState.itemMetaLookup[item.id]) {
           publishTreeViewEvent(instance, 'removeItem', { id: item.id });
         }
       });

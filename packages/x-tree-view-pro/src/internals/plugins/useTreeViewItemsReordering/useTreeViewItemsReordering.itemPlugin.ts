@@ -15,7 +15,7 @@ import {
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import {
-  selectorItemsReorderingForDraggedItem,
+  selectorItemsReorderingDraggedItemProperties,
   selectorItemsReorderingIsValidTarget,
 } from './useTreeViewItemsReordering.selectors';
 
@@ -28,9 +28,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
 
-  const itemsReorderingForDraggedItem = useSelector(
+  const draggedItemProperties = useSelector(
     store,
-    selectorItemsReorderingForDraggedItem,
+    selectorItemsReorderingDraggedItemProperties,
     itemId,
   );
   const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
@@ -144,14 +144,14 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
       },
       dragAndDropOverlay: (): UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering => {
-        if (!itemsReorderingForDraggedItem) {
+        if (!draggedItemProperties) {
           return {};
         }
 
         return {
-          action: itemsReorderingForDraggedItem.action,
+          action: draggedItemProperties.action,
           style: {
-            '--TreeView-targetDepth': itemsReorderingForDraggedItem.targetDepth,
+            '--TreeView-targetDepth': draggedItemProperties.targetDepth,
           } as React.CSSProperties,
         };
       },

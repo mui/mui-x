@@ -18,7 +18,7 @@ import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
 import { useSelector } from '../../hooks/useSelector';
 import {
-  selectorItemMetaMap,
+  selectorItemMetaLookup,
   selectorIsItemDisabled,
   selectorItemParentId,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
@@ -48,7 +48,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     },
   );
 
-  const itemMetaMap = useSelector(store, selectorItemMetaMap);
+  const itemMetaLookup = useSelector(store, selectorItemMetaLookup);
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -60,9 +60,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       newFirstCharMap[item.id] = item.label!.substring(0, 1).toLowerCase();
     };
 
-    Object.values(itemMetaMap).forEach(processItem);
+    Object.values(itemMetaLookup).forEach(processItem);
     firstCharMap.current = newFirstCharMap;
-  }, [itemMetaMap, params.getItemId, instance]);
+  }, [itemMetaLookup, params.getItemId, instance]);
 
   const getFirstMatchingItem = (itemId: string, query: string) => {
     const cleanQuery = query.toLowerCase();

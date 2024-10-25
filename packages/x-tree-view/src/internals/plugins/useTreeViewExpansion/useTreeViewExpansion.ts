@@ -5,7 +5,7 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { selectorIsItemExpandable, selectorIsItemExpanded } from './useTreeViewExpansion.selectors';
-import { getExpandedItemsMap } from './useTreeViewExpansion.utils';
+import { createExpandedItemsMap } from './useTreeViewExpansion.utils';
 import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -24,7 +24,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     store.update((prevState) => ({
       ...prevState,
       expansion: {
-        expandedItemsMap: getExpandedItemsMap(models.expandedItems.value),
+        expandedItemsMap: createExpandedItemsMap(models.expandedItems.value),
       },
     }));
   }, [store, models.expandedItems.value]);
@@ -138,7 +138,7 @@ useTreeViewExpansion.getDefaultizedParams = ({ params }) => ({
 
 useTreeViewExpansion.getInitialState = (params) => ({
   expansion: {
-    expandedItemsMap: getExpandedItemsMap(
+    expandedItemsMap: createExpandedItemsMap(
       params.expandedItems === undefined ? params.defaultExpandedItems : params.expandedItems,
     ),
   },

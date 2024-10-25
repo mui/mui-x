@@ -57,7 +57,7 @@ export {
   TREE_VIEW_ROOT_PARENT_ID,
 } from './plugins/useTreeViewItems';
 export {
-  selectorItemMetaMap,
+  selectorItemMetaLookup,
   selectorItemMeta,
   selectorItemIndex,
   selectorItemOrderedChildrenIds,

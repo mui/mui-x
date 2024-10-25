@@ -26,7 +26,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 
   const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
     store.update((prevState) => {
-      if (prevState.items.itemMetaMap[item.id] != null) {
+      if (prevState.items.itemMetaLookup[item.id] != null) {
         throw new Error(
           [
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
@@ -40,25 +40,28 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         ...prevState,
         items: {
           ...prevState.items,
-          itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: item },
+          itemMetaLookup: { ...prevState.items.itemMetaLookup, [item.id]: item },
           // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
-          itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
+          itemModelLookup: {
+            ...prevState.items.itemModelLookup,
+            [item.id]: { id: item.id, label: item.label ?? '' },
+          },
         },
       };
     });
 
     return () => {
       store.update((prevState) => {
-        const newItemMetaMap = { ...prevState.items.itemMetaMap };
-        const newItemMap = { ...prevState.items.itemMap };
-        delete newItemMetaMap[item.id];
-        delete newItemMap[item.id];
+        const newItemMetaLookup = { ...prevState.items.itemMetaLookup };
+        const newItemModelLookup = { ...prevState.items.itemModelLookup };
+        delete newItemMetaLookup[item.id];
+        delete newItemModelLookup[item.id];
         return {
           ...prevState,
           items: {
             ...prevState.items,
-            itemMetaMap: newItemMetaMap,
-            itemMap: newItemMap,
+            itemMetaLookup: newItemMetaLookup,
+            itemModelLookup: newItemModelLookup,
           },
         };
       });
@@ -73,12 +76,12 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
       ...prevState,
       items: {
         ...prevState.items,
-        itemOrderedChildrenIds: {
-          ...prevState.items.itemOrderedChildrenIds,
+        itemOrderedChildrenIdsLookup: {
+          ...prevState.items.itemOrderedChildrenIdsLookup,
           [parentIdWithDefault]: orderedChildrenIds,
         },
-        itemChildrenIndexes: {
-          ...prevState.items.itemChildrenIndexes,
+        itemChildrenIndexesLookup: {
+          ...prevState.items.itemChildrenIndexesLookup,
           [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
         },
       },
