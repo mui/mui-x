@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { EventHandlers } from '@mui/utils';
-import { TreeViewPlugin, TreeViewUsedInstance, TreeViewUsedStore } from '../../models';
+import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
 import { getFirstNavigableItem } from '../../utils/tree';
@@ -13,28 +13,34 @@ import {
   selectorFocusedItemId,
 } from './useTreeViewFocus.selectors';
 import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
+import {
+  selectorCanItemBeFocused,
+  selectorItemMeta,
+} from '../useTreeViewItems/useTreeViewItems.selectors';
 
-const useDefaultFocusableItemId = (
-  instance: TreeViewUsedInstance<UseTreeViewFocusSignature>,
-  store: TreeViewUsedStore<UseTreeViewFocusSignature>,
-  selectedItems: string | string[] | null,
-) => {
+export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
+  instance,
+  params,
+  store,
+  models,
+}) => {
   useEnhancedEffect(() => {
-    let defaultFocusableItemId = convertSelectedItemsToArray(selectedItems).find((itemId) => {
-      if (!instance.isItemNavigable(itemId)) {
-        return false;
-      }
+    let defaultFocusableItemId = convertSelectedItemsToArray(models.selectedItems.value).find(
+      (itemId) => {
+        if (!selectorCanItemBeFocused(store.value, itemId)) {
+          return false;
+        }
 
-      const itemMeta = selectorItemMeta(store.value, itemId);
-      return (
-        itemMeta &&
-        (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
-      );
-    });
+        const itemMeta = selectorItemMeta(store.value, itemId);
+        return (
+          itemMeta &&
+          (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+        );
+      },
+    );
 
     if (defaultFocusableItemId == null) {
-      defaultFocusableItemId = getFirstNavigableItem(instance, store.value) ?? null;
+      defaultFocusableItemId = getFirstNavigableItem(store.value) ?? null;
     }
 
     store.update((prevState) => {
@@ -50,16 +56,7 @@ const useDefaultFocusableItemId = (
         },
       };
     });
-  }, [store, instance, selectedItems]);
-};
-
-export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
-  instance,
-  params,
-  store,
-  models,
-}) => {
-  useDefaultFocusableItemId(instance, store, models.selectedItems.value);
+  }, [store, models.selectedItems.value]);
 
   const setFocusedItemId = useEventCallback((itemId: string | null) => {
     const focusedItemId = selectorFocusedItemId(store.value);

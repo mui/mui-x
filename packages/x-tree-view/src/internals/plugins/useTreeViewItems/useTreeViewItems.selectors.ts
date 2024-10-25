@@ -39,7 +39,10 @@ export const selectorItemOrderedChildrenIds = createSelector(
  */
 export const selectorItemModel = createSelector(
   [selectorTreeViewItemsState, (_, itemId: string) => itemId],
-  (itemsState, itemId) => itemsState.itemModelLookup[itemId],
+  (itemsState, itemId) => {
+    const a = itemsState.itemModelLookup[itemId];
+    return a;
+  },
 );
 
 /**
@@ -118,4 +121,15 @@ export const selectorItemIndex = createSelector(
 export const selectorItemParentId = createSelector(
   [selectorItemMeta],
   (itemMeta) => itemMeta?.parentId ?? null,
+);
+
+export const selectorCanItemBeFocused = createSelector(
+  [selectorTreeViewItemsState, selectorIsItemDisabled],
+  (itemsState, isItemDisabled) => {
+    if (itemsState.disabledItemsFocusable) {
+      return true;
+    }
+
+    return isItemDisabled;
+  },
 );

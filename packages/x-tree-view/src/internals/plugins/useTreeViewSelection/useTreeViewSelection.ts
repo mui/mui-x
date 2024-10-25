@@ -25,7 +25,6 @@ import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
 import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
-  instance,
   store,
   params,
   models,
@@ -173,11 +172,11 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 
   const selectRangeFromStartToItem = (event: React.SyntheticEvent, itemId: string) => {
-    selectRange(event, [getFirstNavigableItem(instance, store.value), itemId]);
+    selectRange(event, [getFirstNavigableItem(store.value), itemId]);
   };
 
   const selectRangeFromItemToEnd = (event: React.SyntheticEvent, itemId: string) => {
-    selectRange(event, [itemId, getLastNavigableItem(instance, store.value)]);
+    selectRange(event, [itemId, getLastNavigableItem(store.value)]);
   };
 
   const selectAllNavigableItems = (event: React.SyntheticEvent) => {
@@ -185,7 +184,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
       return;
     }
 
-    const navigableItems = getAllNavigableItems(instance, store.value);
+    const navigableItems = getAllNavigableItems(store.value);
     setSelectedItems(event, navigableItems);
 
     lastSelectedRange.current = getLookupFromArray(navigableItems);

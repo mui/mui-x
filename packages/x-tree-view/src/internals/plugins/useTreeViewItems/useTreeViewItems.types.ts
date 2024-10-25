@@ -38,13 +38,6 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
 export interface UseTreeViewItemsInstance<R extends {}>
   extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
   /**
-   * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
-   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is navigable, `false` otherwise.
-   */
-  isItemNavigable: (itemId: TreeViewItemId) => boolean;
-  /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
    */
@@ -116,6 +109,7 @@ interface UseTreeViewItemsEventLookup {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
+    disabledItemsFocusable: boolean;
     itemModelLookup: TreeViewItemModelLookup<R>;
     itemMetaLookup: TreeViewItemMetaLookup;
     itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
@@ -124,7 +118,7 @@ export interface UseTreeViewItemsState<R extends {}> {
 }
 
 interface UseTreeViewItemsContextValue {
-  items: Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable'> & {
+  items: {
     onItemClick: (event: React.MouseEvent, itemId: string) => void;
     indentationAtItemLevel: boolean;
   };

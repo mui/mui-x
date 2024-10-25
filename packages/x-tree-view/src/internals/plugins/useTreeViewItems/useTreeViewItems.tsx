@@ -23,22 +23,23 @@ import {
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
-interface UpdateNodesStateParameters
+interface UpdateItemsStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
-    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
   > {}
 
 type State = UseTreeViewItemsState<TreeViewDefaultItemModelProperties>['items'];
 const updateItemsState = ({
+  disabledItemsFocusable,
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: UpdateNodesStateParameters): State => {
+}: UpdateItemsStateParameters): State => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
-  const itemOrderedChildrenIds: State['itemOrderedChildrenIdsLookup'] = {
+  const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
     [TREE_VIEW_ROOT_PARENT_ID]: [],
   };
 
@@ -90,26 +91,29 @@ const updateItemsState = ({
 
     itemModelLookup[id] = item;
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    if (!itemOrderedChildrenIds[parentIdWithDefault]) {
-      itemOrderedChildrenIds[parentIdWithDefault] = [];
+    if (!itemOrderedChildrenIdsLookup[parentIdWithDefault]) {
+      itemOrderedChildrenIdsLookup[parentIdWithDefault] = [];
     }
-    itemOrderedChildrenIds[parentIdWithDefault].push(id);
+    itemOrderedChildrenIdsLookup[parentIdWithDefault].push(id);
 
     item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
   items.forEach((item) => processItem(item, 0, null));
 
-  const itemChildrenIndexes: State['itemChildrenIndexesLookup'] = {};
-  Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
-    itemChildrenIndexes[parentId] = buildSiblingIndexes(itemOrderedChildrenIds[parentId]);
+  const itemChildrenIndexesLookup: State['itemChildrenIndexesLookup'] = {};
+  Object.keys(itemOrderedChildrenIdsLookup).forEach((parentId) => {
+    itemChildrenIndexesLookup[parentId] = buildSiblingIndexes(
+      itemOrderedChildrenIdsLookup[parentId],
+    );
   });
 
   return {
+    disabledItemsFocusable,
     itemMetaLookup,
     itemModelLookup,
-    itemOrderedChildrenIdsLookup: itemOrderedChildrenIds,
-    itemChildrenIndexesLookup: itemChildrenIndexes,
+    itemOrderedChildrenIdsLookup,
+    itemChildrenIndexesLookup,
   };
 };
 
@@ -159,13 +163,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return document.getElementById(idAttribute);
   };
 
-  const isItemNavigable = (itemId: string) => {
-    if (params.disabledItemsFocusable) {
-      return true;
-    }
-    return !selectorIsItemDisabled(store.value, itemId);
-  };
-
   const areItemUpdatesPreventedRef = React.useRef(false);
   const preventItemUpdates = React.useCallback(() => {
     areItemUpdatesPreventedRef.current = true;
@@ -180,6 +177,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
     store.update((prevState) => {
       const newState = updateItemsState({
+        disabledItemsFocusable: params.disabledItemsFocusable,
         items: params.items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
@@ -194,7 +192,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       return { ...prevState, items: newState };
     });
-  }, [instance, store, params.items, params.isItemDisabled, params.getItemId, params.getItemLabel]);
+  }, [
+    instance,
+    store,
+    params.items,
+    params.disabledItemsFocusable,
+    params.isItemDisabled,
+    params.getItemId,
+    params.getItemLabel,
+  ]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
@@ -207,11 +213,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     () => ({
       items: {
         onItemClick: handleItemClick,
-        disabledItemsFocusable: params.disabledItemsFocusable,
         indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
       },
     }),
-    [handleItemClick, params.disabledItemsFocusable, experimentalFeatures.indentationAtItemLevel],
+    [handleItemClick, experimentalFeatures.indentationAtItemLevel],
   );
 
   return {
@@ -231,7 +236,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     },
     instance: {
       getItemDOMElement,
-      isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
     },
@@ -241,6 +245,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
 useTreeViewItems.getInitialState = (params) => ({
   items: updateItemsState({
+    disabledItemsFocusable: params.disabledItemsFocusable,
     items: params.items,
     isItemDisabled: params.isItemDisabled,
     getItemId: params.getItemId,

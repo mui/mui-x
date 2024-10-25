@@ -1,4 +1,4 @@
-import { TreeViewInstance, TreeViewItemMeta, TreeViewState } from '../models';
+import { TreeViewItemMeta, TreeViewState } from '../models';
 import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
 import {
   selectorIsItemExpandable,
@@ -6,6 +6,7 @@ import {
 } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
 import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
 import {
+  selectorCanItemBeFocused,
   selectorIsItemDisabled,
   selectorItemIndex,
   selectorItemMeta,
@@ -14,12 +15,12 @@ import {
 } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 const getLastNavigableItemInArray = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
+  state: TreeViewState<[UseTreeViewItemsSignature]>,
   items: string[],
 ) => {
   // Equivalent to Array.prototype.findLastIndex
   let itemIndex = items.length - 1;
-  while (itemIndex >= 0 && !instance.isItemNavigable(items[itemIndex])) {
+  while (itemIndex >= 0 && !selectorCanItemBeFocused(state, items[itemIndex])) {
     itemIndex -= 1;
   }
 
@@ -31,7 +32,6 @@ const getLastNavigableItemInArray = (
 };
 
 export const getPreviousNavigableItem = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ): string | null => {
@@ -51,7 +51,7 @@ export const getPreviousNavigableItem = (
   // Finds the previous navigable sibling.
   let previousNavigableSiblingIndex = itemIndex - 1;
   while (
-    !instance.isItemNavigable(siblings[previousNavigableSiblingIndex]) &&
+    !selectorCanItemBeFocused(state, siblings[previousNavigableSiblingIndex]) &&
     previousNavigableSiblingIndex >= 0
   ) {
     previousNavigableSiblingIndex -= 1;
@@ -64,19 +64,19 @@ export const getPreviousNavigableItem = (
     }
 
     // Otherwise, we can try to go up a level and find the previous navigable item.
-    return getPreviousNavigableItem(instance, state, itemMeta.parentId);
+    return getPreviousNavigableItem(state, itemMeta.parentId);
   }
 
   // Finds the last navigable ancestor of the previous navigable sibling.
   let currentItemId: string = siblings[previousNavigableSiblingIndex];
   let lastNavigableChild = getLastNavigableItemInArray(
-    instance,
+    state,
     selectorItemOrderedChildrenIds(state, currentItemId),
   );
   while (selectorIsItemExpanded(state, currentItemId) && lastNavigableChild != null) {
     currentItemId = lastNavigableChild;
-    lastNavigableChild = selectorItemOrderedChildrenIds(state, currentItemId).find(
-      instance.isItemNavigable,
+    lastNavigableChild = selectorItemOrderedChildrenIds(state, currentItemId).find((childId) =>
+      selectorCanItemBeFocused(state, childId),
     );
   }
 
@@ -84,14 +84,13 @@ export const getPreviousNavigableItem = (
 };
 
 export const getNextNavigableItem = (
-  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   itemId: string,
 ) => {
   // If the item is expanded and has some navigable children, return the first of them.
   if (selectorIsItemExpanded(state, itemId)) {
-    const firstNavigableChild = selectorItemOrderedChildrenIds(state, itemId).find(
-      instance.isItemNavigable,
+    const firstNavigableChild = selectorItemOrderedChildrenIds(state, itemId).find((childId) =>
+      selectorCanItemBeFocused(state, childId),
     );
     if (firstNavigableChild != null) {
       return firstNavigableChild;
@@ -107,13 +106,13 @@ export const getNextNavigableItem = (
     if (currentItemIndex < siblings.length - 1) {
       let nextItemIndex = currentItemIndex + 1;
       while (
-        !instance.isItemNavigable(siblings[nextItemIndex]) &&
+        !selectorCanItemBeFocused(state, siblings[nextItemIndex]) &&
         nextItemIndex < siblings.length - 1
       ) {
         nextItemIndex += 1;
       }
 
-      if (instance.isItemNavigable(siblings[nextItemIndex])) {
+      if (selectorCanItemBeFocused(state, siblings[nextItemIndex])) {
         return siblings[nextItemIndex];
       }
     }
@@ -126,13 +125,12 @@ export const getNextNavigableItem = (
 };
 
 export const getLastNavigableItem = (
-  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
   state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
 ) => {
   let itemId: string | null = null;
   while (itemId == null || selectorIsItemExpanded(state, itemId)) {
     const children = selectorItemOrderedChildrenIds(state, itemId);
-    const lastNavigableChild = getLastNavigableItemInArray(instance, children);
+    const lastNavigableChild = getLastNavigableItemInArray(state, children);
 
     // The item has no navigable children.
     if (lastNavigableChild == null) {
@@ -146,9 +144,11 @@ export const getLastNavigableItem = (
 };
 
 export const getFirstNavigableItem = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
   state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-) => selectorItemOrderedChildrenIds(state, null).find(instance.isItemNavigable)!;
+) =>
+  selectorItemOrderedChildrenIds(state, null).find((itemId) =>
+    selectorCanItemBeFocused(state, itemId),
+  )!;
 
 /**
  * This is used to determine the start and end of a selection range so
@@ -272,14 +272,13 @@ export const getNonDisabledItemsInRange = (
 };
 
 export const getAllNavigableItems = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
   state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
 ) => {
-  let item: string | null = getFirstNavigableItem(instance, state);
+  let item: string | null = getFirstNavigableItem(state);
   const navigableItems: string[] = [];
   while (item != null) {
     navigableItems.push(item);
-    item = getNextNavigableItem(instance, state, item);
+    item = getNextNavigableItem(state, item);
   }
 
   return navigableItems;

@@ -15,7 +15,6 @@ export const getFakeContextValue = (
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
   items: {
-    disabledItemsFocusable: false,
     indentationAtItemLevel: false,
     onItemClick: () => {},
   },

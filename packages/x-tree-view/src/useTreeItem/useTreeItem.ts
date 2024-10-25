@@ -28,6 +28,7 @@ import { isTargetInDescendants } from '../internals/utils/tree';
 import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
+import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -37,7 +38,7 @@ export const useTreeItem = <
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
-    items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
+    items: { onItemClick, indentationAtItemLevel },
     selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     label: labelContext,
@@ -78,8 +79,11 @@ export const useTreeItem = <
         return;
       }
 
-      const canBeFocused = !status.disabled || disabledItemsFocusable;
-      if (!status.focused && canBeFocused && event.currentTarget === event.target) {
+      if (
+        !status.focused &&
+        selectorCanItemBeFocused(store.value, itemId) &&
+        event.currentTarget === event.target
+      ) {
         instance.focusItem(event, itemId);
       }
     };
