@@ -259,7 +259,7 @@ const theme = createTheme({
 
 ## Removed types
 
-The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers` pro.
+The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
 If you were using them, you can replace them with the following code:
 
 - `UseDateFieldComponentProps`
