@@ -20,7 +20,7 @@ export interface LegendRendererProps
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
-   * @deprecated Use the `useDrawingArea` hook instead.
+   * @deprecated Use the `useDrawingArea()` hook instead.
    */
   drawingArea: Omit<DrawingArea, 'isPointInside'>;
   /**
@@ -76,7 +76,7 @@ DefaultChartsLegend.propTypes = {
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
   /**
-   * @deprecated Use the `useDrawingArea` hook instead.
+   * @deprecated Use the `useDrawingArea()` hook instead.
    */
   drawingArea: PropTypes.shape({
     bottom: PropTypes.number.isRequired,
