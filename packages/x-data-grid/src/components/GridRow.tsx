@@ -422,7 +422,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const firstColumnIndex = renderContext.firstColumnIndex;
-  const lastColumnIndex = !hasVirtualization ?  visibleColumns.length : renderContext.lastColumnIndex;
+  const lastColumnIndex = !hasVirtualization
+    ? visibleColumns.length
+    : renderContext.lastColumnIndex;
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
