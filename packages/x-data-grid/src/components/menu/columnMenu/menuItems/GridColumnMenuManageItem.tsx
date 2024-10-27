@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -26,12 +25,12 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <MenuItem onClick={showColumns}>
+    <rootProps.slots.baseMenuItem onClick={showColumns}>
       <ListItemIcon>
         <rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('columnMenuManageColumns')}</ListItemText>
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

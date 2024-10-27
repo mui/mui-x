@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 type GetPublicApiType<PrivateApi> = PrivateApi extends { getPublicApi: () => infer PublicApi }
@@ -14,7 +15,7 @@ export function useGridApiMethod<
 >(privateApiRef: React.MutableRefObject<PrivateApi>, apiMethods: T, visibility: V) {
   const isFirstRender = React.useRef(true);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     isFirstRender.current = false;
     privateApiRef.current.register(visibility, apiMethods);
   }, [privateApiRef, visibility, apiMethods]);

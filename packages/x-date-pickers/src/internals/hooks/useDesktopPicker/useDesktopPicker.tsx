@@ -6,13 +6,11 @@ import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
 import {
-  UseDesktopPickerOwnerState,
   UseDesktopPickerParams,
   UseDesktopPickerProps,
   UseDesktopPickerSlotProps,
 } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import {
   FieldSection,
@@ -22,6 +20,7 @@ import {
   InferError,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -80,6 +79,8 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
+    contextValue,
+    ownerState,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
@@ -88,11 +89,6 @@ export const useDesktopPicker = <
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
-
-  // TODO v8: Apply this ownerState to all the slots in this hook.
-  const ownerStateV8: UseDesktopPickerOwnerState = {
-    open,
-  };
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: inputAdornmentOwnerState, ...inputAdornmentProps } = useSlotProps({
@@ -121,7 +117,7 @@ export const useDesktopPicker = <
   const openPickerIconProps = useSlotProps({
     elementType: OpenPickerIcon,
     externalSlotProps: innerSlotProps?.openPickerIcon,
-    ownerState: ownerStateV8,
+    ownerState,
   });
 
   const Field = slots.field;
@@ -212,7 +208,7 @@ export const useDesktopPicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider contextValue={contextValue} localeText={localeText}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -234,7 +230,7 @@ export const useDesktopPicker = <
           {renderCurrentView()}
         </Layout>
       </PickersPopper>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return { renderPicker };

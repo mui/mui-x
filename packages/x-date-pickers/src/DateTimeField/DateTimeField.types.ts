@@ -6,10 +6,9 @@ import {
   FieldSection,
   PickerValidDate,
   BuiltInFieldTextFieldProps,
-  BaseSingleInputFieldProps,
 } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -53,23 +52,6 @@ export interface UseDateTimeFieldProps<
   ampm?: boolean;
 }
 
-/**
- * Props the field can receive when used inside a date time picker.
- * (`DateTimePicker`, `DesktopDateTimePicker` or `MobileDateTimePicker` component).
- */
-export type DateTimeFieldInPickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = DefaultizedProps<
-  UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  | 'format'
-  | 'timezone'
-  | 'ampm'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof BaseTimeValidationProps
-> &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateTimeValidationError>;
-
 export type UseDateTimeFieldComponentProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -79,7 +61,7 @@ export type UseDateTimeFieldComponentProps<
 
 export type DateTimeFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = UseDateTimeFieldComponentProps<
   TDate,
   TEnableAccessibleFieldDOMStructure,
