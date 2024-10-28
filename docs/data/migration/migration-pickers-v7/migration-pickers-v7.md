@@ -325,42 +325,60 @@ If you have customized those translation keys, you have to update them:
  /**
  * If you are setting a custom value in a picker component passing it to the `localeText` prop
  */
--  clockLabelText: (view, time, utils) =>
--     `Select ${view}. ${
--       time === null || !utils.isValid(time)
--         ? 'No time selected'
--         : `Selected time is ${utils.format(time, 'fullTime')}`
--     }`
-+  clockLabelText: (view, formattedTime) =>
-+     `Select ${view}. ${
-+       formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
-+     }`
+-clockLabelText: (view, time, utils) =>
+-   `Select ${view}. ${
+-     time === null || !utils.isValid(time)
+-       ? 'No time selected'
+-       : `Selected time is ${utils.format(time, 'fullTime')}`
+-   }`
++clockLabelText: (view, formattedTime) =>
++   `Select ${view}. ${
++     formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++   }`
 
--  openDatePickerDialogue: (value, utils) =>
--     value !== null && utils.isValid(value)
--      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
--      : 'Choose date',
-+  openDatePickerDialogue: (formattedDate) =>
-+     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+-openDatePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-    : 'Choose date',
++openDatePickerDialogue: (formattedDate) =>
++  formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
 
--   openTimePickerDialogue: (value, utils) =>
--    value !== null && utils.isValid(value)
--      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
--      : 'Choose time',
-+   openTimePickerDialogue: (formattedTime) =>
-+     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+-openTimePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-    : 'Choose time',
++openTimePickerDialogue: (formattedTime) =>
++  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
 
 
  /**
  * If you are setting a custom value in the `LocalizationProvider`
  */
  <LocalizationProvider localeText={{
--   clockLabelText: (view, time, utils) => string;
-+   clockLabelText: (view, formattedTime) => string;
--   openDatePickerDialogue: (date, utils) => string;
-+   openDatePickerDialogue: (date, utils) => string;
--   openTimePickerDialogue: (time, utils) => string;
-+   openDatePickerDialogue: (formattedDate) => string;
+-clockLabelText: (view, time, utils) =>
+-   `Select ${view}. ${
+-     time === null || !utils.isValid(time)
+-       ? 'No time selected'
+-       : `Selected time is ${utils.format(time, 'fullTime')}`
+-   }`
++clockLabelText: (view, formattedTime) =>
++   `Select ${view}. ${
++     formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++   }`
+
+-openDatePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-    : 'Choose date',
++openDatePickerDialogue: (formattedDate) =>
++  formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+
+-openTimePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-    : 'Choose time',
++openTimePickerDialogue: (formattedTime) =>
++  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
  }} >
 
 
