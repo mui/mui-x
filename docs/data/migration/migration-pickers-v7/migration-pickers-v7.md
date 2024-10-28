@@ -258,3 +258,59 @@ const theme = createTheme({
   },
 });
 ```
+
+## Removed types
+
+The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
+If you were using them, you need to replace them with the following code:
+
+- `UseDateFieldComponentProps`
+
+  ```ts
+  import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseTimeFieldComponentProps`
+
+  ```ts
+  import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseDateTimeFieldComponentProps`
+
+  ```ts
+  import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
