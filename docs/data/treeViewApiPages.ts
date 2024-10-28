@@ -19,8 +19,12 @@ const treeViewApiPages: MuiPage[] = [
     title: 'TreeItem',
   },
   {
-    pathname: '/x/api/tree-view/tree-item-2',
-    title: 'TreeItem2',
+    pathname: '/x/api/tree-view/tree-item-drag-and-drop-overlay',
+    title: 'TreeItemDragAndDropOverlay',
+  },
+  {
+    pathname: '/x/api/tree-view/tree-item-icon',
+    title: 'TreeItemIcon',
   },
   {
     pathname: '/x/api/tree-view/tree-view',

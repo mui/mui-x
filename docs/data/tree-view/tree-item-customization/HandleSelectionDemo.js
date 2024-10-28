@@ -5,10 +5,10 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 function CustomLabel({ children, status, onClick, ...props }) {
@@ -33,7 +33,7 @@ function CustomLabel({ children, status, onClick, ...props }) {
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { interactions, status } = useTreeItem2Utils({
+  const { interactions, status } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -46,7 +46,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{

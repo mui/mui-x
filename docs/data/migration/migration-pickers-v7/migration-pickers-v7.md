@@ -12,12 +12,14 @@ This is a reference guide for upgrading `@mui/x-date-pickers` from v7 to v8.
 
 ## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `^8.0.0`.
+In `package.json`, change the version of the date pickers package to `next`.
 
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
-+"@mui/x-date-pickers": "^8.0.0",
++"@mui/x-date-pickers": "next",
 ```
+
+Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
 
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
@@ -257,6 +259,62 @@ const theme = createTheme({
 });
 ```
 
+## Removed types
+
+The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
+If you were using them, you need to replace them with the following code:
+
+- `UseDateFieldComponentProps`
+
+  ```ts
+  import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseTimeFieldComponentProps`
+
+  ```ts
+  import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseDateTimeFieldComponentProps`
+
+  ```ts
+  import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
 ## Stop passing `utils` and the date object to some translation keys
 
 Some translation keys no longer require `utils` and the date object, but only the formatted date value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
@@ -267,7 +325,6 @@ If you have customized those translation keys, you have to update them:
  /**
  * If you are setting a custom value in a picker component passing it to the `localeText` prop
  */
-
 -  clockLabelText: (view, time, utils) =>
 -     `Select ${view}. ${
 -       time === null || !utils.isValid(time)
@@ -297,7 +354,6 @@ If you have customized those translation keys, you have to update them:
  /**
  * If you are setting a custom value in the `LocalizationProvider`
  */
-
  <LocalizationProvider localeText={{
 -   clockLabelText: (view, time, utils) => string;
 +   clockLabelText: (view, formattedTime) => string;
@@ -311,7 +367,6 @@ If you have customized those translation keys, you have to update them:
  /**
  * If you using this translation key in a custom component
  */
-
  const translations = useTranslations();
 
 -const clockLabelText = translations.clockLabelText(view, value, {} as any, value == null ? null : value.format('hh:mm:ss'));

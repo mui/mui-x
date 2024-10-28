@@ -439,7 +439,7 @@ export const useGridFocus = (
 
         const nextRow =
           currentPage.rows[clamp(lastFocusedRowIndex, 0, currentPage.rows.length - 1)];
-        nextRowId = nextRow.id ?? null;
+        nextRowId = nextRow?.id ?? null;
       }
 
       apiRef.current.setState((state) => ({
