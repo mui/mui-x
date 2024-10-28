@@ -158,6 +158,16 @@ TreeView.propTypes = {
     indentationAtItemLevel: PropTypes.bool,
   }),
   /**
+   * Used to determine the number of children the item has.
+   * Only relevant for lazy-loaded trees.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {number} The number of children.
+   * @default (item) => number
+   */
+  getChildrenCount: PropTypes.func,
+  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */

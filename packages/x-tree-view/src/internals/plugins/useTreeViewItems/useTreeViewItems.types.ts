@@ -130,11 +130,21 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    * @default 12px
    */
   itemChildrenIndentation?: string | number;
+  /**
+   * Used to determine the number of children the item has.
+   * Only relevant for lazy-loaded trees.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {number} The number of children.
+   * @default (item) => number
+   */
+  getChildrenCount?: (item: R) => number;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
-  'disabledItemsFocusable' | 'itemChildrenIndentation'
+  'disabledItemsFocusable' | 'itemChildrenIndentation' | 'getChildrenCount'
 >;
 
 interface UseTreeViewItemsEventLookup {

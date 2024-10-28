@@ -174,6 +174,16 @@ RichTreeView.propTypes = {
     labelEditing: PropTypes.bool,
   }),
   /**
+   * Used to determine the number of children the item has.
+   * Only relevant for lazy-loaded trees.
+   *
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {number} The number of children.
+   * @default (item) => number
+   */
+  getChildrenCount: PropTypes.func,
+  /**
    * Used to determine the id of a given item.
    *
    * @template R

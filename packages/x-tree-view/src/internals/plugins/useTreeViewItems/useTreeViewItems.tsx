@@ -14,7 +14,7 @@ import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/use
 interface UpdateNodesStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
-    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'getChildrenCount'
   > {}
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -23,6 +23,7 @@ const updateItemsState = ({
   isItemDisabled,
   getItemLabel,
   getItemId,
+  getChildrenCount,
 }: UpdateNodesStateParameters): State => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
@@ -71,7 +72,7 @@ const updateItemsState = ({
       label,
       parentId,
       idAttribute: undefined,
-      expandable: !!item.children?.length,
+      expandable: !!item.children?.length || getChildrenCount(item) > 0,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
       depth,
     };
@@ -83,6 +84,7 @@ const updateItemsState = ({
     }
     itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
+    // lazyLoadMark
     item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
@@ -211,6 +213,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
         getItemLabel: params.getItemLabel,
+        getChildrenCount: params.getChildrenCount,
       });
 
       Object.values(prevState.items.itemMetaMap).forEach((item) => {
@@ -228,6 +231,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     params.isItemDisabled,
     params.getItemId,
     params.getItemLabel,
+    params.getChildrenCount,
   ]);
 
   const getItemsToRender = () => {
@@ -290,6 +294,7 @@ useTreeViewItems.getInitialState = (params) => ({
     isItemDisabled: params.isItemDisabled,
     getItemId: params.getItemId,
     getItemLabel: params.getItemLabel,
+    getChildrenCount: params.getChildrenCount,
   }),
 });
 
@@ -297,6 +302,11 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
+  getChildrenCount:
+    params.getChildrenCount ??
+    function getChildrenCount() {
+      return 0;
+    },
 });
 
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
@@ -315,4 +325,5 @@ useTreeViewItems.params = {
   getItemId: true,
   onItemClick: true,
   itemChildrenIndentation: true,
+  getChildrenCount: true,
 };
