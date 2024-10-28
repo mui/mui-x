@@ -200,8 +200,6 @@ const getPivotedData = ({
   }
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
-    const initialColumnsLookup: Record<string, GridColDef | null> = {};
-
     columnGroups.forEach((columnGroup) => {
       if (isLeaf(columnGroup)) {
         return;
@@ -209,10 +207,6 @@ const getPivotedData = ({
       const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
       if (isLastColumnGroupLevel) {
         pivotModel.values.forEach((pivotValue) => {
-          if (typeof initialColumnsLookup[pivotValue.field] === 'undefined') {
-            initialColumnsLookup[pivotValue.field] =
-              columns.find((column) => column.field === pivotValue.field) || null;
-          }
           const valueField = pivotValue.field;
           const mapValueKey = `${columnGroup.groupId}-${valueField}`;
           const column: GridColDef = {
