@@ -134,7 +134,7 @@ If your user can only select a value in a small list of available dates, you can
 ### Using a read-only Text Field
 
 If you want users to select a value exclusively through the views
-but you still want the UI to look like a Text Field, you can replace the field with the [TextField](/material-ui/react-text-field/) component used as read-only:
+but you still want the UI to look like a Text Field, you can replace the field with a read-only [TextField](/material-ui/react-text-field/) component:
 
 {{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
