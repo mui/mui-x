@@ -44,7 +44,7 @@ function ButtonDateRangeField(props) {
     }
   };
 
-  const valueStr = (value ?? [null, null])
+  const formattedValue = (value ?? [null, null])
     .map((date) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
 
@@ -56,12 +56,12 @@ function ButtonDateRangeField(props) {
       ref={InputProps?.ref}
       onClick={handleTogglePicker}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>
   );
 }
 
-// Will be removed before the end of the alpha since single input will become the default fields.
+// TODO v8: Will be removed before the end of the alpha since single input will become the default field.
 ButtonDateRangeField.fieldType = 'single-input';
 
 function ButtonFieldDateRangePicker(props) {

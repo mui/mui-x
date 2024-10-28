@@ -48,7 +48,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
     }
   };
 
-  const valueStr = (value ?? [null, null])
+  const formattedValue = (value ?? [null, null])
     .map((date) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
 
@@ -60,7 +60,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
       ref={InputProps?.ref}
       onClick={handleTogglePicker}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>
   );
 }
