@@ -257,62 +257,63 @@ const theme = createTheme({
 });
 ```
 
-## Stop passing `utils` and the date/time object to some translation keys
+## Stop passing `utils` and the date object to some translation keys
 
-If you are customizing the translation of those keys, you no longer need to provide `utils` and the date/time object to it, but only the formatted date/time value as a string.
+Some translation keys no longer require `utils` and the date object, but only the formatted date value as a string.
 
-When migrating to v8, you must have a small refactor on the usage of those keys:
+If you have customized the following translation keys, you have to update them:
 
 - `openDatePickerDialogue`:
 
   ```diff
-   // If you are setting a custom value in a picker component
-  -<DatePicker localeText={{ openDatePickerDialogue: (date, utils) => string; }} />
-  +<DatePicker localeText={{ openDatePickerDialogue: (formattedDate) => string; }} />
-
-   // If you are setting a custom value in the `LocalizationProvider`
-  -<LocalizationProvider localeText={{ openDatePickerDialogue: (date, utils) => string; }} >
-  +<LocalizationProvider localeText={{ openDatePickerDialogue: (formattedDate) => string; }} >
-
-   // If you using this translation key in a custom component
-   const translations = useTranslations();
-  -const openDatePickerDialogue = translations.openDatePickerDialogue(value, {} as any, value == null ? null : value.format('MM/DD/YYY'));
-  +const openDatePickerDialogue = translations.openDatePickerDialogue(value == null ? null : value.format('MM/DD/YYY'));
-  ```
-
-  - `openTimePickerDialogue`:
-
-  ```diff
-   // If you are setting a custom value in a picker component or in the `LocalizationProvider`
-  -<DatePicker localeText={{ openTimePickerDialogue: (time, utils) => string; }} />
-  +<DatePicker localeText={{ openTimePickerDialogue: (formattedTime) => string; }} />
-
-   // If you are setting a custom value in the `LocalizationProvider`
-  -<LocalizationProvider localeText={{ openTimePickerDialogue: (time, utils) => string; }} >
-  +<LocalizationProvider localeText={{ openTimePickerDialogue: (formattedTime) => string; }} >
-
-   // If you using this translation key in a custom component
-   const translations = useTranslations();
-  -const openTimePickerDialogue = translations.openTimePickerDialogue(value, {} as any, value == null ? null : value.format('hh:mm:ss'));
-  +const openTimePickerDialogue = translations.openTimePickerDialogue(value == null ? null : value.format('hh:mm:ss'));
-  ```
-
-  - `clockLabelText`:
-
-  ```diff
-   // If you are setting a custom value in a picker component or in the `LocalizationProvider`
+   /**
+   * If you are setting a custom value in a picker component
+   */
+   //clockLabelText
   -<DatePicker localeText={{ clockLabelText: (view, time, utils) => string; }} />
   +<DatePicker localeText={{ clockLabelText: (view, formattedTime) => string; }} />
 
-   // If you are setting a custom value in the `LocalizationProvider`
+   // openDatePickerDialogue
+  -<DatePicker localeText={{ openDatePickerDialogue: (date, utils) => string; }} />
+  +<DatePicker localeText={{ openDatePickerDialogue: (formattedDate) => string; }} />
+
+   // openTimePickerDialogue
+  -<DatePicker localeText={{ openTimePickerDialogue: (time, utils) => string; }} />
+  +<DatePicker localeText={{ openTimePickerDialogue: (formattedTime) => string; }} />
+
+
+   /**
+   * If you are setting a custom value in the `LocalizationProvider`
+   */
+   //clockLabelText
   -<LocalizationProvider localeText={{ clockLabelText: (view, time, utils) => string; }} >
   +<LocalizationProvider localeText={{ clockLabelText: (view, formattedTime) => string; }} >
 
+   // openDatePickerDialogue
+  -<LocalizationProvider localeText={{ openDatePickerDialogue: (date, utils) => string; }} >
+  +<LocalizationProvider localeText={{ openDatePickerDialogue: (formattedDate) => string; }} >
 
-   // If you using this translation key in a custom component
+   // openTimePickerDialogue
+  -<LocalizationProvider localeText={{ openTimePickerDialogue: (time, utils) => string; }} >
+  +<LocalizationProvider localeText={{ openTimePickerDialogue: (formattedTime) => string; }} >
+
+
+   /**
+   * If you using this translation key in a custom component
+   */
    const translations = useTranslations();
+
+   // clockLabelText
   -const clockLabelText = translations.clockLabelText(view, value, {} as any, value == null ? null : value.format('hh:mm:ss'));
   +const clockLabelText = translations.clockLabelText(view, value == null ? null : value.format('hh:mm:ss'));
+
+   // openDatePickerDialogue
+  -const openDatePickerDialogue = translations.openDatePickerDialogue(value, {} as any, value == null ? null : value.format('MM/DD/YYY'));
+  +const openDatePickerDialogue = translations.openDatePickerDialogue(value == null ? null : value.format('MM/DD/YYY'));
+
+   // openTimePickerDialogue
+  -const openTimePickerDialogue = translations.openTimePickerDialogue(value, {} as any, value == null ? null : value.format('hh:mm:ss'));
+  +const openTimePickerDialogue = translations.openTimePickerDialogue(value == null ? null : value.format('hh:mm:ss'));
   ```
 
 Also the following types and interfaces no longer receive a generic type parameter:
