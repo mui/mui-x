@@ -7,7 +7,6 @@ import {
   GridRowModel,
   gridColumnDefinitionsSelector,
   gridDataRowIdsSelector,
-  gridFilteredRowsLookupSelector,
   gridRowsLookupSelector,
   gridStringOrNumberComparator,
   isLeaf,
@@ -85,7 +84,6 @@ const getPivotedData = ({
 } => {
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
-  const filteredRowsLookup = apiRef.current.state ? gridFilteredRowsLookupSelector(apiRef) : null;
 
   // Returns the column definition from the initial columns array before pivoting
   const getInitialColumn = (() => {
@@ -151,12 +149,6 @@ const getPivotedData = ({
     });
   } else {
     rows.forEach((row) => {
-      if (filteredRowsLookup) {
-        const isRowFiltered = filteredRowsLookup[row.id];
-        if (!isRowFiltered) {
-          return;
-        }
-      }
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
@@ -229,6 +221,11 @@ const getPivotedData = ({
   }
 
   createColumns(columnGroupingModel);
+
+  columns.forEach((column) => {
+    pivotColumns.push(column);
+    columnVisibilityModel[column.field] = false;
+  });
 
   return {
     rows: newRows,
