@@ -259,43 +259,53 @@ const theme = createTheme({
 
 ## Stop passing `utils` and the date object to some translation keys
 
-Some translation keys no longer require `utils` and the date object, but only the formatted date value as a string.
+Some translation keys no longer require `utils` and the date object, but only the formatted date value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
 
-If you have customized the following translation keys, you have to update them:
+If you have customized those translation keys, you have to update them:
 
 ```diff
  /**
- * If you are setting a custom value in a picker component
+ * If you are setting a custom value in a picker component passing it to the `localeText` prop
  */
 
- //clockLabelText
--<DatePicker localeText={{ clockLabelText: (view, time, utils) => string; }} />
-+<DatePicker localeText={{ clockLabelText: (view, formattedTime) => string; }} />
+-  clockLabelText: (view, time, utils) =>
+-     `Select ${view}. ${
+-       time === null || !utils.isValid(time)
+-         ? 'No time selected'
+-         : `Selected time is ${utils.format(time, 'fullTime')}`
+-     }`
++  clockLabelText: (view, formattedTime) =>
++     `Select ${view}. ${
++       formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++     }`
 
- // openDatePickerDialogue
--<DatePicker localeText={{ openDatePickerDialogue: (date, utils) => string; }} />
-+<DatePicker localeText={{ openDatePickerDialogue: (formattedDate) => string; }} />
+-  openDatePickerDialogue: (value, utils) =>
+-     value !== null && utils.isValid(value)
+-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-      : 'Choose date',
++  openDatePickerDialogue: (formattedDate) =>
++     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
 
- // openTimePickerDialogue
--<DatePicker localeText={{ openTimePickerDialogue: (time, utils) => string; }} />
-+<DatePicker localeText={{ openTimePickerDialogue: (formattedTime) => string; }} />
+-   openTimePickerDialogue: (value, utils) =>
+-    value !== null && utils.isValid(value)
+-      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-      : 'Choose time',
++   openTimePickerDialogue: (formattedTime) =>
++     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
 
 
  /**
  * If you are setting a custom value in the `LocalizationProvider`
  */
 
- //clockLabelText
--<LocalizationProvider localeText={{ clockLabelText: (view, time, utils) => string; }} >
-+<LocalizationProvider localeText={{ clockLabelText: (view, formattedTime) => string; }} >
-
- // openDatePickerDialogue
--<LocalizationProvider localeText={{ openDatePickerDialogue: (date, utils) => string; }} >
-+<LocalizationProvider localeText={{ openDatePickerDialogue: (formattedDate) => string; }} >
-
- // openTimePickerDialogue
--<LocalizationProvider localeText={{ openTimePickerDialogue: (time, utils) => string; }} >
-+<LocalizationProvider localeText={{ openTimePickerDialogue: (formattedTime) => string; }} >
+ <LocalizationProvider localeText={{
+-   clockLabelText: (view, time, utils) => string;
++   clockLabelText: (view, formattedTime) => string;
+-   openDatePickerDialogue: (date, utils) => string;
++   openDatePickerDialogue: (date, utils) => string;
+-   openTimePickerDialogue: (time, utils) => string;
++   openDatePickerDialogue: (formattedDate) => string;
+ }} >
 
 
  /**
@@ -304,15 +314,12 @@ If you have customized the following translation keys, you have to update them:
 
  const translations = useTranslations();
 
- // clockLabelText
 -const clockLabelText = translations.clockLabelText(view, value, {} as any, value == null ? null : value.format('hh:mm:ss'));
 +const clockLabelText = translations.clockLabelText(view, value == null ? null : value.format('hh:mm:ss'));
 
- // openDatePickerDialogue
 -const openDatePickerDialogue = translations.openDatePickerDialogue(value, {} as any, value == null ? null : value.format('MM/DD/YYY'));
 +const openDatePickerDialogue = translations.openDatePickerDialogue(value == null ? null : value.format('MM/DD/YYY'));
 
- // openTimePickerDialogue
 -const openTimePickerDialogue = translations.openTimePickerDialogue(value, {} as any, value == null ? null : value.format('hh:mm:ss'));
 +const openTimePickerDialogue = translations.openTimePickerDialogue(value == null ? null : value.format('hh:mm:ss'));
 ```
