@@ -55,7 +55,7 @@ export interface DateRangePickerProps<
  */
 export type DateRangePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = MakeRequired<
   UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   'format' | 'timezone' | 'value' | keyof BaseDateValidationProps<TDate>

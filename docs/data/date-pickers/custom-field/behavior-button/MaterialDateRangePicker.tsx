@@ -65,7 +65,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
   );
 }
 
-// Will be removed before the end of the alpha since single input will become the default fields.
+// TODO v8: Will be removed before the end of the alpha since single input will become the default field.
 ButtonDateRangeField.fieldType = 'single-input';
 
 function ButtonFieldDateRangePicker(props: DateRangePickerProps<Dayjs>) {
