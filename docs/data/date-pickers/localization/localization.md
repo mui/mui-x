@@ -46,7 +46,7 @@ function App({ children }) {
 }
 ```
 
-Note that `createTheme` accepts any number of arguments.
+Note that `createTheme()` accepts any number of arguments.
 If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the Data Grid](/x/react-data-grid/localization/#locale-text), you can add `deDE` as a new argument.
 
 ```jsx
@@ -73,7 +73,7 @@ function App({ children }) {
 
 ### Using LocalizationProvider
 
-If you want to pass language translations without using `createTheme` and `ThemeProvider`,
+If you want to pass language translations without using `createTheme()` and `ThemeProvider`,
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx

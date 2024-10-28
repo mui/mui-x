@@ -126,7 +126,7 @@ export const useMobileRangePicker = <
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
     >,
-    PickerOwnerState<DateRange<TDate>>
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,

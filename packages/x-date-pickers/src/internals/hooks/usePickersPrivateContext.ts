@@ -5,8 +5,8 @@ import { PickersContext, PickersPrivateContextValue } from '../components/Picker
 /**
  * Returns the private context passed by the picker that wraps the current component.
  */
-export const usePickersPrivateContext = <TValue>() => {
-  const value = React.useContext(PickersContext) as PickersPrivateContextValue<TValue> | null;
+export const usePickersPrivateContext = () => {
+  const value = React.useContext(PickersContext) as PickersPrivateContextValue | null;
   if (value == null) {
     throw new Error(
       [

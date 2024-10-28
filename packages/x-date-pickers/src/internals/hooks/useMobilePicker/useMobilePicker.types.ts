@@ -58,7 +58,7 @@ export interface ExportedUseMobilePickerSlotProps<
       unknown
     >,
     {},
-    PickerOwnerState<TDate | null>
+    PickerOwnerState
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }

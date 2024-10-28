@@ -135,7 +135,7 @@ export const useDesktopPicker = <
         InferError<TExternalProps>
       >
     >,
-    PickerOwnerState<TDate | null>
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,

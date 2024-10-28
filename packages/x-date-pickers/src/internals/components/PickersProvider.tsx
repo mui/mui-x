@@ -5,9 +5,7 @@ import { LocalizationProvider } from '../../LocalizationProvider';
 
 export const PickersContext = React.createContext<PickersContextValue | null>(null);
 
-export const PickersPrivateContext = React.createContext<PickersPrivateContextValue<any> | null>(
-  null,
-);
+export const PickersPrivateContext = React.createContext<PickersPrivateContextValue | null>(null);
 
 /**
  * Provides the context for the various parts of a picker component:
@@ -16,9 +14,7 @@ export const PickersPrivateContext = React.createContext<PickersPrivateContextVa
  *
  * @ignore - do not document.
  */
-export function PickersProvider<TValue, TDate extends PickerValidDate>(
-  props: PickersProviderProps<TValue, TDate>,
-) {
+export function PickersProvider<TDate extends PickerValidDate>(props: PickersProviderProps<TDate>) {
   const { contextValue, privateContextValue, localeText, children } = props;
 
   return (
@@ -30,9 +26,9 @@ export function PickersProvider<TValue, TDate extends PickerValidDate>(
   );
 }
 
-export interface PickersProviderProps<TValue, TDate extends PickerValidDate> {
+export interface PickersProviderProps<TDate extends PickerValidDate> {
   contextValue: PickersContextValue;
-  privateContextValue: PickersPrivateContextValue<TValue>;
+  privateContextValue: PickersPrivateContextValue;
   localeText: PickersInputLocaleText<TDate> | undefined;
   children: React.ReactNode;
 }
@@ -53,9 +49,9 @@ export interface PickersContextValue {
    */
   open: boolean;
 }
-export interface PickersPrivateContextValue<TValue> {
+export interface PickersPrivateContextValue {
   /**
    * The ownerState of the picker.
    */
-  ownerState: PickerOwnerState<TValue>;
+  ownerState: PickerOwnerState;
 }

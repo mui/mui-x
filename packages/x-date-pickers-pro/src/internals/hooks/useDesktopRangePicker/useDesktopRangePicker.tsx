@@ -150,7 +150,7 @@ export const useDesktopRangePicker = <
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
     >,
-    PickerOwnerState<DateRange<TDate>>
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: slotProps?.field,

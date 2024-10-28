@@ -68,6 +68,6 @@ export interface UsePickerResponse<
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
-  ownerState: PickerOwnerState<TValue>;
-  providerProps: UsePickerProviderReturnValue<TValue, TDate>;
+  ownerState: PickerOwnerState;
+  providerProps: UsePickerProviderReturnValue<TDate>;
 }

@@ -87,20 +87,12 @@ export interface ExportedUseDesktopPickerSlotProps<
       unknown
     >,
     {},
-    PickerOwnerState<TDate | null>
+    PickerOwnerState
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  inputAdornment?: SlotComponentPropsFromProps<
-    InputAdornmentProps,
-    {},
-    PickerOwnerState<TDate | null>
-  >;
-  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState<TDate | null>>;
-  openPickerIcon?: SlotComponentPropsFromProps<
-    Record<string, any>,
-    {},
-    PickerOwnerState<TDate | null>
-  >;
+  inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
+  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
 export interface DesktopOnlyPickerProps

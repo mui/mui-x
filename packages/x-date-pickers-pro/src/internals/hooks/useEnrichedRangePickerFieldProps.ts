@@ -71,7 +71,7 @@ export interface RangePickerFieldSlotProps<
       unknown
     >,
     {},
-    PickerOwnerState<DateRange<TDate>>
+    PickerOwnerState
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;

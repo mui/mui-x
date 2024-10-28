@@ -99,7 +99,7 @@ export const useMobilePicker = <
         InferError<TExternalProps>
       >
     >,
-    PickerOwnerState<TDate | null>
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,

@@ -19,7 +19,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
-  ownerState: PickersLayoutOwnerState<any>,
+  ownerState: PickersLayoutOwnerState,
 ) => {
   const { isLandscape } = ownerState;
   const slots = {
@@ -51,7 +51,7 @@ const usePickerLayout = <
 >(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState } = usePickersPrivateContext<TValue>();
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
 
   const {
     wrapperVariant,
@@ -79,7 +79,7 @@ const usePickerLayout = <
     // - For range pickers value: [TDate | null, TDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
-  const ownerState: PickersLayoutOwnerState<TValue> = {
+  const ownerState: PickersLayoutOwnerState = {
     ...pickerOwnerState,
     wrapperVariant,
     isLandscape,

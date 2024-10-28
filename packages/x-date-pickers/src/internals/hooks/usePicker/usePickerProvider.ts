@@ -8,17 +8,17 @@ import {
 } from '../../components/PickersProvider';
 
 export interface UsePickerProviderParameters<TValue, TDate extends PickerValidDate>
-  extends Pick<PickersProviderProps<TValue, TDate>, 'localeText'> {
+  extends Pick<PickersProviderProps<TDate>, 'localeText'> {
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
-  ownerState: PickerOwnerState<TValue>;
+  ownerState: PickerOwnerState;
 }
 
-export interface UsePickerProviderReturnValue<TValue, TDate extends PickerValidDate>
-  extends Omit<PickersProviderProps<TValue, TDate>, 'children'> {}
+export interface UsePickerProviderReturnValue<TDate extends PickerValidDate>
+  extends Omit<PickersProviderProps<TDate>, 'children'> {}
 
 export function usePickerProvider<TValue, TDate extends PickerValidDate>(
   parameters: UsePickerProviderParameters<TValue, TDate>,
-): UsePickerProviderReturnValue<TValue, TDate> {
+): UsePickerProviderReturnValue<TDate> {
   const { pickerValueResponse, ownerState, localeText } = parameters;
 
   const contextValue = React.useMemo<PickersContextValue>(
@@ -34,7 +34,7 @@ export function usePickerProvider<TValue, TDate extends PickerValidDate>(
     ],
   );
 
-  const privateContextValue = React.useMemo<PickersPrivateContextValue<TValue>>(
+  const privateContextValue = React.useMemo<PickersPrivateContextValue>(
     () => ({ ownerState }),
     [ownerState],
   );

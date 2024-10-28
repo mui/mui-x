@@ -2,18 +2,18 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import {
-  TreeItem2,
-  TreeItem2Props,
-  TreeItem2SlotProps,
-} from '@mui/x-tree-view/TreeItem2';
+  TreeItem,
+  TreeItemProps,
+  TreeItemSlotProps,
+} from '@mui/x-tree-view/TreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
-  props: TreeItem2Props,
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slotProps={
@@ -21,7 +21,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
           content: {
             sx: { border: '1px solid' },
           },
-        } as TreeItem2SlotProps
+        } as TreeItemSlotProps
       }
     />
   );

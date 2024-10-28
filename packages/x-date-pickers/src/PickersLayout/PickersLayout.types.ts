@@ -38,7 +38,7 @@ export interface ExportedPickersLayoutSlots<
   >;
 }
 
-export interface PickersLayoutOwnerState<TValue> extends PickerOwnerState<TValue> {
+export interface PickersLayoutOwnerState extends PickerOwnerState {
   wrapperVariant: WrapperVariant;
   isLandscape: boolean;
 }
@@ -51,11 +51,11 @@ export interface ExportedPickersLayoutSlotProps<
   /**
    * Props passed down to the action bar component.
    */
-  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickersLayoutOwnerState<TValue>>;
+  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickersLayoutOwnerState>;
   /**
    * Props passed down to the shortcuts component.
    */
-  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersLayoutOwnerState<TValue>>;
+  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersLayoutOwnerState>;
   /**
    * Props passed down to the layoutRoot component.
    */

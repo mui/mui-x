@@ -56,6 +56,49 @@ through jscodeshift's `printOptions` command line argument
 npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
+## v8.0.0
+
+### 🚀 `preset-safe` for v8.0.0
+
+A combination of all important transformers for migrating v7 to v8.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
+
+### Tree View codemods
+
+#### `preset-safe` for tree view v8.0.0
+
+The `preset-safe` codemods for tree view.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-item-2`](#rename-tree-item-2)
+
+#### `rename-tree-item-2`
+
+Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or utils like `useTreeItem2` or `TreeItem2Icon`).
+
+```diff
+-import { TreeItem2 } from '@mui/x-tree-view';
++import { TreeItem } from '@mui/x-tree-view';
+
+-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
++import { TreeItem } from '@mui/x-tree-view/TreeItem';
+```
+
 ## v7.0.0
 
 ### 🚀 `preset-safe` for v7.0.0

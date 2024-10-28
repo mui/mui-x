@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuList from '@mui/material/MenuList';
 import { useRtl } from '@mui/system/RtlProvider';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
@@ -224,7 +223,7 @@ function GridActionsCell(props: GridActionsCellProps) {
 
       {menuButtons.length > 0 && (
         <GridMenu open={open} target={buttonRef.current} position={position} onClose={hideMenu}>
-          <MenuList
+          <rootProps.slots.baseMenuList
             id={menuId}
             className={gridClasses.menuList}
             onKeyDown={handleListKeyDown}
@@ -235,7 +234,7 @@ function GridActionsCell(props: GridActionsCellProps) {
             {menuButtons.map((button, index) =>
               React.cloneElement(button, { key: index, closeMenu: hideMenu }),
             )}
-          </MenuList>
+          </rootProps.slots.baseMenuList>
         </GridMenu>
       )}
     </div>

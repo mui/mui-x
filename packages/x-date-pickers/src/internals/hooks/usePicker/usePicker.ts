@@ -74,7 +74,7 @@ export const usePicker = <
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });
 
-  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
+  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse, valueManager });
 
   const providerProps = usePickerProvider({
     pickerValueResponse,
