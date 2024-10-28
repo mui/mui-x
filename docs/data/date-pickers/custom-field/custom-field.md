@@ -131,6 +131,12 @@ If your user can only select a value in a small list of available dates, you can
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
+### Using a masked Text Field
+
+If you want to use a simple mask approach for the field editing instead of the built-in logic, you can replace the default field with the [TextField](/material-ui/react-text-field/) component using a masked input value built with the [rifm](https://github.com/realadvisor/rifm) package.
+
+{{"demo": "behavior-masked-text-field/MaskedMaterialTextField.js", "defaultCodeOpen": false}}
+
 ### Using a read-only Text Field
 
 If you want users to select a value exclusively through the views
