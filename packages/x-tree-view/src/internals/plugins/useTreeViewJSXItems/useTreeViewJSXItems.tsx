@@ -14,8 +14,6 @@ import {
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
 } from '../useTreeViewItems/useTreeViewItems.utils';
-import type { TreeItemProps } from '../../../TreeItem';
-import type { TreeItem2Props } from '../../../TreeItem2';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
@@ -117,11 +115,7 @@ const isItemExpandable = (reactChildren: React.ReactNode) => {
   return Boolean(reactChildren);
 };
 
-const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
-  props,
-  rootRef,
-  contentRef,
-}) => {
+const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
   const { instance, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 

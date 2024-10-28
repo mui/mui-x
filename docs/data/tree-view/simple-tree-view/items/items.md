@@ -91,13 +91,13 @@ const apiRef = useTreeViewApiRef();
 return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
+When your component first renders, `apiRef` is `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
 ### Get an item's DOM element by ID
 
-Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
 
 ```ts
 const itemElement = apiRef.current.getItemDOMElement(

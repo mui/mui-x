@@ -1,7 +1,7 @@
 import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { TreeItem2LabelInputProps } from '../../../TreeItem2LabelInput';
+import { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';
 
 export interface UseTreeViewLabelPublicAPI {
   /**
@@ -82,9 +82,9 @@ export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   dependencies: [UseTreeViewItemsSignature];
 }>;
 
-export interface UseTreeItem2LabelInputSlotPropsFromLabelEditing extends TreeItem2LabelInputProps {}
+export interface UseTreeItemLabelInputSlotPropsFromLabelEditing extends TreeItemLabelInputProps {}
 
-declare module '@mui/x-tree-view/useTreeItem2' {
-  interface UseTreeItem2LabelInputSlotOwnProps
-    extends UseTreeItem2LabelInputSlotPropsFromLabelEditing {}
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemLabelInputSlotOwnProps
+    extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
 }
