@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
@@ -15,6 +16,7 @@ import {
   isRowContextInitialized,
   getCellValue,
 } from './gridRowSpanningUtils';
+import { GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef/gridCheckboxSelectionColDef';
 
 export interface GridRowSpanningState {
   spannedCells: Record<GridRowId, Record<GridColDef['field'], number>>;
@@ -31,7 +33,11 @@ export type RowRange = { firstRowIndex: number; lastRowIndex: number };
 
 const EMPTY_STATE = { spannedCells: {}, hiddenCells: {}, hiddenCellOriginMap: {} };
 const EMPTY_RANGE: RowRange = { firstRowIndex: 0, lastRowIndex: 0 };
-const skippedFields = new Set(['__check__', '__reorder__', '__detail_panel_toggle__']);
+const skippedFields = new Set([
+  GRID_CHECKBOX_SELECTION_FIELD,
+  '__reorder__',
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+]);
 /**
  * Default number of rows to process during state initialization to avoid flickering.
  * Number `20` is arbitrarily chosen to be large enough to cover most of the cases without
