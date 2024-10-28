@@ -49,28 +49,25 @@ export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extend
   ampm?: boolean;
 }
 
-export type UseDateTimeFieldComponentProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>> &
-  UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
 export type DateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  UseDateTimeFieldComponentProps<
-    TEnableAccessibleFieldDOMStructure,
-    BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
-  > & {
-    /**
-     * Overridable component slots.
-     * @default {}
-     */
-    slots?: DateTimeFieldSlots;
-    /**
-     * The props used for each component slot.
-     * @default {}
-     */
-    slotProps?: DateTimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
-  };
+  // The hook props
+  UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
+    // The TextField props
+    Omit<
+      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
+      keyof UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure>
+    > & {
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: DateTimeFieldSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: DateTimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+    };
 
 export type DateTimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>;

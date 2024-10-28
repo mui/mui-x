@@ -36,28 +36,25 @@ export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends bo
   ampm?: boolean;
 }
 
-export type UseTimeFieldComponentProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>> &
-  UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>;
-
 export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  UseTimeFieldComponentProps<
-    TEnableAccessibleFieldDOMStructure,
-    BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
-  > & {
-    /**
-     * Overridable component slots.
-     * @default {}
-     */
-    slots?: TimeFieldSlots;
-    /**
-     * The props used for each component slot.
-     * @default {}
-     */
-    slotProps?: TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
-  };
+  // The hook props
+  UseTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
+    // The TextField props
+    Omit<
+      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
+      keyof UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>
+    > & {
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: TimeFieldSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+    };
 
 export type TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   TimeFieldProps<TEnableAccessibleFieldDOMStructure>;

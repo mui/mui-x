@@ -37,28 +37,25 @@ export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends bo
     BaseDateValidationProps,
     ExportedUseClearableFieldProps {}
 
-export type UseDateFieldComponentProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseDateFieldProps<TEnableAccessibleFieldDOMStructure>> &
-  UseDateFieldProps<TEnableAccessibleFieldDOMStructure>;
-
 export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  UseDateFieldComponentProps<
-    TEnableAccessibleFieldDOMStructure,
-    BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
-  > & {
-    /**
-     * Overridable component slots.
-     * @default {}
-     */
-    slots?: DateFieldSlots;
-    /**
-     * The props used for each component slot.
-     * @default {}
-     */
-    slotProps?: DateFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
-  };
+  // The hook props
+  UseDateFieldProps<TEnableAccessibleFieldDOMStructure> &
+    // The TextField props
+    Omit<
+      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
+      keyof UseDateFieldProps<TEnableAccessibleFieldDOMStructure>
+    > & {
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: DateFieldSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: DateFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+    };
 
 export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateFieldProps<TEnableAccessibleFieldDOMStructure>;

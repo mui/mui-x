@@ -91,11 +91,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     UseDesktopPickerProps<any, TEnableAccessibleFieldDOMStructure, any, any>
   >;
-  openPickerIcon?: SlotComponentPropsFromProps<
-    Record<string, any>,
-    {},
-    PickerOwnerState<PickerValidDate | null>
-  >;
+  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
 export interface DesktopOnlyPickerProps
