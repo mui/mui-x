@@ -55,7 +55,7 @@ export interface DateTimeRangePickerProps<
  */
 export type DateTimeRangePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > = MakeRequired<
   UseDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   | 'format'
