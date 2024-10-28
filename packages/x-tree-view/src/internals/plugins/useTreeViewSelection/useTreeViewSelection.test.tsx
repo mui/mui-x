@@ -689,6 +689,128 @@ describeTreeView<[UseTreeViewSelectionSignature, UseTreeViewExpansionSignature]>
           fireEvent.click(view.getItemCheckboxInput('3'), { shiftKey: true });
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
+
+        it('should not select the parent when selecting all the children', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+            defaultSelectedItems: ['1.2'],
+            defaultExpandedItems: ['1'],
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2']);
+        });
+
+        it('should set the parent checkbox as indeterminate when some children are selected but the parent is not', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+            defaultSelectedItems: ['1.1'],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('true');
+        });
+
+        it('should not set the parent checkbox as indeterminate when no child is selected and the parent is not either', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }, { id: '2' }],
+            defaultExpandedItems: ['1'],
+          });
+
+          expect(view.getItemCheckboxInput('1').dataset.indeterminate).to.equal('false');
+        });
+      });
+
+      describe('multi selection with selectionPropagation.descendants = true', () => {
+        it('should select all the children when selecting a parent', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
+        });
+
+        it('should deselect all the children when deselecting a parent', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultSelectedItems: ['1', '1.1', '1.2'],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal([]);
+        });
+
+        it('should not select the parent when selecting all the children', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultSelectedItems: ['1.2'],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1.1', '1.2']);
+        });
+
+        it('should not unselect the parent when unselecting a children', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1' }, { id: '1.2' }] }],
+            defaultSelectedItems: ['1', '1.1', '1.2'],
+            defaultExpandedItems: ['1'],
+            selectionPropagation: { descendants: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.2']);
+        });
+      });
+
+      describe('multi selection with selectionPropagation.parents = true', () => {
+        it('should select all the parents when selecting a child', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
+            defaultExpandedItems: ['1', '1.1'],
+            selectionPropagation: { parents: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.1.1']);
+        });
+
+        it('should deselect all the parents when deselecting a child ', () => {
+          const view = render({
+            multiSelect: true,
+            checkboxSelection: true,
+            items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
+            defaultSelectedItems: ['1', '1.1', '1.1.1'],
+            defaultExpandedItems: ['1', '1.1'],
+            selectionPropagation: { parents: true },
+          });
+
+          fireEvent.click(view.getItemCheckboxInput('1.1.1'));
+          expect(view.getSelectedTreeItems()).to.deep.equal([]);
+        });
       });
     });
 

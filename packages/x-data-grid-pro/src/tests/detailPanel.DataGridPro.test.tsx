@@ -86,10 +86,10 @@ describe('<DataGridPro /> - Detail panel', () => {
     await microtasks();
 
     const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
-    expect(virtualScrollerContent).toHaveInlineStyle({
-      width: 'auto',
+    expect(virtualScrollerContent).toHaveComputedStyle({
       height: `${rowHeight + detailPanelHeight}px`,
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     const detailPanels = $$('.MuiDataGrid-detailPanel');
     expect(detailPanels[0]).toHaveComputedStyle({
@@ -128,11 +128,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
 
     await waitFor(() => {
-      expect(virtualScrollerContent).toHaveInlineStyle({
-        width: 'auto',
-        height: `${rowHeight + 100}px`,
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     const detailPanels = $$('.MuiDataGrid-detailPanel');
     expect(detailPanels[0]).toHaveComputedStyle({
@@ -142,11 +140,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
 
     await waitFor(() => {
-      expect(virtualScrollerContent).toHaveInlineStyle({
-        width: 'auto',
-        height: `${rowHeight + 200}px`,
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     expect(detailPanels[0]).toHaveComputedStyle({
       height: `200px`,

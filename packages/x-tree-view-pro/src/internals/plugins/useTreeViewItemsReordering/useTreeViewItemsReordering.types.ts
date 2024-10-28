@@ -9,7 +9,7 @@ import {
   TreeViewItemsReorderingAction,
   TreeViewCancellableEventHandler,
 } from '@mui/x-tree-view/models';
-import { TreeItem2DragAndDropOverlayProps } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
+import { TreeItemDragAndDropOverlayProps } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 
 export interface UseTreeViewItemsReorderingInstance {
   /**
@@ -137,27 +137,26 @@ export type UseTreeViewItemsReorderingSignature = TreeViewPluginSignature<{
   dependencies: [UseTreeViewItemsSignature];
 }>;
 
-export interface UseTreeItem2RootSlotPropsFromItemsReordering {
+export interface UseTreeItemRootSlotPropsFromItemsReordering {
   draggable?: true;
   onDragStart?: TreeViewCancellableEventHandler<React.DragEvent>;
   onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
   onDragEnd?: TreeViewCancellableEventHandler<React.DragEvent>;
 }
 
-export interface UseTreeItem2ContentSlotPropsFromItemsReordering {
+export interface UseTreeItemContentSlotPropsFromItemsReordering {
   onDragEnter?: TreeViewCancellableEventHandler<React.DragEvent>;
   onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
 }
 
-export interface UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering
-  extends TreeItem2DragAndDropOverlayProps {}
+export interface UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering
+  extends TreeItemDragAndDropOverlayProps {}
 
-declare module '@mui/x-tree-view/useTreeItem2' {
-  interface UseTreeItem2RootSlotOwnProps extends UseTreeItem2RootSlotPropsFromItemsReordering {}
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromItemsReordering {}
 
-  interface UseTreeItem2ContentSlotOwnProps
-    extends UseTreeItem2ContentSlotPropsFromItemsReordering {}
+  interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromItemsReordering {}
 
-  interface UseTreeItem2DragAndDropOverlaySlotOwnProps
-    extends UseTreeItem2DragAndDropOverlaySlotPropsFromItemsReordering {}
+  interface UseTreeItemDragAndDropOverlaySlotOwnProps
+    extends UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering {}
 }

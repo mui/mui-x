@@ -241,7 +241,7 @@ const columns: GridColDef[] = [
 You can use the `valueSetter` property of the column definition to customize how the row is updated with a new value.
 This lets you insert a value from a nested object.
 It is called with an object containing the new cell value to be saved as well as the row that the cell belongs to.
-If you are already using a `valueGetter` to extract the value from a nested object, then the `valueSetter` will probably also be necessary.
+If you are already using a `valueGetter` to extract the value from a nested object, then the `valueSetter` is probably also necessary.
 
 ```tsx
 const columns: GridColDef[] = [
