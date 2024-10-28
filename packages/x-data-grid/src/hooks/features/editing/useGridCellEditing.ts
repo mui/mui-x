@@ -345,27 +345,35 @@ export const useGridCellEditing = (
       }
 
       const column = apiRef.current.getColumn(field);
+      const shouldProcessEditCellProps = !!column.preProcessEditCellProps && deleteValue;
 
       let newProps: GridEditCellProps = {
         value: newValue,
         error: false,
-        isProcessingProps: !!column.preProcessEditCellProps,
+        isProcessingProps: shouldProcessEditCellProps,
       };
 
       updateOrDeleteFieldState(id, field, newProps);
 
       apiRef.current.setCellFocus(id, field);
 
-      if (column.preProcessEditCellProps) {
+      if (shouldProcessEditCellProps) {
         newProps = await Promise.resolve(
-          column.preProcessEditCellProps({
+          column.preProcessEditCellProps!({
             id,
             row: apiRef.current.getRow(id),
             props: newProps,
             hasChanged: newValue !== value,
           }),
         );
-        updateOrDeleteFieldState(id, field, { ...newProps, isProcessingProps: false });
+
+        const editingState = gridEditRowsStateSelector(apiRef.current.state);
+
+        updateOrDeleteFieldState(id, field, {
+          ...newProps,
+          value: editingState[id][field].value,
+          isProcessingProps: false,
+        });
       }
     },
   ) as GridCellEditingApi['startCellEditMode'];
