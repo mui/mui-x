@@ -16,7 +16,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 const MASK_USER_INPUT_SYMBOL = '_';
 const ACCEPT_REGEX = /[\d]/gi;
 
-const staticDateWith2DigitTokens = dayjs('2019-11-21T22:30:00.000');
+const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
 function getValueStrFromValue(value: Dayjs | null, format: string) {
@@ -49,14 +49,14 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
   });
 
   // Control the input text
-  const [valueStr, setValueStr] = React.useState<string>(() =>
+  const [inputValue, setInputValue] = React.useState<string>(() =>
     getValueStrFromValue(value, format),
   );
 
   React.useEffect(() => {
     if (value && value.isValid()) {
       const newDisplayDate = getValueStrFromValue(value, format);
-      setValueStr(newDisplayDate);
+      setInputValue(newDisplayDate);
     }
   }, [format, value]);
 
@@ -71,7 +71,7 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
   });
 
   const handleValueStrChange = (newValueStr: string) => {
-    setValueStr(newValueStr);
+    setInputValue(newValueStr);
 
     const newValue = dayjs(newValueStr, format);
     setValue(newValue);
@@ -105,7 +105,7 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
       let outputCharIndex = 0;
       return valueToFormat
         .split('')
-        .map((char, inputCharIndex) => {
+        .map((character, characterIndex) => {
           ACCEPT_REGEX.lastIndex = 0;
 
           if (outputCharIndex > maskToUse.length - 1) {
@@ -115,7 +115,7 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
           const maskChar = maskToUse[outputCharIndex];
           const nextMaskChar = maskToUse[outputCharIndex + 1];
 
-          const acceptedChar = ACCEPT_REGEX.test(char) ? char : '';
+          const acceptedChar = ACCEPT_REGEX.test(character) ? character : '';
           const formattedChar =
             maskChar === MASK_USER_INPUT_SYMBOL
               ? acceptedChar
@@ -123,7 +123,7 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
 
           outputCharIndex += formattedChar.length;
 
-          const isLastCharacter = inputCharIndex === valueToFormat.length - 1;
+          const isLastCharacter = characterIndex === valueToFormat.length - 1;
           if (
             isLastCharacter &&
             nextMaskChar &&
@@ -140,7 +140,7 @@ function MaskedField(props: DatePickerFieldProps<Dayjs>) {
   }, [format]);
 
   const rifmProps = useRifm({
-    value: valueStr,
+    value: inputValue,
     onChange: handleValueStrChange,
     format: rifmFormat,
   });
