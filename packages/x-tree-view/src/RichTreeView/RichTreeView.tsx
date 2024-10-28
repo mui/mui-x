@@ -276,6 +276,26 @@ RichTreeView.propTypes = {
    */
   selectedItems: PropTypes.any,
   /**
+   * When `selectionPropagation.descendants` is set to `true`.
+   *
+   * - Selecting a parent selects all its descendants automatically.
+   * - Deselecting a parent deselects all its descendants automatically.
+   *
+   * When `selectionPropagation.parents` is set to `true`.
+   *
+   * - Selecting all the descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Only works when `multiSelect` is `true`.
+   * On the <SimpleTreeView />, only the expanded items are considered (since the collapsed item are not passed to the Tree View component at all)
+   *
+   * @default { parents: false, descendants: false }
+   */
+  selectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
+  /**
    * The props used for each component slot.
    * @default {}
    */

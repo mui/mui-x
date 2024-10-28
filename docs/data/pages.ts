@@ -1,8 +1,8 @@
 import type { MuiPage } from 'docs/src/MuiPage';
-import chartsComponentApi from './charts-component-api-pages';
-import dataGridComponentApi from './data-grid-component-api-pages';
-import pickersComponentApi from './date-pickers-component-api-pages';
-import treeViewComponentApi from './tree-view-component-api-pages';
+import chartsComponentApi from './chartsApiPages';
+import dataGridComponentApi from './dataGridApiPages';
+import pickersComponentApi from './datePickersApiPages';
+import treeViewComponentApi from './treeViewApiPages';
 
 const pages: MuiPage[] = [
   {
@@ -120,8 +120,9 @@ const pages: MuiPage[] = [
         pathname: '/x/react-data-grid/server-side-data-group',
         title: 'Server-side data',
         plan: 'pro',
+        newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', plan: 'pro' },
           { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
@@ -135,8 +136,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
-            plan: 'pro',
-            planned: true,
+            plan: 'premium',
           },
           {
             pathname: '/x/react-data-grid/server-side-data/aggregation',
@@ -541,9 +541,18 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v8',
         subheader: 'Upgrade to v8',
         children: [
+          { pathname: '/x/migration/migration-data-grid-v7', title: 'Breaking changes: Data Grid' },
           {
             pathname: '/x/migration/migration-pickers-v7',
             title: 'Breaking changes: Date and Time Pickers',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-v7',
+            title: 'Breaking changes: Tree View',
+          },
+          {
+            pathname: '/x/migration/migration-charts-v7',
+            title: 'Breaking changes: Charts',
           },
         ],
       },
