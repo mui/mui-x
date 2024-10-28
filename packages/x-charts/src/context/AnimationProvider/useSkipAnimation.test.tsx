@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
 import { useSkipAnimation } from './useSkipAnimation';
 import { AnimationProvider } from './AnimationProvider';
 
@@ -44,9 +44,8 @@ describe('useSkipAnimation', () => {
         </ErrorBoundary>,
       ),
     ).toErrorDev([
-      'MUI X: Could not find the animation ref context.',
-      'It looks like you rendered your component outside of a ChartsContainer parent component.',
-      'The above error occurred in the <UseSkipAnimation> component:',
+      'MUI X: Could not find the animation ref context.\nIt looks like you rendered your component outside of a ChartsContainer parent component.',
+      reactMajor < 19 && 'The above error occurred in the <UseSkipAnimation> component:',
     ]);
 
     expect((errorRef.current as any).errors).to.have.length(1);
