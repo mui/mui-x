@@ -366,14 +366,15 @@ export const useGridCellEditing = (
             hasChanged: newValue !== value,
           }),
         );
-
-        const editingState = gridEditRowsStateSelector(apiRef.current.state);
-
-        updateOrDeleteFieldState(id, field, {
-          ...newProps,
-          value: editingState[id][field].value,
-          isProcessingProps: false,
-        });
+        // Check if still in edit mode before updating
+        if (apiRef.current.getCellMode(id, field) === GridCellModes.Edit) {
+          const editingState = gridEditRowsStateSelector(apiRef.current.state);
+          updateOrDeleteFieldState(id, field, {
+            ...newProps,
+            value: editingState[id][field].value,
+            isProcessingProps: false,
+          });
+        }
       }
     },
   ) as GridCellEditingApi['startCellEditMode'];
