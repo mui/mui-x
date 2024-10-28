@@ -30,6 +30,9 @@ import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
+  '& .MuiInputAdornment-root': {
+    height: 'auto',
+  },
 });
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(

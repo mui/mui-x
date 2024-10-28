@@ -58,7 +58,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contém',
+  filterOperatorDoesNotContain: 'não contém',
   filterOperatorEquals: 'é igual a',
+  filterOperatorDoesNotEqual: 'não é igual a',
   filterOperatorStartsWith: 'começa com',
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
@@ -79,7 +81,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
+  headerFilterOperatorDoesNotContain: 'Não contém',
   headerFilterOperatorEquals: 'Igual',
+  headerFilterOperatorDoesNotEqual: 'Não é igual a',
   headerFilterOperatorStartsWith: 'Começa com',
   headerFilterOperatorEndsWith: 'Termina com',
   headerFilterOperatorIs: 'É',

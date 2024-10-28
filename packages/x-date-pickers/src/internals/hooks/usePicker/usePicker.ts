@@ -1,11 +1,11 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { InferError } from '../useValidation';
-import { warnOnce } from '../../utils/warning';
-import { FieldSection, PickerValidDate } from '../../../models';
+import { FieldSection, PickerValidDate, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { usePickerOwnerState } from './usePickerOwnerState';
 
 export const usePicker = <
   TValue,
@@ -72,6 +72,8 @@ export const usePicker = <
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });
 
+  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
+
   return {
     // Picker value
     open: pickerValueResponse.open,
@@ -85,5 +87,11 @@ export const usePicker = <
 
     // Picker layout
     layoutProps: pickerLayoutResponse.layoutProps,
+
+    // Picker context
+    contextValue: pickerValueResponse.contextValue,
+
+    // Picker owner state
+    ownerState: pickerOwnerState,
   };
 };

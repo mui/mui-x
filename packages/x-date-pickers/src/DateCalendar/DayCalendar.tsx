@@ -351,7 +351,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
     onMonthSwitchingAnimationEnd,
     readOnly,
     reduceAnimations,
-    renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    renderLoading = () => <span data-testid="loading-progress">...</span>,
     slideDirection,
     TransitionProps,
     disablePast,
@@ -502,7 +502,6 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   const transitionKey = `${currentYearNumber}-${currentMonthNumber}`;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
-  const startOfCurrentWeek = utils.startOfWeek(now);
 
   const focusableDay = React.useMemo<TDate | null>(() => {
     const startOfMonth = utils.startOfMonth(currentMonth);
@@ -535,9 +534,8 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
-    const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
-    let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
+    const toDisplay = utils.getWeekArray(currentMonth);
+    let nextMonth = utils.addMonths(currentMonth, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -554,7 +552,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
       nextMonth = utils.addMonths(nextMonth, 1);
     }
     return toDisplay;
-  }, [currentMonth, fixedWeekNumber, utils, timezone]);
+  }, [currentMonth, fixedWeekNumber, utils]);
 
   return (
     <PickersCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
@@ -574,7 +572,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
             key={i.toString()}
             variant="caption"
             role="columnheader"
-            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            aria-label={utils.format(weekday, 'weekday')}
             className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter(weekday)}
@@ -597,7 +595,7 @@ export function DayCalendar<TDate extends PickerValidDate>(inProps: DayCalendarP
           nodeRef={slideNodeRef}
         >
           <PickersCalendarWeekContainer
-            data-mui-test="pickers-calendar"
+            data-testid="pickers-calendar"
             ref={slideNodeRef}
             role="rowgroup"
             className={classes.monthContainer}

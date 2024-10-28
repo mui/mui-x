@@ -11,8 +11,8 @@
       },
       "default": "{ x: 'none', y: 'none' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "bottomAxis": {
@@ -39,7 +39,7 @@
     "legend": {
       "type": {
         "name": "shape",
-        "description": "{ classes?: object, direction?: 'column'<br>&#124;&nbsp;'row', hidden?: bool, position?: { horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }, slotProps?: object, slots?: object }"
+        "description": "{ classes?: object, direction?: 'column'<br>&#124;&nbsp;'row', hidden?: bool, itemGap?: number, itemMarkHeight?: number, itemMarkWidth?: number, labelStyle?: object, markGap?: number, onItemClick?: func, padding?: number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }, position?: { horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }, slotProps?: object, slots?: object }"
       },
       "default": "{ direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }",
       "deprecated": true,
@@ -61,11 +61,12 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
+    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "rightAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -170,7 +171,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiPieChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

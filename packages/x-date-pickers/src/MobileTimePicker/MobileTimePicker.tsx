@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -8,16 +9,16 @@ import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
-import { validateTime } from '../internals/utils/validation/validateTime';
+import { extractValidationProps, validateTime } from '../validation';
 import { PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type MobileTimePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -35,7 +36,7 @@ type MobileTimePickerComponent = (<
  */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -92,8 +93,12 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? translations.openTimePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullTime',
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: props.localeText?.openTimePickerDialogue,
+    }),
     validator: validateTime,
   });
 
@@ -159,7 +164,7 @@ MobileTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -207,16 +212,16 @@ MobileTimePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -227,13 +232,13 @@ MobileTimePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

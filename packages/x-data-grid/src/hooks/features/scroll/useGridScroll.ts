@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -17,28 +17,29 @@ import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';
+import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
 function scrollIntoView(dimensions: {
-  clientHeight: number;
-  scrollTop: number;
-  offsetHeight: number;
-  offsetTop: number;
+  containerSize: number;
+  scrollPosition: number;
+  elementSize: number;
+  elementOffset: number;
 }) {
-  const { clientHeight, scrollTop, offsetHeight, offsetTop } = dimensions;
+  const { containerSize, scrollPosition, elementSize, elementOffset } = dimensions;
 
-  const elementBottom = offsetTop + offsetHeight;
+  const elementEnd = elementOffset + elementSize;
   // Always scroll to top when cell is higher than viewport to avoid scroll jump
   // See https://github.com/mui/mui-x/issues/4513 and https://github.com/mui/mui-x/issues/4514
-  if (offsetHeight > clientHeight) {
-    return offsetTop;
+  if (elementSize > containerSize) {
+    return elementOffset;
   }
-  if (elementBottom - clientHeight > scrollTop) {
-    return elementBottom - clientHeight;
+  if (elementEnd - containerSize > scrollPosition) {
+    return elementEnd - containerSize;
   }
-  if (offsetTop < scrollTop) {
-    return offsetTop;
+  if (elementOffset < scrollPosition) {
+    return elementOffset;
   }
   return undefined;
 }
@@ -53,19 +54,23 @@ function scrollIntoView(dimensions: {
  */
 export const useGridScroll = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'unstable_listView'>,
 ): void => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
+  const virtualScrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef!;
+  const virtualScrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
       const dimensions = gridDimensionsSelector(apiRef.current.state);
       const totalRowCount = gridRowCountSelector(apiRef);
-      const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+      const visibleColumns = props.unstable_listView
+        ? [gridListColumnSelector(apiRef.current.state)!]
+        : gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
         return false;
@@ -96,10 +101,10 @@ export const useGridScroll = (
         }
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
-          clientHeight: dimensions.viewportInnerSize.width,
-          scrollTop: Math.abs(virtualScrollerRef.current!.scrollLeft),
-          offsetHeight: cellWidth,
-          offsetTop: columnPositions[params.colIndex],
+          containerSize: dimensions.viewportOuterSize.width,
+          scrollPosition: Math.abs(virtualScrollerRef.current!.scrollLeft),
+          elementSize: cellWidth,
+          elementOffset: columnPositions[params.colIndex],
         });
       }
       if (params.rowIndex !== undefined) {
@@ -116,10 +121,10 @@ export const useGridScroll = (
           : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
 
         scrollCoordinates.top = scrollIntoView({
-          clientHeight: dimensions.viewportInnerSize.height,
-          scrollTop: virtualScrollerRef.current!.scrollTop,
-          offsetHeight: targetOffsetHeight,
-          offsetTop: rowsMeta.positions[elementIndex],
+          containerSize: dimensions.viewportInnerSize.height,
+          scrollPosition: virtualScrollerRef.current!.scrollTop,
+          elementSize: targetOffsetHeight,
+          elementOffset: rowsMeta.positions[elementIndex],
         });
       }
 
@@ -139,24 +144,49 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows],
+    [
+      logger,
+      apiRef,
+      virtualScrollerRef,
+      props.pagination,
+      visibleSortedRows,
+      props.unstable_listView,
+    ],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
     (params: Partial<GridScrollParams>) => {
-      if (virtualScrollerRef.current && params.left !== undefined && colRef.current) {
-        const direction = theme.direction === 'rtl' ? -1 : 1;
+      if (
+        virtualScrollerRef.current &&
+        virtualScrollbarHorizontalRef.current &&
+        params.left !== undefined &&
+        colRef.current
+      ) {
+        const direction = isRtl ? -1 : 1;
         colRef.current.scrollLeft = params.left;
         virtualScrollerRef.current.scrollLeft = direction * params.left;
+        virtualScrollbarHorizontalRef.current.scrollLeft = direction * params.left;
         logger.debug(`Scrolling left: ${params.left}`);
       }
-      if (virtualScrollerRef.current && params.top !== undefined) {
+      if (
+        virtualScrollerRef.current &&
+        virtualScrollbarVerticalRef.current &&
+        params.top !== undefined
+      ) {
         virtualScrollerRef.current.scrollTop = params.top;
+        virtualScrollbarVerticalRef.current.scrollTop = params.top;
         logger.debug(`Scrolling top: ${params.top}`);
       }
       logger.debug(`Scrolling, updating container, and viewport`);
     },
-    [virtualScrollerRef, theme.direction, colRef, logger],
+    [
+      virtualScrollerRef,
+      virtualScrollbarHorizontalRef,
+      virtualScrollbarVerticalRef,
+      isRtl,
+      colRef,
+      logger,
+    ],
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(() => {

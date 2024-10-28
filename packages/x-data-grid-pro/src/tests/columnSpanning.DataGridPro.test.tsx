@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -56,9 +57,9 @@ describe('<DataGridPro /> - Column spanning', () => {
     );
 
     expect(getCell(0, 0).offsetWidth).to.equal(110);
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
-    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
   });
 
   it('should apply `colSpan` inside pinned columns section', () => {
@@ -72,9 +73,9 @@ describe('<DataGridPro /> - Column spanning', () => {
       </div>,
     );
 
-    expect(() => getCell(0, 0)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
     expect(() => getCell(0, 1)).to.throw(/not found/);
-    expect(() => getCell(0, 2)).to.not.throw();
+    expect(() => getCell(0, 2)).not.to.throw();
   });
 
   describe('key navigation', () => {
@@ -102,7 +103,7 @@ describe('<DataGridPro /> - Column spanning', () => {
 
       act(() => apiRef!.current.setColumnIndex('price', 1));
 
-      userEvent.mousePress(getCell(1, 1));
+      fireUserEvent.mousePress(getCell(1, 1));
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });
@@ -136,21 +137,21 @@ describe('<DataGridPro /> - Column spanning', () => {
     act(() => apiRef!.current.setColumnIndex('brand', 1));
 
     // Nike row
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
     expect(() => getCell(0, 2)).to.throw(/not found/);
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Adidas row
-    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
     expect(() => getCell(1, 1)).to.throw(/not found/);
-    expect(() => getCell(1, 2)).to.not.throw();
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
 
     // Puma row
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
-    expect(() => getCell(2, 2)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
+    expect(() => getCell(2, 2)).not.to.throw();
     expect(() => getCell(2, 3)).to.throw(/not found/);
   });
 
@@ -236,21 +237,21 @@ describe('<DataGridPro /> - Column spanning', () => {
     );
 
     // Adidas row
-    expect(() => getCell(0, 0)).to.not.throw();
-    expect(() => getCell(0, 1)).to.not.throw();
+    expect(() => getCell(0, 0)).not.to.throw();
+    expect(() => getCell(0, 1)).not.to.throw();
     expect(() => getCell(0, 2)).to.throw(/not found/);
-    expect(() => getCell(0, 3)).to.not.throw();
+    expect(() => getCell(0, 3)).not.to.throw();
 
     // Nike row
-    expect(() => getCell(1, 0)).to.not.throw();
+    expect(() => getCell(1, 0)).not.to.throw();
     expect(() => getCell(1, 1)).to.throw(/not found/);
-    expect(() => getCell(1, 2)).to.not.throw();
-    expect(() => getCell(1, 3)).to.not.throw();
+    expect(() => getCell(1, 2)).not.to.throw();
+    expect(() => getCell(1, 3)).not.to.throw();
 
     // Reebok row
-    expect(() => getCell(2, 0)).to.not.throw();
-    expect(() => getCell(2, 1)).to.not.throw();
-    expect(() => getCell(2, 2)).to.not.throw();
-    expect(() => getCell(2, 3)).to.not.throw();
+    expect(() => getCell(2, 0)).not.to.throw();
+    expect(() => getCell(2, 1)).not.to.throw();
+    expect(() => getCell(2, 2)).not.to.throw();
+    expect(() => getCell(2, 3)).not.to.throw();
   });
 });

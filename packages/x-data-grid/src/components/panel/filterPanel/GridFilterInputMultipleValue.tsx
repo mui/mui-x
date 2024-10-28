@@ -47,9 +47,17 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   >(
     (event, value) => {
       setFilterValueState(value.map(String));
-      applyValue({ ...item, value: [...value] });
+
+      applyValue({
+        ...item,
+        value: [
+          ...value.map((filterItemValue) =>
+            type === 'number' ? Number(filterItemValue) : filterItemValue,
+          ),
+        ],
+      });
     },
-    [applyValue, item],
+    [applyValue, item, type],
   );
 
   return (
@@ -65,14 +73,18 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       value={filterValueState}
       onChange={handleChange}
       renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
-          <rootProps.slots.baseChip
-            variant="outlined"
-            size="small"
-            label={option}
-            {...getTagProps({ index })}
-          />
-        ))
+        value.map((option, index) => {
+          const { key, ...tagProps } = getTagProps({ index });
+          return (
+            <rootProps.slots.baseChip
+              key={key}
+              variant="outlined"
+              size="small"
+              label={option}
+              {...tagProps}
+            />
+          );
+        })
       }
       renderInput={(params) => (
         <rootProps.slots.baseTextField

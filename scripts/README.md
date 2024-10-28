@@ -24,6 +24,7 @@ pnpm release:changelog
    --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
    --lastRelease   The release to compare against (default: the last one)
    --release       The branch to release (default: master)
+   --nextVersion   Expected version of the next release (if not provided, __VERSION__ placeholders must be updated manually)
 ```
 
 > :warning: the script will add a separator string in form of a comment like this right after the highlights:
@@ -57,7 +58,7 @@ Push the working branch on the documentation release branch to deploy the docume
 <!-- #default-branch-switch -->
 
 ```bash
-git push -f upstream master:docs-v7
+pnpm docs:deploy
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)

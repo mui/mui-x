@@ -180,7 +180,7 @@ const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormOperatorInput,
-})<{ ownerState: OwnerState }>({ width: 120 });
+})<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
@@ -452,12 +452,24 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...logicOperatorInputProps}
-          sx={{
-            display: hasLogicOperatorColumn ? 'flex' : 'none',
-            visibility: showMultiFilterOperators ? 'visible' : 'hidden',
-            ...(baseFormControlProps.sx || {}),
-            ...(logicOperatorInputProps.sx || {}),
-          }}
+          sx={[
+            hasLogicOperatorColumn
+              ? {
+                  display: 'flex',
+                }
+              : {
+                  display: 'none',
+                },
+            showMultiFilterOperators
+              ? {
+                  visibility: 'visible',
+                }
+              : {
+                  visibility: 'hidden',
+                },
+            baseFormControlProps.sx,
+            logicOperatorInputProps.sx,
+          ]}
           className={clsx(
             classes.logicOperatorInput,
             baseFormControlProps.className,

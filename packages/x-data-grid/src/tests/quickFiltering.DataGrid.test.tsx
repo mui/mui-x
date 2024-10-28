@@ -480,23 +480,27 @@ describe('<DataGrid /> - Quick filter', () => {
       }
 
       it('should not ignore diacritics by default', () => {
-        let renderer = render(<DiacriticsTestCase quickFilterValues={['apa']} />);
+        const { unmount } = render(<DiacriticsTestCase quickFilterValues={['apa']} />);
         expect(getColumnValues(0)).to.deep.equal([]);
-        renderer.unmount();
+        unmount();
 
-        renderer = render(<DiacriticsTestCase quickFilterValues={['apă']} />);
+        const { unmount: unmount2 } = render(<DiacriticsTestCase quickFilterValues={['apă']} />);
         expect(getColumnValues(0)).to.deep.equal(['Apă']);
-        renderer.unmount();
+        unmount2();
       });
 
       it('should ignore diacritics when `ignoreDiacritics` is enabled', () => {
-        let renderer = render(<DiacriticsTestCase quickFilterValues={['apa']} ignoreDiacritics />);
+        const { unmount } = render(
+          <DiacriticsTestCase quickFilterValues={['apa']} ignoreDiacritics />,
+        );
         expect(getColumnValues(0)).to.deep.equal(['Apă']);
-        renderer.unmount();
+        unmount();
 
-        renderer = render(<DiacriticsTestCase quickFilterValues={['apă']} ignoreDiacritics />);
+        const { unmount: unmount2 } = render(
+          <DiacriticsTestCase quickFilterValues={['apă']} ignoreDiacritics />,
+        );
         expect(getColumnValues(0)).to.deep.equal(['Apă']);
-        renderer.unmount();
+        unmount2();
       });
     });
   });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, fireEvent, userEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -31,7 +31,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
@@ -82,17 +82,17 @@ describe('<MobileTimePicker /> - Describes', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
@@ -102,7 +102,7 @@ describe('<MobileTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the hours view in case we'd like to repeat the selection process
-        userEvent.mousePress(screen.getByRole('button', { name: 'Open previous view' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Open previous view' }));
       }
 
       return newValue;

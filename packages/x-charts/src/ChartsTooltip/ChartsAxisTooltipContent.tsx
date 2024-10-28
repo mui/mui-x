@@ -56,7 +56,7 @@ function ChartsAxisTooltipContent(props: {
 }) {
   const { content, contentProps, axisData, sx, classes } = props;
 
-  const isXaxis = (axisData.x && axisData.x.index) !== undefined;
+  const isXaxis = axisData.x && axisData.x.index !== -1;
 
   const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;

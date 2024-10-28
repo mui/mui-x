@@ -248,7 +248,7 @@ const arrowKeys: KeyType[] = [
 const RootRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
   stroke: theme.palette.grey[500],
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     stroke: theme.palette.grey[600],
     fill: theme.palette.background.paper,
   }),
@@ -261,7 +261,7 @@ const KeyRoot = styled('g')(({ theme }) => ({
 const KeyRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
   stroke: theme.palette.grey[500],
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     stroke: theme.palette.grey[600],
     fill: theme.palette.background.paper,
   }),
@@ -270,7 +270,7 @@ const KeyText = styled('text')(({ theme }) => ({
   fill: theme.palette.grey[800],
   fontSize: 9,
   fontFamily: 'IBM Plex Sans',
-  ...(theme.palette.mode === 'dark' && { fill: theme.palette.text.primary }),
+  ...theme.applyStyles('dark', { fill: theme.palette.text.primary }),
 }));
 
 type KeyboardSvgProps = {
@@ -316,11 +316,11 @@ export function KeyboardSvg({ selectedKey, handleKeySelection }: KeyboardSvgProp
                         selectedKey.key.toLowerCase() === label.toLowerCase() &&
                         selectedKey.location === location,
                     })}
-                    onMouseDown={(e) => {
+                    onMouseDown={(event) => {
                       if (shouldSelect) {
-                        e.preventDefault();
+                        event.preventDefault();
 
-                        handleKeySelection(e, {
+                        handleKeySelection(event, {
                           key: label,
                           location: location || 0,
                           code: code || label,
@@ -328,9 +328,9 @@ export function KeyboardSvg({ selectedKey, handleKeySelection }: KeyboardSvgProp
                         });
                       }
                     }}
-                    onMouseUp={(e) => {
+                    onMouseUp={(event) => {
                       if (shouldSelect) {
-                        handleKeySelection(e, null);
+                        handleKeySelection(event, null);
                       }
                     }}
                   >
@@ -370,12 +370,12 @@ export function KeyboardSvg({ selectedKey, handleKeySelection }: KeyboardSvgProp
               className={clsx(key, 'key-root', {
                 selected: selectedKey && selectedKey.key.toLowerCase() === key.toLowerCase(),
               })}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleKeySelection(e, { key, location, code, keyCode });
+              onMouseDown={(event) => {
+                event.preventDefault();
+                handleKeySelection(event, { key, location, code, keyCode });
               }}
-              onMouseUp={(e) => {
-                handleKeySelection(e, null);
+              onMouseUp={(event) => {
+                handleKeySelection(event, null);
               }}
             >
               <KeyRectangle
@@ -400,7 +400,7 @@ type SelectedKey = {
   code?: string;
   keyCode?: number;
 };
-type HandleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => void;
+type HandleKeySelection = (event: React.SyntheticEvent, key: SelectedKey | null) => void;
 
 export default function Keyboard() {
   const [selectedKey, setSelectedKey] = React.useState<SelectedKey | null>(null);
@@ -410,20 +410,20 @@ export default function Keyboard() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => {
+  const handleKeySelection = (event: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
     );
     sectionContent.focus();
 
     if (key) {
-      const event = new KeyboardEvent('keydown', {
+      const keydownEvent = new KeyboardEvent('keydown', {
         ...key,
         bubbles: true,
         cancelable: true,
       });
 
-      sectionContent.dispatchEvent(event);
+      sectionContent.dispatchEvent(keydownEvent);
 
       if (key.key === 'Backspace') {
         sectionContent.textContent = '';
@@ -463,10 +463,9 @@ export default function Keyboard() {
             }
             description="The MUI X Date Pickers feature advanced keyboard support that's compliant with WCAG and WAI-ARIA standards, so users who require assistive technology can navigate your interface with ease."
           />
-
           <Button
             size="small"
-            href="/x/react-date-pickers/accessibility"
+            href="/x/react-date-pickers/accessibility/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
           >
@@ -478,17 +477,16 @@ export default function Keyboard() {
             <DateField
               defaultValue={dayjs('12/12/2023')}
               ref={ref}
-              onKeyDown={(e: React.KeyboardEvent) => {
+              onKeyDown={(event: React.KeyboardEvent) => {
                 setSelectedKey({
-                  key: e.key,
-                  code: e.code,
-                  location: e.location,
+                  key: event.key,
+                  code: event.code,
+                  location: event.location,
                 });
               }}
               onKeyUp={() => {
                 setSelectedKey(null);
               }}
-              enableAccessibleFieldDOMStructure
               onSelectedSectionsChange={(newSelectedSection) => {
                 selectedSection.current = newSelectedSection;
               }}

@@ -22,7 +22,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
 import { GridCellCoordinates } from '../../../models/gridCell';
-import { GridRowEntry } from '../../../models/gridRows';
+import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
@@ -43,6 +43,7 @@ export const useGridFocus = (
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
 
   const publishCellFocusOut = React.useCallback(
     (cell: GridCellCoordinates | null, event: GridEventLookup['cellFocusOut']['event']) => {
@@ -422,19 +423,36 @@ export const useGridFocus = (
   const handleRowSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     const cell = gridFocusCellSelector(apiRef);
 
-    // If the focused cell is in a row which does not exist anymore, then remove the focus
+    // If the focused cell is in a row which does not exist anymore,
+    // focus previous row or remove the focus
     if (cell && !apiRef.current.getRow(cell.id)) {
+      const lastFocusedRowId = gridFocusCellSelector(apiRef)?.id;
+
+      let nextRowId: GridRowId | null = null;
+      if (typeof lastFocusedRowId !== 'undefined') {
+        const lastFocusedRowIndex =
+          apiRef.current.getRowIndexRelativeToVisibleRows(lastFocusedRowId);
+        const currentPage = getVisibleRows(apiRef, {
+          pagination: props.pagination,
+          paginationMode: props.paginationMode,
+        });
+
+        const nextRow =
+          currentPage.rows[clamp(lastFocusedRowIndex, 0, currentPage.rows.length - 1)];
+        nextRowId = nextRow.id ?? null;
+      }
+
       apiRef.current.setState((state) => ({
         ...state,
         focus: {
-          cell: null,
+          cell: nextRowId === null ? null : { id: nextRowId, field: cell.field },
           columnHeader: null,
           columnHeaderFilter: null,
           columnGroupHeader: null,
         },
       }));
     }
-  }, [apiRef]);
+  }, [apiRef, props.pagination, props.paginationMode]);
 
   const handlePaginationModelChange = useEventcallback(() => {
     const currentFocusedCell = gridFocusCellSelector(apiRef);
@@ -489,7 +507,7 @@ export const useGridFocus = (
     return () => {
       doc.removeEventListener('mouseup', handleDocumentClick);
     };
-  }, [apiRef, handleDocumentClick]);
+  }, [apiRef, hasRootReference, handleDocumentClick]);
 
   useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);

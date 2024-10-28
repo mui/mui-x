@@ -17,6 +17,8 @@ export type PluginContextState = {
   colorProcessors: ColorProcessorsConfig<ChartSeriesType>;
   xExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
   yExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
+  rotationExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
+  radiusExtremumGetters: ExtremumGettersConfig<ChartSeriesType>;
 };
 
 export type ChartsPlugin<T> = T extends ChartSeriesType
@@ -26,5 +28,7 @@ export type ChartsPlugin<T> = T extends ChartSeriesType
       colorProcessor: ColorProcessor<T>;
       xExtremumGetter?: ExtremumGetter<T>;
       yExtremumGetter?: ExtremumGetter<T>;
+      rotationExtremumGetter?: ExtremumGetter<T>;
+      radiusExtremumGetter?: ExtremumGetter<T>;
     }
   : never;

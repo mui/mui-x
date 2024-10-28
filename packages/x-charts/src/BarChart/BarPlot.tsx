@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
@@ -14,6 +15,7 @@ import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 /**
  * Solution of the equations
@@ -54,7 +56,7 @@ export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps
 export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation?: boolean;
   /**
@@ -223,7 +225,11 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
+
+  const withoutBorderRadius = !borderRadius || borderRadius <= 0;
+
   const transition = useTransition(completedData, {
     keys: (bar) => `${bar.seriesId}-${bar.dataIndex}`,
     from: leaveStyle,
@@ -233,7 +239,7 @@ function BarPlot(props: BarPlotProps) {
     immediate: skipAnimation,
   });
 
-  const maskTransition = useTransition(masksData, {
+  const maskTransition = useTransition(withoutBorderRadius ? [] : masksData, {
     keys: (v) => v.id,
     from: leaveStyle,
     leave: leaveStyle,
@@ -244,18 +250,19 @@ function BarPlot(props: BarPlotProps) {
 
   return (
     <React.Fragment>
-      {maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
-        return (
-          <BarClipPath
-            maskId={id}
-            borderRadius={borderRadius}
-            hasNegative={hasNegative}
-            hasPositive={hasPositive}
-            layout={layout}
-            style={style}
-          />
-        );
-      })}
+      {!withoutBorderRadius &&
+        maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
+          return (
+            <BarClipPath
+              maskId={id}
+              borderRadius={borderRadius}
+              hasNegative={hasNegative}
+              hasPositive={hasPositive}
+              layout={layout}
+              style={style}
+            />
+          );
+        })}
       {transition((style, { seriesId, dataIndex, color, maskId }) => {
         const barElement = (
           <BarElement
@@ -273,7 +280,7 @@ function BarPlot(props: BarPlotProps) {
           />
         );
 
-        if (!borderRadius || borderRadius <= 0) {
+        if (withoutBorderRadius) {
           return barElement;
         }
 
@@ -316,7 +323,7 @@ BarPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation: PropTypes.bool,
   /**

@@ -9,7 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
+import { alpha, styled, darken, lighten } from '@mui/material/styles';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 const pageSizeOptions = [5, 10, 50];
@@ -83,7 +83,7 @@ export default function ServerSideTreeDataErrorHandling() {
           control={
             <Checkbox
               checked={shouldRequestsFail}
-              onChange={(e) => setShouldRequestsFail(e.target.checked)}
+              onChange={(event) => setShouldRequestsFail(event.target.checked)}
             />
           }
           label="Make the requests fail"
@@ -94,12 +94,12 @@ export default function ServerSideTreeDataErrorHandling() {
           {...props}
           treeData
           unstable_dataSource={dataSource}
-          unstable_onDataSourceError={(e, params) => {
+          unstable_onDataSourceError={(error, params) => {
             if (!params.groupKeys || params.groupKeys.length === 0) {
-              setRootError(e.message);
+              setRootError(error.message);
             } else {
               setChildrenError(
-                `${e.message} (Requested level: ${params.groupKeys.join(' > ')})`,
+                `${error.message} (Requested level: ${params.groupKeys.join(' > ')})`,
               );
             }
           }}
@@ -121,13 +121,6 @@ export default function ServerSideTreeDataErrorHandling() {
   );
 }
 
-function getBorderColor(theme: Theme) {
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
 const StyledDiv = styled('div')(({ theme: t }) => ({
   position: 'absolute',
   zIndex: 10,
@@ -139,8 +132,11 @@ const StyledDiv = styled('div')(({ theme: t }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '4px',
-  border: `1px solid ${getBorderColor(t)}`,
+  border: `1px solid ${lighten(alpha(t.palette.divider, 1), 0.88)}`,
   backgroundColor: t.palette.background.default,
+  ...t.applyStyles('dark', {
+    borderColor: darken(alpha(t.palette.divider, 1), 0.68),
+  }),
 }));
 
 function ErrorOverlay({ error }: { error: string }) {

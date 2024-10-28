@@ -1,12 +1,12 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useTransition } from '@react-spring/web';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
-import { useAnimatedPath } from '../internals/useAnimatedPath';
-import { cleanId } from '../internals/cleanId';
 import type { AreaElementOwnerState } from './AreaElement';
-import { useChartId, useDrawingArea } from '../hooks';
+import { useStringInterpolator } from '../internals/useStringInterpolator';
+import { AppearingMask } from './AppearingMask';
 
 export const AreaElementPath = styled(animated.path, {
   name: 'MuiAreaElement',
@@ -44,28 +44,23 @@ export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'
  */
 function AnimatedArea(props: AnimatedAreaProps) {
   const { d, skipAnimation, ownerState, ...other } = props;
-  const { left, top, right, bottom, width, height } = useDrawingArea();
-  const chartId = useChartId();
 
-  const path = useAnimatedPath(d, skipAnimation);
+  const stringInterpolator = useStringInterpolator(d);
 
-  const { animatedWidth } = useSpring({
-    from: { animatedWidth: left },
-    to: { animatedWidth: width + left + right },
+  const transitionChange = useTransition([stringInterpolator], {
+    from: { value: 0 },
+    to: { value: 1 },
+    enter: { value: 1 },
     reset: false,
     immediate: skipAnimation,
   });
 
-  const clipId = cleanId(`${chartId}-${ownerState.id}-area-clip`);
   return (
-    <React.Fragment>
-      <clipPath id={clipId}>
-        <animated.rect x={0} y={0} width={animatedWidth} height={top + height + bottom} />
-      </clipPath>
-      <g clipPath={`url(#${clipId})`}>
-        <AreaElementPath {...other} ownerState={ownerState} d={path} />
-      </g>
-    </React.Fragment>
+    <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-area-clip`}>
+      {transitionChange((style, interpolator) => (
+        <AreaElementPath {...other} ownerState={ownerState} d={style.value.to(interpolator)} />
+      ))}
+    </AppearingMask>
   );
 }
 

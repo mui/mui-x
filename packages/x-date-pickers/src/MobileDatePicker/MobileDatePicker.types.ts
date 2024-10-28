@@ -23,7 +23,7 @@ export interface MobileDatePickerSlotProps<
 
 export interface MobileDatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDatePickerProps<TDate>,
     MobileOnlyPickerProps {
   /**
@@ -36,4 +36,9 @@ export interface MobileDatePickerProps<
    * @default {}
    */
   slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow?: 3 | 4;
 }

@@ -39,10 +39,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Downloaden als Excel-bestand',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Zoeken',
+  columnsManagementNoColumns: 'Geen kolommen',
+  columnsManagementShowHideAllText: 'Toon/Verberg Alle',
+  columnsManagementReset: 'Reset',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
@@ -58,7 +58,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'bevat',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'gelijk aan',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'begint met',
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
@@ -79,7 +81,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Bevat',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Gelijk aan',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Begint met',
   headerFilterOperatorEndsWith: 'Eindigt met',
   headerFilterOperatorIs: 'Is',

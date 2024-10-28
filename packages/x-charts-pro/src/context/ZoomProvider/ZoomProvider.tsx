@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { Initializable } from '@mui/x-charts/internals';

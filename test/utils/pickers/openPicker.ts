@@ -1,4 +1,4 @@
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { getFieldSectionsContainer } from 'test/utils/pickers/fields';
 import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
@@ -22,23 +22,24 @@ export const openPicker = (params: OpenPickerParams) => {
   const fieldSectionsContainer = getFieldSectionsContainer(
     isRangeType && !params.isSingleInput && params.initialFocus === 'end' ? 1 : 0,
   );
-
   if (isRangeType) {
-    userEvent.mousePress(fieldSectionsContainer);
+    fireEvent.click(fieldSectionsContainer);
 
     if (params.isSingleInput && params.initialFocus === 'end') {
       const sections = fieldSectionsContainer.querySelectorAll(
         `.${pickersInputBaseClasses.sectionsContainer}`,
       );
 
-      userEvent.mousePress(sections[sections.length - 1]);
+      fireEvent.click(sections[sections.length - 1]);
     }
 
-    return undefined;
+    return true;
   }
 
   if (params.variant === 'mobile') {
-    return userEvent.mousePress(fieldSectionsContainer);
+    fireEvent.click(fieldSectionsContainer);
+
+    return true;
   }
 
   const target =
@@ -46,5 +47,6 @@ export const openPicker = (params: OpenPickerParams) => {
       ? screen.getByLabelText(/choose time/i)
       : screen.getByLabelText(/choose date/i);
 
-  return userEvent.mousePress(target);
+  fireEvent.click(target);
+  return true;
 };

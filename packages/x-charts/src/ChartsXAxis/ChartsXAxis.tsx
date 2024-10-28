@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
@@ -83,6 +84,12 @@ function addLabelDimension(
   });
 }
 
+const XAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsXAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
+
 const defaultProps = {
   position: 'bottom',
   disableLine: false,
@@ -134,7 +141,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
-  const { left, top, width, height } = useDrawingArea();
+  const { left, top, width, height, isPointInside } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -204,7 +211,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
   return (
-    <AxisRoot
+    <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
       sx={sx}
@@ -217,9 +224,8 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
 
-        const showTick = offset >= left - 1 && offset <= left + width + 1;
-        const showTickLabel =
-          offset + xTickLabel >= left - 1 && offset + xTickLabel <= left + width + 1;
+        const showTick = isPointInside({ x: offset, y: -1 }, { direction: 'x' });
+        const showTickLabel = isPointInside({ x: offset + xTickLabel, y: -1 }, { direction: 'x' });
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
             {!disableTicks && showTick && (
@@ -247,7 +253,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </XAxisRoot>
   );
 }
 

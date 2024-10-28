@@ -1,7 +1,7 @@
-import { TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { TreeItem2LabelInputProps } from '../../../TreeItem2LabelInput';
+import { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';
 
 export interface UseTreeViewLabelPublicAPI {
   /**
@@ -39,7 +39,7 @@ export interface UseTreeViewLabelInstance extends UseTreeViewLabelPublicAPI {
    */
   isItemEditable: (itemId: TreeViewItemId) => boolean;
   /**
-   * Set to `true` if the tree view is editable.
+   * Set to `true` if the Tree View is editable.
    */
   isTreeViewEditable: boolean;
 }
@@ -63,18 +63,28 @@ export interface UseTreeViewLabelParameters<R extends {}> {
   isItemEditable?: boolean | ((item: R) => boolean);
 }
 
+export type UseTreeViewLabelDefaultizedParameters<R extends {}> = DefaultizedProps<
+  UseTreeViewLabelParameters<R>,
+  'isItemEditable'
+>;
+
 export interface UseTreeViewLabelState {
   editedItemId: string | null;
 }
 
 export type UseTreeViewLabelSignature = TreeViewPluginSignature<{
   params: UseTreeViewLabelParameters<any>;
-  defaultizedParams: UseTreeViewLabelParameters<any>;
+  defaultizedParams: UseTreeViewLabelDefaultizedParameters<any>;
   publicAPI: UseTreeViewLabelPublicAPI;
   instance: UseTreeViewLabelInstance;
   state: UseTreeViewLabelState;
   experimentalFeatures: 'labelEditing';
   dependencies: [UseTreeViewItemsSignature];
 }>;
-export interface UseTreeItem2LabelInputSlotPropsFromItemsReordering
-  extends TreeItem2LabelInputProps {}
+
+export interface UseTreeItemLabelInputSlotPropsFromLabelEditing extends TreeItemLabelInputProps {}
+
+declare module '@mui/x-tree-view/useTreeItem' {
+  interface UseTreeItemLabelInputSlotOwnProps
+    extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
+}

@@ -5,7 +5,6 @@ export * from '../ResponsiveChartContainer/useChartContainerDimensions';
 export * from '../ResponsiveChartContainer/ResizableContainer';
 
 // hooks
-export { useReducedMotion } from '../hooks/useReducedMotion';
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
@@ -21,6 +20,9 @@ export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
 export * from './isDefined';
+export { unstable_cleanupDOM } from './domUtils';
+export * from './getScale';
+export * from './computeAxisValue';
 
 // contexts
 
@@ -30,7 +32,9 @@ export * from '../context/InteractionProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export * from '../context/PluginProvider';
+export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
+export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
 // series configuration
 export * from '../models/seriesType/config';

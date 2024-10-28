@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -29,7 +29,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     views: ['day'],
   }));
 
-  describeConformance(<DesktopDateRangePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DesktopDateRangePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateRangePicker',
@@ -86,7 +86,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
@@ -148,7 +148,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],

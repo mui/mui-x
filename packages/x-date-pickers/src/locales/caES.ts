@@ -43,8 +43,8 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Selecciona ${views[view]}. ${time === null ? 'Hora no seleccionada' : `L'hora seleccionada és ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, time, utils, formattedTime) =>
+    `Selecciona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora no seleccionada' : `L'hora seleccionada és ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
   hoursClockNumberText: (hours) => `${hours} hores`,
   minutesClockNumberText: (minutes) => `${minutes} minuts`,
   secondsClockNumberText: (seconds) => `${seconds} segons`,
@@ -59,13 +59,13 @@ const caESPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tria la data, la data triada és ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    formattedDate || (value !== null && utils.isValid(value))
+      ? `Tria la data, la data triada és ${formattedDate ?? utils.format(value, 'fullDate')}`
       : 'Tria la data',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Tria l'hora, l'hora triada és ${utils.format(value, 'fullTime')}`
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Tria l'hora, l'hora triada és ${formattedTime ?? utils.format(value, 'fullTime')}`
       : "Tria l'hora",
   fieldClearLabel: 'Netega el valor',
 

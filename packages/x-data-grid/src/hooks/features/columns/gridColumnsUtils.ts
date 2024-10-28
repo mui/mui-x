@@ -1,4 +1,5 @@
 import * as React from 'react';
+import resolveProps from '@mui/utils/resolveProps';
 import {
   GridColumnLookup,
   GridColumnsState,
@@ -379,11 +380,7 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = {
-      ...existingState,
-      ...newColumn,
-      hasBeenResized,
-    };
+    columnsState.lookup[field] = resolveProps(existingState, { ...newColumn, hasBeenResized });
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
@@ -443,8 +440,15 @@ export function getFirstNonSpannedColumnToRender({
 
 export function getTotalHeaderHeight(
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'headerFilterHeight'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'columnHeaderHeight' | 'headerFilterHeight' | 'unstable_listView'
+  >,
 ) {
+  if (props.unstable_listView) {
+    return 0;
+  }
+
   const densityFactor = gridDensityFactorSelector(apiRef);
   const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
   const isHeaderFilteringEnabled = gridHeaderFilteringEnabledSelector(apiRef);

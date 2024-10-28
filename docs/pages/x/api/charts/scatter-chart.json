@@ -11,8 +11,8 @@
       },
       "default": "{ x: 'none', y: 'none' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/tooltip/#highlights",
-        "text": "highlight docs"
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
       }
     },
     "bottomAxis": {
@@ -62,10 +62,12 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "rightAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
     },
+    "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -176,7 +178,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiScatterChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",

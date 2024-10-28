@@ -171,7 +171,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
 
   return (
     <PickersMonthRoot
-      data-mui-test="month"
+      data-testid="month"
       className={clsx(classes.root, className)}
       ownerState={props}
       {...other}

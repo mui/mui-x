@@ -10,3 +10,8 @@ export type TreeViewItemsReorderingAction =
   | 'reorder-below'
   | 'make-child'
   | 'move-to-parent';
+
+export interface TreeViewSelectionPropagation {
+  descendants?: boolean;
+  parents?: boolean;
+}

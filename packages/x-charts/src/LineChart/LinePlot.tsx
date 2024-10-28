@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
@@ -15,6 +16,7 @@ import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -38,76 +40,83 @@ const useAggregatedData = () => {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
 
-  if (seriesData === undefined) {
-    return [];
-  }
+  // This memo prevents odd line chart behavior when hydrating.
+  const allData = React.useMemo(() => {
+    if (seriesData === undefined) {
+      return [];
+    }
 
-  const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
+    const { series, stackingGroups } = seriesData;
+    const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+    const defaultXAxisId = xAxisIds[0];
+    const defaultYAxisId = yAxisIds[0];
 
-  return stackingGroups.flatMap(({ ids: groupIds }) => {
-    return groupIds.flatMap((seriesId) => {
-      const {
-        xAxisId: xAxisIdProp,
-        yAxisId: yAxisIdProp,
-        xAxisKey = defaultXAxisId,
-        yAxisKey = defaultYAxisId,
-        stackedData,
-        data,
-        connectNulls,
-      } = series[seriesId];
+    return stackingGroups.flatMap(({ ids: groupIds }) => {
+      return groupIds.flatMap((seriesId) => {
+        const {
+          xAxisId: xAxisIdProp,
+          yAxisId: yAxisIdProp,
+          xAxisKey = defaultXAxisId,
+          yAxisKey = defaultYAxisId,
+          stackedData,
+          data,
+          connectNulls,
+        } = series[seriesId];
 
-      const xAxisId = xAxisIdProp ?? xAxisKey;
-      const yAxisId = yAxisIdProp ?? yAxisKey;
+        const xAxisId = xAxisIdProp ?? xAxisKey;
+        const yAxisId = yAxisIdProp ?? yAxisKey;
 
-      const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
-      const yScale = yAxis[yAxisId].scale;
-      const xData = xAxis[xAxisId].data;
+        const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
+        const yScale = yAxis[yAxisId].scale;
+        const xData = xAxis[xAxisId].data;
 
-      const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
-        (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
-        (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
-        undefined;
+        const gradientUsed: [AxisId, 'x' | 'y'] | undefined =
+          (yAxis[yAxisId].colorScale && [yAxisId, 'y']) ||
+          (xAxis[xAxisId].colorScale && [xAxisId, 'x']) ||
+          undefined;
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (xData === undefined) {
-          throw new Error(
-            `MUI X: ${
-              xAxisId === DEFAULT_X_AXIS_KEY
-                ? 'The first `xAxis`'
-                : `The x-axis with id "${xAxisId}"`
-            } should have data property to be able to display a line plot.`,
-          );
+        if (process.env.NODE_ENV !== 'production') {
+          if (xData === undefined) {
+            throw new Error(
+              `MUI X: ${
+                xAxisId === DEFAULT_X_AXIS_KEY
+                  ? 'The first `xAxis`'
+                  : `The x-axis with id "${xAxisId}"`
+              } should have data property to be able to display a line plot.`,
+            );
+          }
+          if (xData.length < stackedData.length) {
+            throw new Error(
+              `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+            );
+          }
         }
-        if (xData.length < stackedData.length) {
-          throw new Error(
-            `MUI X: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-          );
-        }
-      }
 
-      const linePath = d3Line<{
-        x: any;
-        y: [number, number];
-      }>()
-        .x((d) => xScale(d.x))
-        .defined((_, i) => connectNulls || data[i] != null)
-        .y((d) => yScale(d.y[1])!);
+        const linePath = d3Line<{
+          x: any;
+          y: [number, number];
+        }>()
+          .x((d) => xScale(d.x))
+          .defined((_, i) => connectNulls || data[i] != null)
+          .y((d) => yScale(d.y[1])!);
 
-      const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
-      const d3Data = connectNulls ? formattedData.filter((_, i) => data[i] != null) : formattedData;
+        const formattedData = xData?.map((x, index) => ({ x, y: stackedData[index] })) ?? [];
+        const d3Data = connectNulls
+          ? formattedData.filter((_, i) => data[i] != null)
+          : formattedData;
 
-      const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
-      return {
-        ...series[seriesId],
-        gradientUsed,
-        d,
-        seriesId,
-      };
+        const d = linePath.curve(getCurveFactory(series[seriesId].curve))(d3Data) || '';
+        return {
+          ...series[seriesId],
+          gradientUsed,
+          d,
+          seriesId,
+        };
+      });
     });
-  });
+  }, [seriesData, axisData]);
+
+  return allData;
 };
 
 /**
@@ -121,7 +130,8 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const getGradientId = useChartGradient();
   const completedData = useAggregatedData();

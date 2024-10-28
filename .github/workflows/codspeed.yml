@@ -17,6 +17,8 @@ on:
       - 'master'
       - 'next'
 
+permissions: {}
+
 jobs:
   benchmarks:
     name: Benchmarks Charts
@@ -26,29 +28,29 @@ jobs:
     # L3: Run the benchmarks for pull requests with the label 'component: charts'
     # Yaml syntax looks a little weird, but it is correct.
     if: >-
-      ${{ 
-          (github.event_name == 'push') || 
-          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') || 
-          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts')) 
+      ${{
+          (github.event_name == 'push') ||
+          (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'component: charts') ||
+          (github.event_name == 'pull_request' && github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'component: charts'))
       }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
       - name: Use Node.js 20.x
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: 20
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
       - run: pnpm install --frozen-lockfile
       # Ensure we are running on the prod version of our libs
-      # Only charts and license are needed for the benchmarks
+      - run: pnpm --filter @mui/x-internals build
       - run: pnpm --filter @mui/x-license build
       - run: pnpm --filter @mui/x-charts build
       - run: pnpm --filter @mui/x-charts-pro build
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@86517f4abbb50982006ed33de6c22a586c7e11a1
+        uses: CodSpeedHQ/action@b587655f756aab640e742fec141261bc6f0a569d
         with:
           run: pnpm --filter @mui-x-internal/performance-charts test:performance
           token: ${{ secrets.CODSPEED_TOKEN }}

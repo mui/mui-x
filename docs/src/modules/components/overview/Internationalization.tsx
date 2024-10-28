@@ -102,7 +102,7 @@ function TimezonesDemo() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleContinentClick: ContinentClickHandler = (e, newTimezone) => {
+  const handleContinentClick: ContinentClickHandler = (event, newTimezone) => {
     if (selectedTimezone === newTimezone) {
       setSelectedTimezone(null);
     } else {
@@ -112,7 +112,7 @@ function TimezonesDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoWrapper link="/x/react-date-pickers/timezone">
+      <DemoWrapper link="/x/react-date-pickers/timezone/">
         <Stack
           spacing={2}
           flexGrow={1}
@@ -230,7 +230,7 @@ function LanguagesDemo() {
             selectedLanguage={selectedLanguage}
           />
         }
-        link="/x/react-date-pickers/localization"
+        link="/x/react-date-pickers/localization/"
       >
         <ThemeProvider theme={theme}>
           <Stack
@@ -290,7 +290,7 @@ function ValidationDemo() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoWrapper link="/x/react-date-pickers/validation">
+      <DemoWrapper link="/x/react-date-pickers/validation/">
         <ThemeProvider theme={theme}>
           <Stack
             spacing={2}

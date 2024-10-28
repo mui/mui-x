@@ -39,6 +39,9 @@
     "columnBufferPx": {
       "description": "Column region in pixels to render before/after the viewport"
     },
+    "columnGroupHeaderHeight": {
+      "description": "Sets the height in pixels of the column group headers in the Data Grid. Inherits the <code>columnHeaderHeight</code> value if not set."
+    },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the Data Grid."
     },
@@ -184,7 +187,7 @@
     "groupingColDef": { "description": "The grouping column used by the tree data." },
     "headerFilterHeight": { "description": "Override the height of the header filters." },
     "headerFilters": {
-      "description": "If <code>true</code>, enables the data grid filtering on header feature."
+      "description": "If <code>true</code>, the header filters feature is enabled."
     },
     "hideFooter": { "description": "If <code>true</code>, the footer component is hidden." },
     "hideFooterPagination": {
@@ -201,6 +204,9 @@
     },
     "ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the Data Grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export."
+    },
+    "indeterminateCheckboxAction": {
+      "description": "If <code>select</code>, a group header checkbox in indeterminate state (like &quot;Select All&quot; checkbox) will select all the rows under it. If <code>deselect</code>, it will deselect all the rows under it. Works only if <code>checkboxSelection</code> is enabled."
     },
     "initialState": {
       "description": "The initial state of the DataGridPremium. The data in it is set in the state on initialization but isn&#39;t controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins."
@@ -322,6 +328,13 @@
         "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
+      }
+    },
+    "onColumnHeaderContextMenu": {
+      "description": "Callback fired when a contextmenu event comes from a column header element.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnHeaderParams.",
+        "event": "The event object."
       }
     },
     "onColumnHeaderDoubleClick": {
@@ -583,6 +596,7 @@
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
         "oldRow": "Row object with the old values.",
+        "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
     },
@@ -604,6 +618,9 @@
     "rows": { "description": "Set of rows of type GridRowsProp." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
     "rowSelectionModel": { "description": "Sets the row selection model of the Data Grid." },
+    "rowSelectionPropagation": {
+      "description": "When <code>rowSelectionPropagation.descendants</code> is set to <code>true</code>. - Selecting a parent selects all its filtered descendants automatically. - Deselecting a parent row deselects all its filtered descendants automatically.<br>When <code>rowSelectionPropagation.parents</code> is set to <code>true</code> - Selecting all the filtered descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Works with tree data and row grouping on the client-side only."
+    },
     "rowsLoadingMode": {
       "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;"
     },
@@ -617,10 +634,10 @@
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
     },
     "showCellVerticalBorder": {
-      "description": "If <code>true</code>, the vertical borders of the cells are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
     "showColumnVerticalBorder": {
-      "description": "If <code>true</code>, the right border of the column headers are displayed."
+      "description": "If <code>true</code>, vertical borders will be displayed between column header items."
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering."
@@ -643,6 +660,15 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    },
+    "unstable_listColumn": {
+      "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."
+    },
+    "unstable_listView": {
+      "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
+    },
+    "unstable_rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     }
   },
   "classDescriptions": {
@@ -1204,13 +1230,17 @@
     }
   },
   "slotDescriptions": {
+    "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseChip": "The custom Chip component used in the grid.",
+    "baseDivider": "The custom Divider component used in the grid.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "baseMenuItem": "The custom MenuItem component used in the grid.",
+    "baseMenuList": "The custom MenuList component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",

@@ -261,7 +261,7 @@
     },
     {
       "name": "switchViewIcon",
-      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is \"year\".",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.",
       "default": "ArrowDropDown",
       "class": null
     },

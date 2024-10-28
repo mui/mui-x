@@ -1,3 +1,4 @@
+'use client';
 import { useChartContainerProps } from '@mui/x-charts/internals';
 import { ZoomProviderProps } from '../context/ZoomProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
@@ -17,6 +18,7 @@ export const useChartContainerProProps = (
     highlightedProviderProps,
     chartsSurfaceProps,
     pluginProviderProps,
+    animationProviderProps,
     xAxis,
     yAxis,
   } = useChartContainerProps(baseProps, ref);
@@ -38,5 +40,6 @@ export const useChartContainerProProps = (
     zAxisContextProps,
     highlightedProviderProps,
     chartsSurfaceProps,
+    animationProviderProps,
   };
 };

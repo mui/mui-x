@@ -41,7 +41,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: '検索',
   columnsManagementNoColumns: 'カラムなし',
   columnsManagementShowHideAllText: 'すべて表示/非表示',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'リセット',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
@@ -57,7 +57,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '...を含む',
+  filterOperatorDoesNotContain: '...を含まない',
   filterOperatorEquals: '...に等しい',
+  filterOperatorDoesNotEqual: '...に等しくない',
   filterOperatorStartsWith: '...で始まる',
   filterOperatorEndsWith: '...で終わる',
   filterOperatorIs: '...である',
@@ -78,7 +80,9 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '含む',
+  headerFilterOperatorDoesNotContain: '含まない',
   headerFilterOperatorEquals: '等しい',
+  headerFilterOperatorDoesNotEqual: '等しくない',
   headerFilterOperatorStartsWith: 'で始まる',
   headerFilterOperatorEndsWith: 'で終わる',
   headerFilterOperatorIs: 'である',

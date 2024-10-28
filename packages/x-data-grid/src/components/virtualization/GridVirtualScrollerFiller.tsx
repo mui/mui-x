@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { fastMemo } from '../../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
@@ -51,10 +51,9 @@ function GridVirtualScrollerFiller({ rowsLength }: Props) {
     rightPinnedWidth,
   } = useGridSelector(apiRef, gridDimensionsSelector);
 
-  const scrollbarHeight = hasScrollX ? scrollbarSize : 0;
-  const expandedHeight = viewportOuterSize.height - minimumSize.height - scrollbarHeight;
-  const height = Math.max(scrollbarHeight, expandedHeight);
-  if (height === 0) {
+  const height = hasScrollX ? scrollbarSize : 0;
+  const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
+  if (height === 0 && !needsLastRowBorder) {
     return null;
   }
 
