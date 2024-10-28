@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
+import { useStore } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
@@ -15,7 +15,8 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { dispatch } = React.useContext(InteractionContext);
+  // const { dispatch } = React.useContext(InteractionContext);
+  const store = useStore();
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -100,7 +101,12 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         x: -1,
         y: -1,
       };
-      dispatch({ type: 'exitChart' });
+
+      store.update((prev) => ({
+        ...prev,
+        interaction: { item: null, axis: { x: null, y: null } },
+      }));
+      // dispatch({ type: 'exitChart' });
     };
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
@@ -112,7 +118,11 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
       if (!drawingArea.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
-          dispatch({ type: 'exitChart' });
+          store.update((prev) => ({
+            ...prev,
+            interaction: { item: null, axis: { x: null, y: null } },
+          }));
+          // dispatch({ type: 'exitChart' });
           mousePosition.current.isInChart = false;
         }
         return;
@@ -121,7 +131,11 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
       const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
-      dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
+      store.update((prev) => ({
+        ...prev,
+        interaction: { ...prev.interaction, axis: { x: newStateX, y: newStateY } },
+      }));
+      // dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -147,5 +161,5 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
-  }, [svgRef, dispatch, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
+  }, [svgRef, store, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
 };

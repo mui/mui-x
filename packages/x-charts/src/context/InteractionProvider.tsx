@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import { useCharts } from '../internals/useCharts';
+import { ChartsStore } from '../internals/plugins/utils/ChartsStore';
 
 export interface InteractionProviderProps {
   children: React.ReactNode;
@@ -70,6 +72,12 @@ if (process.env.NODE_ENV !== 'production') {
   InteractionContext.displayName = 'InteractionContext';
 }
 
+const ChartsContext = React.createContext<{ store: ChartsStore } | null>(null);
+
+if (process.env.NODE_ENV !== 'production') {
+  ChartsContext.displayName = 'ChartsContext';
+}
+
 const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, InteractionActions> = (
   prevState,
   action,
@@ -110,6 +118,15 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
   }
 };
 
+export function useStore() {
+  const charts = React.useContext(ChartsContext);
+
+  if (!charts) {
+    throw new Error('Context is not defined. You are outside any context.');
+  }
+
+  return charts.store;
+}
 function InteractionProvider(props: InteractionProviderProps) {
   const { children } = props;
   const [data, dispatch] = React.useReducer(dataReducer, {
@@ -125,8 +142,12 @@ function InteractionProvider(props: InteractionProviderProps) {
     }),
     [data],
   );
-
-  return <InteractionContext.Provider value={value}>{children}</InteractionContext.Provider>;
+  const { contextValue } = useCharts();
+  return (
+    <ChartsContext.Provider value={contextValue}>
+      <InteractionContext.Provider value={value}>{children}</InteractionContext.Provider>
+    </ChartsContext.Provider>
+  );
 }
 
 export { InteractionProvider };
