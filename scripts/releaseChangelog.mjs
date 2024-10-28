@@ -324,6 +324,8 @@ ${logTeamSection()}
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
 ### Data Grid
 
 #### \`@mui/x-data-grid@__VERSION__\`
