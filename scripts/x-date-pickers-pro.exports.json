@@ -292,6 +292,7 @@
   { "name": "pickersLayoutClasses", "kind": "Variable" },
   { "name": "PickersLayoutClassKey", "kind": "TypeAlias" },
   { "name": "PickersLayoutContentWrapper", "kind": "Variable" },
+  { "name": "PickersLayoutOwnerState", "kind": "Interface" },
   { "name": "PickersLayoutProps", "kind": "Interface" },
   { "name": "PickersLayoutRoot", "kind": "Variable" },
   { "name": "PickersLayoutSlotProps", "kind": "Interface" },
