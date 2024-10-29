@@ -129,7 +129,7 @@ The new accessible DOM structure will become compatible with Joy UI in the futur
 
 If your user can only select a value in a small list of available dates, you can replace the field with the [Autocomplete](/material-ui/react-autocomplete/) component to list those dates:
 
-{{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
+{{"demo": "behavior-autocomplete/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
 ### Using a masked Text Field
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -42,7 +43,7 @@ function ButtonDateField(props) {
     }
   };
 
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const formattedValue = value == null ? parsedFormat : value.format(format);
 
   return (
     <Button
@@ -52,7 +53,7 @@ function ButtonDateField(props) {
       ref={InputProps?.ref}
       onClick={handleTogglePicker}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>
   );
 }

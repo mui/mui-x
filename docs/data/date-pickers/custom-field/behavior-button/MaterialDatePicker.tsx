@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -46,7 +47,8 @@ function ButtonDateField(props: DatePickerFieldProps) {
     }
   };
 
-  const valueStr = value == null ? parsedFormat : value.format(format);
+  const formattedValue =
+    value == null ? parsedFormat : (value as Dayjs).format(format);
 
   return (
     <Button
@@ -56,7 +58,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       ref={InputProps?.ref}
       onClick={handleTogglePicker}
     >
-      {label ? `${label}: ${valueStr}` : valueStr}
+      {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>
   );
 }
