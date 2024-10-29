@@ -51,15 +51,9 @@ const GridAggregationFunctionLabel = styled('div', {
 });
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, colDef } = ownerState;
+  const { classes } = ownerState;
 
   const slots = {
-    root: [
-      'aggregationColumnHeader',
-      colDef.headerAlign === 'left' && 'aggregationColumnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'aggregationColumnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'aggregationColumnHeader--alignRight',
-    ],
     aggregationLabel: ['aggregationColumnHeaderLabel'],
   };
 

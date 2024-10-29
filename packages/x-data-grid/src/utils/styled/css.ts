@@ -39,8 +39,8 @@ export function css<T extends Record<string, CSSObject>>(meta: Meta, styles: T):
 }
 
 // XXX: Use `styledUnstyled` after prototyping is done.
-// export const StyledContext = React.createContext(styledUnstyled);
 export const StyledContext = React.createContext(styledMaterial);
+// export const StyledContext = React.createContext(styledUnstyled);
 
 export function useStyled<P, Keys extends string | number | symbol>(
   styleMeta: StyleMeta<Keys>,
@@ -55,6 +55,9 @@ export function styledUnstyled<P, Keys extends string | number | symbol>(
   _params: { rootProps: P }
 ) {
   const result = styleMeta.classes
+
+  // XXX: rootProps.classes handling
+
   return result
 }
 

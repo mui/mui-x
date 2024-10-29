@@ -24,6 +24,7 @@
     "@babel/runtime-corejs2": "^7.25.7",
     "@docsearch/react": "^3.6.2",
     "@emotion/cache": "^11.13.1",
+    "@emotion/css": "^11.13.4",
     "@emotion/react": "^11.13.3",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.13.0",

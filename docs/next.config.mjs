@@ -41,6 +41,23 @@ const WORKSPACE_ALIASES = {
   '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
   '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
+
+  '@mui/base':                   '/home/romgrk/src/mui-x/material-ui/@mui/base/',
+  '@mui/codemod':                '/home/romgrk/src/mui-x/material-ui/@mui/codemod/',
+  '@mui/core-downloads-tracker': '/home/romgrk/src/mui-x/material-ui/@mui/core-downloads-tracker/',
+  '@mui/icons-material':         '/home/romgrk/src/mui-x/material-ui/@mui/icons-material/',
+  '@mui/lab':                    '/home/romgrk/src/mui-x/material-ui/@mui/lab/',
+  '@mui/material':               '/home/romgrk/src/mui-x/material-ui/@mui/material/',
+  '@mui/material-nextjs':        '/home/romgrk/src/mui-x/material-ui/@mui/material-nextjs/',
+  '@mui/material-pigment-css':   '/home/romgrk/src/mui-x/material-ui/@mui/material-pigment-css/',
+  '@mui/private-theming':        '/home/romgrk/src/mui-x/material-ui/@mui/private-theming/',
+  '@mui/styled-engine':          '/home/romgrk/src/mui-x/material-ui/@mui/styled-engine/',
+  '@mui/styled-engine-sc':       '/home/romgrk/src/mui-x/material-ui/@mui/styled-engine-sc/',
+  '@mui/styles':                 '/home/romgrk/src/mui-x/material-ui/@mui/styles/',
+  '@mui/system':                 '/home/romgrk/src/mui-x/material-ui/@mui/system/',
+  '@mui/types':                  '/home/romgrk/src/mui-x/material-ui/@mui/types/',
+  '@mui/utils':                  '/home/romgrk/src/mui-x/material-ui/@mui/utils/'
+
 };
 
 /**
