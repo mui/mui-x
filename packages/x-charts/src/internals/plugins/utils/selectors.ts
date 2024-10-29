@@ -14,9 +14,7 @@ const cache = new WeakMap<
   Map<Parameters<typeof reselectCreateSelector>, any>
 >();
 
-export type ChartsRootSelector = (
-  state: ChartsState,
-) => ChartsState[keyof ChartsState];
+export type ChartsRootSelector = (state: ChartsState) => ChartsState[keyof ChartsState];
 
 export type ChartsSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 

@@ -37,17 +37,17 @@ import {
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
-import { DefaultHeatmapTooltip } from './DefaultHeatmapTooltip';
+import { DefaultHeatmapTooltipContent } from './DefaultHeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
 export interface HeatmapSlots
   extends ChartsAxisSlots,
-    Omit<ChartsTooltipSlots<'heatmap'>, 'axisContent'>,
+    Omit<ChartsTooltipSlots, 'axisContent'>,
     ChartsOverlaySlots,
     HeatmapItemSlots {}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    Omit<ChartsTooltipSlotProps<'heatmap'>, 'axisContent'>,
+    Omit<ChartsTooltipSlotProps, 'axisContent'>,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps {}
 
@@ -80,7 +80,7 @@ export interface HeatmapProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps<'heatmap'>;
+  tooltip?: ChartsTooltipProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -196,12 +196,9 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
         slotProps={slotProps}
       />
       {!loading && (
-        <ChartsTooltip
-          trigger="item"
-          {...tooltip}
-          slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
-          slotProps={slotProps}
-        />
+        <ChartsTooltip trigger="item" {...tooltip} slots={slots} slotProps={slotProps}>
+          <DefaultHeatmapTooltipContent />
+        </ChartsTooltip>
       )}
 
       <ChartsClipPath id={clipPathId} />

@@ -5,10 +5,16 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { styled } from '@mui/material/styles';
-import { InteractionContext } from '../context/InteractionProvider';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { getValueToPositionMapper } from '../hooks/useScale';
+import { useStore } from '../context/InteractionProvider';
+
+import { getValueToPositionMapper, useXScale, useYScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
+import { useSelector } from '../internals/useSelector';
+import {
+  selectorChartsInteractionXAxis,
+  selectorChartsInteractionYAxis,
+} from '../context/InteractionSelectors';
+import { useDrawingArea } from '../hooks';
 
 export interface ChartsAxisHighlightClasses {
   /** Styles applied to the root element. */
@@ -75,42 +81,26 @@ export type ChartsAxisHighlightProps = {
   y?: AxisHighlight;
 };
 
-/**
- * Demos:
- *
- * - [Custom components](https://mui.com/x/react-charts/components/)
- *
- * API:
- *
- * - [ChartsAxisHighlight API](https://mui.com/x/api/charts/charts-axis-highlight/)
- */
-function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
-  const { x: xAxisHighlight, y: yAxisHighlight } = props;
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
+function ChartsXHighlight(props: { type: AxisHighlight }) {
+  const { type } = props;
+
   const classes = useUtilityClasses();
 
-  const USED_X_AXIS_ID = xAxisIds[0];
-  const USED_Y_AXIS_ID = yAxisIds[0];
+  const { top, height } = useDrawingArea();
 
-  const xScale = xAxis[USED_X_AXIS_ID].scale;
-  const yScale = yAxis[USED_Y_AXIS_ID].scale;
+  const xScale = useXScale();
 
-  const { axis } = React.useContext(InteractionContext);
+  const store = useStore();
+  const axisX = useSelector(store, selectorChartsInteractionXAxis);
 
   const getXPosition = getValueToPositionMapper(xScale);
-  const getYPosition = getValueToPositionMapper(yScale);
 
-  const axisX = axis.x;
-  const axisY = axis.y;
-
-  const isBandScaleX = xAxisHighlight === 'band' && axisX !== null && isBandScale(xScale);
-  const isBandScaleY = yAxisHighlight === 'band' && axisY !== null && isBandScale(yScale);
+  const isBandScaleX = type === 'band' && axisX !== null && isBandScale(xScale);
 
   if (process.env.NODE_ENV !== 'production') {
-    const isXError = isBandScaleX && xScale(axisX.value) === undefined;
-    const isYError = isBandScaleY && yScale(axisY.value) === undefined;
+    const isError = isBandScaleX && xScale(axisX.value) === undefined;
 
-    if (isXError || isYError) {
+    if (isError) {
       console.error(
         [
           `MUI X: The position value provided for the axis is not valid for the current scale.`,
@@ -127,47 +117,114 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         <ChartsAxisHighlightPath
           // @ts-expect-error, xScale value is checked in the statement above
           d={`M ${xScale(axisX.value) - (xScale.step() - xScale.bandwidth()) / 2} ${
-            yScale.range()[0]
-          } l ${xScale.step()} 0 l 0 ${
-            yScale.range()[1] - yScale.range()[0]
-          } l ${-xScale.step()} 0 Z`}
+            top
+          } l ${xScale.step()} 0 l 0 ${height} l ${-xScale.step()} 0 Z`}
           className={classes.root}
           ownerState={{ axisHighlight: 'band' }}
         />
       )}
 
+      {type === 'line' && axisX !== null && (
+        <ChartsAxisHighlightPath
+          d={`M ${getXPosition(axisX.value)} ${top} L ${getXPosition(axisX.value)} ${top + height}`}
+          className={classes.root}
+          ownerState={{ axisHighlight: 'line' }}
+        />
+      )}
+    </React.Fragment>
+  );
+}
+
+ChartsXHighlight.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  type: PropTypes.oneOf(['band', 'line', 'none']).isRequired,
+} as any;
+
+function ChartsYHighlight(props: { type: AxisHighlight }) {
+  const { type } = props;
+
+  const classes = useUtilityClasses();
+
+  const { left, width } = useDrawingArea();
+
+  const yScale = useYScale();
+
+  const store = useStore();
+  const axisY = useSelector(store, selectorChartsInteractionYAxis);
+
+  const getYPosition = getValueToPositionMapper(yScale);
+
+  const isBandScaleY = type === 'band' && axisY !== null && isBandScale(yScale);
+
+  if (process.env.NODE_ENV !== 'production') {
+    const isError = isBandScaleY && yScale(axisY.value) === undefined;
+
+    if (isError) {
+      console.error(
+        [
+          `MUI X: The position value provided for the axis is not valid for the current scale.`,
+          `This probably means something is wrong with the data passed to the chart.`,
+          `The ChartsAxisHighlight component will not be displayed.`,
+        ].join('\n'),
+      );
+    }
+  }
+
+  return (
+    <React.Fragment>
       {isBandScaleY && yScale(axisY.value) !== undefined && (
         <ChartsAxisHighlightPath
-          d={`M ${xScale.range()[0]} ${
+          d={`M ${left} ${
             // @ts-expect-error, yScale value is checked in the statement above
             yScale(axisY.value) - (yScale.step() - yScale.bandwidth()) / 2
-          } l 0 ${yScale.step()} l ${
-            xScale.range()[1] - xScale.range()[0]
-          } 0 l 0 ${-yScale.step()} Z`}
+          } l 0 ${yScale.step()} l ${width} 0 l 0 ${-yScale.step()} Z`}
           className={classes.root}
           ownerState={{ axisHighlight: 'band' }}
         />
       )}
 
-      {xAxisHighlight === 'line' && axis.x !== null && (
+      {type === 'line' && axisY !== null && (
         <ChartsAxisHighlightPath
-          d={`M ${getXPosition(axis.x.value)} ${yScale.range()[0]} L ${getXPosition(
-            axis.x.value,
-          )} ${yScale.range()[1]}`}
+          d={`M ${left} ${getYPosition(axisY.value)} L ${left + width} ${getYPosition(
+            axisY.value,
+          )}`}
           className={classes.root}
           ownerState={{ axisHighlight: 'line' }}
         />
       )}
+    </React.Fragment>
+  );
+}
 
-      {yAxisHighlight === 'line' && axis.y !== null && (
-        <ChartsAxisHighlightPath
-          d={`M ${xScale.range()[0]} ${getYPosition(axis.y.value)} L ${
-            xScale.range()[1]
-          } ${getYPosition(axis.y.value)}`}
-          className={classes.root}
-          ownerState={{ axisHighlight: 'line' }}
-        />
-      )}
+/**
+ * Demos:
+ *
+ * - [Custom components](https://mui.com/x/react-charts/components/)
+ *
+ * API:
+ *
+ * - [ChartsAxisHighlight API](https://mui.com/x/api/charts/charts-axis-highlight/)
+ */
+
+ChartsYHighlight.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  type: PropTypes.oneOf(['band', 'line', 'none']).isRequired,
+} as any;
+
+function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
+  console.log('render highlight parent');
+  const { x: xAxisHighlight, y: yAxisHighlight } = props;
+
+  return (
+    <React.Fragment>
+      {xAxisHighlight && <ChartsXHighlight type={xAxisHighlight} />}
+      {yAxisHighlight && <ChartsYHighlight type={yAxisHighlight} />}
     </React.Fragment>
   );
 }

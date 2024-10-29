@@ -15,7 +15,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  // const { dispatch } = React.useContext(InteractionContext);
+
   const store = useStore();
 
   const usedXAxis = xAxisIds[0];
@@ -106,7 +106,6 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         ...prev,
         interaction: { item: null, axis: { x: null, y: null } },
       }));
-      // dispatch({ type: 'exitChart' });
     };
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
@@ -122,7 +121,6 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
             ...prev,
             interaction: { item: null, axis: { x: null, y: null } },
           }));
-          // dispatch({ type: 'exitChart' });
           mousePosition.current.isInChart = false;
         }
         return;
@@ -133,9 +131,22 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
       store.update((prev) => ({
         ...prev,
-        interaction: { ...prev.interaction, axis: { x: newStateX, y: newStateY } },
+        interaction: {
+          ...prev.interaction,
+          axis: {
+            // A bit verbose, but prevent losing the x value if only y got modified.
+            ...prev.interaction.axis,
+            ...(prev.interaction.axis.x?.index !== newStateX?.index ||
+            prev.interaction.axis.x?.value !== newStateX?.value
+              ? { x: newStateX }
+              : {}),
+            ...(prev.interaction.axis.y?.index !== newStateY?.index ||
+            prev.interaction.axis.y?.value !== newStateY?.value
+              ? { y: newStateY }
+              : {}),
+          },
+        },
       }));
-      // dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
     };
 
     const handleDown = (event: PointerEvent) => {

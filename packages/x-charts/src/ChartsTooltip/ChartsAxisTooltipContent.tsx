@@ -1,42 +1,19 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { AxisInteractionData } from '../context/InteractionProvider';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { AxisDefaultized } from '../models/axis';
+import Typography from '@mui/material/Typography';
+import clsx from 'clsx';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
-import { DefaultChartsAxisTooltipContent } from './DefaultChartsAxisTooltipContent';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
-import { isCartesianSeriesType } from '../internals/isCartesian';
-import { useSeries } from '../hooks/useSeries';
-
-type ChartSeriesDefaultizedWithColorGetter = ChartSeriesDefaultized<ChartSeriesType> & {
-  getColor: (dataIndex: number) => string;
-};
+import {
+  ChartsTooltipCell,
+  ChartsTooltipMark,
+  ChartsTooltipPaper,
+  ChartsTooltipRow,
+  ChartsTooltipTable,
+} from './ChartsTooltipTable';
+import { useAxisTooltip } from './useAxisTooltip';
+import { useXAxis, useYAxis } from '../hooks';
 
 export type ChartsAxisContentProps = {
-  /**
-   * Data identifying the triggered axis.
-   */
-  axisData: AxisInteractionData;
-  /**
-   * The series linked to the triggered axis.
-   */
-  series: ChartSeriesDefaultizedWithColorGetter[];
-  /**
-   * The properties of the triggered axis.
-   */
-  axis: AxisDefaultized;
-  /**
-   * The index of the data item triggered.
-   */
-  dataIndex?: null | number;
-  /**
-   * The value associated to the current mouse position.
-   */
-  axisValue: string | number | Date | null;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -48,94 +25,58 @@ export type ChartsAxisContentProps = {
  * @ignore - internal component.
  */
 function ChartsAxisTooltipContent(props: {
-  axisData: AxisInteractionData;
-  content?: React.ElementType<ChartsAxisContentProps>;
-  contentProps?: Partial<ChartsAxisContentProps>;
   sx?: SxProps<Theme>;
   classes: ChartsAxisContentProps['classes'];
 }) {
-  const { content, contentProps, axisData, sx, classes } = props;
+  const { classes, sx } = props;
+  const tootlipData = useAxisTooltip();
+  const xAxis = useXAxis();
+  const yAxis = useYAxis();
 
-  const isXaxis = axisData.x && axisData.x.index !== -1;
+  if (tootlipData === null) {
+    return null;
+  }
 
-  const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
-  const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
+  const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tootlipData;
 
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
-  const { zAxisIds, zAxis } = React.useContext(ZAxisContext);
-  const series = useSeries();
+  const axis = axisDirection === 'x' ? xAxis : yAxis;
 
-  const colorProcessors = useColorProcessor();
+  return (
+    <ChartsTooltipPaper sx={sx} className={classes.paper}>
+      <ChartsTooltipTable className={classes.table}>
+        {axisValue != null && !axis.hideTooltip && (
+          <thead>
+            <ChartsTooltipRow>
+              <ChartsTooltipCell colSpan={3}>
+                <Typography>{axisFormattedValue}</Typography>
+              </ChartsTooltipCell>
+            </ChartsTooltipRow>
+          </thead>
+        )}
 
-  const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
-
-  const relevantSeries = React.useMemo(() => {
-    const rep: any[] = [];
-    Object.keys(series)
-      .filter(isCartesianSeriesType)
-      .forEach((seriesType) => {
-        series[seriesType]!.seriesOrder.forEach((seriesId) => {
-          const item = series[seriesType]!.series[seriesId];
-
-          const providedXAxisId = item.xAxisId ?? item.xAxisKey;
-          const providedYAxisId = item.yAxisId ?? item.yAxisKey;
-
-          const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
-
-          if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-            const seriesToAdd = series[seriesType]!.series[seriesId];
-
-            const xAxisId = providedXAxisId ?? xAxisIds[0];
-            const yAxisId = providedYAxisId ?? yAxisIds[0];
-            const zAxisId =
-              (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
-
-            const getColor =
-              colorProcessors[seriesType]?.(
-                seriesToAdd as any,
-                xAxis[xAxisId],
-                yAxis[yAxisId],
-                zAxisId && zAxis[zAxisId],
-              ) ?? (() => '');
-
-            rep.push({ ...seriesToAdd, getColor });
-          }
-        });
-      });
-    return rep;
-  }, [
-    USED_AXIS_ID,
-    colorProcessors,
-    isXaxis,
-    series,
-    xAxis,
-    xAxisIds,
-    yAxis,
-    yAxisIds,
-    zAxis,
-    zAxisIds,
-  ]);
-
-  const relevantAxis = React.useMemo(() => {
-    return isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];
-  }, [USED_AXIS_ID, isXaxis, xAxis, yAxis]);
-
-  const Content = content ?? DefaultChartsAxisTooltipContent;
-  const chartTooltipContentProps = useSlotProps({
-    elementType: Content,
-    externalSlotProps: contentProps,
-    additionalProps: {
-      axisData,
-      series: relevantSeries,
-      axis: relevantAxis,
-      dataIndex,
-      axisValue,
-      sx,
-      classes,
-    },
-    ownerState: {},
-  });
-  return <Content {...chartTooltipContentProps} />;
+        <tbody>
+          {seriesItems.map(({ seriesId, color, formattedValue, formattedLabel }) => {
+            if (formattedValue == null) {
+              return null;
+            }
+            return (
+              <ChartsTooltipRow key={seriesId} className={classes.row}>
+                <ChartsTooltipCell className={clsx(classes.markCell, classes.cell)}>
+                  {color && <ChartsTooltipMark color={color} className={classes.mark} />}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.labelCell, classes.cell)}>
+                  {formattedLabel ? <Typography>{formattedLabel}</Typography> : null}
+                </ChartsTooltipCell>
+                <ChartsTooltipCell className={clsx(classes.valueCell, classes.cell)}>
+                  <Typography>{formattedValue}</Typography>
+                </ChartsTooltipCell>
+              </ChartsTooltipRow>
+            );
+          })}
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
+  );
 }
 
 export { ChartsAxisTooltipContent };

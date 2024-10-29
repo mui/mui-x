@@ -47,13 +47,13 @@ export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'scatter'>,
+    ChartsTooltipSlots,
     ChartsOverlaySlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'scatter'>,
+    ChartsTooltipSlotProps,
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
@@ -72,7 +72,7 @@ export interface ScatterChartProps
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    * @default { trigger: 'item' }
    */
-  tooltip?: ChartsTooltipProps<'scatter'>;
+  tooltip?: ChartsTooltipProps;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.

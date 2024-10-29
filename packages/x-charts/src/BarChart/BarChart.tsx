@@ -42,13 +42,13 @@ export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'bar'>,
+    ChartsTooltipSlots,
     ChartsOverlaySlots {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'bar'>,
+    ChartsTooltipSlotProps,
     ChartsOverlaySlotProps {}
 
 export interface BarChartProps
@@ -66,7 +66,7 @@ export interface BarChartProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps<'bar'>;
+  tooltip?: ChartsTooltipProps;
   /**
    * Option to display a cartesian grid in the background.
    */

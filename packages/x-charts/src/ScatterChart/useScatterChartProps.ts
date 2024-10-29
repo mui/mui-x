@@ -109,7 +109,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps<'scatter'> = {
+  const tooltipProps: ChartsTooltipProps = {
     trigger: 'item' as const,
     ...tooltip,
     slots,

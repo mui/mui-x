@@ -24,6 +24,11 @@ type InteractionState = {
    * The x- and y-axes currently interacting.
    */
   axis: AxisInteractionData;
+  /**
+   * Set to `true` when `VoronoiHandler` is active.
+   * Used to prevent collision with mouseEnter events.
+   */
+  useVoronoiInteraction?: boolean;
 };
 
 export type ChartsStateCacheKey = { id: number };
