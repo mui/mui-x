@@ -162,7 +162,7 @@ export default function GmailTreeView() {
         endIcon: EndIcon,
       }}
       sx={{ flexGrow: 1, maxWidth: 400 }}
-      itemChildrenIndentation={24}
+      itemChildrenIndentation={20}
     >
       <CustomTreeItem itemId="1" label="All Mail" labelIcon={MailIcon} />
       <CustomTreeItem itemId="2" label="Trash" labelIcon={DeleteIcon} />
