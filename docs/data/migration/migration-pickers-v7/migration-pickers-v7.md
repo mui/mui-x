@@ -19,6 +19,8 @@ In `package.json`, change the version of the date pickers package to `next`.
 +"@mui/x-date-pickers": "next",
 ```
 
+Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
+
 Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from v7 to v8.
@@ -256,3 +258,59 @@ const theme = createTheme({
   },
 });
 ```
+
+## Removed types
+
+The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
+If you were using them, you need to replace them with the following code:
+
+- `UseDateFieldComponentProps`
+
+  ```ts
+  import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseTimeFieldComponentProps`
+
+  ```ts
+  import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseDateTimeFieldComponentProps`
+
+  ```ts
+  import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
