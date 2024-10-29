@@ -88,7 +88,11 @@ describe('<DataGridPro /> - List view', () => {
         </div>,
       );
     }).toWarnDev(
-      'MUI X: The `unstable_listColumn` prop must be set if `unstable_listView` is enabled.',
+      [
+        'MUI X: The `unstable_listColumn` prop must be set if `unstable_listView` is enabled.',
+        'To fix, pass a column definition to the `unstable_listColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
+        'For more details, see https://mui.com/x/react-data-grid/list-view/',
+      ].join('\n'),
     );
   });
 });
