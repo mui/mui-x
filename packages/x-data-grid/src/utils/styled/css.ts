@@ -38,32 +38,42 @@ export function css<T extends Record<string, CSSObject>>(meta: Meta, styles: T):
   return cx;
 }
 
+type PropsBase = { classes?: Record<string, string> }
+type KeysBase = string | number | symbol
+
 // XXX: Use `styledUnstyled` after prototyping is done.
 export const StyledContext = React.createContext(styledMaterial);
 // export const StyledContext = React.createContext(styledUnstyled);
 
-export function useStyled<P, Keys extends string | number | symbol>(
+export function useStyled<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  params: { rootProps: P }
+  params: { rootProps: Props }
 ) {
   return React.useContext(StyledContext)(styleMeta, params);
 }
 
 
-export function styledUnstyled<P, Keys extends string | number | symbol>(
+export function styledUnstyled<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  _params: { rootProps: P }
+  params: { rootProps: Props }
 ) {
-  const result = styleMeta.classes
+  const result = { ...styleMeta.classes, }
 
-  // XXX: rootProps.classes handling
+  const classes = params.rootProps.classes
+  if (classes) {
+    for (let key in result) {
+      if (classes[key]) {
+        result[key] += ' ' + classes[key]
+      }
+    }
+  }
 
   return result
 }
 
-export function styledMaterial<P, Keys extends string | number | symbol>(
+export function styledMaterial<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  params: { rootProps: P }
+  params: { rootProps: Props }
 ) {
   const theme = useTheme()
   const styledClassName = applyStyled(
@@ -71,11 +81,21 @@ export function styledMaterial<P, Keys extends string | number | symbol>(
     styleMeta.meta.name,
     (_: any, styles: any) => styles[styleMeta.meta.slot],
   )
+
   const result = {
     ...styleMeta.classes,
   }
   if ((result as any).root) {
     (result as any).root += ' ' + styledClassName
+  }
+
+  const classes = params.rootProps.classes
+  if (classes) {
+    for (let key in result) {
+      if (classes[key]) {
+        result[key] += ' ' + classes[key]
+      }
+    }
   }
 
   return result
