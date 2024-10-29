@@ -14,7 +14,7 @@ import { PickerValidDate } from '../models';
 
 type DateFieldComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -32,7 +32,7 @@ type DateFieldComponent = (<
  */
 const DateField = React.forwardRef(function DateField<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
@@ -48,7 +48,7 @@ const DateField = React.forwardRef(function DateField<
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -123,7 +123,7 @@ DateField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**

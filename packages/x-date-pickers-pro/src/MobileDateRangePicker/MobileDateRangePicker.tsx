@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerViewRendererLookup, useUtils } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerOwnerState, PickerValidDate } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -17,7 +17,7 @@ import { DateRange } from '../models';
 
 type MobileDateRangePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -35,11 +35,13 @@ type MobileDateRangePickerComponent = (<
  */
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils<TDate>();
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
@@ -54,6 +56,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     views: ['day'] as const,
@@ -64,7 +67,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -172,7 +175,7 @@ MobileDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

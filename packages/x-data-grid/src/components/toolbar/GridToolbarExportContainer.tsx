@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
@@ -85,7 +84,7 @@ const GridToolbarExportContainer = React.forwardRef<
         onClose={handleMenuClose}
         position="bottom-start"
       >
-        <MenuList
+        <rootProps.slots.baseMenuList
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
@@ -98,7 +97,7 @@ const GridToolbarExportContainer = React.forwardRef<
             }
             return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
           })}
-        </MenuList>
+        </rootProps.slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

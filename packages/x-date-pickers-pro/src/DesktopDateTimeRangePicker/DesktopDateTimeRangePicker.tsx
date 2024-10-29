@@ -11,7 +11,8 @@ import {
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerOwnerState, PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickersLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -118,7 +119,7 @@ const rendererInterceptor = function rendererInterceptor<
 
 type DesktopDateRangePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -136,7 +137,7 @@ type DesktopDateRangePickerComponent = (<
  */
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -185,7 +186,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -199,7 +200,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: any) => ({
+      actionBar: (ownerState: PickersLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
@@ -318,7 +319,7 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
