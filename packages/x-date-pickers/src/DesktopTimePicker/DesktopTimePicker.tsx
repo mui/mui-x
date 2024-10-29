@@ -20,7 +20,7 @@ import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView, PickerValidDate } from '../models';
+import { TimeView, PickerValidDate, PickerOwnerState } from '../models';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopTimePickerComponent = (<
@@ -104,7 +104,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
