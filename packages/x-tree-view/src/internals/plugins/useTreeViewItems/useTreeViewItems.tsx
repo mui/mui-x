@@ -260,7 +260,6 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
 });
 
 useTreeViewItems.wrapRoot = ({ children }) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   return (
     <TreeViewItemDepthContext.Provider value={selectorItemDepth}>
       {children}

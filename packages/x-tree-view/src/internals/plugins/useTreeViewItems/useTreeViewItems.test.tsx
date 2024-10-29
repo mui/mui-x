@@ -274,7 +274,7 @@ describeTreeView<
         const view = render({
           items: Array.from({ length: 5 }, (_, i) => ({
             id: i.toString(),
-            children: Array.from({ length: 5 }, (_, j) => ({ id: `${i}.${j}` })),
+            children: Array.from({ length: 5 }, (_el, j) => ({ id: `${i}.${j}` })),
           })),
           slotProps: { item: { slots: { label: spyLabel } } },
         });
@@ -296,7 +296,7 @@ describeTreeView<
         const view = render({
           items: Array.from({ length: 5 }, (_, i) => ({
             id: i.toString(),
-            children: Array.from({ length: 5 }, (_, j) => ({ id: `${i}.${j}` })),
+            children: Array.from({ length: 5 }, (_el, j) => ({ id: `${i}.${j}` })),
           })),
           defaultExpandedItems: Array.from({ length: 5 }, (_, i) => i.toString()),
           selectedItems: [],
