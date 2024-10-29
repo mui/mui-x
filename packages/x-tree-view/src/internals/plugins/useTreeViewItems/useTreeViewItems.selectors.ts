@@ -123,6 +123,17 @@ export const selectorItemParentId = createSelector(
   (itemMeta) => itemMeta?.parentId ?? null,
 );
 
+/**
+ * Get the depth of an item (items at the root level have a depth of 0).
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @param {TreeViewItemId} itemId The id of the item to get the depth of.
+ * @returns {number} The depth of the item.
+ */
+export const selectorItemDepth = createSelector(
+  [selectorItemMeta],
+  (itemMeta) => itemMeta?.depth ?? 0,
+);
+
 export const selectorCanItemBeFocused = createSelector(
   [selectorTreeViewItemsState, selectorIsItemDisabled],
   (itemsState, isItemDisabled) => {

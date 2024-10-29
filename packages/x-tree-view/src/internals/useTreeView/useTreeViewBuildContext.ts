@@ -118,7 +118,7 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
     [plugins, instance],
   );
 
-  const wrapRoot = React.useCallback<TreeRootWrapper<TSignatures>>(
+  const wrapRoot = React.useCallback<TreeRootWrapper>(
     ({ children }) => {
       let finalChildren: React.ReactNode = children;
       // The wrappers are reversed to ensure that the first wrapper is the outermost one.
@@ -127,14 +127,13 @@ export const useTreeViewBuildContext = <TSignatures extends readonly TreeViewAny
         if (plugin.wrapRoot) {
           finalChildren = plugin.wrapRoot({
             children: finalChildren,
-            store: store as TreeViewStore<any>,
           });
         }
       }
 
       return finalChildren;
     },
-    [store, plugins],
+    [plugins],
   );
 
   return React.useMemo(() => {

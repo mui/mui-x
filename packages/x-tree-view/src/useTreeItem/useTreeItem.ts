@@ -49,6 +49,18 @@ export const useTreeItem = <
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
+  const depth = useSelector(
+    store,
+    (...params) => {
+      if (typeof depthContext === 'function') {
+        return depthContext(...params);
+      }
+
+      return depthContext;
+    },
+    parameters.itemId,
+  );
+
   const { id, itemId, label, children, rootRef } = parameters;
 
   const { rootRef: pluginRootRef, contentRef, propsEnhancers } = runItemPlugins(parameters);
@@ -222,8 +234,7 @@ export const useTreeItem = <
 
     if (indentationAtItemLevel) {
       props.style = {
-        '--TreeView-itemDepth':
-          typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+        '--TreeView-itemDepth': depth,
       } as React.CSSProperties;
     }
 

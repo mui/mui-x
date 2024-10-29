@@ -151,10 +151,7 @@ export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
   idAttribute: string;
 }) => React.ReactNode;
 
-export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
-  children: React.ReactNode;
-  store: TreeViewStore<TSignatures>;
-}) => React.ReactNode;
+export type TreeRootWrapper = (params: { children: React.ReactNode }) => React.ReactNode;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
@@ -178,5 +175,5 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @param {{ children: React.ReactNode; }} params The params of the root.
    * @returns {React.ReactNode} The wrapped root.
    */
-  wrapRoot?: TreeRootWrapper<[TSignature, ...TSignature['dependencies']]>;
+  wrapRoot?: TreeRootWrapper;
 };

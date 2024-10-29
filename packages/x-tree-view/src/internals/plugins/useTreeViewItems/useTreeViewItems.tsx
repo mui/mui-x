@@ -18,6 +18,7 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
   selectorItemModel,
+  selectorItemDepth,
 } from './useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
@@ -258,14 +259,10 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
 });
 
-useTreeViewItems.wrapRoot = ({ children, store }) => {
+useTreeViewItems.wrapRoot = ({ children }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const contextValue = React.useCallback(
-    (itemId: TreeViewItemId) => selectorItemMeta(store.value, itemId)?.depth ?? 0,
-    [store],
-  );
   return (
-    <TreeViewItemDepthContext.Provider value={contextValue}>
+    <TreeViewItemDepthContext.Provider value={selectorItemDepth}>
       {children}
     </TreeViewItemDepthContext.Provider>
   );
