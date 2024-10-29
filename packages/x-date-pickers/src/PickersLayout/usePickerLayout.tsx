@@ -85,7 +85,8 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
       onClear,
       onCancel,
       onSetToday,
-      actions: ['cancel', 'accept'] as PickersActionBarAction[],
+      actions:
+        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
     ownerState,
