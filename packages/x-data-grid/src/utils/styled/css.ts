@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material';
 import { applyStyled } from '@mui/system/createStyled';
 import type { CSSObject } from '@mui/system';
-import { injectStyles } from './injectStyles';
+import { injectStyles } from './engine';
 
 type Meta = {
   name: string;
