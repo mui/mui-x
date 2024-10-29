@@ -211,7 +211,7 @@ jobs:
               git add -A && git diff --exit-code --staged
             fi
       - run:
-          name: 'No date library import in the pickers build'
+          name: 'No dynamic date library import in the Pickers built types?'
           command: |
             pnpm --filter @mui/x-date-pickers* prebuild
             pnpm --filter @mui/x-date-pickers* build:types
