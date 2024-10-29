@@ -41,8 +41,8 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   dateRangePickerToolbarTitle: '選擇時間範圍',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `選擇 ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? '未選擇時間' : `已選擇${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `選擇 ${views[view]}. ${!formattedTime ? '未選擇時間' : `已選擇${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours}小時`,
   minutesClockNumberText: (minutes) => `${minutes}分鐘`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
@@ -57,14 +57,10 @@ const zhHKPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `選擇日期，已選擇${formattedDate ?? utils.format(value!, 'fullDate')}`
-      : '選擇日期',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `選擇時間，已選擇${formattedTime ?? utils.format(value!, 'fullTime')}`
-      : '選擇時間',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `選擇日期，已選擇${formattedDate}` : '選擇日期',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `選擇時間，已選擇${formattedTime}` : '選擇時間',
   fieldClearLabel: '清除',
 
   // Table labels

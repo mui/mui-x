@@ -16,18 +16,8 @@ export const getPickersLocalization = (pickersTranslations: Partial<PickersLocal
 export const buildGetOpenDialogAriaText = (params: {
   utils: MuiPickersAdapter;
   formatKey: keyof AdapterFormats;
-  contextTranslation: (
-    date: PickerValidDate | null,
-    utils: MuiPickersAdapter,
-    formattedValue: string | null,
-  ) => string;
-  propsTranslation:
-    | ((
-        date: PickerValidDate | null,
-        utils: MuiPickersAdapter,
-        formattedValue: string | null,
-      ) => string)
-    | undefined;
+  contextTranslation: (formattedValue: string | null) => string;
+  propsTranslation: ((formattedValue: string | null) => string) | undefined;
 }) => {
   const { utils, formatKey, contextTranslation, propsTranslation } = params;
 
@@ -35,6 +25,6 @@ export const buildGetOpenDialogAriaText = (params: {
     const formattedValue =
       value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
     const translation = propsTranslation ?? contextTranslation;
-    return translation(value, utils, formattedValue);
+    return translation(formattedValue);
   };
 };

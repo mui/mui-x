@@ -43,8 +43,8 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   dateRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Valitse ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Ei aikaa valittuna' : `Valittu aika on ${formattedTime ?? utils.format(time!, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Valitse ${views[view]}. ${!formattedTime ? 'Ei aikaa valittuna' : `Valittu aika on ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
   secondsClockNumberText: (seconds) => `${seconds} sekuntia`,
@@ -59,14 +59,10 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Valitse päivä, valittu päivä on ${formattedDate ?? utils.format(value!, 'fullDate')}`
-      : 'Valitse päivä',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Valitse aika, valittu aika on ${formattedTime ?? utils.format(value!, 'fullTime')}`
-      : 'Valitse aika',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Valitse päivä, valittu päivä on ${formattedDate}` : 'Valitse päivä',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Valitse aika, valittu aika on ${formattedTime}` : 'Valitse aika',
   fieldClearLabel: 'Tyhjennä arvo',
 
   // Table labels

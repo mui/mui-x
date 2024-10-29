@@ -40,7 +40,7 @@ export const usePicker = <
       ]);
     }
   }
-  const pickerValueResponse = usePickerValue({
+  const pickerValueResponse = usePickerValue<TValue, TSection, TExternalProps>({
     props,
     valueManager,
     valueType,

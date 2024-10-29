@@ -1,11 +1,5 @@
 import { TimeViewWithMeridiem } from '../../internals/models';
-import {
-  DateView,
-  TimeView,
-  MuiPickersAdapter,
-  FieldSectionContentType,
-  PickerValidDate,
-} from '../../models';
+import { DateView, TimeView, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -61,19 +55,7 @@ export interface PickersComponentAgnosticLocaleText {
   todayButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (
-    view: TimeView,
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    time: PickerValidDate | null,
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    utils: MuiPickersAdapter,
-    // TODO v8: Make it required
-    formattedTime?: string | null,
-  ) => string;
+  clockLabelText: (view: TimeView, formattedTime: string | null) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
@@ -82,30 +64,8 @@ export interface PickersComponentAgnosticLocaleText {
   selectViewText: (view: TimeViewWithMeridiem) => string;
 
   // Open picker labels
-  openDatePickerDialogue: (
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    date: PickerValidDate | null,
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    utils: MuiPickersAdapter,
-    // TODO v8: Make it required
-    formattedDate: string | null,
-  ) => string;
-  openTimePickerDialogue: (
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    date: PickerValidDate | null,
-    /**
-     * @deprecated Use `formattedTime` instead
-     */
-    utils: MuiPickersAdapter,
-    // TODO v8: Make it required
-    formattedTime: string | null,
-  ) => string;
+  openDatePickerDialogue: (formattedDate: string | null) => string;
+  openTimePickerDialogue: (formattedTime: string | null) => string;
 
   // Clear button label
   fieldClearLabel: string;

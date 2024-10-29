@@ -43,8 +43,8 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   dateRangePickerToolbarTitle: 'Избери времеви период',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Избери ${views[view]}. ${time === null ? 'Не е избран час' : `Избраният час е ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Избери ${views[view]}. ${!formattedTime ? 'Не е избран час' : `Избраният час е ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} часа`,
   minutesClockNumberText: (minutes) => `${minutes} минути`,
   secondsClockNumberText: (seconds) => `${seconds} секунди`,
@@ -59,14 +59,10 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Избери дата, избраната дата е ${utils.format(value!, 'fullDate')}`
-      : 'Избери дата',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Избери час, избраният час е ${utils.format(value!, 'fullTime')}`
-      : 'Избери час',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Избери дата, избраната дата е ${formattedDate}` : 'Избери дата',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Избери час, избраният час е ${formattedTime}` : 'Избери час',
   fieldClearLabel: 'Изчисти стойност',
 
   // Table labels
