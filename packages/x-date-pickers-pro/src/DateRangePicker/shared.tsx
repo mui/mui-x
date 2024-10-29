@@ -68,7 +68,7 @@ export interface BaseDateRangePickerProps<TDate extends PickerValidDate>
 type UseDateRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateRangePickerProps<TDate>,
-> = LocalizedComponent<TDate, DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
+> = LocalizedComponent<DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
 
 export function useDateRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
@@ -81,7 +81,7 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }

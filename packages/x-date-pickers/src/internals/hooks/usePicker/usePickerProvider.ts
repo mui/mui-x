@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldSection, PickerOwnerState, PickerValidDate } from '../../../models';
+import { FieldSection, PickerOwnerState } from '../../../models';
 import { UsePickerValueResponse } from './usePickerValue.types';
 import {
   PickersProviderProps,
@@ -7,18 +7,17 @@ import {
   PickersPrivateContextValue,
 } from '../../components/PickersProvider';
 
-export interface UsePickerProviderParameters<TValue, TDate extends PickerValidDate>
-  extends Pick<PickersProviderProps<TDate>, 'localeText'> {
+export interface UsePickerProviderParameters<TValue>
+  extends Pick<PickersProviderProps, 'localeText'> {
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
   ownerState: PickerOwnerState;
 }
 
-export interface UsePickerProviderReturnValue<TDate extends PickerValidDate>
-  extends Omit<PickersProviderProps<TDate>, 'children'> {}
+export interface UsePickerProviderReturnValue extends Omit<PickersProviderProps, 'children'> {}
 
-export function usePickerProvider<TValue, TDate extends PickerValidDate>(
-  parameters: UsePickerProviderParameters<TValue, TDate>,
-): UsePickerProviderReturnValue<TDate> {
+export function usePickerProvider<TValue>(
+  parameters: UsePickerProviderParameters<TValue>,
+): UsePickerProviderReturnValue {
   const { pickerValueResponse, ownerState, localeText } = parameters;
 
   const contextValue = React.useMemo<PickersContextValue>(

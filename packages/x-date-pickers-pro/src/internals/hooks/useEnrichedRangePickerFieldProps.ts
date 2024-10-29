@@ -114,7 +114,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Pick<
-      UsePickerResponse<DateRange<TDate>, TDate, TView, RangeFieldSection, any>,
+      UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
     >,
     UseRangePositionResponse {
@@ -125,7 +125,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   disableOpenPicker?: boolean;
   onBlur?: () => void;
   label?: React.ReactNode;
-  localeText: PickersInputLocaleText<TDate> | undefined;
+  localeText: PickersInputLocaleText | undefined;
   pickerSlotProps: RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: RangePickerPropsForFieldSlot<

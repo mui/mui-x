@@ -55,13 +55,12 @@ export interface UsePickerParams<
       UsePickerViewParams<TValue, TDate, TView, TSection, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
-    Pick<UsePickerProviderParameters<TValue, TDate>, 'localeText'> {
+    Pick<UsePickerProviderParameters<TValue>, 'localeText'> {
   props: TExternalProps;
 }
 
 export interface UsePickerResponse<
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
   TError,
@@ -69,5 +68,5 @@ export interface UsePickerResponse<
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
   ownerState: PickerOwnerState;
-  providerProps: UsePickerProviderReturnValue<TDate>;
+  providerProps: UsePickerProviderReturnValue;
 }
