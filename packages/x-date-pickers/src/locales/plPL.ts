@@ -25,10 +25,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange labels
   start: 'Początek',
   end: 'Koniec',
-  // startDate: 'Start date',
-  // startTime: 'Start time',
-  // endDate: 'End date',
-  // endTime: 'End time',
+  startDate: 'Data rozpoczęcia',
+  startTime: 'Czas rozpoczęcia',
+  endDate: 'Data zakończenia',
+  endTime: 'Czas zakończenia',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',
@@ -59,15 +59,11 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    value != null && utils.isValid(value)
-      ? `Wybierz datę, obecnie wybrana data to ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Wybierz datę',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Wybierz czas, obecnie wybrany czas to ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Wybierz czas',
-  // fieldClearLabel: 'Clear',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  fieldClearLabel: 'Wyczyść',
 
   // Table labels
   timeTableLabel: 'wybierz czas',
@@ -84,13 +80,13 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
+  year: 'Rok',
+  month: 'Miesiąc',
+  day: 'Dzień',
+  weekDay: 'Dzień tygodnia',
+  hours: 'Godzin',
+  minutes: 'Minut',
+  seconds: 'Sekund',
   // meridiem: 'Meridiem',
 
   // Common
