@@ -32,9 +32,10 @@ const labelStyled = css({
   slot: 'aggregationColumnHeaderLabel',
 }, {
   root: {
-    fontSize: 'var(--DataGrid-typography-caption-fontSize)', // FIXME: CSS vars not implemented
+    // FIXME: CSS vars not implemented
+    fontSize: 'var(--DataGrid-typography-caption-fontSize)',
     lineHeight: 'normal',
-    color: 'var(--DataGrid-palette-text-secondary)', // FIXME: CSS vars not implemented
+    color: 'var(--DataGrid-palette-text-secondary)',
     marginTop: -1,
   },
 });
