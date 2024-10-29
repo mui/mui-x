@@ -67,6 +67,7 @@ function GridAggregationHeader(
 ) {
   const { renderHeader, ...params } = props;
   const { colDef, aggregation } = params;
+  const { headerAlign } = colDef;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -87,9 +88,9 @@ function GridAggregationHeader(
 
   const rootClassName = clsx(
     headerClasses.root,
-    colDef.headerAlign === 'left' && headerClasses.alignLeft,
-    colDef.headerAlign === 'center' && headerClasses.alignCenter,
-    colDef.headerAlign === 'right' && headerClasses.alignRight,
+    headerAlign === 'left' && headerClasses.alignLeft,
+    headerAlign === 'center' && headerClasses.alignCenter,
+    headerAlign === 'right' && headerClasses.alignRight,
   );
 
   return (
