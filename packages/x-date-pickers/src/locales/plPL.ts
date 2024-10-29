@@ -27,7 +27,7 @@ const plPLPickers: Partial<PickersLocaleText> = {
   end: 'Koniec',
   startDate: 'Data rozpoczęcia',
   startTime: 'Czas rozpoczęcia',
-  endDate: 'Data końcowa',
+  endDate: 'Data zakończenia',
   endTime: 'Czas zakończenia',
 
   // Action bar
