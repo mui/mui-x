@@ -59,20 +59,6 @@ export const GridRootStyles = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => [
     { [`&.${c.autoHeight}`]: styles.autoHeight },
-    { [`&.${c.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
-    {
-      [`&.${c['aggregationColumnHeader--alignLeft']}`]:
-        styles['aggregationColumnHeader--alignLeft'],
-    },
-    {
-      [`&.${c['aggregationColumnHeader--alignCenter']}`]:
-        styles['aggregationColumnHeader--alignCenter'],
-    },
-    {
-      [`&.${c['aggregationColumnHeader--alignRight']}`]:
-        styles['aggregationColumnHeader--alignRight'],
-    },
-    { [`&.${c.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
     {
       [`&.${c['root--disableUserSelection']} .${c.cell}`]: styles['root--disableUserSelection'],
     },
