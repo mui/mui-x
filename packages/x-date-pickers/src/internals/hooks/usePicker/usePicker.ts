@@ -33,7 +33,7 @@ export const usePicker = <
   TSection,
   TExternalProps,
   TAdditionalProps
->): UsePickerResponse<TValue, TDate, TView, TSection, InferError<TExternalProps>> => {
+>): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
