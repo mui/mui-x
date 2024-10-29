@@ -51,7 +51,7 @@ const usePickerLayout = <
 >(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
 
   const {
     wrapperVariant,
@@ -80,7 +80,7 @@ const usePickerLayout = <
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
   const ownerState: PickersLayoutOwnerState = {
-    ...pickerOwnerState,
+    ...pickersOwnerState,
     wrapperVariant,
     isLandscape,
   };
