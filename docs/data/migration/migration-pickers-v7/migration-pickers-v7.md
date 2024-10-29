@@ -314,3 +314,109 @@ If you were using them, you need to replace them with the following code:
   > &
     UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
   ```
+
+## Stop passing `utils` and the date object to some translation keys
+
+Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
+If you have customized those translation keys, you have to update them following the examples below:
+
+- If you are setting a custom value in a picker component:
+
+```diff
+-clockLabelText: (view, time, utils) =>
+-   `Select ${view}. ${
+-     time === null || !utils.isValid(time)
+-       ? 'No time selected'
+-       : `Selected time is ${utils.format(time, 'fullTime')}`
+-   }`
++clockLabelText: (view, formattedTime) =>
++   `Select ${view}. ${
++     formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++   }`
+
+-openDatePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-    : 'Choose date',
++openDatePickerDialogue: (formattedDate) =>
++  formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+
+-openTimePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-    : 'Choose time',
++openTimePickerDialogue: (formattedTime) =>
++  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+```
+
+- If you are setting a custom value in the `LocalizationProvider`:
+
+```diff
+ <LocalizationProvider localeText={{
+-   clockLabelText: (view, time, utils) =>
+-     `Select ${view}. ${
+-       time === null || !utils.isValid(time)
+-         ? 'No time selected'
+-         : `Selected time is ${utils.format(time, 'fullTime')}`
+-     }`
++   clockLabelText: (view, formattedTime) =>
++     `Select ${view}. ${
++       formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++     }`
+-   openDatePickerDialogue: (value, utils) =>
+-     value !== null && utils.isValid(value)
+-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-      : 'Choose date',
++   openDatePickerDialogue: (formattedDate) =>
++     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+-   openTimePickerDialogue: (value, utils) =>
+-     value !== null && utils.isValid(value)
+-       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-       : 'Choose time',
++   openTimePickerDialogue: (formattedTime) =>
++     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+ }} >
+```
+
+- If you using this translation key in a custom component:
+
+```diff
+ const translations = usePickersTranslations();
+
+-const clockLabelText = translations.clockLabelText(
+-  view,
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('hh:mm:ss')
+-);
++const clockLabelText = translations.clockLabelText(
++  view,
++  value == null ? null : value.format('hh:mm:ss')
++);
+
+-const openDatePickerDialogue = translations.openDatePickerDialogue(
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('MM/DD/YYY')
+-);
++const openDatePickerDialogue = translations.openDatePickerDialogue(
++  value == null ? null : value.format('MM/DD/YYY')
++);
+
+-const openTimePickerDialogue = translations.openTimePickerDialogue(
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('hh:mm:ss')
+-);
++const openTimePickerDialogue = translations.openTimePickerDialogue(
++  value == null ? null : value.format('hh:mm:ss')
++);
+```
+
+Also the following types and interfaces no longer receive a generic type parameter:
+
+- `PickersComponentAgnosticLocaleText`
+- `PickersInputComponentLocaleText`
+- `PickersInputLocaleText`
+- `PickersLocaleText`
+- `PickersTranslationKeys`
