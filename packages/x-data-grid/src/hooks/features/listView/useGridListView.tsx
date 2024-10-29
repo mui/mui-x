@@ -74,9 +74,11 @@ export function useGridListView(
 
   React.useEffect(() => {
     if (props.unstable_listView && !props.unstable_listColumn) {
-      warnOnce(
+      warnOnce([
         'MUI X: The `unstable_listColumn` prop must be set if `unstable_listView` is enabled.',
-      );
+        'To fix, pass a column definition to the `unstable_listColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
+        'For more details, see https://mui.com/x/react-data-grid/list-view/',
+      ]);
     }
   }, [props.unstable_listView, props.unstable_listColumn]);
 }
