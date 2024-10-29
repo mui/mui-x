@@ -8,8 +8,14 @@ title: React Server-side tree data
 
 To dynamically load tree data from the server, including lazy-loading of children, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
-The data source also requires some additional props to handle tree data, namely `getGroupKey` and `getChildrenCount`.
-If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
+:::info
+If you are looking for tree data on the client-side, see [client-side tree data](/x/react-data-grid/tree-data/).
+:::
+
+The data source also requires some additional props to handle tree data:
+
+- `getGroupKey()`: Returns the group key for the row.
+- `getChildrenCount()`: Returns the number of children for the row. If the children count is not available for some reason, but there are some children, returns `-1`.
 
 ```tsx
 const customDataSource: GridDataSource = {
@@ -25,6 +31,26 @@ const customDataSource: GridDataSource = {
     return row.childrenCount;
   },
 };
+```
+
+Like the other parameters such as `filterModel`, `sortModel`, and `paginationModel`, the `getRows()` callback receives a `groupKeys` parameter that corresponds to the keys provided for each nested level in `getGroupKey()`.
+Use `groupKeys` on the server to extract the rows for a given nested level.
+
+```tsx
+const getRows: async (params) => {
+  const urlParams = new URLSearchParams({
+    // Example: JSON.stringify(['Billy Houston', 'Lora Dean'])
+    groupKeys: JSON.stringify(params.groupKeys),
+  });
+  const getRowsResponse = await fetchRows(
+    // Server should extract the rows for the nested level based on `groupKeys`
+    `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
+  );
+  return {
+    rows: getRowsResponse.rows,
+    rowCount: getRowsResponse.rowCount,
+  };
+}
 ```
 
 The following tree data example supports filtering, sorting, and pagination on the server.

@@ -3,12 +3,13 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
-import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
+import { PickersLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerValidDate } from '../models';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -16,8 +17,11 @@ function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   return toolbarProps.view !== null;
 }
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
-  const { classes, isLandscape } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersLayoutClasses> | undefined,
+  ownerState: PickersLayoutOwnerState,
+) => {
+  const { isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
     contentWrapper: ['contentWrapper'],
@@ -47,6 +51,8 @@ const usePickerLayout = <
 >(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse<TValue> => {
+  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+
   const {
     wrapperVariant,
     onAccept,
@@ -66,13 +72,19 @@ const usePickerLayout = <
     children,
     slots,
     slotProps,
+    classes: classesProp,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
     // - For pickers value: TDate | null
     // - For range pickers value: [TDate | null, TDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
-  const classes = useUtilityClasses(props);
+  const ownerState: PickersLayoutOwnerState = {
+    ...pickersOwnerState,
+    wrapperVariant,
+    isLandscape,
+  };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
@@ -88,7 +100,7 @@ const usePickerLayout = <
         wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
-    ownerState: { ...props, wrapperVariant },
+    ownerState,
   });
   const actionBar = <ActionBar {...actionBarProps} />;
 
@@ -108,7 +120,7 @@ const usePickerLayout = <
       readOnly,
     },
     className: classes.toolbar,
-    ownerState: { ...props, wrapperVariant },
+    ownerState,
   });
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
@@ -133,12 +145,7 @@ const usePickerLayout = <
       onChange: onSelectShortcut,
     },
     className: classes.shortcuts,
-    ownerState: {
-      isValid,
-      isLandscape,
-      onChange: onSelectShortcut,
-      wrapperVariant,
-    },
+    ownerState,
   });
   const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 

@@ -30,7 +30,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DesktopDateTimeRangePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopDateTimeRangePicker',

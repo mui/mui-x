@@ -177,4 +177,5 @@ export type { GridApiCaches } from '../models/gridApiCaches';
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
 export * from './utils';
+export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';

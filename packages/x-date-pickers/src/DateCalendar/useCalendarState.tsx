@@ -43,6 +43,7 @@ export const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'changeMonth', ChangeMonthPayload<TDate>>
+      | ReducerAction<'changeMonthTimezone', { newTimezone: string }>
       | ReducerAction<'changeFocusedDay', ChangeFocusedDayPayload<TDate>>,
   ): CalendarState<TDate> => {
     switch (action.type) {
@@ -53,6 +54,21 @@ export const createCalendarStateReducer =
           currentMonth: action.newMonth,
           isMonthSwitchingAnimating: !reduceAnimations,
         };
+
+      case 'changeMonthTimezone': {
+        const newTimezone = action.newTimezone;
+        if (utils.getTimezone(state.currentMonth) === newTimezone) {
+          return state;
+        }
+        let newCurrentMonth = utils.setTimezone(state.currentMonth, newTimezone);
+        if (utils.getMonth(newCurrentMonth) !== utils.getMonth(state.currentMonth)) {
+          newCurrentMonth = utils.setMonth(newCurrentMonth, utils.getMonth(state.currentMonth));
+        }
+        return {
+          ...state,
+          currentMonth: newCurrentMonth,
+        };
+      }
 
       case 'finishMonthSwitchingAnimation':
         return {
@@ -149,7 +165,9 @@ export const useCalendarState = <TDate extends PickerValidDate>(
         granularity: SECTION_TYPE_GRANULARITY.day,
       });
     },
-    [], // eslint-disable-line react-hooks/exhaustive-deps
+    // We want the `referenceDate` to update on prop and `timezone` change (https://github.com/mui/mui-x/issues/10804)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [referenceDateProp, timezone],
   );
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
@@ -158,6 +176,15 @@ export const useCalendarState = <TDate extends PickerValidDate>(
     currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
+
+  // Ensure that `calendarState.currentMonth` timezone is updated when `referenceDate` (or timezone changes)
+  // https://github.com/mui/mui-x/issues/10804
+  React.useEffect(() => {
+    dispatch({
+      type: 'changeMonthTimezone',
+      newTimezone: utils.getTimezone(referenceDate),
+    });
+  }, [referenceDate, utils]);
 
   const handleChangeMonth = React.useCallback(
     (payload: ChangeMonthPayload<TDate>) => {
