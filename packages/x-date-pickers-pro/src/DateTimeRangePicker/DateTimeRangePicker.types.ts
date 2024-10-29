@@ -1,4 +1,10 @@
 import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  MakeRequired,
+} from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlots,
   DesktopDateTimeRangePickerSlotProps,
@@ -8,6 +14,8 @@ import {
   MobileDateTimeRangePickerSlots,
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
+import { UseDateTimeRangeFieldProps } from '../internals/models';
+import { DateRange, DateTimeRangeValidationError, RangeFieldSection } from '../models';
 
 export interface DateTimeRangePickerSlots
   extends DesktopDateTimeRangePickerSlots,
@@ -37,3 +45,19 @@ export interface DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure ext
    */
   slotProps?: DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
+
+/**
+ * Props the field can receive when used inside a `DateTimeRangePicker`, `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` component.
+ */
+export type DateTimeRangePickerFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = MakeRequired<
+  UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  | 'format'
+  | 'timezone'
+  | 'value'
+  | 'ampm'
+  | keyof BaseDateValidationProps
+  | keyof BaseTimeValidationProps
+> &
+  BaseSingleInputFieldProps<DateRange, RangeFieldSection, false, DateTimeRangeValidationError>;

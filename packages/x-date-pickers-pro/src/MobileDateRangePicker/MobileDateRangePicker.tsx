@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerViewRendererLookup, useUtils } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -36,6 +36,8 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   inProps: MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils();
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
@@ -49,6 +51,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: utils.formats.keyboardDate,
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     views: ['day'] as const,

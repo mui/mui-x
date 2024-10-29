@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerViewRendererLookup, useUtils } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -36,6 +36,8 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils();
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
     DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
@@ -49,6 +51,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,

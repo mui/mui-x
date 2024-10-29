@@ -4,7 +4,7 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
@@ -54,7 +54,7 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
  * Props the field can receive when used inside a `DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component.
  */
 export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  DefaultizedProps<
+  MakeRequired<
     UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
     'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
   > &
