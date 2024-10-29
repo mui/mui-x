@@ -104,10 +104,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ),
   };
 
-  const fieldResponse = useSingleInputDateRangeField({
-    ...textFieldProps,
-    enableAccessibleFieldDOMStructure: true,
-  });
+  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({

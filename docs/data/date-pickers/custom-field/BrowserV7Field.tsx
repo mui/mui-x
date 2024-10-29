@@ -117,10 +117,7 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<true, typeof textFieldProps>({
-      ...textFieldProps,
-      enableAccessibleFieldDOMStructure: true,
-    });
+    const fieldResponse = useDateField<true, typeof textFieldProps>(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
