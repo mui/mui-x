@@ -7,20 +7,20 @@ githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Tree View - Getting Started
+# Tree View - Getting started
 
 <p class="description">Get started with the Tree View. Install the package, configure your application and start using the components.</p>
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-tree-view-pro` for the commercial version, or `@mui/x-tree-view` for the free community version.
+Run one of the following commands to install the free Community version or the paid Pro version of the MUI X Tree View:
 
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 
-The Tree View package has a peer dependency on `@mui/material`.
-If you are not already using it in your project, you can install it with:
+The Tree View packages have a peer dependency on `@mui/material`.
+If you're not already using it, install it with the following command:
 
 <codeblock storageKey="package-manager">
 
@@ -40,7 +40,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
+[`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 
 ```json
 "peerDependencies": {
@@ -49,32 +49,32 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 },
 ```
 
-### Style engine
+## Render a Tree View
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+:::info
+Currently, the Simple and Rich Tree View components share many of the same features.
+As this package continues to mature, more advanced features and functionality are more likely to land on the Rich Tree View.
+:::
 
-<codeblock storageKey="package-manager">
-```bash npm
-npm install @mui/styled-engine-sc styled-components
+### Simple Tree View
+
+
+
+The simple version of the Tree View component receives its items as JSX children.
+This is the recommended version for hardcoded items.
+
+{{"demo": "BasicSimpleTreeView.js"}}
+
+### Rich Tree View
+
+```jsx
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 
-```bash pnpm
-pnpm add @mui/styled-engine-sc styled-components
-```
+The rich version of the Tree View component receives its items dynamically from an external data source.
+This is the recommended version for larger trees, as well as those that require more advanced features like editing and virtualization.
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
-</codeblock>
-
-Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
-
-## Render your first component
-
-To make sure that everything is set up correctly, try rendering a Simple Tree View component:
-
-{{"demo": "FirstComponent.js"}}
+{{"demo": "BasicRichTreeView.js"}}
 
 ## Accessibility
 
@@ -88,11 +88,14 @@ otherwise, screen readers will announce it as "tree", making it hard to understa
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
-Internally, it uses module augmentation to extend the default theme structure.
+To benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users must import the following types.
+These types use module augmentation to extend the default theme structure.
 
 ```tsx
+// only one import is necessary,
+// from the version you're currently using.
 import type {} from '@mui/x-tree-view/themeAugmentation';
+import type {} from '@mui/x-tree-view-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
