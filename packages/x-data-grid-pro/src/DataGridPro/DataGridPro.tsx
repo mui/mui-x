@@ -873,6 +873,7 @@ DataGridProRaw.propTypes = {
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
   rowPositionsDebounceMs: PropTypes.number,
   /**
@@ -900,12 +901,12 @@ DataGridProRaw.propTypes = {
   ]),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
-   * - Selecting a parent will auto-select all its filtered descendants.
-   * - Deselecting a parent will auto-deselect all its filtered descendants.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
    *
-   * When `rowSelectionPropagation.parents=true`
-   * - Selecting all descendants of a parent would auto-select it.
-   * - Deselecting a descendant of a selected parent would deselect the parent.
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
    * @default { parents: false, descendants: false }
@@ -1004,6 +1005,21 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
   /**
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.

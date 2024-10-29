@@ -29,7 +29,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
   describe('text field keyboard:', () => {
     it('should not accept end date prior to start state', () => {
       const onErrorMock = spy();
-      render(<ElementToTest enableAccessibleFieldDOMStructure onError={onErrorMock} />);
+      render(<ElementToTest onError={onErrorMock} />);
 
       expect(onErrorMock.callCount).to.equal(0);
       act(() => {
@@ -53,7 +53,6 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onError={onErrorMock}
           shouldDisableDate={(date) => adapterToUse.isAfter(date, adapterToUse.date('2018-03-11'))}
         />,
@@ -100,7 +99,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
     it('should apply disablePast', function test() {
       const onErrorMock = spy();
       const now = adapterToUse.date();
-      render(<ElementToTest enableAccessibleFieldDOMStructure disablePast onError={onErrorMock} />);
+      render(<ElementToTest disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
       if (withDate) {
@@ -140,9 +139,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
     it('should apply disableFuture', function test() {
       const onErrorMock = spy();
       const now = adapterToUse.date();
-      render(
-        <ElementToTest enableAccessibleFieldDOMStructure disableFuture onError={onErrorMock} />,
-      );
+      render(<ElementToTest disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;
 
@@ -187,13 +184,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onError={onErrorMock}
-          minDate={adapterToUse.date('2018-03-15')}
-        />,
-      );
+      render(<ElementToTest onError={onErrorMock} minDate={adapterToUse.date('2018-03-15')} />);
 
       act(() => {
         [adapterToUse.date('2018-03-09'), adapterToUse.date('2018-03-10')].forEach(
@@ -230,13 +221,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       const onErrorMock = spy();
-      render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onError={onErrorMock}
-          maxDate={adapterToUse.date('2018-03-15')}
-        />,
-      );
+      render(<ElementToTest onError={onErrorMock} maxDate={adapterToUse.date('2018-03-15')} />);
 
       act(() => {
         [adapterToUse.date('2018-03-15'), adapterToUse.date('2018-03-17')].forEach(
@@ -266,11 +251,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onError={onErrorMock}
-          minTime={adapterToUse.date('2018-03-10T12:00:00')}
-        />,
+        <ElementToTest onError={onErrorMock} minTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
       act(() => {
@@ -310,11 +291,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
 
       const onErrorMock = spy();
       render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onError={onErrorMock}
-          maxTime={adapterToUse.date('2018-03-10T12:00:00')}
-        />,
+        <ElementToTest onError={onErrorMock} maxTime={adapterToUse.date('2018-03-10T12:00:00')} />,
       );
 
       act(() => {

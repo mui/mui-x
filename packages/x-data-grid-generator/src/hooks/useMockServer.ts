@@ -9,23 +9,24 @@ import {
   GridInitialState,
   GridColumnVisibilityModel,
 } from '@mui/x-data-grid-pro';
-import {
-  UseDemoDataOptions,
-  getColumnsFromOptions,
-  extrapolateSeed,
-  deepFreeze,
-} from './useDemoData';
+import { extrapolateSeed, deepFreeze } from './useDemoData';
+import { getCommodityColumns } from '../columns/commodities.columns';
+import { getEmployeeColumns } from '../columns/employees.columns';
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 import { getRealGridData, GridDemoData } from '../services/real-data-service';
-import { addTreeDataOptionsToDemoData } from '../services/tree-data-generator';
+import {
+  addTreeDataOptionsToDemoData,
+  AddPathToDemoDataOptions,
+} from '../services/tree-data-generator';
 import {
   loadServerRows,
   processTreeDataRows,
-  DEFAULT_DATASET_OPTIONS,
+  processRowGroupingRows,
   DEFAULT_SERVER_OPTIONS,
 } from './serverUtils';
 import type { ServerOptions } from './serverUtils';
 import { randomInt } from '../services';
+import { getMovieRows, getMovieColumns } from './useMovieData';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -41,6 +42,66 @@ type UseMockServerResponse = {
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
   loadNewData: () => void;
+};
+
+type DataSet = 'Commodity' | 'Employee' | 'Movies';
+
+interface UseMockServerOptions {
+  dataSet: DataSet;
+  /**
+   * Has no effect when DataSet='Movies'
+   */
+  rowLength: number;
+  maxColumns?: number;
+  visibleFields?: string[];
+  editable?: boolean;
+  treeData?: AddPathToDemoDataOptions;
+  rowGrouping?: boolean;
+}
+
+interface GridMockServerData {
+  rows: GridRowModel[];
+  columns: GridColDefGenerator[] | GridColDef[];
+  initialState?: GridInitialState;
+}
+
+interface ColumnsOptions
+  extends Pick<UseMockServerOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+
+const GET_DEFAULT_DATASET_OPTIONS: (isRowGrouping: boolean) => UseMockServerOptions = (
+  isRowGrouping,
+) => ({
+  dataSet: isRowGrouping ? 'Movies' : 'Commodity',
+  rowLength: isRowGrouping ? getMovieRows().length : 100,
+  maxColumns: 6,
+});
+
+const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] | GridColDef[] => {
+  let columns;
+
+  switch (options.dataSet) {
+    case 'Commodity':
+      columns = getCommodityColumns(options.editable);
+      break;
+    case 'Employee':
+      columns = getEmployeeColumns();
+      break;
+    case 'Movies':
+      columns = getMovieColumns();
+      break;
+    default:
+      throw new Error('Unknown dataset');
+  }
+
+  if (options.visibleFields) {
+    columns = columns.map((col) =>
+      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
+    );
+  }
+  if (options.maxColumns) {
+    columns = columns.slice(0, options.maxColumns);
+  }
+  return columns;
 };
 
 function decodeParams(url: string): GridGetRowsParams {
@@ -76,12 +137,18 @@ const getInitialState = (columns: GridColDefGenerator[], groupingField?: string)
 
 const defaultColDef = getGridDefaultColumnTypes();
 
+function sendEmptyResponse() {
+  return new Promise<GridGetRowsResponse>((resolve) => {
+    resolve({ rows: [], rowCount: 0 });
+  });
+}
+
 export const useMockServer = (
-  dataSetOptions?: Partial<UseDemoDataOptions>,
+  dataSetOptions?: Partial<UseMockServerOptions>,
   serverOptions?: ServerOptions & { verbose?: boolean },
   shouldRequestsFail?: boolean,
 ): UseMockServerResponse => {
-  const [data, setData] = React.useState<GridDemoData>();
+  const [data, setData] = React.useState<GridMockServerData>();
   const [index, setIndex] = React.useState(0);
   const shouldRequestsFailRef = React.useRef<boolean>(shouldRequestsFail ?? false);
 
@@ -91,7 +158,11 @@ export const useMockServer = (
     }
   }, [shouldRequestsFail]);
 
-  const options = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
+  const isRowGrouping = dataSetOptions?.rowGrouping ?? false;
+
+  const options = { ...GET_DEFAULT_DATASET_OPTIONS(isRowGrouping), ...dataSetOptions };
+
+  const isTreeData = options.treeData?.groupingField != null;
 
   const columns = React.useMemo(() => {
     return getColumnsFromOptions({
@@ -116,8 +187,6 @@ export const useMockServer = (
     [columns],
   );
 
-  const isTreeData = options.treeData?.groupingField != null;
-
   const getGroupKey = React.useMemo(() => {
     if (isTreeData) {
       return (row: GridRowModel): string => row[options.treeData!.groupingField!];
@@ -141,6 +210,13 @@ export const useMockServer = (
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey)!;
       setData(newData);
+      return undefined;
+    }
+
+    if (options.dataSet === 'Movies') {
+      const rowsData = { rows: getMovieRows(), columns };
+      setData(rowsData);
+      dataCache.set(cacheKey, rowsData);
       return undefined;
     }
 
@@ -193,10 +269,8 @@ export const useMockServer = (
 
   const fetchRows = React.useCallback(
     async (requestUrl: string): Promise<GridGetRowsResponse> => {
-      if (!data || !requestUrl) {
-        return new Promise<GridGetRowsResponse>((resolve) => {
-          resolve({ rows: [], rowCount: 0 });
-        });
+      if (!requestUrl || !data?.rows) {
+        return sendEmptyResponse();
       }
       const params = decodeParams(requestUrl);
       const verbose = serverOptions?.verbose ?? true;
@@ -224,9 +298,21 @@ export const useMockServer = (
         });
       }
 
-      if (isTreeData /* || TODO: `isRowGrouping` */) {
+      if (isTreeData) {
         const { rows, rootRowCount } = await processTreeDataRows(
-          data.rows,
+          data?.rows ?? [],
+          params,
+          serverOptionsWithDefault,
+          columnsWithDefaultColDef,
+        );
+
+        getRowsResponse = {
+          rows: rows.slice().map((row) => ({ ...row, path: undefined })),
+          rowCount: rootRowCount,
+        };
+      } else if (isRowGrouping) {
+        const { rows, rootRowCount } = await processRowGroupingRows(
+          data?.rows ?? [],
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -237,9 +323,8 @@ export const useMockServer = (
           rowCount: rootRowCount,
         };
       } else {
-        // plain data
         const { returnedRows, nextCursor, totalRowCount } = await loadServerRows(
-          data.rows,
+          data?.rows ?? [],
           { ...params, ...params.paginationModel },
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
@@ -262,12 +347,13 @@ export const useMockServer = (
       serverOptions?.useCursorPagination,
       isTreeData,
       columnsWithDefaultColDef,
+      isRowGrouping,
     ],
   );
 
   return {
     columns: columnsWithDefaultColDef,
-    initialState,
+    initialState: options.dataSet === 'Movies' ? {} : initialState,
     getGroupKey,
     getChildrenCount,
     fetchRows,

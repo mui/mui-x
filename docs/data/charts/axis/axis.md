@@ -56,7 +56,7 @@ Which expects an array of value coherent with the `scaleType`:
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
+- bar plots require an `xAxis` with `scaleType="band"` and some `data` provided.
 
 ### Axis formatter
 

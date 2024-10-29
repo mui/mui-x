@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopTimePicker />', () => {
-  describe('rendering behavior', () => {
-    const { render } = createPickerRenderer({
-      clock: 'fake',
-      clockConfig: new Date('2018-01-01T10:05:05.000'),
-    });
+  const { render } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date('2018-01-01T10:05:05.000'),
+  });
 
+  describe('rendering behavior', () => {
     it('should render "accept" action and 3 time sections by default', () => {
       render(<DesktopTimePicker open />);
 
@@ -60,14 +60,12 @@ describe('<DesktopTimePicker />', () => {
   });
 
   describe('selecting behavior', () => {
-    const { render } = createPickerRenderer();
-
-    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', async () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting a single option', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { user } = render(
+      render(
         <DesktopTimePicker
           timeSteps={{ minutes: 60 }}
           onChange={onChange}
@@ -77,9 +75,9 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      openPicker({ type: 'time', variant: 'desktop' });
 
-      await user.click(screen.getByRole('option', { name: '09:00 AM' }));
+      fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onAccept.callCount).to.equal(1);
@@ -87,12 +85,12 @@ describe('<DesktopTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call "onAccept", "onChange", and "onClose" when selecting all section', async () => {
+    it('should call "onAccept", "onChange", and "onClose" when selecting all section', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { user } = render(
+      render(
         <DesktopTimePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -101,31 +99,31 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      openPicker({ type: 'time', variant: 'desktop' });
 
-      await user.click(screen.getByRole('option', { name: '2 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await user.click(screen.getByRole('option', { name: '15 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await user.click(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should allow out of order section selection', async () => {
+    it('should allow out of order section selection', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { user } = render(
+      render(
         <DesktopTimePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -134,36 +132,36 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      openPicker({ type: 'time', variant: 'desktop' });
 
-      await user.click(screen.getByRole('option', { name: '15 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await user.click(screen.getByRole('option', { name: '2 hours' }));
+      fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(2);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await user.click(screen.getByRole('option', { name: '25 minutes' }));
+      fireEvent.click(screen.getByRole('option', { name: '25 minutes' }));
       expect(onChange.callCount).to.equal(3);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
-      await user.click(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should finish selection when selecting only the last section', async () => {
+    it('should finish selection when selecting only the last section', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
 
-      const { user } = render(
+      render(
         <DesktopTimePicker
           onChange={onChange}
           onAccept={onAccept}
@@ -172,9 +170,9 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPicker({ type: 'time', variant: 'desktop', click: user.click });
+      openPicker({ type: 'time', variant: 'desktop' });
 
-      await user.click(screen.getByRole('option', { name: 'PM' }));
+      fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
