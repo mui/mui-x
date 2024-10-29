@@ -190,7 +190,6 @@
   { "name": "getTimeClockUtilityClass", "kind": "Function" },
   { "name": "getYearCalendarUtilityClass", "kind": "Function" },
   { "name": "InferError", "kind": "TypeAlias" },
-  { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LocalizationProvider", "kind": "Variable" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "LocalizedComponent", "kind": "TypeAlias" },
