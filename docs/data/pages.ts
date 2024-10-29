@@ -23,7 +23,9 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/common-features-group',
     title: 'Common concepts',
-    children: [{ pathname: `/x/common-concepts/custom-components`, title: 'Custom subcomponents' }],
+    children: [
+      { pathname: `/x/common-concepts/custom-components`, title: 'Slots and subcomponents' },
+    ],
   },
   {
     pathname: '/x/react-data-grid-group',
@@ -119,7 +121,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-data-grid/interactivity',
+        pathname: '/x/react-data-grid/interactivity-group',
         subheader: 'Interactivity',
         children: [
           { pathname: '/x/react-data-grid/localization' },
@@ -144,42 +146,48 @@ const pages: MuiPage[] = [
         unstable: true,
       },
       {
-        pathname: '/x/react-data-grid/server-side-data-group',
-        title: 'Server-side data',
-        plan: 'pro',
+        pathname: '/x/api/resources-group',
+        subheader: 'Resources',
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
           {
-            pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+            pathname: '/x/react-data-grid/server-side-data-group',
+            title: 'Server-side data',
             plan: 'pro',
-            planned: true,
+            children: [
+              { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+              { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+                plan: 'pro',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/infinite-loading',
+                plan: 'pro',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/row-grouping',
+                plan: 'pro',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/aggregation',
+                plan: 'premium',
+                planned: true,
+              },
+            ],
           },
           {
-            pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-            plan: 'pro',
-            planned: true,
-          },
-          {
-            pathname: '/x/react-data-grid/server-side-data/row-grouping',
-            plan: 'pro',
-            planned: true,
-          },
-          {
-            pathname: '/x/react-data-grid/server-side-data/aggregation',
-            plan: 'premium',
-            planned: true,
-          },
-        ],
-      },
-      {
-        pathname: '/x/react-data-grid/recipes',
-        children: [
-          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-          {
-            pathname: '/x/react-data-grid/recipes-row-grouping',
-            title: 'Row grouping',
-            plan: 'premium',
+            pathname: '/x/react-data-grid/recipes',
+            children: [
+              { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
+              {
+                pathname: '/x/react-data-grid/recipes-row-grouping',
+                title: 'Row grouping',
+                plan: 'premium',
+              },
+            ],
           },
         ],
       },
@@ -344,11 +352,6 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
-          {
-            pathname: '/x/api/date-pickers-group',
-            title: 'API reference',
-            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
-          },
         ],
       },
       {
@@ -392,6 +395,17 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
           { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
+        ],
+      },
+      {
+        pathname: '/x/api/picker-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/date-pickers-group',
+            title: 'API reference',
+            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
+          },
         ],
       },
     ],
@@ -473,19 +487,25 @@ const pages: MuiPage[] = [
             ],
           },
           {
-            pathname: '/x/api/charts-group',
-            title: 'API reference',
+            pathname: '/x/api/chart-resources',
+            subheader: 'Resources',
             children: [
-              ...chartsComponentApi,
               {
-                pathname: '/x/api/charts-interfaces-group',
-                subheader: 'Interfaces',
+                pathname: '/x/api/charts-group',
+                title: 'API reference',
                 children: [
-                  { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
-                  { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
-                  { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
-                  { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
-                  { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                  ...chartsComponentApi,
+                  {
+                    pathname: '/x/api/charts-interfaces-group',
+                    subheader: 'Interfaces',
+                    children: [
+                      { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
+                      { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
+                      { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
+                      { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
+                      { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                    ],
+                  },
                 ],
               },
             ],
@@ -545,9 +565,15 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/api/tree-view-group',
-        title: 'API reference',
-        children: [...treeViewComponentApi],
+        pathname: '/x/api/tree-view-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/tree-view-group',
+            title: 'API reference',
+            children: [...treeViewComponentApi],
+          },
+        ],
       },
     ],
   },
