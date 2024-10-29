@@ -1,47 +1,38 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
-interface AutoCompleteFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      true,
-      DateValidationError
-    > {
-  /**
-   * @typescript-to-proptypes-ignore
-   */
-  options?: Dayjs[];
-}
-
-function AutocompleteField(props: AutoCompleteFieldProps) {
+function AutocompleteField(props) {
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+  const { value, timezone, onChange } = internalProps;
   const {
+    InputProps,
+    slotProps,
+    slots,
+    ownerState,
     label,
-    disabled,
-    readOnly,
-    id,
-    value,
-    onChange,
-    InputProps: { ref, startAdornment, endAdornment } = {},
-    inputProps,
+    focused,
+    name,
     options = [],
-  } = props;
+    inputProps,
+    ...other
+  } = forwardedProps;
 
-  const mergeAdornments = (...adornments: React.ReactNode[]) => {
+  const { hasValidationError } = useValidation({
+    validator: validateDate,
+    value,
+    timezone,
+    props: internalProps,
+  });
+
+  const mergeAdornments = (...adornments) => {
     const nonNullAdornments = adornments.filter((el) => el != null);
     if (nonNullAdornments.length === 0) {
       return null;
@@ -62,25 +53,24 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
 
   return (
     <Autocomplete
-      id={id}
+      {...other}
       options={options}
-      disabled={disabled}
-      readOnly={readOnly}
-      ref={ref}
+      ref={InputProps?.ref}
       sx={{ minWidth: 250 }}
       renderInput={(params) => (
         <TextField
           {...params}
+          error={hasValidationError}
           label={label}
           inputProps={{ ...params.inputProps, ...inputProps }}
           InputProps={{
             ...params.InputProps,
             startAdornment: mergeAdornments(
-              startAdornment,
+              InputProps?.startAdornment,
               params.InputProps.startAdornment,
             ),
             endAdornment: mergeAdornments(
-              endAdornment,
+              InputProps?.endAdornment,
               params.InputProps.endAdornment,
             ),
           }}
@@ -104,32 +94,22 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
   );
 }
 
-interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
-  /**
-   * @typescript-to-proptypes-ignore
-   */
-  options: Dayjs[];
-}
-
-function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
+function AutocompleteDatePicker(props) {
   const { options, ...other } = props;
 
   const optionsLookup = React.useMemo(
     () =>
-      options.reduce(
-        (acc, option) => {
-          acc[option.toISOString()] = true;
-          return acc;
-        },
-        {} as Record<string, boolean>,
-      ),
+      options.reduce((acc, option) => {
+        acc[option.toISOString()] = true;
+        return acc;
+      }, {}),
     [options],
   );
 
   return (
-    <DatePicker<Dayjs>
+    <DatePicker
       slots={{ ...props.slots, field: AutocompleteField }}
-      slotProps={{ ...props.slotProps, field: { options } as any }}
+      slotProps={{ ...props.slotProps, field: { options } }}
       shouldDisableDate={(date) => !optionsLookup[date.startOf('day').toISOString()]}
       {...other}
     />
@@ -138,7 +118,7 @@ function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
 
 const today = dayjs().startOf('day');
 
-export default function PickerWithAutocompleteField() {
+export default function MaterialDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <AutocompleteDatePicker
