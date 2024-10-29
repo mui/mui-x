@@ -21,10 +21,10 @@ const headerStyled = css({
   alignRight: {
     alignItems: 'flex-end',
   },
-  alignLeft: {
+  alignCenter: {
     alignItems: 'center',
   },
-  alignCenter: {},
+  alignLeft: {},
 });
 
 const labelStyled = css({
