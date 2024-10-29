@@ -1,17 +1,17 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getCheckboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { getCheckboxPropsSelector } from '../../hooks/features/rowSelection/utils';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -107,6 +107,8 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         ? isChecked && !isIndeterminate
         : isChecked;
 
+    const checkBoxId = `checkbox_${id}`;
+
     return (
       <rootProps.slots.baseCheckbox
         ref={handleRef}
@@ -119,6 +121,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         indeterminate={isIndeterminate}
         disabled={!isSelectable}
         touchRippleRef={rippleRef as any /* FIXME: typing error */}
+        id={checkBoxId}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
