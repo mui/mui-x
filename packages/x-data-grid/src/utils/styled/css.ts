@@ -47,19 +47,19 @@ export const StyledContext = React.createContext(styledMaterial);
 
 export function useStyled<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  params: { rootProps: Props }
+  rootProps: Props,
 ) {
-  return React.useContext(StyledContext)(styleMeta, params);
+  return React.useContext(StyledContext)(styleMeta, rootProps);
 }
 
 
 export function styledUnstyled<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  params: { rootProps: Props }
+  rootProps: Props,
 ) {
   const result = { ...styleMeta.classes, }
 
-  const classes = params.rootProps.classes
+  const classes = rootProps.classes
   if (classes) {
     for (let key in result) {
       if (classes[key]) {
@@ -73,11 +73,11 @@ export function styledUnstyled<Props extends PropsBase, Keys extends KeysBase>(
 
 export function styledMaterial<Props extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  params: { rootProps: Props }
+  rootProps: Props,
 ) {
   const theme = useTheme()
   const styledClassName = applyStyled(
-    { ...params.rootProps, theme },
+    { ...rootProps, theme },
     styleMeta.meta.name,
     (_: any, styles: any) => styles[styleMeta.meta.slot],
   )
@@ -89,7 +89,7 @@ export function styledMaterial<Props extends PropsBase, Keys extends KeysBase>(
     (result as any).root += ' ' + styledClassName
   }
 
-  const classes = params.rootProps.classes
+  const classes = rootProps.classes
   if (classes) {
     for (let key in result) {
       if (classes[key]) {
