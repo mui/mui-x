@@ -10,7 +10,7 @@ import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimeP
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
@@ -18,7 +18,7 @@ import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalizat
 
 type MobileTimePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -36,7 +36,7 @@ type MobileTimePickerComponent = (<
  */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -71,7 +71,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -164,7 +164,7 @@ MobileTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**

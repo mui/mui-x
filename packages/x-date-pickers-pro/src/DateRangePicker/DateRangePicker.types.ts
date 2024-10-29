@@ -1,5 +1,9 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
+import {
+  BaseDateValidationProps,
+  MakeRequired,
+  UsePickerValueNonStaticProps,
+} from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -10,6 +14,12 @@ import {
   MobileDateRangePickerSlots,
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
+import {
+  DateRange,
+  DateRangeValidationError,
+  RangeFieldSection,
+  UseDateRangeFieldProps,
+} from '../models';
 
 export interface DateRangePickerSlots<TDate extends PickerValidDate>
   extends DesktopDateRangePickerSlots<TDate>,
@@ -23,7 +33,7 @@ export interface DateRangePickerSlotProps<
 
 export interface DateRangePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
@@ -48,3 +58,21 @@ export interface DateRangePickerProps<
    */
   closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
 }
+
+/**
+ * Props the field can receive when used inside a `DateRangePicker`, `DesktopDateRangePicker` or `MobileDateRangePicker` component.
+ */
+export type DateRangePickerFieldProps<
+  TDate extends PickerValidDate,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = MakeRequired<
+  UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  'format' | 'timezone' | 'value' | keyof BaseDateValidationProps<TDate>
+> &
+  BaseSingleInputFieldProps<
+    DateRange<TDate>,
+    TDate,
+    RangeFieldSection,
+    false,
+    DateRangeValidationError
+  >;

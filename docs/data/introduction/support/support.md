@@ -42,7 +42,7 @@ You can browse the documentation, find an example close to your use case, and th
 
 - [Data Grid](/x/react-data-grid/#mit-license-free-forever)
 - [Date Pickers](/x/react-date-pickers/getting-started/#render-your-first-component)
-- [Charts](/x/react-charts/getting-started/#single-charts)
+- [Charts](/x/react-charts/getting-started/#self-contained-charts)
 - [Tree View](/x/react-tree-view/#simple-tree-view)
 
 #### Use starter templates

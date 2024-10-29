@@ -332,6 +332,14 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
+      case 'PageUp':
+        handleValueChange(viewValue + 5, 'partial');
+        event.preventDefault();
+        break;
+      case 'PageDown':
+        handleValueChange(viewValue - 5, 'partial');
+        event.preventDefault();
+        break;
       case 'Enter':
       case ' ':
         handleValueChange(viewValue, 'finish');
@@ -372,8 +380,6 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
           aria-activedescendant={selectedId}
           aria-label={translations.clockLabelText(
             type,
-            value,
-            utils,
             value == null ? null : utils.format(value, 'fullTime'),
           )}
           ref={listboxRef}

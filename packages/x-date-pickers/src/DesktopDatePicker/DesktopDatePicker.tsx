@@ -9,7 +9,7 @@ import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DateP
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
-import { DateView, PickerValidDate } from '../models';
+import { DateView, PickerOwnerState, PickerValidDate } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
@@ -19,7 +19,7 @@ import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalizat
 
 type DesktopDatePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -37,7 +37,7 @@ type DesktopDatePickerComponent = (<
  */
 const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -71,7 +71,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -164,7 +164,7 @@ DesktopDatePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
