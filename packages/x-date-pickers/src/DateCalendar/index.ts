@@ -4,6 +4,7 @@ export type {
   DateCalendarSlots,
   DateCalendarSlotProps,
 } from './DateCalendar.types';
+export type { PickersDayOwnerState } from './DayCalendar';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';

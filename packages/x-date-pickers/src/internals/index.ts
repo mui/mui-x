@@ -84,6 +84,7 @@ export type {
   PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
+export { usePickersPrivateContext } from './hooks/usePickersPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,

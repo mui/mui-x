@@ -3,9 +3,13 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimezoneProps } from '../models';
-import type { PickersMonthProps } from './PickersMonth';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models/helpers';
+
+export interface PickersMonthOwnerState extends PickerOwnerState {
+  isMonthSelected: boolean;
+  isMonthDisabled: boolean;
+}
 
 export interface MonthCalendarSlots {
   /**
@@ -19,7 +23,7 @@ export interface MonthCalendarSlotProps {
   monthButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersMonthProps
+    PickersMonthOwnerState
   >;
 }
 

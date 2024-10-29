@@ -11,7 +11,7 @@ import {
 } from '@mui/utils';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
+import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
 import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
@@ -19,11 +19,10 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
-const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -58,7 +57,7 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: MonthCalendarProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
@@ -88,6 +87,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
   const {
     className,
+    classes: classesProp,
     value: valueProp,
     defaultValue,
     referenceDate: referenceDateProp,
@@ -124,6 +124,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
   const now = useNow<TDate>(timezone);
   const isRtl = useRtl();
   const utils = useUtils<TDate>();
+  const { ownerState } = usePickersPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>
@@ -138,8 +139,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate exten
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 

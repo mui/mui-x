@@ -17,7 +17,7 @@ import {
   DayValidationProps,
 } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerValidDate, TimezoneProps } from '../models';
+import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   ExportedYearCalendarProps,
@@ -48,7 +48,7 @@ export interface DateCalendarSlotProps<TDate extends PickerValidDate>
     DayCalendarSlotProps<TDate>,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, PickerOwnerState>;
 }
 
 export interface ExportedDateCalendarProps<TDate extends PickerValidDate>

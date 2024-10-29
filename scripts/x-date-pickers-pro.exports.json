@@ -267,6 +267,7 @@
   { "name": "pickersDayClasses", "kind": "Variable" },
   { "name": "PickersDayClasses", "kind": "Interface" },
   { "name": "PickersDayClassKey", "kind": "TypeAlias" },
+  { "name": "PickersDayOwnerState", "kind": "Interface" },
   { "name": "PickersDayProps", "kind": "Interface" },
   { "name": "pickersFadeTransitionGroupClasses", "kind": "Variable" },
   { "name": "PickersFadeTransitionGroupClasses", "kind": "Interface" },

@@ -25,11 +25,13 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValueWithTimezone,
   useViews,
+  usePickersPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
+  DateRangeCalendarClasses,
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
 } from './dateRangeCalendarClasses';
@@ -62,7 +64,7 @@ const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateRangeCalendarOwnerState<any> }>({
+})<{ ownerState: DateRangeCalendarOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
 });
@@ -133,12 +135,14 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   };
 }
 
-const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
-  const { classes, isDragging } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<DateRangeCalendarClasses> | undefined,
+  ownerState: DateRangeCalendarOwnerState,
+) => {
   const slots = {
     root: ['root'],
     monthContainer: ['monthContainer'],
-    dayCalendar: [isDragging && 'dayDragging'],
+    dayCalendar: [ownerState.isDraggingDay && 'dayDragging'],
   };
 
   return composeClasses(slots, getDateRangeCalendarUtilityClass, classes);
@@ -172,6 +176,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     referenceDate,
     onChange,
     className,
+    classes: classesProp,
     disableFuture,
     disablePast,
     minDate,
@@ -299,8 +304,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
     timezone,
   });
 
-  const ownerState = { ...props, isDragging };
-  const classes = useUtilityClasses(ownerState);
+  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+  const ownerState: DateRangeCalendarOwnerState = {
+    ...pickersOwnerState,
+    isDraggingDay: isDragging,
+  };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   const draggingRange = React.useMemo<DateRange<TDate>>(() => {
     if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
@@ -370,7 +379,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       slots,
       slotProps,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const prevValue = React.useRef<DateRange<TDate> | null>(null);
@@ -455,7 +464,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   const slotPropsForDayCalendar = {
     ...slotProps,
     day: (dayOwnerState) => {
-      const { day } = dayOwnerState;
+      const { day, isDaySelected } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
@@ -488,7 +497,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
         onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
         // apply selected styling to the dragging start or end day
         isVisuallySelected:
-          dayOwnerState.selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
+          isDaySelected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,

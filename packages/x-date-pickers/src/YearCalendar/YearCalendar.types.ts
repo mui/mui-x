@@ -3,9 +3,13 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimezoneProps } from '../models';
-import type { PickersYearProps } from './PickersYear';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { SlotComponentPropsFromProps } from '../internals/models/helpers';
+
+export interface PickersYearOwnerState extends PickerOwnerState {
+  isYearSelected: boolean;
+  isYearDisabled: boolean;
+}
 
 export interface YearCalendarSlots {
   /**
@@ -19,7 +23,7 @@ export interface YearCalendarSlotProps {
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersYearProps
+    PickersYearOwnerState
   >;
 }
 
