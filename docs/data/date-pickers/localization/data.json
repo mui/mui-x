@@ -179,9 +179,17 @@
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 9,
-    "totalKeysCount": 37,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/plPL.ts"
+    "missingKeysCount": 10,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-date-pickers/src/locales/plPL.ts"
+  },
+  {
+    "languageTag": "pt-PT",
+    "importName": "ptPT",
+    "localeName": "Portuguese",
+    "missingKeysCount": 0,
+    "totalKeysCount": 50,
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-date-pickers/src/locales/ptPT.ts"
   },
   {
     "languageTag": "pt-BR",

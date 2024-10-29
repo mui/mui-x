@@ -25,6 +25,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // DateRange placeholders
   start: 'Początek',
   end: 'Koniec',
+  startDate: 'Data rozpoczęcia',
+  startTime: 'Czas rozpoczęcia',
+  endDate: 'Data zakończenia',
+  endTime: 'Czas zakończenia',
 
   // Action bar
   cancelButtonLabel: 'Anuluj',
@@ -57,15 +61,11 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
-      ? `Wybierz datę, obecnie wybrana data to ${utils.format(value, 'fullDate')}`
-      : 'Wybierz datę',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Wybierz czas, obecnie wybrany czas to ${utils.format(value, 'fullTime')}`
-      : 'Wybierz czas',
-  // fieldClearLabel: 'Clear value',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  fieldClearLabel: 'Wyczyść',
 
   // Table labels
   timeTableLabel: 'wybierz czas',
@@ -80,6 +80,19 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
   // fieldMeridiemPlaceholder: () => 'aa',
+
+  // View names
+  year: 'Rok',
+  month: 'Miesiąc',
+  day: 'Dzień',
+  weekDay: 'Dzień tygodnia',
+  hours: 'Godzin',
+  minutes: 'Minut',
+  seconds: 'Sekund',
+  // meridiem: 'Meridiem',
+
+  // Common
+  // empty: 'Empty',
 };
 
 export const plPL = getPickersLocalization(plPLPickers);
