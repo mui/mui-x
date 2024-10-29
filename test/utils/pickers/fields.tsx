@@ -234,7 +234,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    // Test with v7 input
+    // Test with accessible DOM structure
     const v7Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: true,
@@ -244,7 +244,7 @@ export const buildFieldInteractions = <P extends {}>({
     expectFieldValueV7(v7Response.getSectionsContainer(), expectedValue);
     v7Response.unmount();
 
-    // Test with v6 input
+    // Test with non-accessible DOM structure
     const v6Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,
@@ -263,7 +263,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     if (!skipV7) {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const v7Response = renderWithProps({
         ...props,
         enableAccessibleFieldDOMStructure: true,
@@ -280,7 +280,7 @@ export const buildFieldInteractions = <P extends {}>({
       v7Response.unmount();
     }
 
-    // Test with v6 input
+    // Test with non-accessible DOM structure
     const v6Response = renderWithProps({
       ...props,
       enableAccessibleFieldDOMStructure: false,

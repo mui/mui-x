@@ -9,7 +9,7 @@ import {
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
-import { UsePickerParams, UsePickerProps } from '../usePicker';
+import { UsePickerParams } from '../usePicker';
 import {
   BaseSingleInputFieldProps,
   FieldSection,
@@ -87,20 +87,12 @@ export interface ExportedUseDesktopPickerSlotProps<
       unknown
     >,
     {},
-    UsePickerProps<TDate | null, TDate, any, any, any, any>
+    PickerOwnerState
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: SlotComponentProps<
-    typeof IconButton,
-    {},
-    UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
-  >;
-  openPickerIcon?: SlotComponentPropsFromProps<
-    Record<string, any>,
-    {},
-    PickerOwnerState<TDate | null>
-  >;
+  inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
+  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
 export interface DesktopOnlyPickerProps

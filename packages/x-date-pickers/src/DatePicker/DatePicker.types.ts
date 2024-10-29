@@ -4,7 +4,7 @@ import {
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
@@ -30,7 +30,7 @@ export interface DatePickerSlotProps<
 
 export interface DatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
   /**
@@ -61,9 +61,9 @@ export interface DatePickerProps<
  */
 export type DatePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> = DefaultizedProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = MakeRequired<
   UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | keyof BaseDateValidationProps<TDate>
+  'format' | 'timezone' | 'value' | keyof BaseDateValidationProps<TDate>
 > &
   BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateValidationError>;
