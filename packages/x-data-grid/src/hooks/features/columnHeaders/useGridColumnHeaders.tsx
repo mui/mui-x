@@ -368,7 +368,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return null;
     }
 
-    const { renderedColumns, firstColumnToRender, lastColumnToRender } = columnsToRender;
+    const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
     const rowStructure = columnGroupsHeaderStructure[depth];
 
@@ -464,7 +464,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           pinnedPosition={pinnedPosition}
           style={style}
           indexInSection={indexInSection}
-          sectionLength={renderedColumns.length}
+          sectionLength={rowStructure.length}
           gridHasFiller={gridHasFiller}
         />
       );

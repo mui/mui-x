@@ -11,6 +11,8 @@ import {
   useUtils,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { PickersLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -177,7 +179,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -191,7 +193,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: any) => ({
+      actionBar: (ownerState: PickersLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),

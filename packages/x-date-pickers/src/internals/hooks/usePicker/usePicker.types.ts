@@ -13,6 +13,7 @@ import {
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { UsePickerProviderParameters, UsePickerProviderReturnValue } from './usePickerProvider';
 
 /**
  * Props common to all picker headless implementations.
@@ -50,7 +51,8 @@ export interface UsePickerParams<
     Pick<
       UsePickerViewParams<TValue, TView, TSection, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
-    > {
+    >,
+    Pick<UsePickerProviderParameters<TValue>, 'localeText'> {
   props: TExternalProps;
 }
 
@@ -63,4 +65,5 @@ export interface UsePickerResponse<
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
   ownerState: PickerOwnerState;
+  providerProps: UsePickerProviderReturnValue;
 }

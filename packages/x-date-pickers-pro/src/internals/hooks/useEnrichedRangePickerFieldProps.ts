@@ -10,6 +10,7 @@ import {
   BaseSingleInputFieldProps,
   FieldSelectedSections,
   FieldRef,
+  PickerOwnerState,
 } from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
@@ -21,7 +22,6 @@ import {
   onSpaceOrEnter,
   UsePickerResponse,
   WrapperVariant,
-  UsePickerProps,
   SlotComponentPropsFromProps,
   DateOrTimeViewWithMeridiem,
 } from '@mui/x-date-pickers/internals';
@@ -67,7 +67,7 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
       unknown
     >,
     {},
-    UsePickerProps<DateRange, any, any, any, any>
+    PickerOwnerState
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;

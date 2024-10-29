@@ -9,7 +9,7 @@ import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DateP
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDate } from '../validation';
-import { DateView } from '../models';
+import { DateView, PickerOwnerState } from '../models';
 import { DateField } from '../DateField';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -63,7 +63,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,

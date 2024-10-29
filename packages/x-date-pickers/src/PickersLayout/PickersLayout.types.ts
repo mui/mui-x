@@ -12,6 +12,7 @@ import {
   ExportedPickersShortcutProps,
   PickersShortcuts,
 } from '../PickersShortcuts/PickersShortcuts';
+import { PickerOwnerState } from '../models';
 
 export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
@@ -33,28 +34,20 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
   >;
 }
 
-interface PickersLayoutActionBarOwnerState<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersLayoutProps<TValue, TView> {
+export interface PickersLayoutOwnerState extends PickerOwnerState {
   wrapperVariant: WrapperVariant;
-}
-
-interface PickersShortcutsOwnerState<TValue> extends PickersShortcutsProps<TValue> {
-  wrapperVariant: WrapperVariant;
+  isLandscape: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Props passed down to the action bar component.
    */
-  actionBar?: SlotComponentProps<
-    typeof PickersActionBar,
-    {},
-    PickersLayoutActionBarOwnerState<TValue, TView>
-  >;
+  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickersLayoutOwnerState>;
   /**
    * Props passed down to the shortcuts component.
    */
-  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersShortcutsOwnerState<TValue>>;
+  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersLayoutOwnerState>;
   /**
    * Props passed down to the layoutRoot component.
    */
