@@ -223,7 +223,7 @@ describeTreeView<
     });
 
     describe('Memoization (Rich Tree View only)', () => {
-      it('should not re-render any children when the Tree View re-renders', function test() {
+      it('should not re-render any children when the Tree View re-renders (flat tree)', function test() {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
           this.skip();
         }
@@ -242,7 +242,7 @@ describeTreeView<
         expect(renders).to.deep.equal([]);
       });
 
-      it('should not re-render every children when updating the state on an item', function test() {
+      it('should not re-render every children when updating the state on an item (flat tree)', function test() {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
           this.skip();
         }
@@ -250,6 +250,55 @@ describeTreeView<
         const spyLabel = spy((props) => <TreeItemLabel {...props} />);
         const view = render({
           items: Array.from({ length: 10 }, (_, i) => ({ id: i.toString() })),
+          selectedItems: [],
+          slotProps: { item: { slots: { label: spyLabel } } },
+        });
+
+        spyLabel.resetHistory();
+
+        view.setProps({ selectedItems: ['1'] });
+
+        const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+
+        // 2 renders of the 1st item to remove to tabIndex={0}
+        // 2 renders of the selected item to change its visual state
+        expect(renders).to.deep.equal(['0', '0', '1', '1']);
+      });
+
+      it('should not re-render any children when the Tree View re-renders (nested tree)', function test() {
+        if (!treeViewComponentName.startsWith('RichTreeView')) {
+          this.skip();
+        }
+
+        const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+        const view = render({
+          items: Array.from({ length: 5 }, (_, i) => ({
+            id: i.toString(),
+            children: Array.from({ length: 5 }, (_, j) => ({ id: `${i}.${j}` })),
+          })),
+          slotProps: { item: { slots: { label: spyLabel } } },
+        });
+
+        spyLabel.resetHistory();
+
+        view.setProps({ onClick: () => {} });
+
+        const renders = spyLabel.getCalls().map((call) => call.args[0].children);
+        expect(renders).to.deep.equal([]);
+      });
+
+      it('should not re-render every children when updating the state on an item (nested tree)', function test() {
+        if (!treeViewComponentName.startsWith('RichTreeView')) {
+          this.skip();
+        }
+
+        const spyLabel = spy((props) => <TreeItemLabel {...props} />);
+        const view = render({
+          items: Array.from({ length: 5 }, (_, i) => ({
+            id: i.toString(),
+            children: Array.from({ length: 5 }, (_, j) => ({ id: `${i}.${j}` })),
+          })),
+          defaultExpandedItems: Array.from({ length: 5 }, (_, i) => i.toString()),
           selectedItems: [],
           slotProps: { item: { slots: { label: spyLabel } } },
         });
