@@ -318,7 +318,7 @@ If you were using them, you need to replace them with the following code:
 ## Stop passing `utils` and the date object to some translation keys
 
 Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
-If you have customized those translation keys, you have to update them following the examples bellow:
+If you have customized those translation keys, you have to update them following the examples below:
 
 - If you are setting a custom value in a picker component:
 
