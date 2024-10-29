@@ -318,13 +318,11 @@ If you were using them, you need to replace them with the following code:
 ## Stop passing `utils` and the date object to some translation keys
 
 Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
+If you have customized those translation keys, you have to update them following the examples bellow:
 
-If you have customized those translation keys, you have to update them:
+- If you are setting a custom value in a picker component:
 
 ```diff
- /**
- * If you are setting a custom value in a picker component
- */
 -clockLabelText: (view, time, utils) =>
 -   `Select ${view}. ${
 -     time === null || !utils.isValid(time)
@@ -349,11 +347,11 @@ If you have customized those translation keys, you have to update them:
 -    : 'Choose time',
 +openTimePickerDialogue: (formattedTime) =>
 +  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+```
 
+- If you are setting a custom value in the `LocalizationProvider`:
 
- /**
- * If you are setting a custom value in the `LocalizationProvider`
- */
+```diff
  <LocalizationProvider localeText={{
 -   clockLabelText: (view, time, utils) =>
 -     `Select ${view}. ${
@@ -378,12 +376,12 @@ If you have customized those translation keys, you have to update them:
 +   openTimePickerDialogue: (formattedTime) =>
 +     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
  }} >
+```
 
+- If you using this translation key in a custom component:
 
- /**
- * If you using this translation key in a custom component
- */
- const translations = useTranslations();
+```diff
+ const translations = usePickersTranslations();
 
 -const clockLabelText = translations.clockLabelText(
 -  view,
