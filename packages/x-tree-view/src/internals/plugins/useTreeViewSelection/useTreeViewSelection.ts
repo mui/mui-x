@@ -227,14 +227,18 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         multiSelect: params.multiSelect,
         checkboxSelection: params.checkboxSelection,
         disableSelection: params.disableSelection,
-        selectionPropagation: params.selectionPropagation,
+        selectionPropagation: {
+          descendants: params.selectionPropagation.descendants,
+          parents: params.selectionPropagation.parents,
+        },
       },
     }),
     [
       params.multiSelect,
       params.checkboxSelection,
       params.disableSelection,
-      params.selectionPropagation,
+      params.selectionPropagation.descendants,
+      params.selectionPropagation.parents,
     ],
   );
 
