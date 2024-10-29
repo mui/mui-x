@@ -1,9 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx'
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
+import { css, useStyled } from '@mui/x-data-grid/internals';
 import {
   getDataGridUtilityClass,
-  gridClasses,
   GridColDef,
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
@@ -19,19 +20,21 @@ interface OwnerState extends DataGridPremiumProcessedProps {
   colDef: GridColDef;
 }
 
-const GridAggregationHeaderRoot = styled('div', {
+const headerStyled = css({
   name: 'MuiDataGrid',
-  slot: 'AggregationColumnHeader',
-  overridesResolver: (_, styles) => styles.aggregationColumnHeader,
-})<{ ownerState: OwnerState }>({
-  display: 'flex',
-  flexDirection: 'column',
-  [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]: {
+  slot: 'aggregationColumnHeader',
+}, {
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  alignRight: {
     alignItems: 'flex-end',
   },
-  [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]: {
+  alignLeft: {
     alignItems: 'center',
   },
+  alignCenter: {},
 });
 
 const GridAggregationFunctionLabel = styled('div', {
@@ -81,13 +84,22 @@ function GridAggregationHeader(
     return null;
   }
 
+  const headerClasses = useStyled(headerStyled, { rootProps })
+
   const aggregationLabel = getAggregationFunctionLabel({
     apiRef,
     aggregationRule: aggregation.aggregationRule,
   });
 
+  const rootClassName = clsx(
+    headerClasses.root,
+    colDef.headerAlign === 'left' && headerClasses.alignLeft,
+    colDef.headerAlign === 'center' && headerClasses.alignCenter,
+    colDef.headerAlign === 'right' && headerClasses.alignRight,
+  );
+
   return (
-    <GridAggregationHeaderRoot ownerState={ownerState} className={classes.root}>
+    <div className={rootClassName}>
       {renderHeader ? (
         renderHeader(params)
       ) : (
@@ -100,7 +112,7 @@ function GridAggregationHeader(
       <GridAggregationFunctionLabel ownerState={ownerState} className={classes.aggregationLabel}>
         {aggregationLabel}
       </GridAggregationFunctionLabel>
-    </GridAggregationHeaderRoot>
+    </div>
   );
 }
 
