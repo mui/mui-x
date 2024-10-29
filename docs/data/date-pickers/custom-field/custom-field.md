@@ -140,7 +140,7 @@ If you want to use a simple mask approach for the field editing instead of the b
 ### Using a read-only Text Field
 
 If you want users to select a value exclusively through the views
-but you still want the UI to look like a Text Field, you can replace the field with a read-only [TextField](/material-ui/react-text-field/) component:
+but you still want the UI to look like a Text Field, you can replace the field with a read-only [Text Field](/material-ui/react-text-field/) component:
 
 {{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
