@@ -5,10 +5,11 @@ import {
   GridColDef,
   useKeepGroupedColumnsHidden,
   useGridApiRef,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const hiddenFields = ['id', '__row_group_by_columns_group__', 'status'];
+const hiddenFields = ['id', GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, 'status'];
 
 const getTogglableColumns = (columns: GridColDef[]) => {
   return columns
