@@ -128,7 +128,6 @@ type UseDateTimeRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateTimeRangePickerProps<TDate>,
 > = LocalizedComponent<
-  TDate,
   Omit<DefaultizedProps<Props, 'openTo' | 'ampm' | keyof BaseDateValidationProps<TDate>>, 'views'>
 > & {
   shouldRenderTimeInASingleColumn: boolean;

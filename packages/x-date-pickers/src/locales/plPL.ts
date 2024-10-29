@@ -9,7 +9,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'popołudnie',
 };
 
-const plPLPickers: Partial<PickersLocaleText<any>> = {
+const plPLPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Poprzedni miesiąc',
   nextMonth: 'Następny miesiąc',
@@ -43,8 +43,8 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Wybierz zakres dat',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Wybierz ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Wybierz ${timeViews[view]}. ${!formattedTime ? 'Nie wybrano czasu' : `Wybrany czas to ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} godzin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
@@ -59,14 +59,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    value != null && utils.isValid(value)
-      ? `Wybierz datę, obecnie wybrana data to ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Wybierz datę',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Wybierz czas, obecnie wybrany czas to ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Wybierz czas',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
   // fieldClearLabel: 'Clear',
 
   // Table labels
