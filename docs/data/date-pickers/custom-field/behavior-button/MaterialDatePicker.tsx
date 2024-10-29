@@ -1,21 +1,33 @@
 import * as React from 'react';
-
-import TextField from '@mui/material/TextField';
+import { Dayjs } from 'dayjs';
+import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import {
+  DatePicker,
+  DatePickerProps,
+  DatePickerFieldProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
-function ReadOnlyDateField(props) {
+function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
-  const { InputProps, slotProps, slots, ...other } = forwardedProps;
+  const {
+    InputProps,
+    slotProps,
+    slots,
+    ownerState,
+    label,
+    focused,
+    name,
+    ...other
+  } = forwardedProps;
 
   const pickersContext = usePickersContext();
 
@@ -27,7 +39,7 @@ function ReadOnlyDateField(props) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event) => {
+  const handleTogglePicker = (event: React.UIEvent) => {
     if (pickersContext.open) {
       pickersContext.onClose(event);
     } else {
@@ -35,33 +47,31 @@ function ReadOnlyDateField(props) {
     }
   };
 
+  const valueStr = value == null ? parsedFormat : value.format(format);
+
   return (
-    <TextField
+    <Button
       {...other}
-      value={value == null ? '' : value.format(format)}
-      placeholder={parsedFormat}
-      InputProps={{
-        ...InputProps,
-        readOnly: true,
-        endAdornment: <CalendarIcon color="action" />,
-        sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
-      }}
-      error={hasValidationError}
+      variant="outlined"
+      color={hasValidationError ? 'error' : 'primary'}
+      ref={InputProps?.ref}
       onClick={handleTogglePicker}
-    />
+    >
+      {label ? `${label}: ${valueStr}` : valueStr}
+    </Button>
   );
 }
 
-function ReadOnlyFieldDatePicker(props) {
+function ButtonFieldDatePicker(props: DatePickerProps<Dayjs>) {
   return (
-    <DatePicker {...props} slots={{ ...props.slots, field: ReadOnlyDateField }} />
+    <DatePicker {...props} slots={{ ...props.slots, field: ButtonDateField }} />
   );
 }
 
-export default function ReadOnlyMaterialTextField() {
+export default function MaterialDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ReadOnlyFieldDatePicker />
+      <ButtonFieldDatePicker />
     </LocalizationProvider>
   );
 }
