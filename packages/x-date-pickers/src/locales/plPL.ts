@@ -80,8 +80,8 @@ const plPLPickers: Partial<PickersLocaleText> = {
   // fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  rok: 'Rok',
-  miesiąc: 'Miesiąc',
+  year: 'Rok',
+  month: 'Miesiąc',
   day: 'Dzień',
   weekDay: 'Dzień tygodnia',
   hours: 'Godzin',
