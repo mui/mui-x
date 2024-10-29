@@ -5,6 +5,7 @@ export type {
   PickersLayoutSlotProps,
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
+  PickersLayoutOwnerState,
 } from './PickersLayout.types';
 
 export { default as usePickerLayout } from './usePickerLayout';

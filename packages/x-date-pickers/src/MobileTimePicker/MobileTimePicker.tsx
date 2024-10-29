@@ -10,7 +10,7 @@ import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimeP
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
@@ -71,7 +71,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
