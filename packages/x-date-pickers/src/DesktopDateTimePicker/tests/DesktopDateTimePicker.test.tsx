@@ -56,8 +56,9 @@ describe('<DesktopDateTimePicker />', () => {
       // Change the meridiem (same value)
       fireEvent.click(screen.getByRole('option', { name: 'AM' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
-      expect(onAccept.callCount).to.equal(0); // onAccept false by default
-      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Click on 'accept' action to close the picker
       fireEvent.click(screen.getByText(/ok/i));
@@ -104,8 +105,9 @@ describe('<DesktopDateTimePicker />', () => {
     // Change the meridiem
     fireEvent.click(screen.getByRole('option', { name: 'PM' }));
     expect(onChange.callCount).to.equal(8);
-    expect(onAccept.callCount).to.equal(0); // onAccept false by default
-    expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+    // closeOnSelect false by default
+    expect(onAccept.callCount).to.equal(0);
+    expect(onClose.callCount).to.equal(0);
 
     // Click on 'accept' action to close the picker
     fireEvent.click(screen.getByText(/ok/i));
