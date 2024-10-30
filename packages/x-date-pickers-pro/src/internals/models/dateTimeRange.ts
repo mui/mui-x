@@ -1,7 +1,7 @@
+import { MakeOptional } from '@mui/x-internals/helpers';
 import {
   BaseDateValidationProps,
   TimeValidationProps,
-  MakeOptional,
   UseFieldInternalProps,
   DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,

@@ -960,6 +960,9 @@ importers:
       '@babel/traverse':
         specifier: ^7.25.9
         version: 7.25.9
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
       jscodeshift:
         specifier: 17.0.0
         version: 17.0.0(@babel/preset-env@7.26.0(@babel/core@7.26.0))
