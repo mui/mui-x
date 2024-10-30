@@ -132,8 +132,8 @@ importers:
         specifier: ^11.0.4
         version: 11.0.4
       '@types/karma':
-        specifier: ^6.3.8
-        version: 6.3.8
+        specifier: ^6.3.9
+        version: 6.3.9
       '@types/lodash':
         specifier: ^4.17.12
         version: 4.17.12
@@ -1571,8 +1571,8 @@ importers:
         specifier: ^4.3.20
         version: 4.3.20
       '@types/karma':
-        specifier: ^6.3.8
-        version: 6.3.8
+        specifier: ^6.3.9
+        version: 6.3.9
       '@types/moment-jalaali':
         specifier: ^0.7.9
         version: 0.7.9
@@ -4101,8 +4101,8 @@ packages:
   '@types/jsonwebtoken@8.5.9':
     resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
 
-  '@types/karma@6.3.8':
-    resolution: {integrity: sha512-+QGoOPhb1f6Oli8pG+hxdnGDzVhIrpsHaFSJ4UJg15Xj+QBtluKELkJY+L4Li532HmT3l5K5o1FoUZHRQeOOaQ==}
+  '@types/karma@6.3.9':
+    resolution: {integrity: sha512-sjE/MHnoAZAQYAKRXAbjTOiBKyGGErEM725bruRcmDdMa2vp1bjWPhApI7/i564PTyHlzc3vIGXLL6TFIpAxFg==}
 
   '@types/lodash@4.17.12':
     resolution: {integrity: sha512-sviUmCE8AYdaF/KIHLDJBQgeYzPBI0vf/17NaYehBJfYD1j6/L95Slh07NlyK2iNyBNaEkb3En2jRt+a8y3xZQ==}
@@ -13024,7 +13024,7 @@ snapshots:
     dependencies:
       '@types/node': 20.16.14
 
-  '@types/karma@6.3.8':
+  '@types/karma@6.3.9':
     dependencies:
       '@types/node': 20.16.14
       log4js: 6.9.1
