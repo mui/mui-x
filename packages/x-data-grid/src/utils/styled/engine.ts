@@ -6,6 +6,7 @@ const UPPERCASE_LETTERS = /[A-Z]/g
 
 let element = undefined as HTMLStyleElement | undefined
 
+
 export function injectStyles(selector: string, styles: CSSObject) {
   if (typeof document === 'undefined') { return }
   const style = setup()
