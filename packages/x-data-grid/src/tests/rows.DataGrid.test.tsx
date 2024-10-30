@@ -750,7 +750,7 @@ describe('<DataGrid /> - Rows', () => {
             width={100}
           />,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
+        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(3);
       });
 
       it('should measure rows while scrolling', async () => {
