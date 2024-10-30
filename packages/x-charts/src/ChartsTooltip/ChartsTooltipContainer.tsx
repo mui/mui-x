@@ -177,20 +177,11 @@ ChartsTooltipContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Component to override the tooltip content when trigger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
-   */
-  axisContent: PropTypes.elementType,
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * Component to override the tooltip content when trigger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
-   */
-  itemContent: PropTypes.elementType,
   /**
    * The props used for each component slot.
    * @default {}

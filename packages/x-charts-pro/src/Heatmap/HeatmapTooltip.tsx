@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -17,7 +18,8 @@ import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel } from '@mui/x-charts/internals';
 import { useHeatmapSeries } from '../hooks/useSeries';
 
-export interface HeatmapTooltipProps extends Omit<ChartsTooltipContainerProps, 'trigger'> {}
+export interface HeatmapTooltipProps
+  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
 
 const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes'] }) => {
   const { classes } = ownerState;
@@ -36,16 +38,6 @@ const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes']
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
-
-export function HeatmapTooltip(props: HeatmapTooltipProps) {
-  const classes = useUtilityClasses({ classes: props.classes });
-
-  return (
-    <ChartsTooltipContainer {...props} classes={classes} trigger="item">
-      <DefaultHeatmapTooltipContent classes={classes} />
-    </ChartsTooltipContainer>
-  );
-}
 
 /**
  * @ignore - internal component.
@@ -110,4 +102,46 @@ function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'
   );
 }
 
-export { DefaultHeatmapTooltipContent };
+DefaultHeatmapTooltipContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+} as any;
+
+function HeatmapTooltip(props: HeatmapTooltipProps) {
+  const classes = useUtilityClasses({ classes: props.classes });
+
+  return (
+    <ChartsTooltipContainer {...props} classes={classes} trigger="item">
+      <DefaultHeatmapTooltipContent classes={classes} />
+    </ChartsTooltipContainer>
+  );
+}
+
+HeatmapTooltip.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { HeatmapTooltip };

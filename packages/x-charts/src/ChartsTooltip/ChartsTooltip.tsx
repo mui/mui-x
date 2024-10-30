@@ -5,9 +5,16 @@ import composeClasses from '@mui/utils/composeClasses';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { getChartsTooltipUtilityClass } from './chartsTooltipClasses';
-import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
+import {
+  ChartsTooltipContainer,
+  ChartsTooltipContainerProps,
+  ChartsTooltipContainerSlotProps,
+  ChartsTooltipContainerSlots,
+} from './ChartsTooltipContainer';
 
-export interface ChartsTooltipProps extends ChartsTooltipContainerProps {}
+export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipSlotProps extends ChartsTooltipContainerSlotProps {}
+export interface ChartsTooltipSlots extends ChartsTooltipContainerSlots {}
 
 const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
   const { classes } = ownerState;
@@ -56,19 +63,9 @@ ChartsTooltip.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Component to override the tooltip content when trigger is set to 'axis'.
-   * @deprecated Use slots.axisContent instead
-   */
-  axisContent: PropTypes.elementType,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * Component to override the tooltip content when trigger is set to 'item'.
-   * @deprecated Use slots.itemContent instead
-   */
-  itemContent: PropTypes.elementType,
   /**
    * The props used for each component slot.
    * @default {}
