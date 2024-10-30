@@ -45,8 +45,7 @@ function GridAggregationHeader(
     renderHeader: GridBaseColDef['renderHeader'];
   },
 ) {
-  const { renderHeader, ...params } = props;
-  const { colDef, aggregation } = params;
+  const { renderHeader, colDef, aggregation } = props;
   const { headerAlign } = colDef;
 
   const apiRef = useGridApiContext();
@@ -74,7 +73,7 @@ function GridAggregationHeader(
   return (
     <div className={headerClassName}>
       {renderHeader ? (
-        renderHeader(params)
+        renderHeader(props)
       ) : (
         <GridColumnHeaderTitle
           label={colDef.headerName ?? colDef.field}
