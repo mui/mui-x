@@ -28,7 +28,7 @@ export interface MobileDateRangePickerProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateRangePickerProps<TDate>,
-    MobileOnlyPickerProps,
+    Pick<MobileOnlyPickerProps, 'closeOnSelect'>,
     MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
