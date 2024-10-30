@@ -59,10 +59,14 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (formattedDate) =>
-    formattedDate ? `Wybierz datę, obecnie wybrana data to ${formattedDate}` : 'Wybierz datę',
-  openTimePickerDialogue: (formattedTime) =>
-    formattedTime ? `Wybierz czas, obecnie wybrany czas to ${formattedTime}` : 'Wybierz czas',
+  openDatePickerDialogue: (value, utils, formattedDate) =>
+    value != null && utils.isValid(value)
+      ? `Wybierz datę, obecnie wybrana data to ${formattedDate ?? utils.format(value, 'fullDate')}`
+      : 'Wybierz datę',
+  openTimePickerDialogue: (value, utils, formattedTime) =>
+    formattedTime || (value !== null && utils.isValid(value))
+      ? `Wybierz czas, obecnie wybrany czas to ${formattedTime ?? utils.format(value, 'fullTime')}`
+      : 'Wybierz czas',
   fieldClearLabel: 'Wyczyść',
 
   // Table labels
