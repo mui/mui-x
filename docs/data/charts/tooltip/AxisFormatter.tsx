@@ -44,7 +44,7 @@ const chartParams: BarChartProps = {
         }).format((v || 0) * 1_000_000),
     },
   ],
-  slotProps:{ legend: {hidden: true } },
+  slotProps: { legend: { hidden: true } },
   dataset,
   width: 600,
   height: 400,

@@ -71,7 +71,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               top: props.direction === 'row' ? 50 : 20,
               right: props.direction === 'row' ? 20 : 150,
             }}
-            slotProps={{ legend: {hidden: true } }}
+            slotProps={{ legend: { hidden: true } }}
           >
             <ChartsReferenceLine y={0} />
             <PiecewiseColorLegend

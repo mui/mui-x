@@ -44,7 +44,7 @@ export default function BasicColorLegend() {
         grid={{ horizontal: true }}
         height={300}
         margin={{ top: 30, right: 150 }}
-        slotProps={{ legend: {hidden: true } }}
+        slotProps={{ legend: { hidden: true } }}
       >
         <PiecewiseColorLegend
           axisDirection="x"
