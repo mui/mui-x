@@ -4,7 +4,7 @@ export type PickerOrientation = 'portrait' | 'landscape';
 
 export type PickerVariant = 'mobile' | 'desktop';
 
-export type ValueType = 'date' | 'time' | 'date-time' | null;
+export type ValueType = 'date' | 'time' | 'date-time';
 
 export type TimeViewWithMeridiem = TimeView | 'meridiem';
 
