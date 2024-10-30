@@ -22,13 +22,13 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 ```
 
-The Simple version is recommended for hardcoded items, while the Rich version is preferred for dynamically rendered items, larger trees, and more advanced features like editing and virtualization.
+The Simple version is recommended for hardcoded items, while the Rich version is preferred for dynamically rendered items, larger trees, and more complex use cases that require features like editing and virtualization.
 
 The demo below shows how to render a Simple Tree View—try clicking on an item to see how it expands and collapses:
 
 {{"demo": "TreeViewOverviewDemo.js", "defaultCodeOpen": true}}
 
-## Using this documentation
-
-Although the Simple and Rich Tree View share many of the same features, each version's implementation of those features differs enough that they warrant their own separate docs in most cases.
-Other features, such as accessibility, work the same in both versions and are documented in the Common features section of the navigation bar.
+:::info
+Currently, the Simple and Rich Tree View components share many of the same features.
+As this package continues to mature, more advanced features and functionality will be prioritized for the Rich Tree View.
+:::

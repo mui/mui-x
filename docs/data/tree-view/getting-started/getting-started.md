@@ -51,14 +51,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ## Render a Tree View
 
-:::info
-Currently, the Simple and Rich Tree View components share many of the same features.
-As this package continues to mature, more advanced features and functionality are more likely to land on the Rich Tree View.
-:::
-
 ### Simple Tree View
-
-
 
 The simple version of the Tree View component receives its items as JSX children.
 This is the recommended version for hardcoded items.
@@ -109,3 +102,8 @@ const theme = createTheme({
   },
 });
 ```
+
+## Using this documentation
+
+Although the Simple and Rich Tree View share many of the same features, each version's implementation of those features differs enough that they warrant their own separate docs in most cases.
+Other features, such as accessibility, work the same in both versions and are documented in the main features section of the navigation bar.
