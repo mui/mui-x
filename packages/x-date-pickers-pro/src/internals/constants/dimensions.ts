@@ -5,3 +5,4 @@ export { DAY_MARGIN } from '@mui/x-date-pickers/internals';
 export const DAY_RANGE_SIZE = 40;
 // adding the extra height of the range day element height difference (40px vs 36px)
 export const RANGE_VIEW_HEIGHT = VIEW_HEIGHT + 6 * 2 * DAY_MARGIN;
+export const DAY_CALENDAR_FOR_RANGE_WIDTH = 312;

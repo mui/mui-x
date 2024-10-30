@@ -101,7 +101,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
         dense
         sx={(theme) => ({
           display: 'flex',
-          maxWidth: '625px',
+          maxWidth: '625px', // DAY_CALENDAR_FOR_RANGE_WIDTH * 2 + 1 (margin)
           px: theme.spacing(4),
           '& .MuiListItem-root': {
             pt: 0,
