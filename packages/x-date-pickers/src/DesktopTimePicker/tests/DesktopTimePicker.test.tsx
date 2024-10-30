@@ -80,8 +80,9 @@ describe('<DesktopTimePicker />', () => {
       fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
-      expect(onAccept.callCount).to.equal(0); // onAccept false by default
-      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Click on 'accept' action to close the picker
       fireEvent.click(screen.getByText(/ok/i));
@@ -117,8 +118,9 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
-      expect(onAccept.callCount).to.equal(0); // onAccept false by default
-      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Click on 'accept' action to close the picker
       fireEvent.click(screen.getByText(/ok/i));
@@ -159,8 +161,9 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
-      expect(onAccept.callCount).to.equal(0); // onAccept false by default
-      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Click on 'accept' action to close the picker
       fireEvent.click(screen.getByText(/ok/i));
@@ -186,8 +189,9 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(0); // onAccept false by default
-      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
 
       // Click on 'accept' action to close the picker
       fireEvent.click(screen.getByText(/ok/i));
