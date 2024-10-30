@@ -22,7 +22,7 @@ export default function PieClickNoSnap() {
           series={series}
           width={400}
           height={300}
-          hideLegend
+          slotProps={{ legend: {hidden: true } }}
           onItemClick={(event, d) => setItemData(d)}
         />{' '}
       </Box>

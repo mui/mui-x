@@ -71,7 +71,7 @@ export default function MarginAndLabelPosition() {
           { dataKey: '2021', label: '2021' },
           { dataKey: '2022', label: '2022' },
         ]}
-        hideLegend
+        slotProps={{ legend: { hidden: true } }}
         yAxis={[
           {
             valueFormatter: (value) => `${(value / 1000).toLocaleString()}k`,

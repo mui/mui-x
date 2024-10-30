@@ -84,7 +84,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
               top: props.direction === 'row' ? 50 : 20,
               right: props.direction === 'row' ? 20 : 50,
             }}
-            hideLegend
+            slotProps={{ legend: {hidden: true } }}
           >
             <ChartsReferenceLine y={0} />
             <ContinuousColorLegend

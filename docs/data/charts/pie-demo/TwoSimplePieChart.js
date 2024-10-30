@@ -36,7 +36,7 @@ export default function TwoSimplePieChart() {
         },
       ]}
       height={300}
-      hideLegend
+      slotProps={{ legend: { hidden: true } }}
     />
   );
 }

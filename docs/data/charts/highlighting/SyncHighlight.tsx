@@ -38,7 +38,7 @@ const barChartsProps: BarChartProps = {
   ],
   xAxis: [{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }],
   height: 400,
-  hideLegend: true,
+  slotProps:{ legend: {hidden: true } }
 };
 
 const pieChartProps: PieChartProps = {
@@ -56,5 +56,5 @@ const pieChartProps: PieChartProps = {
     },
   ],
   height: 400,
-  hideLegend: true,
+  slotProps:{ legend: {hidden: true } },
 };

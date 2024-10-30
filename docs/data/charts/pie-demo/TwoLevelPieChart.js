@@ -39,7 +39,7 @@ export default function TwoLevelPieChart() {
       ]}
       width={400}
       height={300}
-      hideLegend
+      slotProps={{ legend: { hidden: true } }}
     />
   );
 }

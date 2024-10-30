@@ -14,7 +14,7 @@ const stackStrategy = {
 
 const customize = {
   height: 300,
-  hideLegend: true,
+  slotProps: { legend: { hidden: true } },
   margin: { top: 5 },
 };
 
