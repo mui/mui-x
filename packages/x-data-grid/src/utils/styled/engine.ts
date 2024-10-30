@@ -1,15 +1,19 @@
 import type { CSSObject } from '@mui/system';
+import unitLessProperties from './unitLessProperties';
 
 const SPECIAL_CHAR = /#|\.|\s|>|&/
-const BROWSER_PREFIX = /^(webkit|moz)/
 const UPPERCASE_LETTERS = /[A-Z]/g
 
 let element = undefined as HTMLStyleElement | undefined
 
 export function injectStyles(selector: string, styles: CSSObject) {
   if (typeof document === 'undefined') { return }
-  const element = setup()
-  element.innerHTML += stylesToString(selector, styles)
+  const style = setup()
+  if (process.env.NODE_ENV === 'development') {
+    style.innerHTML += stylesToString(selector, styles) + '\n';
+  } else {
+    style.sheet?.insertRule(stylesToString(selector, styles));
+  }
 }
 
 function stylesToString(selector: string, styles: CSSObject, parents: string[] = []) {
@@ -21,16 +25,14 @@ function stylesToString(selector: string, styles: CSSObject, parents: string[] =
     if (isSubStyles) {
       output += stylesToString(key, styles[key] as any, parents.concat(selector))
     } else {
-      const cssKey =
-        key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase)
-           .replace(BROWSER_PREFIX, '-$1')
+      const cssKey = key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase)
       const cssValue = transformValue(cssKey, styles[key])
 
       output += cssKey + ':' + cssValue + ';'
     }
   }
 
-  output += ' }\n'
+  output += ' } '
 
   return output
 }
@@ -38,29 +40,6 @@ function stylesToString(selector: string, styles: CSSObject, parents: string[] =
 function uppercaseToDashLowercase(char: string) {
   return '-' + char.toLowerCase()
 }
-
-/** CSS properties that accept numbers without units */
-const unitLessProperties = new Set([
-  'animation-iteration-count',
-  'border-image-slice',
-  'border-image-width',
-  'column-count',
-  'counter-increment',
-  'counter-reset',
-  'flex',
-  'flex-grow',
-  'flex-shrink',
-  'font-size-adjust',
-  'font-weight',
-  'line-height',
-  'nav-index',
-  'opacity',
-  'order',
-  'orphans',
-  'tab-size',
-  'widows',
-  'z-index',
-])
 
 function transformSelector(selector: string, parents: string[]) {
   if (selector.includes('&')) {
