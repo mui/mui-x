@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/helpers';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -18,7 +19,6 @@ import {
 } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
 import {
   ExportedYearCalendarProps,
   YearCalendarSlots,

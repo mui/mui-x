@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/helpers';
 import type { StackOffsetType } from '../stacking';
 import {
   CartesianSeriesType,

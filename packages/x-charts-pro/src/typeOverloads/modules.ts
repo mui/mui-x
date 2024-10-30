@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-charts/internals';
+import { DefaultizedProps } from '@mui/x-internals/helpers';
 import {
   HeatmapItemIdentifier,
   HeatmapSeriesType,
