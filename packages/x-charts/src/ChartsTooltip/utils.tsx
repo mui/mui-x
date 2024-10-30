@@ -10,61 +10,6 @@ type MousePosition = {
   height: number;
 };
 
-export type VirtualElement = {
-  getBoundingClientRect: () => {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-    toJSON: () => string;
-  };
-};
-/**
- * Generate a virtual element for the tooltip.
- * Default to (0, 0) is the argument is not provided, or null.
- * @param mousePosition { x: number, y: number}
- */
-export function generateVirtualElement(
-  mousePosition?: Pick<MousePosition, 'x' | 'y'> | null,
-): VirtualElement {
-  if (!mousePosition) {
-    return {
-      getBoundingClientRect: () => ({
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        toJSON: () => '',
-      }),
-    };
-  }
-  const { x, y } = mousePosition;
-  const boundingBox = {
-    width: 0,
-    height: 0,
-    x,
-    y,
-    top: y,
-    right: x,
-    bottom: y,
-    left: x,
-  };
-  return {
-    getBoundingClientRect: () => ({
-      ...boundingBox,
-      toJSON: () => JSON.stringify(boundingBox),
-    }),
-  };
-}
-
 export type UseMouseTrackerReturnValue = null | MousePosition;
 
 /**

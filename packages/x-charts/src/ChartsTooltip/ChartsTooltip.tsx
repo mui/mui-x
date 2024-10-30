@@ -2,13 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useStore } from '../context/InteractionProvider';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { generateVirtualElement, TriggerOptions, usePointerType, VirtualElement } from './utils';
+import { TriggerOptions, usePointerType } from './utils';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
@@ -114,16 +115,10 @@ function ChartsTooltip(inProps: ChartsTooltipProps) {
 
   const xAxisHasData = xAxis.data !== undefined && xAxis.data.length !== 0;
 
-  const positionRef = React.useRef({ x: 0, y: 0 });
-
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
+  const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const virtualElement = React.useRef<VirtualElement | null>(null);
-  if (virtualElement.current === null) {
-    virtualElement.current = generateVirtualElement(null);
-  }
   const store = useStore();
-
   const isOpen = useSelector(
     store,
     // eslint-disable-next-line no-nested-ternary
@@ -147,7 +142,19 @@ function ChartsTooltip(inProps: ChartsTooltipProps) {
       open: popperOpen,
       placement: pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
       popperRef,
-      anchorEl: virtualElement.current,
+      anchorEl: {
+        getBoundingClientRect: () => ({
+          x: positionRef.current.x,
+          y: positionRef.current.y,
+          top: positionRef.current.y,
+          left: positionRef.current.x,
+          right: positionRef.current.x,
+          bottom: positionRef.current.y,
+          width: 0,
+          height: 0,
+          toJSON: () => '',
+        }),
+      },
       modifiers: [
         {
           name: 'offset',
@@ -175,7 +182,7 @@ function ChartsTooltip(inProps: ChartsTooltipProps) {
     return () => {
       element.removeEventListener('pointermove', handleMove);
     };
-  }, [svgRef]);
+  }, [svgRef, positionRef]);
 
   if (trigger === 'none') {
     return null;
