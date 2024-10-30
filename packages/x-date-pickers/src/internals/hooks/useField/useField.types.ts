@@ -6,7 +6,6 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
   PickerValidDate,
   FieldRef,
   OnErrorProps,
@@ -18,6 +17,7 @@ import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
+import { ValueType } from '../../models/common';
 
 export interface UseFieldParams<
   TValue,
@@ -39,7 +39,7 @@ export interface UseFieldParams<
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   validator: Validator<TValue, TDate, InferError<TInternalProps>, TInternalProps>;
-  valueType: FieldValueType;
+  valueType: ValueType;
 }
 
 export interface UseFieldInternalProps<

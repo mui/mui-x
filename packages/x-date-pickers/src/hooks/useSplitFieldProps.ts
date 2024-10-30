@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { FieldValueType } from '../models';
+import { ValueType } from '../internals/models';
 import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
@@ -26,7 +26,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'dateSeparator',
 ] as const;
 
-type InternalPropNames<TValueType extends FieldValueType> =
+type InternalPropNames<TValueType extends ValueType> =
   | (typeof SHARED_FIELD_INTERNAL_PROP_NAMES)[number]
   | (TValueType extends 'date' | 'date-time' ? (typeof DATE_VALIDATION_PROP_NAMES)[number] : never)
   | (TValueType extends 'time' | 'date-time' ? (typeof TIME_VALIDATION_PROP_NAMES)[number] : never)
@@ -43,7 +43,7 @@ type InternalPropNames<TValueType extends FieldValueType> =
  * @param {TValueType} valueType The type of the field value ('date', 'time', or 'date-time').
  */
 export const useSplitFieldProps = <
-  TValueType extends FieldValueType,
+  TValueType extends ValueType,
   TProps extends { [key in InternalPropNames<TValueType>]?: any },
 >(
   props: TProps,
