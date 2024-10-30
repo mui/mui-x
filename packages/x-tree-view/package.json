@@ -43,7 +43,7 @@
     "directory": "packages/x-tree-view"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.7",
+    "@babel/runtime": "^7.26.0",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "^4.4.11",
