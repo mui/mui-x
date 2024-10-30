@@ -1,19 +1,17 @@
 import {
-  BaseDateValidationProps,
-  TimeValidationProps,
   MakeOptional,
   UseFieldInternalProps,
-  DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
+  AmPmProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { DayRangeValidationProps } from './dateRange';
 import {
   DateTimeRangeValidationError,
   RangeFieldSection,
   DateRange,
   RangeFieldSeparatorProps,
 } from '../../models';
+import { ExportedValidateDateTimeRangeProps } from '../../validation/validateDateTimeRange';
 
 export interface UseDateTimeRangeFieldProps<
   TDate extends PickerValidDate,
@@ -32,16 +30,8 @@ export interface UseDateTimeRangeFieldProps<
       'format'
     >,
     RangeFieldSeparatorProps,
-    DayRangeValidationProps<TDate>,
-    TimeValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    DateTimeValidationProps<TDate> {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateDateTimeRangeProps<TDate>,
+    AmPmProps {}
 
 export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
 
