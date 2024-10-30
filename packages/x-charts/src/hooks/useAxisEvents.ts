@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '../context/InteractionProvider';
+import { ChartsContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
@@ -16,7 +16,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
 
-  const store = useStore();
+  const store = React.useContext(ChartsContext)?.store;
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -30,7 +30,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || disableAxisListener) {
+    if (element === null || disableAxisListener || !store) {
       return () => {};
     }
 
