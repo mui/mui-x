@@ -17,9 +17,10 @@ function ErrorAlert({ onClick }: { onClick: () => void }) {
     <Alert
       sx={{
         position: 'absolute',
-        bottom: '20%',
-        left: '20%',
-        width: '60%',
+        bottom: '0',
+        paddingX: 2,
+        paddingY: 1,
+        width: '100%',
         zIndex: 10,
       }}
       severity="error"
