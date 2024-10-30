@@ -13,6 +13,10 @@ const reselectCreateSelector = createSelectorCreator({
   },
 });
 
+type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
+  selectorArgs?: any;
+};
+
 // TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
   (apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>): Result;
@@ -323,12 +327,28 @@ export const createSelectorMemoizedV8: CreateSelectorFunctionV8 = (...args: any)
     const cacheFn = cacheArgs?.get(args);
 
     if (cacheArgs && cacheFn) {
+      if (cacheFn.selectorArgs !== selectorArgs) {
+        const reselectArgs =
+          selectorArgs !== undefined
+            ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]
+            : args;
+        const fn: GridCreateSelectorFunction = reselectCreateSelector(...reselectArgs);
+        fn.selectorArgs = selectorArgs;
+        cacheArgs.set(args, fn);
+        return fn(state, selectorArgs, cacheKey);
+      }
       // We pass the cache key because the called selector might have as
       // dependency another selector created with this `createSelector`.
       return cacheFn(state, selectorArgs, cacheKey);
     }
 
-    const fn = reselectCreateSelector(...args);
+    const reselectArgs =
+      selectorArgs !== undefined
+        ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]
+        : args;
+
+    const fn: GridCreateSelectorFunction = reselectCreateSelector(...reselectArgs);
+    fn.selectorArgs = selectorArgs;
 
     if (!cacheArgsInit) {
       cache.set(cacheKey, cacheArgs);
