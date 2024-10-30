@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { randomTraderName, randomEmail } from '@mui/x-data-grid-generator';
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 160 },
@@ -10,13 +11,13 @@ const columns = [
 const rows = [
   {
     id: 1,
-    name: 'Test User',
-    email: 'testuser@mui.com',
-    age: 40,
+    name: randomTraderName(),
+    email: randomEmail(),
+    age: 25,
   },
 ];
 
-export default function BasicColumnPinning() {
+export default function DataGridPinnedColumnsBordered() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
