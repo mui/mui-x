@@ -48,5 +48,5 @@ export interface DesktopDateRangePickerProps<
    * If `true`, the popover or modal will close after submitting the full date.
    * @default true
    */
-  closeOnSelect?: UsePickerValueNonStaticProps['closeOnSelect'];
+  closeOnSelect?: boolean;
 }
