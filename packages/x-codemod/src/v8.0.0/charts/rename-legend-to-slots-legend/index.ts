@@ -27,15 +27,17 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             (elementNode) =>
               elementNode.type === 'JSXAttribute' && elementNode.name.name === 'legend',
           );
-          const slotProps = elementPath.node.openingElement.attributes?.find(
-            (elementNode) =>
-              elementNode.type === 'JSXAttribute' && elementNode.name.name === 'slotProps',
-          );
 
           if (!legendProps) {
             // No legend props to manage
             return;
           }
+
+          const slotProps = elementPath.node.openingElement.attributes?.find(
+            (elementNode) =>
+              elementNode.type === 'JSXAttribute' && elementNode.name.name === 'slotProps',
+          );
+
           if (slotProps === null) {
             // We create a new slotProps object
             elementPath.node.openingElement.attributes?.push(
