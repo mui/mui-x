@@ -104,21 +104,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
-    pathname: '/x/api/charts/default-charts-axis-tooltip-content',
-    title: 'DefaultChartsAxisTooltipContent',
-  },
-  {
-    pathname: '/x/api/charts/default-charts-item-tooltip-content',
-    title: 'DefaultChartsItemTooltipContent',
-  },
-  {
     pathname: '/x/api/charts/default-charts-legend',
     title: 'DefaultChartsLegend',
-  },
-  {
-    pathname: '/x/api/charts/default-heatmap-tooltip',
-    title: 'DefaultHeatmapTooltip',
-    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/gauge',

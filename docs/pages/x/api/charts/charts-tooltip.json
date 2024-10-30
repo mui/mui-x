@@ -1,16 +1,6 @@
 {
   "props": {
-    "axisContent": {
-      "type": { "name": "elementType" },
-      "deprecated": true,
-      "deprecationInfo": "Use slots.axisContent instead"
-    },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "itemContent": {
-      "type": { "name": "elementType" },
-      "deprecated": true,
-      "deprecationInfo": "Use slots.itemContent instead"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -32,18 +22,6 @@
     "import { ChartsTooltip } from '@mui/x-charts-pro';"
   ],
   "slots": [
-    {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
-      "class": null
-    },
     {
       "name": "popper",
       "description": "Custom component for the tooltip popper.",
