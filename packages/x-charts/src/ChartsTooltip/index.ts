@@ -1,4 +1,5 @@
 export * from './ChartsTooltip';
+export * from './ChartsTooltipContainer';
 export * from './chartsTooltipClasses';
 
 export * from './ChartsAxisTooltipContent';

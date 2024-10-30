@@ -6,10 +6,9 @@ import useId from '@mui/utils/useId';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
-  ChartsTooltip,
+  ChartsTooltipContainerSlotProps,
+  ChartsTooltipContainerSlots,
   ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
 import {
   MakeOptional,
@@ -37,17 +36,17 @@ import {
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
-import { DefaultHeatmapTooltipContent } from './DefaultHeatmapTooltip';
+import { HeatmapTooltip } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
 export interface HeatmapSlots
   extends ChartsAxisSlots,
-    Omit<ChartsTooltipSlots, 'axisContent'>,
+    ChartsTooltipContainerSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots {}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    Omit<ChartsTooltipSlotProps, 'axisContent'>,
+    ChartsTooltipContainerSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps {}
 
@@ -119,7 +118,6 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
     colors,
     dataset,
     sx,
-    tooltip,
     topAxis,
     leftAxis,
     rightAxis,
@@ -195,11 +193,7 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
         slots={slots}
         slotProps={slotProps}
       />
-      {!loading && (
-        <ChartsTooltip trigger="item" {...tooltip} slots={slots} slotProps={slotProps}>
-          <DefaultHeatmapTooltipContent />
-        </ChartsTooltip>
-      )}
+      {!loading && <HeatmapTooltip slots={slots} slotProps={slotProps} />}
 
       <ChartsClipPath id={clipPathId} />
       {children}
