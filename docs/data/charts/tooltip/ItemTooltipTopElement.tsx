@@ -5,7 +5,6 @@ import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { CustomItemTooltipContent } from './CustomItemTooltipContent';
-import { generateVirtualElement } from './generateVirtualElement';
 
 type PointerState = {
   isActive: boolean;
@@ -110,7 +109,19 @@ export function ItemTooltipTopElement() {
         }}
         open
         placement="top"
-        anchorEl={generateVirtualElement(tooltipPosition)}
+        anchorEl={{
+          getBoundingClientRect: () => ({
+            x: tooltipPosition.x,
+            y: tooltipPosition.y,
+            top: tooltipPosition.y,
+            left: tooltipPosition.x,
+            right: tooltipPosition.x,
+            bottom: tooltipPosition.y,
+            width: 0,
+            height: 0,
+            toJSON: () => '',
+          }),
+        }}
       >
         <CustomItemTooltipContent {...tooltipData} />
       </Popper>
