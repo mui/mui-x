@@ -17,7 +17,12 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -86,9 +91,11 @@ export interface PieChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * If `true`, the legend is not rendered.
+   * The props of the legend.
+   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
+   * @deprecated Consider using `slotProps.legend` instead.
    */
-  hideLegend?: boolean;
+  legend?: ChartsLegendProps;
   /**
    * Callback fired when a pie arc is clicked.
    */
@@ -132,7 +139,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    hideLegend,
+    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -150,6 +157,11 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const isRtl = useRtl();
 
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const legend: ChartsLegendProps = {
+    direction: 'column',
+    position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
+    ...legendProps,
+  };
 
   return (
     <ResponsiveChartContainer
@@ -191,14 +203,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       />
       <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      {!hideLegend && (
-        <ChartsLegend
-          direction="column"
-          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
-          slots={slots}
-          slotProps={slotProps}
-        />
-      )}
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}

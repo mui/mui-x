@@ -41,7 +41,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     onMarkClick,
     axisHighlight,
     disableLineItemHighlight,
-    hideLegend,
+    legend,
     grid,
     topAxis,
     leftAxis,
@@ -160,6 +160,7 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
+    ...legend,
     slots,
     slotProps,
   };

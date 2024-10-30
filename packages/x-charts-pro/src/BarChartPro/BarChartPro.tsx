@@ -110,7 +110,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(inProps: BarChartProPr
         <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      <ChartsLegend {...legendProps} />
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />

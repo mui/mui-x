@@ -28,7 +28,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
-    hideLegend,
+    legend,
     width,
     height,
     margin,
@@ -98,6 +98,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
+    ...legend,
     slots,
     slotProps,
   };

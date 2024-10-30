@@ -21,7 +21,12 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
+} from '../ChartsLegend';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -84,9 +89,9 @@ export interface ScatterChartProps
    */
   disableVoronoi?: boolean;
   /**
-   * If `true`, the legend is not rendered.
+   * @deprecated Consider using `slotProps.legend` instead.
    */
-  hideLegend?: boolean;
+  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -141,7 +146,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
           <ScatterPlot {...scatterPlotProps} />
         </g>
         <ChartsOverlay {...overlayProps} />
-        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsLegend {...legendProps} />
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
