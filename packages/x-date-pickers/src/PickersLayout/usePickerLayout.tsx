@@ -55,6 +55,7 @@ const usePickerLayout = <
 
   const {
     wrapperVariant,
+    valueType,
     onAccept,
     onClear,
     onCancel,
@@ -86,6 +87,9 @@ const usePickerLayout = <
   };
   const classes = useUtilityClasses(classesProp, ownerState);
 
+  const actionBarActions: PickersActionBarAction[] =
+    valueType.includes('time') || wrapperVariant === 'mobile' ? ['cancel', 'accept'] : [];
+
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
@@ -96,8 +100,7 @@ const usePickerLayout = <
       onClear,
       onCancel,
       onSetToday,
-      actions:
-        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: actionBarActions,
     },
     className: classes.actionBar,
     ownerState,

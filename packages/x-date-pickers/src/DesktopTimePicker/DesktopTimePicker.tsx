@@ -16,7 +16,6 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
-import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
@@ -77,7 +76,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = ['cancel', 'accept'];
 
   // Need to avoid adding the `meridiem` view when unexpected renderer is specified
   const shouldHoursRendererContainMeridiemView =
@@ -112,10 +110,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
         hidden: true,
         ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
-      },
-      actionBar: {
-        actions: actionBarActions,
-        ...defaultizedProps.slotProps?.actionBar,
       },
     },
   };
