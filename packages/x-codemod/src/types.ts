@@ -1,7 +1,5 @@
 import type { FileInfo, API } from 'jscodeshift';
-import { MakeOptional } from '@mui/x-internals/helpers';
-
-type MakeRequired<Type, Key extends keyof Type> = Pick<Type, Key> & Partial<Omit<Type, Key>>;
+import { MakeOptional, MakeRequired } from '@mui/x-internals/helpers';
 
 export type JsCodeShiftFileInfo = MakeOptional<FileInfo, 'path'>;
 
