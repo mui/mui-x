@@ -52,11 +52,9 @@ function transformValue(cssKey: string, value: any) {
   if (typeof value !== 'number') {
     return value
   }
-
   if (unitLessProperties.has(cssKey)) {
     return String(value)
   }
-
   return String(value) + 'px'
 }
 
