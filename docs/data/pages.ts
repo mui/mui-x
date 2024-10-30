@@ -115,7 +115,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
             plan: 'pro',
-            newFeature: true,
           },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
