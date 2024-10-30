@@ -17,12 +17,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -91,12 +86,6 @@ export interface PieChartProps
    */
   axisHighlight?: ChartsAxisHighlightProps;
   /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
-  /**
    * Callback fired when a pie arc is clicked.
    */
   onItemClick?: PiePlotProps['onItemClick'];
@@ -139,7 +128,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -157,11 +145,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const isRtl = useRtl();
 
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
-  const legend: ChartsLegendProps = {
-    direction: 'column',
-    position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
-    ...legendProps,
-  };
 
   return (
     <ResponsiveChartContainer
@@ -203,7 +186,12 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       />
       <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
+      <ChartsLegend
+        direction="column"
+        position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
+        slots={slots}
+        slotProps={slotProps}
+      />
       <ChartsAxisHighlight {...axisHighlight} />
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}
@@ -253,10 +241,6 @@ PieChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
-  /**
-   * If `true`, the legend is not rendered.
-   */
-  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */

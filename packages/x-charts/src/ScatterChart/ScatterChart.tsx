@@ -21,12 +21,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -88,10 +83,6 @@ export interface ScatterChartProps
    * @default false
    */
   disableVoronoi?: boolean;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -209,10 +200,6 @@ ScatterChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
-  /**
-   * If `true`, the legend is not rendered.
-   */
-  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */

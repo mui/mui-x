@@ -16,12 +16,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
@@ -79,10 +74,6 @@ export interface BarChartProps
    *
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -208,10 +199,6 @@ BarChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
-  /**
-   * If `true`, the legend is not rendered.
-   */
-  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
