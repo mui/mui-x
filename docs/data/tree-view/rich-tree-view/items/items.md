@@ -179,7 +179,7 @@ const item = apiRef.current.getItem(
 
 ### Get an item's DOM element by ID
 
-Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
 
 ```ts
 const itemElement = apiRef.current.getItemDOMElement(

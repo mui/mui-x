@@ -18,6 +18,7 @@ import {
   FieldRef,
   BaseSingleInputFieldProps,
   InferError,
+  PickerOwnerState,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { PickersProvider } from '../../components/PickersProvider';
@@ -76,15 +77,16 @@ export const useDesktopPicker = <
     actions,
     hasUIView,
     layoutProps,
+    providerProps,
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-    contextValue,
     ownerState,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
+    localeText,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
@@ -97,7 +99,7 @@ export const useDesktopPicker = <
     additionalProps: {
       position: 'end' as const,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const OpenPickerButton = slots.openPickerButton ?? IconButton;
@@ -110,7 +112,7 @@ export const useDesktopPicker = <
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
       edge: inputAdornmentProps.position,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const OpenPickerIcon = slots.openPickerIcon;
@@ -133,7 +135,7 @@ export const useDesktopPicker = <
         InferError<TExternalProps>
       >
     >,
-    TExternalProps
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
@@ -156,7 +158,7 @@ export const useDesktopPicker = <
       focused: open ? true : undefined,
       ...(inputRef ? { inputRef } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
@@ -208,7 +210,7 @@ export const useDesktopPicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <PickersProvider contextValue={contextValue} localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}

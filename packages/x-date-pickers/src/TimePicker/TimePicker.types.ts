@@ -4,7 +4,7 @@ import {
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { MakeRequired } from '../internals/models/helpers';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileTimePickerProps,
@@ -62,8 +62,8 @@ export interface TimePickerProps<
 export type TimePickerFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = DefaultizedProps<
+> = MakeRequired<
   UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
+  'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
 > &
   BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;
