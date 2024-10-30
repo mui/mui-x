@@ -82,24 +82,5 @@ createTheme({
         },
       },
     },
-    MuiTreeItem2: {
-      defaultProps: {
-        itemId: '1',
-        // @ts-expect-error invalid MuiTreeItem2 prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${treeItemClasses.content}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiTreeItem2 class key
-        main: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
   },
 });

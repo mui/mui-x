@@ -9,8 +9,13 @@ import {
   BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
-import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, PickerValidDate } from '../../../models';
+import { UsePickerParams } from '../usePicker';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  PickerOwnerState,
+  PickerValidDate,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -66,10 +71,6 @@ export interface UseDesktopPickerSlotProps<
 > extends ExportedUseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
-export interface UseDesktopPickerOwnerState {
-  open: boolean;
-}
-
 export interface ExportedUseDesktopPickerSlotProps<
   TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -86,16 +87,12 @@ export interface ExportedUseDesktopPickerSlotProps<
       unknown
     >,
     {},
-    UsePickerProps<TDate | null, TDate, any, any, any, any>
+    PickerOwnerState
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: SlotComponentProps<
-    typeof IconButton,
-    {},
-    UseDesktopPickerProps<TDate, any, TEnableAccessibleFieldDOMStructure, any, any>
-  >;
-  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, UseDesktopPickerOwnerState>;
+  inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
+  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
 export interface DesktopOnlyPickerProps

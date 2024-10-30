@@ -164,7 +164,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
 
   return (
     <PickersYearRoot
-      data-mui-test="year"
+      data-testid="year"
       className={clsx(classes.root, className)}
       ownerState={props}
       {...other}

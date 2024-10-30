@@ -14,14 +14,8 @@ export default function MaterialV7FieldWrapped() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'DatePicker']}>
-        <DateField
-          enableAccessibleFieldDOMStructure
-          slots={{ textField: MyPickersTextField }}
-        />
-        <DatePicker
-          enableAccessibleFieldDOMStructure
-          slots={{ textField: MyPickersTextField }}
-        />
+        <DateField slots={{ textField: MyPickersTextField }} />
+        <DatePicker slots={{ textField: MyPickersTextField }} />
       </DemoContainer>
     </LocalizationProvider>
   );

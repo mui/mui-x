@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
-import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersProvider } from '../../components/PickersProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { FieldSection, PickerValidDate } from '../../../models';
@@ -33,7 +33,7 @@ export const useStaticPicker = <
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, renderCurrentView } = usePicker<
+  const { layoutProps, providerProps, renderCurrentView } = usePicker<
     TDate | null,
     TDate,
     TView,
@@ -45,6 +45,7 @@ export const useStaticPicker = <
     props,
     autoFocusView: autoFocus ?? false,
     fieldRef: undefined,
+    localeText,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });
@@ -52,7 +53,7 @@ export const useStaticPicker = <
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}
@@ -69,7 +70,7 @@ export const useStaticPicker = <
       >
         {renderCurrentView()}
       </Layout>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return { renderPicker };

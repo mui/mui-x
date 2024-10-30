@@ -4,6 +4,7 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
+export { PickersProvider } from './components/PickersProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,
@@ -103,7 +104,12 @@ export type {
 export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
+export type {
+  DefaultizedProps,
+  MakeOptional,
+  MakeRequired,
+  SlotComponentPropsFromProps,
+} from './models/helpers';
 export type {
   WrapperVariant,
   TimeViewWithMeridiem,

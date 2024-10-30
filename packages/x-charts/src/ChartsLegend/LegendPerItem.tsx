@@ -206,7 +206,7 @@ export function LegendPerItem(props: LegendPerItemProps) {
             markGap={markGap}
             labelStyle={labelStyle}
             classes={classes}
-            onClick={onItemClick ? (e) => onItemClick(e, i) : undefined}
+            onClick={onItemClick ? (event) => onItemClick(event, i) : undefined}
           />
         ))}
       </ChartsLegendRoot>

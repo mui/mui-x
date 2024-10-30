@@ -18,7 +18,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
 
   describe('value selection', () => {
     it('should allow to select range within the same day', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure />);
+      render(<DesktopDateTimeRangePicker />);
 
       openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -43,7 +43,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
 
   describe('disabled dates', () => {
     it('should respect the "disablePast" prop', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure disablePast open />);
+      render(<DesktopDateTimeRangePicker disablePast open />);
 
       expect(screen.getByRole('gridcell', { name: '8' })).to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
@@ -68,7 +68,6 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should respect the "disablePast" prop combined with "referenceDate"', () => {
       render(
         <DesktopDateTimeRangePicker
-          enableAccessibleFieldDOMStructure
           disablePast
           open
           referenceDate={adapterToUse.date('2018-01-11')}
@@ -93,7 +92,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     });
 
     it('should respect the "disableFuture" prop', () => {
-      render(<DesktopDateTimeRangePicker enableAccessibleFieldDOMStructure disableFuture open />);
+      render(<DesktopDateTimeRangePicker disableFuture open />);
 
       expect(screen.getByRole('gridcell', { name: '9' })).not.to.have.attribute('disabled');
       expect(screen.getByRole('gridcell', { name: '10' })).not.to.have.attribute('disabled');
@@ -113,7 +112,6 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should respect the "disableFuture" prop combined with "referenceDate"', () => {
       render(
         <DesktopDateTimeRangePicker
-          enableAccessibleFieldDOMStructure
           disableFuture
           open
           referenceDate={adapterToUse.date('2018-01-09')}
@@ -136,7 +134,6 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should respect the "minDateTime" prop', () => {
       render(
         <DesktopDateTimeRangePicker
-          enableAccessibleFieldDOMStructure
           minDateTime={adapterToUse.date('2018-01-10T10:16:00')}
           referenceDate={adapterToUse.date('2018-01-10T10:00:00')}
           open
@@ -168,7 +165,6 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should respect the "maxDateTime" prop', () => {
       render(
         <DesktopDateTimeRangePicker
-          enableAccessibleFieldDOMStructure
           maxDateTime={adapterToUse.date('2018-01-10T10:16:00')}
           referenceDate={adapterToUse.date('2018-01-10T10:00:00')}
           open

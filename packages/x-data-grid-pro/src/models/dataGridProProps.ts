@@ -7,6 +7,7 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridFeatureMode,
+  GridListColDef,
 } from '@mui/x-data-grid';
 import type {
   GridExperimentalFeatures,
@@ -57,7 +58,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 }
 
 /**
- * The props of the `DataGridPro` component after the pre-processing phase.
+ * The props of the Data Grid Pro component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue<R>,
@@ -67,7 +68,7 @@ export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
 export type DataGridProForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPro` options with a default value overridable through props
+ * The Data Grid Pro options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
@@ -137,6 +138,11 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: boolean;
 }
 
 interface DataGridProDataSourceProps {
@@ -245,4 +251,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridProSlotProps;
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn?: GridListColDef<R>;
 }

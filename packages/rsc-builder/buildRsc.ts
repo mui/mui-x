@@ -14,7 +14,7 @@ type Project = {
   ignorePaths?: string[];
 };
 
-// The data grid packages are not using this script.
+// The Data Grid packages are not using this script.
 // Instead, they are manually adding the "use client" directive in the entry point of each package.
 const PROJECTS: Project[] = [
   {

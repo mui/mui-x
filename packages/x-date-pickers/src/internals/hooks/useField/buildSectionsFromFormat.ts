@@ -1,4 +1,4 @@
-import { FieldSection, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../../models';
+import { FieldSection, MuiPickersAdapter, PickerValidDate } from '../../../models';
 import { PickersLocaleText } from '../../../locales';
 import {
   applyLocalizedDigits,
@@ -13,9 +13,8 @@ interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
   format: string;
   formatDensity: 'dense' | 'spacious';
   isRtl: boolean;
-  timezone: PickersTimezone;
   shouldRespectLeadingZeros: boolean;
-  localeText: PickersLocaleText<TDate>;
+  localeText: PickersLocaleText;
   localizedDigits: string[];
   date: TDate | null;
   enableAccessibleFieldDOMStructure: boolean;
@@ -64,15 +63,14 @@ const getEscapedPartsFromFormat = <TDate extends PickerValidDate>({
 
 const getSectionPlaceholder = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
-  localeText: PickersLocaleText<TDate>,
+  localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   sectionFormat: string,
 ) => {
   switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
-        digitAmount: utils.formatByString(utils.date(undefined, timezone), sectionFormat).length,
+        digitAmount: utils.formatByString(utils.date(undefined, 'default'), sectionFormat).length,
         format: sectionFormat,
       });
     }
@@ -119,7 +117,6 @@ const getSectionPlaceholder = <TDate extends PickerValidDate>(
 
 const createSection = <TDate extends PickerValidDate>({
   utils,
-  timezone,
   date,
   shouldRespectLeadingZeros,
   localeText,
@@ -140,7 +137,6 @@ const createSection = <TDate extends PickerValidDate>({
 
   const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
     utils,
-    timezone,
     sectionConfig.contentType,
     sectionConfig.type,
     token,
@@ -181,7 +177,7 @@ const createSection = <TDate extends PickerValidDate>({
     format: token,
     maxLength,
     value: sectionValue,
-    placeholder: getSectionPlaceholder(utils, timezone, localeText, sectionConfig, token),
+    placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
     hasLeadingZerosInFormat,
     hasLeadingZerosInInput,
     startSeparator,

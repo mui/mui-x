@@ -13,7 +13,7 @@ import {
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDateTime } from '../validation';
-import { DateOrTimeView, PickerValidDate } from '../models';
+import { DateOrTimeView, PickerOwnerState, PickerValidDate } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
@@ -22,7 +22,7 @@ import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalizat
 
 type MobileDateTimePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: MobileDateTimePickerProps<TDate, DateOrTimeView, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -40,7 +40,7 @@ type MobileDateTimePickerComponent = (<
  */
 const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   inProps: MobileDateTimePickerProps<TDate, DateOrTimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
@@ -78,7 +78,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -191,7 +191,7 @@ MobileDateTimePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -359,7 +359,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**

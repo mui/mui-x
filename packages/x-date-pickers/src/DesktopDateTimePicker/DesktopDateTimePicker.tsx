@@ -24,7 +24,7 @@ import {
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -42,6 +42,7 @@ import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
+import { PickersLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -112,7 +113,7 @@ const rendererInterceptor = function rendererInterceptor<
 
 type DesktopDateTimePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -196,7 +197,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -211,7 +212,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: (ownerState: any) => ({
+      actionBar: (ownerState: PickersLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
@@ -315,7 +316,7 @@ DesktopDateTimePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -483,7 +484,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
