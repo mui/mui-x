@@ -7,7 +7,7 @@ import {
 import { useMockServer } from '@mui/x-data-grid-generator';
 
 function ServerSideLazyLoadingInfinite() {
-  const { columns, fetchRows } = useMockServer(
+  const { fetchRows, ...props } = useMockServer(
     { rowLength: 100 },
     { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
@@ -36,7 +36,7 @@ function ServerSideLazyLoadingInfinite() {
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPro
-        columns={columns}
+        {...props}
         unstable_dataSource={dataSource}
         lazyLoading
         paginationModel={{ page: 0, pageSize: 15 }}
