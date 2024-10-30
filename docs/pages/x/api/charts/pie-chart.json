@@ -36,15 +36,6 @@
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
     },
-    "legend": {
-      "type": {
-        "name": "shape",
-        "description": "{ classes?: object, direction?: 'column'<br>&#124;&nbsp;'row', hidden?: bool, itemGap?: number, itemMarkHeight?: number, itemMarkWidth?: number, labelStyle?: object, markGap?: number, onItemClick?: func, padding?: number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }, position?: { horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }, slotProps?: object, slots?: object }"
-      },
-      "default": "{ direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>slotProps.legend</code> instead."
-    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
       "type": {
