@@ -56,8 +56,13 @@ describe('<DesktopDateTimePicker />', () => {
       // Change the meridiem (same value)
       fireEvent.click(screen.getByRole('option', { name: 'AM' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
-      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
-      expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+      expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onAccept.callCount).to.equal(1);
+      expect(onClose.callCount).to.equal(1);
     });
   });
 
@@ -99,8 +104,13 @@ describe('<DesktopDateTimePicker />', () => {
     // Change the meridiem
     fireEvent.click(screen.getByRole('option', { name: 'PM' }));
     expect(onChange.callCount).to.equal(8);
-    expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
-    expect(onClose.callCount).to.equal(0); // onClose will only called when onCloseOnSelect is true (false by default for pickers with time view)
+    expect(onAccept.callCount).to.equal(0); // onAccept false by default
+    expect(onClose.callCount).to.equal(0); // onCloseOnSelect false by default
+
+    // Click on 'accept' action to close the picker
+    fireEvent.click(screen.getByText(/ok/i));
+    expect(onAccept.callCount).to.equal(1);
+    expect(onClose.callCount).to.equal(1);
   });
 
   describe('prop: timeSteps', () => {
@@ -123,7 +133,11 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 3, 0, 0));
-      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onAccept.callCount).to.equal(1);
     });
 
     it('should accept value and close picker when selecting time on "DigitalClock" view renderer', () => {
@@ -144,7 +158,11 @@ describe('<DesktopDateTimePicker />', () => {
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 3, 0, 0));
-      expect(onAccept.callCount).to.equal(0); // onAccept will only called when onCloseOnSelect is true (false by default for pickers with time view)
+      expect(onAccept.callCount).to.equal(0); // onAccept false by default
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onAccept.callCount).to.equal(1);
     });
   });
 });
