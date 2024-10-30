@@ -32,7 +32,6 @@ const GridOverlayWrapperRoot = styled('div', {
         top: 'var(--DataGrid-headersTotalHeight)',
         left: 0,
         width: 0, // To stay above the content instead of shifting it down
-        // height: 0, // To stay above the content instead of shifting it down
         zIndex:
           overlayType === 'loadingOverlay'
             ? 5 // Should be above pinned columns, pinned rows, and detail panel
