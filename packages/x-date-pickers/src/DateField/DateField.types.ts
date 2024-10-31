@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
+import { MakeOptional } from '@mui/x-internals/types';
 import TextField from '@mui/material/TextField';
 import {
   ExportedUseClearableFieldProps,
@@ -13,7 +14,6 @@ import {
   BuiltInFieldTextFieldProps,
 } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MakeOptional } from '../internals/models/helpers';
 import { ExportedValidateDateProps } from '../validation/validateDate';
 
 export interface UseDateFieldProps<

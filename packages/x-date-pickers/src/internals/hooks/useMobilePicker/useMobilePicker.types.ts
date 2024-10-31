@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -25,7 +26,6 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseMobilePickerSlots<
   TDate extends PickerValidDate,
