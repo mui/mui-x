@@ -75,9 +75,6 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
   );
   const classes = useUtilityClasses(classesProp, ownerState);
 
-  const actionBarActions: PickersActionBarAction[] =
-    variant === 'mobile' ? ['cancel', 'accept'] : [];
-
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
@@ -88,7 +85,7 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
       onClear,
       onCancel,
       onSetToday,
-      actions: actionBarActions,
+      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
     ownerState,
