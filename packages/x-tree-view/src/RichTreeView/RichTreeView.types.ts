@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import {
   RichTreeViewPluginParameters,
@@ -11,11 +12,7 @@ import {
 } from './RichTreeView.plugins';
 import { TreeItemProps } from '../TreeItem';
 import { TreeViewItemId } from '../models';
-import {
-  SlotComponentPropsFromProps,
-  TreeViewExperimentalFeatures,
-  TreeViewPublicAPI,
-} from '../internals/models';
+import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
 
 interface RichTreeViewItemSlotOwnerState {
   itemId: TreeViewItemId;

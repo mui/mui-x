@@ -12,7 +12,12 @@ import {
   ExportedBaseTabsProps,
   PickersProvider,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
+import {
+  PickerValidDate,
+  FieldRef,
+  InferError,
+  PickerOwnerState,
+} from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -90,10 +95,11 @@ export const useDesktopRangePicker = <
     open,
     actions,
     layoutProps,
+    providerProps,
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-    contextValue,
+    ownerState,
   } = usePicker<
     DateRange<TDate>,
     TDate,
@@ -107,6 +113,7 @@ export const useDesktopRangePicker = <
     wrapperVariant: 'desktop',
     autoFocusView: false,
     fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    localeText,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -143,7 +150,7 @@ export const useDesktopRangePicker = <
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
     >,
-    TExternalProps
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: slotProps?.field,
@@ -163,7 +170,7 @@ export const useDesktopRangePicker = <
       ref: fieldContainerRef,
       ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
@@ -210,7 +217,7 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickersProvider contextValue={contextValue} localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"

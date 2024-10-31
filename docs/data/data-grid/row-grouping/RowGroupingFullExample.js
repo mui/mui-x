@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -23,7 +24,7 @@ export default function RowGroupingFullExample() {
         model: ['commodity'],
       },
       sorting: {
-        sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }],
+        sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
       },
     },
   });

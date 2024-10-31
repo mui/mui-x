@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
+import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
@@ -12,7 +13,6 @@ import {
   ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
 import {
-  MakeOptional,
   ChartsAxisSlots,
   ChartsAxisSlotProps,
   ChartsXAxisProps,

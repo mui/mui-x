@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   GridToolbar,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
@@ -40,7 +41,7 @@ export default function DataGridPremiumDemo() {
         model: ['commodity'],
       },
       sorting: {
-        sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }],
+        sortModel: [{ field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, sort: 'asc' }],
       },
       aggregation: {
         model: {
