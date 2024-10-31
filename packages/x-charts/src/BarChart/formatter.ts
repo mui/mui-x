@@ -1,9 +1,9 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
 import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 

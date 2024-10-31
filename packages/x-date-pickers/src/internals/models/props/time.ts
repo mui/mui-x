@@ -1,21 +1,23 @@
 import { SxProps, Theme } from '@mui/material/styles';
-import { BaseTimeValidationProps, TimeValidationProps } from '../validation';
 import { PickerValidDate, TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 import { TimeViewWithMeridiem } from '../common';
+import { ExportedValidateTimeProps } from '../../../validation/validateTime';
 
-export interface ExportedBaseClockProps<TDate extends PickerValidDate>
-  extends TimeValidationProps<TDate>,
-    BaseTimeValidationProps,
-    TimezoneProps {
+export interface AmPmProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm?: boolean;
 }
+
+export interface ExportedBaseClockProps<TDate extends PickerValidDate>
+  extends ExportedValidateTimeProps<TDate>,
+    TimezoneProps,
+    AmPmProps {}
 
 export interface BaseClockProps<TDate extends PickerValidDate, TView extends TimeViewWithMeridiem>
   extends ExportedUseViewsOptions<TView>,

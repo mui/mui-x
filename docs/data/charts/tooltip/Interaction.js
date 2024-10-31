@@ -16,11 +16,7 @@ const barChartsParams = {
   ],
   margin: { top: 10, right: 10 },
   height: 200,
-  slotProps: {
-    legend: {
-      hidden: true,
-    },
-  },
+  slotProps: { legend: { hidden: true } },
 };
 export default function Interaction() {
   return (

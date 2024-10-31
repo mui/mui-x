@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
@@ -11,7 +12,6 @@ import {
 import { PickersDayOwnerState } from '@mui/x-date-pickers/DateCalendar';
 import {
   BaseDateValidationProps,
-  DefaultizedProps,
   ExportedDayCalendarProps,
   DayCalendarSlots,
   DayCalendarSlotProps,
@@ -19,12 +19,12 @@ import {
   PickersArrowSwitcherSlotProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRange, RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
 
 export interface DateRangeCalendarSlots<TDate extends PickerValidDate>
   extends PickersArrowSwitcherSlots,
@@ -58,8 +58,7 @@ export interface DateRangeCalendarSlotProps<TDate extends PickerValidDate>
 
 export interface ExportedDateRangeCalendarProps<TDate extends PickerValidDate>
   extends ExportedDayCalendarProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    DayRangeValidationProps<TDate>,
+    ExportedValidateDateRangeProps<TDate>,
     TimezoneProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
