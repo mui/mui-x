@@ -131,8 +131,16 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   const prevArgs = refs.current.args;
   refs.current.args = args;
   if (didInit && !refs.current.equals<typeof args>(prevArgs, args)) {
-    // React to arguments change
-    apiRef.current.store.update(apiRef.current.state);
+    const newState = applySelectorV8(
+      apiRef,
+      refs.current.selector,
+      refs.current.args,
+      apiRef.current.instanceId,
+    ) as T;
+    if (!refs.current.equals(refs.current.state, newState)) {
+      refs.current.state = newState;
+      setState(newState);
+    }
   }
 
   useOnMount(() => {
