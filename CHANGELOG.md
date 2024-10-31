@@ -53,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@7.22.1`.
 
 #### `@mui/x-tree-view@7.22.1`
 
+- [TreeView] Export `TreeItem2DragAndDropOverlay` and `TreeItem2LabelInput` from the root of each package (#15208) @flaviendelangle 
 - [TreeView] Fix drag and drop color usage (#15149) @LukasTy
 
 ### Docs
