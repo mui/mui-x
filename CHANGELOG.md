@@ -27,7 +27,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix right column group header border (#15152) @KenanYusuf
 - [DataGrid] Fix scroll jump when holding down arrow keys (#15167) @arminmeh
 - [DataGrid] Move `rowGroupingModelChange` handler to respective hook (#15127) @MBilalShafi
-- [DataGrid] Prevent error when deleting the last row (#15153) @KenanYusuf
+- [DataGrid] Prevent error when deleting the last row (#15153) @dpak-maurya
 
 #### `@mui/x-data-grid-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
