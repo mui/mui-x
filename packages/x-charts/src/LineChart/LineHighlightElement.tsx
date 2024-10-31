@@ -117,6 +117,8 @@ LineHighlightElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
+    .isRequired,
 } as any;
 
 export { LineHighlightElement };

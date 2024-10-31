@@ -1,6 +1,5 @@
 {
   "props": {
-    "experimentalRendering": { "type": { "name": "bool" }, "default": "false" },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
