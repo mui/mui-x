@@ -6,7 +6,7 @@ import {
   BaseClockProps,
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
-} from '../internals/models/props/clock';
+} from '../internals/models/props/time';
 import { PickerValidDate, TimeView } from '../models';
 
 export interface ExportedDigitalClockProps<TDate extends PickerValidDate>

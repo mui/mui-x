@@ -3,7 +3,6 @@ import { SlotComponentProps } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import {
   FieldSection,
   PickerValidDate,
@@ -15,6 +14,8 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
+import { ExportedValidateTimeProps } from '../validation/validateTime';
+import { AmPmProps } from '../internals/models/props/time';
 
 export interface UseTimeFieldProps<
   TDate extends PickerValidDate,
@@ -29,15 +30,9 @@ export interface UseTimeFieldProps<
       >,
       'format'
     >,
-    TimeValidationProps<TDate>,
-    BaseTimeValidationProps,
-    ExportedUseClearableFieldProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateTimeProps<TDate>,
+    ExportedUseClearableFieldProps,
+    AmPmProps {}
 
 export type TimeFieldProps<
   TDate extends PickerValidDate,

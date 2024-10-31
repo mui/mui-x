@@ -15,7 +15,7 @@ import { PickerValidDate, TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseTimePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
