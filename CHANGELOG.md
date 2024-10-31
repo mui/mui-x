@@ -14,9 +14,9 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 - 🌍 Improve Polish (plPL) locale on the Date Pickers
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@KenanYusuf.
+@wojtkolos.
 Following are all team members who have contributed to this release:
-@LukasTy.
+@LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -24,16 +24,16 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.22.1`
 
-- [DataGrid] Fix right column group header border (@KenanYusuf) (#15152) @github-actions[bot]
-- [DataGrid] Fix scroll jump when holding down arrow keys (@arminmeh) (#15167) @github-actions[bot]
-- [DataGrid] Move `rowGroupingModelChange` handler to respective hook (@MBilalShafi) (#15127) @github-actions[bot]
+- [DataGrid] Fix right column group header border (#15152) @KenanYusuf
+- [DataGrid] Fix scroll jump when holding down arrow keys (#15167) @arminmeh
+- [DataGrid] Move `rowGroupingModelChange` handler to respective hook (#15127) @MBilalShafi
 - [DataGrid] Prevent error when deleting the last row (#15153) @KenanYusuf
 
 #### `@mui/x-data-grid-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.22.1`, plus:
 
-- [DataGridPro] Add list view tests (@KenanYusuf) (#15166) @github-actions[bot]
+- [DataGridPro] Add list view tests (#15166) @KenanYusuf
 
 #### `@mui/x-data-grid-premium@7.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -43,7 +43,7 @@ Same changes as in `@mui/x-data-grid-pro@7.22.1`.
 
 #### `@mui/x-date-pickers@7.22.1`
 
-- [l10n] Improve Polish (plPL) locale (@wojtkolos) (#15177) @github-actions[bot]
+- [l10n] Improve Polish (plPL) locale (#15177) @wojtkolos
 - [pickers] Fix Pickers `pl-PL` translation after cherry-pick from master (#15183) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
