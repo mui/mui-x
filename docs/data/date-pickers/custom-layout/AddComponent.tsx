@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,7 +17,7 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateView, PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateView } from '@mui/x-date-pickers/models';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -57,7 +58,7 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<PickerValidDate | null, DateView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (

@@ -18,8 +18,9 @@ import {
   PickersArrowSwitcherSlotProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../models';
+import { RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
@@ -100,17 +101,17 @@ export interface ExportedDateRangeCalendarProps
 export interface DateRangeCalendarProps
   extends ExportedDateRangeCalendarProps,
     UseRangePositionProps,
-    ExportedUseViewsOptions<DateRange, 'day'> {
+    ExportedUseViewsOptions<PickerRangeValue, 'day'> {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: DateRange;
+  value?: PickerRangeValue;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: DateRange;
+  defaultValue?: PickerRangeValue;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.

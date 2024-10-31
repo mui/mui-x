@@ -9,6 +9,7 @@ import {
   PickerViewsRendererProps,
   resolveDateTimeFormat,
   useUtils,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -36,7 +37,6 @@ import {
 } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -51,7 +51,7 @@ const rendererInterceptor = function rendererInterceptor<
   inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: PickerViewsRendererProps<
-    DateRange,
+    PickerRangeValue,
     DateTimeRangePickerView,
     DefaultizedProps<
       Omit<
@@ -103,7 +103,7 @@ const rendererInterceptor = function rendererInterceptor<
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
           inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
-            DateRange,
+            PickerRangeValue,
             DateTimeRangePickerView,
             any,
             {}

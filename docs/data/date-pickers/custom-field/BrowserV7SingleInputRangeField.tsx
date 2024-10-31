@@ -24,7 +24,10 @@ import {
   DateRange,
   FieldType,
 } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -115,7 +118,8 @@ const BrowserTextField = React.forwardRef(
 interface BrowserSingleInputDateRangeFieldProps
   extends UseSingleInputDateRangeFieldProps<true>,
     BaseSingleInputFieldProps<
-      DateRange,
+      // This usage of PickerValidDate will go away with TIsRange
+      DateRange<PickerValidDate>,
       RangeFieldSection,
       true,
       DateRangeValidationError

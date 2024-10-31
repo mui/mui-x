@@ -27,7 +27,7 @@ export default function DateRangeValidationShouldDisableDate() {
                 return false;
               }
 
-              return isWeekend(date as Dayjs);
+              return isWeekend(date);
             }}
           />
         </DemoItem>
@@ -39,7 +39,7 @@ export default function DateRangeValidationShouldDisableDate() {
                 return false;
               }
 
-              return isWeekend(date as Dayjs);
+              return isWeekend(date);
             }}
           />
         </DemoItem>

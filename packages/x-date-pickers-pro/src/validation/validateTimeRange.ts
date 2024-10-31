@@ -1,7 +1,11 @@
 import { validateTime, Validator } from '@mui/x-date-pickers/validation';
-import { TimeValidationProps, BaseTimeValidationProps } from '@mui/x-date-pickers/internals';
+import {
+  TimeValidationProps,
+  BaseTimeValidationProps,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../internals/utils/date-utils';
-import { TimeRangeValidationError, DateRange } from '../models';
+import { TimeRangeValidationError } from '../models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 
 /**
@@ -16,7 +20,7 @@ export interface ValidateTimeRangeProps
     TimeValidationProps {}
 
 export const validateTimeRange: Validator<
-  DateRange,
+  PickerRangeValue,
   TimeRangeValidationError,
   ValidateTimeRangeProps
 > = ({ adapter, value, timezone, props }) => {

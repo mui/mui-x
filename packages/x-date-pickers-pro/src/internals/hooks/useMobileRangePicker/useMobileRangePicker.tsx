@@ -9,6 +9,7 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersProvider,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -24,7 +25,7 @@ import {
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangeFieldSection } from '../../../models';
+import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -84,7 +85,7 @@ export const useMobileRangePicker = <
     fieldProps: pickerFieldProps,
     ownerState,
   } = usePicker<
-    DateRange,
+    PickerRangeValue,
     TView,
     RangeFieldSection,
     TExternalProps,
@@ -158,7 +159,7 @@ export const useMobileRangePicker = <
     endFieldRef,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
     ...innerSlotProps,
     tabs: {
       ...innerSlotProps?.tabs,

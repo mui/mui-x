@@ -5,16 +5,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
+import { TimeView } from '@mui/x-date-pickers/models';
 
-const shouldDisableTime = (date: PickerValidDate, view: TimeView) => {
-  const dateWithKnownAdapter = date as Dayjs;
-  const hour = dateWithKnownAdapter.hour();
+const shouldDisableTime = (date: Dayjs, view: TimeView) => {
+  const hour = date.hour();
   if (view === 'hours') {
     return hour < 9 || hour > 13;
   }
   if (view === 'minutes') {
-    const minute = dateWithKnownAdapter.minute();
+    const minute = date.minute();
     return minute > 20 && hour === 13;
   }
   return false;

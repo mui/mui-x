@@ -1,5 +1,9 @@
 import { MakeRequired } from '@mui/x-internals/types';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '@mui/x-date-pickers/internals';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DesktopDateTimeRangePickerProps,
@@ -12,7 +16,7 @@ import {
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
 import { UseDateTimeRangeFieldProps } from '../internals/models';
-import { DateRange, DateTimeRangeValidationError, RangeFieldSection } from '../models';
+import { DateTimeRangeValidationError, RangeFieldSection } from '../models';
 
 export interface DateTimeRangePickerSlots
   extends DesktopDateTimeRangePickerSlots,
@@ -57,4 +61,9 @@ export type DateTimeRangePickerFieldProps<
   | keyof BaseDateValidationProps
   | keyof BaseTimeValidationProps
 > &
-  BaseSingleInputFieldProps<DateRange, RangeFieldSection, false, DateTimeRangeValidationError>;
+  BaseSingleInputFieldProps<
+    PickerRangeValue,
+    RangeFieldSection,
+    false,
+    DateTimeRangeValidationError
+  >;

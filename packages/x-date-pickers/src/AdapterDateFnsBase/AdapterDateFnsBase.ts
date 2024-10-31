@@ -190,14 +190,14 @@ export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
   public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (typeof value === 'undefined') {
-      return <R>new Date();
+      return new Date() as unknown as R;
     }
 
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
-    return <R>new Date(value);
+    return new Date(value) as unknown as R;
   };
 
   public getInvalidDate = () => new Date('Invalid Date');

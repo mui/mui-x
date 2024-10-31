@@ -3,8 +3,6 @@
   onChange={setValue}
   slots={{
     openPickerIcon:
-      value == null || !(value as Dayjs).isValid()
-        ? PriorityHighIcon
-        : CheckIcon,
+      value == null || !value.isValid() ? PriorityHighIcon : CheckIcon,
   }}
 />

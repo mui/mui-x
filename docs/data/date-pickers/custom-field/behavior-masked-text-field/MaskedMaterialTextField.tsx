@@ -4,7 +4,6 @@ import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
 import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
   DatePicker,
@@ -20,13 +19,12 @@ const ACCEPT_REGEX = /[\d]/gi;
 const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
-function getInputValueFromDate(date: PickerValidDate | null, format: string) {
-  const dateWithKnownAdapter = date as Dayjs;
-  if (dateWithKnownAdapter == null) {
+function getInputValueFromDate(date: Dayjs | null, format: string) {
+  if (date == null) {
     return '';
   }
 
-  return dateWithKnownAdapter.isValid() ? dateWithKnownAdapter.format(format) : '';
+  return date.isValid() ? date.format(format) : '';
 }
 
 function MaskedField(props: DatePickerFieldProps) {
@@ -56,7 +54,7 @@ function MaskedField(props: DatePickerFieldProps) {
   );
 
   React.useEffect(() => {
-    if (value && (value as Dayjs).isValid()) {
+    if (value && value.isValid()) {
       const newDisplayDate = getInputValueFromDate(value, format);
       setInputValue(newDisplayDate);
     }

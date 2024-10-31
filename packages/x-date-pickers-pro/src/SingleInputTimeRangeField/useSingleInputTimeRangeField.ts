@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useField, useDefaultizedTimeField } from '@mui/x-date-pickers/internals';
+import { useField, useDefaultizedTimeField, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateTimeRange } from '../validation';
-import { RangeFieldSection, DateRange } from '../models';
+import { RangeFieldSection } from '../models';
 
 export const useSingleInputTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -26,7 +26,7 @@ export const useSingleInputTimeRangeField = <
   );
 
   return useField<
-    DateRange,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,

@@ -140,10 +140,10 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
   public date = <T extends string | null | undefined>(value?: T): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
-    return <R>this.moment(value).locale('ar-SA');
+    return this.moment(value).locale('ar-SA') as unknown as R;
   };
 
   public getTimezone = (): string => {

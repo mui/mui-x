@@ -10,6 +10,4 @@
     maxDate={dayjs('2022-12-31')}
   />
 </LocalizationProvider>
-<Typography>
-  Value: {value == null ? 'null' : (value as Dayjs).format('L')}
-</Typography>
+<Typography>Value: {value == null ? 'null' : value.format('L')}</Typography>

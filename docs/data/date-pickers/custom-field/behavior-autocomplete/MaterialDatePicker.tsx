@@ -94,7 +94,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
 
         return option.format('MM / DD / YYYY');
       }}
-      value={value as Dayjs}
+      value={value}
       onChange={(_, newValue) => {
         onChange?.(newValue, { validationError: null });
       }}
@@ -131,9 +131,7 @@ function AutocompleteDatePicker(props: AutocompleteDatePickerProps) {
     <DatePicker
       slots={{ ...props.slots, field: AutocompleteField }}
       slotProps={{ ...props.slotProps, field: { options } as any }}
-      shouldDisableDate={(date) =>
-        !optionsLookup[(date as Dayjs).startOf('day').toISOString()]
-      }
+      shouldDisableDate={(date) => !optionsLookup[date.startOf('day').toISOString()]}
       {...other}
     />
   );

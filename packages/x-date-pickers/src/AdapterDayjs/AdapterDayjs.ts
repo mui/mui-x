@@ -299,7 +299,7 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     let parsedValue: Dayjs;
@@ -312,10 +312,10 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     }
 
     if (this.locale === undefined) {
-      return <R>parsedValue;
+      return parsedValue as unknown as R;
     }
 
-    return <R>parsedValue.locale(this.locale);
+    return parsedValue.locale(this.locale) as unknown as R;
   };
 
   public getInvalidDate = () => defaultDayjs(new Date('Invalid date'));

@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateRangePicker,
   DateRangePickerProps,
@@ -109,7 +110,8 @@ const BrowserTextField = React.forwardRef(
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<true>,
     BaseMultiInputFieldProps<
-      DateRange,
+      // This usage of PickerValidDate will go away with TIsRange
+      DateRange<PickerValidDate>,
       RangeFieldSection,
       true,
       DateRangeValidationError

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -23,16 +22,13 @@ const CustomCalendarHeaderRoot = styled('div')({
 
 function CustomCalendarHeader(props: PickersCalendarHeaderProps) {
   const { currentMonth, onMonthChange } = props;
-  const currentMonthWithKnownAdapter = currentMonth as Dayjs;
 
-  const selectNextMonth = () =>
-    onMonthChange(currentMonthWithKnownAdapter.add(1, 'month'), 'left');
-  const selectNextYear = () =>
-    onMonthChange(currentMonthWithKnownAdapter.add(1, 'year'), 'left');
+  const selectNextMonth = () => onMonthChange(currentMonth.add(1, 'month'), 'left');
+  const selectNextYear = () => onMonthChange(currentMonth.add(1, 'year'), 'left');
   const selectPreviousMonth = () =>
-    onMonthChange(currentMonthWithKnownAdapter.subtract(1, 'month'), 'right');
+    onMonthChange(currentMonth.subtract(1, 'month'), 'right');
   const selectPreviousYear = () =>
-    onMonthChange(currentMonthWithKnownAdapter.subtract(1, 'year'), 'right');
+    onMonthChange(currentMonth.subtract(1, 'year'), 'right');
 
   return (
     <CustomCalendarHeaderRoot>
@@ -44,9 +40,7 @@ function CustomCalendarHeader(props: PickersCalendarHeaderProps) {
           <ChevronLeft />
         </IconButton>
       </Stack>
-      <Typography variant="body2">
-        {currentMonthWithKnownAdapter.format('MMMM YYYY')}
-      </Typography>
+      <Typography variant="body2">{currentMonth.format('MMMM YYYY')}</Typography>
       <Stack spacing={1} direction="row">
         <IconButton onClick={selectNextMonth} title="Next month">
           <ChevronRight />

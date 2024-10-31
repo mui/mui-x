@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -8,7 +8,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
 
 const shouldDisableTime: TimePickerProps['shouldDisableTime'] = (value, view) =>
-  view === 'minutes' && (value as Dayjs).minute() >= 45;
+  view === 'minutes' && value.minute() >= 45;
 
 const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute');
 

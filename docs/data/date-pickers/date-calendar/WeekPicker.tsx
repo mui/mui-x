@@ -6,7 +6,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 dayjs.extend(isBetweenPlugin);
 
@@ -38,11 +37,11 @@ const CustomPickersDay = styled(PickersDay, {
       },
     }),
   }),
-  ...((day as Dayjs).day() === 0 && {
+  ...(day.day() === 0 && {
     borderTopLeftRadius: '50%',
     borderBottomLeftRadius: '50%',
   }),
-  ...((day as Dayjs).day() === 6 && {
+  ...(day.day() === 6 && {
     borderTopRightRadius: '50%',
     borderBottomRightRadius: '50%',
   }),
@@ -71,15 +70,15 @@ function Day(
       sx={{ px: 2.5 }}
       disableMargin
       selected={false}
-      isSelected={isInSameWeek(day as Dayjs, selectedDay)}
-      isHovered={isInSameWeek(day as Dayjs, hoveredDay)}
+      isSelected={isInSameWeek(day, selectedDay)}
+      isHovered={isInSameWeek(day, hoveredDay)}
     />
   );
 }
 
 export default function WeekPicker() {
-  const [hoveredDay, setHoveredDay] = React.useState<SimpleValue>(null);
-  const [value, setValue] = React.useState<SimpleValue>(dayjs('2022-04-17'));
+  const [hoveredDay, setHoveredDay] = React.useState<Dayjs | null>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

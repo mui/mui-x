@@ -4,5 +4,5 @@
   referenceDate={dayjs('2022-04-17T15:30')}
 />
 <Typography>
-  Stored value: {value == null ? 'null' : (value as Dayjs).format()}
+  Stored value: {value == null ? 'null' : value.format()}
 </Typography>

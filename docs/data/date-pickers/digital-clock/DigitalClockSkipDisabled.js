@@ -7,13 +7,12 @@ import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
 const shouldDisableTime = (date, view) => {
-  const dateWithKnownAdapter = date;
-  const hour = dateWithKnownAdapter.hour();
+  const hour = date.hour();
   if (view === 'hours') {
     return hour < 9 || hour > 13;
   }
   if (view === 'minutes') {
-    const minute = dateWithKnownAdapter.minute();
+    const minute = date.minute();
     return minute > 20 && hour === 13;
   }
   return false;

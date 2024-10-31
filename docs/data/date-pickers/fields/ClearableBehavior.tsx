@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function ClearableBehavior() {
-  const [value, setValue] = React.useState<SimpleValue>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
   const [cleared, setCleared] = React.useState<boolean>(false);
 
   React.useEffect(() => {

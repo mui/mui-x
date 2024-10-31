@@ -27,7 +27,10 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 import {
   RangeFieldSection,
   DateRange,
@@ -102,7 +105,8 @@ const JoyField = React.forwardRef(
 interface JoySingleInputDateRangeFieldProps
   extends UseSingleInputDateRangeFieldProps<false>,
     BaseSingleInputFieldProps<
-      DateRange,
+      // This usage of PickerValidDate will go away with TIsRange
+      DateRange<PickerValidDate>,
       RangeFieldSection,
       false,
       DateRangeValidationError

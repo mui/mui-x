@@ -1,13 +1,13 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 export default function TimeRangeFieldValue() {
-  const [value, setValue] = React.useState<DateRange>(() => [
+  const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
     dayjs('2022-04-17T15:30'),
     dayjs('2022-04-17T18:30'),
   ]);

@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { PickersTimezone, SimpleValue } from '@mui/x-date-pickers/models';
+import { PickersTimezone } from '@mui/x-date-pickers/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -18,7 +18,7 @@ dayjs.tz.setDefault('America/New_York');
 const TIMEZONES: PickersTimezone[] = ['default', 'system', 'UTC', 'America/Chicago'];
 
 export default function TimezonePlayground() {
-  const [value, setValue] = React.useState<SimpleValue>(
+  const [value, setValue] = React.useState<Dayjs | null>(
     dayjs.utc('2022-04-17T15:30'),
   );
 
@@ -49,7 +49,7 @@ export default function TimezonePlayground() {
           onChange={setValue}
         />
         <Typography>
-          Stored value: {value == null ? 'null' : (value as Dayjs).format()}
+          Stored value: {value == null ? 'null' : value.format()}
         </Typography>
       </Stack>
     </LocalizationProvider>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -42,7 +41,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps) {
   return (
     <TextField
       {...other}
-      value={value == null ? '' : (value as Dayjs).format(format)}
+      value={value == null ? '' : value.format(format)}
       placeholder={parsedFormat}
       InputProps={{
         ...InputProps,

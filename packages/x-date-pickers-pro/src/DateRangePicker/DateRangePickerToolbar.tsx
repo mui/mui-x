@@ -11,9 +11,9 @@ import {
   useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
-import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
@@ -32,7 +32,7 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps) => {
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<DateRange, 'day'>, 'onChange' | 'isLandscape'>,
+    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {

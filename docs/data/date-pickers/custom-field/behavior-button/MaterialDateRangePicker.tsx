@@ -49,7 +49,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   };
 
   const formattedValue = (value ?? [null, null])
-    .map((date) => (date == null ? parsedFormat : (date as Dayjs).format(format)))
+    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
 
   return (

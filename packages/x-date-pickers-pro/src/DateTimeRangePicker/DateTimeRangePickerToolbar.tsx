@@ -10,6 +10,7 @@ import {
   useUtils,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -17,7 +18,6 @@ import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
 } from '@mui/x-date-pickers/DateTimePicker';
-import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
@@ -39,7 +39,7 @@ const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps) => {
 type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
 export interface DateTimeRangePickerToolbarProps
-  extends BaseToolbarProps<DateRange, DateTimeRangeViews>,
+  extends BaseToolbarProps<PickerRangeValue, DateTimeRangeViews>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;

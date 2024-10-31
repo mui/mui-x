@@ -3,6 +3,7 @@ import { unstable_useDateTimeField as useDateTimeField } from '@mui/x-date-picke
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  PickerRangeValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedDateTimeField,
@@ -13,7 +14,7 @@ import type {
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
-import { DateTimeRangeValidationError, DateRange } from '../../../models';
+import { DateTimeRangeValidationError } from '../../../models';
 import { validateDateTimeRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
@@ -76,7 +77,8 @@ export const useMultiInputDateTimeRangeField = <
     index: 0 | 1,
   ): FieldChangeHandler<PickerValidDate | null, DateTimeValidationError> => {
     return (newDate, rawContext) => {
-      const newDateRange: DateRange = index === 0 ? [newDate, value[1]] : [value[0], newDate];
+      const newDateRange: PickerRangeValue =
+        index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<DateTimeRangeValidationError> = {
         ...rawContext,

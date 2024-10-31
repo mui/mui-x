@@ -197,18 +197,18 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
   ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as unknown as R;
     }
 
     if (timezone === 'UTC') {
-      return <R>this.createUTCDate(value);
+      return this.createUTCDate(value) as unknown as R;
     }
 
     if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
-      return <R>this.createSystemDate(value);
+      return this.createSystemDate(value) as unknown as R;
     }
 
-    return <R>this.createTZDate(value, timezone);
+    return this.createTZDate(value, timezone) as unknown as R;
   };
 
   public getInvalidDate = () => this.moment(new Date('Invalid Date'));

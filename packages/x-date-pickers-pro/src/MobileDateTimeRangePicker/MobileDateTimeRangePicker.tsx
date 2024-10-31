@@ -13,6 +13,7 @@ import {
   TimeViewWithMeridiem,
   resolveDateTimeFormat,
   useUtils,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -35,7 +36,6 @@ import {
 } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -50,7 +50,7 @@ const rendererInterceptor = function rendererInterceptor<
   inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: PickerViewsRendererProps<
-    DateRange,
+    PickerRangeValue,
     DateTimeRangePickerView,
     DefaultizedProps<
       UseMobileRangePickerProps<
@@ -102,7 +102,9 @@ const rendererInterceptor = function rendererInterceptor<
     return (
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
-        viewRenderer={viewRenderer as PickerViewRenderer<DateRange, TimeViewWithMeridiem, any, {}>}
+        viewRenderer={
+          viewRenderer as PickerViewRenderer<PickerRangeValue, TimeViewWithMeridiem, any, {}>
+        }
         view={view && isInternalTimeView(view) ? view : 'hours'}
         views={finalProps.views as TimeViewWithMeridiem[]}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
@@ -110,7 +112,7 @@ const rendererInterceptor = function rendererInterceptor<
     );
   }
   // avoiding problem of `props: never`
-  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange, 'day', any, any>;
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<PickerRangeValue, 'day', any, any>;
 
   return typedViewRenderer({
     ...finalProps,

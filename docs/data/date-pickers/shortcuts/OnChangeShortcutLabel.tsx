@@ -12,7 +12,6 @@ import {
 import {
   DateValidationError,
   PickerChangeHandlerContext,
-  SimpleValue,
 } from '@mui/x-date-pickers/models';
 
 const getMonthWeekday = (
@@ -82,13 +81,13 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
 ];
 
 export default function OnChangeShortcutLabel() {
-  const [value, setValue] = React.useState<SimpleValue>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
   const [lastShortcutSelected, setLastShortcutSelected] = React.useState<
     PickersShortcutsItemContext | undefined
   >(undefined);
 
   const handleChange = (
-    newValue: SimpleValue,
+    newValue: Dayjs | null,
     ctx: PickerChangeHandlerContext<DateValidationError>,
   ) => {
     setValue(newValue);

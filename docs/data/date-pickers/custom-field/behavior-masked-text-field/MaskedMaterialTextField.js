@@ -4,7 +4,6 @@ import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
 import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useSplitFieldProps, useParsedFormat } from '@mui/x-date-pickers/hooks';
@@ -17,12 +16,11 @@ const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
 function getInputValueFromDate(date, format) {
-  const dateWithKnownAdapter = date;
-  if (dateWithKnownAdapter == null) {
+  if (date == null) {
     return '';
   }
 
-  return dateWithKnownAdapter.isValid() ? dateWithKnownAdapter.format(format) : '';
+  return date.isValid() ? date.format(format) : '';
 }
 
 function MaskedField(props) {

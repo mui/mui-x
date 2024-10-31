@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup, useUtils } from '@mui/x-date-pickers/internals';
+import {
+  PickerViewRendererLookup,
+  useUtils,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -13,7 +17,6 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateRange } from '../validation';
-import { DateRange } from '../models';
 
 type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -43,7 +46,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     MobileDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<DateRange, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };

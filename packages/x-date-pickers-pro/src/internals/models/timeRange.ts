@@ -1,9 +1,8 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { UseFieldInternalProps, AmPmProps } from '@mui/x-date-pickers/internals';
+import { UseFieldInternalProps, AmPmProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   TimeRangeValidationError,
   RangeFieldSection,
-  DateRange,
   RangeFieldSeparatorProps,
 } from '../../models';
 import type { ExportedValidateTimeRangeProps } from '../../validation/validateTimeRange';
@@ -12,7 +11,7 @@ export interface UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure exten
   extends MakeOptional<
       Omit<
         UseFieldInternalProps<
-          DateRange,
+          PickerRangeValue,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TimeRangeValidationError

@@ -1,14 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../validation';
-import { DateRange } from '../models';
 
 type StaticDateRangePickerComponent = ((
   props: StaticDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
@@ -35,7 +34,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
-  const viewRenderers: PickerViewRendererLookup<DateRange, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };

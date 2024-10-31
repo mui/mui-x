@@ -1,14 +1,13 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function DigitalClockValue() {
-  const [value, setValue] = React.useState<SimpleValue>(dayjs('2022-04-17T15:30'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

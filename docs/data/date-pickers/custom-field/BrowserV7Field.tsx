@@ -107,6 +107,7 @@ const BrowserTextField = React.forwardRef(
 interface BrowserDateFieldProps
   extends UseDateFieldProps<true>,
     BaseSingleInputFieldProps<
+      // This usage of PickerValidDate will go away with TIsRange
       PickerValidDate | null,
       FieldSection,
       true,

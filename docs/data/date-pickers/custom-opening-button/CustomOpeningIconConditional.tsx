@@ -6,10 +6,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function CustomOpeningIconConditional() {
-  const [value, setValue] = React.useState<SimpleValue>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -19,9 +18,7 @@ export default function CustomOpeningIconConditional() {
           onChange={setValue}
           slots={{
             openPickerIcon:
-              value == null || !(value as Dayjs).isValid()
-                ? PriorityHighIcon
-                : CheckIcon,
+              value == null || !value.isValid() ? PriorityHighIcon : CheckIcon,
           }}
         />
       </DemoContainer>

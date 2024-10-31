@@ -25,6 +25,7 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValueWithTimezone,
   useViews,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -45,7 +46,7 @@ import {
   isWithinRange,
 } from '../internals/utils/date-utils';
 import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
-import { DateRange, RangePosition } from '../models';
+import { RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -209,7 +210,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   } = props;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
-    DateRange,
+    PickerRangeValue,
     NonNullable<typeof onChange>
   >({
     name: 'DateRangeCalendar',
@@ -282,7 +283,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
-  const valueDayRange = React.useMemo<DateRange>(
+  const valueDayRange = React.useMemo<PickerRangeValue>(
     () => [
       value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
       value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
@@ -302,7 +303,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   const ownerState = { ...props, isDragging };
   const classes = useUtilityClasses(ownerState);
 
-  const draggingRange = React.useMemo<DateRange>(() => {
+  const draggingRange = React.useMemo<PickerRangeValue>(() => {
     if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
       return [null, null];
     }
@@ -371,7 +372,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       ownerState: props,
     });
 
-  const prevValue = React.useRef<DateRange | null>(null);
+  const prevValue = React.useRef<PickerRangeValue | null>(null);
   React.useEffect(() => {
     const date = rangePosition === 'start' ? value[0] : value[1];
     if (!date || !utils.isValid(date)) {

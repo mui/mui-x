@@ -47,19 +47,18 @@ const shortcutsItems = [
 ];
 
 const shouldDisableDate = (date) => {
-  const dateWithKnownAdapter = date;
   const today = dayjs();
 
-  if (today.isSame(dateWithKnownAdapter, 'month')) {
+  if (today.isSame(date, 'month')) {
     return true;
   }
   const nextMonth = today.add(1, 'month').startOf('month');
 
-  if (dateWithKnownAdapter.isSame(nextMonth, 'month')) {
-    if (dateWithKnownAdapter.isSame(nextMonth, 'week')) {
+  if (date.isSame(nextMonth, 'month')) {
+    if (date.isSame(nextMonth, 'week')) {
       return true;
     }
-    return [10, 11, 12, 16, 18, 29, 30].includes(dateWithKnownAdapter.date());
+    return [10, 11, 12, 16, 18, 29, 30].includes(date.date());
   }
   return false;
 };

@@ -24,13 +24,13 @@ import {
   UsePickerResponse,
   WrapperVariant,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  DateRange,
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
@@ -61,7 +61,7 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
   extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
     BaseMultiInputFieldProps<
-      DateRange,
+      PickerRangeValue,
       RangeFieldSection,
       TEnableAccessibleFieldDOMStructure,
       unknown
@@ -85,7 +85,7 @@ export type RangePickerPropsForFieldSlot<
 > =
   | (TIsSingleInput extends true
       ? BaseSingleInputFieldProps<
-          DateRange,
+          PickerRangeValue,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TError
@@ -93,7 +93,7 @@ export type RangePickerPropsForFieldSlot<
       : never)
   | (TIsSingleInput extends false
       ? BaseMultiInputFieldProps<
-          DateRange,
+          PickerRangeValue,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TError
@@ -105,7 +105,10 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerResponse<DateRange, TView, RangeFieldSection, any>, 'open' | 'actions'>,
+> extends Pick<
+      UsePickerResponse<PickerRangeValue, TView, RangeFieldSection, any>,
+      'open' | 'actions'
+    >,
     UseRangePositionResponse {
   wrapperVariant: WrapperVariant;
   fieldType: FieldType;
@@ -161,7 +164,7 @@ const useMultiInputFieldSlotProps = <
   TError
 >) => {
   type ReturnType = BaseMultiInputFieldProps<
-    DateRange,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError
@@ -337,7 +340,7 @@ const useSingleInputFieldSlotProps = <
   TError
 >) => {
   type ReturnType = BaseSingleInputFieldProps<
-    DateRange,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError

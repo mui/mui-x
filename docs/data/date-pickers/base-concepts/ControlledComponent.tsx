@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 export default function ControlledComponent() {
-  const [value, setValue] = React.useState<SimpleValue>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -2,7 +2,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateRange, RangePosition } from '../models';
+import { PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
 interface UseDragRangeParams {
@@ -13,7 +14,7 @@ interface UseDragRangeParams {
   isDragging: boolean;
   onDatePositionChange: (position: RangePosition) => void;
   onDrop: (newDate: PickerValidDate) => void;
-  dateRange: DateRange;
+  dateRange: PickerRangeValue;
   timezone: PickersTimezone;
 }
 

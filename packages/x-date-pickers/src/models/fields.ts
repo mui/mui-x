@@ -11,6 +11,7 @@ import type {
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
+import { PickerValidDate } from './pickers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =

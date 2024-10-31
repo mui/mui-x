@@ -9,7 +9,10 @@ import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDa
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 
 export default function LifeCycleDateRangeField() {
-  const [value, setValue] = React.useState<DateRange>([dayjs('2022-04-17'), null]);
+  const [value, setValue] = React.useState<DateRange<Dayjs>>([
+    dayjs('2022-04-17'),
+    null,
+  ]);
 
   return (
     <Stack spacing={2}>
@@ -20,9 +23,7 @@ export default function LifeCycleDateRangeField() {
       </LocalizationProvider>
       <Typography>
         Value:{' '}
-        {value
-          .map((date) => (date == null ? 'null' : (date as Dayjs).format('L')))
-          .join(' – ')}
+        {value.map((date) => (date == null ? 'null' : date.format('L'))).join(' – ')}
       </Typography>
     </Stack>
   );

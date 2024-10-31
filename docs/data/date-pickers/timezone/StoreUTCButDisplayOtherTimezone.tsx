@@ -7,13 +7,12 @@ import Typography from '@mui/material/Typography';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function StoreUTCButDisplayOtherTimezone() {
-  const [value, setValue] = React.useState<SimpleValue>(
+  const [value, setValue] = React.useState<Dayjs | null>(
     dayjs.utc('2022-04-17T15:30'),
   );
 
@@ -26,7 +25,7 @@ export default function StoreUTCButDisplayOtherTimezone() {
           onChange={setValue}
         />
         <Typography>
-          Stored value: {value == null ? 'null' : (value as Dayjs).format()}
+          Stored value: {value == null ? 'null' : value.format()}
         </Typography>
       </Stack>
     </LocalizationProvider>

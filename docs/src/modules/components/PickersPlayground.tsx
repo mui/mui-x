@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -176,7 +176,7 @@ interface ComponentFamilySet {
   props: Record<string, any>;
 }
 
-const shortcutsItems: PickersShortcutsItem<DateRange>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
     label: 'This Week',
     getValue: () => {

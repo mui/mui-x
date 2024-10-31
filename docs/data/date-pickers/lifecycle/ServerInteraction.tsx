@@ -8,10 +8,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import useControlled from '@mui/utils/useControlled';
-import { SimpleValue } from '@mui/x-date-pickers/models';
 
 type DisplayEventsProps = {
-  logs: SimpleValue[];
+  logs: (Dayjs | null)[];
   title: string;
 };
 function DisplayEvents(props: DisplayEventsProps) {
@@ -28,8 +27,8 @@ function DisplayEvents(props: DisplayEventsProps) {
                 // eslint-disable-next-line no-nested-ternary
                 value === null
                   ? 'null'
-                  : (value as Dayjs).isValid()
-                    ? (value as Dayjs).format('DD/MM/YYYY')
+                  : value.isValid()
+                    ? value.format('DD/MM/YYYY')
                     : 'Invalid Date'
               }`,
           )
@@ -58,11 +57,11 @@ function debounce(func: (...arg: any) => void, wait = 500) {
 }
 
 function DateFieldWithAccept(
-  props: DateFieldProps & { onAccept: (value: SimpleValue) => void },
+  props: DateFieldProps & { onAccept: (value: Dayjs | null) => void },
 ) {
   const { value: valueProp, onAccept, onChange, ...other } = props;
 
-  const [value, setValue] = useControlled<SimpleValue>({
+  const [value, setValue] = useControlled<Dayjs | null>({
     name: 'FieldAcceptValue',
     state: 'value',
     controlled: valueProp,
@@ -90,10 +89,14 @@ function DateFieldWithAccept(
 }
 
 export default function ServerInteraction() {
-  const [logsFromOnChange, setLogsFromOnChange] = React.useState<SimpleValue[]>([]);
-  const [logsFromOnAccept, setLogsFromOnAccept] = React.useState<SimpleValue[]>([]);
+  const [logsFromOnChange, setLogsFromOnChange] = React.useState<(Dayjs | null)[]>(
+    [],
+  );
+  const [logsFromOnAccept, setLogsFromOnAccept] = React.useState<(Dayjs | null)[]>(
+    [],
+  );
 
-  const onAccept = React.useCallback((newValue: SimpleValue) => {
+  const onAccept = React.useCallback((newValue: Dayjs | null) => {
     setLogsFromOnAccept((prev) => [newValue, ...prev]);
   }, []);
 

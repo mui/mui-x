@@ -102,6 +102,7 @@ const JoyField = React.forwardRef(
 interface JoyDateFieldProps
   extends UseDateFieldProps<false>,
     BaseSingleInputFieldProps<
+      // This usage of PickerValidDate will go away with TIsRange
       PickerValidDate | null,
       FieldSection,
       false,
