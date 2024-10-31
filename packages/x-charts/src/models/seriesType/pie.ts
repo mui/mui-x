@@ -1,5 +1,5 @@
 import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type PieItemId = string | number;

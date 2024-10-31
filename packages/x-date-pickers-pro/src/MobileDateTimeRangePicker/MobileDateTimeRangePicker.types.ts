@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseMobileRangePickerSlots,

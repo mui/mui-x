@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';

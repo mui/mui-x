@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/helpers';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
 import { SeriesId } from '../models/seriesType/common';

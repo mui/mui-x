@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { MakeRequired } from '@mui/x-internals/helpers';
+import { MakeRequired } from '@mui/x-internals/types';
 import {
   AdapterFormats,
   AdapterOptions,

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { ValidateDateProps, validateDate } from '../validation';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { PickerValidDate, TimezoneProps } from '../models';

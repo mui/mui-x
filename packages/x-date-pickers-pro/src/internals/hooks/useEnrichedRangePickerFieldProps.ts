@@ -6,7 +6,7 @@ import { SlotComponentProps } from '@mui/utils';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/helpers';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseSingleInputFieldProps,
   FieldSelectedSections,

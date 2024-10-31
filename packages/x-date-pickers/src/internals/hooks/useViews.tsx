@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { PickerValidDate } from '../../models';

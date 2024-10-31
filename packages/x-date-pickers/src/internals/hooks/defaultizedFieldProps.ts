@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { applyDefaultDate } from '../utils/date-utils';
 import { useUtils, useDefaultDates } from './useUtils';
 import {

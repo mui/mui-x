@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/helpers';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
 import { PickerValidDate, TimezoneProps } from '../models';

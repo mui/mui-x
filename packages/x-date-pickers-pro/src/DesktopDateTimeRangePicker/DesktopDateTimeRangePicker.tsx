@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   isDatePickerView,
   isInternalTimeView,

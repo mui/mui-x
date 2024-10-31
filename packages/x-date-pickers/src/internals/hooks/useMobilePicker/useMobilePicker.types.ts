@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/helpers';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,

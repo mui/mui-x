@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,

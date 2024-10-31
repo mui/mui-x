@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type ScatterValueType = {

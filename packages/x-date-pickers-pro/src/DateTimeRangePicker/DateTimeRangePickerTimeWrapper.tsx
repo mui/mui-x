@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickerSelectionState,
   PickerViewRenderer,

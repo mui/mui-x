@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { TreeViewItemMeta, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 

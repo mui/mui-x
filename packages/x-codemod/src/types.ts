@@ -1,5 +1,5 @@
 import type { FileInfo, API } from 'jscodeshift';
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 
 type KeepRequired<Type, Key extends keyof Type> = Pick<Type, Key> & Partial<Omit<Type, Key>>;
 

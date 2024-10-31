@@ -1,4 +1,4 @@
-import { MakeRequired } from '@mui/x-internals/helpers';
+import { MakeRequired } from '@mui/x-internals/types';
 import { UseDateTimeFieldProps } from '../DateTimeField';
 import {
   DesktopDateTimePickerProps,

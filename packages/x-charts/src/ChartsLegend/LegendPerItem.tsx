@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';

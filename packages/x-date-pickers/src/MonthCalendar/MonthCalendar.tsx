@@ -9,7 +9,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';

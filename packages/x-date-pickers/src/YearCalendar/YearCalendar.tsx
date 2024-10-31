@@ -10,7 +10,7 @@ import {
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass } from './yearCalendarClasses';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { DefaultizedProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { getSeriesToDisplay } from './utils';
 import { getLegendUtilityClass } from './chartsLegendClasses';

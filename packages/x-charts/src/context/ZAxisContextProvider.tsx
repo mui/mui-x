@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 import { DatasetType } from '../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 import { ZAxisConfig, ZAxisDefaultized } from '../models/z-axis';

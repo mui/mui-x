@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-internals/helpers';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   BaseDateValidationProps,
   TimeValidationProps,

@@ -1,4 +1,4 @@
-import { DefaultizedProps, MakeOptional } from '@mui/x-internals/helpers';
+import { DefaultizedProps, MakeOptional } from '@mui/x-internals/types';
 import {
   ScatterSeriesType,
   DefaultizedScatterSeriesType,

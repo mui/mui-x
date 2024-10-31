@@ -9,7 +9,7 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/helpers';
+import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
