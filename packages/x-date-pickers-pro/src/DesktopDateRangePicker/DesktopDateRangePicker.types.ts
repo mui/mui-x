@@ -1,4 +1,4 @@
-import { MakeOptional, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerSlots,

@@ -17,7 +17,6 @@ import {
   UseViewsOptions,
   DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
-  UsePickerValueNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';

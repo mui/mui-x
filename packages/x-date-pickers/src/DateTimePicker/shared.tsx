@@ -33,7 +33,6 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
-import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface BaseDateTimePickerSlots<TDate extends PickerValidDate>
   extends DateCalendarSlots<TDate>,

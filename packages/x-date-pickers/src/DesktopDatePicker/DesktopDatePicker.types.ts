@@ -11,7 +11,6 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateView, PickerValidDate } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
-import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface DesktopDatePickerSlots<TDate extends PickerValidDate>
   extends BaseDatePickerSlots<TDate>,

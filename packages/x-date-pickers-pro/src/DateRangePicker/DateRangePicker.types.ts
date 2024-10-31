@@ -1,8 +1,4 @@
-import {
-  BaseDateValidationProps,
-  MakeRequired,
-  UsePickerValueNonStaticProps,
-} from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps, MakeRequired } from '@mui/x-date-pickers/internals';
 import { BaseSingleInputFieldProps, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
