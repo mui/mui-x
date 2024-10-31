@@ -1,8 +1,4 @@
-import {
-  BaseSingleInputFieldProps,
-  PickerRangeValue,
-  UsePickerValueNonStaticProps,
-} from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,

@@ -11,7 +11,6 @@ import {
 } from '../DatePicker/shared';
 import { DateView } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
-import { UsePickerValueNonStaticProps } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface DesktopDatePickerSlots
   extends BaseDatePickerSlots,
