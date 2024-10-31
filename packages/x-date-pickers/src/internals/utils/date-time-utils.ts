@@ -9,7 +9,7 @@ import {
 import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils';
 import { isDatePickerView, resolveDateFormat } from './date-utils';
 import { DateOrTimeViewWithMeridiem } from '../models';
-import { DesktopOnlyTimePickerProps } from '../models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../models/props/time';
 import { DefaultizedProps } from '../models/helpers';
 
 export const resolveDateTimeFormat = <TDate extends PickerValidDate>(

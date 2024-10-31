@@ -101,7 +101,7 @@ export type {
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
+export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type {

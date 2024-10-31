@@ -1,9 +1,4 @@
-import {
-  BaseTimeValidationProps,
-  TimeValidationProps,
-  MakeOptional,
-  UseFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
+import { MakeOptional, UseFieldInternalProps, AmPmProps } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   TimeRangeValidationError,
@@ -11,6 +6,7 @@ import {
   DateRange,
   RangeFieldSeparatorProps,
 } from '../../models';
+import type { ExportedValidateTimeRangeProps } from '../../validation/validateTimeRange';
 
 export interface UseTimeRangeFieldProps<
   TDate extends PickerValidDate,
@@ -29,11 +25,5 @@ export interface UseTimeRangeFieldProps<
       'format'
     >,
     RangeFieldSeparatorProps,
-    TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateTimeRangeProps<TDate>,
+    AmPmProps {}
