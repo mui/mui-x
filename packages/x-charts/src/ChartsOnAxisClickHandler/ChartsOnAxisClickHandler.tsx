@@ -33,7 +33,6 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   React.useEffect(() => {
-    console.log('update effect');
     const element = svgRef.current;
     if (element === null || !onAxisClick) {
       return () => {};

@@ -218,7 +218,6 @@ ChartsYHighlight.propTypes = {
 } as any;
 
 function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
-  console.log('render highlight parent');
   const { x: xAxisHighlight, y: yAxisHighlight } = props;
 
   return (
