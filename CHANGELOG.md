@@ -14,7 +14,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 🌍 Improve Polish (plPL) locale on the Date Pickers
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@wojtkolos, @dpak-maurya.
+@wojtkolos, @dpak-maurya, @k-rajat19.
 Following are all team members who have contributed to this release:
 @LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf, @flaviendelangle.
 
@@ -28,6 +28,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix scroll jump when holding down arrow keys (#15167) @arminmeh
 - [DataGrid] Move `rowGroupingModelChange` handler to respective hook (#15127) @MBilalShafi
 - [DataGrid] Prevent error when deleting the last row (#15153) @dpak-maurya
+- [DataGrid] Fix overlay height in autoHeight mode (#15205) @cherniavskii
 
 #### `@mui/x-data-grid-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -37,7 +38,7 @@ Same changes as in `@mui/x-data-grid@7.22.1`, plus:
 
 #### `@mui/x-data-grid-premium@7.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@7.22.1`.
+- [DataGridPremium] Keep focus on the grouping cell on space bar press #15155 @k-rajat19
 
 ### Date and Time Pickers
 
