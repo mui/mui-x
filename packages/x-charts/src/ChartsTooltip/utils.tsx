@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { ItemInteractionData } from '../context/InteractionProvider';
-import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
 type MousePosition = {
