@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.1
+
+_Nov 1, 2024_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🌍 Improve Polish (plPL) locale on the Date Pickers
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@KenanYusuf.
+Following are all team members who have contributed to this release:
+@LukasTy.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.1`
+
+- [DataGrid] Fix right column group header border (@KenanYusuf) (#15152) @github-actions[bot]
+- [DataGrid] Fix scroll jump when holding down arrow keys (@arminmeh) (#15167) @github-actions[bot]
+- [DataGrid] Move `rowGroupingModelChange` handler to respective hook (@MBilalShafi) (#15127) @github-actions[bot]
+- [DataGrid] Prevent error when deleting the last row (#15153) @KenanYusuf
+
+#### `@mui/x-data-grid-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.1`, plus:
+
+- [DataGridPro] Add list view tests (@KenanYusuf) (#15166) @github-actions[bot]
+
+#### `@mui/x-data-grid-premium@7.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.1`
+
+- [l10n] Improve Polish (plPL) locale (@wojtkolos) (#15177) @github-actions[bot]
+- [pickers] Fix Pickers `pl-PL` translation after cherry-pick from master (#15183) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.1`.
+
+### Charts
+ 
+#### `@mui/x-charts@7.22.1`
+
+No changes since `@mui/x-charts@v7.22.0`.
+
+#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.22.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.22.1`
+
+- [TreeView] Fix drag and drop color usage (#15149) @LukasTy
+
 ## 7.22.0
 
 _Oct 25, 2024_
