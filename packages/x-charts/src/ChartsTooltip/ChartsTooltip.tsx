@@ -44,11 +44,13 @@ const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] 
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
 function ChartsTooltip(props: ChartsTooltipProps) {
-  const classes = useUtilityClasses({ classes: props.classes });
+  const { classes: propClasses, trigger = 'axis' } = props;
+
+  const classes = useUtilityClasses({ classes: propClasses });
 
   return (
-    <ChartsTooltipContainer {...props}>
-      {props.trigger === 'axis' ? (
+    <ChartsTooltipContainer {...props} classes={classes}>
+      {trigger === 'axis' ? (
         <ChartsAxisTooltipContent classes={classes} />
       ) : (
         <ChartsItemTooltipContent classes={classes} />
