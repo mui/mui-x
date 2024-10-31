@@ -12,7 +12,7 @@ import { cleanId } from '../internals/cleanId';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './getColor';
-import { MarkElementProps } from './MarkElement';
+import { MarkElement, MarkElementProps } from './MarkElement';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -65,8 +65,6 @@ function MarkPlot(props: MarkPlotProps) {
   const chartId = useChartId();
   const drawingArea = useDrawingArea();
 
-  const Mark = slots?.mark ?? CircleMarkElement;
-
   if (seriesData === undefined) {
     return null;
   }
@@ -87,6 +85,7 @@ function MarkPlot(props: MarkPlotProps) {
             stackedData,
             data,
             showMark = true,
+            shape = 'circle',
           } = series[seriesId];
 
           if (showMark === false) {
@@ -113,6 +112,8 @@ function MarkPlot(props: MarkPlotProps) {
           const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
 
           const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
+
+          const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
           return (
             <g key={seriesId} clipPath={`url(#${clipId})`}>
@@ -153,7 +154,7 @@ function MarkPlot(props: MarkPlotProps) {
                       key={`${seriesId}-${index}`}
                       id={seriesId}
                       dataIndex={index}
-                      shape="circle"
+                      shape={shape}
                       color={colorGetter(index)}
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null

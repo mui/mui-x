@@ -77,6 +77,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             stackedData,
             data,
             disableHighlight,
+            shape = 'circle',
           } = series[seriesId];
 
           const xAxisId = xAxisIdProp ?? xAxisKey;
@@ -114,6 +115,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
               color={colorGetter(highlightedIndex)}
               x={x}
               y={y}
+              shape={shape}
               {...slotProps?.lineHighlight}
             />
           );
