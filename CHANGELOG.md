@@ -50,16 +50,6 @@ Same changes as in `@mui/x-data-grid-pro@7.22.1`.
 
 Same changes as in `@mui/x-date-pickers@7.22.1`.
 
-### Charts
- 
-#### `@mui/x-charts@7.22.1`
-
-No changes since `@mui/x-charts@v7.22.0`.
-
-#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@7.22.1`.
-
 ### Tree View
 
 #### `@mui/x-tree-view@7.22.1`
