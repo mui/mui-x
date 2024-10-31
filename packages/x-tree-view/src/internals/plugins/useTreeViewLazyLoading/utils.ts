@@ -1,13 +1,8 @@
-import { GridRowId } from '@mui/x-data-grid';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { TreeViewItemId } from '../../../models';
+import { TreeViewInstance, TreeViewUsedInstance } from '../../models';
+import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
-
-export const runIfServerMode = (modeProp: 'server' | 'client', fn: Function) => () => {
-  if (modeProp === 'server') {
-    fn();
-  }
-};
 
 export enum RequestStatus {
   QUEUED,
@@ -17,26 +12,40 @@ export enum RequestStatus {
 }
 
 /**
+ * Plugins that need to be present in the Tree View in order for `useTreeItemUtils` to work correctly.
+ */
+type NestedDataManagerMinimalPlugins = readonly [UseTreeViewLazyLoadingSignature];
+
+/**
+ * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
+ */
+
+export type NestedDataManagerOptionalPlugins = readonly [];
+
+/**
  * Fetches row children from the server with option to limit the number of concurrent requests
  * Determines the status of a request based on the enum `RequestStatus`
- * Uses `GridRowId` to uniquely identify a request
+ * Uses `ParentId` to uniquely identify a request
  */
 export class NestedDataManager {
-  private pendingRequests: Set<GridRowId> = new Set();
+  private pendingRequests: Set<TreeViewItemId> = new Set();
 
-  private queuedRequests: Set<GridRowId> = new Set();
+  private queuedRequests: Set<TreeViewItemId> = new Set();
 
-  private settledRequests: Set<GridRowId> = new Set();
+  private settledRequests: Set<TreeViewItemId> = new Set();
 
-  private api: GridPrivateApiPro;
+  private instance: TreeViewInstance<
+    NestedDataManagerMinimalPlugins,
+    NestedDataManagerOptionalPlugins
+  >;
 
   private maxConcurrentRequests: number;
 
   constructor(
-    privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
+    instance: TreeViewUsedInstance<UseTreeViewLazyLoadingSignature>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
-    this.api = privateApiRef.current;
+    this.instance = instance;
     this.maxConcurrentRequests = maxConcurrentRequests;
   }
 
@@ -57,32 +66,34 @@ export class NestedDataManager {
       const id = fetchQueue[i];
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
-      this.api.fetchRowChildren(id);
+      this.instance.fetchItemChildren(id);
     }
   };
 
-  public queue = async (ids: GridRowId[]) => {
-    const loadingIds: Record<GridRowId, boolean> = {};
+  public queue = async (ids: TreeViewItemId[]) => {
+    const loadingIds: Record<TreeViewItemId, boolean> = {};
+    console.log('ids', ids);
     ids.forEach((id) => {
       this.queuedRequests.add(id);
       loadingIds[id] = true;
     });
-    this.api.setState((state) => {
-      return {
-        ...state,
-        dataSource: {
-          ...state.dataSource,
-          loading: {
-            ...state.dataSource.loading,
-            ...loadingIds,
-          },
-        },
-      };
-    });
+    // this.instance.setState((state) => {
+    //   console.log('state', state);
+    //   return {
+    //     ...state,
+    //     dataSource: {
+    //       ...state.dataSource,
+    //       loading: {
+    //         ...state.dataSource.loading,
+    //         ...loadingIds,
+    //       },
+    //     },
+    //   };
+    // });
     this.processQueue();
   };
 
-  public setRequestSettled = (id: GridRowId) => {
+  public setRequestSettled = (id: TreeViewItemId) => {
     this.pendingRequests.delete(id);
     this.settledRequests.add(id);
     this.processQueue();
@@ -93,13 +104,13 @@ export class NestedDataManager {
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
 
-  public clearPendingRequest = (id: GridRowId) => {
-    this.api.unstable_dataSource.setChildrenLoading(id, false);
+  public clearPendingRequest = (id: TreeViewItemId) => {
+    // this.instance.unstable_dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };
 
-  public getRequestStatus = (id: GridRowId) => {
+  public getRequestStatus = (id: TreeViewItemId) => {
     if (this.pendingRequests.has(id)) {
       return RequestStatus.PENDING;
     }

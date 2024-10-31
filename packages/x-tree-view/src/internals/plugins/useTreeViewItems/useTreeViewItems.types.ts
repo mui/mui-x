@@ -9,6 +9,12 @@ export interface TreeViewItemToRenderProps {
   children?: TreeViewItemToRenderProps[];
 }
 
+type AddItemsParams<R> = {
+  items: R[];
+  parentId?: TreeViewItemId;
+  depth: number;
+  getChildrenCount?: (item: R) => number;
+};
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
    * Get the item with the given id.
@@ -84,6 +90,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  addItems: ({ items, parentId, depth, getChildrenCount }: AddItemsParams<R>) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -130,21 +137,11 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    * @default 12px
    */
   itemChildrenIndentation?: string | number;
-  /**
-   * Used to determine the number of children the item has.
-   * Only relevant for lazy-loaded trees.
-   *
-   * @template R
-   * @param {R} item The item to check.
-   * @returns {number} The number of children.
-   * @default (item) => number
-   */
-  getChildrenCount?: (item: R) => number;
 }
 
 export type UseTreeViewItemsDefaultizedParameters<R extends { children?: R[] }> = DefaultizedProps<
   UseTreeViewItemsParameters<R>,
-  'disabledItemsFocusable' | 'itemChildrenIndentation' | 'getChildrenCount'
+  'disabledItemsFocusable' | 'itemChildrenIndentation'
 >;
 
 interface UseTreeViewItemsEventLookup {

@@ -13,6 +13,7 @@ import {
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { TreeViewPublicAPI } from '../../internals/models';
+import { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -31,6 +32,7 @@ type UseTreeItemUtilsMinimalPlugins = readonly [
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
+  UseTreeViewLazyLoadingSignature,
 ];
 
 /**
@@ -51,12 +53,12 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-const isItemExpandable = (reactChildren: React.ReactNode) => {
-  if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-  }
-  return Boolean(reactChildren);
-};
+// const isItemExpandable = (reactChildren: React.ReactNode) => {
+//   if (Array.isArray(reactChildren)) {
+//     return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+//   }
+//   return Boolean(reactChildren);
+// };
 
 export const useTreeItemUtils = <
   TSignatures extends UseTreeItemUtilsMinimalPlugins = UseTreeItemUtilsMinimalPlugins,
@@ -71,11 +73,21 @@ export const useTreeItemUtils = <
   const {
     instance,
     selection: { multiSelect },
+    lazyLoading = false,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
+  const isItemExpandable = () => {
+    let expandable = false;
+    if (Array.isArray(children)) {
+      expandable = children.length > 0 && children.some(isItemExpandable);
+    }
+    expandable = expandable || instance?.isItemExpandable(itemId);
+    return Boolean(children) || expandable;
+  };
+
   const status: UseTreeItemStatus = {
-    expandable: instance?.isItemExpandable ? instance?.isItemExpandable(itemId) : false,
+    expandable: isItemExpandable(),
     expanded: instance.isItemExpanded(itemId),
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
@@ -91,6 +103,10 @@ export const useTreeItemUtils = <
 
     if (!status.focused) {
       instance.focusItem(event, itemId);
+    }
+
+    if (lazyLoading && !status.expanded) {
+      instance.fetchItems(itemId);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);

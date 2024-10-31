@@ -25,6 +25,7 @@ import {
   useTreeViewLabel,
   UseTreeViewLabelParameters,
 } from '../internals/plugins/useTreeViewLabel';
+import { useTreeViewLazyLoading } from '../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading';
 
 export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewItems,
@@ -34,6 +35,7 @@ export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
   useTreeViewLabel,
+  useTreeViewLazyLoading,
 ] as const;
 
 export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
