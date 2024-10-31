@@ -263,6 +263,7 @@ export const useGridRowSelection = (
         const removeRow = (rowId: GridRowId) => {
           newSelection.delete(rowId);
         };
+
         if (isSelected) {
           addRow(id);
           if (applyAutoSelection) {
@@ -309,13 +310,13 @@ export const useGridRowSelection = (
 
       const selectableIds = ids.filter((id) => apiRef.current.isRowSelectable(id));
 
-      let newSelection: GridRowId[];
+      let newSelection: Set<GridRowId>;
       if (resetSelection) {
         if (isSelected) {
-          newSelection = selectableIds;
+          newSelection = new Set(selectableIds);
           if (applyAutoSelection) {
             const addRow = (rowId: GridRowId) => {
-              newSelection.push(rowId);
+              newSelection.add(rowId);
             };
             selectableIds.forEach((id) => {
               findRowsToSelect(
@@ -329,23 +330,20 @@ export const useGridRowSelection = (
             });
           }
         } else {
-          newSelection = [];
+          newSelection = new Set();
         }
       } else {
-        // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-        const selectionLookup = {
-          ...selectedIdsLookupSelector(apiRef),
-        };
+        newSelection = new Set(Object.values(selectedIdsLookupSelector(apiRef)));
         const addRow = (rowId: GridRowId) => {
-          selectionLookup[rowId] = rowId;
+          newSelection.add(rowId);
         };
         const removeRow = (rowId: GridRowId) => {
-          delete selectionLookup[rowId];
+          newSelection.delete(rowId);
         };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
-            selectionLookup[id] = id;
+            newSelection.add(id);
             if (applyAutoSelection) {
               findRowsToSelect(
                 apiRef,
@@ -370,13 +368,11 @@ export const useGridRowSelection = (
             }
           }
         });
-
-        newSelection = Object.values(selectionLookup);
       }
 
-      const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+      const isSelectionValid = newSelection.size < 2 || canHaveMultipleSelection;
       if (isSelectionValid) {
-        apiRef.current.setRowSelectionModel(newSelection);
+        apiRef.current.setRowSelectionModel(Array.from(newSelection));
       }
     },
     [
