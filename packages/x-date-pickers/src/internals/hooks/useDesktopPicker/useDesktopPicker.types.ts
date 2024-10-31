@@ -3,6 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -28,7 +29,6 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
-import { SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseDesktopPickerSlots<
   TDate extends PickerValidDate,

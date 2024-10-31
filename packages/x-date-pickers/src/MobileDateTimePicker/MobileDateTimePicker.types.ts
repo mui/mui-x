@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   ExportedUseMobilePickerSlotProps,
@@ -8,7 +9,6 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView, PickerValidDate } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 

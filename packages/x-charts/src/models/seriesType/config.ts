@@ -1,3 +1,4 @@
+import { DefaultizedProps, MakeOptional } from '@mui/x-internals/types';
 import {
   ScatterSeriesType,
   DefaultizedScatterSeriesType,
@@ -13,7 +14,6 @@ import {
   PieValueType,
   DefaultizedPieValueType,
 } from './pie';
-import { DefaultizedProps, MakeOptional } from '../helpers';
 
 export interface ChartsSeriesConfig {
   bar: {

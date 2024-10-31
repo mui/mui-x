@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
@@ -16,7 +17,6 @@ import {
 import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { MakeOptional } from '../models/helpers';
 import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
 
 export type ChartContainerProps = Omit<

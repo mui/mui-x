@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  DefaultizedProps,
   useDefaultDates,
   useUtils,
   applyDefaultDate,

@@ -1,4 +1,5 @@
-import { MakeOptional, UseFieldInternalProps, AmPmProps } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-internals/types';
+import { UseFieldInternalProps, AmPmProps } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   TimeRangeValidationError,
