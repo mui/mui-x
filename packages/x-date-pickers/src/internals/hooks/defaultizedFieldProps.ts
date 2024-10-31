@@ -1,3 +1,4 @@
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { applyDefaultDate } from '../utils/date-utils';
 import { useUtils, useDefaultDates } from './useUtils';
 import {
@@ -6,7 +7,6 @@ import {
   DateTimeValidationProps,
   TimeValidationProps,
 } from '../models/validation';
-import { DefaultizedProps } from '../models/helpers';
 import { PickerValidDate } from '../../models';
 
 export interface UseDefaultizedDateFieldBaseProps<TDate extends PickerValidDate>

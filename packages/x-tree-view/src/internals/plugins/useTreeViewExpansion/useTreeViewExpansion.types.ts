@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from '../useTreeViewLabel';

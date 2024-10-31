@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -8,9 +9,8 @@ import {
   BaseTimePickerSlots,
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import {
   MultiSectionDigitalClockSlots,

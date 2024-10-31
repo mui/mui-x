@@ -36,6 +36,13 @@ In the demo below only rows with quantity above 50,000 can be selected:
 
 {{"demo": "DisableRowSelection.js", "bg": "inline"}}
 
+## Row selection with filtering
+
+By default, when the rows are filtered the selection is cleared from the rows that don't meet the filter criteria.
+To keep those rows selected even when they're not visible, set the `keepNonExistentRowsSelected` prop.
+
+{{"demo": "KeepNonExistentRowsSelected.js", "bg": "inline"}}
+
 ## Controlled row selection
 
 Use the `rowSelectionModel` prop to control the selection.

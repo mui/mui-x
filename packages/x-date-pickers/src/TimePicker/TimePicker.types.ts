@@ -1,10 +1,10 @@
+import { MakeRequired } from '@mui/x-internals/types';
 import {
   DesktopTimePickerProps,
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { MakeRequired } from '../internals/models/helpers';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileTimePickerProps,

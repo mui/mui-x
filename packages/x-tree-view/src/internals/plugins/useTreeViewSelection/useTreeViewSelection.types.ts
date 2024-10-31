@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 import { TreeViewSelectionPropagation, TreeViewCancellableEventHandler } from '../../../models';

@@ -1,4 +1,5 @@
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeItemLabelInputProps } from '../../../TreeItemLabelInput';

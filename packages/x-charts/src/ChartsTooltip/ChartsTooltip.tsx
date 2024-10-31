@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
@@ -12,13 +13,7 @@ import {
   ItemInteractionData,
 } from '../context/InteractionProvider';
 import { useSvgRef } from '../hooks/useSvgRef';
-import {
-  generateVirtualElement,
-  getTooltipHasData,
-  TriggerOptions,
-  usePointerType,
-  VirtualElement,
-} from './utils';
+import { getTooltipHasData, TriggerOptions, usePointerType } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
@@ -140,10 +135,7 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
 
-  const virtualElement = React.useRef<VirtualElement | null>(null);
-  if (virtualElement.current === null) {
-    virtualElement.current = generateVirtualElement(null);
-  }
+  const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
   const { item, axis } = React.useContext(InteractionContext);
 
@@ -162,7 +154,19 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
       open: popperOpen,
       placement: pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
       popperRef,
-      anchorEl: virtualElement.current,
+      anchorEl: {
+        getBoundingClientRect: () => ({
+          x: positionRef.current.x,
+          y: positionRef.current.y,
+          top: positionRef.current.y,
+          left: positionRef.current.x,
+          right: positionRef.current.x,
+          bottom: positionRef.current.y,
+          width: 0,
+          height: 0,
+          toJSON: () => '',
+        }),
+      },
       modifiers: [
         {
           name: 'offset',
@@ -182,10 +186,11 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
     }
 
     const handleMove = (event: PointerEvent) => {
-      virtualElement.current = generateVirtualElement({
+      // eslint-disable-next-line react-compiler/react-compiler
+      positionRef.current = {
         x: event.clientX,
         y: event.clientY,
-      });
+      };
       popperRef.current?.update();
     };
     element.addEventListener('pointermove', handleMove);
@@ -193,7 +198,7 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
     return () => {
       element.removeEventListener('pointermove', handleMove);
     };
-  }, [svgRef]);
+  }, [svgRef, positionRef]);
 
   if (trigger === 'none') {
     return null;
