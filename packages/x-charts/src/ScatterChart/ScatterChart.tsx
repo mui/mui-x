@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -14,7 +15,6 @@ import {
 } from '../ResponsiveChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { MakeOptional } from '../models/helpers';
 import {
   ChartsTooltip,
   ChartsTooltipProps,

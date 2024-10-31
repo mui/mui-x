@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   MobileOnlyPickerProps,
@@ -8,7 +9,6 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateView } from '../models';
 
 export interface MobileDatePickerSlots

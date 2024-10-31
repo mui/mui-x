@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { DateTimeValidationError, PickerValidDate } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {

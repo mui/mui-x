@@ -1,5 +1,5 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
-  MakeOptional,
   UseFieldInternalProps,
   DateOrTimeViewWithMeridiem,
   AmPmProps,

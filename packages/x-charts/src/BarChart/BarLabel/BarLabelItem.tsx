@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '../../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from './barLabelClasses';
 import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';

@@ -1,3 +1,4 @@
+import { MakeRequired } from '@mui/x-internals/types';
 import { UseDateTimeFieldProps } from '../DateTimeField';
 import {
   DesktopDateTimePickerProps,
@@ -5,7 +6,6 @@ import {
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileDateTimePickerProps,

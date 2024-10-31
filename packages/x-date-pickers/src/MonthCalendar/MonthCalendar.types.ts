@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
 import { PickerValidDate, TimezoneProps } from '../models';
 import type { PickersMonthProps } from './PickersMonth';
-import { SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface MonthCalendarSlots {
   /**

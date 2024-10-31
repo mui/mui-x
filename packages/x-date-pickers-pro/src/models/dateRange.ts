@@ -1,4 +1,5 @@
-import { MakeOptional, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-internals/types';
+import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { RangeFieldSection, RangeFieldSeparatorProps } from './fields';
 import { DateRangeValidationError } from './validation';
 import { DateRange } from './range';
