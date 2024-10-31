@@ -61,7 +61,7 @@ take the height of two rows by default.
 
 To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
 
-{{"demo": "AutoHeightOverlayNoSnap.js", "bg": "inline"}}
+{{"demo": "AutoHeightOverlay.js", "bg": "inline"}}
 
 ## API
 

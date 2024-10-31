@@ -19,12 +19,12 @@ import {
   DayCalendarProps,
   ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
-import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRange, RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 import { PickersRangeCalendarHeaderProps } from '../PickersRangeCalendarHeader';
+import { ExportedValidateDateRangeProps } from '../validation/validateDateRange';
 
 export interface DateRangeCalendarSlots
   extends PickersArrowSwitcherSlots,
@@ -58,8 +58,7 @@ export interface DateRangeCalendarSlotProps
 
 export interface ExportedDateRangeCalendarProps
   extends ExportedDayCalendarProps,
-    BaseDateValidationProps,
-    DayRangeValidationProps,
+    ExportedValidateDateRangeProps,
     TimezoneProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.

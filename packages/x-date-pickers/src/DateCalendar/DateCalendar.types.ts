@@ -10,12 +10,7 @@ import {
 } from '../PickersCalendarHeader';
 import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
 import { DateCalendarClasses } from './dateCalendarClasses';
-import {
-  BaseDateValidationProps,
-  YearValidationProps,
-  MonthValidationProps,
-  DayValidationProps,
-} from '../internals/models/validation';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, PickerValidDate, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
@@ -29,6 +24,7 @@ import {
   MonthCalendarSlots,
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
+import { ExportedValidateDateProps } from '../validation/validateDate';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
@@ -55,10 +51,7 @@ export interface ExportedDateCalendarProps
   extends ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
-    BaseDateValidationProps,
-    DayValidationProps,
-    YearValidationProps,
-    MonthValidationProps,
+    ExportedValidateDateProps,
     TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.

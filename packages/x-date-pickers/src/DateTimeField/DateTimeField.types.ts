@@ -10,19 +10,12 @@ import {
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
 import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  DateTimeValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  TimeValidationProps,
-  YearValidationProps,
-} from '../internals/models/validation';
-import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
+import { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
+import { AmPmProps } from '../internals/models/props/time';
 
 export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -34,20 +27,9 @@ export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extend
       >,
       'format'
     >,
-    DayValidationProps,
-    MonthValidationProps,
-    YearValidationProps,
-    BaseDateValidationProps,
-    TimeValidationProps,
-    BaseTimeValidationProps,
-    DateTimeValidationProps,
-    ExportedUseClearableFieldProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateDateTimeProps,
+    ExportedUseClearableFieldProps,
+    AmPmProps {}
 
 export type DateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props

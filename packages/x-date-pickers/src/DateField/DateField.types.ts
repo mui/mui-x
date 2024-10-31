@@ -14,12 +14,7 @@ import {
 } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MakeOptional } from '../internals/models/helpers';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/models/validation';
+import { ExportedValidateDateProps } from '../validation/validateDate';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -31,10 +26,7 @@ export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends bo
       >,
       'format'
     >,
-    DayValidationProps,
-    MonthValidationProps,
-    YearValidationProps,
-    BaseDateValidationProps,
+    ExportedValidateDateProps,
     ExportedUseClearableFieldProps {}
 
 export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =

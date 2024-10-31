@@ -1,18 +1,16 @@
 import {
-  BaseDateValidationProps,
-  TimeValidationProps,
   MakeOptional,
   UseFieldInternalProps,
-  DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
+  AmPmProps,
 } from '@mui/x-date-pickers/internals';
-import { DayRangeValidationProps } from './dateRange';
 import {
   DateTimeRangeValidationError,
   RangeFieldSection,
   DateRange,
   RangeFieldSeparatorProps,
 } from '../../models';
+import { ExportedValidateDateTimeRangeProps } from '../../validation/validateDateTimeRange';
 
 export interface UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -28,16 +26,8 @@ export interface UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure e
       'format'
     >,
     RangeFieldSeparatorProps,
-    DayRangeValidationProps,
-    TimeValidationProps,
-    BaseDateValidationProps,
-    DateTimeValidationProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateDateTimeRangeProps,
+    AmPmProps {}
 
 export type DateTimeRangePickerView = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
 

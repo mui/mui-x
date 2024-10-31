@@ -1,15 +1,11 @@
-import {
-  BaseTimeValidationProps,
-  TimeValidationProps,
-  MakeOptional,
-  UseFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
+import { MakeOptional, UseFieldInternalProps, AmPmProps } from '@mui/x-date-pickers/internals';
 import {
   TimeRangeValidationError,
   RangeFieldSection,
   DateRange,
   RangeFieldSeparatorProps,
 } from '../../models';
+import type { ExportedValidateTimeRangeProps } from '../../validation/validateTimeRange';
 
 export interface UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -25,11 +21,5 @@ export interface UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure exten
       'format'
     >,
     RangeFieldSeparatorProps,
-    TimeValidationProps,
-    BaseTimeValidationProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default utils.is12HourCycleInCurrentLocale()
-   */
-  ampm?: boolean;
-}
+    ExportedValidateTimeRangeProps,
+    AmPmProps {}
