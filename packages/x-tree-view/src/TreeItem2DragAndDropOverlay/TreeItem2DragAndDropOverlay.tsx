@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { TreeItem2DragAndDropOverlayProps } from './TreeItem2DragAndDropOverlay.types';
@@ -61,5 +62,14 @@ function TreeItem2DragAndDropOverlay(props: TreeItem2DragAndDropOverlayProps) {
 
   return <TreeItem2DragAndDropOverlayRoot {...props} />;
 }
+
+TreeItem2DragAndDropOverlay.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  action: PropTypes.oneOf(['make-child', 'move-to-parent', 'reorder-above', 'reorder-below']),
+  style: PropTypes.object,
+} as any;
 
 export { TreeItem2DragAndDropOverlay };

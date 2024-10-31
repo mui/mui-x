@@ -1,5 +1,8 @@
 import { styled } from '../internals/zero-styled';
 
+/**
+ * @ignore - internal component.
+ */
 const TreeItem2LabelInput = styled('input', {
   name: 'MuiTreeItem2',
   slot: 'LabelInput',

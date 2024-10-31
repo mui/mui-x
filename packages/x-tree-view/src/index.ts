@@ -9,6 +9,8 @@ export * from './TreeItem2';
 export * from './useTreeItem2';
 export * from './TreeItem2Icon';
 export * from './TreeItem2Provider';
+export * from './TreeItem2DragAndDropOverlay';
+export * from './TreeItem2LabelInput';
 
 export { unstable_resetCleanupTracking } from './internals/hooks/useInstanceEventHandler';
 
