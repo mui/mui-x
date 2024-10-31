@@ -10,7 +10,7 @@ import {
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import {
   MultiSectionDigitalClockSlots,

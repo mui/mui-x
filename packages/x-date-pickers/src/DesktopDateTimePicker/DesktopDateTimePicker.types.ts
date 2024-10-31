@@ -10,7 +10,7 @@ import {
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
 import { DateOrTimeView, PickerValidDate } from '../models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MultiSectionDigitalClockSlots,

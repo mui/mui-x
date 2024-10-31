@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
 import { PickerValidDate, TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
-import { BaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps } from '../internals/models/props/time';
 import {
   MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,

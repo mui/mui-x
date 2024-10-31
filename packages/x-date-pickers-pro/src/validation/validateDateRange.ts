@@ -6,6 +6,13 @@ import { DayRangeValidationProps } from '../internals/models/dateRange';
 import { DateRangeValidationError, DateRange } from '../models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 
+/**
+ * Validation props used by the Date Range Picker, Date Range Field and Date Range Calendar components.
+ */
+export interface ExportedValidateDateRangeProps<TDate extends PickerValidDate>
+  extends DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
+
 export interface ValidateDateRangeProps<TDate extends PickerValidDate>
   extends DayRangeValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {}
