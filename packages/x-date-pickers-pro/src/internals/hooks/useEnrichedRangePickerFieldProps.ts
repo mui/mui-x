@@ -7,7 +7,6 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import {
-  BaseSingleInputFieldProps,
   FieldSelectedSections,
   FieldRef,
   PickerValidDate,
@@ -25,9 +24,9 @@ import {
   WrapperVariant,
   SlotComponentPropsFromProps,
   DateOrTimeViewWithMeridiem,
+  BaseSingleInputFieldProps,
 } from '@mui/x-date-pickers/internals';
 import {
-  BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
@@ -35,8 +34,10 @@ import {
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
+  PickersRangeFieldSlotProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
+import { BaseMultiInputFieldProps } from '../models/fields';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   field: React.ElementType;
@@ -63,12 +64,11 @@ export interface RangePickerFieldSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseMultiInputFieldProps<
+    PickersRangeFieldSlotProps<
       DateRange<TDate>,
       TDate,
       RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
+      TEnableAccessibleFieldDOMStructure
     >,
     {},
     PickerOwnerState

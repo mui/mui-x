@@ -16,17 +16,13 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
+  DatePicker,
+  DatePickerFieldProps,
+  DatePickerProps,
+} from '@mui/x-date-pickers/DatePicker';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
 
@@ -99,18 +95,8 @@ const JoyField = React.forwardRef(
   },
 ) as JoyFieldComponent;
 
-interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, false>,
-    BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
-      FieldSection,
-      false,
-      DateValidationError
-    > {}
-
 const JoyDateField = React.forwardRef(
-  (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerFieldProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
     const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({

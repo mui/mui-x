@@ -1,5 +1,5 @@
-import { BaseDateValidationProps, MakeRequired } from '@mui/x-date-pickers/internals';
-import { BaseSingleInputFieldProps, PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -10,12 +10,8 @@ import {
   MobileDateRangePickerSlots,
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
-import {
-  DateRange,
-  DateRangeValidationError,
-  RangeFieldSection,
-  UseDateRangeFieldProps,
-} from '../models';
+import { DateRange, DateRangeValidationError, RangeFieldSection } from '../models';
+import { ValidateDateRangeProps } from '../validation';
 
 export interface DateRangePickerSlots<TDate extends PickerValidDate>
   extends DesktopDateRangePickerSlots<TDate>,
@@ -56,14 +52,11 @@ export interface DateRangePickerProps<
 export type DateRangePickerFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = MakeRequired<
-  UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | 'value' | keyof BaseDateValidationProps<TDate>
-> &
+> = ValidateDateRangeProps<TDate> &
   BaseSingleInputFieldProps<
     DateRange<TDate>,
     TDate,
     RangeFieldSection,
-    false,
+    TEnableAccessibleFieldDOMStructure,
     DateRangeValidationError
   >;

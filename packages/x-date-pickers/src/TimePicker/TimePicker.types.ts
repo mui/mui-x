@@ -3,21 +3,14 @@ import {
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
-import { TimeViewWithMeridiem } from '../internals/models';
-import { MakeRequired } from '../internals/models/helpers';
-import { BaseTimeValidationProps } from '../internals/models/validation';
+import { BaseSingleInputFieldProps, TimeViewWithMeridiem } from '../internals/models';
 import {
   MobileTimePickerProps,
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  PickerValidDate,
-  TimeValidationError,
-} from '../models';
-import { UseTimeFieldProps } from '../TimeField';
+import { FieldSection, PickerValidDate, TimeValidationError } from '../models';
+import { ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots<TDate extends PickerValidDate>
   extends DesktopTimePickerSlots<TDate>,
@@ -62,8 +55,11 @@ export interface TimePickerProps<
 export type TimePickerFieldProps<
   TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = MakeRequired<
-  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
-> &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;
+> = ValidateTimeProps<TDate> &
+  BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    TimeValidationError
+  >;

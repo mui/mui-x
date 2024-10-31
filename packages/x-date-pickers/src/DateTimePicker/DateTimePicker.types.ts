@@ -1,23 +1,16 @@
-import { UseDateTimeFieldProps } from '../DateTimeField';
 import {
   DesktopDateTimePickerProps,
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { MakeRequired } from '../internals/models/helpers';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateTimeValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '../models';
+import { DateTimeValidationError, FieldSection, PickerValidDate } from '../models';
+import { ValidateDateTimeProps } from '../validation';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots<TDate extends PickerValidDate>
@@ -74,16 +67,5 @@ export interface DateTimePickerProps<
  * Props the field can receive when used inside a date time picker.
  * (`DateTimePicker`, `DesktopDateTimePicker` or `MobileDateTimePicker` component).
  */
-export type DateTimePickerFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = MakeRequired<
-  UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  | 'format'
-  | 'timezone'
-  | 'value'
-  | 'ampm'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof BaseTimeValidationProps
-> &
+export type DateTimePickerFieldProps<TDate extends PickerValidDate> = ValidateDateTimeProps<TDate> &
   BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateTimeValidationError>;

@@ -12,8 +12,8 @@ import {
 } from '../../components/PickersModalDialog';
 import { UsePickerParams } from '../usePicker';
 import {
-  BaseSingleInputFieldProps,
   FieldSection,
+  PickersFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
@@ -25,7 +25,7 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { SlotComponentPropsFromProps } from '../../models/helpers';
+import { MakeRequired, SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseMobilePickerSlots<
   TDate extends PickerValidDate,
@@ -50,13 +50,7 @@ export interface ExportedUseMobilePickerSlotProps<
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<
-      TDate | null,
-      TDate,
-      FieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
-    >,
+    PickersFieldSlotProps<TDate | null, TDate, FieldSection, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -83,7 +77,7 @@ export interface UseMobilePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
-    MobileOnlyPickerProps {
+    MakeRequired<MobileOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
    * @default {}

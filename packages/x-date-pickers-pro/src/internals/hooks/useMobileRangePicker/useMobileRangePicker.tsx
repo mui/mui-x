@@ -11,18 +11,12 @@ import {
   PickersProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
-import {
-  PickerValidDate,
-  FieldRef,
-  InferError,
-  PickerOwnerState,
-} from '@mui/x-date-pickers/models';
+import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
-  UseMobileRangePickerSlotProps,
 } from './useMobileRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
@@ -117,32 +111,31 @@ export const useMobileRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
-    RangePickerPropsForFieldSlot<
-      boolean,
-      TDate,
-      TEnableAccessibleFieldDOMStructure,
-      InferError<TExternalProps>
-    >,
-    PickerOwnerState
-  >({
+  const fieldProps: RangePickerPropsForFieldSlot<
+    boolean,
+    TDate,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
+      // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
+      ...(fieldType === 'singleInput' && !enableAccessibleFieldDOMStructure && { inputRef }),
+      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });

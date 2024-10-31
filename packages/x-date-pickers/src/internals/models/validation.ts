@@ -1,4 +1,4 @@
-import { PickerValidDate, TimeView } from '../../models';
+import type { PickerValidDate, TimeView } from '../../models';
 
 interface FutureAndPastValidationProps {
   /**

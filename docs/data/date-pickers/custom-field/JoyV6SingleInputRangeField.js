@@ -21,7 +21,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { useClearableField, usePickersContext } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
 
@@ -70,7 +70,16 @@ const JoyField = React.forwardRef((props, ref) => {
 });
 
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, onAdornmentClick, ...other } = props;
+  const { slots, slotProps, ...other } = props;
+
+  const pickersContext = usePickersContext();
+  const handleTogglePicker = (event) => {
+    if (pickersContext.open) {
+      pickersContext.onClose(event);
+    } else {
+      pickersContext.onOpen(event);
+    }
+  };
 
   const textFieldProps = useSlotProps({
     elementType: FormControl,
@@ -97,7 +106,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       ref={ref}
       endDecorator={
         <IconButton
-          onClick={onAdornmentClick}
+          onClick={handleTogglePicker}
           variant="plain"
           color="neutral"
           sx={{ marginLeft: 2.5 }}
@@ -112,33 +121,11 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const toggleOpen = (event) => {
-    // allows toggle behavior
-    event.stopPropagation();
-    setIsOpen((currentOpen) => !currentOpen);
-  };
-
-  const handleOpen = () => setIsOpen(true);
-
-  const handleClose = () => setIsOpen(false);
-
   return (
     <DateRangePicker
       {...props}
       ref={ref}
-      open={isOpen}
-      onClose={handleClose}
-      onOpen={handleOpen}
       slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
-      slotProps={{
-        ...props.slotProps,
-        field: {
-          ...props.slotProps?.field,
-          onAdornmentClick: toggleOpen,
-        },
-      }}
     />
   );
 });

@@ -11,8 +11,8 @@ import {
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
 import {
-  BaseSingleInputFieldProps,
   FieldSection,
+  PickersFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
@@ -28,7 +28,7 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
-import { SlotComponentPropsFromProps } from '../../models/helpers';
+import { MakeRequired, SlotComponentPropsFromProps } from '../../models/helpers';
 
 export interface UseDesktopPickerSlots<
   TDate extends PickerValidDate,
@@ -79,13 +79,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     ExportedPickersLayoutSlotProps<TDate | null, TDate, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<
-      TDate | null,
-      TDate,
-      FieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
-    >,
+    PickersFieldSlotProps<TDate | null, TDate, FieldSection, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -114,7 +108,7 @@ export interface UseDesktopPickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<TDate | null, TDate, TView, any, {}>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
-    DesktopOnlyPickerProps {
+    MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
    * @default {}

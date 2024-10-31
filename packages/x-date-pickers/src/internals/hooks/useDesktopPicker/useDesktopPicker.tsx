@@ -5,22 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import {
-  UseDesktopPickerParams,
-  UseDesktopPickerProps,
-  UseDesktopPickerSlotProps,
-} from './useDesktopPicker.types';
+import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import {
-  FieldSection,
-  PickerValidDate,
-  FieldRef,
-  BaseSingleInputFieldProps,
-  InferError,
-  PickerOwnerState,
-} from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { FieldSection, PickerValidDate, FieldRef, InferError } from '../../../models';
+import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../../models';
 import { PickersProvider } from '../../components/PickersProvider';
 
 /**
@@ -123,40 +112,36 @@ export const useDesktopPicker = <
   });
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
-    Partial<
-      BaseSingleInputFieldProps<
-        TDate | null,
-        TDate,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        InferError<TExternalProps>
-      >
-    >,
-    PickerOwnerState
-  >({
+  const fieldProps: BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
-      ...(isToolbarHidden && { id: labelId }),
+      // Internal props
       readOnly,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      autoFocus: autoFocus && !props.open,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       label,
       name,
-      autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
-      ...(inputRef ? { inputRef } : {}),
+      ...(isToolbarHidden && { id: labelId }),
+      ...(!enableAccessibleFieldDOMStructure && { inputRef }),
     },
     ownerState,
   });
