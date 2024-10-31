@@ -55,6 +55,10 @@ Same changes as in `@mui/x-date-pickers@7.22.1`.
 
 - [TreeView] Fix drag and drop color usage (#15149) @LukasTy
 
+#### `@mui/x-tree-view-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.22.1`.
+
 ### Docs
 
 - [docs] Add section explaining how to keep the selection while filtering in Data grid docs (#15199) @arminmeh
