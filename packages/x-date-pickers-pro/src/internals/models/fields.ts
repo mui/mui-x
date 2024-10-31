@@ -1,7 +1,8 @@
 import { SxProps } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
-import { MakeRequired, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { MakeRequired } from '@mui/x-internals/types';
+import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { FieldSection, PickerValidDate } from '@mui/x-date-pickers/models';
 import type {
   MultiInputFieldRefs,

@@ -40,6 +40,5 @@ export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 
-export * from '../models/helpers';
 export * from '../models/z-axis';
 export * from '../models/axis';

@@ -9,6 +9,7 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
+import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
@@ -29,7 +30,6 @@ import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps, SlotComponentPropsFromProps } from '../internals/models/helpers';
 
 export interface DayCalendarSlots<TDate extends PickerValidDate> {
   /**

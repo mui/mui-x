@@ -1,3 +1,4 @@
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DateOrTimeView,
   DateView,
@@ -10,7 +11,6 @@ import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils'
 import { isDatePickerView, resolveDateFormat } from './date-utils';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { DesktopOnlyTimePickerProps } from '../models/props/time';
-import { DefaultizedProps } from '../models/helpers';
 
 export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,

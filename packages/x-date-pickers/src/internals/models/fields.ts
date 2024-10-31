@@ -1,4 +1,5 @@
 import { SxProps } from '@mui/material/styles';
+import { MakeRequired } from '@mui/x-internals/types';
 import type {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlotProps,
@@ -6,7 +7,6 @@ import type {
 } from '../../hooks/useClearableField';
 import type { FieldSection, PickerOwnerState, PickerValidDate } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
-import { MakeRequired } from './helpers';
 
 interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
   className: string | undefined;

@@ -510,7 +510,7 @@ If you were using them, you need to replace them with the following code:
     -import { BasePickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
     +import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
 
-    interface CustomTextFieldProps
+     interface CustomTextFieldProps
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseSingleInputPickersTextFieldProps<true> {}
     ```
@@ -521,7 +521,7 @@ If you were using them, you need to replace them with the following code:
     -import { BasePickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
     +import { BaseMultiInputPickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
 
-    interface CustomTextFieldProps
+     interface CustomTextFieldProps
     -  extends BasePickersTextFieldProps<true> {}
     +  extends BaseMultiInputPickersTextFieldProps<true> {}
     ```
