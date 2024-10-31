@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 1, 2024_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 Special thanks go out to the community contributors who have helped make this release possible:
 @wojtkolos, @dpak-maurya.
 Following are all team members who have contributed to this release:
-@LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf.
+@LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf, @flaviendelangle.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -53,6 +53,7 @@ Same changes as in `@mui/x-date-pickers@7.22.1`.
 
 #### `@mui/x-tree-view@7.22.1`
 
+- [TreeView] Export `TreeItem2DragAndDropOverlay` and `TreeItem2LabelInput` from the root of each package (#15208) @flaviendelangle 
 - [TreeView] Fix drag and drop color usage (#15149) @LukasTy
 
 #### `@mui/x-tree-view-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
