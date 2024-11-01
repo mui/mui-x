@@ -58,7 +58,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'شامل',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'مساوی',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'شروع با',
   filterOperatorEndsWith: 'پایان با',
   filterOperatorIs: 'هست',
@@ -79,7 +81,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'شامل',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'مساوی',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'شروع با',
   headerFilterOperatorEndsWith: 'پایان با',
   headerFilterOperatorIs: 'هست',

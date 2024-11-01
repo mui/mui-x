@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerValidDate, TimeView } from '../models';
@@ -6,7 +7,7 @@ import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimeP
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateTime } from '../internals/utils/validation/validateTime';
+import { validateTime } from '../validation';
 
 type StaticTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,

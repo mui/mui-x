@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -20,6 +21,7 @@ import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { getFocusedListItemIndex } from '../internals/utils/utils';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -114,6 +116,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
+  const listRef = React.useRef<HTMLUListElement>(null);
 
   const props = useThemeProps({
     props: inProps,
@@ -280,18 +283,49 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
+    const result: TDate[] = [];
     const startOfDay = utils.startOfDay(valueOrReferenceDate);
-    return [
-      startOfDay,
-      ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfDay, timeStep * (index + 1)),
-      ),
-    ];
+    let nextTimeStepOption = startOfDay;
+    while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
+      result.push(nextTimeStepOption);
+      nextTimeStepOption = utils.addMinutes(nextTimeStepOption, timeStep);
+    }
+    return result;
   }, [valueOrReferenceDate, timeStep, utils]);
 
   const focusedOptionIndex = timeOptions.findIndex((option) =>
     utils.isEqual(option, valueOrReferenceDate),
   );
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'PageUp': {
+        const newIndex = getFocusedListItemIndex(listRef.current!) - 5;
+        const children = listRef.current!.children;
+        const newFocusedIndex = Math.max(0, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      case 'PageDown': {
+        const newIndex = getFocusedListItemIndex(listRef.current!) + 5;
+        const children = listRef.current!.children;
+        const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+        const childToFocus = children[newFocusedIndex];
+        if (childToFocus) {
+          (childToFocus as HTMLElement).focus();
+        }
+        event.preventDefault();
+        break;
+      }
+      default:
+    }
+  };
 
   return (
     <DigitalClockRoot
@@ -301,9 +335,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList
+        ref={listRef}
         role="listbox"
         aria-label={translations.timePickerToolbarTitle}
         className={classes.list}
+        onKeyDown={handleKeyDown}
       >
         {timeOptions.map((option, index) => {
           if (skipDisabled && isTimeDisabled(option)) {
@@ -313,10 +349,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           const formattedValue = utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h');
           const tabIndex =
             focusedOptionIndex === index || (focusedOptionIndex === -1 && index === 0) ? 0 : -1;
-
           return (
             <ClockItem
-              key={formattedValue}
+              key={`${option.valueOf()}-${formattedValue}`}
               onClick={() => !readOnly && handleItemSelect(option)}
               selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}

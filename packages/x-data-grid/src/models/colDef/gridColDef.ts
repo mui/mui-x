@@ -185,6 +185,10 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   valueGetter?: GridValueGetter<R, V, F>;
   /**
+   * Function that allows to provide a specific value to be used in row spanning.
+   */
+  rowSpanValueGetter?: GridValueGetter<R, V, F>;
+  /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
    * @returns {R} The row with the updated field.
@@ -350,6 +354,16 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>
   | GridSingleSelectColDef<R, V, F>;
+
+/**
+ * Column Definition interface used for the list view column.
+ * @demos
+ *   - [List view](/x/react-data-grid/list-view/)
+ */
+export type GridListColDef<R extends GridValidRowModel = any, V = any, F = V> = Pick<
+  GridBaseColDef<R, V, F>,
+  'field' | 'renderCell' | 'align' | 'cellClassName' | 'display'
+>;
 
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 

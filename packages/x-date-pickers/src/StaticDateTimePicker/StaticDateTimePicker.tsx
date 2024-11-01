@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticDateTimePickerProps } from './StaticDateTimePicker.types';
@@ -10,7 +11,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView, PickerValidDate } from '../models';
-import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { validateDateTime } from '../validation';
 
 type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -277,7 +278,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
@@ -380,8 +381,14 @@ StaticDateTimePicker.propTypes = {
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
   /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
+  /**
    * Years rendered per row.
-   * @default 3
+   * @default `4` when `displayStaticWrapperAs === 'desktop'`, `3` otherwise.
    */
   yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

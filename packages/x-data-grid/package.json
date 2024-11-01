@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "7.16.0",
+  "version": "7.21.0",
   "description": "The Community plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,12 +43,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.6",
-    "@mui/utils": "^5.16.6",
+    "@babel/runtime": "^7.26.0",
+    "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-internals": "workspace:*",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
@@ -71,13 +71,13 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.12",
+    "@mui/internal-test-utils": "^1.0.19",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@mui/types": "^7.2.15",
-    "@types/prop-types": "^15.7.12",
-    "rimraf": "^5.0.10"
+    "@types/prop-types": "^15.7.13",
+    "rimraf": "^6.0.1"
   },
   "engines": {
     "node": ">=14.0.0"

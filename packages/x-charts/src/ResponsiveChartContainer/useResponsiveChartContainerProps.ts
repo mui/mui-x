@@ -1,3 +1,4 @@
+'use client';
 import { ChartContainerProps } from '../ChartContainer';
 import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
@@ -9,6 +10,7 @@ export const useResponsiveChartContainerProps = (
   const {
     width,
     height,
+    resolveSizeBeforeRender,
     margin,
     children,
     series,
@@ -25,6 +27,7 @@ export const useResponsiveChartContainerProps = (
     xAxis,
     yAxis,
     zAxis,
+    skipAnimation,
     ...other
   } = props;
 
@@ -32,7 +35,7 @@ export const useResponsiveChartContainerProps = (
     containerRef,
     width: dWidth,
     height: dHeight,
-  } = useChartContainerDimensions(width, height);
+  } = useChartContainerDimensions(width, height, resolveSizeBeforeRender);
 
   const resizableChartContainerProps = {
     ...other,
@@ -57,6 +60,7 @@ export const useResponsiveChartContainerProps = (
     xAxis,
     yAxis,
     zAxis,
+    skipAnimation,
     width: dWidth,
     height: dHeight,
     ref,

@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   MobileOnlyPickerProps,
@@ -8,7 +9,6 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateView, PickerValidDate } from '../models';
 
 export interface MobileDatePickerSlots<TDate extends PickerValidDate>
@@ -23,7 +23,7 @@ export interface MobileDatePickerSlotProps<
 
 export interface MobileDatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDatePickerProps<TDate>,
     MobileOnlyPickerProps {
   /**
@@ -36,4 +36,9 @@ export interface MobileDatePickerProps<
    * @default {}
    */
   slotProps?: MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow?: 3 | 4;
 }

@@ -1,3 +1,4 @@
+'use client';
 import { useCartesianContext } from '../context/CartesianProvider';
 
 export function useXAxis(identifier?: number | string) {

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -222,7 +223,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
     <PickersCalendarHeaderRoot
       {...other}
       ownerState={ownerState}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ref={ref}
     >
       <PickersCalendarHeaderLabelContainer
@@ -236,7 +237,7 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<
         <PickersFadeTransitionGroup reduceAnimations={reduceAnimations} transKey={label}>
           <PickersCalendarHeaderLabel
             id={labelId}
-            data-mui-test="calendar-month-and-year-text"
+            data-testid="calendar-month-and-year-text"
             ownerState={ownerState}
             className={classes.label}
           >

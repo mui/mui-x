@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
+import { MakeOptional } from '@mui/x-internals/types';
 import TextField from '@mui/material/TextField';
 import {
   ExportedUseClearableFieldProps,
@@ -13,13 +14,7 @@ import {
   BuiltInFieldTextFieldProps,
 } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { MakeOptional } from '../internals/models/helpers';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/models/validation';
+import { ExportedValidateDateProps } from '../validation/validateDate';
 
 export interface UseDateFieldProps<
   TDate extends PickerValidDate,
@@ -34,38 +29,31 @@ export interface UseDateFieldProps<
       >,
       'format'
     >,
-    DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate>,
+    ExportedValidateDateProps<TDate>,
     ExportedUseClearableFieldProps {}
-
-export type UseDateFieldComponentProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
-  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
 
 export type DateFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> = UseDateFieldComponentProps<
-  TDate,
-  TEnableAccessibleFieldDOMStructure,
-  BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>
-> & {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: DateFieldSlots;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: DateFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
-};
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> =
+  // The hook props
+  UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+    // The TextField props
+    Omit<
+      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
+      keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+    > & {
+      /**
+       * Overridable component slots.
+       * @default {}
+       */
+      slots?: DateFieldSlots;
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotProps?: DateFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+    };
 
 export type DateFieldOwnerState<
   TDate extends PickerValidDate,

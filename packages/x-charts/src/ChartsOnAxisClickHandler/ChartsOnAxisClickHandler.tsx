@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { InteractionContext } from '../context/InteractionProvider';
@@ -5,7 +6,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
 import { useCartesianContext } from '../context/CartesianProvider';
 
-type AxisData = {
+export type ChartsAxisData = {
   dataIndex: number;
   axisValue?: number | Date | string;
   seriesValues: Record<string, number | null | undefined>;
@@ -18,7 +19,7 @@ export interface ChartsOnAxisClickHandlerProps {
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | AxisData} data The data about the clicked axis and items associated with it.
    */
-  onAxisClick?: (event: MouseEvent, data: null | AxisData) => void;
+  onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
 }
 
 function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
@@ -38,7 +39,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
     const handleMouseClick = (event: MouseEvent) => {
       event.preventDefault();
 
-      const isXaxis = (axis.x && axis.x.index) !== undefined;
+      const isXaxis = axis.x && axis.x.index !== -1;
       const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
       const dataIndex = isXaxis ? axis.x && axis.x.index : axis.y && axis.y.index;
 

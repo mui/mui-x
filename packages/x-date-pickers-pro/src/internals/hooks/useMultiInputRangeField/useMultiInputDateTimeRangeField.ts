@@ -1,11 +1,6 @@
 import useEventCallback from '@mui/utils/useEventCallback';
+import { unstable_useDateTimeField as useDateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
-  unstable_useDateTimeField as useDateTimeField,
-  UseDateTimeFieldComponentProps,
-} from '@mui/x-date-pickers/DateTimeField';
-import {
-  useLocalizationContext,
-  useValidation,
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
@@ -13,15 +8,13 @@ import {
   useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
+import { useValidation } from '@mui/x-date-pickers/validation';
 import type {
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
 import { DateTimeRangeValidationError, DateRange } from '../../../models';
-import {
-  DateTimeRangeComponentValidationProps,
-  validateDateTimeRange,
-} from '../../utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { excludeProps } from './shared';
@@ -47,7 +40,6 @@ export const useMultiInputDateTimeRangeField = <
     UseMultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
     typeof inSharedProps
   >(inSharedProps);
-  const adapter = useLocalizationContext<TDate>();
 
   const {
     value: valueProp,
@@ -74,6 +66,14 @@ export const useMultiInputDateTimeRangeField = <
     valueManager: rangeValueManager,
   });
 
+  const { validationError, getValidationErrorForNewValue } = useValidation({
+    props: sharedProps,
+    value,
+    timezone,
+    validator: validateDateTimeRange,
+    onError: sharedProps.onError,
+  });
+
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
@@ -84,11 +84,7 @@ export const useMultiInputDateTimeRangeField = <
 
       const context: FieldChangeHandlerContext<DateTimeRangeValidationError> = {
         ...rawContext,
-        validationError: validateDateTimeRange({
-          adapter,
-          value: newDateRange,
-          props: { ...sharedProps, timezone },
-        }),
+        validationError: getValidationErrorForNewValue(newDateRange),
       };
 
       handleValueChange(newDateRange, context);
@@ -98,18 +94,6 @@ export const useMultiInputDateTimeRangeField = <
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
-  const validationError = useValidation<
-    DateRange<TDate>,
-    TDate,
-    DateTimeRangeValidationError,
-    DateTimeRangeComponentValidationProps<TDate>
-  >(
-    { ...sharedProps, value, timezone },
-    validateDateTimeRange,
-    rangeValueManager.isSameError,
-    rangeValueManager.defaultErrorState,
-  );
-
   const selectedSectionsResponse = useMultiInputFieldSelectedSections({
     selectedSections,
     onSelectedSectionsChange,
@@ -117,11 +101,7 @@ export const useMultiInputDateTimeRangeField = <
     unstableEndFieldRef,
   });
 
-  const startFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const startFieldProps = {
     error: !!validationError[0],
     ...startTextFieldProps,
     ...selectedSectionsResponse.start,
@@ -138,11 +118,7 @@ export const useMultiInputDateTimeRangeField = <
     autoFocus, // Do not add on end field.
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const endFieldProps = {
     error: !!validationError[1],
     ...endTextFieldProps,
     ...selectedSectionsResponse.end,

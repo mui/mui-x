@@ -68,6 +68,10 @@ import {
   useGridDataSourceTreeDataPreProcessors,
   useGridDataSource,
   dataSourceStateInitializer,
+  useGridRowSpanning,
+  rowSpanningStateInitializer,
+  useGridListView,
+  listViewStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -82,6 +86,7 @@ import {
   rowGroupingStateInitializer,
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
+import { useGridDataSourceRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridDataSourceRowGroupingPreProcessors';
 import { useGridExcelExport } from '../hooks/features/export/useGridExcelExport';
 import {
   cellSelectionStateInitializer,
@@ -101,6 +106,7 @@ export const useDataGridPremiumComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
+  useGridDataSourceRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
@@ -131,6 +137,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
@@ -140,6 +147,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
   useGridInitializeState(dataSourceStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridHeaderFiltering(apiRef, props);
@@ -152,7 +160,8 @@ export const useDataGridPremiumComponent = (
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
+  useGridRowSpanning(apiRef, props);
+  useGridParamsApi(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
@@ -181,6 +190,7 @@ export const useDataGridPremiumComponent = (
   useGridStatePersistence(apiRef);
   useGridDataSource(apiRef, props);
   useGridVirtualization(apiRef, props);
+  useGridListView(apiRef, props);
 
   return apiRef;
 };

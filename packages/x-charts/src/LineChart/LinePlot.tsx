@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
@@ -15,6 +16,7 @@ import { LineItemIdentifier } from '../models/seriesType/line';
 import { useChartGradient } from '../internals/components/ChartsAxesGradients';
 import { useLineSeries } from '../hooks/useSeries';
 import { AxisId } from '../models/axis';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 export interface LinePlotSlots extends LineElementSlots {}
 
@@ -128,7 +130,8 @@ const useAggregatedData = () => {
  * - [LinePlot API](https://mui.com/x/api/charts/line-plot/)
  */
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, ...other } = props;
+  const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const getGradientId = useChartGradient();
   const completedData = useAggregatedData();

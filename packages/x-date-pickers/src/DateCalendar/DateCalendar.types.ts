@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderProps,
@@ -10,15 +11,9 @@ import {
 } from '../PickersCalendarHeader';
 import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
 import { DateCalendarClasses } from './dateCalendarClasses';
-import {
-  BaseDateValidationProps,
-  YearValidationProps,
-  MonthValidationProps,
-  DayValidationProps,
-} from '../internals/models/validation';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView, PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
 import {
   ExportedYearCalendarProps,
   YearCalendarSlots,
@@ -29,6 +24,7 @@ import {
   MonthCalendarSlots,
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
+import { ExportedValidateDateProps } from '../validation/validateDate';
 
 export interface DateCalendarSlots<TDate extends PickerValidDate>
   extends PickersCalendarHeaderSlots,
@@ -55,10 +51,7 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   extends ExportedDayCalendarProps<TDate>,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
-    BaseDateValidationProps<TDate>,
-    DayValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    MonthValidationProps<TDate>,
+    ExportedValidateDateProps<TDate>,
     TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.
@@ -78,7 +71,7 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading?: () => React.ReactNode;
   /**

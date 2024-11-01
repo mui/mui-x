@@ -1,13 +1,13 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { getSeriesToDisplay } from './utils';
 import { getLegendUtilityClass } from './chartsLegendClasses';
-import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
-import { useDrawingArea } from '../hooks';
 import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
 
@@ -22,11 +22,11 @@ export interface ChartsLegendSlots {
    * Custom rendering of the legend.
    * @default DefaultChartsLegend
    */
-  legend?: React.JSXElementConstructor<ChartsLegendPropsBase>;
+  legend?: React.JSXElementConstructor<LegendRendererProps>;
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<ChartsLegendPropsBase>;
+  legend?: Partial<LegendRendererProps>;
 }
 
 export interface ChartsLegendProps extends ChartsLegendPropsBase {
@@ -51,6 +51,7 @@ const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: T
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
+    itemBackground: ['itemBackground'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -72,7 +73,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const drawingArea = useDrawingArea();
   const series = useSeries();
 
   const seriesToDisplay = getSeriesToDisplay(series);
@@ -84,7 +84,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     additionalProps: {
       ...other,
       classes,
-      drawingArea,
       series,
       seriesToDisplay,
     },
@@ -138,6 +137,13 @@ ChartsLegend.propTypes = {
    * @default 5
    */
   markGap: PropTypes.number,
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -200,7 +201,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
       <TimePickerToolbarHourMinuteLabel className={classes.hourMinuteLabel} ownerState={ownerState}>
         {arrayIncludes(views, 'hours') && (
           <PickersToolbarButton
-            data-mui-test="hours"
+            data-testid="hours"
             tabIndex={-1}
             variant="h3"
             onClick={() => onViewChange('hours')}
@@ -212,7 +213,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
         {arrayIncludes(views, ['hours', 'minutes']) && separator}
         {arrayIncludes(views, 'minutes') && (
           <PickersToolbarButton
-            data-mui-test="minutes"
+            data-testid="minutes"
             tabIndex={-1}
             variant="h3"
             onClick={() => onViewChange('minutes')}
@@ -224,7 +225,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
         {arrayIncludes(views, ['minutes', 'seconds']) && separator}
         {arrayIncludes(views, 'seconds') && (
           <PickersToolbarButton
-            data-mui-test="seconds"
+            data-testid="seconds"
             variant="h3"
             onClick={() => onViewChange('seconds')}
             selected={view === 'seconds'}
@@ -237,7 +238,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
           <PickersToolbarButton
             disableRipple
             variant="subtitle2"
-            data-mui-test="toolbar-am-btn"
+            data-testid="toolbar-am-btn"
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(utils, 'am')}
@@ -247,7 +248,7 @@ function TimePickerToolbar<TDate extends PickerValidDate>(inProps: TimePickerToo
           <PickersToolbarButton
             disableRipple
             variant="subtitle2"
-            data-mui-test="toolbar-pm-btn"
+            data-testid="toolbar-pm-btn"
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
             value={formatMeridiem(utils, 'pm')}

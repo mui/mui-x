@@ -1,7 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
@@ -13,18 +15,17 @@ import {
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
-import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { CalendarIcon } from '../icons';
 import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
 import {
   resolveDateTimeFormat,
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -37,11 +38,11 @@ import {
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DefaultizedProps } from '../internals/models/helpers';
 import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
+import { PickersLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TDate extends PickerValidDate,
@@ -112,7 +113,7 @@ const rendererInterceptor = function rendererInterceptor<
 
 type DesktopDateTimePickerComponent = (<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
   props: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
@@ -196,7 +197,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -211,7 +212,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: (ownerState: any) => ({
+      actionBar: (ownerState: PickersLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
@@ -315,7 +316,7 @@ DesktopDateTimePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -483,7 +484,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
@@ -631,6 +632,12 @@ DesktopDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
    * @default 4

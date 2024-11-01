@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { DateTimeValidationError, PickerValidDate } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
@@ -31,7 +31,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseDateTimePickerSlots<TDate extends PickerValidDate>
@@ -112,7 +112,6 @@ type UseDateTimePickerDefaultizedProps<
   TView extends DateOrTimeViewWithMeridiem,
   Props extends BaseDateTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
-  TDate,
   DefaultizedProps<
     Props,
     | 'views'
@@ -138,7 +137,7 @@ export function useDateTimePickerDefaultizedProps<
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }

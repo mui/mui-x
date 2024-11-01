@@ -20,7 +20,7 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
    */
   switchViewButton?: React.ElementType;
   /**
-   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is "year".
+   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is `year`.
    * @default ArrowDropDown
    */
   switchViewIcon?: React.ElementType;

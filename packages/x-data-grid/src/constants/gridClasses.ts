@@ -164,6 +164,17 @@ export interface GridClasses {
    */
   'columnHeader--last': string;
   /**
+   * Styles applied to the last unpinned column header item.
+   * @ignore - do not document.
+   */
+  'columnHeader--lastUnpinned': string;
+  /**
+   * Styles applied to a column header item when its sibling with a bordering separator is focused.
+   * @ignore - do not document.
+   */
+  'columnHeader--siblingFocused': string;
+
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -621,6 +632,11 @@ export interface GridClasses {
    */
   groupingCriteriaCellToggle: string;
   /**
+   * Styles applied to the loading container of the grouping cell of the tree data.
+   * @ignore - do not document.
+   */
+  groupingCriteriaCellLoadingContainer: string;
+  /**
    * Styles applied to the pinned rows container.
    */
   pinnedRows: string;
@@ -686,6 +702,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeader--pinnedLeft',
   'columnHeader--pinnedRight',
   'columnHeader--last',
+  'columnHeader--lastUnpinned',
+  'columnHeader--siblingFocused',
   'columnHeaderCheckbox',
   'columnHeaderDraggableContainer',
   'columnHeaderTitle',
@@ -797,6 +815,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'treeDataGroupingCellLoadingContainer',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
+  'groupingCriteriaCellLoadingContainer',
   'pinnedRows',
   'pinnedRows--top',
   'pinnedRows--bottom',

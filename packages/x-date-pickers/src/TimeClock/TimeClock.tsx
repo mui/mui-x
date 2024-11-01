@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -184,13 +185,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
                 utils.setMinutes(valueOrReferenceDate, timeValue),
                 'minutes',
               );
-
             case 'seconds':
               return !shouldDisableTime(
                 utils.setSeconds(valueOrReferenceDate, timeValue),
                 'seconds',
               );
-
             default:
               return false;
           }

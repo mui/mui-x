@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -62,7 +63,7 @@ function useDateCalendarDefaultizedProps<TDate extends PickerValidDate>(
     views: themeProps.views ?? ['year', 'day'],
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -141,6 +142,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
     loading,
     renderLoading,
     displayWeekNumber,
+    yearsOrder,
     yearsPerRow,
     monthsPerRow,
     timezone: timezoneProp,
@@ -353,6 +355,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate extends
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsOrder={yearsOrder}
               yearsPerRow={yearsPerRow}
               referenceDate={referenceDate}
             />
@@ -543,7 +546,7 @@ DateCalendar.propTypes = {
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
+   * @default () => <span>...</span>
    */
   renderLoading: PropTypes.func,
   /**
@@ -622,6 +625,12 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years are displayed in ascending (chronological) order by default.
+   * If `desc`, years are displayed in descending order.
+   * @default 'asc'
+   */
+  yearsOrder: PropTypes.oneOf(['asc', 'desc']),
   /**
    * Years rendered per row.
    * @default 3

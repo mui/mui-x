@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -58,6 +59,10 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
+type DateRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
+  props: DateRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
  * Demos:
  *
@@ -104,7 +109,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
       isLandscape={false}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
     >
@@ -125,7 +130,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>
   );
-});
+}) as DateRangePickerToolbarComponent;
 
 DateRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------

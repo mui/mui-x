@@ -1,3 +1,4 @@
+'use client';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -27,7 +28,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
-    legend,
     width,
     height,
     margin,
@@ -97,7 +97,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
     slots,
     slotProps,
   };

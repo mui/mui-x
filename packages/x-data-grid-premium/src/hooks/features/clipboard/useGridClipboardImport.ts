@@ -14,7 +14,6 @@ import {
   gridExpandedSortedRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
-  warnOnce,
   getRowIdFromRowModel,
   getActiveElement,
   GridPipeProcessor,
@@ -23,6 +22,7 @@ import {
   isPasteShortcut,
   useGridLogger,
 } from '@mui/x-data-grid/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -180,7 +180,7 @@ class CellValueUpdater {
 
         try {
           const oldRow = apiRef.current.getRow(rowId);
-          const finalRowUpdate = await processRowUpdate(newRow, oldRow);
+          const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);

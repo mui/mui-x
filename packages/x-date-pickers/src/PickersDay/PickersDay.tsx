@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -333,7 +334,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
       className={clsx(classes.root, className)}
       ref={handleRef}
       centerRipple
-      data-mui-test="day"
+      data-testid="day"
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}

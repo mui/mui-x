@@ -55,7 +55,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
         <GridPanelWrapperRoot
           ref={ref}
           tabIndex={-1}
-          className={clsx(className, classes.root)}
+          className={clsx(classes.root, className)}
           ownerState={rootProps}
           {...other}
         />

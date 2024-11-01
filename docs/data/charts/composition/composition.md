@@ -58,9 +58,11 @@ For example, the Bar Chart component assumes that `series` will be of type `'bar
 With composition, the chart container isn't able to guess the series type, so you must explicitly define it.
 
 ```jsx
-<BarChart series={[{
+<BarChart
+  series={[{
     data: [1, 2, 3] // No need to specify it is a bar series
-}]} />
+  }]}
+/>
 
 <ChartContainer
   series={[

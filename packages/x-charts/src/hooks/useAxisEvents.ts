@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';

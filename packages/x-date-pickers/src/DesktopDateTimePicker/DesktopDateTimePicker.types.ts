@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -8,15 +9,15 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView, PickerValidDate } from '../models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MultiSectionDigitalClockSlots,
   MultiSectionDigitalClockSlotProps,
 } from '../MultiSectionDigitalClock';
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots<TDate extends PickerValidDate>
   extends BaseDateTimePickerSlots<TDate>,
@@ -41,19 +42,11 @@ export interface DesktopDateTimePickerSlotProps<
 
 export interface DesktopDateTimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
-    DesktopOnlyTimePickerProps<TDate> {
-  /**
-   * Available views.
-   */
-  views?: readonly DateOrTimeView[];
-  /**
-   * Years rendered per row.
-   * @default 4
-   */
-  yearsPerRow?: 3 | 4;
+    DesktopOnlyTimePickerProps<TDate>,
+    ExportedYearCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
@@ -64,4 +57,13 @@ export interface DesktopDateTimePickerProps<
    * @default {}
    */
   slotProps?: DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Available views.
+   */
+  views?: readonly DateOrTimeView[];
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
 }

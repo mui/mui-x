@@ -65,12 +65,11 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
 
 export const getDaysInWeekStr = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
   format: string,
 ) => {
   const elements: TDate[] = [];
 
-  const now = utils.date(undefined, timezone);
+  const now = utils.date(undefined, 'default');
   const startDate = utils.startOfWeek(now);
   const endDate = utils.endOfWeek(now);
 
@@ -97,7 +96,7 @@ export const getLetterEditingOptions = <TDate extends PickerValidDate>(
     }
 
     case 'weekDay': {
-      return getDaysInWeekStr(utils, timezone, format);
+      return getDaysInWeekStr(utils, format);
     }
 
     case 'meridiem': {
@@ -393,13 +392,11 @@ export const changeSectionValueFormat = <TDate extends PickerValidDate>(
 
 const isFourDigitYearFormat = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
   format: string,
-) => utils.formatByString(utils.date(undefined, timezone), format).length === 4;
+) => utils.formatByString(utils.date(undefined, 'system'), format).length === 4;
 
 export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
   contentType: FieldSectionContentType,
   sectionType: FieldSectionType,
   format: string,
@@ -408,12 +405,12 @@ export const doesSectionFormatHaveLeadingZeros = <TDate extends PickerValidDate>
     return false;
   }
 
-  const now = utils.date(undefined, timezone);
+  const now = utils.date(undefined, 'default');
 
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
-      if (isFourDigitYearFormat(utils, timezone, format)) {
+      if (isFourDigitYearFormat(utils, format)) {
         const formatted0001 = utils.formatByString(utils.setYear(now, 1), format);
         return formatted0001 === '0001';
       }
@@ -547,7 +544,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
   return {
     year: ({ format }) => ({
       minimum: 0,
-      maximum: isFourDigitYearFormat(utils, timezone, format) ? 9999 : 99,
+      maximum: isFourDigitYearFormat(utils, format) ? 9999 : 99,
     }),
     month: () => ({
       minimum: 1,
@@ -564,7 +561,7 @@ export const getSectionsBoundaries = <TDate extends PickerValidDate>(
     }),
     weekDay: ({ format, contentType }) => {
       if (contentType === 'digit') {
-        const daysInWeek = getDaysInWeekStr(utils, timezone, format).map(Number);
+        const daysInWeek = getDaysInWeekStr(utils, format).map(Number);
         return {
           minimum: Math.min(...daysInWeek),
           maximum: Math.max(...daysInWeek),
@@ -653,7 +650,6 @@ export const validateSections = <TSection extends FieldSection>(
 
 const transferDateSectionValue = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
   section: FieldSection,
   dateToTransferFrom: TDate,
   dateToTransferTo: TDate,
@@ -668,7 +664,7 @@ const transferDateSectionValue = <TDate extends PickerValidDate>(
     }
 
     case 'weekDay': {
-      const formattedDaysInWeek = getDaysInWeekStr(utils, timezone, section.format);
+      const formattedDaysInWeek = getDaysInWeekStr(utils, section.format);
       const dayInWeekStrOfActiveDate = utils.formatByString(dateToTransferFrom, section.format);
       const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
       const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
@@ -728,7 +724,6 @@ const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
 
 export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
   dateToTransferFrom: TDate,
   sections: FieldSection[],
   referenceDate: TDate,
@@ -741,7 +736,7 @@ export const mergeDateIntoReferenceDate = <TDate extends PickerValidDate>(
     )
     .reduce((mergedDate, section) => {
       if (!shouldLimitToEditedSections || section.modified) {
-        return transferDateSectionValue(utils, timezone, section, dateToTransferFrom, mergedDate);
+        return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
       }
 
       return mergedDate;

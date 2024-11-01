@@ -1,3 +1,4 @@
+'use client';
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -33,7 +34,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     tooltip,
     onAxisClick,
     axisHighlight,
-    legend,
     grid,
     topAxis,
     leftAxis,
@@ -96,13 +96,13 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none' &&
       !onAxisClick,
     className,
+    skipAnimation,
   };
 
   const barPlotProps: BarPlotProps = {
     onItemClick,
     slots,
     slotProps,
-    skipAnimation,
     borderRadius,
     barLabel,
   };
@@ -145,7 +145,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
     slots,
     slotProps,
   };

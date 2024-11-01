@@ -8,11 +8,11 @@ import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
-import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
+import { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridListColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -33,6 +33,7 @@ import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
 import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
 import type { GridDataSource } from '../gridDataSource';
+import type { GridRowSelectionPropagation } from '../gridRowSelectionModel';
 
 export interface GridExperimentalFeatures {
   /**
@@ -43,7 +44,7 @@ export interface GridExperimentalFeatures {
 }
 
 /**
- * The props users can give to the `DataGrid` component.
+ * The props users can give to the Data Grid component.
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues<R>> &
@@ -55,7 +56,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 };
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
+ * The props of the Data Grid component after the pre-processing phase that the user should not be able to override.
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
@@ -67,10 +68,11 @@ export type DataGridForcedPropsKey =
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
-  | 'signature';
+  | 'signature'
+  | 'unstable_listView';
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
   slots: GridSlotsComponent;
@@ -78,7 +80,7 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value that must be merged with the value given through props.
+ * The Data Grid options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
@@ -93,7 +95,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
 }
 
 /**
- * The `DataGrid` options with a default value overridable through props
+ * The Data Grid options with a default value overridable through props
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  * TODO: add multiSortKey
@@ -102,6 +104,11 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: boolean;
   /**
@@ -371,8 +378,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
-  rowPositionsDebounceMs: number;
+  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
   /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
@@ -383,10 +391,15 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   disableAutosize: boolean;
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: boolean;
 }
 
 /**
- * The `DataGrid` props with no default value.
+ * The Data Grid props with no default value.
  */
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
@@ -532,6 +545,12 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderClick?: GridEventListener<'columnHeaderClick'>;
+  /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu?: GridEventListener<'columnHeaderContextMenu'>;
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -771,20 +790,27 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
+  // eslint-disable-next-line jsdoc/require-param
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
+   * @param {{ rowId: GridRowId }} params Additional parameters.
    * @returns {Promise<R> | R} The final values to update the row.
    */
-  processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
+  processRowUpdate?: (newRow: R, oldRow: R, params: { rowId: GridRowId }) => Promise<R> | R;
   /**
    * Callback called when `processRowUpdate` throws an error or rejects.
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight?: number;
   /**
    * Callback called when the data is copied to the clipboard.
    * @param {string} data The data copied to the clipboard.
@@ -812,18 +838,41 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
 
 export interface DataGridProSharedPropsWithDefaultValue {
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: boolean;
+  /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
+   *
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: GridRowSelectionPropagation;
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   * @default false
+   */
+  unstable_listView: boolean;
 }
 
-export interface DataGridProSharedPropsWithoutDefaultValue {
+export interface DataGridProSharedPropsWithoutDefaultValue<R extends GridValidRowModel = any> {
   /**
    * Override the height of the header filters.
    */
   headerFilterHeight?: number;
   unstable_dataSource?: GridDataSource;
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn?: GridListColDef<R>;
 }
 
 export interface DataGridPremiumSharedPropsWithDefaultValue {
@@ -835,7 +884,7 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
 }
 
 /**
- * The props of the `DataGrid` component after the pre-processing phase.
+ * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,

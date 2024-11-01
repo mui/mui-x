@@ -10,16 +10,17 @@ import {
 } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
-import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   BaseSingleInputFieldProps,
   PickerValidDate,
   FieldRef,
+  InferError,
+  PickerOwnerState,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { PickersProvider } from '../../components/PickersProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -71,12 +72,15 @@ export const useMobilePicker = <
     open,
     actions,
     layoutProps,
+    providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
+    ownerState,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
+    localeText,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
@@ -95,7 +99,7 @@ export const useMobilePicker = <
         InferError<TExternalProps>
       >
     >,
-    TExternalProps
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
@@ -120,7 +124,7 @@ export const useMobilePicker = <
       name,
       ...(inputRef ? { inputRef } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
@@ -159,7 +163,7 @@ export const useMobilePicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -171,7 +175,7 @@ export const useMobilePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </LocalizationProvider>
+    </PickersProvider>
   );
 
   return { renderPicker };

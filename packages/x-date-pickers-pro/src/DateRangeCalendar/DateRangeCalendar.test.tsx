@@ -85,7 +85,7 @@ describe('<DateRangeCalendar />', () => {
       fireEvent.click(getPickerDay('30', 'January 2019'));
       fireEvent.click(getPickerDay('19', 'January 2019'));
 
-      expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
+      expect(screen.queryByTestId('DateRangeHighlight')).to.equal(null);
 
       fireEvent.click(getPickerDay('30', 'January 2019'));
 
@@ -102,7 +102,7 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
+      expect(screen.getAllByTestId('DateRangeHighlight')).to.have.length(31);
     });
 
     it('prop: disableDragEditing - should not allow dragging range', () => {
@@ -487,6 +487,23 @@ describe('<DateRangeCalendar />', () => {
       clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
     });
+
+    describe('prop: currentMonthCalendarPosition', () => {
+      it('should switch to the selected month when changing value from the outside', () => {
+        const { setProps } = render(
+          <DateRangeCalendar
+            value={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-15')]}
+            currentMonthCalendarPosition={2}
+          />,
+        );
+
+        setProps({
+          value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
+        });
+        clock.runToLast();
+        expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+      });
+    });
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
@@ -518,7 +535,7 @@ describe('<DateRangeCalendar />', () => {
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 
-    expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
+    expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
   });
 
   describe('Performance', () => {

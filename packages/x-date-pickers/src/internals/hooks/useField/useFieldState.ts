@@ -21,12 +21,12 @@ import {
   getLocalizedDigits,
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
-import { InferError } from '../useValidation';
 import {
   FieldSection,
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
+  InferError,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -108,7 +108,7 @@ export const useFieldState = <
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
       timezone: timezoneProp,
-      enableAccessibleFieldDOMStructure = false,
+      enableAccessibleFieldDOMStructure = true,
     },
   } = params;
 
@@ -136,7 +136,6 @@ export const useFieldState = <
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
         buildSectionsFromFormat({
           utils,
-          timezone,
           localeText: translations,
           localizedDigits,
           format,
@@ -156,7 +155,6 @@ export const useFieldState = <
       shouldRespectLeadingZeros,
       utils,
       formatDensity,
-      timezone,
       enableAccessibleFieldDOMStructure,
     ],
   );
@@ -228,7 +226,8 @@ export const useFieldState = <
       validationError: validator({
         adapter,
         value,
-        props: { ...internalProps, value, timezone },
+        timezone,
+        props: internalProps,
       }),
     };
 
@@ -285,7 +284,6 @@ export const useFieldState = <
 
       const sections = buildSectionsFromFormat({
         utils,
-        timezone,
         localeText: translations,
         localizedDigits,
         format,
@@ -295,7 +293,7 @@ export const useFieldState = <
         enableAccessibleFieldDOMStructure,
         isRtl,
       });
-      return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
+      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
@@ -344,7 +342,6 @@ export const useFieldState = <
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
-        timezone,
         newActiveDate,
         newActiveDateSections,
         activeDateManager.referenceDate,

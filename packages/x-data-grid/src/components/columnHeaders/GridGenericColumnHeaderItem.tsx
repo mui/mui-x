@@ -109,7 +109,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
-      aria-label={headerComponent == null ? label : undefined}
       {...other}
     >
       <div

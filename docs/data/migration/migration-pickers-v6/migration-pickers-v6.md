@@ -16,7 +16,7 @@ To read more about the changes from the new major, check out [the blog post abou
 In `package.json`, change the version of the date pickers package to `^7.0.0`.
 
 ```diff
--"@mui/x-date-pickers": "6.x.x",
+-"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
 ```
 
@@ -42,13 +42,14 @@ If you're using the commercial version of the Pickers ([Pro](/x/introduction/lic
 If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
 
 ```diff
--"@mui/x-license-pro": "6.x.x",
+-"@mui/x-license-pro": ^6.0.0",
 +"@mui/x-license": "^7.0.0",
 ```
 
 ## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7. You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target Data Grid as well.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
+You can run `v7.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v7.0.0/preset-safe` to target other MUI X components like the Data Grid as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
@@ -58,7 +59,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 // Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
-// Target Data Grid as well
+// Target other MUI X components as well
 npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
@@ -78,7 +79,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<DatePicker {...pickerProps} />
+<DatePicker {...newProps} />
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.
@@ -439,7 +440,7 @@ The headless field hooks (e.g.: `useDateField`) now return a new prop called `en
 This is used to know if the current UI expected is built using the accessible DOM structure or not.
 
 :::info
-See [Fields—Accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure) for more details.
+See [Migration from v7 to v8—New DOM structure for the field](/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field) for more details.
 :::
 
 When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:

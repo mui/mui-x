@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -22,10 +23,10 @@ import {
   PickerSelectionState,
   useNow,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
-  warnOnce,
   useControlledValueWithTimezone,
   useViews,
 } from '@mui/x-date-pickers/internals';
+import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
@@ -78,7 +79,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
@@ -98,7 +99,9 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
       },
     },
   },
-})) as typeof DayCalendar;
+}));
+
+const DayCalendarForRange = InnerDayCalendarForRange as typeof DayCalendar;
 
 function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
@@ -115,7 +118,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   return {
     ...themeProps,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
@@ -386,7 +389,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
       return;
     }
 
-    const displayingMonthRange = calendars - 1;
+    const displayingMonthRange = calendars - currentMonthCalendarPosition;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
     const requestedMonthNumber = utils.getMonth(date);
 
@@ -542,7 +545,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   return (
     <DateRangeCalendarRoot
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >

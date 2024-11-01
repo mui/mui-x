@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   BaseDatePickerProps,
   BaseDatePickerSlots,
@@ -8,7 +9,6 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateView, PickerValidDate } from '../models';
 
 export interface StaticDatePickerSlots<TDate extends PickerValidDate>
@@ -32,4 +32,9 @@ export interface StaticDatePickerProps<TDate extends PickerValidDate>
    * @default {}
    */
   slotProps?: StaticDatePickerSlotProps<TDate>;
+  /**
+   * Years rendered per row.
+   * @default `4` when `displayStaticWrapperAs === 'desktop'`, `3` otherwise.
+   */
+  yearsPerRow?: 3 | 4;
 }

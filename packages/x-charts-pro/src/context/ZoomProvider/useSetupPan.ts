@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { getSVGPoint } from '@mui/x-charts/internals';
@@ -105,7 +106,7 @@ export const useSetupPan = () => {
 
     const handleUp = (event: PointerEvent) => {
       eventCacheRef.current.splice(
-        eventCacheRef.current.findIndex((e) => e.pointerId === event.pointerId),
+        eventCacheRef.current.findIndex((cachedEvent) => cachedEvent.pointerId === event.pointerId),
         1,
       );
       setIsInteracting(false);
