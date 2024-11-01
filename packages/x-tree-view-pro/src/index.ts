@@ -9,6 +9,8 @@ export * from '@mui/x-tree-view/TreeItem2';
 export * from '@mui/x-tree-view/useTreeItem2';
 export * from '@mui/x-tree-view/TreeItem2Icon';
 export * from '@mui/x-tree-view/TreeItem2Provider';
+export * from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
+export * from '@mui/x-tree-view/TreeItem2LabelInput';
 
 export { unstable_resetCleanupTracking } from '@mui/x-tree-view/internals';
 
