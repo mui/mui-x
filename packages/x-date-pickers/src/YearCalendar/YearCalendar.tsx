@@ -10,10 +10,10 @@ import {
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass } from './yearCalendarClasses';
-import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -226,7 +226,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate extends
   }, [selectedYear]);
 
   const verticalDirection = yearsOrder !== 'desc' ? yearsPerRow * 1 : yearsPerRow * -1;
-  const horizontalDirection = isRtl || yearsOrder === 'desc' ? -1 : 1;
+  const horizontalDirection =
+    (isRtl && yearsOrder === 'asc') || (!isRtl && yearsOrder === 'desc') ? -1 : 1;
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
     switch (event.key) {

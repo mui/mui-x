@@ -28,18 +28,108 @@ import { ZoomProps } from '../context/ZoomProvider';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const { isInteracting } = useZoom();
-  return <AreaPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <AreaPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
+
+AreaPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line area item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 function LinePlotZoom(props: LinePlotProps) {
   const { isInteracting } = useZoom();
-  return <LinePlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <LinePlot {...props} skipAnimation={isInteracting || undefined} />;
 }
+
+LinePlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Callback fired when a line item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 function MarkPlotZoom(props: MarkPlotProps) {
   const { isInteracting } = useZoom();
-  return <MarkPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
+  return <MarkPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
+
+MarkPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If `true` the mark element will only be able to render circle.
+   * Giving fewer customization options, but saving around 40ms per 1.000 marks.
+   * @default false
+   */
+  experimentalRendering: PropTypes.bool,
+  /**
+   * Callback fired when a line mark item is clicked.
+   * @param {React.MouseEvent<SVGPathElement, MouseEvent>} event The event source of the callback.
+   * @param {LineItemIdentifier} lineItemIdentifier The line mark item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default false
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 export interface LineChartProProps extends LineChartProps, ZoomProps {}
 
@@ -111,7 +201,7 @@ LineChartPro.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
@@ -174,35 +264,6 @@ LineChartPro.propTypes = {
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemGap: PropTypes.number,
-    itemMarkHeight: PropTypes.number,
-    itemMarkWidth: PropTypes.number,
-    labelStyle: PropTypes.object,
-    markGap: PropTypes.number,
-    onItemClick: PropTypes.func,
-    padding: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        bottom: PropTypes.number,
-        left: PropTypes.number,
-        right: PropTypes.number,
-        top: PropTypes.number,
-      }),
-    ]),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false

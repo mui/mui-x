@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { ValidateDateProps, validateDate } from '../validation';
 import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { PickerValidDate, TimezoneProps } from '../models';
-import { DefaultizedProps } from '../internals/models/helpers';
 
 export const useIsDateDisabled = <TDate extends PickerValidDate>({
   shouldDisableDate,

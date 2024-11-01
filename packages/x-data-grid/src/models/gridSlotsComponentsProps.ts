@@ -1,5 +1,8 @@
 import * as React from 'react';
+import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { MenuListProps } from '@mui/material/MenuList';
+import type { MenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -34,8 +37,14 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
+type DividerProps = {};
+
 // Overrides for module augmentation
+export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseDividerPropsOverrides {}
+export interface BaseMenuListPropsOverrides {}
+export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
@@ -72,7 +81,11 @@ export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 
 export interface GridSlotProps {
+  baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
+  baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;

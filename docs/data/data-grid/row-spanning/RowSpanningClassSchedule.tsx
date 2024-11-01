@@ -135,11 +135,10 @@ const columns: GridColDef[] = [
 
 export default function RowSpanningClassSchedule() {
   return (
-    <Box style={{ width: '100%' }}>
+    <Box style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       <DataGrid
         columns={columns}
         rows={rows}
-        autoHeight
         unstable_rowSpanning
         disableRowSelectionOnClick
         hideFooter

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   ScatterPlot,
   ScatterPlotProps,
@@ -14,19 +15,13 @@ import {
 } from '../ResponsiveChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { MakeOptional } from '../models/helpers';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -75,7 +70,7 @@ export interface ScatterChartProps
   tooltip?: ChartsTooltipProps<'scatter'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -88,10 +83,6 @@ export interface ScatterChartProps
    * @default false
    */
   disableVoronoi?: boolean;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -162,7 +153,7 @@ ScatterChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -223,35 +214,6 @@ ScatterChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemGap: PropTypes.number,
-    itemMarkHeight: PropTypes.number,
-    itemMarkWidth: PropTypes.number,
-    labelStyle: PropTypes.object,
-    markGap: PropTypes.number,
-    onItemClick: PropTypes.func,
-    padding: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        bottom: PropTypes.number,
-        left: PropTypes.number,
-        right: PropTypes.number,
-        top: PropTypes.number,
-      }),
-    ]),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -301,6 +263,11 @@ ScatterChart.propTypes = {
    * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

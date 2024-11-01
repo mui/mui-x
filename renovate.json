@@ -15,19 +15,19 @@
     },
     {
       "groupName": "babel",
-      "matchPackagePatterns": "@babel/*"
+      "matchPackageNames": ["@babel/**"]
     },
     {
       "groupName": "D3",
-      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+      "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
     {
       "groupName": "react-spring",
-      "matchPackagePatterns": "@react-spring/*"
+      "matchPackageNames": ["@react-spring/**"]
     },
     {
       "groupName": "Emotion",
-      "matchPackagePatterns": "@emotion/*"
+      "matchPackageNames": ["@emotion/**"]
     },
     {
       "groupName": "core-js",
@@ -51,7 +51,7 @@
     },
     {
       "groupName": "typescript-eslint",
-      "matchPackagePatterns": "@typescript-eslint/*"
+      "matchPackageNames": ["@typescript-eslint/**"]
     },
     {
       "groupName": "ESLint plugins",
@@ -64,12 +64,12 @@
     },
     {
       "groupName": "bundling fixtures",
-      "matchPaths": ["test/bundling/fixtures/**/package.json"],
+      "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "every 6 months on the first day of the month"
     },
     {
       "groupName": "examples",
-      "matchPaths": ["examples/**/package.json"],
+      "matchFileNames": ["examples/**/package.json"],
       "minor": {
         "enabled": false
       },
@@ -99,11 +99,11 @@
     },
     {
       "groupName": "MUI Internal",
-      "matchPackagePatterns": ["@mui/internal-*", "@mui/docs"]
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
-      "matchPackagePatterns": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test"]
     },
     {
       "matchDepTypes": ["action"],
@@ -112,6 +112,10 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Vite & Vitest",
+      "matchPackageNames": ["@vitejs/**", "/vitest/"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

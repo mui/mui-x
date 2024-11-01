@@ -1,4 +1,8 @@
+import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUIDivider from '@mui/material/Divider';
+import MUIMenuList from '@mui/material/MenuList';
+import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
@@ -88,7 +92,11 @@ const iconSlots: GridIconSlotsComponent = {
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
+  baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
+  baseDivider: MUIDivider,
+  baseMenuList: MUIMenuList,
+  baseMenuItem: MUIMenuItem,
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,

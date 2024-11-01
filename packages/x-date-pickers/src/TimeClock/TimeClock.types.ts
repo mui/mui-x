@@ -3,7 +3,7 @@ import {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { PickerValidDate, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 

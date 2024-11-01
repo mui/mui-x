@@ -512,6 +512,8 @@ export default function PopularFeaturesDemo() {
   return (
     <Box
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
         minHeight: 1000,
         width: '100%',
         border: '1px solid',
@@ -521,7 +523,6 @@ export default function PopularFeaturesDemo() {
     >
       <DataGridPremium
         apiRef={apiRef}
-        autoHeight
         disableRowSelectionOnClick
         onRowClick={onRowClick}
         slots={{

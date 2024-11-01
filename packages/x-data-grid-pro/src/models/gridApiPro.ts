@@ -17,7 +17,7 @@ import type {
 import type { DataGridProProcessedProps } from './dataGridProProps';
 
 /**
- * The api of `DataGridPro`.
+ * The api of Data Grid Pro.
  */
 export interface GridApiPro
   extends GridApiCommon<GridStatePro, GridInitialStatePro>,

@@ -1,23 +1,24 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { MuiCancellableEvent, TreeViewItemPlugin } from '../../models';
+import { TreeViewCancellableEvent } from '../../../models';
+import { TreeViewItemPlugin } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import {
-  UseTreeItem2LabelInputSlotPropsFromLabelEditing,
+  UseTreeItemLabelInputSlotPropsFromLabelEditing,
   UseTreeViewLabelSignature,
 } from './useTreeViewLabel.types';
 
-export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) => {
+export const useTreeViewLabelItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { instance } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewLabelSignature]>();
   const { label, itemId } = props;
 
-  const [labelInputValue, setLabelInputValue] = React.useState(label);
+  const [labelInputValue, setLabelInputValue] = React.useState(label as string);
 
   const isItemBeingEdited = instance.isItemBeingEdited(itemId);
 
   React.useEffect(() => {
     if (!isItemBeingEdited) {
-      setLabelInputValue(label);
+      setLabelInputValue(label as string);
     }
   }, [isItemBeingEdited, label]);
 
@@ -26,7 +27,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
       labelInput: ({
         externalEventHandlers,
         interactions,
-      }): UseTreeItem2LabelInputSlotPropsFromLabelEditing => {
+      }): UseTreeItemLabelInputSlotPropsFromLabelEditing => {
         const editable = instance.isItemEditable(itemId);
 
         if (!editable) {
@@ -34,7 +35,7 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
         }
 
         const handleKeydown = (
-          event: React.KeyboardEvent<HTMLInputElement> & MuiCancellableEvent,
+          event: React.KeyboardEvent<HTMLInputElement> & TreeViewCancellableEvent,
         ) => {
           externalEventHandlers.onKeyDown?.(event);
           if (event.defaultMuiPrevented) {
@@ -49,7 +50,9 @@ export const useTreeViewLabelItemPlugin: TreeViewItemPlugin<any> = ({ props }) =
           }
         };
 
-        const handleBlur = (event: React.FocusEvent<HTMLInputElement> & MuiCancellableEvent) => {
+        const handleBlur = (
+          event: React.FocusEvent<HTMLInputElement> & TreeViewCancellableEvent,
+        ) => {
           externalEventHandlers.onBlur?.(event);
           if (event.defaultMuiPrevented) {
             return;

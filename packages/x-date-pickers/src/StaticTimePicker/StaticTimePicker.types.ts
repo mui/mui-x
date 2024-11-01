@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   BaseTimePickerProps,
   BaseTimePickerSlots,
@@ -8,7 +9,6 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals/models/helpers';
 import { PickerValidDate, TimeView } from '../models';
 
 export interface StaticTimePickerSlots<TDate extends PickerValidDate>

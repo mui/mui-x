@@ -31,9 +31,6 @@ const Scrollbar = styled('div')({
   position: 'absolute',
   display: 'inline-block',
   zIndex: 6,
-  '& > div': {
-    display: 'inline-block',
-  },
   // In macOS Safari and Gnome Web, scrollbars are overlaid and don't affect the layout. So we consider
   // their size to be 0px throughout all the calculations, but the floating scrollbar container does need
   // to appear and have a real size. We set it to 14px because it seems like an acceptable value and we
@@ -67,10 +64,6 @@ const ScrollbarHorizontal = styled(Scrollbar)({
     height: 'var(--size)',
   },
   bottom: '0px',
-});
-
-const Content = styled('div')({
-  display: 'inline-block',
 });
 
 const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
@@ -107,6 +100,8 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
         return;
       }
 
+      lastPosition.current = scroller[propertyScroll];
+
       if (isLocked.current) {
         isLocked.current = false;
         return;
@@ -115,8 +110,6 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
-
-      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
@@ -155,10 +148,15 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
       <Container
         ref={useForkRef(ref, scrollbarRef)}
         className={classes.root}
+        style={
+          props.position === 'vertical' && rootProps.unstable_listView
+            ? { height: '100%', top: 0 }
+            : undefined
+        }
         tabIndex={-1}
         aria-hidden="true"
       >
-        <Content ref={contentRef} className={classes.content} />
+        <div ref={contentRef} className={classes.content} />
       </Container>
     );
   },

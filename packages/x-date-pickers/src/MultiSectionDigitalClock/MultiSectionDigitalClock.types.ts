@@ -6,7 +6,7 @@ import {
   BaseClockProps,
   ExportedBaseClockProps,
   MultiSectionDigitalClockOnlyProps,
-} from '../internals/models/props/clock';
+} from '../internals/models/props/time';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { PickerValidDate } from '../models';

@@ -155,7 +155,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       variant="outlined"
       value={searchValue}
       onChange={handleSearchValueChange}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
