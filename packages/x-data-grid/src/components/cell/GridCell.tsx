@@ -81,7 +81,7 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   onFocus?: React.FocusEventHandler<Element>;
-  children?: undefined;
+  children?: React.ReactNode;
   style?: React.CSSProperties;
   [x: `data-${string}`]: string;
 };
