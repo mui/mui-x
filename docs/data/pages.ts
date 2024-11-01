@@ -98,7 +98,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/virtualization' },
           { pathname: '/x/react-data-grid/accessibility' },
           { pathname: '/x/react-data-grid/localization' },
-          
         ],
       },
       {
@@ -112,7 +111,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
           { pathname: '/x/react-data-grid/scrolling' },
-    
+
           {
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
@@ -151,7 +150,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-data-grid/visual-customization-group',
+        pathname: '/x/react-data-grid/customization-group',
         subheader: 'Customization',
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
@@ -374,8 +373,8 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/visual-customization',
-        subheader: 'Visual customization',
+        pathname: '/x/react-date-pickers/customization-group',
+        subheader: 'Customization',
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
