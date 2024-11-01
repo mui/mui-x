@@ -97,7 +97,8 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/virtualization' },
           { pathname: '/x/react-data-grid/accessibility' },
-          { pathname: '/x/react-data-grid/performance' },
+          { pathname: '/x/react-data-grid/localization' },
+          
         ],
       },
       {
@@ -108,6 +109,16 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          { pathname: '/x/react-data-grid/export' },
+          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+          { pathname: '/x/react-data-grid/scrolling' },
+    
+          {
+            pathname: '/x/react-data-grid/list-view',
+            title: 'List view',
+            plan: 'pro',
+            unstable: true,
+          },
         ],
       },
       {
@@ -121,34 +132,13 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-data-grid/interactivity-group',
-        subheader: 'Interactivity',
-        children: [
-          { pathname: '/x/react-data-grid/localization' },
-          {
-            pathname: '/x/react-data-grid/custom-behavior',
-            children: [
-              { pathname: '/x/react-data-grid/api-object', title: 'API object' },
-              { pathname: '/x/react-data-grid/events' },
-              { pathname: '/x/react-data-grid/state' },
-            ],
-          },
-        ],
-      },
-      { pathname: '/x/react-data-grid/export' },
-      { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
-      { pathname: '/x/react-data-grid/scrolling' },
-
-      {
-        pathname: '/x/react-data-grid/list-view',
-        title: 'List view',
-        plan: 'pro',
-        unstable: true,
-      },
-      {
         pathname: '/x/api/resources-group',
         subheader: 'Resources',
         children: [
+          { pathname: '/x/react-data-grid/api-object', title: 'API object' },
+          { pathname: '/x/react-data-grid/events' },
+          { pathname: '/x/react-data-grid/state' },
+          { pathname: '/x/react-data-grid/performance' },
           {
             pathname: '/x/react-data-grid/server-side-data-group',
             title: 'Server-side data',
