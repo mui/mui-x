@@ -44,7 +44,7 @@ Same changes as in `@mui/x-data-grid@7.22.1`, plus:
 
 #### `@mui/x-date-pickers@7.22.1`
 
-- [l10n] Improve Polish (plPL) locale (#15177) @wojtkolos
+- [l10n] Improve Polish (pl-PL) locale (#15177) @wojtkolos
 
 #### `@mui/x-date-pickers-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
