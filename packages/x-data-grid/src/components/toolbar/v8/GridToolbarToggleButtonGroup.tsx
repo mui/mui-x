@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridToolbarToggleButtonGroupProps = ToggleButtonGroupProps;
 

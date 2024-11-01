@@ -1,27 +1,28 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
-import { ButtonProps } from '@mui/material/Button';
+import { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
-import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridToolbarTooltip } from './v8/GridToolbarTooltip';
+import { unstable_useId as useId } from '@mui/material/utils';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { gridPreferencePanelStateSelector } from '../../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
+import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
+import { GridToolbarToggleButton } from './GridToolbarToggleButton';
 
-interface GridToolbarColumnsButtonProps {
+interface GridToolbarColumnsItemProps {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: { toggleButton?: Partial<ToggleButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
-  function GridToolbarColumnsButton(props, ref) {
+const GridToolbarColumnsItem = React.forwardRef<HTMLButtonElement, GridToolbarColumnsItemProps>(
+  function GridToolbarColumnsItem(props, ref) {
     const { slotProps = {} } = props;
-    const buttonProps = slotProps.button || {};
+    const toggleButtonProps = slotProps.toggleButton || {};
     const tooltipProps = slotProps.tooltip || {};
     const columnButtonId = useId();
     const columnPanelId = useId();
@@ -30,7 +31,7 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
     const rootProps = useGridRootProps();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
-    const showColumns = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const showColumns = () => {
       if (
         preferencePanel.open &&
         preferencePanel.openedPanelValue === GridPreferencePanelsValue.columns
@@ -43,8 +44,6 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           columnButtonId,
         );
       }
-
-      buttonProps.onClick?.(event);
     };
 
     // Disable the button if the corresponding is disabled
@@ -59,27 +58,26 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
         title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         {...tooltipProps}
       >
-        <rootProps.slots.baseButton
+        <GridToolbarToggleButton
           ref={ref}
           id={columnButtonId}
-          size="small"
           aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
           aria-haspopup="menu"
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
-          startIcon={<rootProps.slots.columnSelectorIcon />}
-          onClick={showColumns}
-          {...rootProps.slotProps?.baseButton}
-          {...buttonProps}
+          value="columns"
+          selected={isOpen}
+          onChange={showColumns}
+          {...toggleButtonProps}
         >
-          {apiRef.current.getLocaleText('toolbarColumns')}
-        </rootProps.slots.baseButton>
+          <rootProps.slots.columnSelectorIcon fontSize="small" />
+        </GridToolbarToggleButton>
       </GridToolbarTooltip>
     );
   },
 );
 
-GridToolbarColumnsButton.propTypes = {
+GridToolbarColumnsItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -91,4 +89,4 @@ GridToolbarColumnsButton.propTypes = {
   slotProps: PropTypes.object,
 } as any;
 
-export { GridToolbarColumnsButton };
+export { GridToolbarColumnsItem };

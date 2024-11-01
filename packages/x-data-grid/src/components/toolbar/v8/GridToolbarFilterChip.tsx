@@ -8,17 +8,17 @@ import {
 } from '@mui/utils';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { ChipProps } from '@mui/material/Chip';
-import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
-import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
-import { GridFilterItem } from '../../models/gridFilterItem';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { useGridSelector } from '../../../hooks/utils/useGridSelector';
+import { gridFilterActiveItemsSelector } from '../../../hooks/features/filter/gridFilterSelector';
+import { gridPreferencePanelStateSelector } from '../../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
+import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
+import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
+import { GridFilterItem } from '../../../models/gridFilterItem';
+import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -58,8 +58,8 @@ export interface GridToolbarFilterChipProps {
   slotProps?: { chip?: Partial<ChipProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarFilterChip = React.forwardRef<HTMLButtonElement, GridToolbarFilterChipProps>(
-  function GridToolbarFilterChip(props) {
+const GridToolbarFilterChip = React.forwardRef<HTMLDivElement, GridToolbarFilterChipProps>(
+  function GridToolbarFilterChip(props, ref) {
     const { slotProps = {} } = props;
     const chipProps = slotProps.chip || {};
     const tooltipProps = slotProps.tooltip || {};
@@ -144,6 +144,7 @@ const GridToolbarFilterChip = React.forwardRef<HTMLButtonElement, GridToolbarFil
         {...rootProps.slotProps?.baseTooltip}
       >
         <GridToolbarChip
+          ref={ref}
           ownerState={rootProps}
           className={classes.chip}
           label={apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}

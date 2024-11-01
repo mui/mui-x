@@ -9,8 +9,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
-import { GridToolbarTooltip } from './GridToolbarTooltip';
-import { GridToolbarToggleButton } from './GridToolbarToggleButton';
+import { GridToolbarTooltip } from './v8/GridToolbarTooltip';
+import { GridToolbarToggleButton } from './v8/GridToolbarToggleButton';
 
 interface GridToolbarExportContainerProps {
   /**

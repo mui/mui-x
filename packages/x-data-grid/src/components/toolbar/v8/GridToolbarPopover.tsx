@@ -3,9 +3,9 @@ import Popover, { popoverClasses, PopoverProps } from '@mui/material/Popover';
 import { styled } from '@mui/system';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export type GridToolbarPopoverProps = PopoverProps;
 

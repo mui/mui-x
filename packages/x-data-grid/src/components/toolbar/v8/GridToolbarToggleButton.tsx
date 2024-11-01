@@ -3,9 +3,9 @@ import ToggleButton, { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export type GridToolbarToggleButtonProps = ToggleButtonProps;
 

@@ -13,7 +13,7 @@ import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
-import { GridToolbarTooltip } from './GridToolbarTooltip';
+import { GridToolbarTooltip } from './v8/GridToolbarTooltip';
 
 interface GridToolbarDensitySelectorProps {
   /**
