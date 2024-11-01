@@ -39,6 +39,7 @@ const pages: MuiPage[] = [
         pathname: '/x/react-data-grid/main-features',
         subheader: 'Main features',
         children: [
+          { pathname: '/x/react-data-grid/layout' },
           {
             pathname: '/x/react-data-grid/columns',
             children: [
@@ -115,7 +116,6 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
-          { pathname: '/x/react-data-grid/layout' },
           { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
         ],
