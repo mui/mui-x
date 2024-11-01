@@ -119,26 +119,6 @@ const pages: MuiPage[] = [
             plan: 'pro',
             unstable: true,
           },
-        ],
-      },
-      {
-        pathname: '/x/react-data-grid/visual-customization-group',
-        subheader: 'Customization',
-        children: [
-          { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
-          { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
-          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
-          { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
-        ],
-      },
-      {
-        pathname: '/x/api/resources-group',
-        subheader: 'Resources',
-        children: [
-          { pathname: '/x/react-data-grid/api-object', title: 'API object' },
-          { pathname: '/x/react-data-grid/events' },
-          { pathname: '/x/react-data-grid/state' },
-          { pathname: '/x/react-data-grid/performance' },
           {
             pathname: '/x/react-data-grid/server-side-data-group',
             title: 'Server-side data',
@@ -168,6 +148,26 @@ const pages: MuiPage[] = [
               },
             ],
           },
+        ],
+      },
+      {
+        pathname: '/x/react-data-grid/visual-customization-group',
+        subheader: 'Customization',
+        children: [
+          { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
+          { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
+          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+          { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+        ],
+      },
+      {
+        pathname: '/x/api/resources-group',
+        subheader: 'Resources',
+        children: [
+          { pathname: '/x/react-data-grid/api-object', title: 'API object' },
+          { pathname: '/x/react-data-grid/events' },
+          { pathname: '/x/react-data-grid/state' },
+          { pathname: '/x/react-data-grid/performance' },
           {
             pathname: '/x/react-data-grid/recipes',
             children: [
