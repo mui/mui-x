@@ -41,22 +41,7 @@ GridPrintExportMenuItem.propTypes = {
     hideFooter: PropTypes.bool,
     hideToolbar: PropTypes.bool,
     includeCheckboxes: PropTypes.bool,
-    pageStyle: PropTypes.oneOfType([
-      PropTypes.shape({
-        '__@hasInstance@645': PropTypes.func.isRequired,
-        '__@metadata@647': PropTypes.any,
-        apply: PropTypes.func.isRequired,
-        arguments: PropTypes.any.isRequired,
-        bind: PropTypes.func.isRequired,
-        call: PropTypes.func.isRequired,
-        caller: PropTypes.object.isRequired,
-        length: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        prototype: PropTypes.any.isRequired,
-        toString: PropTypes.func.isRequired,
-      }),
-      PropTypes.string,
-    ]),
+    pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   }),
 } as any;
 
