@@ -1,15 +1,9 @@
 import { GridRowId } from '@mui/x-data-grid';
-import { GridDataSourceCache } from '../../../models';
+import { GridDataSourceCache, GridGetRowsParams } from '../../../models';
 
 export interface GridDataSourceState {
   loading: Record<GridRowId, boolean>;
   errors: Record<GridRowId, any>;
-}
-
-export interface FetchRowsOptions {
-  parentId?: GridRowId;
-  start?: number | string;
-  end?: number;
 }
 
 /**
@@ -29,11 +23,13 @@ export interface GridDataSourceApiBase {
    */
   setChildrenFetchError: (parentId: GridRowId, error: Error | null) => void;
   /**
-   * Fetches the rows from the server for with given options.
+   * Fetches the rows from the server.
    * If no `parentId` option is provided, it fetches the root rows.
-   * @param {FetchRowsOptions} options Options that allow setting the specific request params.
+   * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).
+   * @param {GridRowId} parentId The id of the parent node.
+   * @param {Partial<GridGetRowsParams>} params Request parameters override.
    */
-  fetchRows: (options?: GridRowId | FetchRowsOptions) => void;
+  fetchRows: (parentId?: GridRowId, params?: Partial<GridGetRowsParams>) => void;
   /**
    * The data source cache object.
    */

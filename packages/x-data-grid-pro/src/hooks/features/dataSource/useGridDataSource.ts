@@ -6,20 +6,19 @@ import {
   useGridApiMethod,
   GridDataSourceGroupNode,
   useGridSelector,
-  GridRowId,
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
-import { gridRowGroupsToFetchSelector, GridStateInitializer } from '@mui/x-data-grid/internals';
+import {
+  GridGetRowsParams,
+  gridRowGroupsToFetchSelector,
+  GridStateInitializer,
+} from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
-import {
-  FetchRowsOptions,
-  GridDataSourceApi,
-  GridDataSourceApiBase,
-  GridDataSourcePrivateApi,
-} from './interfaces';
+import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
 import { NestedDataManager, RequestStatus, runIf } from './utils';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
@@ -92,25 +91,12 @@ export const useGridDataSource = (
     }),
   );
 
-  const fetchRows = React.useCallback(
-    async (options?: GridRowId | FetchRowsOptions) => {
+  const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
+    async (parentId, params) => {
       const getRows = props.unstable_dataSource?.getRows;
       if (!getRows) {
         return;
       }
-
-      const hasDeprecatedArgument = typeof options === 'string' || typeof options === 'number';
-      if (hasDeprecatedArgument) {
-        console.warn(
-          '`fetchRows` argument should be an options object (`FetchRowsOptions`). `GridRowId` argument is deprecated.',
-        );
-      }
-
-      const parentId = hasDeprecatedArgument || !options ? options : options.parentId;
-      const fetchParamsOverride =
-        hasDeprecatedArgument || options?.start === undefined || options?.end === undefined
-          ? {}
-          : { start: options.start, end: options.end };
 
       if (parentId) {
         nestedDataManager.queue([parentId]);
@@ -127,7 +113,7 @@ export const useGridDataSource = (
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
         ...apiRef.current.unstable_applyPipeProcessors('getRowsParams', {}),
-        ...fetchParamsOverride,
+        ...params,
       };
       const startingIndex =
         typeof fetchParams.start === 'string'
@@ -343,7 +329,11 @@ export const useGridDataSource = (
     'paginationModelChange',
     runIf(props.paginationMode === 'server' && !isLazyLoaded, fetchRows),
   );
-  useGridApiEventHandler(apiRef, 'getRows', runIf(isLazyLoaded, fetchRows));
+  useGridApiEventHandler(
+    apiRef,
+    'getRows',
+    runIf(isLazyLoaded, (params: GridGetRowsParams) => fetchRows(GRID_ROOT_GROUP_ID, params)),
+  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
