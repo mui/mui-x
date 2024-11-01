@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.1
+
+_Nov 1, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+- 🌍 Improve Polish (pl-PL) locale on the Date Pickers
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@wojtkolos, @dpak-maurya, @k-rajat19.
+Following are all team members who have contributed to this release:
+@LukasTy, @arminmeh, @MBilalShafi, @KenanYusuf, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.1`
+
+- [DataGrid] Fix right column group header border (#15152) @KenanYusuf
+- [DataGrid] Fix scroll jump when holding down arrow keys (#15167) @arminmeh
+- [DataGrid] Move `rowGroupingModelChange` handler to respective hook (#15127) @MBilalShafi
+- [DataGrid] Prevent error when deleting the last row (#15153) @dpak-maurya
+- [DataGrid] Fix overlay height in autoHeight mode (#15205) @cherniavskii
+
+#### `@mui/x-data-grid-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.1`, plus:
+
+- [DataGridPro] Add list view tests (#15166) @KenanYusuf
+
+#### `@mui/x-data-grid-premium@7.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+- [DataGridPremium] Keep focus on the grouping cell on space bar press #15155 @k-rajat19
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.1`
+
+- [l10n] Improve Polish (pl-PL) locale (#15177) @wojtkolos
+
+#### `@mui/x-date-pickers-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.22.1`
+
+- [TreeView] Export `TreeItem2DragAndDropOverlay` and `TreeItem2LabelInput` from the root of each package (#15208) @flaviendelangle
+- [TreeView] Fix drag and drop color usage (#15149) @LukasTy
+
+#### `@mui/x-tree-view-pro@7.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.22.1`.
+
+### Docs
+
+- [docs] Add section explaining how to keep the selection while filtering in Data grid docs (#15199) @arminmeh
+
 ## 7.22.0
 
 _Oct 25, 2024_
