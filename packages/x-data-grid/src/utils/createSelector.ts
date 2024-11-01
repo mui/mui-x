@@ -2,6 +2,7 @@ import * as React from 'react';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
+import { areArgsEqual } from '../hooks/utils/useGridSelector';
 
 type CacheKey = { id: number };
 
@@ -28,7 +29,7 @@ export interface OutputSelector<State, Result> {
 export interface OutputSelectorV8<State, Args, Result> {
   (
     apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
-    args: Args,
+    args?: Args,
   ): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
@@ -327,7 +328,7 @@ export const createSelectorMemoizedV8: CreateSelectorFunctionV8 = (...args: any)
     const cacheFn = cacheArgs?.get(args);
 
     if (cacheArgs && cacheFn) {
-      if (cacheFn.selectorArgs !== selectorArgs) {
+      if (!areArgsEqual(cacheFn.selectorArgs, selectorArgs)) {
         const reselectArgs =
           selectorArgs !== undefined
             ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]

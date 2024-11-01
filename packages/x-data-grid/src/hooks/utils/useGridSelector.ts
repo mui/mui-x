@@ -51,6 +51,16 @@ const arrayShallowCompare = (a: any[], b: any[]) => {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 };
 
+export const areArgsEqual = (prev: any, curr: any) => {
+  let fn = Object.is;
+  if (curr instanceof Array) {
+    fn = arrayShallowCompare;
+  } else if (curr instanceof Object) {
+    fn = objectShallowCompare;
+  }
+  return fn(prev, curr);
+};
+
 const createRefs = () => ({ state: null, equals: null, selector: null, args: null }) as any;
 
 // TODO v8: Remove this function
@@ -138,24 +148,16 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   const prevArgs = refs.current.args;
   refs.current.args = args;
 
-  if (didInit) {
-    let argsEqual = Object.is;
-    if (args instanceof Array) {
-      argsEqual = arrayShallowCompare;
-    } else if (args instanceof Object) {
-      argsEqual = objectShallowCompare;
-    }
-    if (!argsEqual(prevArgs, args)) {
-      const newState = applySelectorV8(
-        apiRef,
-        refs.current.selector,
-        refs.current.args,
-        apiRef.current.instanceId,
-      ) as T;
-      if (!refs.current.equals(refs.current.state, newState)) {
-        refs.current.state = newState;
-        setState(newState);
-      }
+  if (didInit && !areArgsEqual(prevArgs, args)) {
+    const newState = applySelectorV8(
+      apiRef,
+      refs.current.selector,
+      refs.current.args,
+      apiRef.current.instanceId,
+    ) as T;
+    if (!refs.current.equals(refs.current.state, newState)) {
+      refs.current.state = newState;
+      setState(newState);
     }
   }
 
