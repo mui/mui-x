@@ -14,7 +14,6 @@ export type {
   TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
-  DefaultizedProps,
   TreeViewItemPlugin,
 } from './models';
 
