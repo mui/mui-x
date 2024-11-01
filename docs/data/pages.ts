@@ -111,7 +111,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-data-grid/visual-customization-group',
-        subheader: 'Visual customization',
+        subheader: 'Customization',
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
