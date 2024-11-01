@@ -55,7 +55,7 @@ function GridAggregationHeader(
     return null;
   }
 
-  const headerClasses = useStyled(headerStyled, rootProps)
+  const headerClasses = useStyled(headerStyled, rootProps, props)
   const labelClasses = useStyled(labelStyled, rootProps)
 
   const aggregationLabel = getAggregationFunctionLabel({

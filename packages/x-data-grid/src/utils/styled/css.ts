@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material';
-import { applyStyled } from '@mui/system/createStyled';
+import { internal_applyStyled } from '@mui/system/createStyled';
 import type { CSSObject } from '@mui/system';
 import { injectStyles } from './engine';
 
@@ -45,51 +45,61 @@ type KeysBase = string | number | symbol
 export const StyledContext = React.createContext(styledMaterial);
 // export const StyledContext = React.createContext(styledUnstyled);
 
-export function useStyled<Props extends PropsBase, Keys extends KeysBase>(
+export function useStyled<P, RP extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  rootProps: Props,
+  rootProps: RP,
+  props?: P,
 ) {
-  return React.useContext(StyledContext)(styleMeta, rootProps);
+  return React.useContext(StyledContext)(styleMeta, rootProps, props);
 }
 
 
-export function styledUnstyled<Props extends PropsBase, Keys extends KeysBase>(
+export function styledUnstyled<P, RP extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  rootProps: Props,
+  rootProps: RP,
+  _props: P,
 ) {
+  const classes = rootProps.classes
+  if (!classes) {
+    return styleMeta.classes;
+  }
+
   const result = { ...styleMeta.classes, }
 
-  const classes = rootProps.classes
-  if (classes) {
-    for (let key in result) {
-      if (classes[key]) {
-        result[key] += ' ' + classes[key]
-      }
+  for (let key in result) {
+    if (classes[key]) {
+      result[key] += ' ' + classes[key]
     }
   }
 
   return result
 }
 
-export function styledMaterial<Props extends PropsBase, Keys extends KeysBase>(
+export function styledMaterial<P, RP extends PropsBase, Keys extends KeysBase>(
   styleMeta: StyleMeta<Keys>,
-  rootProps: Props,
+  rootProps: RP,
+  props: P,
 ) {
+  const classes = rootProps.classes
+
   const theme = useTheme()
-  const styledClassName = applyStyled(
-    { ...rootProps, theme },
+  const styledClassName = internal_applyStyled(
+    { ...props, ownerState: rootProps, theme },
     styleMeta.meta.name,
+    styleMeta.meta.slot,
     (_: any, styles: any) => styles[styleMeta.meta.slot],
   )
 
-  const result = {
-    ...styleMeta.classes,
-  }
-  if ((result as any).root) {
-    (result as any).root += ' ' + styledClassName
+  if (!classes && !styledClassName) {
+    return styleMeta.classes;
   }
 
-  const classes = rootProps.classes
+  const result = {
+    ...styleMeta.classes,
+  };
+
+  (result as any).root = ((result as any).root ?? '') + ' ' + styledClassName
+
   if (classes) {
     for (let key in result) {
       if (classes[key]) {
