@@ -98,7 +98,7 @@ export const useGridDataSource = (
         return;
       }
 
-      if (parentId) {
+      if (parentId && parentId !== GRID_ROOT_GROUP_ID) {
         nestedDataManager.queue([parentId]);
         return;
       }
