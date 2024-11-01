@@ -138,7 +138,7 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/row-grouping',
-                plan: 'pro',
+                plan: 'premium',
                 planned: true,
               },
               {
