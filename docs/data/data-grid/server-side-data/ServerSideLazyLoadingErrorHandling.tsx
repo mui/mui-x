@@ -5,6 +5,7 @@ import {
   GridToolbar,
   GridDataSource,
   GridGetRowsParams,
+  GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -84,7 +85,10 @@ function ServerSideLazyLoadingErrorHandling() {
         {retryParams && (
           <ErrorAlert
             onClick={() => {
-              apiRef.current.unstable_dataSource.fetchRows(retryParams);
+              apiRef.current.unstable_dataSource.fetchRows(
+                GRID_ROOT_GROUP_ID,
+                retryParams,
+              );
               setRetryParams(null);
             }}
           />
@@ -94,6 +98,7 @@ function ServerSideLazyLoadingErrorHandling() {
           apiRef={apiRef}
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(_, params) => setRetryParams(params)}
+          unstable_dataSourceCache={null}
           lazyLoading
           paginationModel={{ page: 0, pageSize: 10 }}
           slots={{ toolbar: GridToolbar }}
