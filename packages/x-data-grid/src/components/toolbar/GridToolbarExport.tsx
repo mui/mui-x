@@ -27,12 +27,11 @@ export interface GridToolbarExportProps {
    * @default {}
    */
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
-  [key: string]: any; // TODO v8: Remove this loophole
+  // TODO v8: Remove this loophole
+  // Refactored from: [key: string]: any;
+  [x: `data-${string}`]: string;
+  [x: `${string}Options`]: any;
 }
-
-type GridToolbarExportComponent = ((
-  props: GridToolbarExportProps & React.RefAttributes<HTMLButtonElement>,
-) => React.JSX.Element | null) & { propTypes?: any };
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {
@@ -56,7 +55,7 @@ const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportP
       </GridToolbarExportContainer>
     );
   },
-) as GridToolbarExportComponent;
+);
 
 GridToolbarExport.propTypes = {
   // ----------------------------- Warning --------------------------------
