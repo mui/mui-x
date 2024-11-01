@@ -6,7 +6,6 @@ import {
   DataGridPro,
   GridInitialState,
   GridSlotProps,
-  GridSlots,
   GridToolbarContainer,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
@@ -66,7 +65,7 @@ export default function RestoreStateInitialState() {
         <DataGridPro
           {...data}
           loading={loading}
-          slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
+          slots={{ toolbar: GridCustomToolbar }}
           slotProps={{ toolbar: { syncState } }}
         />
       </Box>

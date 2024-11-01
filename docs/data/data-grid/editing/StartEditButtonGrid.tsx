@@ -150,14 +150,11 @@ export default function StartEditButtonGrid() {
         cellModesModel={cellModesModel}
         onCellEditStop={handleCellEditStop}
         onCellModesModelChange={(model) => setCellModesModel(model)}
-        slots={{
-          toolbar: EditToolbar as GridSlots['toolbar'],
-        }}
+        slots={{ toolbar: EditToolbar }}
         slotProps={{
           toolbar: {
             cellMode,
             selectedCellParams,
-            setSelectedCellParams,
             cellModesModel,
             setCellModesModel,
           },
