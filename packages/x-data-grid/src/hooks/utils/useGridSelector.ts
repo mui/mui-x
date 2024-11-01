@@ -2,7 +2,7 @@ import * as React from 'react';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
-import { OutputSelector, OutputSelectorV8 } from '../../utils/createSelector';
+import type { OutputSelector, OutputSelectorV8 } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 import type { GridCoreApi } from '../../models/api/gridCoreApi';
@@ -51,7 +51,7 @@ const arrayShallowCompare = (a: any[], b: any[]) => {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 };
 
-export const areArgsEqual = (prev: any, curr: any) => {
+export const argsEqual = (prev: any, curr: any) => {
   let fn = Object.is;
   if (curr instanceof Array) {
     fn = arrayShallowCompare;
@@ -148,7 +148,7 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
   const prevArgs = refs.current.args;
   refs.current.args = args;
 
-  if (didInit && !areArgsEqual(prevArgs, args)) {
+  if (didInit && !argsEqual(prevArgs, args)) {
     const newState = applySelectorV8(
       apiRef,
       refs.current.selector,

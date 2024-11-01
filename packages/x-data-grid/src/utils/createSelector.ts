@@ -2,7 +2,7 @@ import * as React from 'react';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
-import { areArgsEqual } from '../hooks/utils/useGridSelector';
+import { argsEqual } from '../hooks/utils/useGridSelector';
 
 type CacheKey = { id: number };
 
@@ -328,7 +328,7 @@ export const createSelectorMemoizedV8: CreateSelectorFunctionV8 = (...args: any)
     const cacheFn = cacheArgs?.get(args);
 
     if (cacheArgs && cacheFn) {
-      if (!areArgsEqual(cacheFn.selectorArgs, selectorArgs)) {
+      if (!argsEqual(cacheFn.selectorArgs, selectorArgs)) {
         const reselectArgs =
           selectorArgs !== undefined
             ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]
