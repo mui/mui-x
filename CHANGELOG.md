@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-- 🌍 Improve Polish (plPL) locale on the Date Pickers
+- 🌍 Improve Polish (pl-PL) locale on the Date Pickers
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @wojtkolos, @dpak-maurya, @k-rajat19.
