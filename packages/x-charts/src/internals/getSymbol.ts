@@ -1,6 +1,7 @@
 export type SymbolsTypes = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
 
 export function getSymbol(shape: SymbolsTypes): number {
+  // prettier-ignore
   switch (shape) {
     case 'circle':   return 0;
     case 'cross':    return 1;
