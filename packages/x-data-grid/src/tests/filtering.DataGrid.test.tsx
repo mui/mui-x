@@ -557,6 +557,53 @@ describe('<DataGrid /> - Filter', () => {
       ]);
     });
 
+    it('should filter with operator "isNotAnyOf"', () => {
+      expect(getRows({ operator: 'isNotAnyOf', value: ['France (fr)'] })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // `isNotAnyOf` has a `or` behavior
+      expect(getRows({ operator: 'isNotAnyOf', value: ['France (fr)', 'Germany'] })).to.deep.equal([
+        '',
+        '',
+        '',
+        '0',
+        '1',
+      ]);
+
+      // Number casting
+      expect(getRows({ operator: 'isNotAnyOf', value: ['0'] })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '1',
+      ]);
+      expect(getRows({ operator: 'isNotAnyOf', value: ['1'] })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '0',
+      ]);
+
+      // Empty values
+      expect(getRows({ operator: 'isNotAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isNotAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
+
+      // `isNotAnyOf` trim values
+      expect(
+        getRows({ operator: 'isNotAnyOf', value: [' France (fr)', 'Germany '] }),
+      ).to.deep.equal(['', '', '', '0', '1']);
+    });
+
     it('should filter with operator "isEmpty"', () => {
       expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['', '', '']);
     });
@@ -719,6 +766,18 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ operator: 'isAnyOf', value: [1954, 1984] })).to.deep.equal(['1954', '1984']);
       expect(getRows({ operator: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "isNotAnyOf"', () => {
+      expect(getRows({ operator: 'isNotAnyOf', value: [1954, 1984] })).to.deep.equal([
+        '',
+        '',
+        '',
+        '0',
+        '1974',
+      ]);
+      expect(getRows({ operator: 'isNotAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isNotAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "isEmpty"', () => {
