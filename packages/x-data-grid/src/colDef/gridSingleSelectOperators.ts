@@ -20,7 +20,7 @@ const createAnyFilterFn = (negate: boolean) => (filterItem: GridFilterItem) => {
 
   const isAnyOf = (value: unknown): boolean => {
     if (value == null) {
-      return negate;
+      return false;
     }
     return filterItemValues.includes(parseObjectValue(value));
   };
