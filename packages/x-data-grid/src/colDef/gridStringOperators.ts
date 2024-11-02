@@ -60,6 +60,30 @@ const createEmptyFilterFn = (negate: boolean) => () => {
   };
 };
 
+const createAnyFilterFn = (disableTrim: boolean,negate: boolean) => (filterItem: GridFilterItem) => {
+  if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+    return null;
+  }
+  
+  const filterItemValue = disableTrim
+  ? filterItem.value
+  : filterItem.value.map((val) => val.trim());
+const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
+
+  const isAnyOf = (value: unknown): boolean => {
+    if (value == null) {
+      return negate; 
+    }
+    return filterItemValue.some((filterValue: GridFilterItem['value']) => {
+      return collator.compare(filterValue, value.toString() || '') === 0;
+    });
+  };
+
+  return negate 
+    ? (value: unknown) => !isAnyOf(value) 
+    : isAnyOf;
+};
+
 export const getGridStringOperators = (
   disableTrim: boolean = false,
 ): GridFilterOperator<any, number | string | null, any>[] => [
@@ -125,22 +149,12 @@ export const getGridStringOperators = (
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-      const filterItemValue = disableTrim
-        ? filterItem.value
-        : filterItem.value.map((val) => val.trim());
-      const collator = new Intl.Collator(undefined, { sensitivity: 'base', usage: 'search' });
-
-      return (value): boolean =>
-        value != null
-          ? filterItemValue.some((filterValue: GridFilterItem['value']) => {
-              return collator.compare(filterValue, value.toString() || '') === 0;
-            })
-          : false;
-    },
+    getApplyFilterFn: createAnyFilterFn(disableTrim,false),
+    InputComponent: GridFilterInputMultipleValue,
+  },
+  {
+    value: 'isNotAnyOf',
+    getApplyFilterFn: createAnyFilterFn(disableTrim,true),
     InputComponent: GridFilterInputMultipleValue,
   },
 ];

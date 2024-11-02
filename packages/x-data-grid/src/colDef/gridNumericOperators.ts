@@ -2,6 +2,7 @@ import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilter
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
+import { GridFilterItem } from '../models';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -21,6 +22,23 @@ export const getGridNumericQuickFilterFn: GetApplyQuickFilterFn<any, number | st
   return (columnValue) => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
+};
+
+const createAnyFilterFn = (negate: boolean) => (filterItem: GridFilterItem) => {
+  if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
+    return null;
+  }
+
+  const isAnyOf = (value: unknown): boolean => {
+    if (value == null) {
+      return negate; 
+    }
+    return filterItem.value.includes(Number(value));
+  };
+
+  return negate 
+    ? (value: unknown) => !isAnyOf(value) 
+    : isAnyOf;
 };
 
 export const getGridNumericOperators = (): GridFilterOperator<
@@ -148,15 +166,13 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn: (filterItem) => {
-      if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
-        return null;
-      }
-
-      return (value): boolean => {
-        return value != null && filterItem.value.includes(Number(value));
-      };
-    },
+    getApplyFilterFn:createAnyFilterFn(false),
+    InputComponent: GridFilterInputMultipleValue,
+    InputComponentProps: { type: 'number' },
+  },
+  {
+    value:'isNotAnyOf',
+    getApplyFilterFn: createAnyFilterFn(true),
     InputComponent: GridFilterInputMultipleValue,
     InputComponentProps: { type: 'number' },
   },
