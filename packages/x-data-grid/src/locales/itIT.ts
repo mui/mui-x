@@ -39,10 +39,10 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Scarica come Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Cerca',
+  columnsManagementNoColumns: 'Nessuna colonna',
+  columnsManagementShowHideAllText: 'Mostra/Nascondi Tutto',
+  columnsManagementReset: 'Resetta',
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
@@ -58,13 +58,13 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'non contiene',
   filterOperatorEquals: 'uguale a',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'diverso da',
   filterOperatorStartsWith: 'comincia per',
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
-  filterOperatorNot: 'diversa da',
+  filterOperatorNot: 'diverso da',
   filterOperatorAfter: 'dopo il',
   filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorBefore: 'prima del',

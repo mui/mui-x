@@ -230,6 +230,13 @@
         "details": "Additional details for this callback."
       }
     },
+    "onColumnHeaderContextMenu": {
+      "description": "Callback fired when a contextmenu event comes from a column header element.",
+      "typeDescriptions": {
+        "params": "With all properties from GridColumnHeaderParams.",
+        "event": "The event object."
+      }
+    },
     "onColumnHeaderDoubleClick": {
       "description": "Callback fired when a double click event comes from a column header element.",
       "typeDescriptions": {
@@ -437,6 +444,7 @@
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
         "oldRow": "Row object with the old values.",
+        "params": "Additional parameters.",
         "Promise<R> | R": "The final values to update the row."
       }
     },
@@ -1040,13 +1048,17 @@
     }
   },
   "slotDescriptions": {
+    "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseChip": "The custom Chip component used in the grid.",
+    "baseDivider": "The custom Divider component used in the grid.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInputAdornment": "The custom InputAdornment component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "baseMenuItem": "The custom MenuItem component used in the grid.",
+    "baseMenuList": "The custom MenuList component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",

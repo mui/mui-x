@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import { MakeRequired } from '@mui/x-internals/types';
 import {
   AdapterFormats,
   AdapterOptions,
@@ -6,7 +7,6 @@ import {
   FieldFormatTokenMap,
   MuiPickersAdapter,
 } from '../models';
-import { MakeRequired } from '../internals/models/helpers';
 
 type DateFnsLocaleBase = {
   formatLong?: {
@@ -49,6 +49,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   ii: 'weekDay',
   iii: { sectionType: 'weekDay', contentType: 'letter' },
   iiii: { sectionType: 'weekDay', contentType: 'letter' },
+  // eslint-disable-next-line id-denylist
   e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ee: 'weekDay',
   eee: { sectionType: 'weekDay', contentType: 'letter' },

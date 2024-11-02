@@ -3,13 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useThemeProps } from '@mui/material/styles';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { PieSeriesType } from '../models/seriesType';
-import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
@@ -17,12 +17,7 @@ import {
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -86,16 +81,10 @@ export interface PieChartProps
   tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Callback fired when a pie arc is clicked.
    */
@@ -139,7 +128,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
     tooltip = { trigger: 'item' },
     axisHighlight = { x: 'none', y: 'none' },
     skipAnimation,
-    legend: legendProps,
     topAxis = null,
     leftAxis = null,
     rightAxis = null,
@@ -157,11 +145,6 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const isRtl = useRtl();
 
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
-  const legend: ChartsLegendProps = {
-    direction: 'column',
-    position: { vertical: 'middle', horizontal: isRtl ? 'left' : 'right' },
-    ...legendProps,
-  };
 
   return (
     <ResponsiveChartContainer
@@ -191,6 +174,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       className={className}
+      skipAnimation={skipAnimation}
     >
       <ChartsAxis
         topAxis={topAxis}
@@ -200,14 +184,14 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
         slots={slots}
         slotProps={slotProps}
       />
-      <PiePlot
+      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+      <ChartsLegend
+        direction="column"
+        position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
         slots={slots}
         slotProps={slotProps}
-        onItemClick={onItemClick}
-        skipAnimation={skipAnimation}
       />
-      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}
@@ -222,7 +206,7 @@ PieChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -270,37 +254,6 @@ PieChart.propTypes = {
    * @default null
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * The props of the legend.
-   * @default { direction: 'column', position: { vertical: 'middle', horizontal: 'right' } }
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemGap: PropTypes.number,
-    itemMarkHeight: PropTypes.number,
-    itemMarkWidth: PropTypes.number,
-    labelStyle: PropTypes.object,
-    markGap: PropTypes.number,
-    onItemClick: PropTypes.func,
-    padding: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.shape({
-        bottom: PropTypes.number,
-        left: PropTypes.number,
-        right: PropTypes.number,
-        top: PropTypes.number,
-      }),
-    ]),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -351,7 +304,7 @@ PieChart.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**

@@ -1,13 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -53,8 +51,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
-    const newAggregationItem = event.target?.value || undefined;
+  const handleAggregationItemChange = (event: Event) => {
+    const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
     const newModel: GridAggregationModel =
@@ -69,26 +67,26 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
   return (
-    <MenuItem disableRipple>
+    <rootProps.slots.baseMenuItem disableRipple>
       <ListItemIcon>
         <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
           <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <Select
+          <rootProps.slots.baseSelect
             labelId={`${id}-label`}
             id={`${id}-input`}
             value={selectedAggregationRule}
             label={label}
             color="primary"
-            onChange={handleAggregationItemChange}
+            onChange={handleAggregationItemChange as any}
             onBlur={(event) => event.stopPropagation()}
             fullWidth
           >
-            <MenuItem value="">...</MenuItem>
+            <rootProps.slots.baseMenuItem value="">...</rootProps.slots.baseMenuItem>
             {availableAggregationFunctions.map((aggFunc) => (
-              <MenuItem key={aggFunc} value={aggFunc}>
+              <rootProps.slots.baseMenuItem key={aggFunc} value={aggFunc}>
                 {getAggregationFunctionLabel({
                   apiRef,
                   aggregationRule: {
@@ -96,12 +94,12 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                     aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                   },
                 })}
-              </MenuItem>
+              </rootProps.slots.baseMenuItem>
             ))}
-          </Select>
+          </rootProps.slots.baseSelect>
         </FormControl>
       </ListItemText>
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

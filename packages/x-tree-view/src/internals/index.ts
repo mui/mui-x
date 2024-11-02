@@ -1,6 +1,8 @@
 export { useTreeView } from './useTreeView';
 export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
 
+export { RichTreeViewItems } from './components/RichTreeViewItems';
+
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
 export type {
@@ -12,10 +14,7 @@ export type {
   TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
-  DefaultizedProps,
   TreeViewItemPlugin,
-  MuiCancellableEvent,
-  MuiCancellableEventHandler,
 } from './models';
 
 // Core plugins

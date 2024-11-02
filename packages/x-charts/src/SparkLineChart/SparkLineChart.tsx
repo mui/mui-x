@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import {
@@ -16,8 +17,7 @@ import {
 } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { MakeOptional } from '../models/helpers';
-import { LineSeriesType } from '../models/seriesType/line';
+import { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
@@ -177,7 +177,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           data,
           valueFormatter,
           ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
-        },
+        } as LineSeriesType | BarSeriesType,
       ]}
       width={width}
       height={height}
@@ -342,6 +342,11 @@ SparkLineChart.propTypes = {
    * @default false
    */
   showTooltip: PropTypes.bool,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

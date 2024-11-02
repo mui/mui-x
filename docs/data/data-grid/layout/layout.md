@@ -1,6 +1,6 @@
 # Data Grid - Layout
 
-<p class="description">The data grid offers multiple layout modes.</p>
+<p class="description">The Data Grid offers multiple layout modes.</p>
 
 :::error
 By default, the Data Grid has **no intrinsic dimensions**.
@@ -37,7 +37,7 @@ If the parent has no size, the percentage will be zero.
 
 ## Predefined dimensions
 
-You can predefine dimensions for the parent of the data grid.
+You can predefine dimensions for the parent of the Data Grid.
 
 {{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
@@ -61,7 +61,7 @@ take the height of two rows by default.
 
 To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
 
-{{"demo": "AutoHeightOverlayNoSnap.js", "bg": "inline"}}
+{{"demo": "AutoHeightOverlay.js", "bg": "inline"}}
 
 ## API
 

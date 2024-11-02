@@ -1,4 +1,5 @@
 import { GRID_STRING_COL_DEF, GridColDef } from '@mui/x-data-grid';
+import { GRID_TREE_DATA_GROUPING_FIELD } from '@mui/x-data-grid/internals';
 
 /**
  * TODO: Add sorting and filtering on the value and the filteredDescendantCount
@@ -19,7 +20,7 @@ export const GRID_TREE_DATA_GROUPING_COL_DEF: Omit<GridColDef, 'field' | 'editab
   },
 };
 
-export const GRID_TREE_DATA_GROUPING_FIELD = '__tree_data_group__';
+export { GRID_TREE_DATA_GROUPING_FIELD };
 
 export const GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES: Pick<
   GridColDef,

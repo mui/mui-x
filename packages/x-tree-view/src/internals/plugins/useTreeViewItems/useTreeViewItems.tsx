@@ -9,6 +9,7 @@ import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
+import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -180,7 +181,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       return null;
     }
 
-    return document.getElementById(instance.getTreeItemIdAttribute(itemId, itemMeta.idAttribute));
+    return document.getElementById(
+      generateTreeItemIdAttribute({ treeId: state.id.treeId, itemId, id: itemMeta.idAttribute }),
+    );
   };
 
   const isItemNavigable = (itemId: string) => {

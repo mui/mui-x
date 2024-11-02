@@ -35,6 +35,9 @@
     "showTooltip": {
       "description": "Set to <code>true</code> to enable the tooltip in the sparkline."
     },
+    "skipAnimation": {
+      "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
+    },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "valueFormatter": {

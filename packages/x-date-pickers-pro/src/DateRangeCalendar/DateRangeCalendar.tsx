@@ -79,7 +79,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const InnerDayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
@@ -99,7 +99,9 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
       },
     },
   },
-})) as typeof DayCalendar;
+}));
+
+const DayCalendarForRange = InnerDayCalendarForRange as typeof DayCalendar;
 
 function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   props: DateRangeCalendarProps<TDate>,
@@ -116,7 +118,7 @@ function useDateRangeCalendarDefaultizedProps<TDate extends PickerValidDate>(
   return {
     ...themeProps,
     renderLoading:
-      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+      themeProps.renderLoading ?? (() => <span data-testid="loading-progress">...</span>),
     reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
@@ -543,7 +545,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   return (
     <DateRangeCalendarRoot
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >

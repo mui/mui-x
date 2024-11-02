@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-internals/types';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerSlots,
@@ -31,7 +31,7 @@ export interface DesktopDateTimeRangePickerSlotProps<
 
 export interface DesktopDateTimeRangePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimeRangePickerProps<TDate>,
     DesktopRangeOnlyPickerProps {
   /**
