@@ -15,19 +15,17 @@ const createAnyFilterFn = (negate: boolean) => (filterItem: GridFilterItem) => {
   if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
     return null;
   }
-  
+
   const filterItemValues = filterItem.value.map(parseObjectValue);
 
   const isAnyOf = (value: unknown): boolean => {
     if (value == null) {
-      return negate; 
+      return negate;
     }
     return filterItemValues.includes(parseObjectValue(value));
   };
 
-  return negate 
-    ? (value: unknown) => !isAnyOf(value) 
-    : isAnyOf;
+  return negate ? (value: unknown) => !isAnyOf(value) : isAnyOf;
 };
 export const getGridSingleSelectOperators = (): GridFilterOperator[] => [
   {

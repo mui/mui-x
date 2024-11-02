@@ -31,14 +31,12 @@ const createAnyFilterFn = (negate: boolean) => (filterItem: GridFilterItem) => {
 
   const isAnyOf = (value: unknown): boolean => {
     if (value == null) {
-      return negate; 
+      return negate;
     }
     return filterItem.value.includes(Number(value));
   };
 
-  return negate 
-    ? (value: unknown) => !isAnyOf(value) 
-    : isAnyOf;
+  return negate ? (value: unknown) => !isAnyOf(value) : isAnyOf;
 };
 
 export const getGridNumericOperators = (): GridFilterOperator<
@@ -166,12 +164,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn:createAnyFilterFn(false),
+    getApplyFilterFn: createAnyFilterFn(false),
     InputComponent: GridFilterInputMultipleValue,
     InputComponentProps: { type: 'number' },
   },
   {
-    value:'isNotAnyOf',
+    value: 'isNotAnyOf',
     getApplyFilterFn: createAnyFilterFn(true),
     InputComponent: GridFilterInputMultipleValue,
     InputComponentProps: { type: 'number' },
