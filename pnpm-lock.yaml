@@ -531,8 +531,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
@@ -1142,8 +1142,8 @@ importers:
         specifier: ^15.7.13
         version: 15.7.13
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1266,8 +1266,8 @@ importers:
         specifier: ^15.7.13
         version: 15.7.13
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
@@ -1355,8 +1355,8 @@ importers:
         specifier: ^15.7.13
         version: 15.7.13
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-jalali:
         specifier: ^2.30.0-0
         version: 2.30.0-0
@@ -5479,10 +5479,6 @@ packages:
 
   date-fns-jalali@3.6.0-1:
     resolution: {integrity: sha512-f4FlXArA3kE0uW27y/2AJjRevb6x7DaLMjJfxw7CEXC+XK/JXbZ/WVHND5l1zq2VZsssRrXRWWS0u9NGwawVsQ==}
-
-  date-fns@2.30.0:
-    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
-    engines: {node: '>=0.11'}
 
   date-fns@4.1.0:
     resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
@@ -14658,10 +14654,6 @@ snapshots:
       '@babel/runtime': 7.26.0
 
   date-fns-jalali@3.6.0-1: {}
-
-  date-fns@2.30.0:
-    dependencies:
-      '@babel/runtime': 7.26.0
 
   date-fns@4.1.0: {}
 
