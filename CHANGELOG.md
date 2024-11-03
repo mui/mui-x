@@ -861,7 +861,7 @@ No changes since `@mui/x-tree-view@7.12.0`.
 
 ### Docs
 
-- [docs] Add a warning to promote the usage of `updateRows` (#14027) @MBilalShafi
+- [docs] Add a warning to promote the usage of `updateRows()` (#14027) @MBilalShafi
 - [docs] Disable ad in `Rich Tree View-Ordering` page (#14123) @oliviertassinari
 - [docs] Redesign Date and Time Pickers overview page (#13241) @noraleonte
 
