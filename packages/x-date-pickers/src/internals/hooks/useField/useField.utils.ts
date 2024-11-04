@@ -14,9 +14,9 @@ import {
   PickersTimezone,
   PickerValidDate,
   FieldSelectedSections,
+  PickerValueType,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
-import { PickerValueType } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,

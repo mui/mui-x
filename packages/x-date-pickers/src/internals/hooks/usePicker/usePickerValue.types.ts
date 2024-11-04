@@ -1,6 +1,6 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { PickerValueType, WrapperVariant } from '../../models/common';
+import { WrapperVariant } from '../../models/common';
 import {
   FieldSection,
   TimezoneProps,
@@ -10,6 +10,7 @@ import {
   PickerValidDate,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {

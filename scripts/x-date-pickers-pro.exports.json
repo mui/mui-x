@@ -335,6 +335,7 @@
   { "name": "PickersYearClassKey", "kind": "TypeAlias" },
   { "name": "PickerValidDate", "kind": "TypeAlias" },
   { "name": "PickerValidDateLookup", "kind": "Interface" },
+  { "name": "PickerValueType", "kind": "TypeAlias" },
   { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "RangeFieldSection", "kind": "Interface" },
   { "name": "RangeFieldSeparatorProps", "kind": "Interface" },

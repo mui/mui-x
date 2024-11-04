@@ -1,5 +1,11 @@
-import { DateView, MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../models';
-import { DateOrTimeViewWithMeridiem, PickerValueType } from '../models';
+import {
+  DateView,
+  MuiPickersAdapter,
+  PickersTimezone,
+  PickerValidDate,
+  PickerValueType,
+} from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
 export const mergeDateAndTime = <TDate extends PickerValidDate>(

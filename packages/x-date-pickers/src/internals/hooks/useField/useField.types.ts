@@ -10,6 +10,7 @@ import {
   FieldRef,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
@@ -17,7 +18,6 @@ import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
-import { PickerValueType } from '../../models';
 
 export interface UseFieldParams<
   TValue,
