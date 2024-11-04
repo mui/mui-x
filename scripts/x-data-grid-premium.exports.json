@@ -40,7 +40,6 @@
   { "name": "ElementSize", "kind": "Interface" },
   { "name": "EMPTY_PINNED_COLUMN_FIELDS", "kind": "Variable" },
   { "name": "EMPTY_RENDER_CONTEXT", "kind": "Variable" },
-  { "name": "FetchRowsOptions", "kind": "Interface" },
   { "name": "FilterColumnsArgs", "kind": "Interface" },
   { "name": "FilterPanelPropsOverrides", "kind": "Interface" },
   { "name": "FocusElement", "kind": "Interface" },
