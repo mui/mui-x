@@ -15,7 +15,11 @@ export default function TimeFieldValue() {
           label="Uncontrolled field"
           defaultValue={dayjs('2022-04-17T15:30')}
         />
-        <TimeField label="Controlled field" value={value} onChange={setValue} />
+        <TimeField
+          label="Controlled field"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
       </DemoContainer>
     </LocalizationProvider>
   );

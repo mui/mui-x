@@ -61,7 +61,7 @@ export default function PickerButton() {
       <DatePicker
         value={value}
         label={value == null ? null : value.format('MMM DD, YYYY')}
-        onChange={setValue}
+        onChange={(newValue) => setValue(newValue)}
         slots={{ field: ButtonField }}
         slotProps={{
           field: { setOpen } as any,

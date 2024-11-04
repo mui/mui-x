@@ -37,7 +37,7 @@ export default function ClearableBehavior() {
           <DateField
             sx={{ width: '300px' }}
             value={value}
-            onChange={setValue}
+            onChange={(newValue) => setValue(newValue)}
             onClear={() => setCleared(true)}
             clearable
           />

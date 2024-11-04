@@ -15,7 +15,7 @@ export default function TimeClockValue() {
           <TimeClock defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
         <DemoItem label="Controlled clock">
-          <TimeClock value={value} onChange={setValue} />
+          <TimeClock value={value} onChange={(newValue) => setValue(newValue)} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

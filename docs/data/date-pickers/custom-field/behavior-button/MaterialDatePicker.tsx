@@ -46,7 +46,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
     }
   };
 
-  const formattedValue = value == null ? parsedFormat : value.format(format);
+  const valueStr = value == null ? parsedFormat : value.format(format);
 
   return (
     <Button
@@ -56,7 +56,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       ref={InputProps?.ref}
       onClick={handleTogglePicker}
     >
-      {label ? `${label}: ${formattedValue}` : formattedValue}
+      {label ? `${label}: ${valueStr}` : valueStr}
     </Button>
   );
 }

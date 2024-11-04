@@ -15,12 +15,12 @@ const ACCEPT_REGEX = /[\d]/gi;
 const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
-function getInputValueFromDate(date, format) {
-  if (date == null) {
+function getValueStrFromValue(value, format) {
+  if (value == null) {
     return '';
   }
 
-  return date.isValid() ? date.format(format) : '';
+  return value.isValid() ? value.format(format) : '';
 }
 
 function MaskedField(props) {
@@ -46,12 +46,12 @@ function MaskedField(props) {
 
   // Control the input text
   const [inputValue, setInputValue] = React.useState(() =>
-    getInputValueFromDate(value, format),
+    getValueStrFromValue(value, format),
   );
 
   React.useEffect(() => {
     if (value && value.isValid()) {
-      const newDisplayDate = getInputValueFromDate(value, format);
+      const newDisplayDate = getValueStrFromValue(value, format);
       setInputValue(newDisplayDate);
     }
   }, [format, value]);
