@@ -69,6 +69,7 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-data-grid/editing' },
+          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing recipes' },
           { pathname: '/x/react-data-grid/sorting' },
           {
             pathname: '/x/react-data-grid/filtering-group',
@@ -106,6 +107,11 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+          {
+            pathname: '/x/react-data-grid/recipes-row-grouping',
+            title: 'Row grouping recipes',
+            plan: 'premium',
+          },
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
           { pathname: '/x/react-data-grid/export' },
@@ -167,17 +173,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/events' },
           { pathname: '/x/react-data-grid/state' },
           { pathname: '/x/react-data-grid/performance' },
-          {
-            pathname: '/x/react-data-grid/recipes',
-            children: [
-              { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-              {
-                pathname: '/x/react-data-grid/recipes-row-grouping',
-                title: 'Row grouping',
-                plan: 'premium',
-              },
-            ],
-          },
         ],
       },
       {
