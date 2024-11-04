@@ -1,9 +1,8 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { WrapperVariant } from '../../models/common';
+import { PickerValueType, WrapperVariant } from '../../models/common';
 import {
   FieldSection,
-  FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
@@ -41,13 +40,13 @@ export interface PickerValueManager<TValue, TDate extends PickerValidDate, TErro
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
    * @param {PickersTimezone} timezone The current timezone.
-   * @param {FieldValueType} valueType The type of the value being edited.
+   * @param {PickerValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
     utils: MuiPickersAdapter<TDate>,
     timezone: PickersTimezone,
-    valueType: FieldValueType,
+    valueType: PickerValueType,
   ) => TValue;
   /**
    * @template TDate, TValue
@@ -278,7 +277,7 @@ export interface UsePickerValueParams<
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
-  valueType: FieldValueType;
+  valueType: PickerValueType;
   wrapperVariant: WrapperVariant;
   validator: Validator<TValue, TDate, InferError<TExternalProps>, TExternalProps>;
 }

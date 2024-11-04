@@ -8,7 +8,6 @@ import {
 } from './useField.types';
 import {
   FieldSectionType,
-  FieldValueType,
   FieldSection,
   MuiPickersAdapter,
   FieldSectionContentType,
@@ -17,6 +16,7 @@ import {
   FieldSelectedSections,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { PickerValueType } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = <TDate extends PickerValidDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -623,7 +623,7 @@ let warnedOnceInvalidSection = false;
 
 export const validateSections = <TSection extends FieldSection>(
   sections: TSection[],
-  valueType: FieldValueType,
+  valueType: PickerValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
