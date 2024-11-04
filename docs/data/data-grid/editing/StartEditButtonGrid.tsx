@@ -9,7 +9,6 @@ import {
   GridCellModes,
   GridEventListener,
   GridCellModesModel,
-  GridSlots,
   GridSlotProps,
 } from '@mui/x-data-grid';
 import {
