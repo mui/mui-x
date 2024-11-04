@@ -22,8 +22,6 @@
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisId": { "type": { "description": "string" } },
-    "xAxisKey": { "type": { "description": "string" } },
-    "yAxisId": { "type": { "description": "string" } },
-    "yAxisKey": { "type": { "description": "string" } }
+    "yAxisId": { "type": { "description": "string" } }
   }
 }
