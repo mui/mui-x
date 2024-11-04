@@ -68,10 +68,10 @@ export default function BarAnimation() {
   );
 }
 
-const highlightScope = {
+const highlightScope: HighlightScope = {
   highlight: 'series',
   fade: 'global',
-} as HighlightScope;
+};
 
 const series = [
   {
