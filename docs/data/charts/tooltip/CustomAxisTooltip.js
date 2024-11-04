@@ -5,12 +5,11 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useAxisTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef } from '@mui/x-charts/hooks';
-import { generateVirtualElement } from './generateVirtualElement';
 
 function usePointer() {
   const svgRef = useSvgRef();
   const popperRef = React.useRef(null);
-  const virtualElement = React.useRef(generateVirtualElement({ x: 0, y: 0 }));
+  const positionRef = React.useRef({ x: 0, y: 0 });
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [pointer, setPointer] = React.useState({
@@ -43,10 +42,10 @@ function usePointer() {
     };
 
     const handleMove = (event) => {
-      virtualElement.current = generateVirtualElement({
+      positionRef.current = {
         x: event.clientX,
         y: event.clientY,
-      });
+      };
       popperRef.current?.update();
     };
 
@@ -61,7 +60,23 @@ function usePointer() {
     };
   }, [svgRef]);
 
-  return { ...pointer, popperRef, anchorEl: virtualElement.current };
+  return {
+    ...pointer,
+    popperRef,
+    anchorEl: {
+      getBoundingClientRect: () => ({
+        x: positionRef.current.x,
+        y: positionRef.current.y,
+        top: positionRef.current.y,
+        left: positionRef.current.x,
+        right: positionRef.current.x,
+        bottom: positionRef.current.y,
+        width: 0,
+        height: 0,
+        toJSON: () => '',
+      }),
+    },
+  };
 }
 
 export function CustomAxisTooltip() {

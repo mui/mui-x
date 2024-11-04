@@ -1,10 +1,10 @@
+import { MakeRequired } from '@mui/x-internals/types';
 import { UseDateFieldProps } from '../DateField';
 import {
   DesktopDatePickerProps,
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { MakeRequired } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
