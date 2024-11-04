@@ -39,7 +39,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     InputLabelProps,
     ...others
   } = props;
-  const [filterValueState, setFilterValueState] = React.useState(item.value || '');
+  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const rootProps = useGridRootProps();
 
   const labelId = useId();
@@ -54,13 +54,13 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setFilterValueState(value);
-      applyValue({ ...item, value: Boolean(value) });
+      applyValue({ ...item, value: String(value).toLowerCase() === 'true' });
     },
     [applyValue, item],
   );
 
   React.useEffect(() => {
-    setFilterValueState(item.value || '');
+    setFilterValueState(item.value ?? '');
   }, [item.value]);
 
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
