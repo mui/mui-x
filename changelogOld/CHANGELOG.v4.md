@@ -394,7 +394,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
      apiRef.current.commitCellChange({ id: 1, field: 'name' });
     ```
 
-  - The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows()` in place.
+  - The `setCellValue()` was removed from the API. Use `commitCellChange()` or `updateRows()` in place.
 
     ```diff
     -apiRef.current.setCellValue({ id: 1, field: 'name', value: 'Ana' });
