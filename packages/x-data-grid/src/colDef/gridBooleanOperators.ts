@@ -6,11 +6,11 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.value) {
+      if (!filterItem.value && typeof filterItem.value !== 'boolean') {
         return null;
       }
 
-      const valueAsBoolean = String(filterItem.value) === 'true';
+      const valueAsBoolean = String(filterItem.value).toLowerCase() === 'true';
       return (value): boolean => {
         return Boolean(value) === valueAsBoolean;
       };

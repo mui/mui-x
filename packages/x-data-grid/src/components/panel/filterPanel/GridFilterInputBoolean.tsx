@@ -54,7 +54,8 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setFilterValueState(value);
-      applyValue({ ...item, value: String(value).toLowerCase() === 'true' });
+
+      applyValue({ ...item, value: value ? String(value).toLowerCase() === 'true' : value });
     },
     [applyValue, item],
   );
