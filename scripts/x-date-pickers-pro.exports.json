@@ -345,7 +345,6 @@
   { "name": "renderDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderMultiSectionDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderTimeViewClock", "kind": "Variable" },
-  { "name": "SimpleValue", "kind": "TypeAlias" },
   { "name": "SingleInputDateRangeField", "kind": "Variable" },
   { "name": "SingleInputDateRangeFieldProps", "kind": "TypeAlias" },
   { "name": "SingleInputDateTimeRangeField", "kind": "Variable" },
