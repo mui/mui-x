@@ -59,17 +59,16 @@ function ScatterPlot(props: ScatterPlotProps) {
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, zAxisKey, xAxisId, yAxisId, zAxisId, markerSize, color } =
-          series[seriesId];
+        const { id, xAxisId, yAxisId, zAxisId, markerSize, color } = series[seriesId];
 
         const colorGetter = getColor(
           series[seriesId],
-          xAxis[xAxisId ?? xAxisKey ?? defaultXAxisId],
-          yAxis[yAxisId ?? yAxisKey ?? defaultYAxisId],
-          zAxis[zAxisId ?? zAxisKey ?? defaultZAxisId],
+          xAxis[xAxisId ?? defaultXAxisId],
+          yAxis[yAxisId ?? defaultYAxisId],
+          zAxis[zAxisId ?? defaultZAxisId],
         );
-        const xScale = xAxis[xAxisId ?? xAxisKey ?? defaultXAxisId].scale;
-        const yScale = yAxis[yAxisId ?? yAxisKey ?? defaultYAxisId].scale;
+        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
         return (
           <ScatterItems
             key={id}

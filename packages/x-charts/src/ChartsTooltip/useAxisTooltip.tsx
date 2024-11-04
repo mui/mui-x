@@ -61,8 +61,8 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
       return seriesOfType.seriesOrder.map((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
 
-        const providedXAxisId = seriesToAdd.xAxisId ?? seriesToAdd.xAxisKey;
-        const providedYAxisId = seriesToAdd.yAxisId ?? seriesToAdd.yAxisKey;
+        const providedXAxisId = seriesToAdd.xAxisId;
+        const providedYAxisId = seriesToAdd.yAxisId;
 
         const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
 
@@ -70,8 +70,7 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
         if (axisKey === undefined || axisKey === USED_AXIS_ID) {
           const xAxisId = providedXAxisId ?? xAxisIds[0];
           const yAxisId = providedYAxisId ?? yAxisIds[0];
-          const zAxisId =
-            (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+          const zAxisId = (seriesToAdd as any).zAxisId ?? zAxisIds[0];
 
           const color =
             colorProcessors[seriesType]?.(
