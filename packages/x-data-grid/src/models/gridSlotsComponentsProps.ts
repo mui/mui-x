@@ -1,8 +1,11 @@
 import * as React from 'react';
 import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { MenuProps } from '@mui/material/Menu';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps } from '@mui/material/MenuItem';
+import type { ListItemIconProps } from '@mui/material/ListItemIcon';
+import type { ListItemTextProps } from '@mui/material/ListItemText';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -43,8 +46,11 @@ type DividerProps = {};
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
+export interface BaseMenuPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
+export interface BaseListItemIconPropsOverrides {}
+export interface BaseListItemTextPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
@@ -84,8 +90,11 @@ export interface GridSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseMenu: MenuProps & BaseMenuPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
+  baseListItemIcon: ListItemIconProps & BaseListItemIconPropsOverrides;
+  baseListItemText: ListItemTextProps & BaseListItemTextPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;

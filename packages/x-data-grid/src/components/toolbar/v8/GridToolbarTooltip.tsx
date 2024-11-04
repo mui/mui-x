@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
-import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
+import { TooltipProps } from '@mui/material/Tooltip';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
@@ -21,24 +20,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const StyledTooltip = styled(Tooltip, {
-  name: 'MuiDataGrid',
-  slot: 'ToolbarTooltip',
-  overridesResolver: (_, styles) => styles.toolbarTooltip,
-})<{ ownerState: OwnerState }>({
-  border: 0,
-});
-
 function GridToolbarTooltip(props: GridToolbarTooltipProps) {
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const classes = useUtilityClasses(rootProps);
 
   return (
-    <StyledTooltip
-      ownerState={rootProps}
+    <rootProps.slots.baseTooltip
       className={clsx(classes.root, className)}
-      as={rootProps.slots.baseTooltip}
       enterDelay={1000}
       slotProps={{
         popper: {
@@ -56,7 +45,7 @@ function GridToolbarTooltip(props: GridToolbarTooltipProps) {
       {...other}
     >
       {children}
-    </StyledTooltip>
+    </rootProps.slots.baseTooltip>
   );
 }
 

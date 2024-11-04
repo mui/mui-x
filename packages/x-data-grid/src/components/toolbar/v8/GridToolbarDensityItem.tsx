@@ -11,9 +11,7 @@ import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../../models/api/gridDensityApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridToolbarTooltip } from './GridToolbarTooltip';
-import { GridToolbarToggleButtonGroup } from './GridToolbarToggleButtonGroup';
 import { GridToolbarToggleButton } from './GridToolbarToggleButton';
-import { GridToolbarPopover } from './GridToolbarPopover';
 
 interface GridToolbarDensityItemProps {
   /**
@@ -30,7 +28,6 @@ interface GridToolbarDensityItemProps {
 const GridToolbarDensityItem = React.forwardRef<HTMLButtonElement, GridToolbarDensityItemProps>(
   function GridToolbarDensityItem(props, ref) {
     const { slotProps = {} } = props;
-    const toggleButtonGroupProps = slotProps.toggleButtonGroup || {};
     const toggleButtonProps = slotProps.toggleButton || {};
     const tooltipProps = slotProps.tooltip || {};
     const apiRef = useGridApiContext();
@@ -73,10 +70,7 @@ const GridToolbarDensityItem = React.forwardRef<HTMLButtonElement, GridToolbarDe
       },
     ];
 
-    const handleDensityUpdate = (
-      event: React.MouseEvent<HTMLElement, MouseEvent>,
-      newDensity: GridDensity,
-    ) => {
+    const handleDensityUpdate = (newDensity: GridDensity) => {
       if (newDensity !== null) {
         apiRef.current.setDensity(newDensity);
       }
@@ -100,38 +94,39 @@ const GridToolbarDensityItem = React.forwardRef<HTMLButtonElement, GridToolbarDe
             value="density"
             selected={!!anchorEl}
             onChange={handleDensitySelectorOpen}
+            sx={{ gap: 1 }}
             {...toggleButtonProps}
           >
             {densityIcons[density]}
-            <rootProps.slots.arrowDropDownIcon fontSize="small" sx={{ mr: -0.75 }} />
+            Density
+            <rootProps.slots.arrowDropDownIcon fontSize="small" sx={{ ml: -0.75, mr: -0.5 }} />
           </GridToolbarToggleButton>
         </GridToolbarTooltip>
 
-        <GridToolbarPopover
+        <rootProps.slots.baseMenu
           open={!!anchorEl}
           anchorEl={anchorEl}
           onClose={handleDensitySelectorOpen}
           id={densityMenuId}
+          {...rootProps.slotProps?.baseMenu}
         >
-          <GridToolbarToggleButtonGroup
-            value={density}
-            onChange={handleDensityUpdate}
-            exclusive
-            {...toggleButtonGroupProps}
-          >
-            {densityOptions.map((option) => (
-              <GridToolbarTooltip key={option.value} title={option.label} {...tooltipProps}>
-                <GridToolbarToggleButton
-                  value={option.value}
-                  aria-label={option.label}
-                  {...toggleButtonProps}
-                >
-                  {option.icon}
-                </GridToolbarToggleButton>
-              </GridToolbarTooltip>
-            ))}
-          </GridToolbarToggleButtonGroup>
-        </GridToolbarPopover>
+          {densityOptions.map((option) => (
+            <rootProps.slots.baseMenuItem
+              key={option.value}
+              value={option.value}
+              selected={option.value === density}
+              onClick={() => handleDensityUpdate(option.value)}
+              {...rootProps.slotProps?.baseMenuItem}
+            >
+              <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
+                {option.icon}
+              </rootProps.slots.baseListItemIcon>
+              <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+                {option.label}
+              </rootProps.slots.baseListItemText>
+            </rootProps.slots.baseMenuItem>
+          ))}
+        </rootProps.slots.baseMenu>
       </React.Fragment>
     );
   },

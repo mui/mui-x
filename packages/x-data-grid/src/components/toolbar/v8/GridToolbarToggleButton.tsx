@@ -25,9 +25,10 @@ const StyledToggleButton = styled(ToggleButton, {
   name: 'MuiDataGrid',
   slot: 'ToolbarToggleButton',
   overridesResolver: (_, styles) => styles.toolbarToggleButton,
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   border: 0,
-});
+  gap: theme.spacing(0.5),
+}));
 
 const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarToggleButtonProps>(
   function GridToolbarToggleButton(props, ref) {

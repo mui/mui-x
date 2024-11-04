@@ -34,6 +34,7 @@ const Separator = styled('div', {
   backgroundColor: theme.palette.divider,
 }));
 
+// TODO: This should be a divider component from Material UI
 function GridToolbarSeparator(props: GridToolbarSeparatorProps) {
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);

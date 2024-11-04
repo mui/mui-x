@@ -26,6 +26,11 @@ export interface GridBaseSlots {
    */
   baseDivider: React.JSXElementConstructor<GridSlotProps['baseDivider']>;
   /**
+   * The custom Menu component used in the grid.
+   * @default Menu
+   */
+  baseMenu: React.JSXElementConstructor<GridSlotProps['baseMenu']>;
+  /**
    * The custom MenuList component used in the grid.
    * @default MenuList
    */
@@ -35,6 +40,16 @@ export interface GridBaseSlots {
    * @default MenuItem
    */
   baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
+  /**
+   * The custom ListItemIcon component used in the grid.
+   * @default ListItemIcon
+   */
+  baseListItemIcon: React.JSXElementConstructor<GridSlotProps['baseListItemIcon']>;
+  /**
+   * The custom ListItemText component used in the grid.
+   * @default ListItemText
+   */
+  baseListItemText: React.JSXElementConstructor<GridSlotProps['baseListItemText']>;
   /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment
