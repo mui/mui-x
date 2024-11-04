@@ -28,7 +28,7 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
-declare module '@mui/x-data-grid-premium' {
+declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     listView: boolean;
     container: () => HTMLElement;

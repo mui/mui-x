@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-declare module '@mui/x-data-grid-pro' {
+declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     syncState: (stateToSave: GridInitialState) => void;
   }
