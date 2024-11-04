@@ -36,7 +36,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
 
   return Object.keys(series)
     .filter((seriesId) => {
-      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey;
+      const yAxisId = series[seriesId].yAxisId;
       return yAxisId === axis.id || (isDefaultAxis && yAxisId === undefined);
     })
     .reduce(
@@ -47,8 +47,8 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
         const filter = getFilters?.({
           currentAxisId: axis.id,
           isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId ?? series[seriesId].xAxisKey,
-          seriesYAxisId: series[seriesId].yAxisId ?? series[seriesId].yAxisKey,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
         });
 
         // Since this series is not used to display an area, we do not consider the base (the d[0]).
