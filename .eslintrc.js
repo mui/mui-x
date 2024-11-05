@@ -59,7 +59,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*.?(c|m)[jt]s?(x)`],
-    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+    excludedFiles: ['*.d.ts', '*.spec.*', '*.test.*'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -245,7 +245,7 @@ module.exports = {
     },
     {
       files: ['packages/*/src/**/*.?(c|m)[jt]s?(x)'],
-      excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx'],
+      excludedFiles: ['*.d.ts', '*.spec.*'],
       rules: {
         'material-ui/mui-name-matches-component-name': [
           'error',
