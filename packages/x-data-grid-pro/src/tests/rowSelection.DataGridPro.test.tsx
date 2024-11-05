@@ -11,6 +11,7 @@ import {
   GridRowSelectionModel,
   GridRowsProp,
   GridColDef,
+  GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -199,7 +200,7 @@ describe('<DataGridPro /> - Row selection', () => {
     function TestDataGrid() {
       const [gridRows, setRows] = React.useState(rows);
       const onFilterChange = React.useCallback(
-        (filterModel) => {
+        (filterModel: GridFilterModel) => {
           if (filterModel.items?.length === 0) {
             return;
           }

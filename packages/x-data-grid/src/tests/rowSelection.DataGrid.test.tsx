@@ -18,6 +18,7 @@ import {
   useGridApiRef,
   GridApi,
   GridPreferencePanelsValue,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -69,8 +70,8 @@ describe('<DataGrid /> - Row selection', () => {
   it('should not call `onRowSelectionModelChange` twice when using filterMode="server"', () => {
     const onRowSelectionModelChange = spy();
     function TestDataGrid() {
-      const [, setRowSelectionModel] = React.useState([]);
-      const handleRowSelectionModelChange = React.useCallback((model) => {
+      const [, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      const handleRowSelectionModelChange = React.useCallback((model: GridRowSelectionModel) => {
         setRowSelectionModel(model);
         onRowSelectionModelChange(model);
       }, []);
