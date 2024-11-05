@@ -119,7 +119,7 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-data-grid/row-grouping', title: 'Overview' },
               {
-                pathname: '/x/react-data-grid/row-grouping/recipes-row-grouping',
+                pathname: '/x/react-data-grid/recipes-row-grouping',
                 title: 'Recipes',
               },
             ],
