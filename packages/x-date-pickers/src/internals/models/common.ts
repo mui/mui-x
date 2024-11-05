@@ -4,8 +4,6 @@ export type PickerOrientation = 'portrait' | 'landscape';
 
 export type PickerVariant = 'mobile' | 'desktop';
 
-export type ValueType = 'date' | 'time' | 'date-time';
-
 export type TimeViewWithMeridiem = TimeView | 'meridiem';
 
 export type DateOrTimeViewWithMeridiem = DateView | TimeViewWithMeridiem;
