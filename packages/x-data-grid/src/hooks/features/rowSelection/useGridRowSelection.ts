@@ -11,7 +11,11 @@ import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEve
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import {
+  gridRowsLookupSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowTreeSelector,
+} from '../rows/gridRowsSelector';
 import {
   gridRowSelectionStateSelector,
   selectedGridRowsSelector,
@@ -81,6 +85,7 @@ export const useGridRowSelection = (
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
     | 'paginationMode'
+    | 'filterMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
     | 'rowSelection'
@@ -332,6 +337,13 @@ export const useGridRowSelection = (
         } else {
           newSelection = new Set();
         }
+        const currentLookup = selectedIdsLookupSelector(apiRef);
+        if (
+          newSelection.length === Object.keys(currentLookup).length &&
+          newSelection.every((id) => currentLookup[id] === id)
+        ) {
+          return;
+        }
       } else {
         newSelection = new Set(Object.values(selectedIdsLookupSelector(apiRef)));
         const addRow = (rowId: GridRowId) => {
@@ -445,14 +457,22 @@ export const useGridRowSelection = (
         return;
       }
       const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+      const rowsLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
       // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
       const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
 
+      const isNonExistent = (id: GridRowId) => {
+        if (props.filterMode === 'server') {
+          return !rowsLookup[id];
+        }
+        return filteredRowsLookup[id] !== true;
+      };
+
       let hasChanged = false;
       currentSelection.forEach((id: GridRowId) => {
-        if (filteredRowsLookup[id] !== true) {
+        if (isNonExistent(id)) {
           if (props.keepNonExistentRowsSelected) {
             return;
           }
@@ -479,9 +499,18 @@ export const useGridRowSelection = (
         }
       });
 
-      if (hasChanged || (isNestedData && !sortModelUpdated)) {
+      // For nested data, on row tree updation (filtering, adding rows, etc.) when the selection is
+      // not empty, we need to re-run scanning of the tree to propagate the selection changes
+      // Example: A parent whose de-selected children are filtered out should now be selected
+      const shouldReapplyPropagation =
+        isNestedData &&
+        !sortModelUpdated &&
+        props.rowSelectionPropagation?.parents &&
+        Object.keys(selectionLookup).length > 0;
+
+      if (hasChanged || shouldReapplyPropagation) {
         const newSelection = Object.values(selectionLookup);
-        if (isNestedData) {
+        if (shouldReapplyPropagation) {
           apiRef.current.selectRows(newSelection, true, true);
         } else {
           apiRef.current.setRowSelectionModel(newSelection);
@@ -493,6 +522,7 @@ export const useGridRowSelection = (
       isNestedData,
       props.rowSelectionPropagation?.parents,
       props.keepNonExistentRowsSelected,
+      props.filterMode,
       tree,
     ],
   );
