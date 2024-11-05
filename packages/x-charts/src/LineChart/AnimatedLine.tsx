@@ -43,12 +43,12 @@ function AnimatedLine(props: AnimatedLineProps) {
     <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
       {transitionChange((style, interpolator) => (
         <animated.path
-          {...other}
           d={style.value.to(interpolator)}
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
           strokeLinejoin="round"
           fill="none"
+          {...other}
         />
       ))}
     </AppearingMask>

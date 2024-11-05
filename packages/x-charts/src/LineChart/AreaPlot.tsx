@@ -44,7 +44,7 @@ const AreaPlotRoot = styled('g', {
   overridesResolver: (_, styles) => styles.root,
 })({
   [`& .${areaElementClasses.highlighted}`]: {
-    filter: 'brightness(120%)',
+    filter: 'brightness(140%)',
   },
   [`& .${areaElementClasses.faded}`]: {
     opacity: 0.3,
