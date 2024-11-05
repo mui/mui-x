@@ -9,11 +9,18 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
-    BaseSingleInputFieldProps<Dayjs | null, Dayjs, FieldSection, true, DateValidationError> {
+  extends UseDateFieldProps<true>,
+    BaseSingleInputFieldProps<
+      // This usage of PickerValidDate will go away with TIsRange
+      PickerValidDate | null,
+      FieldSection,
+      true,
+      DateValidationError
+    > {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

@@ -18,8 +18,7 @@ import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 
-export interface ClockProps<TDate extends PickerValidDate>
-  extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -40,14 +39,14 @@ export interface ClockProps<TDate extends PickerValidDate>
   /**
    * The current full date value.
    */
-  value: TDate | null;
+  value: PickerValidDate | null;
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
   classes?: Partial<ClockClasses>;
 }
 
-const useUtilityClasses = (ownerState: ClockProps<any>) => {
+const useUtilityClasses = (ownerState: ClockProps) => {
   const { classes, meridiemMode } = ownerState;
   const slots = {
     root: ['root'],
@@ -99,7 +98,7 @@ const ClockWrapper = styled('div', {
 });
 
 type ClockSquareMaskOwnerState = {
-  disabled?: ClockProps<any>['disabled'];
+  disabled?: ClockProps['disabled'];
 };
 
 const ClockSquareMask = styled('div', {
@@ -170,7 +169,7 @@ const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
   overridesResolver: (_, styles) => styles.amButton,
-})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+})<{ ownerState: ClockProps }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'am'),
   // keeping it here to make TS happy
   position: 'absolute',
@@ -181,7 +180,7 @@ const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
   overridesResolver: (_, styles) => styles.pmButton,
-})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+})<{ ownerState: ClockProps }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'pm'),
   // keeping it here to make TS happy
   position: 'absolute',
@@ -201,7 +200,7 @@ const ClockMeridiemText = styled(Typography, {
 /**
  * @ignore - internal component.
  */
-export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>) {
+export function Clock(inProps: ClockProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,
@@ -224,8 +223,8 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
 
   const ownerState = props;
 
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
+  const utils = useUtils();
+  const translations = usePickersTranslations();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 

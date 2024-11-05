@@ -16,7 +16,7 @@ import {
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
+function ButtonDateRangeField(props: DateRangePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const {
@@ -49,7 +49,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
   };
 
   const formattedValue = (value ?? [null, null])
-    .map((date) => (date == null ? parsedFormat : date.format(format)))
+    .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
 
   return (
@@ -68,7 +68,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps<Dayjs>) {
 // TODO v8: Will be removed before the end of the alpha since single input will become the default field.
 ButtonDateRangeField.fieldType = 'single-input';
 
-function ButtonFieldDateRangePicker(props: DateRangePickerProps<Dayjs>) {
+function ButtonFieldDateRangePicker(props: DateRangePickerProps) {
   return (
     <DateRangePicker
       {...props}
