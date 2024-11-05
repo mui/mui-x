@@ -10,17 +10,14 @@ import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimeP
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
-type MobileTimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure> &
+type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -35,23 +32,21 @@ type MobileTimePickerComponent = (<
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickersTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
-    TDate,
     TimeView,
-    MobileTimePickerProps<TDate, TimeView, TEnableAccessibleFieldDOMStructure>
+    MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimePicker');
 
-  const viewRenderers: TimePickerViewRenderers<TDate, TimeView, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeView, any> = {
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
@@ -85,7 +80,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
   };
 
   const { renderPicker } = useMobilePicker<
-    TDate,
     TimeView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -309,8 +303,7 @@ MobileTimePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

@@ -10,6 +10,7 @@ import {
   useUtils,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -17,7 +18,6 @@ import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
 } from '@mui/x-date-pickers/DateTimePicker';
-import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
@@ -25,7 +25,7 @@ import {
 } from './dateTimeRangePickerToolbarClasses';
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
-const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -38,8 +38,8 @@ const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => 
 
 type DateTimeRangeViews = Exclude<DateOrTimeViewWithMeridiem, 'year' | 'month'>;
 
-export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
-  extends BaseToolbarProps<DateRange<TDate>, DateTimeRangeViews>,
+export interface DateTimeRangePickerToolbarProps
+  extends BaseToolbarProps<PickerRangeValue, DateTimeRangeViews>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
@@ -58,30 +58,29 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateTimeRangePickerToolbarProps<any>;
+  ownerState: DateTimeRangePickerToolbarProps;
 }>({
   display: 'flex',
   flexDirection: 'column',
 });
 
-type DateTimeRangePickerStartOrEndToolbarProps<TDate extends PickerValidDate> =
-  DateTimePickerToolbarProps<TDate> & {
-    ownerState?: DateTimeRangePickerToolbarProps<TDate>;
-  };
+type DateTimeRangePickerStartOrEndToolbarProps = DateTimePickerToolbarProps & {
+  ownerState?: DateTimeRangePickerToolbarProps;
+};
 
-type DateTimeRangePickerStartOrEndToolbarComponent = <TDate extends PickerValidDate>(
-  props: DateTimeRangePickerStartOrEndToolbarProps<TDate>,
+type DateTimeRangePickerStartOrEndToolbarComponent = (
+  props: DateTimeRangePickerStartOrEndToolbarProps,
 ) => React.JSX.Element;
 
 const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+})<DateTimeRangePickerStartOrEndToolbarProps>({
   borderBottom: 'none',
   variants: [
     {
-      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps) =>
         toolbarVariant !== 'desktop',
       style: {
         padding: '12px 8px 0 12px',
@@ -100,10 +99,10 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+})<DateTimeRangePickerStartOrEndToolbarProps>({
   variants: [
     {
-      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps) =>
         toolbarVariant !== 'desktop',
       style: {
         padding: '12px 8px 12px 12px',
@@ -112,15 +111,16 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   ],
 }) as DateTimeRangePickerStartOrEndToolbarComponent;
 
-type DateTimeRangePickerToolbarComponent = (<TDate extends PickerValidDate>(
-  props: DateTimeRangePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DateTimeRangePickerToolbarComponent = ((
+  props: DateTimeRangePickerToolbarProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: DateTimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar(
+  inProps: DateTimeRangePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerToolbar' });
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const {
     value: [start, end],
@@ -156,7 +156,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarPlaceholder,
   };
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickersTranslations();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -188,7 +188,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   );
 
   const handleOnChange = React.useCallback(
-    (newDate: TDate | null) => {
+    (newDate: PickerValidDate | null) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
@@ -214,7 +214,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       sx={sx}
       {...other}
     >
-      <DateTimeRangePickerToolbarStart<TDate>
+      <DateTimeRangePickerToolbarStart
         value={start}
         onViewChange={handleStartRangeViewChange}
         toolbarTitle={translations.start}
@@ -226,7 +226,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         titleId={titleId ? `${titleId}-start-toolbar` : undefined}
         {...commonToolbarProps}
       />
-      <DateTimeRangePickerToolbarEnd<TDate>
+      <DateTimeRangePickerToolbarEnd
         value={end}
         onViewChange={handleEndRangeViewChange}
         toolbarTitle={translations.end}

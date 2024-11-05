@@ -113,7 +113,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       act(() => {
-        setValue(adapterToUse.date(past));
+        setValue(past);
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -121,7 +121,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, false], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(past), { setEndDate: true });
+        setValue(past, { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -129,7 +129,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(now));
+        setValue(now);
       });
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disablePast']);
@@ -154,7 +154,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       }
 
       act(() => {
-        setValue(adapterToUse.date(future), { setEndDate: true });
+        setValue(future, { setEndDate: true });
       });
 
       expect(onErrorMock.callCount).to.equal(1);
@@ -162,7 +162,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([false, true], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(future));
+        setValue(future);
       });
 
       expect(onErrorMock.callCount).to.equal(2);
@@ -170,7 +170,7 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       testInvalidStatus([true, true], isSingleInput);
 
       act(() => {
-        setValue(adapterToUse.date(now));
+        setValue(now);
       });
 
       expect(onErrorMock.callCount).to.equal(3);

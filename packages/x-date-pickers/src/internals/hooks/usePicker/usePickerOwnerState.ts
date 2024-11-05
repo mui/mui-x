@@ -5,9 +5,9 @@ import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.typ
 import { useUtils } from '../useUtils';
 
 interface UsePickerOwnerStateParameters<TValue> {
-  props: UsePickerProps<TValue, any, any, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any, any>;
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
-  valueManager: PickerValueManager<TValue, any, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }
 
 export function usePickerOwnerState<TValue>(

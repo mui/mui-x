@@ -1,5 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -11,23 +10,20 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface DesktopDateRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateRangePickerSlots<TDate>,
-    MakeOptional<UseDesktopRangePickerSlots<TDate, 'day'>, 'field'> {}
+export interface DesktopDateRangePickerSlots
+  extends BaseDateRangePickerSlots,
+    MakeOptional<UseDesktopRangePickerSlots<'day'>, 'field'> {}
 
-export interface DesktopDateRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateRangePickerSlotProps<TDate>,
+export interface DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDateRangePickerSlotProps,
     Omit<
-      UseDesktopRangePickerSlotProps<TDate, 'day', TEnableAccessibleFieldDOMStructure>,
+      UseDesktopRangePickerSlotProps<'day', TEnableAccessibleFieldDOMStructure>,
       'tabs' | 'toolbar'
     > {}
 
 export interface DesktopDateRangePickerProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateRangePickerProps<TDate>,
+> extends BaseDateRangePickerProps,
     DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
@@ -38,12 +34,12 @@ export interface DesktopDateRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateRangePickerSlots<TDate>;
+  slots?: DesktopDateRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
   /**
    * If `true`, the popover or modal will close after submitting the full date.
    * @default true

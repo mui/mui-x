@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
@@ -36,29 +37,26 @@ import {
 import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DefaultizedProps } from '../internals/models/helpers';
 import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 const rendererInterceptor = function rendererInterceptor<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeViewWithMeridiem, any>,
+  inViewRenderers: DateTimePickerViewRenderers<DateOrTimeViewWithMeridiem, any>,
   popperView: TView,
   rendererProps: PickerViewsRendererProps<
-    TDate | null,
+    PickerValidDate | null,
     TView,
     DefaultizedProps<
       UseDesktopPickerProps<
-        TDate,
         TView,
         TEnableAccessibleFieldDOMStructure,
         any,
-        UsePickerViewsProps<TDate | null, TDate, TView, any, {}>
+        UsePickerViewsProps<PickerValidDate | null, TView, any, {}>
       >,
       'openTo'
     >,
@@ -109,11 +107,8 @@ const rendererInterceptor = function rendererInterceptor<
   );
 };
 
-type DesktopDateTimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopDateTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -128,20 +123,18 @@ type DesktopDateTimePickerComponent = (<
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inProps: DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickersTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
-    TDate,
     DateOrTimeViewWithMeridiem,
-    DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimePicker');
 
   const {
@@ -149,13 +142,13 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     thresholdToRenderTimeInASingleColumn,
     views: resolvedViews,
     timeSteps,
-  } = resolveTimeViewsResponse<TDate>(defaultizedProps);
+  } = resolveTimeViewsResponse(defaultizedProps);
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeViewWithMeridiem, any> = {
+  const viewRenderers: DateTimePickerViewRenderers<DateOrTimeViewWithMeridiem, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -211,7 +204,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   };
 
   const { renderPicker } = useDesktopPicker<
-    TDate,
     DateOrTimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -262,9 +254,9 @@ DesktopDateTimePicker.propTypes = {
   closeOnSelect: PropTypes.bool,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -420,8 +412,7 @@ DesktopDateTimePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -442,8 +433,7 @@ DesktopDateTimePicker.propTypes = {
   onViewChange: PropTypes.func,
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
   onYearChange: PropTypes.func,
   /**
@@ -507,30 +497,26 @@ DesktopDateTimePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,

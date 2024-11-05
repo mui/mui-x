@@ -57,7 +57,7 @@ function debounce(func: (...arg: any) => void, wait = 500) {
 }
 
 function DateFieldWithAccept(
-  props: DateFieldProps<Dayjs> & { onAccept: (value: Dayjs | null) => void },
+  props: DateFieldProps & { onAccept: (value: Dayjs | null) => void },
 ) {
   const { value: valueProp, onAccept, onChange, ...other } = props;
 

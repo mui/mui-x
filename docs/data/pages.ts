@@ -23,145 +23,168 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/common-features-group',
     title: 'Common concepts',
-    children: [{ pathname: `/x/common-concepts/custom-components`, title: 'Custom subcomponents' }],
+    children: [
+      { pathname: `/x/common-concepts/custom-components`, title: 'Slots and subcomponents' },
+    ],
   },
   {
     pathname: '/x/react-data-grid-group',
     title: 'Data Grid',
-
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
-      { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/layout' },
+      { pathname: '/x/react-data-grid/demo' },
+      { pathname: '/x/react-data-grid/faq', title: 'FAQs' },
       {
-        pathname: '/x/react-data-grid/columns',
+        pathname: '/x/react-data-grid/main-features',
+        subheader: 'Main features',
         children: [
-          { pathname: '/x/react-data-grid/column-definition' },
-          { pathname: '/x/react-data-grid/column-dimensions' },
-          { pathname: '/x/react-data-grid/column-visibility' },
-          { pathname: '/x/react-data-grid/custom-columns' },
-          { pathname: '/x/react-data-grid/column-header' },
-          { pathname: '/x/react-data-grid/column-menu' },
-          { pathname: '/x/react-data-grid/column-spanning' },
-          { pathname: '/x/react-data-grid/column-groups' },
-          { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
-          { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
-        ],
-      },
-      {
-        pathname: '/x/react-data-grid/rows',
-        children: [
-          { pathname: '/x/react-data-grid/row-definition' },
-          { pathname: '/x/react-data-grid/row-updates' },
-          { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
-          { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
-        ],
-      },
-      { pathname: '/x/react-data-grid/editing' },
-      { pathname: '/x/react-data-grid/sorting' },
-      {
-        pathname: '/x/react-data-grid/filtering-group',
-        title: 'Filtering',
-        children: [
-          { pathname: '/x/react-data-grid/filtering', title: 'Overview' },
-          { pathname: '/x/react-data-grid/filtering/customization' },
-          { pathname: '/x/react-data-grid/filtering/quick-filter' },
-          { pathname: '/x/react-data-grid/filtering/server-side', title: 'Server-side filter' },
-          { pathname: '/x/react-data-grid/filtering/multi-filters', plan: 'pro' },
+          { pathname: '/x/react-data-grid/layout' },
           {
-            pathname: '/x/react-data-grid/filtering/header-filters',
-            plan: 'pro',
-            newFeature: true,
-          },
-          { pathname: '/x/react-data-grid/filtering-recipes', title: 'Recipes' },
-        ],
-      },
-      { pathname: '/x/react-data-grid/pagination' },
-      {
-        pathname: '/x/react-data-grid/selection',
-        children: [
-          { pathname: '/x/react-data-grid/row-selection' },
-          { pathname: '/x/react-data-grid/cell-selection', plan: 'premium', newFeature: true },
-        ],
-      },
-      { pathname: '/x/react-data-grid/export' },
-      { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
-      { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
-      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
-      {
-        pathname: '/x/react-data-grid/style-group',
-        title: 'Style',
-        children: [
-          { pathname: '/x/react-data-grid/style', title: 'Overview' },
-          { pathname: '/x/react-data-grid/style-recipes', title: 'Recipes' },
-        ],
-      },
-      { pathname: '/x/react-data-grid/localization' },
-      { pathname: '/x/react-data-grid/scrolling' },
-      { pathname: '/x/react-data-grid/virtualization' },
-      { pathname: '/x/react-data-grid/accessibility' },
-      { pathname: '/x/react-data-grid/performance' },
-      { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
-      { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
-      { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
-      { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
-      {
-        pathname: '/x/react-data-grid/list-view',
-        title: 'List view',
-        plan: 'pro',
-        unstable: true,
-      },
-      {
-        pathname: '/x/react-data-grid/server-side-data-group',
-        title: 'Server-side data',
-        plan: 'pro',
-        newFeature: true,
-        children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', plan: 'pro' },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
-          {
-            pathname: '/x/react-data-grid/server-side-data/lazy-loading',
-            plan: 'pro',
-            planned: true,
+            pathname: '/x/react-data-grid/columns',
+            children: [
+              { pathname: '/x/react-data-grid/column-definition' },
+              { pathname: '/x/react-data-grid/column-dimensions' },
+              { pathname: '/x/react-data-grid/column-visibility' },
+              { pathname: '/x/react-data-grid/custom-columns' },
+              { pathname: '/x/react-data-grid/column-header' },
+              { pathname: '/x/react-data-grid/column-menu' },
+              { pathname: '/x/react-data-grid/column-spanning' },
+              { pathname: '/x/react-data-grid/column-groups' },
+              { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
+              { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
+            ],
           },
           {
-            pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-            plan: 'pro',
-            planned: true,
+            pathname: '/x/react-data-grid/rows',
+            children: [
+              { pathname: '/x/react-data-grid/row-definition' },
+              { pathname: '/x/react-data-grid/row-updates' },
+              { pathname: '/x/react-data-grid/row-height' },
+              { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
+              { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
+              { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
+              { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
+              { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
+            ],
           },
           {
-            pathname: '/x/react-data-grid/server-side-data/row-grouping',
+            pathname: '/x/react-data-grid/editing-group',
+            title: 'Editing',
+            children: [
+              { pathname: '/x/react-data-grid/editing', title: 'Overview' },
+              { pathname: '/x/react-data-grid/recipes-editing', title: 'Recipes' },
+            ],
+          },
+          { pathname: '/x/react-data-grid/sorting' },
+          {
+            pathname: '/x/react-data-grid/filtering-group',
+            title: 'Filtering',
+            children: [
+              { pathname: '/x/react-data-grid/filtering', title: 'Overview' },
+              { pathname: '/x/react-data-grid/filtering/customization' },
+              { pathname: '/x/react-data-grid/filtering/quick-filter' },
+              { pathname: '/x/react-data-grid/filtering/server-side', title: 'Server-side filter' },
+              { pathname: '/x/react-data-grid/filtering/multi-filters', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/filtering/header-filters',
+                plan: 'pro',
+                newFeature: true,
+              },
+              { pathname: '/x/react-data-grid/filtering-recipes', title: 'Recipes' },
+            ],
+          },
+          { pathname: '/x/react-data-grid/pagination' },
+          {
+            pathname: '/x/react-data-grid/selection',
+            children: [
+              { pathname: '/x/react-data-grid/row-selection' },
+              { pathname: '/x/react-data-grid/cell-selection', plan: 'premium', newFeature: true },
+            ],
+          },
+          { pathname: '/x/react-data-grid/virtualization' },
+          { pathname: '/x/react-data-grid/accessibility' },
+          { pathname: '/x/react-data-grid/localization' },
+        ],
+      },
+      {
+        pathname: '/x/react-data-grid/advanced-features-group',
+        subheader: 'Advanced features',
+        children: [
+          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+          {
+            pathname: '/x/react-data-grid/row-grouping-group',
+            title: 'Row grouping',
             plan: 'premium',
+            children: [
+              { pathname: '/x/react-data-grid/row-grouping', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/recipes-row-grouping',
+                title: 'Recipes',
+              },
+            ],
+          },
+          { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          { pathname: '/x/react-data-grid/export' },
+          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+          { pathname: '/x/react-data-grid/scrolling' },
+
+          {
+            pathname: '/x/react-data-grid/list-view',
+            title: 'List view',
+            plan: 'pro',
+            unstable: true,
           },
           {
-            pathname: '/x/react-data-grid/server-side-data/aggregation',
-            plan: 'premium',
-            planned: true,
+            pathname: '/x/react-data-grid/server-side-data-group',
+            title: 'Server-side data',
+            plan: 'pro',
+            children: [
+              { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
+              { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/server-side-data/lazy-loading',
+                plan: 'pro',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/infinite-loading',
+                plan: 'pro',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/row-grouping',
+                plan: 'premium',
+                planned: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/aggregation',
+                plan: 'premium',
+                planned: true,
+              },
+            ],
           },
         ],
       },
       {
-        pathname: '/x/react-data-grid/custom-behavior',
+        pathname: '/x/react-data-grid/customization-group',
+        subheader: 'Customization',
+        children: [
+          { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
+          { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
+          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+          { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+        ],
+      },
+      {
+        pathname: '/x/api/resources-group',
+        subheader: 'Resources',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
           { pathname: '/x/react-data-grid/state' },
-        ],
-      },
-      {
-        pathname: '/x/react-data-grid/recipes',
-        children: [
-          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-          {
-            pathname: '/x/react-data-grid/recipes-row-grouping',
-            title: 'Row grouping',
-            plan: 'premium',
-          },
+          { pathname: '/x/react-data-grid/performance' },
         ],
       },
       {
@@ -223,7 +246,6 @@ const pages: MuiPage[] = [
           },
         ],
       },
-      { pathname: '/x/react-data-grid/faq', title: 'FAQ' },
     ],
   },
   {
@@ -233,8 +255,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
-      { pathname: '/x/react-date-pickers/accessibility' },
-      { pathname: '/x/react-date-pickers/faq', title: 'FAQ' },
+      { pathname: '/x/react-date-pickers/faq', title: 'FAQs' },
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
@@ -327,20 +348,16 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-date-pickers/fields', title: 'Field components' },
-          {
-            pathname: '/x/api/date-pickers-group',
-            title: 'API reference',
-            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
-          },
         ],
       },
       {
-        pathname: '/x/react-date-pickers/common-features',
-        subheader: 'Common features',
+        pathname: '/x/react-date-pickers/main-features',
+        subheader: 'Main features',
         children: [
           { pathname: '/x/react-date-pickers/validation' },
           { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
           { pathname: '/x/react-date-pickers/shortcuts' },
+          { pathname: '/x/react-date-pickers/accessibility' },
         ],
       },
       {
@@ -363,8 +380,8 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/visual-customization',
-        subheader: 'Visual customization',
+        pathname: '/x/react-date-pickers/customization-group',
+        subheader: 'Customization',
         children: [
           {
             pathname: '/x/react-date-pickers/custom-components',
@@ -374,6 +391,17 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/custom-opening-button' },
           { pathname: '/x/react-date-pickers/playground', title: 'Customization playground' },
+        ],
+      },
+      {
+        pathname: '/x/api/picker-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/date-pickers-group',
+            title: 'API reference',
+            children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
+          },
         ],
       },
     ],
@@ -386,8 +414,8 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/getting-started' },
       {
-        pathname: '/x/react-charts-available',
-        subheader: 'Available components',
+        pathname: '/x/react-chart-components',
+        subheader: 'Components',
         children: [
           {
             pathname: '/x/react-charts-bars',
@@ -434,8 +462,8 @@ const pages: MuiPage[] = [
             unstable: true,
           },
           {
-            pathname: '/x/react-charts/common-features',
-            subheader: 'Common features',
+            pathname: '/x/react-charts/main-features',
+            subheader: 'Main features',
             children: [
               { pathname: '/x/react-charts/axis' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
@@ -455,19 +483,25 @@ const pages: MuiPage[] = [
             ],
           },
           {
-            pathname: '/x/api/charts-group',
-            title: 'API reference',
+            pathname: '/x/api/chart-resources',
+            subheader: 'Resources',
             children: [
-              ...chartsComponentApi,
               {
-                pathname: '/x/api/charts-interfaces-group',
-                subheader: 'Interfaces',
+                pathname: '/x/api/charts-group',
+                title: 'API reference',
                 children: [
-                  { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
-                  { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
-                  { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
-                  { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
-                  { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                  ...chartsComponentApi,
+                  {
+                    pathname: '/x/api/charts-interfaces-group',
+                    subheader: 'Interfaces',
+                    children: [
+                      { pathname: '/x/api/charts/axis-config', title: 'AxisConfig' },
+                      { pathname: '/x/api/charts/bar-series-type', title: 'BarSeriesType' },
+                      { pathname: '/x/api/charts/line-series-type', title: 'LineSeriesType' },
+                      { pathname: '/x/api/charts/pie-series-type', title: 'PieSeriesType' },
+                      { pathname: '/x/api/charts/scatter-series-type', title: 'ScatterSeriesType' },
+                    ],
+                  },
                 ],
               },
             ],
@@ -519,17 +553,23 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-tree-view/common-features',
-        subheader: 'Common features',
+        pathname: '/x/react-tree-view/main-features',
+        subheader: 'Main features',
         children: [
           { pathname: '/x/react-tree-view/accessibility' },
           { pathname: '/x/react-tree-view/tree-item-customization', title: 'Item customization' },
         ],
       },
       {
-        pathname: '/x/api/tree-view-group',
-        title: 'API reference',
-        children: [...treeViewComponentApi],
+        pathname: '/x/api/tree-view-resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/api/tree-view-group',
+            title: 'API reference',
+            children: [...treeViewComponentApi],
+          },
+        ],
       },
     ],
   },
