@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,7 +14,7 @@ import {
   usePickersContext,
 } from '@mui/x-date-pickers/hooks';
 
-function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
+function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const {
@@ -62,7 +61,7 @@ function ButtonDateField(props: DatePickerFieldProps<Dayjs>) {
   );
 }
 
-function ButtonFieldDatePicker(props: DatePickerProps<Dayjs>) {
+function ButtonFieldDatePicker(props: DatePickerProps) {
   return (
     <DatePicker {...props} slots={{ ...props.slots, field: ButtonDateField }} />
   );

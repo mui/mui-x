@@ -21,65 +21,59 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 
-export interface BaseDatePickerSlots<TDate extends PickerValidDate>
-  extends DateCalendarSlots<TDate> {
+export interface BaseDatePickerSlots extends DateCalendarSlots {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
    */
-  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps>;
 }
 
-export interface BaseDatePickerSlotProps<TDate extends PickerValidDate>
-  extends DateCalendarSlotProps<TDate> {
+export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
   toolbar?: ExportedDatePickerToolbarProps;
 }
 
 export type DatePickerViewRenderers<
-  TDate extends PickerValidDate,
   TView extends DateView,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  TDate | null,
+  PickerValidDate | null,
   TView,
-  DateViewRendererProps<TDate, TView>,
+  DateViewRendererProps<TView>,
   TAdditionalProps
 >;
 
-export interface BaseDatePickerProps<TDate extends PickerValidDate>
-  extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
-    ExportedDateCalendarProps<TDate> {
+export interface BaseDatePickerProps
+  extends BasePickerInputProps<PickerValidDate | null, DateView, DateValidationError>,
+    ExportedDateCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDatePickerSlots<TDate>;
+  slots?: BaseDatePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDatePickerSlotProps<TDate>;
+  slotProps?: BaseDatePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<DatePickerViewRenderers<TDate, DateView>>;
+  viewRenderers?: Partial<DatePickerViewRenderers<DateView>>;
 }
 
-type UseDatePickerDefaultizedProps<
-  TDate extends PickerValidDate,
-  Props extends BaseDatePickerProps<TDate>,
-> = LocalizedComponent<
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
+type UseDatePickerDefaultizedProps<Props extends BaseDatePickerProps> = LocalizedComponent<
+  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps>
 >;
 
-export function useDatePickerDefaultizedProps<
-  TDate extends PickerValidDate,
-  Props extends BaseDatePickerProps<TDate>,
->(props: Props, name: string): UseDatePickerDefaultizedProps<TDate, Props> {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+export function useDatePickerDefaultizedProps<Props extends BaseDatePickerProps>(
+  props: Props,
+  name: string,
+): UseDatePickerDefaultizedProps<Props> {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,

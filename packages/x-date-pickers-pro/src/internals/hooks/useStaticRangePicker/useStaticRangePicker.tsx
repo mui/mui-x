@@ -8,41 +8,39 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   PickersProvider,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange, RangeFieldSection } from '../../../models';
+import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersLayout;
+})) as typeof PickersLayout;
 
 /**
  * Hook managing all the range static pickers:
  * - StaticDateRangePicker
  */
 export const useStaticRangePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   ref,
   ...pickerParams
-}: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
+}: UseStaticRangePickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
   const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     TView,
     RangeFieldSection,
     TExternalProps,
@@ -61,7 +59,7 @@ export const useStaticRangePicker = <
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,

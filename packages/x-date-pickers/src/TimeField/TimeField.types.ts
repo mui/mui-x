@@ -17,33 +17,27 @@ import {
 import { ExportedValidateTimeProps } from '../validation/validateTime';
 import { AmPmProps } from '../internals/models/props/time';
 
-export interface UseTimeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
+export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends MakeOptional<
       UseFieldInternalProps<
-        TDate | null,
-        TDate,
+        PickerValidDate | null,
         FieldSection,
         TEnableAccessibleFieldDOMStructure,
         TimeValidationError
       >,
       'format'
     >,
-    ExportedValidateTimeProps<TDate>,
+    ExportedValidateTimeProps,
     ExportedUseClearableFieldProps,
     AmPmProps {}
 
-export type TimeFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> =
+export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props
-  UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+  UseTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
     // The TextField props
     Omit<
       BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-      keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+      keyof UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>
     > & {
       /**
        * Overridable component slots.
@@ -54,13 +48,11 @@ export type TimeFieldProps<
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: TimeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+      slotProps?: TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
     };
 
-export type TimeFieldOwnerState<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> = TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+export type TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
+  TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
@@ -70,13 +62,11 @@ export interface TimeFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseClearableFieldSlotProps {
+export interface TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseClearableFieldSlotProps {
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    TimeFieldOwnerState<TDate, TEnableAccessibleFieldDOMStructure>
+    TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure>
   >;
 }

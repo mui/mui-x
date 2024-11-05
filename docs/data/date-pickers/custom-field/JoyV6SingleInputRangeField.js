@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,

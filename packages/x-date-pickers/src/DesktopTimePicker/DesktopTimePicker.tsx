@@ -20,14 +20,11 @@ import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView, PickerValidDate, PickerOwnerState } from '../models';
+import { TimeView, PickerOwnerState } from '../models';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
-type DesktopTimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -42,33 +39,31 @@ type DesktopTimePickerComponent = (<
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickersTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
-    TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
     shouldRenderTimeInASingleColumn,
     views: resolvedViews,
     timeSteps,
-  } = resolveTimeViewsResponse<TDate, TimeView, TimeViewWithMeridiem>(defaultizedProps);
+  } = resolveTimeViewsResponse<TimeView, TimeViewWithMeridiem>(defaultizedProps);
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimePickerViewRenderers<TDate, TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem, any> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
@@ -122,7 +117,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const { renderPicker } = useDesktopPicker<
-    TDate,
     TimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -346,8 +340,7 @@ DesktopTimePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
