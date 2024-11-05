@@ -4,21 +4,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "axisHighlight": {
-      "type": {
-        "name": "shape",
-        "description": "{ x?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', y?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
-      },
-      "default": "{ x: 'none', y: 'none' }",
-      "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/highlighting",
-        "text": "highlighting docs"
-      }
-    },
-    "bottomAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "blueberryTwilightPalette"
@@ -31,10 +16,6 @@
         "name": "shape",
         "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
       }
-    },
-    "leftAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "margin": {
@@ -53,10 +34,6 @@
     },
     "onItemClick": { "type": { "name": "func" } },
     "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
-    "rightAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
-    },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
@@ -71,10 +48,6 @@
       },
       "default": "{ trigger: 'item' }",
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
-    },
-    "topAxis": {
-      "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
-      "default": "null"
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {
@@ -101,30 +74,6 @@
       "name": "axisContent",
       "description": "Custom component for displaying tooltip content when triggered by axis event.",
       "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
-      "name": "axisLabel",
-      "description": "Custom component for axis label.",
-      "default": "ChartsText",
-      "class": null
-    },
-    {
-      "name": "axisLine",
-      "description": "Custom component for the axis main line.",
-      "default": "'line'",
-      "class": null
-    },
-    {
-      "name": "axisTick",
-      "description": "Custom component for the axis tick.",
-      "default": "'line'",
-      "class": null
-    },
-    {
-      "name": "axisTickLabel",
-      "description": "Custom component for tick label.",
-      "default": "ChartsText",
       "class": null
     },
     {
