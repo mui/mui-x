@@ -336,6 +336,10 @@ workflows:
           <<: *default-context
           requires:
             - checkout
+      - test_unit_vitest:
+          <<: *default-context
+          requires:
+            - checkout
       - test_lint:
           <<: *default-context
           requires:
@@ -345,6 +349,10 @@ workflows:
           requires:
             - checkout
       - test_browser:
+          <<: *default-context
+          requires:
+            - checkout
+      - test_browser_vitest:
           <<: *default-context
           requires:
             - checkout
