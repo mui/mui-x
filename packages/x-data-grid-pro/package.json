@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "7.22.1",
+  "version": "7.21.0",
   "description": "The Pro plan edition of the Data Grid components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,7 +43,7 @@
     "directory": "packages/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.7",
+    "@babel/runtime": "^7.26.0",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.17",
+    "@mui/internal-test-utils": "^1.0.19",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@types/prop-types": "^15.7.13",

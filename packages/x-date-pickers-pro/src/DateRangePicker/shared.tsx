@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  DefaultizedProps,
   useDefaultDates,
   useUtils,
   applyDefaultDate,
@@ -43,8 +43,7 @@ export interface BaseDateRangePickerProps<TDate extends PickerValidDate>
       BasePickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
-    ExportedDateRangeCalendarProps<TDate>,
-    BaseDateValidationProps<TDate> {
+    ExportedDateRangeCalendarProps<TDate> {
   /**
    * Overridable component slots.
    * @default {}
@@ -68,7 +67,7 @@ export interface BaseDateRangePickerProps<TDate extends PickerValidDate>
 type UseDateRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateRangePickerProps<TDate>,
-> = LocalizedComponent<TDate, DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
+> = LocalizedComponent<DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
 
 export function useDateRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
@@ -81,7 +80,7 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }

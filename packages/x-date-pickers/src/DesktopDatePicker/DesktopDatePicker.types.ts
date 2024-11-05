@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -8,7 +9,6 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateView, PickerValidDate } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
@@ -24,7 +24,7 @@ export interface DesktopDatePickerSlotProps<
 
 export interface DesktopDatePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDatePickerProps<TDate>,
     DesktopOnlyPickerProps,
     ExportedYearCalendarProps {

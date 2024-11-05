@@ -399,7 +399,7 @@ yargs(hideBin(process.argv))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'v7.x',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         })

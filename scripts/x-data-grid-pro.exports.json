@@ -8,6 +8,8 @@
   { "name": "BaseIconButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseInputAdornmentPropsOverrides", "kind": "Interface" },
   { "name": "BaseInputLabelPropsOverrides", "kind": "Interface" },
+  { "name": "BaseMenuItemPropsOverrides", "kind": "Interface" },
+  { "name": "BaseMenuListPropsOverrides", "kind": "Interface" },
   { "name": "BasePopperPropsOverrides", "kind": "Interface" },
   { "name": "BaseSelectOptionPropsOverrides", "kind": "Interface" },
   { "name": "BaseSelectPropsOverrides", "kind": "Interface" },

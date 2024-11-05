@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseDesktopPickerSlots,
   ExportedUseDesktopPickerSlotProps,
@@ -8,9 +9,8 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView, PickerValidDate } from '../models';
-import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MultiSectionDigitalClockSlots,
@@ -42,7 +42,7 @@ export interface DesktopDateTimePickerSlotProps<
 
 export interface DesktopDateTimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
     DesktopOnlyTimePickerProps<TDate>,

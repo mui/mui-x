@@ -815,6 +815,18 @@
       "class": null
     },
     {
+      "name": "baseMenuList",
+      "description": "The custom MenuList component used in the grid.",
+      "default": "MenuList",
+      "class": null
+    },
+    {
+      "name": "baseMenuItem",
+      "description": "The custom MenuItem component used in the grid.",
+      "default": "MenuItem",
+      "class": null
+    },
+    {
       "name": "baseInputAdornment",
       "description": "The custom InputAdornment component used in the grid.",
       "default": "InputAdornment",
