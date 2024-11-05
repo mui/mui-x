@@ -13,6 +13,7 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
+  overflowX: 'auto',
 })) as unknown as typeof PickersLayout;
 
 /**
