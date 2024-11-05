@@ -32,7 +32,7 @@ const StyledGridToolbarRoot = styled('div', {
   alignItems: 'center',
   flexWrap: 'wrap',
   gap: theme.spacing(0.25),
-  padding: theme.spacing(0.75, 0.75),
+  padding: theme.spacing(0.5),
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 

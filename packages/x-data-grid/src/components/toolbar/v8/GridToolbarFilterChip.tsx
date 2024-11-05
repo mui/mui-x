@@ -6,8 +6,8 @@ import {
   unstable_capitalize as capitalize,
   unstable_useId as useId,
 } from '@mui/utils';
+import Chip, { ChipProps } from '@mui/material/Chip';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { ChipProps } from '@mui/material/Chip';
 import { gridColumnLookupSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../../hooks/features/filter/gridFilterSelector';
@@ -19,6 +19,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import { GridToolbarTooltip } from './GridToolbarTooltip';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -42,7 +43,7 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: theme.spacing(0, 1),
 }));
 
-const GridToolbarChip = styled('div', {
+const GridToolbarChip = styled(Chip, {
   name: 'MuiDataGrid',
   slot: 'ToolbarChip',
   overridesResolver: (_props, styles) => styles.toolbarChip,
@@ -125,39 +126,26 @@ const GridToolbarFilterChip = React.forwardRef<HTMLDivElement, GridToolbarFilter
     }
 
     return (
-      <rootProps.slots.baseTooltip
-        title={tooltipContentNode}
-        enterDelay={1000}
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, -10],
-                },
-              },
-            ],
-          },
-        }}
-        {...tooltipProps}
-        {...rootProps.slotProps?.baseTooltip}
-      >
-        <GridToolbarChip
-          ref={ref}
-          ownerState={rootProps}
-          className={classes.chip}
-          label={apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
-          onClick={toggleFilter}
-          onDelete={() => {
-            apiRef.current.setFilterModel({
-              items: [],
-            });
-          }}
-          {...chipProps}
-          {...rootProps.slotProps?.baseChip}
-        />
-      </rootProps.slots.baseTooltip>
+      <GridToolbarTooltip title={tooltipContentNode} {...tooltipProps}>
+        <div>
+          <GridToolbarChip
+            ref={ref}
+            ownerState={rootProps}
+            className={classes.chip}
+            label={apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(
+              activeFilters.length,
+            )}
+            onClick={toggleFilter}
+            onDelete={() => {
+              apiRef.current.setFilterModel({
+                items: [],
+              });
+            }}
+            {...chipProps}
+            {...rootProps.slotProps?.baseChip}
+          />
+        </div>
+      </GridToolbarTooltip>
     );
   },
 );

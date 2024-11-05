@@ -35,7 +35,6 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   width: 'auto',
   height: 34,
-  margin: theme.spacing(0, -0.25),
   [`.${outlinedInputClasses.root}`]: {
     fontSize: theme.typography.body2.fontSize,
     height: 36,

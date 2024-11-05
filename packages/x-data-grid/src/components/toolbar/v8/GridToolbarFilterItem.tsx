@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/utils';
 import { ToggleButtonProps } from '@mui/material/ToggleButton';
 import { TooltipProps } from '@mui/material/Tooltip';
-import Badge from '@mui/material/Badge';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -64,7 +63,12 @@ const GridToolbarFilterItem = React.forwardRef<HTMLButtonElement, GridToolbarFil
         }
         {...tooltipProps}
       >
-        <Badge badgeContent={filterCount} color="primary" variant="dot" overlap="circular">
+        <rootProps.slots.baseBadge
+          badgeContent={filterCount}
+          color="primary"
+          variant="dot"
+          overlap="circular"
+        >
           <GridToolbarToggleButton
             ref={ref}
             id={filterButtonId}
@@ -83,7 +87,7 @@ const GridToolbarFilterItem = React.forwardRef<HTMLButtonElement, GridToolbarFil
               color={hasFilters ? 'primary' : undefined}
             />
           </GridToolbarToggleButton>
-        </Badge>
+        </rootProps.slots.baseBadge>
       </GridToolbarTooltip>
     );
   },
