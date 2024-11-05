@@ -41,10 +41,10 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option. Define `value` as `-1` to display all results.
 
   ```jsx
-  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}

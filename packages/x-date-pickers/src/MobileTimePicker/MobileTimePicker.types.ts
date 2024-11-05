@@ -1,3 +1,4 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   UseMobilePickerSlots,
   ExportedUseMobilePickerSlotProps,
@@ -8,7 +9,6 @@ import {
   BaseTimePickerSlots,
   BaseTimePickerSlotProps,
 } from '../TimePicker/shared';
-import { MakeOptional } from '../internals/models/helpers';
 import { PickerValidDate, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
@@ -28,7 +28,7 @@ export interface MobileTimePickerSlotProps<
 export interface MobileTimePickerProps<
   TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem = TimeView,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends BaseTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps {
   /**

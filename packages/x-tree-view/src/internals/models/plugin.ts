@@ -157,7 +157,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
   models?: TreeViewModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
-  itemPlugin?: TreeViewItemPlugin<any>;
+  itemPlugin?: TreeViewItemPlugin;
   /**
    * Render function used to add React wrappers around the TreeItem.
    * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the item.

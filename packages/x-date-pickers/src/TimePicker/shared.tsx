@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
@@ -15,7 +15,7 @@ import { PickerValidDate, TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseTimePickerSlots<TDate extends PickerValidDate> extends TimeClockSlots {
@@ -74,7 +74,6 @@ type UseTimePickerDefaultizedProps<
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
-  TDate,
   DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
 >;
 
@@ -91,7 +90,7 @@ export function useTimePickerDefaultizedProps<
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -120,6 +120,24 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
       fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
+    });
+
+    // Context: https://github.com/mui/mui-x/issues/15206
+    it('should keep the correct selection items and the selection count when rows are updated', () => {
+      render(<Test />);
+
+      const expectedKeys = ['auto-generated-row-category1/Cat B', 3, 4];
+      const expectedCount = 3;
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
+
+      act(() => {
+        apiRef.current.updateRows([...rows]);
+      });
+      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
     });
 
     describe("prop: indeterminateCheckboxAction = 'select'", () => {
