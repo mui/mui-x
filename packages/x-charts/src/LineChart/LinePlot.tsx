@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
 import {
   LineElement,
+  lineElementClasses,
   LineElementProps,
   LineElementSlotProps,
   LineElementSlots,
@@ -35,6 +37,22 @@ export interface LinePlotProps
     lineItemIdentifier: LineItemIdentifier,
   ) => void;
 }
+
+const LinePlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${lineElementClasses.highlighted}`]: {
+    filter: 'brightness(120%)',
+  },
+  [`& .${lineElementClasses.faded}`]: {
+    opacity: 0.3,
+  },
+  [`& .${lineElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
 
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
@@ -136,7 +154,7 @@ function LinePlot(props: LinePlotProps) {
   const getGradientId = useChartGradient();
   const completedData = useAggregatedData();
   return (
-    <g {...other}>
+    <LinePlotRoot {...other}>
       {completedData.map(({ d, seriesId, color, gradientUsed }) => {
         return (
           <LineElement
@@ -152,7 +170,7 @@ function LinePlot(props: LinePlotProps) {
           />
         );
       })}
-    </g>
+    </LinePlotRoot>
   );
 }
 
