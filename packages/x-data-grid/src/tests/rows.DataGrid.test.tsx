@@ -964,10 +964,12 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should consider the spacing when computing the content size', function test() {
+    it('should consider the spacing when computing the content size', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const spacingTop = 5;
       const spacingBottom = 10;
@@ -985,10 +987,12 @@ describe('<DataGrid /> - Rows', () => {
       expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
-    it('should update the content size when getRowSpacing is removed', function test() {
+    it('should update the content size when getRowSpacing is removed', function test(t = {}) {
       if (isJSDOM) {
         // Need layouting
-        this.skip();
+        // @ts-expect-error to support mocha and vitest
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        this?.skip?.() || t?.skip();
       }
       const spacingTop = 5;
       const spacingBottom = 10;
