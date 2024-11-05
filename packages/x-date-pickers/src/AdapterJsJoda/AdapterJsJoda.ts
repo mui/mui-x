@@ -293,8 +293,20 @@ export class AdapterJsJoda implements MuiPickersAdapter<CalendarType> {
     if (value instanceof LocalDateTime && comparing instanceof ZonedDateTime) {
       return value[op](comparing.toLocalDateTime());
     }
+    if (
+      value instanceof LocalDate &&
+      (comparing instanceof ZonedDateTime || comparing instanceof LocalDateTime)
+    ) {
+      return value[op](LocalDate.from(comparing));
+    }
     if (value instanceof ZonedDateTime && comparing instanceof LocalDateTime) {
       return value.toLocalDateTime()[op](comparing);
+    }
+    if (
+      (value instanceof ZonedDateTime || value instanceof LocalDateTime) &&
+      comparing instanceof LocalDate
+    ) {
+      return LocalDate.from(value)[op](comparing);
     }
     return value[op](comparing);
   };
