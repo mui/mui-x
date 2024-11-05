@@ -2,7 +2,8 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
-import { DateOrTimeViewWithMeridiem, ValueType, WrapperVariant } from '../../models/common';
+import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
+import { FieldValueType } from '../../../models';
 
 /**
  * Props used to create the layout of the views.
@@ -26,7 +27,7 @@ export interface UsePickerLayoutPropsResponseLayoutProps<
   isLandscape: boolean;
   isRtl: boolean;
   wrapperVariant: WrapperVariant;
-  valueType: ValueType;
+  valueType: FieldValueType;
   isValid: (value: TValue) => boolean;
 }
 
@@ -39,7 +40,7 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
-  valueType: ValueType;
+  valueType: FieldValueType;
 }
 
 /**
