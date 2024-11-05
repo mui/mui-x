@@ -88,3 +88,11 @@ To pass props to the legend, use the `slotProps.legend`.
 - <PieChart legend={{ ... }} />
 + <PieChart slotProps={{ legend: { ... } }} />
 ```
+
+## Remove Pie Chart axes
+
+The `<PieChart />` got by error the code to render axes.
+This code is removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+
+This should not impact your code.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
