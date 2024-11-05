@@ -6,4 +6,11 @@ export interface DataGridProComponentNameToClassKey {
 
 declare module '@mui/material/styles' {
   interface ComponentNameToClassKey extends DataGridProComponentNameToClassKey {}
+
+  interface Mixins {
+    MuiDataGrid?: {
+      containerBackground?: string;
+      pinnedBackground?: string;
+    };
+  }
 }
