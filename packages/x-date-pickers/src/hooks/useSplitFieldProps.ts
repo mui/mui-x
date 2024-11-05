@@ -5,7 +5,7 @@ import {
   DATE_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
 } from '../validation/extractValidationProps';
-import { PickerValueType } from '../internals/models';
+import { PickerValueType } from '../models/common';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'value',
