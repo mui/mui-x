@@ -27,11 +27,9 @@ import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types'
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseMobilePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersModalDialogSlots,
-    ExportedPickersLayoutSlots<TDate | null, TDate, TView> {
+export interface UseMobilePickerSlots<TView extends DateOrTimeViewWithMeridiem>
+  extends PickersModalDialogSlots,
+    ExportedPickersLayoutSlots<PickerValidDate | null, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -44,15 +42,13 @@ export interface UseMobilePickerSlots<
 }
 
 export interface ExportedUseMobilePickerSlotProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersModalDialogSlotProps,
-    ExportedPickersLayoutSlotProps<TDate | null, TDate, TView> {
+    ExportedPickersLayoutSlotProps<PickerValidDate | null, TView> {
   field?: SlotComponentPropsFromProps<
     BaseSingleInputFieldProps<
-      TDate | null,
-      TDate,
+      PickerValidDate | null,
       FieldSection,
       TEnableAccessibleFieldDOMStructure,
       unknown
@@ -64,11 +60,10 @@ export interface ExportedUseMobilePickerSlotProps<
 }
 
 export interface UseMobilePickerSlotProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedUseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<TDate | null, TDate, TView>, 'toolbar'> {}
+> extends ExportedUseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
+    Pick<PickersLayoutSlotProps<PickerValidDate | null, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
@@ -77,40 +72,37 @@ export interface MobileOnlyPickerProps
     UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
-> extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends BasePickerProps<PickerValidDate | null, TView, TError, TExternalProps, {}>,
     MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots: UseMobilePickerSlots<TDate, TView>;
+  slots: UseMobilePickerSlots<TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>;
 }
 
 export interface UseMobilePickerParams<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
+    UsePickerParams<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: TDate | null) => string;
+  getOpenDialogAriaText: (date: PickerValidDate | null) => string;
 }

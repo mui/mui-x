@@ -10,6 +10,7 @@ import {
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<MobileDateRangePicker />', () => {
@@ -64,7 +65,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -104,7 +105,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -136,7 +137,7 @@ describe('<MobileDateRangePicker />', () => {
     it('should call onClose and onAccept when selecting the end date if props.closeOnSelect = true', () => {
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -165,7 +166,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -198,7 +199,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -230,7 +231,7 @@ describe('<MobileDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];

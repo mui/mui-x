@@ -10,7 +10,7 @@ import {
   DesktopDatePickerProps,
 } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
 
 type PickerExamplesType<TComponent, TComponentProps> = {
@@ -291,7 +291,7 @@ export const datePickerExamples: PickersSubcomponentType = {
   },
 };
 
-const pickerProps: DatePickerProps<Dayjs> = {
+const pickerProps: DatePickerProps = {
   views: ['day', 'month', 'year'],
   monthsPerRow: 3,
   yearsPerRow: 3,
@@ -306,7 +306,7 @@ export const pickerExamples = [
     component: StaticDatePicker,
     componentProps: { ...pickerProps, orientation: 'portrait' },
     examples: staticDatePickerExamples,
-  } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps<Dayjs>>,
+  } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps>,
   {
     name: 'DesktopDatePicker',
     component: DesktopDatePicker,
@@ -331,5 +331,5 @@ export const pickerExamples = [
       ...pickerProps,
     },
     examples: datePickerExamples,
-  } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps<Dayjs>>,
+  } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps>,
 ];
