@@ -7,22 +7,19 @@ import {
   DateTimeValidationProps,
   TimeValidationProps,
 } from '../models/validation';
-import { PickerValidDate } from '../../models';
 
-export interface UseDefaultizedDateFieldBaseProps<TDate extends PickerValidDate>
-  extends BaseDateValidationProps<TDate> {
+export interface UseDefaultizedDateFieldBaseProps extends BaseDateValidationProps {
   format?: string;
 }
 
 export const useDefaultizedDateField = <
-  TDate extends PickerValidDate,
-  TKnownProps extends UseDefaultizedDateFieldBaseProps<TDate>,
+  TKnownProps extends UseDefaultizedDateFieldBaseProps,
   TAllProps extends {},
 >(
   props: TKnownProps & TAllProps,
-): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateFieldBaseProps<any>> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateFieldBaseProps> => {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
 
   return {
     ...props,
@@ -39,13 +36,12 @@ export interface UseDefaultizedTimeFieldBaseProps extends BaseTimeValidationProp
 }
 
 export const useDefaultizedTimeField = <
-  TDate extends PickerValidDate,
   TKnownProps extends UseDefaultizedTimeFieldBaseProps & { ampm?: boolean },
   TAllProps extends {},
 >(
   props: TKnownProps & TAllProps,
 ): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedTimeFieldBaseProps> => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
@@ -58,23 +54,22 @@ export const useDefaultizedTimeField = <
   };
 };
 
-export interface UseDefaultizedDateTimeFieldBaseProps<TDate extends PickerValidDate>
-  extends BaseDateValidationProps<TDate>,
+export interface UseDefaultizedDateTimeFieldBaseProps
+  extends BaseDateValidationProps,
     BaseTimeValidationProps {
   format?: string;
 }
 
 export const useDefaultizedDateTimeField = <
-  TDate extends PickerValidDate,
-  TKnownProps extends UseDefaultizedDateTimeFieldBaseProps<TDate> &
-    DateTimeValidationProps<TDate> &
-    TimeValidationProps<TDate> & { ampm?: boolean },
+  TKnownProps extends UseDefaultizedDateTimeFieldBaseProps &
+    DateTimeValidationProps &
+    TimeValidationProps & { ampm?: boolean },
   TAllProps extends {},
 >(
   props: TKnownProps & TAllProps,
-): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateTimeFieldBaseProps<any>> => {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateTimeFieldBaseProps> => {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm

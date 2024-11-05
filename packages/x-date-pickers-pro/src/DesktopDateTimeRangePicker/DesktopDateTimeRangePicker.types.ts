@@ -1,5 +1,4 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   UseDesktopRangePickerSlots,
   UseDesktopRangePickerSlotProps,
@@ -12,27 +11,21 @@ import {
 } from '../DateTimeRangePicker/shared';
 import { DateTimeRangePickerView } from '../internals/models';
 
-export interface DesktopDateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimeRangePickerSlots<TDate>,
-    MakeOptional<UseDesktopRangePickerSlots<TDate, DateTimeRangePickerView>, 'field'> {}
+export interface DesktopDateTimeRangePickerSlots
+  extends BaseDateTimeRangePickerSlots,
+    MakeOptional<UseDesktopRangePickerSlots<DateTimeRangePickerView>, 'field'> {}
 
 export interface DesktopDateTimeRangePickerSlotProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateTimeRangePickerSlotProps<TDate>,
+> extends BaseDateTimeRangePickerSlotProps,
     Omit<
-      UseDesktopRangePickerSlotProps<
-        TDate,
-        DateTimeRangePickerView,
-        TEnableAccessibleFieldDOMStructure
-      >,
+      UseDesktopRangePickerSlotProps<DateTimeRangePickerView, TEnableAccessibleFieldDOMStructure>,
       'tabs' | 'toolbar'
     > {}
 
 export interface DesktopDateTimeRangePickerProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimeRangePickerProps<TDate>,
+> extends BaseDateTimeRangePickerProps,
     DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
@@ -43,10 +36,10 @@ export interface DesktopDateTimeRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimeRangePickerSlots<TDate>;
+  slots?: DesktopDateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

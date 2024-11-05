@@ -11,9 +11,9 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -67,7 +67,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onRangePositionChange": {
       "type": { "name": "func" },
@@ -97,7 +100,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
+        "type": "function(day: PickerValidDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
       }

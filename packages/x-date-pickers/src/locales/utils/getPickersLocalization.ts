@@ -13,15 +13,15 @@ export const getPickersLocalization = (pickersTranslations: Partial<PickersLocal
   };
 };
 
-export const buildGetOpenDialogAriaText = <TDate extends PickerValidDate>(params: {
-  utils: MuiPickersAdapter<TDate>;
+export const buildGetOpenDialogAriaText = (params: {
+  utils: MuiPickersAdapter;
   formatKey: keyof AdapterFormats;
   contextTranslation: (formattedValue: string | null) => string;
   propsTranslation: ((formattedValue: string | null) => string) | undefined;
 }) => {
   const { utils, formatKey, contextTranslation, propsTranslation } = params;
 
-  return (value: TDate | null) => {
+  return (value: PickerValidDate | null) => {
     const formattedValue =
       value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
     const translation = propsTranslation ?? contextTranslation;

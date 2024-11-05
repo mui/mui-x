@@ -22,19 +22,17 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticTimePicker
  */
 export const useStaticPicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 >({
   props,
   ref,
   ...pickerParams
-}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
+}: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
   const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    TDate | null,
-    TDate,
+    PickerValidDate | null,
     TView,
     FieldSection,
     TExternalProps,

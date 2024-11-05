@@ -23,7 +23,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 
-const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
+const useUtilityClasses = (ownerState: DigitalClockProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -38,7 +38,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>({
+})<{ ownerState: DigitalClockProps & { alreadyRendered: boolean } }>({
   overflowY: 'auto',
   width: '100%',
   '@media (prefers-reduced-motion: no-preference)': {
@@ -94,8 +94,8 @@ const DigitalClockItem = styled(MenuItem, {
   },
 }));
 
-type DigitalClockComponent = (<TDate extends PickerValidDate>(
-  props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DigitalClockComponent = ((
+  props: DigitalClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -108,11 +108,11 @@ type DigitalClockComponent = (<TDate extends PickerValidDate>(
  *
  * - [DigitalClock API](https://mui.com/x/api/date-pickers/digital-clock/)
  */
-export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends PickerValidDate>(
-  inProps: DigitalClockProps<TDate>,
+export const DigitalClock = React.forwardRef(function DigitalClock(
+  inProps: DigitalClockProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
@@ -167,8 +167,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     valueManager: singleItemValueManager,
   });
 
-  const translations = usePickersTranslations<TDate>();
-  const now = useNow<TDate>(timezone);
+  const translations = usePickersTranslations();
+  const now = useNow(timezone);
 
   const ownerState = React.useMemo(
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
@@ -193,11 +193,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone,
   });
 
-  const handleValueChange = useEventCallback((newValue: TDate | null) =>
+  const handleValueChange = useEventCallback((newValue: PickerValidDate | null) =>
     handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
-  const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
+  const { setValueAndGoToNextView } = useViews<PickerValidDate | null, Extract<TimeView, 'hours'>>({
     view: inView,
     views,
     openTo,
@@ -207,7 +207,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onFocusedViewChange,
   });
 
-  const handleItemSelect = useEventCallback((newValue: TDate | null) => {
+  const handleItemSelect = useEventCallback((newValue: PickerValidDate | null) => {
     setValueAndGoToNextView(newValue, 'finish');
   });
 
@@ -232,7 +232,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   });
 
   const isTimeDisabled = React.useCallback(
-    (valueToCheck: TDate) => {
+    (valueToCheck: PickerValidDate) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
       const containsValidTime = () => {
@@ -283,7 +283,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const result: TDate[] = [];
+    const result: PickerValidDate[] = [];
     const startOfDay = utils.startOfDay(valueOrReferenceDate);
     let nextTimeStepOption = startOfDay;
     while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
@@ -478,8 +478,7 @@ DigitalClock.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

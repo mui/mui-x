@@ -107,7 +107,7 @@
     "languageTag": "el-GR",
     "importName": "elGR",
     "localeName": "Greek",
-    "missingKeysCount": 14,
+    "missingKeysCount": 6,
     "totalKeysCount": 50,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/elGR.ts"
   },

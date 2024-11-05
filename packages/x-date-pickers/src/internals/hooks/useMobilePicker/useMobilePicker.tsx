@@ -29,11 +29,9 @@ import { PickersProvider } from '../../components/PickersProvider';
  * - MobileTimePicker
  */
 export const useMobilePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobilePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
@@ -43,7 +41,7 @@ export const useMobilePicker = <
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseMobilePickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -76,7 +74,7 @@ export const useMobilePicker = <
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+  } = usePicker<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -89,11 +87,10 @@ export const useMobilePicker = <
   const Field = slots.field;
   const fieldProps = useSlotProps<
     typeof Field,
-    UseMobilePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    UseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
     Partial<
       BaseSingleInputFieldProps<
-        TDate | null,
-        TDate,
+        PickerValidDate | null,
         FieldSection,
         TEnableAccessibleFieldDOMStructure,
         InferError<TExternalProps>
