@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent } from '@mui/x-date-pickers/locales';
 import {
-  DefaultizedProps,
   useDefaultDates,
   useUtils,
   applyDefaultDate,
@@ -128,7 +128,6 @@ type UseDateTimeRangePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDateTimeRangePickerProps<TDate>,
 > = LocalizedComponent<
-  TDate,
   Omit<DefaultizedProps<Props, 'openTo' | 'ampm' | keyof BaseDateValidationProps<TDate>>, 'views'>
 > & {
   shouldRenderTimeInASingleColumn: boolean;

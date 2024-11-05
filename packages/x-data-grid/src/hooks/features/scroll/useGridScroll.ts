@@ -60,8 +60,6 @@ export const useGridScroll = (
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
-  const virtualScrollbarHorizontalRef = apiRef.current.virtualScrollbarHorizontalRef!;
-  const virtualScrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
@@ -156,37 +154,19 @@ export const useGridScroll = (
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
     (params: Partial<GridScrollParams>) => {
-      if (
-        virtualScrollerRef.current &&
-        virtualScrollbarHorizontalRef.current &&
-        params.left !== undefined &&
-        colRef.current
-      ) {
+      if (virtualScrollerRef.current && params.left !== undefined && colRef.current) {
         const direction = isRtl ? -1 : 1;
         colRef.current.scrollLeft = params.left;
         virtualScrollerRef.current.scrollLeft = direction * params.left;
-        virtualScrollbarHorizontalRef.current.scrollLeft = direction * params.left;
         logger.debug(`Scrolling left: ${params.left}`);
       }
-      if (
-        virtualScrollerRef.current &&
-        virtualScrollbarVerticalRef.current &&
-        params.top !== undefined
-      ) {
+      if (virtualScrollerRef.current && params.top !== undefined) {
         virtualScrollerRef.current.scrollTop = params.top;
-        virtualScrollbarVerticalRef.current.scrollTop = params.top;
         logger.debug(`Scrolling top: ${params.top}`);
       }
       logger.debug(`Scrolling, updating container, and viewport`);
     },
-    [
-      virtualScrollerRef,
-      virtualScrollbarHorizontalRef,
-      virtualScrollbarVerticalRef,
-      isRtl,
-      colRef,
-      logger,
-    ],
+    [virtualScrollerRef, isRtl, colRef, logger],
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(() => {

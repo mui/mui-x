@@ -6,7 +6,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { AnimatedProps, animated } from '@react-spring/web';
-import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';

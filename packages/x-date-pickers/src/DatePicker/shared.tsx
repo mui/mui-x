@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DateCalendarSlots,
   DateCalendarSlotProps,
@@ -71,7 +71,6 @@ type UseDatePickerDefaultizedProps<
   TDate extends PickerValidDate,
   Props extends BaseDatePickerProps<TDate>,
 > = LocalizedComponent<
-  TDate,
   DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
 >;
 
@@ -86,7 +85,7 @@ export function useDatePickerDefaultizedProps<
     name,
   });
 
-  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+  const localeText = React.useMemo<PickersInputLocaleText | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
     }
