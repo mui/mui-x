@@ -1,5 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
@@ -24,7 +24,7 @@ const getMonthWeekday = (
   );
 };
 
-const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
+const shortcutsItems: PickersShortcutsItem<false>[] = [
   {
     label: "New Year's Day",
     getValue: () => {

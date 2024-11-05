@@ -3,21 +3,20 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
-import { RangeFieldSection } from '../../models';
 
 interface UseMultiInputFieldSelectedSectionsParams
   extends Pick<
-    UseFieldInternalProps<any, RangeFieldSection, any, any>,
+    UseFieldInternalProps<true, any, any>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<true>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<true>>;
 }
 
 export const useMultiInputFieldSelectedSections = (
   params: UseMultiInputFieldSelectedSectionsParams,
 ) => {
-  const unstableEndFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const unstableEndFieldRef = React.useRef<FieldRef<true>>(null);
   const handleUnstableEndFieldRef = useForkRef(params.unstableEndFieldRef, unstableEndFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
@@ -55,7 +54,7 @@ export const useMultiInputFieldSelectedSections = (
 
   return {
     start: {
-      unstableFieldRef: params.unstableStartFieldRef,
+      unstableFieldRef: params.unstableStartFieldRef as React.Ref<FieldRef<false>>,
       selectedSections:
         activeField === 'start' && params.selectedSections !== undefined
           ? params.selectedSections
@@ -63,7 +62,7 @@ export const useMultiInputFieldSelectedSections = (
       onSelectedSectionsChange: handleStartSelectedSectionChange,
     },
     end: {
-      unstableFieldRef: handleUnstableEndFieldRef,
+      unstableFieldRef: handleUnstableEndFieldRef as React.Ref<FieldRef<false>>,
       selectedSections:
         activeField === 'end' && params.selectedSections !== undefined
           ? params.selectedSections

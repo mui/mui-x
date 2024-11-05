@@ -12,14 +12,7 @@ import {
 } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import {
-  FieldSection,
-  PickerValidDate,
-  FieldRef,
-  BaseSingleInputFieldProps,
-  InferError,
-  PickerOwnerState,
-} from '../../../models';
+import { FieldRef, BaseSingleInputFieldProps, InferError, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { PickersProvider } from '../../components/PickersProvider';
 
@@ -65,7 +58,7 @@ export const useDesktopPicker = <
   } = props;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<false>>(null);
 
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
@@ -80,7 +73,7 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>({
+  } = usePicker<false, TView, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -126,8 +119,7 @@ export const useDesktopPicker = <
     UseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
     Partial<
       BaseSingleInputFieldProps<
-        PickerValidDate | null,
-        FieldSection,
+        false,
         TEnableAccessibleFieldDOMStructure,
         InferError<TExternalProps>
       >

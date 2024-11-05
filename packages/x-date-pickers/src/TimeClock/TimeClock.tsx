@@ -55,7 +55,7 @@ type TimeClockComponent = ((
   props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
+const TIME_CLOCK_DEFAULT_VIEWS: readonly TimeView[] = ['hours', 'minutes'];
 
 /**
  * Demos:
@@ -68,7 +68,7 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
 export const TimeClock = React.forwardRef(function TimeClock(
-  inProps: TimeClockProps,
+  inProps: TimeClockProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
@@ -129,7 +129,10 @@ export const TimeClock = React.forwardRef(function TimeClock(
   const translations = usePickersTranslations();
   const now = useNow(timezone);
 
-  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
+  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews<
+    false,
+    TimeView
+  >({
     view: inView,
     views,
     openTo,
@@ -463,9 +466,9 @@ TimeClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TView The view type. Will be one of date or time views.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */

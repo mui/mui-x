@@ -25,7 +25,7 @@ import {
   resolveTimeViewsResponse,
 } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import { PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -51,14 +51,14 @@ const rendererInterceptor = function rendererInterceptor<
   inViewRenderers: DateTimePickerViewRenderers<DateOrTimeViewWithMeridiem, any>,
   popperView: TView,
   rendererProps: PickerViewsRendererProps<
-    PickerValidDate | null,
+    false,
     TView,
     DefaultizedProps<
       UseDesktopPickerProps<
         TView,
         TEnableAccessibleFieldDOMStructure,
         any,
-        UsePickerViewsProps<PickerValidDate | null, TView, any, {}>
+        UsePickerViewsProps<false, TView, any, {}>
       >,
       'openTo'
     >,
@@ -390,17 +390,17 @@ DesktopDateTimePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} value The value that was just accepted.
+   * @param {InferPickerValue<TIsRange>} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
@@ -414,9 +414,9 @@ DesktopDateTimePicker.propTypes = {
    * When a validation error is detected, the `error` parameter contains a non-null value.
    * This can be used to render an appropriate form error.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {TError} error The reason why the current value is not valid.
-   * @param {TValue} value The value associated with the error.
+   * @param {InferPickerValue<TIsRange>} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

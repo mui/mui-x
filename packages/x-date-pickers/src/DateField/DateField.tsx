@@ -200,9 +200,9 @@ DateField.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
@@ -215,9 +215,9 @@ DateField.propTypes = {
    * When a validation error is detected, the `error` parameter contains a non-null value.
    * This can be used to render an appropriate form error.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {TError} error The reason why the current value is not valid.
-   * @param {TValue} value The value associated with the error.
+   * @param {InferPickerValue<TIsRange>} value The value associated with the error.
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,

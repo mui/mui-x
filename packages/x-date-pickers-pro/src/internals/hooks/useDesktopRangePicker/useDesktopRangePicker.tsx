@@ -11,7 +11,6 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersProvider,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
@@ -25,7 +24,6 @@ import {
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -70,8 +68,8 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
-  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const startFieldRef = React.useRef<FieldRef<true>>(null);
+  const endFieldRef = React.useRef<FieldRef<true>>(null);
   const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
@@ -89,13 +87,7 @@ export const useDesktopRangePicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<
-    PickerRangeValue,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  >({
+  } = usePicker<true, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
     wrapperVariant: 'desktop',
@@ -187,7 +179,7 @@ export const useDesktopRangePicker = <
     onViewChange: layoutProps.onViewChange,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<true, TView> = {
     ...slotProps,
     tabs: {
       ...slotProps?.tabs,

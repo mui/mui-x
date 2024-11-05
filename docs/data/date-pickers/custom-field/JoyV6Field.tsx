@@ -24,8 +24,6 @@ import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseSingleInputFieldProps,
   DateValidationError,
-  FieldSection,
-  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
@@ -101,13 +99,7 @@ const JoyField = React.forwardRef(
 
 interface JoyDateFieldProps
   extends UseDateFieldProps<false>,
-    BaseSingleInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      PickerValidDate | null,
-      FieldSection,
-      false,
-      DateValidationError
-    > {}
+    BaseSingleInputFieldProps<false, false, DateValidationError> {}
 
 const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {

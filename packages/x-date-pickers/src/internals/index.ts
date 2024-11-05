@@ -96,6 +96,7 @@ export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps } from './models/fields';
+export type { RangePosition } from './models/pickers';
 export type {
   BasePickerProps,
   BasePickerInputProps,
@@ -118,7 +119,12 @@ export type {
   DayValidationProps,
   DateTimeValidationProps,
 } from './models/validation';
-export type { PickerRangeValue } from './models/value';
+export type {
+  PickerRangeValue,
+  PickerNonNullableRangeValue,
+  InferPickerValue,
+  InferNonNullablePickerValue,
+} from './models/value';
 
 export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {

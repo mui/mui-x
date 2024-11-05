@@ -46,7 +46,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileDateTimePicker, () => ({
+  describeValue<false, 'picker'>(MobileDateTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time',

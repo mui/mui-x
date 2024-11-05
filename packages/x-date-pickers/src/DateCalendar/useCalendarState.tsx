@@ -109,7 +109,6 @@ export const createCalendarStateReducer =
 interface UseCalendarStateParams
   extends Pick<
     DateCalendarDefaultizedProps,
-    | 'value'
     | 'referenceDate'
     | 'disableFuture'
     | 'disablePast'
@@ -119,6 +118,7 @@ interface UseCalendarStateParams
     | 'reduceAnimations'
     | 'shouldDisableDate'
   > {
+  value: PickerValidDate | null;
   disableSwitchToMonthOnDayFocus?: boolean;
   timezone: PickersTimezone;
 }

@@ -2,12 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import { MakeOptional } from '@mui/x-internals/types';
 import TextField from '@mui/material/TextField';
-import {
-  DateTimeValidationError,
-  FieldSection,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-} from '../models';
+import { DateTimeValidationError, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   ExportedUseClearableFieldProps,
@@ -19,12 +14,7 @@ import { AmPmProps } from '../internals/models/props/time';
 
 export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateTimeValidationError
-      >,
+      UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateTimeValidationError>,
       'format'
     >,
     ExportedValidateDateTimeProps,

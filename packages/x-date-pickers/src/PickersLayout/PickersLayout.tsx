@@ -79,8 +79,8 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
-  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersLayoutComponent = (<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TIsRange, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -93,9 +93,9 @@ type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
 const PickersLayout = React.forwardRef(function PickersLayout<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
+>(inProps: PickersLayoutProps<TIsRange, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);

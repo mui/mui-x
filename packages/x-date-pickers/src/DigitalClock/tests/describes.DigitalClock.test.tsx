@@ -32,7 +32,7 @@ describe('<DigitalClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(DigitalClock, () => ({
+  describeValue<false, 'digital-clock'>(DigitalClock, () => ({
     render,
     componentFamily: 'digital-clock',
     type: 'time',

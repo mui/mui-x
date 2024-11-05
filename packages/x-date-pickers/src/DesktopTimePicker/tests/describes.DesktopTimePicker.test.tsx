@@ -46,7 +46,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopTimePicker, () => ({
+  describeValue<false, 'picker'>(DesktopTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'time',

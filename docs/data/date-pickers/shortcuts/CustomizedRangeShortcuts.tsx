@@ -1,10 +1,10 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
@@ -12,9 +12,8 @@ import {
   PickersShortcutsItem,
   PickersShortcutsProps,
 } from '@mui/x-date-pickers/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
 
-const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+const shortcutsItems: PickersShortcutsItem<true>[] = [
   {
     label: 'This Week',
     getValue: () => {
@@ -55,7 +54,7 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
+function CustomRangeShortcuts(props: PickersShortcutsProps<true>) {
   const { items, onChange, isValid, changeImportance = 'accept' } = props;
 
   if (items == null || items.length === 0) {

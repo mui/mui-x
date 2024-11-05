@@ -9,7 +9,7 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickersTranslations } from '../hooks/usePickersTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
@@ -17,7 +17,7 @@ import {
 import { resolveDateFormat } from '../internals/utils/date-utils';
 
 export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValidDate | null, DateView>,
+  extends BaseToolbarProps<false, DateView>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {

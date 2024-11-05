@@ -5,7 +5,7 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/models/validation';
-import { DateValidationError, PickerValidDate } from '../models';
+import { DateValidationError } from '../models';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
@@ -24,11 +24,12 @@ export interface ValidateDateProps
     YearValidationProps,
     Required<BaseDateValidationProps> {}
 
-export const validateDate: Validator<
-  PickerValidDate | null,
-  DateValidationError,
-  ValidateDateProps
-> = ({ props, value, timezone, adapter }): DateValidationError => {
+export const validateDate: Validator<false, DateValidationError, ValidateDateProps> = ({
+  props,
+  value,
+  timezone,
+  adapter,
+}): DateValidationError => {
   if (value === null) {
     return null;
   }

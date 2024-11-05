@@ -11,6 +11,7 @@ import type {
 import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
 import type { UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
+import { RangePosition } from '../internals/models/pickers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -91,12 +92,22 @@ export interface FieldSection {
   endSeparator: string;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
+
+export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
+  ? TIsRange extends false
+    ? FieldSection | FieldRangeSection
+    : FieldRangeSection
+  : FieldSection;
+
+export interface FieldRef<TIsRange extends boolean> {
   /**
    * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
+   * @returns {InferFieldSection<TIsRange>[]} The sections of the current value.
    */
-  getSections: () => TSection[];
+  getSections: () => InferFieldSection<TIsRange>[];
   /**
    * Returns the index of the active section (the first focused section).
    * If no section is active, returns `null`.
@@ -165,11 +176,10 @@ type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure exten
  * not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> = BaseFieldProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError> &
+> = BaseFieldProps<TIsRange, TEnableAccessibleFieldDOMStructure, TError> &
   BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 /**

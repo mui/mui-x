@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldSection, PickerOwnerState } from '../../../models';
+import { PickerOwnerState } from '../../../models';
 import { UsePickerValueResponse } from './usePickerValue.types';
 import {
   PickersProviderProps,
@@ -7,16 +7,16 @@ import {
   PickersPrivateContextValue,
 } from '../../components/PickersProvider';
 
-export interface UsePickerProviderParameters<TValue>
+export interface UsePickerProviderParameters<TIsRange extends boolean>
   extends Pick<PickersProviderProps, 'localeText'> {
-  pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
+  pickerValueResponse: UsePickerValueResponse<TIsRange, any>;
   ownerState: PickerOwnerState;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickersProviderProps, 'children'> {}
 
-export function usePickerProvider<TValue>(
-  parameters: UsePickerProviderParameters<TValue>,
+export function usePickerProvider<TIsRange extends boolean>(
+  parameters: UsePickerProviderParameters<TIsRange>,
 ): UsePickerProviderReturnValue {
   const { pickerValueResponse, ownerState, localeText } = parameters;
 

@@ -8,7 +8,6 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlots,
@@ -20,16 +19,15 @@ import {
   RangePickerFieldSlots,
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
-import { RangeFieldSection } from '../../../models';
 
 export interface UseRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<PickerRangeValue, TView>,
+  extends ExportedPickersLayoutSlots<true, TView>,
     RangePickerFieldSlots {}
 
 export interface UseRangePickerSlotProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedPickersLayoutSlotProps<PickerRangeValue, TView>,
+> extends ExportedPickersLayoutSlotProps<true, TView>,
     RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> {
   tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;
@@ -48,7 +46,7 @@ export interface UseRangePickerProps<
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
   TAdditionalViewProps extends {},
 > extends RangeOnlyPickerProps,
-    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, TAdditionalViewProps> {}
+    BasePickerProps<true, TView, TError, TExternalProps, TAdditionalViewProps> {}
 
 export interface RangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
@@ -58,13 +56,7 @@ export interface UseRangePickerParams<
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps, TAdditionalViewProps>,
   TAdditionalViewProps extends {},
 > extends Pick<
-    UsePickerParams<
-      PickerRangeValue,
-      TView,
-      RangeFieldSection,
-      TExternalProps,
-      TAdditionalViewProps
-    >,
+    UsePickerParams<true, TView, TExternalProps, TAdditionalViewProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

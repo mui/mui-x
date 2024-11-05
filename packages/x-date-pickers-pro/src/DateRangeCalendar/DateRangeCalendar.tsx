@@ -210,7 +210,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   } = props;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
-    PickerRangeValue,
+    true,
     NonNullable<typeof onChange>
   >({
     name: 'DateRangeCalendar',
@@ -221,7 +221,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     valueManager: rangeValueManager,
   });
 
-  const { setValueAndGoToNextView, view } = useViews({
+  const { setValueAndGoToNextView, view } = useViews<true, 'day'>({
     view: inView,
     views,
     openTo,
@@ -707,9 +707,9 @@ DateRangeCalendar.propTypes = {
   minDate: PropTypes.object,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TView The view type. Will be one of date or time views.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */

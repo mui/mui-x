@@ -30,7 +30,7 @@ describe('<DateCalendar /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(DateCalendar, () => ({
+  describeValue<false, 'calendar'>(DateCalendar, () => ({
     render,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],

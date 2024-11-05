@@ -1,19 +1,10 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
-import { BaseFieldProps, UseFieldResponse } from '@mui/x-date-pickers/internals';
-import {
-  BaseSingleInputPickersTextFieldProps,
-  FieldRef,
-  FieldSection,
-} from '@mui/x-date-pickers/models';
+import { BaseFieldProps, RangePosition, UseFieldResponse } from '@mui/x-date-pickers/internals';
+import { BaseSingleInputPickersTextFieldProps, FieldRef } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { SxProps } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import { RangePosition } from './range';
-
-export interface RangeFieldSection extends FieldSection {
-  dateName: RangePosition;
-}
 
 export type FieldType = 'single-input' | 'multi-input';
 
@@ -44,8 +35,8 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<true>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<true>>;
 }
 
 export interface RangeFieldSeparatorProps {
@@ -62,18 +53,16 @@ export interface RangeFieldSeparatorProps {
  * not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      BaseFieldProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      BaseFieldProps<true, TEnableAccessibleFieldDOMStructure, TError>,
       'unstableFieldRef'
     >,
     RangeFieldSeparatorProps {
   sx?: SxProps<any>;
-  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<true>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<true>>;
   slots?: {
     root?: React.ElementType;
     separator?: React.ElementType;

@@ -77,10 +77,10 @@ export interface PickersComponentsPropsList {
   MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<unknown, DateOrTimeView>;
+  MuiPickersToolbar: PickersToolbarProps<boolean, DateOrTimeView>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
-  MuiPickersLayout: PickersLayoutProps<unknown, DateOrTimeView>;
+  MuiPickersLayout: PickersLayoutProps<boolean, DateOrTimeView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps;
   MuiTimeField: TimeFieldProps<any>;

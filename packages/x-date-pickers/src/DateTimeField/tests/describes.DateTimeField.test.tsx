@@ -30,7 +30,7 @@ describe('<DateTimeField /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
-  describeValue(DateTimeField, () => ({
+  describeValue<false, 'field'>(DateTimeField, () => ({
     render,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],

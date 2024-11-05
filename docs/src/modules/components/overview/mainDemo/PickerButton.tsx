@@ -5,22 +5,11 @@ import Card from '@mui/material/Card';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps, DateValidationError } from '@mui/x-date-pickers/models';
 
 interface ButtonFieldProps
   extends UseDateFieldProps<true>,
-    BaseSingleInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      PickerValidDate | null,
-      FieldSection,
-      true,
-      DateValidationError
-    > {
+    BaseSingleInputFieldProps<false, true, DateValidationError> {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

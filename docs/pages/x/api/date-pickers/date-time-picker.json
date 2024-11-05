@@ -53,14 +53,14 @@
     "onAccept": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "type": "function(value: InferPickerValue<TIsRange>, context: FieldChangeHandlerContext<TError>) => void",
         "describedArgs": ["value", "context"]
       }
     },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "type": "function(value: InferPickerValue<TIsRange>, context: FieldChangeHandlerContext<TError>) => void",
         "describedArgs": ["value", "context"]
       }
     },
@@ -68,7 +68,7 @@
     "onError": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(error: TError, value: TValue) => void",
+        "type": "function(error: TError, value: InferPickerValue<TIsRange>) => void",
         "describedArgs": ["error", "value"]
       }
     },

@@ -7,19 +7,19 @@ import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { FieldRef, FieldSection, PickerValidDate, TimezoneProps } from '../../../models';
+import { FieldRef, PickerValidDate, TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
 
 export type PickerViewsRendererProps<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = Omit<TExternalProps, 'className' | 'sx'> &
   TAdditionalProps &
-  UsePickerValueViewsResponse<TValue> & {
+  UsePickerValueViewsResponse<TIsRange> & {
     view: TView;
     views: readonly TView[];
     focusedView: TView | null;
@@ -29,30 +29,30 @@ export type PickerViewsRendererProps<
   };
 
 export type PickerViewRenderer<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = (
-  props: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
+  props: PickerViewsRendererProps<TIsRange, TView, TExternalProps, TAdditionalProps>,
 ) => React.ReactNode;
 
 export type PickerViewRendererLookup<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<any>,
   TAdditionalProps extends {},
 > = {
-  [K in TView]: PickerViewRenderer<TValue, K, TExternalProps, TAdditionalProps> | null;
+  [K in TView]: PickerViewRenderer<TIsRange, K, TExternalProps, TAdditionalProps> | null;
 };
 
 /**
  * Props used to handle the views that are common to all pickers.
  */
 export interface UsePickerViewsBaseProps<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TIsRange, TView, any, any>,
   TAdditionalProps extends {},
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
     TimezoneProps {
@@ -65,7 +65,7 @@ export interface UsePickerViewsBaseProps<
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */
-  viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  viewRenderers: PickerViewRendererLookup<TIsRange, TView, TExternalProps, TAdditionalProps>;
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
@@ -93,39 +93,38 @@ export interface UsePickerViewsNonStaticProps {
  * Props used to handle the value of the pickers.
  */
 export interface UsePickerViewsProps<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TIsRange, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps> {
+> extends UsePickerViewsBaseProps<TIsRange, TView, TExternalProps, TAdditionalProps> {
   className?: string;
   sx?: SxProps<Theme>;
 }
 
 export interface UsePickerViewParams<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
+  TExternalProps extends UsePickerViewsProps<TIsRange, TView, TExternalProps, TAdditionalProps>,
   TAdditionalProps extends {},
 > {
   props: TExternalProps;
-  propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
+  propsFromPickerValue: UsePickerValueViewsResponse<TIsRange>;
   additionalViewProps: TAdditionalProps;
   autoFocusView: boolean;
-  fieldRef: React.RefObject<FieldRef<TSection>> | undefined;
+  fieldRef: React.RefObject<FieldRef<TIsRange>> | undefined;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
-   * @param {PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
+   * @param {PickerViewRendererLookup<TIsRange, TView, TExternalProps, TAdditionalProps>} viewRenderers The `viewRenderers` that were provided to the picker component.
    * @param {TView} popperView The current picker view.
    * @param {any} rendererProps All the props that are being passed down to the renderer.
    * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
    */
   rendererInterceptor?: (
-    viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>,
+    viewRenderers: PickerViewRendererLookup<TIsRange, TView, TExternalProps, TAdditionalProps>,
     popperView: TView,
-    rendererProps: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
+    rendererProps: PickerViewsRendererProps<TIsRange, TView, TExternalProps, TAdditionalProps>,
   ) => React.ReactNode;
 }
 
@@ -152,10 +151,9 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMe
  * - Handles the focus management when switching views
  */
 export const usePickerViews = <
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TIsRange, TView, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -165,9 +163,8 @@ export const usePickerViews = <
   rendererInterceptor,
   fieldRef,
 }: UsePickerViewParams<
-  TValue,
+  TIsRange,
   TView,
-  TSection,
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
@@ -290,7 +287,7 @@ export const usePickerViews = <
       }
 
       const rendererProps: PickerViewsRendererProps<
-        TValue,
+        TIsRange,
         TView,
         TExternalProps,
         TAdditionalProps

@@ -11,6 +11,7 @@ import {
   FieldRef,
   OnErrorProps,
   InferError,
+  InferFieldSection,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
@@ -18,39 +19,38 @@ import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
+import { InferNonNullablePickerValue, InferPickerValue } from '../../models';
 
 export interface UseFieldParams<
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, TEnableAccessibleFieldDOMStructure, any>,
+  TInternalProps extends UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerValueManager<TValue, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TSection>;
-  validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
+  valueManager: PickerValueManager<TIsRange, InferError<TInternalProps>>;
+  fieldValueManager: FieldValueManager<TIsRange>;
+  validator: Validator<TIsRange, InferError<TInternalProps>, TInternalProps>;
   valueType: FieldValueType;
 }
 
 export interface UseFieldInternalProps<
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends TimezoneProps,
-    OnErrorProps<TValue, TError> {
+    OnErrorProps<TIsRange, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TValue;
+  value?: InferPickerValue<TIsRange>;
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue?: TValue;
+  defaultValue?: InferPickerValue<TIsRange>;
   /**
    * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
@@ -59,12 +59,12 @@ export interface UseFieldInternalProps<
   referenceDate?: PickerValidDate;
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onChange?: FieldChangeHandler<TValue, TError>;
+  onChange?: FieldChangeHandler<TIsRange, TError>;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -114,7 +114,7 @@ export interface UseFieldInternalProps<
   /**
    * The ref object used to imperatively interact with the field.
    */
-  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  unstableFieldRef?: React.Ref<FieldRef<TIsRange>>;
   /**
    * @default true
    */
@@ -132,7 +132,7 @@ export interface UseFieldInternalProps<
 }
 
 export interface UseFieldCommonAdditionalProps
-  extends Required<Pick<UseFieldInternalProps<any, any, any, any>, 'disabled' | 'readOnly'>> {}
+  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {}
 
 export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
   onKeyDown?: React.KeyboardEventHandler;
@@ -215,8 +215,8 @@ export type FieldSectionsBoundaries = {
   };
 };
 
-export type FieldChangeHandler<TValue, TError> = (
-  value: TValue,
+export type FieldChangeHandler<TIsRange extends boolean, TError> = (
+  value: InferPickerValue<TIsRange>,
   context: FieldChangeHandlerContext<TError>,
 ) => void;
 
@@ -228,7 +228,7 @@ export interface FieldChangeHandlerContext<TError> {
  * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TSection extends FieldSection> {
+interface FieldActiveDateManager<TIsRange extends boolean> {
   /**
    * Active date from `state.value`.
    */
@@ -238,113 +238,113 @@ interface FieldActiveDateManager<TValue, TSection extends FieldSection> {
    */
   referenceDate: PickerValidDate;
   /**
-   * @template TSection
-   * @param  {TSection[]} sections The sections of the full value.
-   * @returns {TSection[]} The sections of the active date.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @param  {InferFieldSection<TIsRange>[]} sections The sections of the full value.
+   * @returns {InferFieldSection<TIsRange>[]} The sections of the active date.
    * Get the sections of the active date.
    */
-  getSections: (sections: TSection[]) => TSection[];
+  getSections: (sections: InferFieldSection<TIsRange>[]) => InferFieldSection<TIsRange>[];
   /**
    * Creates the new value and reference value based on the new active date and the current state.
-   * @template TValue
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {PickerValidDate | null} newActiveDate The new value of the date containing the active section.
-   * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
+   * @returns {Pick<UseFieldState<TIsRange>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
   getNewValuesFromNewActiveDate: (
     newActiveDate: PickerValidDate | null,
-  ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
+  ) => Pick<UseFieldState<TIsRange>, 'value' | 'referenceValue'>;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
 
-export interface FieldValueManager<TValue, TSection extends FieldSection> {
+export interface FieldValueManager<TIsRange extends boolean> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
-   * @template TValue, TSection
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {MuiPickersAdapter} utils The utils to manipulate the date.
-   * @param {TValue} value The current value to generate sections from.
-   * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {InferPickerValue<TIsRange>} value The current value to generate sections from.
+   * @param {InferFieldSection<TIsRange>[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
    * @param {(date: PickerValidDate) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
-   * @returns {TSection[]}  The new section list.
+   * @returns {InferFieldSection<TIsRange>[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter,
-    value: TValue,
-    fallbackSections: TSection[] | null,
+    value: InferPickerValue<TIsRange>,
+    fallbackSections: InferFieldSection<TIsRange>[] | null,
     getSectionsFromDate: (date: PickerValidDate) => FieldSection[],
-  ) => TSection[];
+  ) => InferFieldSection<TIsRange>[];
   /**
    * Creates the string value to render in the input based on the current section list.
-   * @template TSection
-   * @param {TSection[]} sections The current section list.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @param {InferFieldSection<TIsRange>[]} sections The current section list.
    * @param {string} localizedDigits The conversion table from localized to 0-9 digits.
    * @param {boolean} isRtl `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
   getV6InputValueFromSections: (
-    sections: TSection[],
+    sections: InferFieldSection<TIsRange>[],
     localizedDigits: string[],
     isRtl: boolean,
   ) => string;
   /**
    * Creates the string value to render in the input based on the current section list.
-   * @template TSection
-   * @param {TSection[]} sections The current section list.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @param {InferFieldSection<TIsRange>[]} sections The current section list.
    * @returns {string} The string value to render in the input.
    */
-  getV7HiddenInputValueFromSections: (sections: TSection[]) => string;
+  getV7HiddenInputValueFromSections: (sections: InferFieldSection<TIsRange>[]) => string;
   /**
    * Returns the manager of the active date.
-   * @template TValue, TSection
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {MuiPickersAdapter} utils The utils to manipulate the date.
-   * @param {UseFieldState<TValue, TSection>} state The current state of the field.
-   * @param {TSection} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue, TSection>} The manager of the active date.
+   * @param {UseFieldState<TIsRange>} state The current state of the field.
+   * @param {InferFieldSection<TIsRange>} activeSection The active section.
+   * @returns {FieldActiveDateManager<TIsRange>} The manager of the active date.
    */
   getActiveDateManager: (
     utils: MuiPickersAdapter,
-    state: UseFieldState<TValue, TSection>,
-    activeSection: TSection,
-  ) => FieldActiveDateManager<TValue, TSection>;
+    state: UseFieldState<TIsRange>,
+    activeSection: InferFieldSection<TIsRange>,
+  ) => FieldActiveDateManager<TIsRange>;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
-   * @template TValue
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {string} valueStr The string value to parse.
-   * @param {TValue} referenceValue The reference value currently stored in state.
+   * @param {InferPickerValue<TIsRange>} referenceValue The reference value currently stored in state.
    * @param {(dateStr: string, referenceDate: PickerValidDate) => PickerValidDate | null} parseDate A method to convert a string date into a parsed one.
-   * @returns {TValue} The new parsed value.
+   * @returns {InferPickerValue<TIsRange>} The new parsed value.
    */
   parseValueStr: (
     valueStr: string,
-    referenceValue: TValue,
+    referenceValue: InferNonNullablePickerValue<TIsRange>,
     parseDate: (dateStr: string, referenceDate: PickerValidDate) => PickerValidDate | null,
-  ) => TValue;
+  ) => InferPickerValue<TIsRange>;
   /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
-   * @template TValue
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {MuiPickersAdapter} utils The utils to manipulate the date.
-   * @param {TValue} value The new value from which we want to take all valid dates in the `referenceValue` state.
-   * @param {TValue} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
-   * @returns {TValue} The new reference value with no invalid date.
+   * @param {InferPickerValue<TIsRange>} value The new value from which we want to take all valid dates in the `referenceValue` state.
+   * @param {InferPickerValue<TIsRange>} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
+   * @returns {InferPickerValue<TIsRange>} The new reference value with no invalid date.
    */
   updateReferenceValue: (
     utils: MuiPickersAdapter,
-    value: TValue,
-    prevReferenceValue: TValue,
-  ) => TValue;
+    value: InferPickerValue<TIsRange>,
+    prevReferenceValue: InferNonNullablePickerValue<TIsRange>,
+  ) => InferNonNullablePickerValue<TIsRange>;
 }
 
-export interface UseFieldState<TValue, TSection extends FieldSection> {
-  value: TValue;
+export interface UseFieldState<TIsRange extends boolean> {
+  value: InferPickerValue<TIsRange>;
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
-  referenceValue: TValue;
-  sections: TSection[];
+  referenceValue: InferNonNullablePickerValue<TIsRange>;
+  sections: InferFieldSection<TIsRange>[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
    * There are two `onChange` calls:
@@ -423,14 +423,12 @@ export interface UseFieldTextFieldInteractions {
 }
 
 export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean> = <
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
   TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
+    TIsRange,
     TEnableAccessibleFieldDOMStructure,
     any
   > & {
@@ -438,8 +436,7 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
   },
 >(
   params: UseFieldTextFieldParams<
-    TValue,
-    TSection,
+    TIsRange,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
@@ -452,21 +449,19 @@ export type UseFieldTextField<TEnableAccessibleFieldDOMStructure extends boolean
 };
 
 interface UseFieldTextFieldParams<
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends TEnableAccessibleFieldDOMStructure extends false
     ? UseFieldV6ForwardedProps
     : UseFieldV7ForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, TEnableAccessibleFieldDOMStructure, any>,
+  TInternalProps extends UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, any>,
 > extends UseFieldParams<
-      TValue,
-      TSection,
+      TIsRange,
       TEnableAccessibleFieldDOMStructure,
       TForwardedProps,
       TInternalProps
     >,
-    UseFieldStateResponse<TValue, TSection>,
+    UseFieldStateResponse<TIsRange>,
     UseFieldCharacterEditingResponse {
   areAllSectionsEmpty: boolean;
   sectionOrder: SectionOrdering;

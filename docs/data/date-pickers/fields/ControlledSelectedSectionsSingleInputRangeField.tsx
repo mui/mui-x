@@ -9,14 +9,14 @@ import {
   FieldSelectedSections,
   FieldRef,
 } from '@mui/x-date-pickers/models';
-import { RangeFieldSection, RangePosition } from '@mui/x-date-pickers-pro/models';
+import { RangePosition } from '@mui/x-date-pickers-pro/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function ControlledSelectedSectionsSingleInputRangeField() {
   const [selectedSections, setSelectedSections] =
     React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const fieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<true>>(null);
 
   const setSelectedSectionType = (
     selectedSectionType: FieldSectionType,

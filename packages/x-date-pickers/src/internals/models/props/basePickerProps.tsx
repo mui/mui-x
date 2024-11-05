@@ -12,12 +12,12 @@ import { UseFieldInternalProps } from '../../hooks/useField';
  * Props common to all pickers after applying the default props on each picker.
  */
 export interface BasePickerProps<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TIsRange, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
+> extends UsePickerBaseProps<TIsRange, TView, TError, TExternalProps, TAdditionalProps> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -33,9 +33,12 @@ export interface BasePickerProps<
 /**
  * Props common to all pickers before applying the default props on each picker.
  */
-export interface BasePickerInputProps<TValue, TView extends DateOrTimeViewWithMeridiem, TError>
-  extends Omit<
-    MakeOptional<BasePickerProps<TValue, TView, TError, any, any>, 'openTo' | 'views'>,
+export interface BasePickerInputProps<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+> extends Omit<
+    MakeOptional<BasePickerProps<TIsRange, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 
@@ -46,7 +49,7 @@ export interface BasePickerInputProps<TValue, TView extends DateOrTimeViewWithMe
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any>,
+    UseFieldInternalProps<any, any, any>,
     | 'formatDensity'
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'

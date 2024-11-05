@@ -29,7 +29,7 @@ describe('<MonthCalendar /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(MonthCalendar, () => ({
+  describeValue<false, 'calendar'>(MonthCalendar, () => ({
     render,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-02-01')],

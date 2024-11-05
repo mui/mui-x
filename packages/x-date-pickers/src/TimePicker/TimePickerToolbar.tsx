@@ -23,7 +23,7 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { PickerValidDate } from '../models';
 
 export interface TimePickerToolbarProps
-  extends BaseToolbarProps<PickerValidDate | null, TimeViewWithMeridiem>,
+  extends BaseToolbarProps<false, TimeViewWithMeridiem>,
     ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;

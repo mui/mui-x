@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { FieldSection, PickerOwnerState } from '../../../models';
+import { PickerOwnerState } from '../../../models';
 import type { UsePickerProps } from './usePicker.types';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import { useUtils } from '../useUtils';
 
-interface UsePickerOwnerStateParameters<TValue> {
-  props: UsePickerProps<TValue, any, any, any, any>;
-  pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
-  valueManager: PickerValueManager<TValue, any>;
+interface UsePickerOwnerStateParameters<TIsRange extends boolean> {
+  props: UsePickerProps<TIsRange, any, any, any, any>;
+  pickerValueResponse: UsePickerValueResponse<TIsRange, any>;
+  valueManager: PickerValueManager<TIsRange, any>;
 }
 
-export function usePickerOwnerState<TValue>(
-  parameters: UsePickerOwnerStateParameters<TValue>,
+export function usePickerOwnerState<TIsRange extends boolean>(
+  parameters: UsePickerOwnerStateParameters<TIsRange>,
 ): PickerOwnerState {
   const { props, pickerValueResponse, valueManager } = parameters;
 

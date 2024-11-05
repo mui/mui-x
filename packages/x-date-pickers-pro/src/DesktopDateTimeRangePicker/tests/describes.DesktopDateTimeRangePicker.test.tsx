@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -46,7 +47,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopDateTimeRangePicker, () => ({
+  describeValue<true, 'picker'>(DesktopDateTimeRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time-range',
@@ -86,7 +87,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
-      let newValue: any[];
+      let newValue: DateRange<any>;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {

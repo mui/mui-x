@@ -3,6 +3,7 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
+import { InferPickerValue } from '../../models';
 
 /**
  * Props used to create the layout of the views.
@@ -18,24 +19,30 @@ export interface UsePickerLayoutProps {
 }
 
 export interface UsePickerLayoutPropsResponseLayoutProps<
-  TValue,
+  TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-> extends UsePickerValueLayoutResponse<TValue>,
+> extends UsePickerValueLayoutResponse<TIsRange>,
     UsePickerViewsLayoutResponse<TView>,
     UsePickerLayoutProps {
   isLandscape: boolean;
   isRtl: boolean;
   wrapperVariant: WrapperVariant;
-  isValid: (value: TValue) => boolean;
+  isValid: (value: InferPickerValue<TIsRange>) => boolean;
 }
 
-export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
-  layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView>;
+export interface UsePickerLayoutPropsResponse<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
+  layoutProps: UsePickerLayoutPropsResponseLayoutProps<TIsRange, TView>;
 }
 
-export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeViewWithMeridiem> {
+export interface UsePickerLayoutPropsParams<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
   props: UsePickerLayoutProps;
-  propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
+  propsFromPickerValue: UsePickerValueLayoutResponse<TIsRange>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
 }
@@ -43,17 +50,20 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
 /**
  * Prepare the props for the view layout (managed by `PickersLayout`)
  */
-export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMeridiem>({
+export const usePickerLayoutProps = <
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+>({
   props,
   propsFromPickerValue,
   propsFromPickerViews,
   wrapperVariant,
-}: UsePickerLayoutPropsParams<TValue, TView>): UsePickerLayoutPropsResponse<TValue, TView> => {
+}: UsePickerLayoutPropsParams<TIsRange, TView>): UsePickerLayoutPropsResponse<TIsRange, TView> => {
   const { orientation } = props;
   const isLandscape = useIsLandscape(propsFromPickerViews.views, orientation);
   const isRtl = useRtl();
 
-  const layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView> = {
+  const layoutProps: UsePickerLayoutPropsResponseLayoutProps<TIsRange, TView> = {
     ...propsFromPickerViews,
     ...propsFromPickerValue,
     isLandscape,

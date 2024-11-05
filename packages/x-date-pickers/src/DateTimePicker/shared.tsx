@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { DateTimeValidationError, PickerValidDate } from '../models';
+import { DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlots,
@@ -62,7 +62,7 @@ export type DateTimePickerViewRenderers<
   TView extends DateOrTimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  PickerValidDate | null,
+  false,
   TView,
   Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
     Omit<
@@ -73,7 +73,7 @@ export type DateTimePickerViewRenderers<
 >;
 
 export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridiem>
-  extends BasePickerInputProps<PickerValidDate | null, TView, DateTimeValidationError>,
+  extends BasePickerInputProps<false, TView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps, 'onViewChange'>,
     ExportedBaseClockProps,
     DateTimeValidationProps {

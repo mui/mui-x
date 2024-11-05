@@ -54,7 +54,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopDateTimePicker, () => ({
+  describeValue<false, 'picker'>(DesktopDateTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time',

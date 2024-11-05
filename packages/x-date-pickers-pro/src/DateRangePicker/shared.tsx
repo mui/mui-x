@@ -9,7 +9,6 @@ import {
   BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../models';
 import {
@@ -38,7 +37,7 @@ export interface BaseDateRangePickerSlotProps extends DateRangeCalendarSlotProps
 
 export interface BaseDateRangePickerProps
   extends Omit<
-      BasePickerInputProps<PickerRangeValue, 'day', DateRangeValidationError>,
+      BasePickerInputProps<true, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
     ExportedDateRangeCalendarProps {
@@ -58,7 +57,7 @@ export interface BaseDateRangePickerProps
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<
-    PickerViewRendererLookup<PickerRangeValue, 'day', DateRangeViewRendererProps<'day'>, {}>
+    PickerViewRendererLookup<true, 'day', DateRangeViewRendererProps<'day'>, {}>
   >;
 }
 

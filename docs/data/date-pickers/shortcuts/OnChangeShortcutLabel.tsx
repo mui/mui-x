@@ -32,7 +32,7 @@ const getMonthWeekday = (
   );
 };
 
-const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
+const shortcutsItems: PickersShortcutsItem<false>[] = [
   {
     label: "New Year's Day",
     getValue: () => {

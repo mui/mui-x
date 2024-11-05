@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeViewWithMeridiem } from '../models';
+import { DateOrTimeViewWithMeridiem, InferPickerValue } from '../models';
 import { PickerValidDate } from '../../models';
 
 export type PickerOnChangeFn = (
@@ -11,16 +11,23 @@ export type PickerOnChangeFn = (
   selectionState?: PickerSelectionState,
 ) => void;
 
-export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem> {
+export interface UseViewsOptions<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TView The view type. Will be one of date or time views.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
-  onChange: (value: TValue, selectionState?: PickerSelectionState, selectedView?: TView) => void;
+  onChange: (
+    value: InferPickerValue<TIsRange>,
+    selectionState?: PickerSelectionState,
+    selectedView?: TView,
+  ) => void;
   /**
    * Callback fired on view change.
    * @template TView
@@ -63,12 +70,14 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
   onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
 }
 
-export interface ExportedUseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
+export interface ExportedUseViewsOptions<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends MakeOptional<UseViewsOptions<TIsRange, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
-interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
+interface UseViewsResponse<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem> {
   view: TView;
   setView: (view: TView) => void;
   focusedView: TView | null;
@@ -78,13 +87,13 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   defaultView: TView;
   goToNextView: () => void;
   setValueAndGoToNextView: (
-    value: TValue,
+    value: InferPickerValue<TIsRange>,
     currentViewSelectionState?: PickerSelectionState,
     selectedView?: TView,
   ) => void;
 }
 
-export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
+export function useViews<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>({
   onChange,
   onViewChange,
   openTo,
@@ -93,7 +102,7 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   autoFocus,
   focusedView: inFocusedView,
   onFocusedViewChange,
-}: UseViewsOptions<TValue, TView>): UseViewsResponse<TValue, TView> {
+}: UseViewsOptions<TIsRange, TView>): UseViewsResponse<TIsRange, TView> {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidView) {
       if (inView != null && !views.includes(inView)) {
@@ -182,7 +191,11 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   });
 
   const setValueAndGoToNextView = useEventCallback(
-    (value: TValue, currentViewSelectionState?: PickerSelectionState, selectedView?: TView) => {
+    (
+      value: InferPickerValue<TIsRange>,
+      currentViewSelectionState?: PickerSelectionState,
+      selectedView?: TView,
+    ) => {
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const hasMoreViews = selectedView
         ? // handles case like `DateTimePicker`, where a view might return a `finish` selection state

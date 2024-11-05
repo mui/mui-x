@@ -8,13 +8,11 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   PickersProvider,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
@@ -40,9 +38,8 @@ export const useStaticRangePicker = <
   const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const { layoutProps, providerProps, renderCurrentView } = usePicker<
-    PickerRangeValue,
+    true,
     TView,
-    RangeFieldSection,
     TExternalProps,
     {}
   >({
@@ -59,7 +56,7 @@ export const useStaticRangePicker = <
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<true, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,

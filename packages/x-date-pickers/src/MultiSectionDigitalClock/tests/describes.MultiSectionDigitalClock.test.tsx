@@ -35,7 +35,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(MultiSectionDigitalClock, () => ({
+  describeValue<false, 'multi-section-digital-clock'>(MultiSectionDigitalClock, () => ({
     render,
     componentFamily: 'multi-section-digital-clock',
     type: 'time',

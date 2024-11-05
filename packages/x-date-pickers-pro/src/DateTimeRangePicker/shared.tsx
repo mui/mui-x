@@ -17,7 +17,6 @@ import {
   UseViewsOptions,
   DateTimeValidationProps,
   DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
@@ -78,7 +77,7 @@ export type DateTimeRangePickerRenderers<
   TView extends DateOrTimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  PickerRangeValue,
+  true,
   TView,
   Omit<DateRangeViewRendererProps<'day'>, 'view' | 'slots' | 'slotProps'> &
     Omit<
@@ -90,15 +89,13 @@ export type DateTimeRangePickerRenderers<
 
 export interface BaseDateTimeRangePickerProps
   extends Omit<
-      BasePickerInputProps<PickerRangeValue, DateTimeRangePickerView, DateTimeRangeValidationError>,
+      BasePickerInputProps<true, DateTimeRangePickerView, DateTimeRangeValidationError>,
       'orientation' | 'views' | 'openTo'
     >,
     ExportedDateRangeCalendarProps,
     BaseDateValidationProps,
     DesktopOnlyTimePickerProps,
-    Partial<
-      Pick<UseViewsOptions<PickerRangeValue, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>
-    >,
+    Partial<Pick<UseViewsOptions<true, DateTimeRangePickerViewExternal>, 'openTo' | 'views'>>,
     DateTimeValidationProps {
   /**
    * Overridable component slots.

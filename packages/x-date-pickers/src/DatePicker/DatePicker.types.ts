@@ -11,12 +11,7 @@ import {
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '../models';
+import { BaseSingleInputFieldProps, DateValidationError } from '../models';
 
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
@@ -58,4 +53,4 @@ export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends bool
     UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
     'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
   > &
-    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateValidationError>;
+    BaseSingleInputFieldProps<false, true, DateValidationError>;

@@ -19,7 +19,6 @@ import FormLabel from '@mui/joy/FormLabel';
 import Typography, { TypographyProps } from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateRangePicker,
   DateRangePickerProps,
@@ -27,10 +26,8 @@ import {
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
   BaseMultiInputFieldProps,
-  DateRange,
   DateRangeValidationError,
   MultiInputFieldSlotTextFieldProps,
-  RangeFieldSection,
   UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
@@ -133,13 +130,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 
 interface JoyMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<false>,
-    BaseMultiInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      DateRange<PickerValidDate>,
-      RangeFieldSection,
-      false,
-      DateRangeValidationError
-    > {}
+    BaseMultiInputFieldProps<false, DateRangeValidationError> {}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,

@@ -1,7 +1,7 @@
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { Validator } from './useValidation';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimeValidationError } from '../models';
+import { TimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 /**
@@ -11,11 +11,12 @@ export interface ExportedValidateTimeProps extends BaseTimeValidationProps, Time
 
 export interface ValidateTimeProps extends Required<BaseTimeValidationProps>, TimeValidationProps {}
 
-export const validateTime: Validator<
-  PickerValidDate | null,
-  TimeValidationError,
-  ValidateTimeProps
-> = ({ adapter, value, timezone, props }): TimeValidationError => {
+export const validateTime: Validator<false, TimeValidationError, ValidateTimeProps> = ({
+  adapter,
+  value,
+  timezone,
+  props,
+}): TimeValidationError => {
   if (value === null) {
     return null;
   }

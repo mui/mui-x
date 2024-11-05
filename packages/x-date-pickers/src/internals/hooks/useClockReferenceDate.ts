@@ -11,7 +11,7 @@ export const useClockReferenceDate = <TProps extends {}>({
   props,
   timezone,
 }: {
-  value: PickerValidDate;
+  value: PickerValidDate | null;
   referenceDate: PickerValidDate | undefined;
   utils: MuiPickersAdapter;
   props: TProps;

@@ -34,7 +34,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
-    MakeOptional<BaseToolbarProps<PickerValidDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
+    MakeOptional<BaseToolbarProps<false, DateOrTimeViewWithMeridiem>, 'view'> {
   toolbarVariant?: WrapperVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.

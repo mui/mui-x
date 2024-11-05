@@ -17,19 +17,16 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { FieldSection } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 
 export const useField = <
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<
-    any,
-    any,
+    TIsRange,
     TEnableAccessibleFieldDOMStructure,
     any
   > & {
@@ -37,8 +34,7 @@ export const useField = <
   },
 >(
   params: UseFieldParams<
-    TValue,
-    TSection,
+    TIsRange,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
@@ -78,7 +74,7 @@ export const useField = <
     timezone,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing<TSection>({
+  const characterEditingResponse = useFieldCharacterEditing<TIsRange>({
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,

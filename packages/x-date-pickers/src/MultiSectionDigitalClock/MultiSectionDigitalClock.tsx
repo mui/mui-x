@@ -153,10 +153,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToNextView, focusedView } = useViews<
-    PickerValidDate | null,
-    TimeViewWithMeridiem
-  >({
+  const { view, setValueAndGoToNextView, focusedView } = useViews<false, TimeViewWithMeridiem>({
     view: inView,
     views,
     openTo,
@@ -519,9 +516,9 @@ MultiSectionDigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @template TView The view type. Will be one of date or time views.
-   * @param {TValue} value The new value.
+   * @param {InferPickerValue<TIsRange>} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */

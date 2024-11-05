@@ -4,7 +4,7 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { useValidation } from '../../../validation';
-import { FieldSection, PickerChangeHandlerContext, InferError } from '../../../models';
+import { PickerChangeHandlerContext, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -23,13 +23,14 @@ import {
   PickerValueUpdaterParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
+import { InferPickerValue } from '../../models';
 
 /**
  * Decide if the new value should be published
  * The published value will be passed to `onChange` if defined.
  */
-const shouldPublishValue = <TValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
+const shouldPublishValue = <TIsRange extends boolean, TError>(
+  params: PickerValueUpdaterParams<TIsRange, TError>,
 ): boolean => {
   const { action, hasChanged, dateState, isControlled } = params;
 
@@ -81,8 +82,8 @@ const shouldPublishValue = <TValue, TError>(
  * The committed value will be passed to `onAccept` if defined.
  * It will also be used as a reset target when calling the `cancel` picker action (when clicking on the "Cancel" button).
  */
-const shouldCommitValue = <TValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
+const shouldCommitValue = <TIsRange extends boolean, TError>(
+  params: PickerValueUpdaterParams<TIsRange, TError>,
 ): boolean => {
   const { action, hasChanged, dateState, isControlled, closeOnSelect } = params;
 
@@ -121,8 +122,8 @@ const shouldCommitValue = <TValue, TError>(
 /**
  * Decide if the picker should be closed after the value is updated.
  */
-const shouldClosePicker = <TValue, TError>(
-  params: PickerValueUpdaterParams<TValue, TError>,
+const shouldClosePicker = <TIsRange extends boolean, TError>(
+  params: PickerValueUpdaterParams<TIsRange, TError>,
 ): boolean => {
   const { action, closeOnSelect } = params;
 
@@ -145,18 +146,16 @@ const shouldClosePicker = <TValue, TError>(
  * Manage the value lifecycle of all the pickers.
  */
 export const usePickerValue = <
-  TValue,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TIsRange extends boolean,
+  TExternalProps extends UsePickerValueProps<TIsRange, any>,
 >({
   props,
   valueManager,
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
-  TValue,
-  TSection,
+}: UsePickerValueParams<TIsRange, TExternalProps>): UsePickerValueResponse<
+  TIsRange,
   InferError<TExternalProps>
 > => {
   type TError = InferError<TExternalProps>;
@@ -221,8 +220,8 @@ export const usePickerValue = <
     valueManager,
   });
 
-  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
-    let initialValue: TValue;
+  const [dateState, setDateState] = React.useState<UsePickerValueState<TIsRange>>(() => {
+    let initialValue: InferPickerValue<TIsRange>;
     if (inValueWithTimezoneToRender !== undefined) {
       initialValue = inValueWithTimezoneToRender;
     } else if (defaultValue !== undefined) {
@@ -248,8 +247,8 @@ export const usePickerValue = <
     onError: props.onError,
   });
 
-  const updateDate = useEventCallback((action: PickerValueUpdateAction<TValue, TError>) => {
-    const updaterParams: PickerValueUpdaterParams<TValue, TError> = {
+  const updateDate = useEventCallback((action: PickerValueUpdateAction<TIsRange, TError>) => {
+    const updaterParams: PickerValueUpdaterParams<TIsRange, TError> = {
       action,
       dateState,
       hasChanged: (comparison) => !valueManager.areValuesEqual(utils, action.value, comparison),
@@ -382,13 +381,13 @@ export const usePickerValue = <
   });
 
   const handleChange = useEventCallback(
-    (newValue: TValue, selectionState: PickerSelectionState = 'partial') =>
+    (newValue: InferPickerValue<TIsRange>, selectionState: PickerSelectionState = 'partial') =>
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
   const handleSelectShortcut = useEventCallback(
     (
-      newValue: TValue,
+      newValue: InferPickerValue<TIsRange>,
       changeImportance: PickerShortcutChangeImportance,
       shortcut: PickersShortcutsItemContext,
     ) =>
@@ -401,7 +400,7 @@ export const usePickerValue = <
   );
 
   const handleChangeFromField = useEventCallback(
-    (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
+    (newValue: InferPickerValue<TIsRange>, context: FieldChangeHandlerContext<TError>) =>
       updateDate({ name: 'setValueFromField', value: newValue, context }),
   );
 
@@ -415,7 +414,7 @@ export const usePickerValue = <
     onClose: handleClose,
   };
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
+  const fieldResponse: UsePickerValueFieldResponse<TIsRange, TError> = {
     value: dateState.draft,
     onChange: handleChangeFromField,
   };
@@ -425,14 +424,14 @@ export const usePickerValue = <
     [utils, valueManager, dateState.draft],
   );
 
-  const viewResponse: UsePickerValueViewsResponse<TValue> = {
+  const viewResponse: UsePickerValueViewsResponse<TIsRange> = {
     value: viewValue,
     onChange: handleChange,
     onClose: handleClose,
     open: isOpen,
   };
 
-  const isValid = (testedValue: TValue) => {
+  const isValid = (testedValue: InferPickerValue<TIsRange>) => {
     const error = validator({
       adapter,
       value: testedValue,
@@ -443,7 +442,7 @@ export const usePickerValue = <
     return !valueManager.hasError(error);
   };
 
-  const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
+  const layoutResponse: UsePickerValueLayoutResponse<TIsRange> = {
     ...actions,
     value: viewValue,
     onChange: handleChange,

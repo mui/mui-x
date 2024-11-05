@@ -16,15 +16,15 @@ const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testShortcuts,
 ];
 
-function innerDescribeValue<TValue, C extends PickerComponentFamily>(
+function innerDescribeValue<TIsRange extends boolean, C extends PickerComponentFamily>(
   ElementToTest: React.FunctionComponent<any>,
-  getOptions: () => DescribeValueOptions<C, TValue>,
+  getOptions: () => DescribeValueOptions<C, TIsRange>,
 ) {
   const options = getOptions();
   const { defaultProps, render, clock, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
+    props: BasePickerInputProps<TIsRange, any, any> & UsePickerValueNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);
@@ -68,19 +68,24 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(WrappedElementToTest, { ...options, renderWithProps });
+    const typedTestSuite = testSuite as DescribeValueTestSuite<TIsRange, any>;
+    typedTestSuite(WrappedElementToTest, { ...options, renderWithProps });
   });
 }
 
-type P<TValue, C extends PickerComponentFamily> = [
+type P<TIsRange extends boolean, C extends PickerComponentFamily> = [
   React.FunctionComponent,
-  () => DescribeValueOptions<C, TValue>,
+  () => DescribeValueOptions<C, TIsRange>,
 ];
 
 type DescribeValue = {
-  <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
-  skip: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
-  only: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+  <TIsRange extends boolean, C extends PickerComponentFamily>(...args: P<TIsRange, C>): void;
+  skip: <TIsRange extends boolean, C extends PickerComponentFamily>(
+    ...args: P<TIsRange, C>
+  ) => void;
+  only: <TIsRange extends boolean, C extends PickerComponentFamily>(
+    ...args: P<TIsRange, C>
+  ) => void;
 };
 
 /**

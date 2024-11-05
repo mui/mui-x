@@ -1,15 +1,14 @@
 import * as React from 'react';
 import type { UseFieldInternalProps } from '../hooks/useField';
-import { FieldSection, PickerOwnerState } from '../../models';
+import { PickerOwnerState } from '../../models';
 import type { ExportedUseClearableFieldProps } from '../../hooks/useClearableField';
 
 export interface BaseFieldProps<
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, TError>,
       'format'
     >,
     ExportedUseClearableFieldProps {

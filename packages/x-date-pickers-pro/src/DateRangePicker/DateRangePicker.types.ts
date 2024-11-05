@@ -1,5 +1,5 @@
 import { MakeRequired } from '@mui/x-internals/types';
-import { BaseDateValidationProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps } from '@mui/x-date-pickers/internals';
 import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DesktopDateRangePickerProps,
@@ -11,7 +11,7 @@ import {
   MobileDateRangePickerSlots,
   MobileDateRangePickerSlotProps,
 } from '../MobileDateRangePicker';
-import { DateRangeValidationError, RangeFieldSection, UseDateRangeFieldProps } from '../models';
+import { DateRangeValidationError, UseDateRangeFieldProps } from '../models';
 
 export interface DateRangePickerSlots
   extends DesktopDateRangePickerSlots,
@@ -50,4 +50,4 @@ export type DateRangePickerFieldProps<TEnableAccessibleFieldDOMStructure extends
     UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
   > &
-    BaseSingleInputFieldProps<PickerRangeValue, RangeFieldSection, false, DateRangeValidationError>;
+    BaseSingleInputFieldProps<true, true, DateRangeValidationError>;

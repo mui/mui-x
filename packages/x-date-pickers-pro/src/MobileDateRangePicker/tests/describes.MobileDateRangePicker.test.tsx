@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { screen, fireDiscreteEvent, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -45,7 +46,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileDateRangePicker, () => ({
+  describeValue<true, 'picker'>(MobileDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',
@@ -73,7 +74,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       expectFieldValueV7(endFieldRoot, expectedEndValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
-      let newValue: any[];
+      let newValue: DateRange<any>;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {

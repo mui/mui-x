@@ -11,14 +11,7 @@ import {
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
-import {
-  FieldSection,
-  BaseSingleInputFieldProps,
-  PickerValidDate,
-  FieldRef,
-  InferError,
-  PickerOwnerState,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldRef, InferError, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { PickersProvider } from '../../components/PickersProvider';
 
@@ -61,7 +54,7 @@ export const useMobilePicker = <
     localeText,
   } = props;
 
-  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<false>>(null);
 
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
@@ -74,7 +67,7 @@ export const useMobilePicker = <
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>({
+  } = usePicker<false, TView, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -90,8 +83,7 @@ export const useMobilePicker = <
     UseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
     Partial<
       BaseSingleInputFieldProps<
-        PickerValidDate | null,
-        FieldSection,
+        false,
         TEnableAccessibleFieldDOMStructure,
         InferError<TExternalProps>
       >

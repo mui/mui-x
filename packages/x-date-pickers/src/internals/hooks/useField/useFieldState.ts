@@ -22,23 +22,24 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import {
-  FieldSection,
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
   InferError,
+  InferFieldSection,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
+import { InferPickerValue } from '../../models';
 
-export interface UpdateSectionValueParams<TSection extends FieldSection> {
+export interface UpdateSectionValueParams<TIsRange extends boolean> {
   /**
    * The section on which we want to apply the new value.
    */
-  activeSection: TSection;
+  activeSection: InferFieldSection<TIsRange>;
   /**
    * Value to apply to the active section.
    */
@@ -49,37 +50,38 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<TValue, TSection extends FieldSection> {
-  state: UseFieldState<TValue, TSection>;
+export interface UseFieldStateResponse<TIsRange extends boolean> {
+  state: UseFieldState<TIsRange>;
   activeSectionIndex: number | null;
   parsedSelectedSections: FieldParsedSelectedSections;
   setSelectedSections: (sections: FieldSelectedSections) => void;
   clearValue: () => void;
   clearActiveSection: () => void;
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
+  updateSectionValue: (params: UpdateSectionValueParams<TIsRange>) => void;
   updateValueFromValueStr: (valueStr: string) => void;
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries;
-  getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
+  getSectionsFromValue: (
+    value: InferPickerValue<TIsRange>,
+    fallbackSections?: InferFieldSection<TIsRange>[] | null,
+  ) => InferFieldSection<TIsRange>[];
   localizedDigits: string[];
   timezone: PickersTimezone;
 }
 
 export const useFieldState = <
-  TValue,
-  TSection extends FieldSection,
+  TIsRange extends boolean,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, any>,
 >(
   params: UseFieldParams<
-    TValue,
-    TSection,
+    TIsRange,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
-): UseFieldStateResponse<TValue, TSection> => {
+): UseFieldStateResponse<TIsRange> => {
   const utils = useUtils();
   const translations = usePickersTranslations();
   const adapter = useLocalizationContext();
@@ -126,7 +128,10 @@ export const useFieldState = <
   );
 
   const getSectionsFromValue = React.useCallback(
-    (value: TValue, fallbackSections: TSection[] | null = null) =>
+    (
+      value: InferPickerValue<TIsRange>,
+      fallbackSections: InferFieldSection<TIsRange>[] | null = null,
+    ) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
         buildSectionsFromFormat({
           utils,
@@ -153,14 +158,13 @@ export const useFieldState = <
     ],
   );
 
-  const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
+  const [state, setState] = React.useState<UseFieldState<TIsRange>>(() => {
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
-    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
+    const stateWithoutReferenceDate: Omit<UseFieldState<TIsRange>, 'referenceValue'> = {
       sections,
       value: valueFromTheOutside,
-      referenceValue: valueManager.emptyValue,
       tempValueStrAndroid: null,
     };
 
@@ -203,7 +207,7 @@ export const useFieldState = <
     value,
     referenceValue,
     sections,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue' | 'sections'>) => {
+  }: Pick<UseFieldState<TIsRange>, 'value' | 'referenceValue' | 'sections'>) => {
     setState((prevState) => ({
       ...prevState,
       sections,
@@ -309,7 +313,7 @@ export const useFieldState = <
     activeSection,
     newSectionValue,
     shouldGoToNextSection,
-  }: UpdateSectionValueParams<TSection>) => {
+  }: UpdateSectionValueParams<TIsRange>) => {
     /**
      * 1. Decide which section should be focused
      */
@@ -325,7 +329,7 @@ export const useFieldState = <
     const newActiveDateSections = activeDateManager.getSections(newSections);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
-    let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
+    let values: Pick<UseFieldState<TIsRange>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
 
     /**

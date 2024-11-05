@@ -11,12 +11,7 @@ import {
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  PickerValidDate,
-  TimeValidationError,
-} from '../models';
+import { BaseSingleInputFieldProps, TimeValidationError } from '../models';
 import { UseTimeFieldProps } from '../TimeField';
 
 export interface TimePickerSlots
@@ -57,4 +52,4 @@ export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends bool
     UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
     'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
   > &
-    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, TimeValidationError>;
+    BaseSingleInputFieldProps<false, true, TimeValidationError>;

@@ -12,12 +12,7 @@ import {
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateTimeValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '../models';
+import { BaseSingleInputFieldProps, DateTimeValidationError } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots
@@ -72,4 +67,4 @@ export type DateTimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends 
     | keyof BaseDateValidationProps
     | keyof BaseTimeValidationProps
   > &
-    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateTimeValidationError>;
+    BaseSingleInputFieldProps<false, true, DateTimeValidationError>;

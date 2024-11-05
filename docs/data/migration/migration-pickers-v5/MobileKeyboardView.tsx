@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -22,7 +21,7 @@ import {
   DatePickerToolbarProps,
 } from '@mui/x-date-pickers/DatePicker';
 
-function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null, DateView>) {
+function LayoutWithKeyboardView(props: PickersLayoutProps<false, DateView>) {
   const { value, onChange } = props;
   const [showKeyboardView, setShowKeyboardView] = React.useState(false);
 

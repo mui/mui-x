@@ -9,7 +9,6 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersProvider,
-  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -25,7 +24,6 @@ import {
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -65,8 +63,8 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
-  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const startFieldRef = React.useRef<FieldRef<true>>(null);
+  const endFieldRef = React.useRef<FieldRef<true>>(null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const { rangePosition, onRangePositionChange } = useRangePosition(
@@ -84,13 +82,7 @@ export const useMobileRangePicker = <
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<
-    PickerRangeValue,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    MobileRangePickerAdditionalViewProps
-  >({
+  } = usePicker<true, TView, TExternalProps, MobileRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
     wrapperVariant: 'mobile',
@@ -159,7 +151,7 @@ export const useMobileRangePicker = <
     endFieldRef,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<true, TView> = {
     ...innerSlotProps,
     tabs: {
       ...innerSlotProps?.tabs,

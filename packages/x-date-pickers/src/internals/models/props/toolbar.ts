@@ -2,12 +2,15 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
+import { InferPickerValue } from '../value';
 
-export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedBaseToolbarProps {
+export interface BaseToolbarProps<
+  TIsRange extends boolean,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedBaseToolbarProps {
   isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
-  value: TValue;
+  onChange: (newValue: InferPickerValue<TIsRange>) => void;
+  value: InferPickerValue<TIsRange>;
   /**
    * Currently visible picker view.
    */
