@@ -70,6 +70,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-data-grid/editing-group',
+            title: 'Editing',
             children: [
               { pathname: '/x/react-data-grid/editing', title: 'Overview' },
               { pathname: '/x/react-data-grid/recipes-editing', title: 'Recipes' },
@@ -113,6 +114,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           {
             pathname: '/x/react-data-grid/row-grouping-group',
+            title: 'Row grouping',
             plan: 'premium',
             children: [
               { pathname: '/x/react-data-grid/row-grouping', title: 'Overview' },
