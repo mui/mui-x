@@ -504,11 +504,10 @@ export const useGridRowSelection = (
       // Example: A parent whose de-selected children are filtered out should now be selected
       const shouldReapplyPropagation =
         isNestedData &&
-        !sortModelUpdated &&
         props.rowSelectionPropagation?.parents &&
         Object.keys(selectionLookup).length > 0;
 
-      if (hasChanged || shouldReapplyPropagation) {
+      if (hasChanged || (shouldReapplyPropagation && !sortModelUpdated)) {
         const newSelection = Object.values(selectionLookup);
         if (shouldReapplyPropagation) {
           apiRef.current.selectRows(newSelection, true, true);
