@@ -339,8 +339,8 @@ export const useGridRowSelection = (
         }
         const currentLookup = selectedIdsLookupSelector(apiRef);
         if (
-          newSelection.length === Object.keys(currentLookup).length &&
-          newSelection.every((id) => currentLookup[id] === id)
+          newSelection.size === Object.keys(currentLookup).length &&
+          Array.from(newSelection).every((id) => currentLookup[id] === id)
         ) {
           return;
         }
