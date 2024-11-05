@@ -8,24 +8,21 @@ import {
   removeLocalizedDigits,
 } from './useField.utils';
 
-interface BuildSectionsFromFormatParams<TDate extends PickerValidDate> {
-  utils: MuiPickersAdapter<TDate>;
+interface BuildSectionsFromFormatParams {
+  utils: MuiPickersAdapter;
   format: string;
   formatDensity: 'dense' | 'spacious';
   isRtl: boolean;
   shouldRespectLeadingZeros: boolean;
   localeText: PickersLocaleText;
   localizedDigits: string[];
-  date: TDate | null;
+  date: PickerValidDate | null;
   enableAccessibleFieldDOMStructure: boolean;
 }
 
 type FormatEscapedParts = { start: number; end: number }[];
 
-const expandFormat = <TDate extends PickerValidDate>({
-  utils,
-  format,
-}: BuildSectionsFromFormatParams<TDate>) => {
+const expandFormat = ({ utils, format }: BuildSectionsFromFormatParams) => {
   // Expand the provided format
   let formatExpansionOverflow = 10;
   let prevFormat = format;
@@ -44,10 +41,10 @@ const expandFormat = <TDate extends PickerValidDate>({
   return nextFormat;
 };
 
-const getEscapedPartsFromFormat = <TDate extends PickerValidDate>({
+const getEscapedPartsFromFormat = ({
   utils,
   expandedFormat,
-}: BuildSectionsFromFormatParams<TDate> & { expandedFormat: string }) => {
+}: BuildSectionsFromFormatParams & { expandedFormat: string }) => {
   const escapedParts: FormatEscapedParts = [];
   const { start: startChar, end: endChar } = utils.escapedCharacters;
   const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
@@ -61,8 +58,8 @@ const getEscapedPartsFromFormat = <TDate extends PickerValidDate>({
   return escapedParts;
 };
 
-const getSectionPlaceholder = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+const getSectionPlaceholder = (
+  utils: MuiPickersAdapter,
   localeText: PickersLocaleText,
   sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   sectionFormat: string,
@@ -115,7 +112,7 @@ const getSectionPlaceholder = <TDate extends PickerValidDate>(
   }
 };
 
-const createSection = <TDate extends PickerValidDate>({
+const createSection = ({
   utils,
   date,
   shouldRespectLeadingZeros,
@@ -124,8 +121,8 @@ const createSection = <TDate extends PickerValidDate>({
   now,
   token,
   startSeparator,
-}: BuildSectionsFromFormatParams<TDate> & {
-  now: TDate;
+}: BuildSectionsFromFormatParams & {
+  now: PickerValidDate;
   token: string;
   startSeparator: string;
 }): FieldSection => {
@@ -186,8 +183,8 @@ const createSection = <TDate extends PickerValidDate>({
   };
 };
 
-const buildSections = <TDate extends PickerValidDate>(
-  params: BuildSectionsFromFormatParams<TDate> & {
+const buildSections = (
+  params: BuildSectionsFromFormatParams & {
     expandedFormat: string;
     escapedParts: FormatEscapedParts;
   },
@@ -273,11 +270,11 @@ const buildSections = <TDate extends PickerValidDate>(
   return sections;
 };
 
-const postProcessSections = <TDate extends PickerValidDate>({
+const postProcessSections = ({
   isRtl,
   formatDensity,
   sections,
-}: BuildSectionsFromFormatParams<TDate> & {
+}: BuildSectionsFromFormatParams & {
   sections: FieldSection[];
 }) => {
   return sections.map((section) => {
@@ -301,9 +298,7 @@ const postProcessSections = <TDate extends PickerValidDate>({
   });
 };
 
-export const buildSectionsFromFormat = <TDate extends PickerValidDate>(
-  params: BuildSectionsFromFormatParams<TDate>,
-) => {
+export const buildSectionsFromFormat = (params: BuildSectionsFromFormatParams) => {
   let expandedFormat = expandFormat(params);
   if (params.isRtl && params.enableAccessibleFieldDOMStructure) {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');

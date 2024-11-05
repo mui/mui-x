@@ -9,9 +9,10 @@ import {
   PickerViewsRendererProps,
   resolveDateTimeFormat,
   useUtils,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState, PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { PickersLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
@@ -36,7 +37,6 @@ import {
 } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -46,18 +46,16 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const rendererInterceptor = function rendererInterceptor<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
+  inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: PickerViewsRendererProps<
-    DateRange<TDate>,
+    PickerRangeValue,
     DateTimeRangePickerView,
     DefaultizedProps<
       Omit<
         UseDesktopRangePickerProps<
-          TDate,
           DateTimeRangePickerView,
           TEnableAccessibleFieldDOMStructure,
           any,
@@ -105,7 +103,7 @@ const rendererInterceptor = function rendererInterceptor<
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
           inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
-            DateRange<TDate>,
+            PickerRangeValue,
             DateTimeRangePickerView,
             any,
             {}
@@ -117,11 +115,8 @@ const rendererInterceptor = function rendererInterceptor<
   );
 };
 
-type DesktopDateRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -136,24 +131,22 @@ type DesktopDateRangePickerComponent = (<
  * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
  */
 const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    TDate,
-    DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
+  const viewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -208,7 +201,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
   };
 
   const { renderPicker } = useDesktopRangePicker<
-    TDate,
     DateTimeRangePickerView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -258,9 +250,9 @@ DesktopDateTimeRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -430,8 +422,7 @@ DesktopDateTimeRangePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -517,16 +508,14 @@ DesktopDateTimeRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

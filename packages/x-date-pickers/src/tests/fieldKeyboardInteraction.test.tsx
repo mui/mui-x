@@ -19,9 +19,9 @@ import 'moment/locale/fa';
 
 const testDate = '2018-05-15T09:35:10';
 
-function updateDate<TDate extends PickerValidDate>(
-  date: TDate,
-  adapter: MuiPickersAdapter<TDate>,
+function updateDate(
+  date: PickerValidDate,
+  adapter: MuiPickersAdapter,
   sectionType: FieldSectionType,
   diff: number,
 ) {
@@ -42,7 +42,7 @@ function updateDate<TDate extends PickerValidDate>(
     case 'meridiem':
       return adapter.setHours(date, (adapter.getHours(date) + 12 * diff) % 24);
     default:
-      return null;
+      throw new Error('Unsupported section type');
   }
 }
 
@@ -241,7 +241,7 @@ adapterToTest.forEach((adapterName) => {
       return valueStr;
     };
 
-    const testKeyPress = <TDate extends PickerValidDate>({
+    const testKeyPress = ({
       key,
       format,
       initialValue,
@@ -250,8 +250,8 @@ adapterToTest.forEach((adapterName) => {
     }: {
       key: string;
       format: string;
-      initialValue: TDate;
-      expectedValue: TDate;
+      initialValue: PickerValidDate;
+      expectedValue: PickerValidDate;
       sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
       const view = renderWithProps({

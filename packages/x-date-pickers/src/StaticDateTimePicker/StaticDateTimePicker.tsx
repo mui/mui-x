@@ -10,11 +10,11 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView, PickerValidDate } from '../models';
+import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../validation';
 
-type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
-  props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateTimePickerComponent = ((
+  props: StaticDateTimePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -27,19 +27,19 @@ type StaticDateTimePickerComponent = (<TDate extends PickerValidDate>(
  *
  * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
  */
-const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
-  TDate extends PickerValidDate,
->(inProps: StaticDateTimePickerProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker(
+  inProps: StaticDateTimePickerProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const defaultizedProps = useDateTimePickerDefaultizedProps<
-    TDate,
     DateOrTimeView,
-    StaticDateTimePickerProps<TDate>
+    StaticDateTimePickerProps
   >(inProps, 'MuiStaticDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
-  const viewRenderers: DateTimePickerViewRenderers<TDate, DateOrTimeView, any> = {
+  const viewRenderers: DateTimePickerViewRenderers<DateOrTimeView, any> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
@@ -70,7 +70,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -106,9 +106,9 @@ StaticDateTimePicker.propTypes = {
   className: PropTypes.string,
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -238,8 +238,7 @@ StaticDateTimePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -250,8 +249,7 @@ StaticDateTimePicker.propTypes = {
   onViewChange: PropTypes.func,
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
   onYearChange: PropTypes.func,
   /**
@@ -286,30 +284,26 @@ StaticDateTimePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,

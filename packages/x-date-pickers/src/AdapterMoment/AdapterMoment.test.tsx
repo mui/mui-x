@@ -2,7 +2,7 @@ import moment, { Moment } from 'moment';
 import momentTZ from 'moment-timezone';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -22,7 +22,7 @@ describe('<AdapterMoment />', () => {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     dateLibInstanceWithTimezoneSupport: momentTZ,
     setDefaultTimezone: momentTZ.tz.setDefault,
-    getLocaleFromDate: (value: Moment) => value.locale(),
+    getLocaleFromDate: (value: PickerValidDate) => (value as Moment).locale(),
     frenchLocale: 'fr',
   };
 
@@ -46,7 +46,7 @@ describe('<AdapterMoment />', () => {
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Moment;
 
       it('getWeekArray: week should start on Monday', () => {
         const result = adapter.getWeekArray(date);
@@ -64,7 +64,7 @@ describe('<AdapterMoment />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterMoment({ locale: 'ru' });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Moment;
 
       beforeEach(() => {
         moment.locale('ru');
@@ -117,7 +117,7 @@ describe('<AdapterMoment />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
