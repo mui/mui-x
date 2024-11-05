@@ -118,6 +118,7 @@ export type {
   DayValidationProps,
   DateTimeValidationProps,
 } from './models/validation';
+export type { PickerRangeValue } from './models/value';
 
 export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {

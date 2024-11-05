@@ -26,9 +26,9 @@ import {
 } from '../MonthCalendar/MonthCalendar.types';
 import { ExportedValidateDateProps } from '../validation/validateDate';
 
-export interface DateCalendarSlots<TDate extends PickerValidDate>
+export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
-    DayCalendarSlots<TDate>,
+    DayCalendarSlots,
     MonthCalendarSlots,
     YearCalendarSlots {
   /**
@@ -36,22 +36,22 @@ export interface DateCalendarSlots<TDate extends PickerValidDate>
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
    * @default PickersCalendarHeader
    */
-  calendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+  calendarHeader?: React.ElementType<PickersCalendarHeaderProps>;
 }
 
-export interface DateCalendarSlotProps<TDate extends PickerValidDate>
-  extends PickersCalendarHeaderSlotProps<TDate>,
-    DayCalendarSlotProps<TDate>,
+export interface DateCalendarSlotProps
+  extends PickersCalendarHeaderSlotProps,
+    DayCalendarSlotProps,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps>;
 }
 
-export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
-  extends ExportedDayCalendarProps<TDate>,
+export interface ExportedDateCalendarProps
+  extends ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
-    ExportedValidateDateProps<TDate>,
+    ExportedValidateDateProps,
     TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.
@@ -76,36 +76,34 @@ export interface ExportedDateCalendarProps<TDate extends PickerValidDate>
   renderLoading?: () => React.ReactNode;
   /**
    * Callback fired on year change.
-   * @template TDate
-   * @param {TDate} year The new year.
+   * @param {PickerValidDate} year The new year.
    */
-  onYearChange?: (year: TDate) => void;
+  onYearChange?: (year: PickerValidDate) => void;
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
-  onMonthChange?: (month: TDate) => void;
+  onMonthChange?: (month: PickerValidDate) => void;
 }
 
-export interface DateCalendarProps<TDate extends PickerValidDate>
-  extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
+export interface DateCalendarProps
+  extends ExportedDateCalendarProps,
+    ExportedUseViewsOptions<PickerValidDate | null, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.
    */
-  value?: TDate | null;
+  value?: PickerValidDate | null;
   /**
    * The default selected value.
    * Used when the component is not controlled.
    */
-  defaultValue?: TDate | null;
+  defaultValue?: PickerValidDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
    */
-  referenceDate?: TDate;
+  referenceDate?: PickerValidDate;
   className?: string;
   /**
    * Override or extend the styles applied to the component.
@@ -119,20 +117,20 @@ export interface DateCalendarProps<TDate extends PickerValidDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateCalendarSlots<TDate>;
+  slots?: DateCalendarSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateCalendarSlotProps<TDate>;
+  slotProps?: DateCalendarSlotProps;
 }
 
-export type DateCalendarDefaultizedProps<TDate extends PickerValidDate> = DefaultizedProps<
-  DateCalendarProps<TDate>,
+export type DateCalendarDefaultizedProps = DefaultizedProps<
+  DateCalendarProps,
   | 'views'
   | 'openTo'
   | 'loading'
   | 'reduceAnimations'
   | 'renderLoading'
-  | keyof BaseDateValidationProps<TDate>
+  | keyof BaseDateValidationProps
 >;

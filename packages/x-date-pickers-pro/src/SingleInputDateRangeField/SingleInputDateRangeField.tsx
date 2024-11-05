@@ -7,17 +7,13 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
@@ -32,10 +28,9 @@ type DateRangeFieldComponent = (<
  * - [SingleInputDateRangeField API](https://mui.com/x/api/single-input-date-range-field/)
  */
 const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -58,14 +53,13 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     additionalProps: {
       ref: inRef,
     },
-  }) as SingleInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useSingleInputDateRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
@@ -291,8 +285,7 @@ SingleInputDateRangeField.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
