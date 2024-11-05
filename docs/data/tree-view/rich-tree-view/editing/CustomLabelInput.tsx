@@ -5,17 +5,13 @@ import CheckIcon from '@mui/icons-material/Check';
 import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { TreeItem, TreeItemLabel, TreeItemProps } from '@mui/x-tree-view/TreeItem';
 import {
-  TreeItem2,
-  TreeItem2Label,
-  TreeItem2Props,
-} from '@mui/x-tree-view/TreeItem2';
-import {
-  UseTreeItem2LabelInputSlotOwnProps,
-  UseTreeItem2LabelSlotOwnProps,
-  useTreeItem2,
-} from '@mui/x-tree-view/useTreeItem2';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+  UseTreeItemLabelInputSlotOwnProps,
+  UseTreeItemLabelSlotOwnProps,
+  useTreeItem,
+} from '@mui/x-tree-view/useTreeItem';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
@@ -67,9 +63,9 @@ export const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
   },
 ];
 
-function Label({ children, ...other }: UseTreeItem2LabelSlotOwnProps) {
+function Label({ children, ...other }: UseTreeItemLabelSlotOwnProps) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       sx={{
         display: 'flex',
@@ -80,11 +76,11 @@ function Label({ children, ...other }: UseTreeItem2LabelSlotOwnProps) {
       }}
     >
       {children}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
-interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
+interface CustomLabelInputProps extends UseTreeItemLabelInputSlotOwnProps {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
   item: TreeViewBaseItem<ExtendedTreeItemProps>;
@@ -163,28 +159,28 @@ const LabelInput = React.forwardRef(function LabelInput(
   );
 });
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
-  props: TreeItem2Props,
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { interactions } = useTreeItem2Utils({
+  const { interactions } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
-  const { publicAPI } = useTreeItem2(props);
+  const { publicAPI } = useTreeItem(props);
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItemLabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (
+  const handleInputKeyDown: UseTreeItemLabelInputSlotOwnProps['onKeyDown'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{ label: Label, labelInput: LabelInput }}
@@ -206,7 +202,7 @@ export default function CustomLabelInput() {
     <Box sx={{ minHeight: 352, minWidth: 340 }}>
       <RichTreeView
         items={ITEMS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['1', '2']}

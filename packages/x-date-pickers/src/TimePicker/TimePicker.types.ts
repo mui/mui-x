@@ -1,10 +1,10 @@
+import { MakeRequired } from '@mui/x-internals/types';
 import {
   DesktopTimePickerProps,
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseTimeValidationProps } from '../internals/models/validation';
 import {
   MobileTimePickerProps,
@@ -31,7 +31,7 @@ export interface TimePickerSlotProps<
 
 export interface TimePickerProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 > extends DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
     Omit<
       MobileTimePickerProps<TDate, TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
@@ -61,9 +61,9 @@ export interface TimePickerProps<
  */
 export type TimePickerFieldProps<
   TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> = DefaultizedProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = MakeRequired<
   UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  'format' | 'timezone' | 'ampm' | keyof BaseTimeValidationProps
+  'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
 > &
   BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, TimeValidationError>;

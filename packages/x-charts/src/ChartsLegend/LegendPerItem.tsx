@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
 import { DrawingArea } from '../context/DrawingProvider';
@@ -12,7 +13,6 @@ import { useDrawingArea } from '../hooks/useDrawingArea';
 import { AnchorPosition, Direction, LegendPlacement } from './legend.types';
 import { ChartsLegendItem } from './ChartsLegendItem';
 import { ChartsLegendClasses } from './chartsLegendClasses';
-import { DefaultizedProps } from '../models/helpers';
 
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;

@@ -39,7 +39,7 @@ export const useLocalizationContext = <TDate extends PickerValidDate>() => {
         ...localization,
         localeText,
       }) as Omit<MuiPickersAdapterContextValue<TDate>, 'localeText'> & {
-        localeText: PickersLocaleText<TDate>;
+        localeText: PickersLocaleText;
       },
     [localization, localeText],
   );

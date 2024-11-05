@@ -228,16 +228,15 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
-    it('should set focus on the cell when clicking the checkbox', () => {
+    it('should set focus on the cell when clicking the checkbox', async () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 
-      // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
       fireUserEvent.mousePress(checkboxInput!);
 
-      expect(getActiveCell()).to.equal('0-0');
+      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -690,6 +689,27 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
+    // Related to https://github.com/mui/mui-x/issues/14964
+    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChangeSpy = spy();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          rowSelectionModel={[0, 1, 2]}
+          onRowSelectionModelChange={onRowSelectionModelChangeSpy}
+          checkboxSelection
+          {...data}
+        />,
+      );
+
+      setProps({
+        rows: data.rows.slice(0, 1),
+      });
+
+      expect(onRowSelectionModelChangeSpy.called).to.equal(true);
+    });
+
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
       const data = getBasicGridData(10, 2);
       const onRowSelectionModelChange = spy();
@@ -868,7 +888,7 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
-      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).not.to.throw();
     });
   });
 

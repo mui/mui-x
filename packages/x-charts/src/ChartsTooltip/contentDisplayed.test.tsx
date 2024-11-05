@@ -67,6 +67,7 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
       firePointerEvent(svg, 'pointermove', {
         clientX: 198,
         clientY: 60,
@@ -134,6 +135,7 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
       firePointerEvent(svg, 'pointermove', {
         clientX: 150,
         clientY: 60,
@@ -206,6 +208,7 @@ describe('ChartsTooltip', () => {
 
       fireEvent.pointerEnter(rectangles[0]);
 
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
       firePointerEvent(svg, 'pointermove', {
         clientX: 150,
         clientY: 60,
@@ -251,6 +254,7 @@ describe('ChartsTooltip', () => {
 
       fireEvent.pointerEnter(rectangles[0]);
 
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
       firePointerEvent(svg, 'pointermove', {
         clientX: 150,
         clientY: 60,
