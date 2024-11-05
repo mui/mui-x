@@ -9,29 +9,29 @@ import {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from '../internals/hooks/useStaticPicker';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 
-export interface StaticDatePickerSlots<TDate extends PickerValidDate>
-  extends BaseDatePickerSlots<TDate>,
-    UseStaticPickerSlots<TDate, DateView> {}
+export interface StaticDatePickerSlots
+  extends BaseDatePickerSlots,
+    UseStaticPickerSlots<DateView> {}
 
-export interface StaticDatePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDatePickerSlotProps<TDate>,
-    UseStaticPickerSlotProps<TDate, DateView> {}
+export interface StaticDatePickerSlotProps
+  extends BaseDatePickerSlotProps,
+    UseStaticPickerSlotProps<DateView> {}
 
-export interface StaticDatePickerProps<TDate extends PickerValidDate>
-  extends BaseDatePickerProps<TDate>,
+export interface StaticDatePickerProps
+  extends BaseDatePickerProps,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticDatePickerSlots<TDate>;
+  slots?: StaticDatePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDatePickerSlotProps<TDate>;
+  slotProps?: StaticDatePickerSlotProps;
   /**
    * Years rendered per row.
    * @default `4` when `displayStaticWrapperAs === 'desktop'`, `3` otherwise.

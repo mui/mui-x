@@ -11,7 +11,7 @@ packageName: '@mui/x-date-pickers'
 <p class="description">The Date and Time Pickers let you reorganize the layout.</p>
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Default layout structure
