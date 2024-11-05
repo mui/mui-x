@@ -265,24 +265,25 @@ export const datePickerExamples: PickersSubcomponentType = {
     },
     slots: ['root', 'monthButton'],
   },
-  TextField: {
+  PickersTextField: {
     examples: {
       customTheme: {
         type: 'info',
         comments:
-          'This approach would change the styles of all the TextField components in the application. Consider using a nested theme with this style wrapping your local picker component to isolate this override',
+          'This approach would change the styles of all the PickersTextField components in the application. Consider using a nested theme with this style wrapping your local picker component to isolate this override',
       },
       sxProp: {
         type: 'success',
         parentSlot: 'textField',
         current: true,
-        comments: 'You can apply the sx prop to the `TextField` via slotProps',
+        comments:
+          'You can apply the sx prop to the `PickersTextField` via slotProps',
       },
       styledComponents: {
         type: 'success',
         parentSlot: 'textField',
-        parentComponent: 'TextField',
-        comments: 'You can style the `TextField` component directly',
+        parentComponent: 'PickersTextField',
+        comments: 'You can style the `PickersTextField` component directly',
         current: true,
       },
     },
