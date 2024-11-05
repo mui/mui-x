@@ -15,21 +15,21 @@ export type PickerValidDate = keyof PickerValidDateLookup extends never
   ? any
   : PickerValidDateLookup[keyof PickerValidDateLookup];
 
-export interface PickerOwnerState<TValue> {
+export interface PickerOwnerState {
   /**
-   * The value currently displayed in the field and in the view.
+   * `true` if the value is currently empty.
    */
-  value: TValue;
+  isPickerValueEmpty: boolean;
   /**
    * `true` if the picker is open, `false` otherwise.
    */
-  open: boolean;
+  isPickerOpen: boolean;
   /**
    * `true` if the picker is disabled, `false` otherwise.
    */
-  disabled: boolean;
+  isPickerDisabled: boolean;
   /**
    * `true` if the picker is read-only, `false` otherwise.
    */
-  readOnly: boolean;
+  isPickerReadOnly: boolean;
 }

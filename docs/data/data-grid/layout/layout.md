@@ -41,6 +41,17 @@ You can predefine dimensions for the parent of the Data Grid.
 
 {{"demo": "FixedSizeGrid.js", "bg": "inline"}}
 
+## Overlay height
+
+When data grid has no content, overlays (such as
+["Loading"](/x/react-data-grid/overlays/#loading-overlay) or
+["No rows"](/x/react-data-grid/overlays/#no-rows-overlay))
+take the height of two rows by default.
+
+To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
+
+{{"demo": "GridOverlayHeight.js", "bg": "inline"}}
+
 ## Auto height
 
 :::error
@@ -51,17 +62,6 @@ The `autoHeight` prop enables the Data Grid to adjust its size based on its cont
 This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
-
-### Overlay height
-
-When `autoHeight` is enabled, grid overlays (such as
-["Loading"](/x/react-data-grid/overlays/#loading-overlay) or
-["No rows"](/x/react-data-grid/overlays/#no-rows-overlay))
-take the height of two rows by default.
-
-To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable.
-
-{{"demo": "AutoHeightOverlay.js", "bg": "inline"}}
 
 ## API
 

@@ -5,20 +5,16 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckIcon from '@mui/icons-material/Check';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { TreeItem, TreeItemLabel, TreeItemProps } from '@mui/x-tree-view/TreeItem';
+import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
 import {
-  TreeItem2,
-  TreeItem2Label,
-  TreeItem2Props,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
-import {
-  UseTreeItem2LabelInputSlotOwnProps,
-  UseTreeItem2LabelSlotOwnProps,
-} from '@mui/x-tree-view/useTreeItem2';
+  UseTreeItemLabelInputSlotOwnProps,
+  UseTreeItemLabelSlotOwnProps,
+} from '@mui/x-tree-view/useTreeItem';
 import { MUI_X_PRODUCTS } from './products';
 
-interface CustomLabelProps extends UseTreeItem2LabelSlotOwnProps {
+interface CustomLabelProps extends UseTreeItemLabelSlotOwnProps {
   editable: boolean;
   editing: boolean;
   toggleItemEditing: () => void;
@@ -32,7 +28,7 @@ function CustomLabel({
   ...other
 }: CustomLabelProps) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       editable={editable}
       sx={{
@@ -52,11 +48,11 @@ function CustomLabel({
           <EditOutlinedIcon fontSize="small" />
         </IconButton>
       )}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
-interface CustomLabelInputProps extends UseTreeItem2LabelInputSlotOwnProps {
+interface CustomLabelInputProps extends UseTreeItemLabelInputSlotOwnProps {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
   value: string;
@@ -68,7 +64,7 @@ function CustomLabelInput(props: Omit<CustomLabelInputProps, 'ref'>) {
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput {...other} value={value} />
+      <TreeItemLabelInput {...other} value={value} />
       <IconButton
         color="success"
         size="small"
@@ -85,33 +81,33 @@ function CustomLabelInput(props: Omit<CustomLabelInputProps, 'ref'>) {
   );
 }
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(
-  props: TreeItem2Props,
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(
+  props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { interactions, status } = useTreeItem2Utils({
+  const { interactions, status } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
 
-  const handleContentDoubleClick: UseTreeItem2LabelSlotOwnProps['onDoubleClick'] = (
+  const handleContentDoubleClick: UseTreeItemLabelSlotOwnProps['onDoubleClick'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleInputBlur: UseTreeItem2LabelInputSlotOwnProps['onBlur'] = (event) => {
+  const handleInputBlur: UseTreeItemLabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleInputKeyDown: UseTreeItem2LabelInputSlotOwnProps['onKeyDown'] = (
+  const handleInputKeyDown: UseTreeItemLabelInputSlotOwnProps['onKeyDown'] = (
     event,
   ) => {
     event.defaultMuiPrevented = true;
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{ label: CustomLabel, labelInput: CustomLabelInput }}
@@ -138,7 +134,7 @@ export default function EditWithIcons() {
     <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['grid', 'pickers']}

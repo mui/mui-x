@@ -5,9 +5,9 @@
     "autoFocus": { "type": { "name": "bool" } },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -65,7 +65,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onViewChange": {
       "type": { "name": "func" },
@@ -73,7 +76,7 @@
     },
     "onYearChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+      "signature": { "type": "function(year: PickerValidDate) => void", "describedArgs": ["year"] }
     },
     "openTo": {
       "type": {
@@ -104,7 +107,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate) => boolean",
+        "type": "function(day: PickerValidDate) => boolean",
         "describedArgs": ["day"],
         "returned": "boolean"
       }
@@ -112,7 +115,7 @@
     "shouldDisableMonth": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(month: TDate) => boolean",
+        "type": "function(month: PickerValidDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
       }
@@ -120,7 +123,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -128,7 +131,7 @@
     "shouldDisableYear": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(year: TDate) => boolean",
+        "type": "function(year: PickerValidDate) => boolean",
         "describedArgs": ["year"],
         "returned": "boolean"
       }

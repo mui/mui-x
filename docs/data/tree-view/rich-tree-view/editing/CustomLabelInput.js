@@ -5,9 +5,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
+import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
@@ -53,7 +53,7 @@ export const ITEMS = [
 
 function Label({ children, ...other }) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       sx={{
         display: 'flex',
@@ -64,7 +64,7 @@ function Label({ children, ...other }) {
       }}
     >
       {children}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
@@ -136,12 +136,12 @@ const LabelInput = React.forwardRef(function LabelInput(
   );
 });
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const { interactions } = useTreeItem2Utils({
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
+  const { interactions } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
-  const { publicAPI } = useTreeItem2(props);
+  const { publicAPI } = useTreeItem(props);
 
   const handleInputBlur = (event) => {
     event.defaultMuiPrevented = true;
@@ -152,7 +152,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{ label: Label, labelInput: LabelInput }}
@@ -174,7 +174,7 @@ export default function CustomLabelInput() {
     <Box sx={{ minHeight: 352, minWidth: 340 }}>
       <RichTreeView
         items={ITEMS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['1', '2']}

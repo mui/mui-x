@@ -13,7 +13,7 @@ This repository contains a collection of codemod scripts based for use with
 <!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@latest <codemod> <paths...>
+npx @mui/x-codemod@next <codemod> <paths...>
 
 Applies a `@mui/x-codemod` to the specified paths
 
@@ -29,8 +29,8 @@ Options:
   --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
-  npx @mui/x-codemod@latest v7.0.0/preset-safe src
-  npx @mui/x-codemod@latest v6.0.0/component-rename-prop src --
+  npx @mui/x-codemod@next v7.0.0/preset-safe src
+  npx @mui/x-codemod@next v6.0.0/component-rename-prop src --
   --component=DataGrid --from=prop --to=newProp
 ```
 
@@ -40,9 +40,9 @@ To pass more options directly to jscodeshift, use `--jscodeshift=...`. For examp
 
 ```bash
 // single option
-npx @mui/x-codemod@latest --jscodeshift=--run-in-band
+npx @mui/x-codemod@next --jscodeshift=--run-in-band
 // multiple options
-npx @mui/x-codemod@latest --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
+npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
@@ -53,7 +53,50 @@ Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
 ```bash
-npx @mui/x-codemod@latest <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
+```
+
+## v8.0.0
+
+### 🚀 `preset-safe` for v8.0.0
+
+A combination of all important transformers for migrating v7 to v8.
+⚠️ This codemod should be run only once.
+It runs codemods for both Data Grid and Date and Time Pickers packages.
+To run codemods for a specific package, refer to the respective section.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
+
+### Tree View codemods
+
+#### `preset-safe` for tree view v8.0.0
+
+The `preset-safe` codemods for tree view.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-tree-item-2`](#rename-tree-item-2)
+
+#### `rename-tree-item-2`
+
+Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or utils like `useTreeItem2` or `TreeItem2Icon`).
+
+```diff
+-import { TreeItem2 } from '@mui/x-tree-view';
++import { TreeItem } from '@mui/x-tree-view';
+
+-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
++import { TreeItem } from '@mui/x-tree-view/TreeItem';
 ```
 
 ## v7.0.0

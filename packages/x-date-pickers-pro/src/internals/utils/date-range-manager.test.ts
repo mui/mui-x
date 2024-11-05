@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../../models';
 
@@ -103,7 +104,7 @@ describe('date-range-manager', () => {
         expect(
           calculateRangeChange({
             utils: adapterToUse,
-            range: range as DateRange<Date>,
+            range: range as DateRange<PickerValidDate>,
             newDate,
             rangePosition,
             allowRangeFlip,
@@ -170,7 +171,7 @@ describe('date-range-manager', () => {
       expect(
         calculateRangePreview({
           utils: adapterToUse,
-          range: range as DateRange<Date>,
+          range: range as DateRange<PickerValidDate>,
           newDate,
           rangePosition,
         }),
