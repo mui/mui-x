@@ -14,8 +14,8 @@ function ServerSideLazyLoadingViewport() {
         const urlParams = new URLSearchParams({
           filterModel: JSON.stringify(params.filterModel),
           sortModel: JSON.stringify(params.sortModel),
-          firstRowToRender: `${params.start}`,
-          lastRowToRender: `${params.end}`,
+          start: `${params.start}`,
+          end: `${params.end}`,
         });
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,

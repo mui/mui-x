@@ -40,8 +40,8 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
           const urlParams = new URLSearchParams({
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
-            firstRowToRender: `${params.start}`,
-            lastRowToRender: `${params.end}`,
+            start: `${params.start}`,
+            end: `${params.end}`,
           });
 
           const getRowsResponse = await fetchRows(
@@ -119,7 +119,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       const initialSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(initialSearchParams.get('lastRowToRender')).to.equal('9');
+      expect(initialSearchParams.get('end')).to.equal('9');
 
       apiRef.current.scrollToIndexes({ rowIndex: 10 });
 
@@ -128,7 +128,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const beforeSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(beforeSortSearchParams.get('lastRowToRender')).to.not.equal('9');
+      expect(beforeSortSearchParams.get('end')).to.not.equal('9');
 
       apiRef.current.sortColumn(mockServer.columns[0].field, 'asc');
 
@@ -137,9 +137,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const afterSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      expect(afterSortSearchParams.get('lastRowToRender')).to.equal(
-        beforeSortSearchParams.get('lastRowToRender'),
-      );
+      expect(afterSortSearchParams.get('end')).to.equal(beforeSortSearchParams.get('end'));
     });
 
     it('should reset the scroll position when filter is applied', async () => {
@@ -155,7 +153,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeFilteringSearchParams.get('firstRowToRender')).to.not.equal('0');
+      expect(beforeFilteringSearchParams.get('start')).to.not.equal('0');
 
       apiRef.current.setFilterModel({
         items: [
@@ -173,7 +171,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
 
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is the end of the first page
-      expect(afterFilteringSearchParams.get('firstRowToRender')).to.equal('0');
+      expect(afterFilteringSearchParams.get('end')).to.equal('0');
     });
   });
 
@@ -222,13 +220,13 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeSortingSearchParams.get('lastRowToRender')).to.not.equal('9');
+      expect(beforeSortingSearchParams.get('end')).to.not.equal('9');
 
       apiRef.current.sortColumn(mockServer.columns[0].field, 'asc');
 
       const afterSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is the end of the first page
-      expect(afterSortingSearchParams.get('lastRowToRender')).to.equal('9');
+      expect(afterSortingSearchParams.get('end')).to.equal('9');
     });
 
     it('should reset the scroll position when filter is applied', async () => {
@@ -243,7 +241,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
 
       const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is not the first page anymore
-      expect(beforeFilteringSearchParams.get('lastRowToRender')).to.not.equal('9');
+      expect(beforeFilteringSearchParams.get('end')).to.not.equal('9');
 
       apiRef.current.setFilterModel({
         items: [
@@ -257,7 +255,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
 
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
       // last row is the end of the first page
-      expect(afterFilteringSearchParams.get('lastRowToRender')).to.equal('9');
+      expect(afterFilteringSearchParams.get('end')).to.equal('9');
     });
   });
 

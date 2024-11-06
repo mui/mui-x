@@ -40,8 +40,8 @@ export interface QueryOptions {
   pageSize?: number;
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
-  firstRowToRender?: number;
-  lastRowToRender?: number;
+  start?: number;
+  end?: number;
 }
 
 export interface ServerSideQueryOptions {
@@ -50,8 +50,8 @@ export interface ServerSideQueryOptions {
   groupKeys?: string[];
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
-  firstRowToRender?: number;
-  lastRowToRender?: number;
+  start?: number;
+  end?: number;
   groupFields?: string[];
 }
 
@@ -277,7 +277,7 @@ export const loadServerRows = (
   }
   const delay = randomInt(minDelay, maxDelay);
 
-  const { cursor, page = 0, pageSize, firstRowToRender, lastRowToRender } = queryOptions;
+  const { cursor, page = 0, pageSize, start, end } = queryOptions;
 
   let nextCursor;
   let firstRowIndex;
@@ -289,9 +289,9 @@ export const loadServerRows = (
   filteredRows = [...filteredRows].sort(rowComparator);
 
   const totalRowCount = filteredRows.length;
-  if (firstRowToRender !== undefined && lastRowToRender !== undefined) {
-    firstRowIndex = firstRowToRender;
-    lastRowIndex = lastRowToRender;
+  if (start !== undefined && end !== undefined) {
+    firstRowIndex = start;
+    lastRowIndex = end;
   } else if (!pageSize) {
     firstRowIndex = 0;
     lastRowIndex = filteredRows.length - 1;
