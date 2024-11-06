@@ -5,7 +5,14 @@ import { LocalizationProvider } from '../../LocalizationProvider';
 
 export const PickerContext = React.createContext<PickerContextValue | null>(null);
 
-export const PickerPrivateContext = React.createContext<PickerPrivateContextValue | null>(null);
+export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
+  ownerState: {
+    isPickerDisabled: false,
+    isPickerReadOnly: false,
+    isPickerValueEmpty: false,
+    isPickerOpen: false,
+  },
+});
 
 /**
  * Provides the context for the various parts of a picker component:
