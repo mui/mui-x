@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import CircularProgress from '@mui/material/CircularProgress';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import { alpha } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
@@ -347,7 +348,11 @@ export const TreeItem = React.forwardRef(function TreeItem(
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
-            <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            {status.loading ? (
+              <CircularProgress size="12px" sx={{ color: 'text.primary' }} thickness={6} />
+            ) : (
+              <TreeItemIcon status={status} slots={slots} slotProps={slotProps} />
+            )}
           </IconContainer>
           <Checkbox {...checkboxProps} />
           {status.editing ? <LabelInput {...labelInputProps} /> : <Label {...labelProps} />}

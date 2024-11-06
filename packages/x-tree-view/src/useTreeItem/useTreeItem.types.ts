@@ -132,6 +132,7 @@ export interface UseTreeItemStatus {
   disabled: boolean;
   editing: boolean;
   editable: boolean;
+  loading: boolean;
 }
 
 export interface UseTreeItemReturnValue<

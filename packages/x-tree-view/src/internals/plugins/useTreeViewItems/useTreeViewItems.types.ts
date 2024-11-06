@@ -90,7 +90,9 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
-  addItems: ({ items, parentId, depth, getChildrenCount }: AddItemsParams<R>) => void;
+  addItems: (args: AddItemsParams<R>) => void;
+  isTreeViewLoading: boolean;
+  setTreeViewLoading: (loading: boolean) => void;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -156,6 +158,7 @@ export interface UseTreeViewItemsState<R extends {}> {
     itemMap: TreeViewItemMap<R>;
     itemOrderedChildrenIds: { [parentItemId: string]: string[] };
     itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
+    loading: boolean;
   };
 }
 

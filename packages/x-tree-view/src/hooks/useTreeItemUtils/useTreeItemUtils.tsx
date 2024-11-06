@@ -6,6 +6,7 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
+import { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
 import {
   UseTreeViewLabelSignature,
   useTreeViewLabel,
@@ -13,7 +14,6 @@ import {
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { TreeViewPublicAPI } from '../../internals/models';
-import { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -94,6 +94,7 @@ export const useTreeItemUtils = <
     disabled: instance.isItemDisabled(itemId),
     editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
+    loading: instance.isTreeItemLoading(itemId),
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -106,7 +107,7 @@ export const useTreeItemUtils = <
     }
 
     if (lazyLoading && !status.expanded) {
-      instance.fetchItems(itemId);
+      instance.fetchItems([itemId]);
     }
 
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);

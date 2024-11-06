@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
@@ -10,7 +11,6 @@ import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
-import { get } from 'http';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -20,7 +20,7 @@ interface UpdateNodesStateParameters
   // not sure where to put these
   initialDepth?: number;
   initialParentId?: string | null;
-  getChildrenCount: (item: TreeViewBaseItem) => number;
+  getChildrenCount?: (item: TreeViewBaseItem) => number;
 }
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -92,17 +92,15 @@ const updateItemsState = ({
 
     itemMap[id] = item;
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
-    console.log('parentIdWithDefault', parentIdWithDefault);
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
     }
     itemOrderedChildrenIds[parentIdWithDefault].push(id);
 
-    // lazyLoadMark
     item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
-  items.forEach((item) => processItem(item, initialDepth, initialParentId));
+  items?.forEach((item) => processItem(item, initialDepth, initialParentId));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
@@ -133,6 +131,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
+
+  const isTreeViewLoading = React.useMemo(
+    () => state.items.loading || false,
+    [state.items.loading],
+  );
+  const setTreeViewLoading = (isLoading) => {
+    setState((prevState) => ({ ...prevState, items: { ...prevState.items, loading: isLoading } }));
+  };
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
@@ -230,7 +236,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       });
 
       setState((prevState) => {
-        let newItems = {};
+        let newItems;
         if (parentId) {
           newItems = {
             itemMap: prevState.items.itemMap,
@@ -252,7 +258,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
             itemChildrenIndexes: newState.itemChildrenIndexes,
           };
         }
-
+        Object.values(prevState.items.itemMetaMap).forEach((item) => {
+          if (!newState.itemMetaMap[item.id]) {
+            publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+          }
+        });
         console.log('newState', newItems);
 
         return { ...prevState, items: newItems };
@@ -334,6 +344,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
       addItems,
+      isTreeViewLoading,
+      setTreeViewLoading,
     },
     contextValue: {
       items: {
@@ -346,12 +358,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 };
 
 useTreeViewItems.getInitialState = (params) => ({
-  items: updateItemsState({
-    items: params.items,
-    isItemDisabled: params.isItemDisabled,
-    getItemId: params.getItemId,
-    getItemLabel: params.getItemLabel,
-  }),
+  items: {
+    ...updateItemsState({
+      items: params.items,
+      isItemDisabled: params.isItemDisabled,
+      getItemId: params.getItemId,
+      getItemLabel: params.getItemLabel,
+    }),
+    loading: false,
+  },
 });
 
 useTreeViewItems.getDefaultizedParams = ({ params }) => ({
@@ -361,6 +376,9 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
 });
 
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
+  if (instance.isTreeViewLoading) {
+    return <Typography>Loading...</Typography>;
+  }
   return (
     <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
       {children}

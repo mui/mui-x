@@ -22,6 +22,11 @@ export interface UseTreeViewLazyLoadingPublicAPI {}
 export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPublicAPI {
   fetchItems: (parentIds?: TreeViewItemId[]) => void;
   fetchItemChildren: (id: TreeViewItemId) => void;
+  isLazyLoadingEnabled: boolean;
+  isTreeItemLoading: (itemId: TreeViewItemId) => boolean;
+  setDataSourceLoading: (itemId: TreeViewItemId, isLoading: boolean) => void;
+  setDataSourceError: (itemId: TreeViewItemId, error: Error | null) => void;
+  getTreeItemError: (itemId: TreeViewItemId) => Error | null;
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {
@@ -37,7 +42,12 @@ interface UseTreeViewLazyLoadingContextValue {
   lazyLoading: boolean;
 }
 
-export interface UseTreeViewLazyLoadingState {}
+export interface UseTreeViewLazyLoadingState {
+  dataSource: {
+    loading: Record<TreeViewItemId, boolean>;
+    errors: Record<TreeViewItemId, any>;
+  };
+}
 export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   params: UseTreeViewLazyLoadingParameters<any>;
   defaultizedParams: UseTreeViewLazyLoadingDefaultizedParameters<any>;
