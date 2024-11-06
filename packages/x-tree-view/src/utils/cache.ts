@@ -1,4 +1,4 @@
-import { TreeViewItemMeta } from '../../models';
+import { TreeViewItemMeta } from '../internals/models';
 
 type TreeViewDataSourceCacheDefaultConfig = {
   /**

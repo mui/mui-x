@@ -3,9 +3,9 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { warnOnce } from '@mui/x-internals/warning';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
-import { TreeViewDataSourceCache, TreeViewDataSourceCacheDefault } from './cache';
 import { NestedDataManager } from './utils';
 import { TreeViewItemId } from '../../../models';
+import { TreeViewDataSourceCache, TreeViewDataSourceCacheDefault } from '../../../utils';
 
 const INITIAL_STATE = {
   loading: {},
@@ -135,7 +135,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.addItems({ items: getTreeItemsResponse, depth: 0, getChildrenCount });
       } catch (error) {
         // set the items to empty
-        instance.removeChildren();
+        instance.addItems({ items: [], depth: 0, getChildrenCount });
       } finally {
         // set loading state
         instance.setTreeViewLoading(false);
@@ -189,16 +189,15 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
         // set caching
         cache.set(id, getTreeItemsResponse);
-
         // update the items in the state -> need to write a method for this in useTreeViewItems
         instance.addItems({ items: getTreeItemsResponse, depth, parentId: id, getChildrenCount });
       } catch (error) {
         const childrenFetchError = error as Error;
         instance.removeChildren(id);
-
+        console.log('error when fetching children', id, childrenFetchError);
+        instance.setItemExpansion(null, id, false);
         // handle errors here
         instance.setDataSourceError(id, childrenFetchError);
-        instance.setItemExpansion(null, id, false);
       } finally {
         // unset loading
         instance.setDataSourceLoading(id, false);
