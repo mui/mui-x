@@ -6,7 +6,7 @@ import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 
-export interface PickersYearOwnerState extends PickerOwnerState {
+export interface PickerYearOwnerState extends PickerOwnerState {
   isYearSelected: boolean;
   isYearDisabled: boolean;
 }
@@ -23,7 +23,7 @@ export interface YearCalendarSlotProps {
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersYearOwnerState
+    PickerYearOwnerState
   >;
 }
 

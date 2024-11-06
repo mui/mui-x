@@ -43,10 +43,10 @@ export interface DayCalendarSlots {
 }
 
 export interface DayCalendarSlotProps {
-  day?: SlotComponentPropsFromProps<PickersDayProps, {}, PickersDayOwnerState>;
+  day?: SlotComponentPropsFromProps<PickersDayProps, {}, PickerDayOwnerState>;
 }
 
-export interface PickersDayOwnerState extends PickerOwnerState {
+export interface PickerDayOwnerState extends PickerOwnerState {
   isDaySelected: boolean;
   isDayDisabled: boolean;
   day: PickerValidDate;

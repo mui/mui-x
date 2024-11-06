@@ -12,7 +12,7 @@ import {
 import {
   MonthCalendarSlotProps,
   MonthCalendarSlots,
-  PickersMonthOwnerState,
+  PickerMonthOwnerState,
 } from './MonthCalendar.types';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
@@ -41,7 +41,7 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
 
 const useUtilityClasses = (
   classes: Partial<PickersMonthClasses> | undefined,
-  ownerState: PickersMonthOwnerState,
+  ownerState: PickerMonthOwnerState,
 ) => {
   const slots = {
     root: ['root'],
@@ -60,7 +60,7 @@ const PickersMonthRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
 })<{
-  ownerState: PickersMonthOwnerState;
+  ownerState: PickerMonthOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -78,7 +78,7 @@ const MonthCalendarButton = styled('button', {
     { [`&.${pickersMonthClasses.selected}`]: styles.selected },
   ],
 })<{
-  ownerState?: PickersMonthOwnerState;
+  ownerState?: PickerMonthOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -147,9 +147,9 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
-  const ownerState: PickersMonthOwnerState = {
-    ...pickersOwnerState,
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const ownerState: PickerMonthOwnerState = {
+    ...pickerOwnerState,
     isMonthDisabled: disabled,
     isMonthSelected: selected,
   };

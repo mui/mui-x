@@ -10,7 +10,7 @@ import {
   PickersYearClasses,
 } from './pickersYearClasses';
 import {
-  PickersYearOwnerState,
+  PickerYearOwnerState,
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
@@ -41,7 +41,7 @@ export interface PickersYearProps extends ExportedPickersYearProps {
 
 const useUtilityClasses = (
   classes: Partial<PickersYearClasses> | undefined,
-  ownerState: PickersYearOwnerState,
+  ownerState: PickerYearOwnerState,
 ) => {
   const slots = {
     root: ['root'],
@@ -142,9 +142,9 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
-  const ownerState: PickersYearOwnerState = {
-    ...pickersOwnerState,
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const ownerState: PickerYearOwnerState = {
+    ...pickerOwnerState,
     isYearDisabled: disabled,
     isYearSelected: selected,
   };

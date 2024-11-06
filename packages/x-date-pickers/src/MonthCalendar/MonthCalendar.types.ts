@@ -6,7 +6,7 @@ import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 
-export interface PickersMonthOwnerState extends PickerOwnerState {
+export interface PickerMonthOwnerState extends PickerOwnerState {
   isMonthSelected: boolean;
   isMonthDisabled: boolean;
 }
@@ -23,7 +23,7 @@ export interface MonthCalendarSlotProps {
   monthButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersMonthOwnerState
+    PickerMonthOwnerState
   >;
 }
 
