@@ -9,7 +9,7 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
@@ -259,7 +259,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const isDesktop = toolbarVariant === 'desktop';
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(ownerState);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 

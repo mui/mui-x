@@ -6,7 +6,7 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
@@ -38,7 +38,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers

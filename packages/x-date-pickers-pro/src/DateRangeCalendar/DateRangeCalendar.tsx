@@ -26,7 +26,7 @@ import {
   useControlledValueWithTimezone,
   useViews,
   PickerRangeValue,
-  usePickersPrivateContext,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -305,7 +305,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     timezone,
   });
 
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
   const ownerState: DateRangeCalendarOwnerState = {
     ...pickersOwnerState,
     isDraggingDay: isDragging,

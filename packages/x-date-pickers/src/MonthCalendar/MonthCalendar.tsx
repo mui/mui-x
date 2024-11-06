@@ -20,7 +20,7 @@ import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReference
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) => {
   const slots = {
@@ -121,7 +121,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   const now = useNow(timezone);
   const isRtl = useRtl();
   const utils = useUtils();
-  const { ownerState } = usePickersPrivateContext();
+  const { ownerState } = usePickerPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>

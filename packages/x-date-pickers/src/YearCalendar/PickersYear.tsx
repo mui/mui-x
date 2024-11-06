@@ -14,7 +14,7 @@ import {
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../models/pickers';
 
 export interface ExportedPickersYearProps {
@@ -142,7 +142,7 @@ export const PickersYear = React.memo(function PickersYear(inProps: PickersYearP
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const ownerState: PickerYearOwnerState = {
     ...pickerOwnerState,
     isYearDisabled: disabled,
