@@ -80,7 +80,7 @@ commands:
             pnpm --version
       - run:
           name: Install js dependencies
-          command: pnpm install
+          command: pnpm install --frozen-lockfile
 
       - run:
           name: Resolve React version
@@ -145,10 +145,10 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
+          command: pnpm vitest --project "jsdom/*" --coverage --pool=forks
           environment:
-            VITEST_MAX_THREADS: 2
-            VITEST_MIN_THREADS: 1
+            VITEST_MAX_FORKS: 2
+            VITEST_MIN_FORKS: 1
       - run:
           name: Check coverage generated
           command: |
@@ -266,18 +266,19 @@ jobs:
 
   test_browser_vitest:
     <<: *default-job
-    docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
     steps:
       - checkout
       - install_js:
           browsers: true
       - run:
+          name: Install Playwright Browsers
+          command: pnpm playwright install --with-deps
+      - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --project "browser/*" --pool=threads
+          command: pnpm vitest --project "browser/*" --pool=forks
           environment:
-            VITEST_MAX_THREADS: 2
-            VITEST_MIN_THREADS: 1
+            VITEST_MAX_FORKS: 2
+            VITEST_MIN_FORKS: 1
 
   test_types:
     <<: *default-job
