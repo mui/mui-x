@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartDataProvider } from '@mui/x-charts/context/ChartDataProvider';
 
 describe('<ChartDataProvider />', () => {
   const { render } = createRenderer();

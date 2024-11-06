@@ -1,5 +1,5 @@
 'use client';
-import { ChartDataProviderProps } from '../ChartDataProvider';
+import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
 

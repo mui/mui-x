@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { CartesianProviderProps } from '../context/CartesianProvider';
-import type { SeriesProviderProps } from '../context/SeriesProvider';
-import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+import type { DrawingProviderProps } from '../DrawingProvider';
+import type { CartesianProviderProps } from '../CartesianProvider';
+import type { SeriesProviderProps } from '../SeriesProvider';
+import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { HighlightedProviderProps } from '../context';
-import { ChartsSurfaceProps } from '../ChartsSurface';
+import { HighlightedProviderProps } from '..';
+import { ChartsSurfaceProps } from '../../ChartsSurface';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
-import { PluginProviderProps } from '../context/PluginProvider';
-import { AnimationProviderProps } from '../context/AnimationProvider';
+import { PluginProviderProps } from '../PluginProvider';
+import { AnimationProviderProps } from '../AnimationProvider';
 
 export const useChartDataProviderProps = (
   props: ChartDataProviderProps,

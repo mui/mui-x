@@ -11,8 +11,8 @@ export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
-export { useChartContainerProps as useResponsiveChartContainerProps } from '../ChartContainer/useChartContainerProps';
-export { useChartDataProviderProps as useChartContainerProps } from '../ChartDataProvider/useChartDataProviderProps';
+export { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+export { useChartDataProviderProps } from '../context/ChartDataProvider/useChartDataProviderProps';
 
 // utils
 export * from './defaultizeValueFormatter';

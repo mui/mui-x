@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
+import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
 

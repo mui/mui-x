@@ -2,22 +2,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
-import { InteractionProvider } from '../context/InteractionProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { CartesianProvider, CartesianProviderProps } from '../context/CartesianProvider';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { DrawingProvider, DrawingProviderProps } from '../DrawingProvider';
+import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
+import { InteractionProvider } from '../InteractionProvider';
+import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
+import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
+import { ChartsAxesGradients } from '../../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
   HighlightedProviderProps,
   ZAxisContextProvider,
   ZAxisContextProviderProps,
-} from '../context';
-import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
+} from '..';
+import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
+import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
 
 export type ChartDataProviderProps = Omit<
   ChartsSurfaceProps &
