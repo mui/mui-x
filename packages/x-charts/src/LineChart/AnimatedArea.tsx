@@ -45,7 +45,7 @@ function AnimatedArea(props: AnimatedAreaProps) {
         <animated.path
           d={style.value.to(interpolator)}
           fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
-          filter="brightness(120%)"
+          filter={ownerState.gradientId ? undefined : 'brightness(120%)'}
           stroke="none"
           {...other}
         />
