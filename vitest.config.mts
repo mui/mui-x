@@ -57,5 +57,10 @@ export default defineConfig({
     env: {
       MUI_VITEST: 'true',
     },
+    poolOptions: {
+      threads: {
+        useAtomics: true,
+      },
+    },
   },
 });
