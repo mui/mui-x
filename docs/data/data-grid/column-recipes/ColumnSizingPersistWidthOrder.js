@@ -14,9 +14,41 @@ const rows = [
   },
 ];
 
+export default function ColumnSizingPersistWidthOrder() {
+  const apiRef = useGridApiRef();
+  const [index, setIndex] = React.useState(0);
+  const inputColumns = React.useMemo(
+    () => [
+      { field: 'id' },
+      { field: 'username', width: 200, key: index },
+      { field: 'age', disableReorder: true },
+    ],
+    [index],
+  );
+
+  const columnsState = useColumnsState(apiRef, inputColumns);
+
+  return (
+    <div style={{ width: '100%' }}>
+      <Button onClick={() => setIndex((prev) => prev + 1)}>
+        Update columns reference
+      </Button>
+      <div style={{ height: 250 }}>
+        <DataGridPro
+          apiRef={apiRef}
+          columns={columnsState.columns}
+          onColumnWidthChange={columnsState.onColumnWidthChange}
+          onColumnOrderChange={columnsState.onColumnOrderChange}
+          rows={rows}
+        />
+      </div>
+    </div>
+  );
+}
+
 const useColumnsState = (apiRef, columns) => {
   const [widths, setWidths] = React.useState({});
-  const [orderedFields, setOrderedFields] = React.useState(
+  const [orderedFields, setOrderedFields] = React.useState(() =>
     columns.map((column) => column.field),
   );
 
@@ -53,35 +85,3 @@ const useColumnsState = (apiRef, columns) => {
 
   return { columns: computedColumns, onColumnWidthChange, onColumnOrderChange };
 };
-
-export default function ColumnSizingPersistWidthOrder() {
-  const apiRef = useGridApiRef();
-  const [index, setIndex] = React.useState(0);
-  const inputColumns = React.useMemo(
-    () => [
-      { field: 'id' },
-      { field: 'username', width: 200, key: index },
-      { field: 'age', disableReorder: true },
-    ],
-    [index],
-  );
-
-  const columnsState = useColumnsState(apiRef, inputColumns);
-
-  return (
-    <div style={{ width: '100%' }}>
-      <Button onClick={() => setIndex((prev) => prev + 1)}>
-        Update columns reference
-      </Button>
-      <div style={{ height: 250 }}>
-        <DataGridPro
-          apiRef={apiRef}
-          columns={columnsState.columns}
-          onColumnWidthChange={columnsState.onColumnWidthChange}
-          onColumnOrderChange={columnsState.onColumnOrderChange}
-          rows={rows}
-        />
-      </div>
-    </div>
-  );
-}
