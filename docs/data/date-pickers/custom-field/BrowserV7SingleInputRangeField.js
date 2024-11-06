@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField, usePickersContext } from '@mui/x-date-pickers/hooks';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -86,7 +86,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...other } = props;
 
-  const pickersContext = usePickersContext();
+  const pickersContext = usePickerContext();
   const handleTogglePicker = (event) => {
     if (pickersContext.open) {
       pickersContext.onClose(event);

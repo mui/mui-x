@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
 import { DatePicker, DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
-import { useParsedFormat, usePickersContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { useParsedFormat, usePickerContext, useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function ButtonDateField(props: DatePickerFieldProps) {
@@ -13,7 +13,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
   const { InputProps, slotProps, slots, ownerState, label, focused, name, ...other } =
     forwardedProps;
 
-  const pickersContext = usePickersContext();
+  const pickersContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({

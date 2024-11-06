@@ -20,7 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField, usePickersContext } from '@mui/x-date-pickers/hooks';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
 
@@ -71,7 +71,7 @@ const JoyField = React.forwardRef((props, ref) => {
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...other } = props;
 
-  const pickersContext = usePickersContext();
+  const pickersContext = usePickerContext();
   const handleTogglePicker = (event) => {
     if (pickersContext.open) {
       pickersContext.onClose(event);

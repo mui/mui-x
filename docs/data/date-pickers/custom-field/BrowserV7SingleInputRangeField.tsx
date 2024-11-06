@@ -13,7 +13,7 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField, usePickersContext } from '@mui/x-date-pickers/hooks';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
 import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
@@ -114,7 +114,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...other } = props;
 
-    const pickersContext = usePickersContext();
+    const pickersContext = usePickerContext();
     const handleTogglePicker = (event: React.UIEvent) => {
       if (pickersContext.open) {
         pickersContext.onClose(event);
