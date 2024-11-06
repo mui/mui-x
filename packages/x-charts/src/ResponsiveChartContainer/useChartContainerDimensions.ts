@@ -1,5 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
 'use client';
+/* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
