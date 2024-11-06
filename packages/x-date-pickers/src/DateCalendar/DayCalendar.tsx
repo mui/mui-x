@@ -29,7 +29,9 @@ import {
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { PickerValidDate, TimezoneProps } from '../models';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { DateCalendarClasses } from './dateCalendarClasses';
 
 export interface DayCalendarSlots {
   /**
@@ -41,11 +43,13 @@ export interface DayCalendarSlots {
 }
 
 export interface DayCalendarSlotProps {
-  day?: SlotComponentPropsFromProps<
-    PickersDayProps,
-    {},
-    DayCalendarProps & { day: PickerValidDate; selected: boolean }
-  >;
+  day?: SlotComponentPropsFromProps<PickersDayProps, {}, PickerDayOwnerState>;
+}
+
+export interface PickerDayOwnerState extends PickerOwnerState {
+  isDaySelected: boolean;
+  isDayDisabled: boolean;
+  day: PickerValidDate;
 }
 
 export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
@@ -119,8 +123,7 @@ export interface DayCalendarProps
   slotProps?: DayCalendarSlotProps;
 }
 
-const useUtilityClasses = (ownerState: DayCalendarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     header: ['header'],
@@ -266,10 +269,16 @@ function WrappedDay({
 
   const utils = useUtils();
   const now = useNow(timezone);
+  const { ownerState } = usePickersPrivateContext();
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
+
+  const isDisabled = React.useMemo(
+    () => disabled || isDateDisabled(day),
+    [disabled, isDateDisabled, day],
+  );
 
   const Day = slots?.day ?? PickersDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
@@ -285,13 +294,8 @@ function WrappedDay({
       'data-timestamp': utils.toJsDate(day).valueOf(),
       ...other,
     },
-    ownerState: { ...parentProps, day, selected: isSelected },
+    ownerState: { ...ownerState, day, isDayDisabled: isDisabled, isDaySelected: isSelected },
   });
-
-  const isDisabled = React.useMemo(
-    () => disabled || isDateDisabled(day),
-    [disabled, isDateDisabled, day],
-  );
 
   const outsideCurrentMonth = React.useMemo(
     () => utils.getMonth(day) !== currentMonthNumber,
@@ -342,6 +346,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
   const {
     onFocusedDayChange,
     className,
+    classes: classesProp,
     currentMonth,
     selectedDays,
     focusedDay,
@@ -371,7 +376,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
   } = props;
 
   const now = useNow(timezone);
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(classesProp);
   const isRtl = useRtl();
 
   const isDateDisabled = useIsDateDisabled({

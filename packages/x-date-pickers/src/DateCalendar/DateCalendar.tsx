@@ -25,15 +25,15 @@ import {
 } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { useDefaultReduceAnimations } from '../internals/hooks/useDefaultReduceAnimations';
-import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
-const useUtilityClasses = (ownerState: DateCalendarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     viewTransitionContainer: ['viewTransitionContainer'],
@@ -73,7 +73,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   height: VIEW_HEIGHT,
@@ -83,7 +83,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
   slot: 'ViewTransitionContainer',
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
-})<{ ownerState: DateCalendarProps }>({});
+})<{ ownerState: PickerOwnerState }>({});
 
 type DateCalendarComponent = ((
   props: DateCalendarProps & React.RefAttributes<HTMLDivElement>,
@@ -105,6 +105,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
+  const { ownerState } = usePickersPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
@@ -127,6 +128,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     views,
     openTo,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     minDate,
@@ -217,7 +219,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
       timezone,
       labelId: gridLabelId,
     },
-    ownerState: props,
+    ownerState,
   });
 
   const handleDateMonthChange = useEventCallback((newDate: PickerValidDate) => {
@@ -295,8 +297,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     }
   }, [value]); // eslint-disable-line
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const baseDateValidationProps: Required<BaseDateValidationProps> = {
     disablePast,

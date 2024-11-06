@@ -163,6 +163,7 @@
   { "name": "MultiSectionDigitalClockSlots", "kind": "Interface" },
   { "name": "OnErrorProps", "kind": "Interface" },
   { "name": "PickerChangeHandlerContext", "kind": "Interface" },
+  { "name": "PickerDayOwnerState", "kind": "Interface" },
   { "name": "PickerOwnerState", "kind": "Interface" },
   { "name": "PickersActionBar", "kind": "Function" },
   { "name": "PickersActionBarAction", "kind": "TypeAlias" },

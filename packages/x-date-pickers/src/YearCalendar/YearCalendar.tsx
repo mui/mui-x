@@ -13,18 +13,17 @@ import {
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { getYearCalendarUtilityClass } from './yearCalendarClasses';
+import { getYearCalendarUtilityClass, YearCalendarClasses } from './yearCalendarClasses';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
-const useUtilityClasses = (ownerState: YearCalendarProps) => {
-  const { classes } = ownerState;
-
+const useUtilityClasses = (classes: Partial<YearCalendarClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -60,7 +59,7 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: YearCalendarProps }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
@@ -95,6 +94,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   const {
     autoFocus,
     className,
+    classes: classesProp,
     value: valueProp,
     defaultValue,
     referenceDate: referenceDateProp,
@@ -131,6 +131,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   const now = useNow(timezone);
   const isRtl = useRtl();
   const utils = useUtils();
+  const { ownerState } = usePickersPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>
@@ -145,8 +146,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {

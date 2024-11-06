@@ -9,7 +9,12 @@ import {
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
-import { MonthCalendarSlotProps, MonthCalendarSlots } from './MonthCalendar.types';
+import {
+  MonthCalendarSlotProps,
+  MonthCalendarSlots,
+  PickerMonthOwnerState,
+} from './MonthCalendar.types';
+import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;
@@ -34,12 +39,17 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
   slotProps?: MonthCalendarSlotProps;
 }
 
-const useUtilityClasses = (ownerState: PickersMonthProps) => {
-  const { disabled, selected, classes } = ownerState;
-
+const useUtilityClasses = (
+  classes: Partial<PickersMonthClasses> | undefined,
+  ownerState: PickerMonthOwnerState,
+) => {
   const slots = {
     root: ['root'],
-    monthButton: ['monthButton', disabled && 'disabled', selected && 'selected'],
+    monthButton: [
+      'monthButton',
+      ownerState.isMonthDisabled && 'disabled',
+      ownerState.isMonthSelected && 'selected',
+    ],
   };
 
   return composeClasses(slots, getPickersMonthUtilityClass, classes);
@@ -50,7 +60,7 @@ const PickersMonthRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
 })<{
-  ownerState: PickersMonthProps;
+  ownerState: PickerMonthOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -68,7 +78,7 @@ const MonthCalendarButton = styled('button', {
     { [`&.${pickersMonthClasses.selected}`]: styles.selected },
   ],
 })<{
-  ownerState?: PickersMonthProps;
+  ownerState?: PickerMonthOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -117,9 +127,10 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   const {
     autoFocus,
     className,
+    classes: classesProp,
     children,
-    disabled,
-    selected,
+    disabled = false,
+    selected = false,
     value,
     tabIndex,
     onClick,
@@ -136,7 +147,14 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const classes = useUtilityClasses(props);
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const ownerState: PickerMonthOwnerState = {
+    ...pickerOwnerState,
+    isMonthDisabled: disabled,
+    isMonthSelected: selected,
+  };
+
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
   useEnhancedEffect(() => {
@@ -165,7 +183,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
       onFocus: (event: React.FocusEvent) => onFocus(event, value),
       onBlur: (event: React.FocusEvent) => onBlur(event, value),
     },
-    ownerState: props,
+    ownerState,
     className: classes.monthButton,
   });
 
@@ -173,7 +191,7 @@ export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMon
     <PickersMonthRoot
       data-testid="month"
       className={clsx(classes.root, className)}
-      ownerState={props}
+      ownerState={ownerState}
       {...other}
     >
       <MonthButton {...monthButtonProps} />
