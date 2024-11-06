@@ -268,8 +268,7 @@ jobs:
     <<: *default-job
     steps:
       - checkout
-      - install_js:
-          browsers: true
+      - install_js
       - run:
           name: Install Playwright Browsers
           command: pnpm playwright install --with-deps
