@@ -148,11 +148,11 @@ module.exports = {
         ),
       },
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
       {
-        "argsIgnorePattern": "^_",
-      }
+        argsIgnorePattern: '^_',
+      },
     ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
