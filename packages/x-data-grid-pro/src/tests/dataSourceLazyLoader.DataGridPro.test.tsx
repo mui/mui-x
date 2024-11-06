@@ -152,7 +152,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      // last row is not the first page anymore
+      // first row is not the first page anymore
       expect(beforeFilteringSearchParams.get('start')).to.not.equal('0');
 
       apiRef.current.setFilterModel({
@@ -170,8 +170,8 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
-      // last row is the end of the first page
-      expect(afterFilteringSearchParams.get('end')).to.equal('0');
+      // first row is the start of the first page
+      expect(afterFilteringSearchParams.get('start')).to.equal('0');
     });
   });
 

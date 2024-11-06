@@ -3,7 +3,6 @@ import { LRUCache } from 'lru-cache';
 import {
   getGridDefaultColumnTypes,
   GridRowModel,
-  GridGetRowsParams,
   GridGetRowsResponse,
   GridColDef,
   GridInitialState,
