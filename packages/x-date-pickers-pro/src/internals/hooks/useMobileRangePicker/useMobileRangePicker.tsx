@@ -9,9 +9,10 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersProvider,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
+import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
@@ -24,17 +25,15 @@ import {
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangeFieldSection } from '../../../models';
+import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseMobileRangePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
@@ -43,12 +42,7 @@ export const useMobileRangePicker = <
 >({
   props,
   ...pickerParams
-}: UseMobileRangePickerParams<
-  TDate,
-  TView,
-  TEnableAccessibleFieldDOMStructure,
-  TExternalProps
->) => {
+}: UseMobileRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -86,12 +80,12 @@ export const useMobileRangePicker = <
     open,
     actions,
     layoutProps,
+    providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-    contextValue,
+    ownerState,
   } = usePicker<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     TView,
     RangeFieldSection,
     TExternalProps,
@@ -102,6 +96,7 @@ export const useMobileRangePicker = <
     wrapperVariant: 'mobile',
     autoFocusView: true,
     fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    localeText,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -112,14 +107,13 @@ export const useMobileRangePicker = <
 
   const fieldProps = useSlotProps<
     typeof Field,
-    UseMobileRangePickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    UseMobileRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
     RangePickerPropsForFieldSlot<
       boolean,
-      TDate,
       TEnableAccessibleFieldDOMStructure,
       InferError<TExternalProps>
     >,
-    TExternalProps
+    PickerOwnerState
   >({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
@@ -137,13 +131,12 @@ export const useMobileRangePicker = <
       timezone,
       ...(fieldType === 'single-input' ? { inputRef, name } : {}),
     },
-    ownerState: props,
+    ownerState,
   });
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -166,7 +159,7 @@ export const useMobileRangePicker = <
     endFieldRef,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
     ...innerSlotProps,
     tabs: {
       ...innerSlotProps?.tabs,
@@ -215,7 +208,7 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickersProvider contextValue={contextValue} localeText={localeText}>
+    <PickersProvider {...providerProps}>
       <Field {...enrichedFieldProps} />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout

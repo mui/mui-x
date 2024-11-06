@@ -103,8 +103,8 @@ const useAggregatedData = (): {
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
     return groupIds.flatMap((seriesId) => {
-      const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
-      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
+      const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
+      const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
       const xAxisConfig = xAxis[xAxisId];
       const yAxisConfig = yAxis[yAxisId];

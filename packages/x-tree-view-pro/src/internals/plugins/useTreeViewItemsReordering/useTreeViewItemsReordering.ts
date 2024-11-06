@@ -256,7 +256,7 @@ useTreeViewItemsReordering.getDefaultizedParams = ({ params, experimentalFeature
     if (params.itemsReordering && !canUseFeature) {
       warnOnce([
         'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `RichTreeViewPro` component.',
+        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `<RichTreeViewPro />`component.',
         'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
       ]);
     }

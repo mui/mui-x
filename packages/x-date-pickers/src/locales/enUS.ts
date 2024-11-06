@@ -3,7 +3,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const enUSPickers: PickersLocaleText<any> = {
+const enUSPickers: PickersLocaleText = {
   // Calendar navigation
   previousMonth: 'Previous month',
   nextMonth: 'Next month',
@@ -37,12 +37,8 @@ const enUSPickers: PickersLocaleText<any> = {
   dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Select ${view}. ${
-      !formattedTime && (time === null || !utils.isValid(time))
-        ? 'No time selected'
-        : `Selected time is ${formattedTime ?? utils.format(time, 'fullTime')}`
-    }`,
+  clockLabelText: (view, formattedTime) =>
+    `Select ${view}. ${!formattedTime ? 'No time selected' : `Selected time is ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
@@ -57,14 +53,10 @@ const enUSPickers: PickersLocaleText<any> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Choose date, selected date is ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Choose date',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Choose time, selected time is ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Choose time',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time',
 
   fieldClearLabel: 'Clear',
 

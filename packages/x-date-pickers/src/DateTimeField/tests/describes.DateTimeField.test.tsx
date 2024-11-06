@@ -21,7 +21,7 @@ describe('<DateTimeField /> - Describes', () => {
     componentFamily: 'field',
   }));
 
-  describeConformance(<DateTimeField enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DateTimeField />, () => ({
     classes: {} as any,
     inheritComponent: PickersTextField,
     render,
@@ -53,7 +53,7 @@ describe('<DateTimeField /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
-      const newValue = adapterToUse.addDays(value, 1);
+      const newValue = adapterToUse.addDays(value!, 1);
       selectSection('day');
       pressKey(undefined, 'ArrowUp');
 

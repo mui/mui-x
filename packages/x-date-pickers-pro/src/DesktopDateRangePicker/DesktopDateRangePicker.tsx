@@ -1,9 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import {
+  PickerViewRendererLookup,
+  useUtils,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -13,13 +17,9 @@ import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../validation';
-import { DateRange } from '../models';
 
-type DesktopDateRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -34,19 +34,19 @@ type DesktopDateRangePickerComponent = (<
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils();
+
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateRangePickerDefaultizedProps<
-    TDate,
-    DesktopDateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopDateRangePicker');
 
-  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };
@@ -54,6 +54,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: utils.formats.keyboardDate,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
@@ -63,7 +64,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -76,7 +77,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   };
 
   const { renderPicker } = useDesktopRangePicker<
-    TDate,
     'day',
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -120,9 +120,9 @@ DesktopDateRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -176,7 +176,7 @@ DesktopDateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -264,8 +264,7 @@ DesktopDateRangePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -339,8 +338,7 @@ DesktopDateRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */

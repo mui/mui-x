@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from '@mui/x-charts-vendor/d3-color';
 import { AnimatedProps, animated } from '@react-spring/web';
-import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';

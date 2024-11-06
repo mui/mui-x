@@ -14,10 +14,7 @@ export type {
   TreeViewExperimentalFeatures,
   TreeViewItemMeta,
   TreeViewInstance,
-  DefaultizedProps,
   TreeViewItemPlugin,
-  MuiCancellableEvent,
-  MuiCancellableEventHandler,
 } from './models';
 
 // Core plugins

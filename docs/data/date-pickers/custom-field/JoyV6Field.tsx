@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -26,6 +25,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
@@ -100,10 +100,10 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, false>,
+  extends UseDateFieldProps<false>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
+      // This usage of PickerValidDate will go away with TIsRange
+      PickerValidDate | null,
       FieldSection,
       false,
       DateValidationError
@@ -113,7 +113,7 @@ const JoyDateField = React.forwardRef(
   (props: JoyDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+    const fieldResponse = useDateField<false, typeof textFieldProps>({
       ...textFieldProps,
       enableAccessibleFieldDOMStructure: false,
     });
@@ -130,7 +130,7 @@ const JoyDateField = React.forwardRef(
 );
 
 const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}
