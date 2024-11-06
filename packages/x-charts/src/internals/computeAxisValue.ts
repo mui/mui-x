@@ -205,7 +205,7 @@ export function computeAxisValue({
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
     const scale = getScale(scaleType, axisExtremums, zoomedRange);
-    const finalScale = axis.domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const finalScale = axis.domainLimit === 'strict' ? scale : scale.nice(rawTickNumber);
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
