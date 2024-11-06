@@ -17,6 +17,7 @@ import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { barLabelClasses } from './BarLabel';
 
 /**
  * Solution of the equations
@@ -217,7 +218,7 @@ export const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})({
+})(({ theme }) => ({
   [`& .${barElementClasses.highlighted}`]: {
     filter: 'brightness(120%)',
   },
@@ -227,7 +228,19 @@ export const BarPlotRoot = styled('g', {
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },
-});
+  [`& .${barLabelClasses.root}`]: {
+    ...theme?.typography?.body2,
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    stroke: 'none',
+    fill: (theme.vars || theme)?.palette?.text?.primary,
+    textAnchor: 'middle',
+    dominantBaseline: 'central',
+    pointerEvents: 'none',
+  },
+  [`& .${barLabelClasses.faded}`]: {
+    opacity: 0.3,
+  },
+}));
 
 /**
  * Demos:

@@ -1,12 +1,14 @@
 import * as React from 'react';
+import { animated } from '@react-spring/web';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from './barLabelClasses';
 import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
-import { BarLabel, BarLabelProps } from './BarLabel';
 import { useItemHighlighted } from '../../context';
+
+export type BarLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'>;
 
 export interface BarLabelSlots {
   /**
@@ -87,7 +89,7 @@ function BarLabelItem(props: BarLabelItemProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const Component = slots?.barLabel ?? BarLabel;
+  const Component = slots?.barLabel ?? animated.text;
 
   const { ownerState: barLabelOwnerState, ...barLabelProps } = useSlotProps({
     elementType: Component,
@@ -117,11 +119,7 @@ function BarLabelItem(props: BarLabelItemProps) {
     return null;
   }
 
-  return (
-    <Component {...barLabelProps} {...barLabelOwnerState}>
-      {formattedLabelText}
-    </Component>
-  );
+  return <Component {...barLabelProps}>{formattedLabelText}</Component>;
 }
 
 BarLabelItem.propTypes = {
