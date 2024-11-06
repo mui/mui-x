@@ -335,10 +335,11 @@ export type AxisConfig<
   reverse?: boolean;
   /**
    * Defines the axis scale domain based on the min/max values of series linked to it.
-   * - 'nice': Uses the `.nice()` method from d3-scale to round the domain at human friendly values.
-   * - 'strict': Set the domain to the min/max value displayed. No extras space is added.
+   * - 'nice': Rounds the domain at human friendly values.
+   * - 'strict': Set the domain to the min/max value provided. No extras space is added.
+   * - function: takes as an argument an array with the min/max displayed values, and return the domain.
    */
-  domainLimit?: 'nice' | 'strict';
+  domainLimit?: 'nice' | 'strict' | ((range: [number, number]) => [number, number]);
 } & Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams &

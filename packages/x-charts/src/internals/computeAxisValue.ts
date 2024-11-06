@@ -198,7 +198,10 @@ export function computeAxisValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
-    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+    const axisExtremums =
+      typeof axis.domainLimit === 'function'
+        ? axis.domainLimit([minData, maxData])
+        : [axis.min ?? minData, axis.max ?? maxData];
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
