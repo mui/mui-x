@@ -10,7 +10,7 @@ import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
 import { FieldSection, PickerValidDate, FieldRef, InferError } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersProvider } from '../../components/PickersProvider';
+import { PickerProvider } from '../../components/PickerProvider';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -192,7 +192,7 @@ export const useDesktopPicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -214,7 +214,7 @@ export const useDesktopPicker = <
           {renderCurrentView()}
         </Layout>
       </PickersPopper>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };
