@@ -12,6 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar, { SnackbarProps } from '@mui/material/Snackbar';
 
 function ErrorSnackbar(props: SnackbarProps & { onRetry: () => void }) {
   const { onRetry, ...rest } = props;
@@ -80,16 +81,17 @@ function ServerSideLazyLoadingErrorHandling() {
       />
       <div style={{ height: 400, position: 'relative' }}>
         {retryParams && (
-        <ErrorSnackbar
-          open={!!retryParams}
-          onRetry={() => {
-            apiRef.current.unstable_dataSource.fetchRows(
-              GRID_ROOT_GROUP_ID,
-              retryParams,
-            );
-            setRetryParams(null);
-          }}
-        />
+          <ErrorSnackbar
+            open={!!retryParams}
+            onRetry={() => {
+              apiRef.current.unstable_dataSource.fetchRows(
+                GRID_ROOT_GROUP_ID,
+                retryParams,
+              );
+              setRetryParams(null);
+            }}
+          />
+        )}
         <DataGridPro
           {...props}
           apiRef={apiRef}

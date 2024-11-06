@@ -10,27 +10,25 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 
-function ErrorAlert({ onClick }) {
+function ErrorSnackbar(props) {
+  const { onRetry, ...rest } = props;
   return (
-    <Alert
-      sx={{
-        position: 'absolute',
-        bottom: '0',
-        paddingX: 2,
-        paddingY: 1,
-        width: '100%',
-        zIndex: 10,
-      }}
-      severity="error"
-      action={
-        <Button color="inherit" size="small" onClick={onClick}>
-          Retry
-        </Button>
-      }
-    >
-      Could not fetch the data
-    </Alert>
+    <Snackbar {...rest}>
+      <Alert
+        severity="error"
+        variant="filled"
+        sx={{ width: '100%' }}
+        action={
+          <Button color="inherit" size="small" onClick={onRetry}>
+            Retry
+          </Button>
+        }
+      >
+        Failed to fetch row data
+      </Alert>
+    </Snackbar>
   );
 }
 
@@ -79,8 +77,9 @@ function ServerSideLazyLoadingErrorHandling() {
       />
       <div style={{ height: 400, position: 'relative' }}>
         {retryParams && (
-          <ErrorAlert
-            onClick={() => {
+          <ErrorSnackbar
+            open={!!retryParams}
+            onRetry={() => {
               apiRef.current.unstable_dataSource.fetchRows(
                 GRID_ROOT_GROUP_ID,
                 retryParams,
