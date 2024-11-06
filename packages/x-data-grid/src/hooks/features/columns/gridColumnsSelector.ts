@@ -1,4 +1,8 @@
-import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import {
+  createSelector,
+  createSelectorMemoized,
+  createSelectorMemoizedV8,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridColumnLookup,
@@ -197,4 +201,35 @@ export const gridFilterableColumnLookupSelector = createSelectorMemoized(
 export const gridHasColSpanSelector = createSelectorMemoized(
   gridColumnDefinitionsSelector,
   (columns) => columns.some((column) => column.colSpan !== undefined),
+);
+
+type Args = {
+  baseSelectorArgs: string;
+  derivedSelectorArgs: string;
+};
+
+// First selector that requires arguments
+const baseSelector = createSelectorMemoizedV8(
+  gridColumnsStateSelector,
+  (selectorXOutput, args: Args) => {
+    // compute sub-state and return
+    return `${selectorXOutput} ${args.baseSelectorArgs}`;
+  },
+);
+
+// Another selector that derives `baseSelector` and also requires some more arguments
+const derivedSelector = createSelectorMemoizedV8(baseSelector, (baseSelectorOutput, args: Args) => {
+  // This function doesn't itself need `baseSelectorArgs` but it should still make them required
+  // so that `baseSelectorOutput` is computed properly
+  return `${baseSelectorOutput} ${args.baseSelectorArgs}`;
+});
+
+// Another selector that derives `derivedSelector` and doesn't require any arguments
+export const derivedSelector2 = createSelectorMemoizedV8(
+  derivedSelector,
+  (derivedSelectorOutput, _args: Args) => {
+    // This function doesn't require any args but it should still `baseSelectorArgs` and `derivedSelectorArgs` make them required
+    // so that the underlying selectors are computed properly
+    return `${derivedSelectorOutput}`;
+  },
 );
