@@ -337,7 +337,7 @@ export type AxisConfig<
    * Defines the axis scale domain based on the min/max values of series linked to it.
    * - 'nice': Rounds the domain at human friendly values.
    * - 'strict': Set the domain to the min/max value provided. No extras space is added.
-   * - function: takes as an argument an array with the min/max displayed values, and return the domain.
+   * - function: Takes the extremums to display as an arrgument, and return the axis domain.
    */
   domainLimit?: 'nice' | 'strict' | ((range: [number, number]) => [number, number]);
 } & Omit<Partial<AxisProps>, 'axisId'> &

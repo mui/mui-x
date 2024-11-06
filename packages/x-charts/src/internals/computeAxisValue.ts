@@ -198,9 +198,11 @@ export function computeAxisValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
+    const domainLimit = axis.domainLimit ?? 'nice';
+
     const axisExtremums =
-      typeof axis.domainLimit === 'function'
-        ? axis.domainLimit([minData, maxData])
+      typeof domainLimit === 'function'
+        ? domainLimit([minData, maxData])
         : [axis.min ?? minData, axis.max ?? maxData];
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
@@ -208,7 +210,7 @@ export function computeAxisValue({
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
     const scale = getScale(scaleType, axisExtremums, zoomedRange);
-    const finalScale = axis.domainLimit === 'strict' ? scale : scale.nice(rawTickNumber);
+    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
     const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
