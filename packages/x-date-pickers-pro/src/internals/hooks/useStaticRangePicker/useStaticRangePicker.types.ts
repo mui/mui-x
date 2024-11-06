@@ -5,54 +5,48 @@ import {
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { RangeFieldSection, DateRange } from '../../../models';
+import { RangeFieldSection } from '../../../models';
 import { UseRangePositionProps } from '../useRangePosition';
 
-export interface UseStaticRangePickerSlots<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlots<DateRange<TDate>, TDate, TView> {}
+export interface UseStaticRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlots<PickerRangeValue, TView> {}
 
-export interface UseStaticRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotProps<DateRange<TDate>, TDate, TView> {
+export interface UseStaticRangePickerSlotProps<TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlotProps<PickerRangeValue, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
 
 export interface UseStaticRangePickerProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
-> extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
+> extends BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
    * Overridable components.
    * @default {}
    */
-  slots?: UseStaticRangePickerSlots<TDate, TView>;
+  slots?: UseStaticRangePickerSlots<TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticRangePickerSlotProps<TDate, TView>;
+  slotProps?: UseStaticRangePickerSlotProps<TView>;
 }
 
 export interface UseStaticRangePickerParams<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,
+    UsePickerParams<PickerRangeValue, TView, RangeFieldSection, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;

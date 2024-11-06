@@ -34,9 +34,7 @@ import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
-export interface BaseDateTimePickerSlots<TDate extends PickerValidDate>
-  extends DateCalendarSlots<TDate>,
-    TimeClockSlots {
+export interface BaseDateTimePickerSlots extends DateCalendarSlots, TimeClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -46,12 +44,10 @@ export interface BaseDateTimePickerSlots<TDate extends PickerValidDate>
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps>;
 }
 
-export interface BaseDateTimePickerSlotProps<TDate extends PickerValidDate>
-  extends DateCalendarSlotProps<TDate>,
-    TimeClockSlotProps {
+export interface BaseDateTimePickerSlotProps extends DateCalendarSlotProps, TimeClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -63,27 +59,24 @@ export interface BaseDateTimePickerSlotProps<TDate extends PickerValidDate>
 }
 
 export type DateTimePickerViewRenderers<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  TDate | null,
+  PickerValidDate | null,
   TView,
-  Omit<DateViewRendererProps<TDate, TView>, 'slots' | 'slotProps'> &
+  Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
     Omit<
-      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
+      TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TimeViewWithMeridiem>>,
       'slots' | 'slotProps'
     >,
   TAdditionalProps
 >;
 
-export interface BaseDateTimePickerProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends BasePickerInputProps<TDate | null, TDate, TView, DateTimeValidationError>,
-    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedBaseClockProps<TDate>,
-    DateTimeValidationProps<TDate> {
+export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridiem>
+  extends BasePickerInputProps<PickerValidDate | null, TView, DateTimeValidationError>,
+    Omit<ExportedDateCalendarProps, 'onViewChange'>,
+    ExportedBaseClockProps,
+    DateTimeValidationProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -93,24 +86,23 @@ export interface BaseDateTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: BaseDateTimePickerSlots<TDate>;
+  slots?: BaseDateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: BaseDateTimePickerSlotProps<TDate>;
+  slotProps?: BaseDateTimePickerSlotProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */
-  viewRenderers?: Partial<DateTimePickerViewRenderers<TDate, TView>>;
+  viewRenderers?: Partial<DateTimePickerViewRenderers<TView>>;
 }
 
 type UseDateTimePickerDefaultizedProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  Props extends BaseDateTimePickerProps<TDate, TView>,
+  Props extends BaseDateTimePickerProps<TView>,
 > = LocalizedComponent<
   DefaultizedProps<
     Props,
@@ -118,18 +110,17 @@ type UseDateTimePickerDefaultizedProps<
     | 'openTo'
     | 'orientation'
     | 'ampm'
-    | keyof BaseDateValidationProps<TDate>
+    | keyof BaseDateValidationProps
     | keyof BaseTimeValidationProps
   >
 >;
 
 export function useDateTimePickerDefaultizedProps<
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  Props extends BaseDateTimePickerProps<TDate, TView>,
->(props: Props, name: string): UseDateTimePickerDefaultizedProps<TDate, TView, Props> {
-  const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
+  Props extends BaseDateTimePickerProps<TView>,
+>(props: Props, name: string): UseDateTimePickerDefaultizedProps<TView, Props> {
+  const utils = useUtils();
+  const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
     props,
     name,

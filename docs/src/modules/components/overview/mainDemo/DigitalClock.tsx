@@ -24,7 +24,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
   const { actionBar, content } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={props}>
@@ -57,7 +57,7 @@ export default function DigitalClock() {
               hours: renderMultiSectionDigitalClockTimeView,
               minutes: renderMultiSectionDigitalClockTimeView,
               meridiem: renderMultiSectionDigitalClockTimeView,
-            } as StaticTimePickerProps<Dayjs>['viewRenderers']
+            } as StaticTimePickerProps['viewRenderers']
           }
         />
       </Paper>

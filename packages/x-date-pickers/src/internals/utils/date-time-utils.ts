@@ -3,7 +3,6 @@ import {
   DateOrTimeView,
   DateView,
   MuiPickersAdapter,
-  PickerValidDate,
   TimeStepOptions,
   TimeView,
 } from '../../models';
@@ -12,8 +11,8 @@ import { isDatePickerView, resolveDateFormat } from './date-utils';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { DesktopOnlyTimePickerProps } from '../models/props/time';
 
-export const resolveDateTimeFormat = <TDate extends PickerValidDate>(
-  utils: MuiPickersAdapter<TDate>,
+export const resolveDateTimeFormat = (
+  utils: MuiPickersAdapter,
   {
     views,
     format,
@@ -70,17 +69,15 @@ const resolveViews = <TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewW
 const resolveShouldRenderTimeInASingleColumn = (timeSteps: TimeStepOptions, threshold: number) =>
   (24 * 60) / ((timeSteps.hours ?? 1) * (timeSteps.minutes ?? 5)) <= threshold;
 
-interface DefaultizedTimeViewsProps<TDate extends PickerValidDate, TView = DateOrTimeView>
-  extends DefaultizedProps<DesktopOnlyTimePickerProps<TDate>, 'ampm'> {
+interface DefaultizedTimeViewsProps<TView = DateOrTimeView>
+  extends DefaultizedProps<DesktopOnlyTimePickerProps, 'ampm'> {
   views: readonly TView[];
 }
 
-interface DefaultizedTimeViewsResponse<
-  TDate extends PickerValidDate,
-  TView = DateOrTimeViewWithMeridiem,
-> extends Required<
+interface DefaultizedTimeViewsResponse<TView = DateOrTimeViewWithMeridiem>
+  extends Required<
     Pick<
-      DefaultizedTimeViewsProps<TDate, TView>,
+      DefaultizedTimeViewsProps<TView>,
       'thresholdToRenderTimeInASingleColumn' | 'timeSteps' | 'views'
     >
   > {
@@ -88,7 +85,6 @@ interface DefaultizedTimeViewsResponse<
 }
 
 export function resolveTimeViewsResponse<
-  TDate extends PickerValidDate,
   InTView extends DateOrTimeView = DateOrTimeView,
   OutTView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
 >({
@@ -96,7 +92,7 @@ export function resolveTimeViewsResponse<
   ampm,
   timeSteps: inTimeSteps,
   views,
-}: DefaultizedTimeViewsProps<TDate, InTView>): DefaultizedTimeViewsResponse<TDate, OutTView> {
+}: DefaultizedTimeViewsProps<InTView>): DefaultizedTimeViewsResponse<OutTView> {
   const thresholdToRenderTimeInASingleColumn = inThreshold ?? 24;
   const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...inTimeSteps };
   const shouldRenderTimeInASingleColumn = resolveShouldRenderTimeInASingleColumn(
