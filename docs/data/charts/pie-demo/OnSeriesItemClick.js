@@ -3,6 +3,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 const items = [
   { value: 10, label: 'Series A ( no Id )' },
@@ -12,7 +13,7 @@ const items = [
 
 const formatObject = (obj) => {
   if (obj === null) {
-    return '  undefined';
+    return 'undefined';
   }
   return JSON.stringify(obj, null, 2)
     .split('\n')
@@ -32,30 +33,37 @@ export default function OnSeriesItemClick() {
     <Stack
       direction={{ xs: 'column', md: 'row' }}
       alignItems={{ xs: 'flex-start', md: 'center' }}
+      gap={2}
       justifyContent="space-between"
-      sx={{ width: '100%' }}
+      sx={{ width: '100%', overflow: 'hidden' }}
     >
       <Typography
         component="pre"
         sx={{ maxWidth: { xs: '100%', md: '50%', flexShrink: 1 }, overflow: 'auto' }}
       >
-        {`item id: ${id ?? 'undefined'}
-
-item identifier:
-${formatObject(identifier)}`}
+        item id:
+        <br />
+        {id ?? 'undefined'}
+        <br />
+        <br />
+        item identifier:
+        <br />
+        {formatObject(identifier)}
       </Typography>
 
-      <PieChart
-        series={[
-          {
-            data: items,
-          },
-        ]}
-        onItemClick={handleClick}
-        width={400}
-        height={200}
-        margin={{ right: 200 }}
-      />
+      <Box sx={{ maxWidth: { xs: '100%', md: '50%' } }}>
+        <PieChart
+          series={[
+            {
+              data: items,
+            },
+          ]}
+          onItemClick={handleClick}
+          width={400}
+          height={200}
+          margin={{ right: 200 }}
+        />
+      </Box>
     </Stack>
   );
 }
