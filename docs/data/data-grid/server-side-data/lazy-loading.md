@@ -12,9 +12,10 @@ It is enabled by adding `lazyLoading` prop in combination with `unstable_dataSou
 
 Initially, the first page data is fetched and displayed in the grid. What triggers the loading of next page data depends on the value of the total row count.
 
-If the total row count is known, the grid gets filled with skeleton rows and fetches more data if one of the skeleton rows falls into the rendering context.
+If the total row count is known, the Data Grid gets filled with skeleton rows and fetches more data if one of the skeleton rows falls into the rendering context.
+This loading strategy is often referred to as [**viewport loading**](#viewport-loading).
 
-If the total row count is unknown, the grid fetches more data when the user scrolls to the bottom of the grid. This loading strategy is often referred to as **infinite loading**.
+If the total row count is unknown, the Data Grid fetches more data when the user scrolls to the bottom. This loading strategy is often referred to as [**infinite loading**](#infinite-loading).
 
 :::info
 Row count can be provided either by returning the `rowCount` in the response of the `getRows` method in `unstable_dataSource`, via the `rowCount` prop or by calling [`setRowCount`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API.
@@ -65,9 +66,9 @@ The grid changes the loading mode dynamically if the total row count gets update
 
 Based on the previous and the new value for the total row count, the following scenarios are possible:
 
-- **Unknown `rowCount` to known `rowCount`**: If row count is not unknown anymore, the grid switches to the viewport loading mode. It checks the amount of allready fetched rows and adds skeleton rows to match the total row count.
+- **Unknown `rowCount` to known `rowCount`**: When the row count is set to a valid value from an unknown value, the Data Grid switches to the viewport loading mode. It checks the number of already fetched rows and adds skeleton rows to match the provided row count.
 
-- **Known `rowCount` to unknown `rowCount`**: If the row count is updated and set to `-1`, the grid resets, fetches the first page and sets itself in the infinite loading mode.
+- **Known `rowCount` to unknown `rowCount`**: If the row count is updated and set to `-1`, the Data Grid resets, fetches the first page, and sets itself in the infinite loading mode.
 
 - **Known `rowCount` greater than the actual row count**: This can happen either by reducing the value of the row count after more rows were already fetched or if the row count was unknown and the grid in the inifite loading mode already fetched more rows. In this case, the grid resets, fetches the first page and continues in one of the modes depending on the new value of the `rowCount`.
 
@@ -89,7 +90,7 @@ This feature isn't implemented yet. It's coming.
 Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this feature, or if you are facing a pain point with your current solution.
 :::
 
-When completed, it will be possible to use `lazyLoading` flag in combination with [Tree data](/x/react-data-grid/server-side-data/tree-data/) and [Row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+When completed, it would be possible to use `lazyLoading` flag in combination with [Tree data](/x/react-data-grid/server-side-data/tree-data/) and [Row grouping](/x/react-data-grid/server-side-data/row-grouping/).
 
 ## Error handling
 
