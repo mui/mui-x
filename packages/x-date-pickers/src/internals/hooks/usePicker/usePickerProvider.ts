@@ -95,11 +95,19 @@ export function usePickerProvider<TValue>(
       onOpen: pickerValueResponse.actions.onOpen,
       onClose: pickerValueResponse.actions.onClose,
       open: pickerValueResponse.open,
+      disabled: props.disabled ?? false,
+      readOnly: props.readOnly ?? false,
+      variant,
+      orientation,
     }),
     [
       pickerValueResponse.actions.onOpen,
       pickerValueResponse.actions.onClose,
       pickerValueResponse.open,
+      variant,
+      orientation,
+      props.disabled,
+      props.readOnly,
     ],
   );
 
@@ -139,4 +147,6 @@ export interface UsePickerProviderProps {
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
+  disabled?: boolean;
+  readOnly?: boolean;
 }

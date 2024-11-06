@@ -15,8 +15,6 @@ export const PickersPrivateContext = React.createContext<PickersPrivateContextVa
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
   },
-  variant: 'desktop',
-  orientation: 'portrait',
 });
 
 /**
@@ -60,12 +58,14 @@ export interface PickersContextValue {
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
-}
-export interface PickersPrivateContextValue {
   /**
-   * The ownerState of the picker.
+   * `true` if the picker is disabled, `false` otherwise.
    */
-  ownerState: PickerOwnerState;
+  disabled: boolean;
+  /**
+   * `true` if the picker is read-only, `false` otherwise.
+   */
+  readOnly: boolean;
   /**
    * The responsive variant of the picker.
    * Is equal to "desktop" when using a desktop picker (like <DesktopDatePicker />).
@@ -83,4 +83,10 @@ export interface PickersPrivateContextValue {
    * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   orientation: PickerOrientation;
+}
+export interface PickersPrivateContextValue {
+  /**
+   * The ownerState of the picker.
+   */
+  ownerState: PickerOwnerState;
 }

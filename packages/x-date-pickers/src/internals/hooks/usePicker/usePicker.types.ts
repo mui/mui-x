@@ -10,10 +10,9 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import {
+import type {
   UsePickerProviderParameters,
   UsePickerProviderProps,
   UsePickerProviderReturnValue,
@@ -30,7 +29,6 @@ export interface UsePickerBaseProps<
   TAdditionalProps extends {},
 > extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps,
     UsePickerProviderProps {}
 
 export interface UsePickerProps<
@@ -41,7 +39,6 @@ export interface UsePickerProps<
   TAdditionalProps extends {},
 > extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps,
     UsePickerProviderProps {}
 
 export interface UsePickerParams<
@@ -68,8 +65,9 @@ export interface UsePickerResponse<
   TSection extends FieldSection,
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
+  layoutProps: UsePickerValueResponse<TValue, TSection, TError>['layoutProps'] &
+    UsePickerViewsResponse<TView>['layoutProps'];
 }

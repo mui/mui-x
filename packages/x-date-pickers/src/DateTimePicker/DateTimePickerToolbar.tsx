@@ -25,6 +25,7 @@ import { pickersToolbarTextClasses } from '../internals/components/pickersToolba
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickersContext } from '../hooks/usePickersContext';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -245,8 +246,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    disabled,
-    readOnly,
     toolbarTitle: inToolbarTitle,
     className,
     classes: classesProp,
@@ -254,7 +253,8 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   } = props;
 
   const isRtl = useRtl();
-  const { ownerState: pickerOwnerState, variant, orientation } = usePickersPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const { orientation, variant, disabled, readOnly } = usePickersContext();
   const ownerState: DateTimePickerToolbarOwnerState = { ...pickerOwnerState, isRtl };
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -425,7 +425,6 @@ DateTimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -438,7 +437,6 @@ DateTimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

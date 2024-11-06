@@ -11,6 +11,7 @@ import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 import { PickersPrivateContextValue } from '../internals/components/PickersProvider';
+import { usePickersContext } from '../hooks/usePickersContext';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -42,12 +43,13 @@ interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeVi
 }
 interface UsePickerLayoutResponse<TValue>
   extends SubComponents<TValue>,
-    Pick<PickersPrivateContextValue, 'orientation' | 'variant' | 'ownerState'> {}
+    Pick<PickersPrivateContextValue, 'ownerState'> {}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickerOwnerState, variant, orientation } = usePickersPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const { variant } = usePickersContext();
 
   const {
     onAccept,
@@ -61,8 +63,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     onChange,
     onSelectShortcut,
     isValid,
-    disabled,
-    readOnly,
     children,
     slots,
     slotProps,
@@ -106,8 +106,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
       view,
       onViewChange,
       views,
-      disabled,
-      readOnly,
     },
     className: classes.toolbar,
     ownerState,
@@ -144,8 +142,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     tabs,
     actionBar,
     shortcuts,
-    orientation,
-    variant,
     ownerState,
   };
 };

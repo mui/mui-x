@@ -104,6 +104,7 @@
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list."
     },
     "orientation": { "description": "Force rendering in particular orientation." },
+    "readOnly": { "description": "Make picker read only." },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty."

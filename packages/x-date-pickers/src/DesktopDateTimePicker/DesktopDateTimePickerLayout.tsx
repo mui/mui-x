@@ -10,6 +10,7 @@ import {
   usePickerLayout,
 } from '../PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
+import { usePickersContext } from '../hooks/usePickersContext';
 
 type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
@@ -22,8 +23,8 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
-  const { toolbar, tabs, content, actionBar, shortcuts, orientation, ownerState } =
-    usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
+  const { orientation } = usePickersContext();
   const { sx, className, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
 
@@ -66,7 +67,6 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -78,7 +78,6 @@ DesktopDateTimePickerLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

@@ -13,6 +13,7 @@ import {
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerOwnerState } from '../models/pickers';
+import { usePickersContext } from '../hooks/usePickersContext';
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
@@ -106,8 +107,8 @@ const PickersLayout = React.forwardRef(function PickersLayout<
 >(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar, shortcuts, orientation, variant, ownerState } =
-    usePickerLayout(props);
+  const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
+  const { orientation, variant } = usePickersContext();
   const { sx, className, classes: classesProp } = props;
 
   const classes = useUtilityClasses(classesProp, ownerState);
@@ -150,7 +151,6 @@ PickersLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -162,7 +162,6 @@ PickersLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

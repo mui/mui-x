@@ -16,6 +16,7 @@ import {
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickersContext } from '../hooks';
 
 export interface DatePickerToolbarProps
   extends BaseToolbarProps<PickerValidDate | null, DateView>,
@@ -92,7 +93,8 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
 
   const utils = useUtils();
   const translations = usePickersTranslations();
-  const { ownerState, orientation } = usePickersPrivateContext();
+  const { ownerState } = usePickersPrivateContext();
+  const { orientation } = usePickersContext();
   const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
@@ -135,7 +137,6 @@ DatePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -148,7 +149,6 @@ DatePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

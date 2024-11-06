@@ -22,6 +22,7 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { PickerOwnerState, PickerValidDate } from '../models';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickersContext } from '../hooks';
 
 export interface TimePickerToolbarProps
   extends BaseToolbarProps<PickerValidDate | null, TimeViewWithMeridiem>,
@@ -163,8 +164,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     view,
     onViewChange,
     views,
-    disabled,
-    readOnly,
     className,
     classes: classesProp,
     ...other
@@ -173,6 +172,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const translations = usePickersTranslations();
   const isRtl = useRtl();
   const { ownerState: pickerOwnerState } = usePickersPrivateContext();
+  const { disabled, readOnly } = usePickersContext();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -276,7 +276,6 @@ TimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -289,7 +288,6 @@ TimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

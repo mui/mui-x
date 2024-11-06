@@ -4,7 +4,6 @@ import { SlotComponentProps } from '@mui/utils';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
@@ -13,6 +12,8 @@ import {
   PickersShortcuts,
 } from '../PickersShortcuts/PickersShortcuts';
 import { PickerOwnerState } from '../models';
+import { UsePickerViewsLayoutResponse } from '../internals/hooks/usePicker/usePickerViews';
+import { UsePickerValueLayoutResponse } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
@@ -79,7 +80,8 @@ export interface PickersLayoutSlotProps<TValue, TView extends DateOrTimeViewWith
 }
 
 export interface PickersLayoutProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
+  extends UsePickerViewsLayoutResponse<TView>,
+    Omit<UsePickerValueLayoutResponse<TValue>, 'value'> {
   value?: TValue;
   className?: string;
   children?: React.ReactNode;

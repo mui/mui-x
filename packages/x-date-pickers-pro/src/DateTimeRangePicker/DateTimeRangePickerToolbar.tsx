@@ -12,7 +12,7 @@ import {
   PickerRangeValue,
   usePickersPrivateContext,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickersContext, usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerOwnerState, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
@@ -129,8 +129,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     view,
     views,
     ampm,
-    disabled,
-    readOnly,
     hidden,
     toolbarFormat,
     toolbarPlaceholder,
@@ -138,6 +136,11 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     sx,
     ...other
   } = props;
+
+  const translations = usePickersTranslations();
+  const { ownerState } = usePickersPrivateContext();
+  const { disabled, readOnly } = usePickersContext();
+  const classes = useUtilityClasses(classesProp);
 
   const commonToolbarProps = {
     views,
@@ -148,11 +151,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarFormat,
     toolbarPlaceholder,
   };
-
-  const translations = usePickersTranslations();
-  const { ownerState } = usePickersPrivateContext();
-
-  const classes = useUtilityClasses(classesProp);
 
   const handleStartRangeViewChange = React.useCallback(
     (newView: DateOrTimeViewWithMeridiem) => {
@@ -244,7 +242,6 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -259,7 +256,6 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
