@@ -23,4 +23,4 @@ export * from './SparkLineChart';
 export * from './Gauge';
 export * from './ChartDataProvider';
 export * from './ChartsSurface';
-export * from './ResponsiveChartContainer';
+export * from './ChartContainer';

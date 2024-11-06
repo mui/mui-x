@@ -3,10 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
-import { useResponsiveChartContainerProps } from './useResponsiveChartContainerProps';
+import { useChartContainerProps } from './useChartContainerProps';
 
-export interface ResponsiveChartContainerProps
-  extends Omit<ChartDataProviderProps, 'width' | 'height'> {
+export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width' | 'height'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -27,12 +26,9 @@ export interface ResponsiveChartContainerProps
   resolveSizeBeforeRender?: boolean;
 }
 
-const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
-  props: ResponsiveChartContainerProps,
-  ref,
-) {
+const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
   const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
-    useResponsiveChartContainerProps(props, ref);
+    useChartContainerProps(props, ref);
 
   if (props.height && props.width) {
     return <ChartDataProvider {...chartDataProviderProps} />;
@@ -45,7 +41,7 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   );
 });
 
-ResponsiveChartContainer.propTypes = {
+ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -330,4 +326,4 @@ ResponsiveChartContainer.propTypes = {
   ),
 } as any;
 
-export { ResponsiveChartContainer };
+export { ChartContainer };

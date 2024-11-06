@@ -1,10 +1,10 @@
 'use client';
 import { ChartDataProviderProps } from '../ChartDataProvider';
-import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
+import type { ChartContainerProps } from './ChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
 
-export const useResponsiveChartContainerProps = (
-  props: ResponsiveChartContainerProps,
+export const useChartContainerProps = (
+  props: ChartContainerProps,
   ref: React.ForwardedRef<unknown>,
 ) => {
   const {

@@ -1,8 +1,8 @@
 // Components
 export * from './components/ChartsAxesGradients';
 
-export * from '../ResponsiveChartContainer/useChartContainerDimensions';
-export * from '../ResponsiveChartContainer/ResizableContainer';
+export * from '../ChartContainer/useChartContainerDimensions';
+export * from '../ChartContainer/ResizableContainer';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -11,7 +11,7 @@ export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
-export { useResponsiveChartContainerProps } from '../ResponsiveChartContainer/useResponsiveChartContainerProps';
+export { useChartContainerProps as useResponsiveChartContainerProps } from '../ChartContainer/useChartContainerProps';
 export { useChartDataProviderProps as useChartContainerProps } from '../ChartDataProvider/useChartDataProviderProps';
 
 // utils

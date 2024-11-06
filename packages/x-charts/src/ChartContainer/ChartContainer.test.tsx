@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
-describe('<ResponsiveChartContainer />', () => {
+describe('<ChartContainer />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<ResponsiveChartContainer height={100} width={100} series={[]} />, () => ({
+  describeConformance(<ChartContainer height={100} width={100} series={[]} />, () => ({
     classes: {} as any,
     inheritComponent: 'svg',
     render,
-    muiName: 'MuiResponsiveChartContainer',
+    muiName: 'MuiChartContainer',
     testComponentPropWith: 'div',
     refInstanceof: window.SVGSVGElement,
     skip: [
