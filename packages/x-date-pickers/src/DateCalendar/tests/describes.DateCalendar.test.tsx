@@ -46,7 +46,7 @@ describe('<DateCalendar /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addDays(value, 1);
+      const newValue = adapterToUse.addDays(value!, 1);
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );

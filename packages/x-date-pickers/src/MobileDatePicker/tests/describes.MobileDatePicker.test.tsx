@@ -63,7 +63,7 @@ describe('<MobileDatePicker /> - Describes', () => {
         openPicker({ type: 'date', variant: 'mobile' });
       }
 
-      const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
+      const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );

@@ -11,23 +11,20 @@ import { FieldSection, PickerValidDate } from '../models';
 import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useDateField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedDateField<
-    TDate,
-    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
     TAllProps
   >(inProps);
 
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   return useField<
-    TDate | null,
-    TDate,
+    PickerValidDate | null,
     FieldSection,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,

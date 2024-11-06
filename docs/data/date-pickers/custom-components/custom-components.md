@@ -14,7 +14,7 @@ For example, available Date Picker slots can be found [here](/x/api/date-pickers
 :::
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Action bar

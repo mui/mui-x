@@ -13,7 +13,7 @@ import {
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
-interface AutocompleteFieldProps extends DatePickerFieldProps<Dayjs> {
+interface AutocompleteFieldProps extends DatePickerFieldProps {
   /**
    * @typescript-to-proptypes-ignore
    */
@@ -105,7 +105,7 @@ function AutocompleteField(props: AutocompleteFieldProps) {
   );
 }
 
-interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
+interface AutocompleteDatePickerProps extends DatePickerProps {
   /**
    * @typescript-to-proptypes-ignore
    */
