@@ -12,7 +12,7 @@ import {
   WrapperVariant,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
@@ -156,7 +156,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarPlaceholder,
   };
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
