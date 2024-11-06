@@ -148,6 +148,7 @@ jobs:
           command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
           environment:
             VITEST_MAX_THREADS: 2
+            VITEST_MIN_THREADS: 1
       - run:
           name: Check coverage generated
           command: |
@@ -276,6 +277,7 @@ jobs:
           command: pnpm vitest --project "browser/*" --pool=threads
           environment:
             VITEST_MAX_THREADS: 2
+            VITEST_MIN_THREADS: 1
 
   test_types:
     <<: *default-job
