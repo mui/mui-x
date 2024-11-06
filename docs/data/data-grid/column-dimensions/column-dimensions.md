@@ -58,15 +58,6 @@ To capture changes in the width of a column there are two callbacks that are cal
 - `onColumnResize`: Called while a column is being resized.
 - `onColumnWidthChange`: Called after the width of a column is changed, but not during resizing.
 
-### Persisting column width
-
-When the `columns` prop reference is updated, the column width is reset to the `colDef.width` value and any resizes will be lost.
-This is because the Data Grid considers update of the columns prop as a new set of columns, and the previous state is discarded.
-
-To persist the column width when the `columns` prop is updated, set the `unstable_persistColumnsWidth` prop to `true`.
-
-{{"demo": "ColumnSizingPersistWidth.js", "disableAd": true, "bg": "inline"}}
-
 ## Autosizing
 
 Data Grid allows to autosize the columns' dimensions based on their content. Autosizing is enabled by default. To turn it off, pass the `disableAutosize` prop to the Data Grid.
