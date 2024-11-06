@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { userEvent, screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   describeValidation,
@@ -26,12 +25,10 @@ describe('<YearCalendar /> - Describes', () => {
   describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,
     inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
     render,
     muiName: 'MuiYearCalendar',
     refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(YearCalendar, () => ({
@@ -53,8 +50,8 @@ describe('<YearCalendar /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addYears(value, 1);
-      userEvent.mousePress(
+      const newValue = adapterToUse.addYears(value!, 1);
+      fireEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 

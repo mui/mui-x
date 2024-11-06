@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
 import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { Store } from '../../utils/Store';
-import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
 import type { DataGridProcessedProps } from '../props/DataGridProps';
@@ -69,13 +69,21 @@ export interface GridCorePrivateApi<
    */
   mainElementRef: React.RefObject<HTMLDivElement>;
   /**
-   * The React ref of the grid virtual scroller container element.
+   * The React ref of the grid's virtual scroller container element.
    */
   virtualScrollerRef: React.RefObject<HTMLDivElement>;
   /**
+   * The React ref of the grid's vertical virtual scrollbar container element.
+   */
+  virtualScrollbarVerticalRef: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid's horizontal virtual scrollbar container element.
+   */
+  virtualScrollbarHorizontalRef: React.RefObject<HTMLDivElement>;
+  /**
    * The React ref of the grid column container virtualized div element.
    */
-  columnHeadersContainerRef?: React.RefObject<HTMLDivElement>;
+  columnHeadersContainerRef: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid header filter row element.
    */

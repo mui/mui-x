@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
+import ownerDocument from '@mui/utils/ownerDocument';
+import useEventCallback from '@mui/utils/useEventCallback';
 import {
   GridPipeProcessor,
   GridStateInitializer,
   getTotalHeaderHeight,
+  getVisibleRows,
   isNavigationKey,
   serializeCellValue,
   useGridRegisterPipeProcessor,
@@ -61,6 +63,7 @@ export const useGridCellSelection = (
     | 'columnHeaderHeight'
   >,
 ) => {
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
@@ -145,7 +148,7 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
+      const newModel = keepOtherSelected ? { ...apiRef.current.getCellSelectionModel() } : {};
 
       rowsInRange.forEach((row) => {
         if (!newModel[row.id]) {
@@ -164,22 +167,37 @@ export const useGridCellSelection = (
   const getSelectedCellsAsArray = React.useCallback<
     GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
-    const model = apiRef.current.getCellSelectionModel();
+    const selectionModel = apiRef.current.getCellSelectionModel();
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const currentVisibleRows = getVisibleRows(apiRef, props);
+    const sortedEntries = currentVisibleRows.rows.reduce(
+      (result, row) => {
+        if (row.id in selectionModel) {
+          result.push([row.id, selectionModel[row.id]]);
+        }
+        return result;
+      },
+      [] as [GridRowId, Record<string, boolean>][],
+    );
 
-    return Object.entries(model).reduce<{ id: GridRowId; field: string }[]>(
-      (acc, [id, fields]) => [
-        ...acc,
-        ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
-          (acc2, [field, isSelected]) => {
-            return isSelected ? [...acc2, { id: idToIdLookup[id], field }] : acc2;
-          },
-          [],
-        ),
-      ],
+    return sortedEntries.reduce<{ id: GridRowId; field: string }[]>(
+      (selectedCells, [id, fields]) => {
+        selectedCells.push(
+          ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
+            (selectedFields, [field, isSelected]) => {
+              if (isSelected) {
+                selectedFields.push({ id: idToIdLookup[id], field });
+              }
+              return selectedFields;
+            },
+            [],
+          ),
+        );
+        return selectedCells;
+      },
       [],
     );
-  }, [apiRef]);
+  }, [apiRef, props]);
 
   const cellSelectionApi: GridCellSelectionApi = {
     isCellSelected,
@@ -276,7 +294,8 @@ export const useGridCellSelection = (
       }
 
       const { x: mouseX, y: mouseY } = mousePosition.current;
-      const { height, width } = dimensions.viewportInnerSize;
+      const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
+      const height = viewportOuterHeight - totalHeaderHeight;
 
       let deltaX = 0;
       let deltaY = 0;
@@ -313,7 +332,7 @@ export const useGridCellSelection = (
     }
 
     autoScroll();
-  }, [apiRef, dimensions]);
+  }, [apiRef, dimensions, totalHeaderHeight]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -337,7 +356,8 @@ export const useGridCellSelection = (
       }
 
       const { x, y } = virtualScrollerRect;
-      const { height, width } = dimensions.viewportInnerSize;
+      const { width, height: viewportOuterHeight } = dimensions.viewportOuterSize;
+      const height = viewportOuterHeight - totalHeaderHeight;
       const mouseX = event.clientX - x;
       const mouseY = event.clientY - y - totalHeaderHeight;
       mousePosition.current = { x: mouseX, y: mouseY };
@@ -460,7 +480,7 @@ export const useGridCellSelection = (
       const document = ownerDocument(rootRef);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [apiRef, handleMouseUp, stopAutoScroll]);
+  }, [apiRef, hasRootReference, handleMouseUp, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {

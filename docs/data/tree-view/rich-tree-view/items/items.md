@@ -28,7 +28,7 @@ Each item must have a unique identifier.
 
 This identifier is used internally to identify the item in the various models and to track the item across updates.
 
-By default, the `RichTreeView` component looks for a property named `id` in the data set to get that identifier:
+By default, the Rich Tree View component looks for a property named `id` in the data set to get that identifier:
 
 ```tsx
 const ITEMS = [{ id: 'tree-view-community' }];
@@ -36,7 +36,7 @@ const ITEMS = [{ id: 'tree-view-community' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the `RichTreeView` component where it is located.
+If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the Rich Tree View component where it is located.
 
 The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
 
@@ -63,7 +63,7 @@ It could be achieved by either defining the prop outside the component scope or 
 
 Each item must have a label which does not need to be unique.
 
-By default, the `RichTreeView` component looks for a property named `label` in the data set to get that label:
+By default, the Rich Tree View component looks for a property named `label` in the data set to get that label:
 
 ```tsx
 const ITEMS = [{ label: '@mui/x-tree-view' }];
@@ -71,7 +71,7 @@ const ITEMS = [{ label: '@mui/x-tree-view' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the `RichTreeView` component where it's located:
+If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the Rich Tree View component where it's located:
 
 The following demo shows how to use `getItemLabel` to grab the unique identifier from a property named `name`:
 
@@ -95,7 +95,7 @@ It could be achieved by either defining the prop outside the component scope or 
 :::
 
 :::warning
-Unlike the `SimpleTreeView` component, the `RichTreeView` component only supports string labels, you cannot pass React nodes to it.
+Unlike the Simple Tree View component, the Rich Tree View component only supports string labels, you cannot pass React nodes to it.
 :::
 
 ## Disabled items
@@ -143,7 +143,26 @@ When it's set to true:
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
 
+## Track item clicks
+
+Use the `onItemClick` prop to track the clicked item:
+
+{{"demo": "OnItemClick.js"}}
+
 ## Imperative API
+
+:::success
+To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+
+```tsx
+const apiRef = useTreeViewApiRef();
+
+return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+```
+
+When your component first renders, `apiRef` will be `undefined`.
+After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
+:::
 
 ### Get an item by ID
 
@@ -151,9 +170,50 @@ Use the `getItem` API method to get an item by its ID.
 
 ```ts
 const item = apiRef.current.getItem(
-  // The ID of the item to retrieve
+  // The id of the item to retrieve
   itemId,
 );
 ```
 
 {{"demo": "ApiMethodGetItem.js", "defaultCodeOpen": false}}
+
+### Get an item's DOM element by ID
+
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
+
+```ts
+const itemElement = apiRef.current.getItemDOMElement(
+  // The id of the item to get the DOM element of
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemDOMElement.js", "defaultCodeOpen": false}}
+
+### Get the current item tree
+
+Use the `getItemTree` API method to get the current item tree.
+
+```ts
+const itemTree = apiRef.current.getItemTree();
+```
+
+{{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
+
+:::info
+This method is mostly useful when the Tree View has some internal updates on the items.
+For now, the only features causing updates on the items is the [re-ordering](/x/react-tree-view/rich-tree-view/ordering/).
+:::
+
+### Get an item's children by ID
+
+Use the `getItemOrderedChildrenIds` API method to get an item's children by its ID.
+
+```ts
+const childrenIds = apiRef.current.getItemOrderedChildrenIds(
+  // The id of the item to retrieve the children from
+  itemId,
+);
+```
+
+{{"demo": "ApiMethodGetItemOrderedChildrenIds.js", "defaultCodeOpen": false}}

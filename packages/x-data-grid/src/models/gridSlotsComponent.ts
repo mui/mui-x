@@ -6,6 +6,11 @@ export type { GridSlotProps } from './gridSlotsComponentsProps';
 
 export interface GridBaseSlots {
   /**
+   * The custom Badge component used in the grid for both header and cells.
+   * @default Badge
+   */
+  baseBadge: React.JSXElementConstructor<GridSlotProps['baseBadge']>;
+  /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
@@ -15,6 +20,21 @@ export interface GridBaseSlots {
    * @default Chip
    */
   baseChip: React.JSXElementConstructor<GridSlotProps['baseChip']>;
+  /**
+   * The custom Divider component used in the grid.
+   * @default Divider
+   */
+  baseDivider: React.JSXElementConstructor<GridSlotProps['baseDivider']>;
+  /**
+   * The custom MenuList component used in the grid.
+   * @default MenuList
+   */
+  baseMenuList: React.JSXElementConstructor<GridSlotProps['baseMenuList']>;
+  /**
+   * The custom MenuItem component used in the grid.
+   * @default MenuItem
+   */
+  baseMenuItem: React.JSXElementConstructor<GridSlotProps['baseMenuItem']>;
   /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment
@@ -93,6 +113,11 @@ export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponen
   columnHeaderFilterIconButton: React.JSXElementConstructor<
     GridSlotProps['columnHeaderFilterIconButton']
   >;
+  /**
+   * Sort icon component rendered in each column header.
+   * @default GridColumnHeaderSortIcon
+   */
+  columnHeaderSortIcon: React.JSXElementConstructor<GridSlotProps['columnHeaderSortIcon']>;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    * @default GridColumnMenu

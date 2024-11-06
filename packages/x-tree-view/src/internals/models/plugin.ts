@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/base/utils';
+import { EventHandlers } from '@mui/utils';
 import { TreeViewExperimentalFeatures, TreeViewInstance, TreeViewModel } from './treeView';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
+import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
@@ -16,6 +17,7 @@ export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSigna
   models: TreeViewUsedModels<TSignature>;
   setState: React.Dispatch<React.SetStateAction<TreeViewUsedState<TSignature>>>;
   rootRef: React.RefObject<HTMLUListElement>;
+  plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
 
 type TreeViewModelsInitializer<TSignature extends TreeViewAnyPluginSignature> = {
@@ -47,7 +49,8 @@ export type TreeViewPluginSignature<
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
     modelNames?: keyof T['defaultizedParams'];
     experimentalFeatures?: string;
-    dependantPlugins?: readonly TreeViewAnyPluginSignature[];
+    dependencies?: readonly TreeViewAnyPluginSignature[];
+    optionalDependencies?: readonly TreeViewAnyPluginSignature[];
   },
 > = {
   params: T extends { params: {} } ? T['params'] : {};
@@ -66,8 +69,13 @@ export type TreeViewPluginSignature<
         >;
       }
     : {};
-  experimentalFeatures: T['experimentalFeatures'];
-  dependantPlugins: T extends { dependantPlugins: Array<any> } ? T['dependantPlugins'] : [];
+  experimentalFeatures: T extends { experimentalFeatures: string }
+    ? { [key in T['experimentalFeatures']]?: boolean }
+    : {};
+  dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
+  optionalDependencies: T extends { optionalDependencies: Array<any> }
+    ? T['optionalDependencies']
+    : [];
 };
 
 export type TreeViewAnyPluginSignature = {
@@ -75,7 +83,8 @@ export type TreeViewAnyPluginSignature = {
   instance: any;
   params: any;
   defaultizedParams: any;
-  dependantPlugins: any;
+  dependencies: any;
+  optionalDependencies: any;
   events: any;
   contextValue: any;
   slots: any;
@@ -85,32 +94,37 @@ export type TreeViewAnyPluginSignature = {
   publicAPI: any;
 };
 
-type TreeViewUsedPlugins<TSignature extends TreeViewAnyPluginSignature> = [
+type TreeViewRequiredPlugins<TSignature extends TreeViewAnyPluginSignature> = [
   ...TreeViewCorePluginSignatures,
-  ...TSignature['dependantPlugins'],
+  ...TSignature['dependencies'],
 ];
 
+type PluginPropertyWithDependencies<
+  TSignature extends TreeViewAnyPluginSignature,
+  TProperty extends keyof TreeViewAnyPluginSignature,
+> = TSignature[TProperty] &
+  MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, TProperty> &
+  Partial<MergeSignaturesProperty<TSignature['optionalDependencies'], TProperty>>;
+
 export type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['params'] & MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'params'>;
+  PluginPropertyWithDependencies<TSignature, 'params'>;
 
 type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['defaultizedParams'] &
-    MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'defaultizedParams'>;
+  PluginPropertyWithDependencies<TSignature, 'defaultizedParams'>;
 
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['instance'] &
-    MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'instance'> & {
-      /**
-       * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
-       */
-      $$signature: TSignature;
-    };
+  PluginPropertyWithDependencies<TSignature, 'instance'> & {
+    /**
+     * Private property only defined in TypeScript to be able to access the plugin signature from the instance object.
+     */
+    $$signature: TSignature;
+  };
 
-type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> = TSignature['state'] &
-  MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'state'>;
+type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
+  PluginPropertyWithDependencies<TSignature, 'state'>;
 
 type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
-  TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependantPlugins']]>;
+  TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependencies']]>;
 
 type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
   [K in keyof Models]: Omit<Models[K], 'setValue'>;
@@ -118,29 +132,10 @@ type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
 
 export type TreeViewUsedModels<TSignature extends TreeViewAnyPluginSignature> =
   TSignature['models'] &
-    RemoveSetValue<MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'models'>>;
+    RemoveSetValue<MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'models'>>;
 
 export type TreeViewUsedEvents<TSignature extends TreeViewAnyPluginSignature> =
-  TSignature['events'] & MergeSignaturesProperty<TreeViewUsedPlugins<TSignature>, 'events'>;
-
-export interface TreeViewItemPluginOptions<TProps extends {}> extends TreeViewItemPluginResponse {
-  props: TProps;
-}
-
-export interface TreeViewItemPluginResponse {
-  /**
-   * Root of the `content` slot enriched by the plugin.
-   */
-  contentRef?: React.RefCallback<HTMLElement> | null;
-  /**
-   * Ref of the `root` slot enriched by the plugin
-   */
-  rootRef?: React.RefCallback<HTMLLIElement> | null;
-}
-
-export type TreeViewItemPlugin<TProps extends {}> = (
-  options: TreeViewItemPluginOptions<TProps>,
-) => void | TreeViewItemPluginResponse;
+  TSignature['events'] & MergeSignaturesProperty<TreeViewRequiredPlugins<TSignature>, 'events'>;
 
 export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
   itemId: TreeViewItemId;
@@ -155,23 +150,24 @@ export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
-  getDefaultizedParams?: (
-    params: TreeViewUsedParams<TSignature>,
-  ) => TSignature['defaultizedParams'];
+  getDefaultizedParams?: (options: {
+    params: TreeViewUsedParams<TSignature>;
+    experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
+  }) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
   models?: TreeViewModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
-  itemPlugin?: TreeViewItemPlugin<any>;
+  itemPlugin?: TreeViewItemPlugin;
   /**
    * Render function used to add React wrappers around the TreeItem.
    * @param {{ nodeId: TreeViewItemId; children: React.ReactNode; }} params The params of the item.
    * @returns {React.ReactNode} The wrapped item.
    */
-  wrapItem?: TreeItemWrapper<[TSignature, ...TSignature['dependantPlugins']]>;
+  wrapItem?: TreeItemWrapper<[TSignature, ...TSignature['dependencies']]>;
   /**
    * Render function used to add React wrappers around the TreeView.
    * @param {{ children: React.ReactNode; }} params The params of the root.
    * @returns {React.ReactNode} The wrapped root.
    */
-  wrapRoot?: TreeRootWrapper<[TSignature, ...TSignature['dependantPlugins']]>;
+  wrapRoot?: TreeRootWrapper<[TSignature, ...TSignature['dependencies']]>;
 };

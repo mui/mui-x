@@ -12,7 +12,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Getting started
 
-The default locale of MUI X is English (United States). If you want to use other locales—follow the instructions below.
+The default locale of MUI X is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
 This page focuses on date format localization.
@@ -41,21 +41,21 @@ import 'dayjs/locale/de';
 For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
 :::info
-Both `date-fns` major versions (v2.x and v3.x) are supported.
+We support `date-fns` package v2.x, v3.x, and v4.x major versions.
 
-A single adapter cannot work for both `date-fns` v2.x and v3.x, because the way functions are exported has been changed in v3.x.
+A single adapter cannot work for all `date-fns` versions, because the way functions are exported has been changed in v3.x.
 
-To use `date-fns` v3.x, you will have to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
+To use `date-fns` v3.x or v4.x, you need to import the adapter from `@mui/x-date-pickers/AdapterDateFnsV3` instead of `@mui/x-date-pickers/AdapterDateFns`.
 :::
 
 ```tsx
 // with date-fns v2.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// with date-fns v3.x
+// with date-fns v3.x or v4.x
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 // with date-fns v2.x
 import de from 'date-fns/locale/de';
-// with date-fns v3.x
+// with date-fns v3.x or v4.x
 import { de } from 'date-fns/locale/de';
 
 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
@@ -78,6 +78,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 ```
 
 {{"demo": "LocalizationLuxon.js"}}
+
+:::warning
+`AdapterLuxon` does not support `Settings.throwOnInvalid = true` [setting](https://moment.github.io/luxon/api-docs/index.html#settingsthrowoninvalid).
+
+👍 Upvote [issue #11853](https://github.com/mui/mui-x/issues/11853) if you need support for it.
+
+Don't hesitate to leave feedback on how you would like the data entry to behave.
+:::
 
 ### With `moment`
 
@@ -361,3 +369,12 @@ moment.updateLocale('en', {
   },
 });
 ```
+
+## RTL Support
+
+Right-to-left languages such as Arabic, Persian, or Hebrew are supported.
+Follow [this guide](/material-ui/customization/right-to-left/) to use them.
+
+The example below demonstrates how to use an RTL language (Arabic) with some of the Date and Time Pickers components.
+
+{{"demo": "PickersRTL.js"}}

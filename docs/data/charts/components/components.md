@@ -20,7 +20,7 @@ Charts dimensions are defined by a few props:
 The term **drawing area** refers to the space available to plot data (scatter points, lines, or pie arcs).
 The `margin` is used to leave some space for extra elements, such as the axes, the legend, or the title.
 
-You can use the `useDrawingArea` hook in the charts subcomponents to get the coordinates of the **drawing area**.
+You can use the `useDrawingArea()` hook in the charts subcomponents to get the coordinates of the **drawing area**.
 
 ```jsx
 import { useDrawingArea } from '@mui/x-charts';
@@ -55,7 +55,7 @@ You don't need extra work to take into account the drawing area.
 #### Value to coordinate
 
 The `d3-scale` default method maps from values to coordinates.
-For example, you can get the `x=0` coordinate as follow:
+For example, you can get the `x=0` coordinate as follows:
 
 ```jsx
 const xAxisScale = useXScale(); // get the default X scale

@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { TypographyProps } from '@mui/material/Typography';
 import { PickersToolbarText } from './PickersToolbarText';
 import { ExtendMui } from '../models/helpers';
@@ -50,10 +50,10 @@ export const PickersToolbarButton = React.forwardRef(function PickersToolbarButt
 
   return (
     <PickersToolbarButtonRoot
-      data-mui-test="toolbar-button"
+      data-testid="toolbar-button"
       variant="text"
       ref={ref}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       {...(width ? { sx: { width } } : {})}
       {...other}
     >

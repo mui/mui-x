@@ -6,7 +6,6 @@
   "commitMessageTopic": "{{depName}}",
   "dependencyDashboard": true,
   "rebaseWhen": "conflicted",
-  "ignoreDeps": ["@mui/joy"],
   "labels": ["dependencies"],
   "stopUpdatingLabel": "on hold",
   "packageRules": [
@@ -21,19 +20,19 @@
     },
     {
       "groupName": "babel",
-      "matchPackagePatterns": "@babel/*"
+      "matchPackageNames": ["@babel/**"]
     },
     {
       "groupName": "D3",
-      "matchPackagePatterns": ["d3-*", "@types/d3-*"]
+      "matchPackageNames": ["d3-*", "@types/d3-*"]
     },
     {
       "groupName": "react-spring",
-      "matchPackagePatterns": "@react-spring/*"
+      "matchPackageNames": ["@react-spring/**"]
     },
     {
       "groupName": "Emotion",
-      "matchPackagePatterns": "@emotion/*"
+      "matchPackageNames": ["@emotion/**"]
     },
     {
       "groupName": "core-js",
@@ -57,21 +56,25 @@
     },
     {
       "groupName": "typescript-eslint",
-      "matchPackagePatterns": "@typescript-eslint/*"
+      "matchPackageNames": ["@typescript-eslint/**"]
+    },
+    {
+      "groupName": "ESLint plugins",
+      "matchPackageNames": ["eslint-plugin-*", "!eslint-plugin-react-compiler"]
     },
     {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 19.0.0"
+      "allowedVersions": "< 21.0.0"
     },
     {
       "groupName": "bundling fixtures",
-      "matchPaths": ["test/bundling/fixtures/**/package.json"],
+      "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "every 6 months on the first day of the month"
     },
     {
       "groupName": "examples",
-      "matchPaths": ["examples/**/package.json"],
+      "matchFileNames": ["examples/**/package.json"],
       "minor": {
         "enabled": false
       },
@@ -87,18 +90,25 @@
     {
       "groupName": "MUI Core",
       "matchPackageNames": [
-        "@mui/base",
         "@mui/icons-material",
+        "@mui/joy",
         "@mui/lab",
         "@mui/material",
+        "@mui/material-nextjs",
         "@mui/styles",
         "@mui/system",
+        "@mui/types",
         "@mui/utils"
-      ]
+      ],
+      "allowedVersions": "< 6.0.0"
+    },
+    {
+      "groupName": "MUI Internal",
+      "matchPackageNames": ["@mui/internal-*", "@mui/docs"]
     },
     {
       "groupName": "Playwright",
-      "matchPackagePatterns": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test"]
     },
     {
       "matchDepTypes": ["action"],
@@ -107,6 +117,10 @@
     {
       "groupName": "GitHub Actions",
       "matchManagers": ["github-actions"]
+    },
+    {
+      "groupName": "Vite & Vitest",
+      "matchPackageNames": ["@vitejs/**", "/vitest/"]
     }
   ],
   "postUpdateOptions": ["pnpmDedupe"],

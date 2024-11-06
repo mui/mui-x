@@ -49,6 +49,11 @@ export interface GridRowApi {
    */
   getAllRowIds: () => GridRowId[];
   /**
+   * Sets the internal loading state.
+   * @param {boolean} loading If `true` the loading indicator will be shown over the Data Grid.
+   */
+  setLoading: (loading: boolean) => void;
+  /**
    * Sets a new set of rows.
    * @param {GridRowModel[]} rows The new rows.
    */
@@ -111,4 +116,14 @@ export interface GridRowProApi {
    * @param {boolean} isExpanded A boolean indicating if the row must be expanded or collapsed.
    */
   setRowChildrenExpansion: (id: GridRowId, isExpanded: boolean) => void;
+}
+
+export interface GridRowProPrivateApi {
+  /**
+   * Allows to update, insert and delete rows at a specific nested level.
+   * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
+   * @param {string[]} groupKeys The group keys of the rows to update.
+   * @param {boolean} throttle Whether to throttle the updates or not. (default: `true`)
+   */
+  updateServerRows: (updates: GridRowModelUpdate[], groupKeys?: string[]) => void;
 }

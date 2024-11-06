@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import moment from 'moment';
-import jMoment from 'moment-jalaali';
+import jMoment, { Moment } from 'moment-jalaali';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import {
@@ -35,7 +35,7 @@ describe('<AdapterMomentJalaali />', () => {
       const adapter = new AdapterMomentJalaali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Moment;
 
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
@@ -82,21 +82,18 @@ describe('<AdapterMomentJalaali />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-          expectFieldValueV7(
-            v7Response.getSectionsContainer(),
-            localizedTexts[localeKey].placeholder,
-          );
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(v7Response.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

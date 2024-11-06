@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -13,6 +13,7 @@ import {
   getRows,
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   GridRowModel,
   useGridApiRef,
@@ -27,8 +28,12 @@ import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+interface BaselineProps extends DataGridProProps {
+  rows: GridValidRowModel[];
+}
+
 describe('<DataGridPro /> - Rows', () => {
-  let baselineProps: DataGridProProps & { rows: GridValidRowModel };
+  let baselineProps: BaselineProps;
 
   const { clock, render } = createRenderer({ clock: 'fake' });
 
@@ -437,10 +442,12 @@ describe('<DataGridPro /> - Rows', () => {
       const rowBufferPx = n * rowHeight;
       const nbRows = 996;
       const height = 600;
+      const headerHeight = rowHeight;
+      const innerHeight = height - headerHeight;
       render(
         <TestCaseVirtualization
           nbRows={nbRows}
-          columnHeaderHeight={0}
+          columnHeaderHeight={headerHeight}
           rowHeight={rowHeight}
           rowBufferPx={rowBufferPx}
           hideFooter
@@ -457,11 +464,13 @@ describe('<DataGridPro /> - Rows', () => {
 
       const lastCell = $$('[role="row"]:last-child [role="gridcell"]')[0];
       expect(lastCell).to.have.text('995');
-      expect(renderingZone.children.length).to.equal(Math.floor(height / rowHeight) + n);
+      expect(renderingZone.children.length).to.equal(Math.floor(innerHeight / rowHeight) + n);
       const scrollbarSize = apiRef.current.state.dimensions.scrollbarSize;
       const distanceToFirstRow = (nbRows - renderingZone.children.length) * rowHeight;
       expect(gridOffsetTop()).to.equal(distanceToFirstRow);
-      expect(virtualScroller.scrollHeight - scrollbarSize).to.equal(nbRows * rowHeight);
+      expect(virtualScroller.scrollHeight - scrollbarSize - headerHeight).to.equal(
+        nbRows * rowHeight,
+      );
     });
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
@@ -710,7 +719,9 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
-      act(() => apiRef.current.setPage(1));
+      act(() => {
+        apiRef.current.setPage(1);
+      });
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });
@@ -758,7 +769,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should focus the clicked cell in the state', () => {
       render(<TestCase rows={baselineProps.rows} />);
 
-      userEvent.mousePress(getCell(0, 0));
+      fireUserEvent.mousePress(getCell(0, 0));
       expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[0].id,
         field: baselineProps.columns[0].field,
@@ -776,7 +787,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not reset focus when removing a row not containing the focus cell', () => {
       const { setProps } = render(<TestCase rows={baselineProps.rows} />);
 
-      userEvent.mousePress(getCell(1, 0));
+      fireUserEvent.mousePress(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -787,7 +798,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should set the focus when pressing a key inside a cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
       const cell = getCell(1, 0);
-      userEvent.mousePress(cell);
+      fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'a' });
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -797,12 +808,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should update the focus when clicking from one cell to another', () => {
       render(<TestCase rows={baselineProps.rows} />);
-      userEvent.mousePress(getCell(1, 0));
+      fireUserEvent.mousePress(getCell(1, 0));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      userEvent.mousePress(getCell(2, 1));
+      fireUserEvent.mousePress(getCell(2, 1));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
@@ -811,12 +822,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should reset focus when clicking outside the focused cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
-      userEvent.mousePress(getCell(1, 0));
+      fireUserEvent.mousePress(getCell(1, 0));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
@@ -824,9 +835,9 @@ describe('<DataGridPro /> - Rows', () => {
       const handleCellFocusOut = spy();
       render(<TestCase rows={baselineProps.rows} />);
       apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
-      userEvent.mousePress(getCell(1, 0));
+      fireUserEvent.mousePress(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);
-      userEvent.mousePress(document.body);
+      fireUserEvent.mousePress(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
@@ -843,7 +854,7 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
       }).not.to.throw();
     });
 
@@ -869,81 +880,10 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const cell = getCell(0, 0);
-        userEvent.mousePress(cell);
+        fireUserEvent.mousePress(cell);
         const columnHeaderCell = getColumnHeaderCell(0);
         fireEvent.focus(columnHeaderCell);
       }).not.to.throw();
-    });
-  });
-
-  describe('apiRef: setRowHeight', () => {
-    const ROW_HEIGHT = 52;
-
-    before(function beforeHook() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
-    beforeEach(() => {
-      baselineProps = {
-        rows: [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Adidas',
-          },
-          {
-            id: 2,
-            brand: 'Puma',
-          },
-        ],
-        columns: [{ field: 'brand', headerName: 'Brand' }],
-      };
-    });
-
-    let apiRef: React.MutableRefObject<GridApi>;
-
-    function TestCase(props: Partial<DataGridProProps>) {
-      apiRef = useGridApiRef();
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro {...baselineProps} apiRef={apiRef} rowHeight={ROW_HEIGHT} {...props} />
-        </div>
-      );
-    }
-
-    it('should change row height', () => {
-      const resizedRowId = 1;
-      render(<TestCase />);
-
-      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
-
-      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
-      expect(getRow(resizedRowId).clientHeight).to.equal(100);
-    });
-
-    it('should preserve changed row height after sorting', () => {
-      const resizedRowId = 0;
-      const getRowHeight = spy();
-      render(<TestCase getRowHeight={getRowHeight} />);
-
-      const row = getRow(resizedRowId);
-      expect(row.clientHeight).to.equal(ROW_HEIGHT);
-
-      getRowHeight.resetHistory();
-      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
-      expect(row.clientHeight).to.equal(100);
-
-      // sort
-      fireEvent.click(getColumnHeaderCell(resizedRowId));
-
-      expect(row.clientHeight).to.equal(100);
-      expect(getRowHeight.neverCalledWithMatch({ id: resizedRowId })).to.equal(true);
     });
   });
 

@@ -7,11 +7,12 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
+        planVersion: 'initial',
       }),
     ).to.equal(
-      'b2b2ea9c6fd846e11770da3c795d6f63Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
+      'e8fad422a82720084ec67dd693f08056Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9aW5pdGlhbCxLVj0y',
     );
   });
 
@@ -20,37 +21,68 @@ describe('License: generateLicense', () => {
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'premium',
-        licensingModel: 'subscription',
+        planScope: 'premium',
+        licenseModel: 'subscription',
+        planVersion: 'initial',
       }),
     ).to.equal(
-      'ac8d20b4ecd1f919157f3713f8ba1651Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
+      '8ca0384bfb92ec214d4cd72483f5110bTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWluaXRpYWwsS1Y9Mg==',
     );
   });
 
-  it('should generate annual license when `licensingModel: "subscription"`', () => {
+  it('should generate annual license when `licenseModel: "subscription"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'subscription',
+        planScope: 'pro',
+        licenseModel: 'subscription',
+        planVersion: 'initial',
       }),
     ).to.equal(
-      'b2b2ea9c6fd846e11770da3c795d6f63Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
+      'e8fad422a82720084ec67dd693f08056Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9aW5pdGlhbCxLVj0y',
     );
   });
 
-  it('should generate perpetual license when `licensingModel: "perpetual"`', () => {
+  it('should generate perpetual license when `licenseModel: "perpetual"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
         orderNumber: 'MUI-123',
-        scope: 'pro',
-        licensingModel: 'perpetual',
+        planScope: 'pro',
+        licenseModel: 'perpetual',
+        planVersion: 'initial',
       }),
     ).to.equal(
-      'b16edd8e6bc83293a723779a259f520cTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsS1Y9Mg==',
+      'aaf2e3c60b06199962fbbab985843d97Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsUFY9aW5pdGlhbCxLVj0y',
+    );
+  });
+
+  it('should generate subscription Pro license when `planVersion: "Q3-2024"`', () => {
+    expect(
+      generateLicense({
+        expiryDate: new Date(1591723879062),
+        orderNumber: 'MUI-123',
+        planScope: 'pro',
+        licenseModel: 'subscription',
+        planVersion: 'Q3-2024',
+      }),
+    ).to.equal(
+      '4adf08e54d606215809064d1d31b6b39Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sUFY9UTMtMjAyNCxLVj0y',
+    );
+  });
+
+  it('should generate subscription Premium license when `planVersion: "Q3-2024"`', () => {
+    expect(
+      generateLicense({
+        expiryDate: new Date(1591723879062),
+        orderNumber: 'MUI-123',
+        planScope: 'premium',
+        licenseModel: 'subscription',
+        planVersion: 'Q3-2024',
+      }),
+    ).to.equal(
+      'b76c2067275b3b566fcae1d28ad23c91Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPVEzLTIwMjQsS1Y9Mg==',
     );
   });
 });

@@ -1,0 +1,16 @@
+<Button onClick={() => apiRef.current.unstable_dataSource.cache.clear()}>
+  Reset cache
+</Button>
+<div style={{ height: 400 }}>
+  <DataGridPro
+    columns={columns}
+    unstable_dataSource={dataSource}
+    treeData
+    apiRef={apiRef}
+    pagination
+    pageSizeOptions={pageSizeOptions}
+    initialState={initialStateWithPagination}
+    slots={{ toolbar: GridToolbar }}
+    slotProps={{ toolbar: { showQuickFilter: true } }}
+  />
+</div>

@@ -1,6 +1,8 @@
+'use client';
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
+import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
 import {
   ResponsiveChartContainer,
@@ -8,20 +10,13 @@ import {
 } from '../ResponsiveChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
-import { MakeOptional } from '../models/helpers';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
@@ -36,22 +31,23 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
+import { useBarChartProps } from './useBarChartProps';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
+    ChartsTooltipSlots<'bar'>,
     ChartsOverlaySlots {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
+    ChartsTooltipSlotProps<'bar'>,
     ChartsOverlaySlotProps {}
 
 export interface BarChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
+  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -65,7 +61,7 @@ export interface BarChartProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps;
+  tooltip?: ChartsTooltipProps<'bar'>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -74,14 +70,10 @@ export interface BarChartProps
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    *
    */
   axisHighlight?: ChartsAxisHighlightProps;
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend?: ChartsLegendProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -110,114 +102,36 @@ export interface BarChartProps
  *
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
-const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
+const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref) {
+  const props = useThemeProps({ props: inProps, name: 'MuiBarChart' });
   const {
-    xAxis,
-    yAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    sx,
-    layout,
-    tooltip,
-    axisHighlight,
-    legend,
-    grid,
-    topAxis,
-    leftAxis,
-    rightAxis,
-    bottomAxis,
-    skipAnimation,
-    borderRadius,
-    onItemClick,
-    onAxisClick,
+    chartContainerProps,
+    barPlotProps,
+    axisClickHandlerProps,
+    gridProps,
+    clipPathProps,
+    clipPathGroupProps,
+    overlayProps,
+    chartsAxisProps,
+    axisHighlightProps,
+    legendProps,
+    tooltipProps,
     children,
-    slots,
-    slotProps,
-    loading,
-    barLabel,
-    highlightedItem,
-    onHighlightChange,
-  } = props;
+  } = useBarChartProps(props);
 
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
-
-  const hasHorizontalSeries =
-    layout === 'horizontal' ||
-    (layout === undefined && series.some((item) => item.layout === 'horizontal'));
-
-  const defaultAxisConfig = {
-    scaleType: 'band',
-    data: Array.from(
-      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-      (_, index) => index,
-    ),
-  } as const;
-
-  const defaultizedAxisHighlight = {
-    ...(hasHorizontalSeries ? ({ y: 'band' } as const) : ({ x: 'band' } as const)),
-    ...axisHighlight,
-  };
   return (
-    <ResponsiveChartContainer
-      ref={ref}
-      series={series.map((s) => ({
-        type: 'bar',
-        ...s,
-        layout: hasHorizontalSeries ? 'horizontal' : 'vertical',
-      }))}
-      width={width}
-      height={height}
-      margin={margin}
-      xAxis={
-        xAxis ??
-        (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY, ...defaultAxisConfig }])
-      }
-      yAxis={
-        yAxis ??
-        (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined)
-      }
-      colors={colors}
-      dataset={dataset}
-      sx={sx}
-      disableAxisListener={
-        tooltip?.trigger !== 'axis' &&
-        axisHighlight?.x === 'none' &&
-        axisHighlight?.y === 'none' &&
-        !onAxisClick
-      }
-      highlightedItem={highlightedItem}
-      onHighlightChange={onHighlightChange}
-    >
-      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
-      {grid && <ChartsGrid vertical={grid.vertical} horizontal={grid.horizontal} />}
-      <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot
-          slots={slots}
-          slotProps={slotProps}
-          skipAnimation={skipAnimation}
-          onItemClick={onItemClick}
-          borderRadius={borderRadius}
-          barLabel={barLabel}
-        />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+      <ChartsGrid {...gridProps} />
+      <g {...clipPathGroupProps}>
+        <BarPlot {...barPlotProps} />
+        <ChartsOverlay {...overlayProps} />
+        <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
-      <ChartsAxis
-        topAxis={topAxis}
-        leftAxis={leftAxis}
-        rightAxis={rightAxis}
-        bottomAxis={bottomAxis}
-        slots={slots}
-        slotProps={slotProps}
-      />
-      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight {...defaultizedAxisHighlight} />
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
-      <ChartsClipPath id={clipPathId} />
+      <ChartsAxis {...chartsAxisProps} />
+      <ChartsLegend {...legendProps} />
+      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      <ChartsClipPath {...clipPathProps} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -232,7 +146,7 @@ BarChart.propTypes = {
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -304,20 +218,6 @@ BarChart.propTypes = {
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -354,6 +254,16 @@ BarChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -366,7 +276,7 @@ BarChart.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**
@@ -420,7 +330,6 @@ BarChart.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -467,6 +376,11 @@ BarChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -491,7 +405,6 @@ BarChart.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -538,6 +451,11 @@ BarChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

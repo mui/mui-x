@@ -5,6 +5,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
+import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -13,7 +14,6 @@ import {
   useGridApiOptionHandler,
 } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { throttle } from '../../../utils/throttle';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
@@ -27,9 +27,14 @@ import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import {
+  calculatePinnedRowsHeight,
+  getValidRowHeight,
+  rowHeightWarning,
+} from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 
 type RootProps = Pick<
   DataGridProcessedProps,
@@ -42,6 +47,7 @@ type RootProps = Pick<
   | 'rowHeight'
   | 'resizeThrottleMs'
   | 'columnHeaderHeight'
+  | 'columnGroupHeaderHeight'
   | 'headerFilterHeight'
 >;
 
@@ -59,6 +65,7 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   hasScrollY: false,
   scrollbarSize: 0,
   headerHeight: 0,
+  groupHeaderHeight: 0,
   headerFilterHeight: 0,
   rowWidth: 0,
   rowHeight: 0,
@@ -86,11 +93,24 @@ export function useGridDimensions(
   const logger = useGridLogger(apiRef, 'useResizeContainer');
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef(EMPTY_SIZE);
+  const dimensionsState = useGridSelector(apiRef, gridDimensionsSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const validRowHeight = React.useMemo(
+    () =>
+      getValidRowHeight(
+        props.rowHeight,
+        DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+        rowHeightWarning,
+      ),
+    [props.rowHeight],
+  );
+  const rowHeight = Math.floor(validRowHeight * densityFactor);
   const headerHeight = Math.floor(props.columnHeaderHeight * densityFactor);
+  const groupHeaderHeight = Math.floor(
+    (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * densityFactor,
+  );
   const headerFilterHeight = Math.floor(
     (props.headerFilterHeight ?? props.columnHeaderHeight) * densityFactor,
   );
@@ -247,6 +267,7 @@ export function useGridDimensions(
       hasScrollY,
       scrollbarSize,
       headerHeight,
+      groupHeaderHeight,
       headerFilterHeight,
       rowWidth,
       rowHeight,
@@ -274,6 +295,7 @@ export function useGridDimensions(
     rowsMeta.currentPageTotalHeight,
     rowHeight,
     headerHeight,
+    groupHeaderHeight,
     headerFilterHeight,
     columnsTotalWidth,
     headersTotalHeight,
@@ -302,26 +324,25 @@ export function useGridDimensions(
   }, [apiRef, savedSize, updateDimensions]);
 
   const root = apiRef.current.rootElementRef.current;
-  const dimensions = apiRef.current.state.dimensions;
   useEnhancedEffect(() => {
     if (!root) {
       return;
     }
     const set = (k: string, v: string) => root.style.setProperty(k, v);
-    set('--DataGrid-width', `${dimensions.viewportOuterSize.width}px`);
-    set('--DataGrid-hasScrollX', `${Number(dimensions.hasScrollX)}`);
-    set('--DataGrid-hasScrollY', `${Number(dimensions.hasScrollY)}`);
-    set('--DataGrid-scrollbarSize', `${dimensions.scrollbarSize}px`);
-    set('--DataGrid-rowWidth', `${dimensions.rowWidth}px`);
-    set('--DataGrid-columnsTotalWidth', `${dimensions.columnsTotalWidth}px`);
-    set('--DataGrid-leftPinnedWidth', `${dimensions.leftPinnedWidth}px`);
-    set('--DataGrid-rightPinnedWidth', `${dimensions.rightPinnedWidth}px`);
-    set('--DataGrid-headerHeight', `${dimensions.headerHeight}px`);
-    set('--DataGrid-headersTotalHeight', `${dimensions.headersTotalHeight}px`);
-    set('--DataGrid-topContainerHeight', `${dimensions.topContainerHeight}px`);
-    set('--DataGrid-bottomContainerHeight', `${dimensions.bottomContainerHeight}px`);
-    set('--height', `${dimensions.rowHeight}px`);
-  }, [root, dimensions]);
+    set('--DataGrid-width', `${dimensionsState.viewportOuterSize.width}px`);
+    set('--DataGrid-hasScrollX', `${Number(dimensionsState.hasScrollX)}`);
+    set('--DataGrid-hasScrollY', `${Number(dimensionsState.hasScrollY)}`);
+    set('--DataGrid-scrollbarSize', `${dimensionsState.scrollbarSize}px`);
+    set('--DataGrid-rowWidth', `${dimensionsState.rowWidth}px`);
+    set('--DataGrid-columnsTotalWidth', `${dimensionsState.columnsTotalWidth}px`);
+    set('--DataGrid-leftPinnedWidth', `${dimensionsState.leftPinnedWidth}px`);
+    set('--DataGrid-rightPinnedWidth', `${dimensionsState.rightPinnedWidth}px`);
+    set('--DataGrid-headerHeight', `${dimensionsState.headerHeight}px`);
+    set('--DataGrid-headersTotalHeight', `${dimensionsState.headersTotalHeight}px`);
+    set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
+    set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
+    set('--height', `${dimensionsState.rowHeight}px`);
+  }, [root, dimensionsState]);
 
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
@@ -334,7 +355,7 @@ export function useGridDimensions(
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty height.',
+            'The parent DOM element of the Data Grid has an empty height.',
             'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
@@ -346,7 +367,7 @@ export function useGridDimensions(
       if (size.width === 0 && !errorShown.current && !isJSDOM) {
         logger.error(
           [
-            'The parent DOM element of the data grid has an empty width.',
+            'The parent DOM element of the Data Grid has an empty width.',
             'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',

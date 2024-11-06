@@ -36,6 +36,8 @@ const WORKSPACE_ALIASES = {
   '@mui/x-date-pickers': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': path.resolve(WORKSPACE_ROOT, './packages/x-date-pickers-pro/src'),
   '@mui/x-charts': path.resolve(WORKSPACE_ROOT, './packages/x-charts/src'),
+  '@mui/x-charts-pro': path.resolve(WORKSPACE_ROOT, './packages/x-charts-pro/src'),
+  '@mui/x-charts-vendor': path.resolve(WORKSPACE_ROOT, './packages/x-charts-vendor'),
   '@mui/x-tree-view': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view/src'),
   '@mui/x-tree-view-pro': path.resolve(WORKSPACE_ROOT, './packages/x-tree-view-pro/src'),
   '@mui/x-license': path.resolve(WORKSPACE_ROOT, './packages/x-license/src'),
@@ -68,7 +70,7 @@ export default withDocsInfra({
   transpilePackages: [
     // TODO, those shouldn't be needed in the first place
     '@mui/monorepo', // Migrate everything to @mui/docs until the @mui/monorepo dependency becomes obsolete
-    '@mui/docs',
+    '@mui/docs', // needed to fix slashes in the generated links (https://github.com/mui/mui-x/pull/13713#issuecomment-2205591461, )
   ],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
@@ -104,18 +106,6 @@ export default withDocsInfra({
     return {
       ...config,
       plugins,
-      // TODO, this shouldn't be needed in the first place
-      // Migrate everything from @mui/monorepo to @mui/docs and embed @mui/internal-markdown in @mui/docs
-      resolveLoader: {
-        ...config.resolveLoader,
-        alias: {
-          ...config.resolveLoader.alias,
-          '@mui/internal-markdown/loader': path.resolve(
-            MONOREPO_PATH,
-            './packages/markdown/loader',
-          ),
-        },
-      },
       resolve: {
         ...config.resolve,
         alias: {

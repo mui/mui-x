@@ -1,0 +1,12 @@
+<LineChartPro
+  width={600}
+  height={300}
+  xAxis={[
+    {
+      zoom: true,
+      scaleType: 'point',
+      data: data.map((v, i) => i),
+    },
+  ]}
+  series={series}
+/>

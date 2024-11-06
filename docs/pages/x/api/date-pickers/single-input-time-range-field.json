@@ -80,7 +80,7 @@
     "shouldDisableTime": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(value: TDate, view: TimeView) => boolean",
+        "type": "function(value: PickerValidDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
       }
@@ -134,7 +134,7 @@
     }
   ],
   "spread": true,
-  "themeDefaultProps": false,
+  "themeDefaultProps": true,
   "muiName": "MuiSingleInputTimeRangeField",
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",

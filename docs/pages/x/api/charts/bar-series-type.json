@@ -16,7 +16,7 @@
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisKey": { "type": { "description": "string" } },
-    "yAxisKey": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } }
   }
 }

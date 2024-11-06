@@ -57,15 +57,14 @@ function getComponents() {
       title: 'Treemap',
       srcLight: '/static/x/component-illustrations/treemap-light.png',
       srcDark: '/static/x/component-illustrations/treemap-dark.png',
-      href: '/x/react-charts/tree-map/',
+      href: '/x/react-charts/treemap/',
       planned: true,
     },
     {
       title: 'Heatmap',
       srcLight: '/static/x/component-illustrations/heatmap-light.png',
       srcDark: '/static/x/component-illustrations/heatmap-dark.png',
-      href: '/x/react-charts/heat-map/',
-      planned: true,
+      href: '/x/react-charts/heatmap/',
       pro: true,
     },
     {

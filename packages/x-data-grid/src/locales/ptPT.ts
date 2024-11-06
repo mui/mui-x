@@ -34,19 +34,19 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
-  toolbarExportCSV: 'Baixar como CSV',
+  toolbarExportCSV: 'Descarregar como CSV',
   toolbarExportPrint: 'Imprimir',
-  toolbarExportExcel: 'Baixe como Excel',
+  toolbarExportExcel: 'Descarregar como Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Procurar',
+  columnsManagementNoColumns: 'Sem colunas',
+  columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
+  columnsManagementReset: 'Repor',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
-  filterPanelRemoveAll: 'Deletar tudo',
+  filterPanelRemoveAll: 'Excluir todos',
   filterPanelDeleteIconLabel: 'Excluir',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operador',
@@ -58,7 +58,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contém',
+  filterOperatorDoesNotContain: 'não contém',
   filterOperatorEquals: 'é igual a',
+  filterOperatorDoesNotEqual: 'não é igual a',
   filterOperatorStartsWith: 'começa com',
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
@@ -79,7 +81,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contém',
+  headerFilterOperatorDoesNotContain: 'Não contém',
   headerFilterOperatorEquals: 'É igual a',
+  headerFilterOperatorDoesNotEqual: 'Não é igual',
   headerFilterOperatorStartsWith: 'Começa com',
   headerFilterOperatorEndsWith: 'Termina com',
   headerFilterOperatorIs: 'É',
@@ -104,9 +108,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
   filterValueFalse: 'falso',
 
   // Column menu text
-  columnMenuLabel: 'Cardápio',
+  columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostrar colunas',
-  columnMenuManageColumns: 'Gerenciar colunas',
+  columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar coluna',
   columnMenuUnsort: 'Desclassificar',
@@ -149,11 +153,11 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixar à esquerda',
   pinToRight: 'Fixar à direita',
-  unpin: 'Liberar',
+  unpin: 'Desafixar',
 
   // Tree Data
-  treeDataGroupingHeaderName: 'Group',
-  treeDataExpand: 'veja crianças',
+  treeDataGroupingHeaderName: 'Grupo',
+  treeDataExpand: 'ver crianças',
   treeDataCollapse: 'esconder crianças',
 
   // Grouping columns
@@ -164,7 +168,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Master/detail
   detailPanelToggle: 'Alternar painel de detalhes',
   expandDetailPanel: 'Expandir',
-  collapseDetailPanel: 'Colapso',
+  collapseDetailPanel: 'Colapsar',
 
   // Row reordering text
   rowReorderingHeaderName: 'Reordenação de linhas',

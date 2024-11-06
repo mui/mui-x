@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { DatasetType } from '../models/seriesType/config';
-import { MakeOptional } from '../models/helpers';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 import { ZAxisConfig, ZAxisDefaultized } from '../models/z-axis';
 
@@ -18,7 +19,7 @@ export type ZAxisContextProviderProps = {
 };
 
 type DefaultizedZAxisConfig = {
-  [axisKey: string]: ZAxisDefaultized;
+  [axisId: string]: ZAxisDefaultized;
 };
 
 export const ZAxisContext = React.createContext<{
@@ -47,7 +48,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI X Charts: z-axis uses `dataKey` but no `dataset` is provided.');
+          throw new Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,
@@ -69,7 +70,11 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           axis.colorMap &&
           (axis.colorMap.type === 'ordinal' && axis.data
             ? getOrdinalColorScale({ values: axis.data, ...axis.colorMap })
-            : getColorScale(axis.colorMap)),
+            : getColorScale(
+                axis.colorMap.type === 'continuous'
+                  ? { min: axis.min, max: axis.max, ...axis.colorMap }
+                  : axis.colorMap,
+              )),
       };
     });
 
@@ -127,6 +132,8 @@ ZAxisContextProvider.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
+      max: PropTypes.number,
+      min: PropTypes.number,
     }),
   ),
 } as any;

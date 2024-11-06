@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
 
-process.env.CHROME_BIN = chromium.executablePath();
+process.env.CHROME_BIN ||= chromium.executablePath();
 
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
@@ -80,6 +80,7 @@ module.exports = function setKarmaConfig(config) {
           fs: false, // Some tests import fs,
           stream: require.resolve('stream-browserify'), // util > inherits breaks with `false`
           path: false,
+          child_process: false,
         },
       },
     },

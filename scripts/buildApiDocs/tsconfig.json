@@ -14,9 +14,6 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@mui/material-nextjs/*": [
-        "../../node_modules/@mui/monorepo/packages/mui-material-nextjs/src/*"
-      ],
       "docs/config": ["../../node_modules/@mui/monorepo/docs/config.d.ts"],
       "@mui-internal/api-docs-builder": [
         "../../node_modules/@mui/monorepo/packages/api-docs-builder/index.ts"

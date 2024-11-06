@@ -466,10 +466,6 @@ describe('<DataGrid /> - Filter panel', () => {
     );
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(1);
 
-    // TODO v6: remove the next two lines
-    deleteFilterForm();
-    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
-
     deleteFilterForm();
     clock.tick(100);
     expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);

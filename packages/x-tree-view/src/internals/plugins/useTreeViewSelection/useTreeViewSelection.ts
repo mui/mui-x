@@ -12,7 +12,13 @@ import {
   UseTreeViewSelectionInstance,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
-import { convertSelectedItemsToArray, getLookupFromArray } from './useTreeViewSelection.utils';
+import {
+  convertSelectedItemsToArray,
+  propagateSelection,
+  getAddedAndRemovedItems,
+  getLookupFromArray,
+} from './useTreeViewSelection.utils';
+import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   instance,
@@ -37,49 +43,68 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
   const setSelectedItems = (
     event: React.SyntheticEvent,
-    newSelectedItems: typeof params.defaultSelectedItems,
+    newModel: typeof params.defaultSelectedItems,
+    additionalItemsToPropagate?: TreeViewItemId[],
   ) => {
+    let cleanModel: typeof newModel;
+
+    if (
+      params.multiSelect &&
+      (params.selectionPropagation.descendants || params.selectionPropagation.parents)
+    ) {
+      cleanModel = propagateSelection({
+        instance,
+        selectionPropagation: params.selectionPropagation,
+        newModel: newModel as string[],
+        oldModel: models.selectedItems.value as string[],
+        additionalItemsToPropagate,
+      });
+    } else {
+      cleanModel = newModel;
+    }
+
     if (params.onItemSelectionToggle) {
       if (params.multiSelect) {
-        const addedItems = (newSelectedItems as string[]).filter(
-          (itemId) => !instance.isItemSelected(itemId),
-        );
-        const removedItems = (models.selectedItems.value as string[]).filter(
-          (itemId) => !(newSelectedItems as string[]).includes(itemId),
-        );
-
-        addedItems.forEach((itemId) => {
-          params.onItemSelectionToggle!(event, itemId, true);
+        const changes = getAddedAndRemovedItems({
+          instance,
+          newModel: cleanModel as string[],
+          oldModel: models.selectedItems.value as string[],
         });
 
-        removedItems.forEach((itemId) => {
-          params.onItemSelectionToggle!(event, itemId, false);
-        });
-      } else if (newSelectedItems !== models.selectedItems.value) {
+        if (params.onItemSelectionToggle) {
+          changes.added.forEach((itemId) => {
+            params.onItemSelectionToggle!(event, itemId, true);
+          });
+
+          changes.removed.forEach((itemId) => {
+            params.onItemSelectionToggle!(event, itemId, false);
+          });
+        }
+      } else if (params.onItemSelectionToggle && cleanModel !== models.selectedItems.value) {
         if (models.selectedItems.value != null) {
           params.onItemSelectionToggle(event, models.selectedItems.value as string, false);
         }
-        if (newSelectedItems != null) {
-          params.onItemSelectionToggle(event, newSelectedItems as string, true);
+        if (cleanModel != null) {
+          params.onItemSelectionToggle(event, cleanModel as string, true);
         }
       }
     }
 
     if (params.onSelectedItemsChange) {
-      params.onSelectedItemsChange(event, newSelectedItems);
+      params.onSelectedItemsChange(event, cleanModel);
     }
 
-    models.selectedItems.setControlledValue(newSelectedItems);
+    models.selectedItems.setControlledValue(cleanModel);
   };
 
   const isItemSelected = (itemId: string) => selectedItemsMap.has(itemId);
 
-  const selectItem: UseTreeViewSelectionInstance['selectItem'] = (
+  const selectItem: UseTreeViewSelectionInstance['selectItem'] = ({
     event,
     itemId,
-    keepExistingSelection,
-    newValue,
-  ) => {
+    keepExistingSelection = false,
+    shouldBeSelected,
+  }) => {
     if (params.disableSelection) {
       return;
     }
@@ -88,23 +113,32 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     if (keepExistingSelection) {
       const cleanSelectedItems = convertSelectedItemsToArray(models.selectedItems.value);
       const isSelectedBefore = instance.isItemSelected(itemId);
-      if (isSelectedBefore && (newValue === false || newValue == null)) {
+      if (isSelectedBefore && (shouldBeSelected === false || shouldBeSelected == null)) {
         newSelected = cleanSelectedItems.filter((id) => id !== itemId);
-      } else if (!isSelectedBefore && (newValue === true || newValue == null)) {
+      } else if (!isSelectedBefore && (shouldBeSelected === true || shouldBeSelected == null)) {
         newSelected = [itemId].concat(cleanSelectedItems);
       } else {
         newSelected = cleanSelectedItems;
       }
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (newValue === false) {
+      if (
+        shouldBeSelected === false ||
+        (shouldBeSelected == null && instance.isItemSelected(itemId))
+      ) {
         newSelected = params.multiSelect ? [] : null;
       } else {
         newSelected = params.multiSelect ? [itemId] : itemId;
       }
     }
 
-    setSelectedItems(event, newSelected);
+    setSelectedItems(
+      event,
+      newSelected,
+      // If shouldBeSelected === instance.isItemSelect(itemId), we still want to propagate the select.
+      // This is useful when the element is in an indeterminate state.
+      [itemId],
+    );
     lastSelectedItem.current = itemId;
     lastSelectedRange.current = {};
   };
@@ -193,6 +227,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     getRootProps: () => ({
       'aria-multiselectable': params.multiSelect,
     }),
+    publicAPI: {
+      selectItem,
+    },
     instance: {
       isItemSelected,
       selectItem,
@@ -207,10 +244,13 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
         multiSelect: params.multiSelect,
         checkboxSelection: params.checkboxSelection,
         disableSelection: params.disableSelection,
+        selectionPropagation: params.selectionPropagation,
       },
     },
   };
 };
+
+useTreeViewSelection.itemPlugin = useTreeViewSelectionItemPlugin;
 
 useTreeViewSelection.models = {
   selectedItems: {
@@ -220,13 +260,14 @@ useTreeViewSelection.models = {
 
 const DEFAULT_SELECTED_ITEMS: string[] = [];
 
-useTreeViewSelection.getDefaultizedParams = (params) => ({
+useTreeViewSelection.getDefaultizedParams = ({ params }) => ({
   ...params,
   disableSelection: params.disableSelection ?? false,
   multiSelect: params.multiSelect ?? false,
   checkboxSelection: params.checkboxSelection ?? false,
   defaultSelectedItems:
     params.defaultSelectedItems ?? (params.multiSelect ? DEFAULT_SELECTED_ITEMS : null),
+  selectionPropagation: params.selectionPropagation ?? {},
 });
 
 useTreeViewSelection.params = {
@@ -237,4 +278,5 @@ useTreeViewSelection.params = {
   selectedItems: true,
   onSelectedItemsChange: true,
   onItemSelectionToggle: true,
+  selectionPropagation: true,
 };

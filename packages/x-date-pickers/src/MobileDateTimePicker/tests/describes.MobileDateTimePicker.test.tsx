@@ -1,4 +1,5 @@
-import { screen, userEvent, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { screen, fireEvent, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -11,6 +12,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -26,6 +28,22 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     views: ['year', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
     variant: 'mobile',
+  }));
+
+  describeConformance(<MobileDateTimePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiMobileDateTimePicker',
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+    ],
   }));
 
   describeValue(MobileDateTimePicker, () => ({
@@ -58,9 +76,9 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
-      userEvent.mousePress(
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value!, 1), 1), 5);
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -69,17 +87,17 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);
         // select appropriate meridiem
-        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+        fireEvent.click(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
@@ -89,7 +107,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
         clock.runToLast();
       } else {
         // return to the date view in case we'd like to repeat the selection process
-        userEvent.mousePress(screen.getByRole('tab', { name: 'pick date' }));
+        fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));
       }
 
       return newValue;

@@ -1,20 +1,23 @@
 import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
   getFirstNavigableItem,
   getLastNavigableItem,
   getNextNavigableItem,
   getPreviousNavigableItem,
+  isTargetInDescendants,
 } from '../../utils/tree';
 import {
   TreeViewFirstCharMap,
   UseTreeViewKeyboardNavigationSignature,
 } from './useTreeViewKeyboardNavigation.types';
-import { MuiCancellableEvent } from '../../models/MuiCancellableEvent';
+import { hasPlugin } from '../../utils/plugins';
+import { useTreeViewLabel } from '../useTreeViewLabel';
 
-function isPrintableCharacter(string: string) {
+function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
 }
 
@@ -83,7 +86,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   // ARIA specification: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/#keyboardinteraction
   const handleItemKeyDown = (
-    event: React.KeyboardEvent<HTMLElement> & MuiCancellableEvent,
+    event: React.KeyboardEvent<HTMLElement> & TreeViewCancellableEvent,
     itemId: string,
   ) => {
     if (event.defaultMuiPrevented) {
@@ -92,7 +95,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
     if (
       event.altKey ||
-      event.currentTarget !== (event.target as HTMLElement).closest('*[role="treeitem"]')
+      isTargetInDescendants(event.target as HTMLElement, event.currentTarget as HTMLElement)
     ) {
       return;
     }
@@ -107,10 +110,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         event.preventDefault();
         if (params.multiSelect && event.shiftKey) {
           instance.expandSelectionRange(event, itemId);
-        } else if (params.multiSelect) {
-          instance.selectItem(event, itemId, true);
         } else {
-          instance.selectItem(event, itemId, false);
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: params.multiSelect,
+            shouldBeSelected: params.multiSelect ? undefined : true,
+          });
         }
         break;
       }
@@ -118,15 +124,21 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item has children, we expand it.
       // If the focused item has no children, we select it.
       case key === 'Enter': {
-        if (canToggleItemExpansion(itemId)) {
+        if (
+          hasPlugin(instance, useTreeViewLabel) &&
+          instance.isItemEditable(itemId) &&
+          !instance.isItemBeingEdited(itemId)
+        ) {
+          instance.setEditedItemId(itemId);
+        } else if (canToggleItemExpansion(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {
             event.preventDefault();
-            instance.selectItem(event, itemId, true);
+            instance.selectItem({ event, itemId, keepExistingSelection: true });
           } else if (!instance.isItemSelected(itemId)) {
-            instance.selectItem(event, itemId, false);
+            instance.selectItem({ event, itemId });
             event.preventDefault();
           }
         }
@@ -171,6 +183,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we move the focus to its first child
       // If the focused item is collapsed and has children, we expand it
       case (key === 'ArrowRight' && !isRtl) || (key === 'ArrowLeft' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (instance.isItemExpanded(itemId)) {
           const nextItemId = getNextNavigableItem(instance, itemId);
           if (nextItemId) {
@@ -188,6 +203,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       // If the focused item is expanded, we collapse it
       // If the focused item is collapsed and has a parent, we move the focus to this parent
       case (key === 'ArrowLeft' && !isRtl) || (key === 'ArrowRight' && isRtl): {
+        if (ctrlPressed) {
+          return;
+        }
         if (canToggleItemExpansion(itemId) && instance.isItemExpanded(itemId)) {
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
@@ -239,7 +257,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Multi select behavior when pressing Ctrl + a
       // Selects all the items
-      case key === 'a' && ctrlPressed && params.multiSelect && !params.disableSelection: {
+      case String.fromCharCode(event.keyCode) === 'A' &&
+        ctrlPressed &&
+        params.multiSelect &&
+        !params.disableSelection: {
         instance.selectAllNavigableItems(event);
         event.preventDefault();
         break;
@@ -247,7 +268,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
       // Type-ahead
       // TODO: Support typing multiple characters
-      case !ctrlPressed && !event.shiftKey && isPrintableCharacter(key): {
+      case !ctrlPressed && !event.shiftKey && isPrintableKey(key): {
         const matchingItem = getFirstMatchingItem(itemId, key);
         if (matchingItem != null) {
           instance.focusItem(event, matchingItem);

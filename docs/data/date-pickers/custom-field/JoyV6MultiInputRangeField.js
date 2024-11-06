@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -12,7 +12,6 @@ import {
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
@@ -20,6 +19,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 

@@ -1,19 +1,23 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
-  extractValidationProps,
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
-  DefaultizedProps,
   PickerViewsRendererProps,
   TimeViewWithMeridiem,
+  resolveDateTimeFormat,
+  useUtils,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { resolveComponentProps } from '@mui/base/utils';
+import { extractValidationProps } from '@mui/x-date-pickers/validation';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -30,9 +34,8 @@ import {
   UseMobileRangePickerProps,
   useMobileRangePicker,
 } from '../internals/hooks/useMobileRangePicker';
-import { validateDateTimeRange } from '../internals/utils/validation/validateDateTimeRange';
+import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import { DateRange } from '../models';
 import {
   DateTimeRangePickerRenderers,
   useDateTimeRangePickerDefaultizedProps,
@@ -42,17 +45,15 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const rendererInterceptor = function rendererInterceptor<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any>,
+  inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: PickerViewsRendererProps<
-    DateRange<TDate>,
+    PickerRangeValue,
     DateTimeRangePickerView,
     DefaultizedProps<
       UseMobileRangePickerProps<
-        TDate,
         DateTimeRangePickerView,
         TEnableAccessibleFieldDOMStructure,
         any,
@@ -102,7 +103,7 @@ const rendererInterceptor = function rendererInterceptor<
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
         viewRenderer={
-          viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
+          viewRenderer as PickerViewRenderer<PickerRangeValue, TimeViewWithMeridiem, any, {}>
         }
         view={view && isInternalTimeView(view) ? view : 'hours'}
         views={finalProps.views as TimeViewWithMeridiem[]}
@@ -111,7 +112,7 @@ const rendererInterceptor = function rendererInterceptor<
     );
   }
   // avoiding problem of `props: never`
-  const typedViewRenderer = viewRenderer as PickerViewRenderer<DateRange<TDate>, 'day', any, any>;
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<PickerRangeValue, 'day', any, any>;
 
   return typedViewRenderer({
     ...finalProps,
@@ -122,11 +123,8 @@ const rendererInterceptor = function rendererInterceptor<
   });
 };
 
-type MobileDateRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type MobileDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -141,23 +139,22 @@ type MobileDateRangePickerComponent = (<
  * - [MobileDateTimeRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-range-picker/)
  */
 const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const utils = useUtils();
   // Props with the default values common to all date time range pickers
   const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    TDate,
-    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileDateTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimeRangePickerRenderers<TDate, DateTimeRangePickerView, any> = {
+  const viewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,
@@ -169,6 +166,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps, true),
     // Force one calendar on mobile to avoid layout issues
     calendars: 1,
     // force true to correctly handle `renderTimeViewClock` as a renderer
@@ -179,7 +177,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -197,7 +195,6 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   };
 
   const { renderPicker } = useMobileRangePicker<
-    TDate,
     DateTimeRangePickerView,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -242,9 +239,9 @@ MobileDateTimeRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -303,7 +300,7 @@ MobileDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -345,6 +342,7 @@ MobileDateTimeRangePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -358,6 +356,7 @@ MobileDateTimeRangePicker.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -381,14 +380,16 @@ MobileDateTimeRangePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -399,19 +400,18 @@ MobileDateTimeRangePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -497,16 +497,14 @@ MobileDateTimeRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

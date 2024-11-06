@@ -23,9 +23,17 @@ import {
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
+import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
+const configuration = {
+  hooks: {
+    useGridAriaAttributes,
+    useGridRowAriaAttributes,
+  },
+};
 const releaseInfo = getReleaseInfo();
 
 let dataGridPremiumPropValidators: PropValidator<DataGridPremiumProcessedProps>[];
@@ -40,14 +48,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 ) {
   const props = useDataGridPremiumProps(inProps);
   const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
-
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
   }
   return (
-    <GridContextProvider privateApiRef={privateApiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
       <GridRoot
         className={props.className}
         style={props.style}
@@ -64,21 +71,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     </GridContextProvider>
   );
 });
-interface DataGridPremiumComponent {
-  <R extends GridValidRowModel = any>(
-    props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): React.JSX.Element;
-  propTypes?: any;
-}
-
-/**
- * Demos:
- * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
- *
- * API:
- * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
- */
-export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;
 
 DataGridPremiumRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -118,6 +110,11 @@ DataGridPremiumRaw.propTypes = {
   /**
    * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
    * @default false
+   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
+   * @example
+   * <div style={{ display: 'flex', flexDirection: 'column' }}>
+   *   <DataGrid />
+   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -178,6 +175,11 @@ DataGridPremiumRaw.propTypes = {
    * @default 150
    */
   columnBufferPx: PropTypes.number,
+  /**
+   * Sets the height in pixels of the column group headers in the Data Grid.
+   * Inherits the `columnHeaderHeight` value if not set.
+   */
+  columnGroupHeaderHeight: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Sets the height in pixel of the column headers in the Data Grid.
@@ -327,6 +329,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV8: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -436,7 +439,7 @@ DataGridPremiumRaw.propTypes = {
    */
   headerFilterHeight: PropTypes.number,
   /**
-   * If `true`, enables the data grid filtering on header feature.
+   * If `true`, the header filters feature is enabled.
    * @default false
    */
   headerFilters: PropTypes.bool,
@@ -480,6 +483,14 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
+   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
+   * will select all the rows under it.
+   * If `deselect`, it will deselect all the rows under it.
+   * Works only if `checkboxSelection` is enabled.
+   * @default "deselect"
+   */
+  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
+  /**
    * The initial state of the DataGridPremium.
    * The data in it is set in the state on initialization but isn't controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -501,7 +512,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {boolean} A boolean indicating if the cell is selectable.
+   * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
   /**
@@ -519,6 +530,7 @@ DataGridPremiumRaw.propTypes = {
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a loading overlay is displayed.
+   * @default false
    */
   loading: PropTypes.bool,
   /**
@@ -624,6 +636,12 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnHeaderClick: PropTypes.func,
+  /**
+   * Callback fired when a contextmenu event comes from a column header element.
+   * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
+   * @param {MuiEvent<React.MouseEvent>} event The event object.
+   */
+  onColumnHeaderContextMenu: PropTypes.func,
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -905,6 +923,7 @@ DataGridPremiumRaw.propTypes = {
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
+   * @param {{ rowId: GridRowId }} params Additional parameters.
    * @returns {Promise<R> | R} The final values to update the row.
    */
   processRowUpdate: PropTypes.func,
@@ -948,6 +967,7 @@ DataGridPremiumRaw.propTypes = {
    * Setting it to a lower value could be useful when using dynamic row height,
    * but might reduce performance when displaying a large number of rows.
    * @default 166
+   * @deprecated
    */
   rowPositionsDebounceMs: PropTypes.number,
   /**
@@ -974,6 +994,22 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.string,
   ]),
   /**
+   * When `rowSelectionPropagation.descendants` is set to `true`.
+   * - Selecting a parent selects all its filtered descendants automatically.
+   * - Deselecting a parent row deselects all its filtered descendants automatically.
+   *
+   * When `rowSelectionPropagation.parents` is set to `true`
+   * - Selecting all the filtered descendants of a parent selects the parent automatically.
+   * - Deselecting a descendant of a selected parent deselects the parent automatically.
+   *
+   * Works with tree data and row grouping on the client-side only.
+   * @default { parents: false, descendants: false }
+   */
+  rowSelectionPropagation: PropTypes.shape({
+    descendants: PropTypes.bool,
+    parents: PropTypes.bool,
+  }),
+  /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
@@ -995,12 +1031,12 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the vertical borders of the cells are displayed.
+   * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
   showCellVerticalBorder: PropTypes.bool,
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, vertical borders will be displayed between column header items.
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
@@ -1059,4 +1095,52 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  unstable_dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getGroupKey: PropTypes.func,
+    getRows: PropTypes.func.isRequired,
+    updateRow: PropTypes.func,
+  }),
+  unstable_dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
+  /**
+   * Definition of the column rendered when the `unstable_listView` prop is enabled.
+   */
+  unstable_listColumn: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    display: PropTypes.oneOf(['flex', 'text']),
+    field: PropTypes.string.isRequired,
+    renderCell: PropTypes.func,
+  }),
+  /**
+   * If `true`, displays the data in a list view.
+   * Use in combination with `unstable_listColumn`.
+   */
+  unstable_listView: PropTypes.bool,
+  unstable_onDataSourceError: PropTypes.func,
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  unstable_rowSpanning: PropTypes.bool,
 } as any;
+
+interface DataGridPremiumComponent {
+  <R extends GridValidRowModel = any>(
+    props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
+  ): React.JSX.Element;
+  propTypes?: any;
+}
+
+/**
+ * Demos:
+ * - [DataGridPremium](https://mui.com/x/react-data-grid/demo/)
+ *
+ * API:
+ * - [DataGridPremium API](https://mui.com/x/api/data-grid/data-grid-premium/)
+ */
+export const DataGridPremium = React.memo(DataGridPremiumRaw) as DataGridPremiumComponent;

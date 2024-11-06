@@ -10,13 +10,6 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   instance?: any;
 }
 
-export function wrapPickerMount(
-  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
-) {
-  return (node: React.ReactElement) =>
-    mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
-}
-
 export function createPickerRenderer({
   locale,
   adapterName,

@@ -39,10 +39,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'ייצוא ל- Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'חיפוש',
+  columnsManagementNoColumns: 'אין עמודות',
+  columnsManagementShowHideAllText: 'הצג/הסתר הכל',
+  columnsManagementReset: 'אתחול',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
@@ -58,7 +58,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'מכיל',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'שווה',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'מתחיל ב-',
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
@@ -79,7 +81,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'מכיל',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'שווה',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'מתחיל ב-',
   headerFilterOperatorEndsWith: 'נגמר ב-',
   headerFilterOperatorIs: 'הינו',

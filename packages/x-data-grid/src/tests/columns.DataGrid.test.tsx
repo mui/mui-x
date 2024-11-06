@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer } from '@mui/internal-test-utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { DataGrid, DataGridProps, GridRowsProp, GridColDef, gridClasses } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -120,5 +120,45 @@ describe('<DataGrid /> - Columns', () => {
     expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
     // should not override valueFormatter with the default numeric one
     expect(getCell(0, 0).textContent).to.equal('formatted: 1');
+  });
+
+  // https://github.com/mui/mui-x/issues/13719
+  it('should not crash when updating columns immediately after scrolling', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    const data = [
+      { id: 1, value: 'A' },
+      { id: 2, value: 'B' },
+      { id: 3, value: 'C' },
+      { id: 4, value: 'D' },
+      { id: 5, value: 'E' },
+      { id: 6, value: 'E' },
+      { id: 7, value: 'F' },
+      { id: 8, value: 'G' },
+      { id: 9, value: 'H' },
+    ];
+
+    function DynamicVirtualizationRange() {
+      const [cols, setCols] = React.useState<GridColDef[]>([{ field: 'id' }, { field: 'value' }]);
+
+      return (
+        <div style={{ width: '100%' }}>
+          <button onClick={() => setCols([{ field: 'id' }])}>Update columns</button>
+          <div style={{ height: 400 }}>
+            <DataGrid rows={data} columns={cols} />
+          </div>
+        </div>
+      );
+    }
+
+    render(<DynamicVirtualizationRange />);
+
+    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    virtualScroller.scrollTop = 1_000;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    fireEvent.click(screen.getByText('Update columns'));
   });
 });

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -13,6 +13,7 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -383,7 +384,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.have.length(20);
       setProps({ paginationModel: { pageSize: 10, page: 0 } });
       expect(getColumnValues(0)).to.have.length(10);
-      expect(getCell(0, 0)).to.not.equal(null);
+      expect(getCell(0, 0)).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.have.length(10);
     });
@@ -597,30 +598,30 @@ describe('<DataGrid /> - Pagination', () => {
     it('should support server side pagination with unknown row count', () => {
       const { setProps } = render(<ServerPaginationGrid rowCount={-1} />);
       expect(getColumnValues(0)).to.deep.equal(['0']);
-      expect(screen.getByText('1–1 of more than 1')).to.not.equal(null);
+      expect(screen.getByText('1–1 of more than 1')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(screen.getByText('2–2 of more than 2')).to.not.equal(null);
+      expect(screen.getByText('2–2 of more than 2')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       setProps({ rowCount: 3 });
       expect(getColumnValues(0)).to.deep.equal(['2']);
-      expect(screen.getByText('3–3 of 3')).to.not.equal(null);
+      expect(screen.getByText('3–3 of 3')).not.to.equal(null);
     });
 
     it('should support server side pagination with estimated row count', () => {
       const { setProps } = render(<ServerPaginationGrid rowCount={-1} estimatedRowCount={2} />);
       expect(getColumnValues(0)).to.deep.equal(['0']);
-      expect(screen.getByText('1–1 of more than 2')).to.not.equal(null);
+      expect(screen.getByText('1–1 of more than 2')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(screen.getByText('2–2 of more than 2')).to.not.equal(null);
+      expect(screen.getByText('2–2 of more than 2')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['2']);
-      expect(screen.getByText('3–3 of more than 3')).to.not.equal(null);
+      expect(screen.getByText('3–3 of more than 3')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       setProps({ rowCount: 4 });
       expect(getColumnValues(0)).to.deep.equal(['3']);
-      expect(screen.getByText('4–4 of 4')).to.not.equal(null);
+      expect(screen.getByText('4–4 of 4')).not.to.equal(null);
     });
   });
 
@@ -631,7 +632,7 @@ describe('<DataGrid /> - Pagination', () => {
         pageSizeOptions={[1]}
       />,
     );
-    userEvent.mousePress(getCell(0, 0));
+    fireUserEvent.mousePress(getCell(0, 0));
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getCell(1, 0)).to.have.attr('tabindex', '0');
   });
@@ -730,12 +731,14 @@ describe('<DataGrid /> - Pagination', () => {
     ];
     expect(() => {
       const { setProps } = render(
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
-          pageSizeOptions={[2]}
-        />,
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
+            pageSizeOptions={[2]}
+          />
+        </div>,
       );
       setProps({ rows: rows.slice(0, 2) });
     }).not.to.throw();

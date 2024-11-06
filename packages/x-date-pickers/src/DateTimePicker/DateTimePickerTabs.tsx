@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -7,7 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { useLocaleText } from '../internals/hooks/useUtils';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
@@ -105,7 +106,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     sx,
   } = props;
 
-  const localeText = useLocaleText();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
@@ -127,12 +128,12 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     >
       <Tab
         value="date"
-        aria-label={localeText.dateTableLabel}
+        aria-label={translations.dateTableLabel}
         icon={<React.Fragment>{dateIcon}</React.Fragment>}
       />
       <Tab
         value="time"
-        aria-label={localeText.timeTableLabel}
+        aria-label={translations.timeTableLabel}
         icon={<React.Fragment>{timeIcon}</React.Fragment>}
       />
     </DateTimePickerTabsRoot>

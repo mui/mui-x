@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, setItemExpansion: func } }"
+        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, selectItem: func, setItemExpansion: func } }"
       }
     },
     "checkboxSelection": { "type": { "name": "bool" }, "default": "false" },
@@ -17,6 +17,10 @@
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
+    "expansionTrigger": {
+      "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
+      "default": "'content'"
+    },
     "experimentalFeatures": {
       "type": { "name": "shape", "description": "{ indentationAtItemLevel?: bool }" }
     },
@@ -33,6 +37,13 @@
         "describedArgs": ["event", "itemIds"]
       }
     },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
+      }
+    },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
@@ -43,8 +54,8 @@
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: string, value: string) => void",
-        "describedArgs": ["event", "itemId", "value"]
+        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "describedArgs": ["event", "itemId"]
       }
     },
     "onItemSelectionToggle": {
@@ -62,6 +73,10 @@
       }
     },
     "selectedItems": { "type": { "name": "any" } },
+    "selectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
+    },
     "slotProps": { "type": { "name": "object" } },
     "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
     "sx": {
@@ -75,7 +90,8 @@
   "name": "SimpleTreeView",
   "imports": [
     "import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';",
-    "import { SimpleTreeView } from '@mui/x-tree-view';"
+    "import { SimpleTreeView } from '@mui/x-tree-view';",
+    "import { SimpleTreeView } from '@mui/x-tree-view-pro';"
   ],
   "slots": [
     {
@@ -96,7 +112,7 @@
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
     }
   ],

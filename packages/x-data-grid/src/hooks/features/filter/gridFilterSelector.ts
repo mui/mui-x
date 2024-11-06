@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
+import { GridRowId } from '../../../models/gridRows';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
@@ -41,6 +42,15 @@ export const gridVisibleRowsLookupSelector = (state: GridStateCommunity) => stat
 export const gridFilteredRowsLookupSelector = createSelector(
   gridFilterStateSelector,
   (filterState) => filterState.filteredRowsLookup,
+);
+
+/**
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridFilteredChildrenCountLookupSelector = createSelector(
+  gridFilterStateSelector,
+  (filterState) => filterState.filteredChildrenCountLookup,
 );
 
 /**
@@ -97,6 +107,41 @@ export const gridFilteredSortedRowIdsSelector = createSelectorMemoized(
 );
 
 /**
+ * Get the ids to position in the current tree level lookup of the rows accessible after the filtering process.
+ * Does not contain the collapsed children.
+ * @category Filtering
+ * @ignore - do not document.
+ */
+export const gridExpandedSortedRowTreeLevelPositionLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowIdsSelector,
+  gridRowTreeSelector,
+  (visibleSortedRowIds, rowTree) => {
+    const depthPositionCounter: Record<number, number> = {};
+    let lastDepth = 0;
+
+    return visibleSortedRowIds.reduce((acc: Record<GridRowId, number>, rowId) => {
+      const rowNode = rowTree[rowId];
+
+      if (!depthPositionCounter[rowNode.depth]) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      // going deeper in the tree should reset the counter
+      // since it might have been used in some other branch at the same level, up in the tree
+      // going back up should keep the counter and continue where it left off
+      if (rowNode.depth > lastDepth) {
+        depthPositionCounter[rowNode.depth] = 0;
+      }
+
+      lastDepth = rowNode.depth;
+      depthPositionCounter[rowNode.depth] += 1;
+      acc[rowId] = depthPositionCounter[rowNode.depth];
+      return acc;
+    }, {});
+  },
+);
+
+/**
  * Get the id and the model of the top level rows accessible after the filtering process.
  * @category Filtering
  */
@@ -129,6 +174,26 @@ export const gridExpandedRowCountSelector = createSelector(
 export const gridFilteredTopLevelRowCountSelector = createSelector(
   gridFilteredSortedTopLevelRowEntriesSelector,
   (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
+);
+
+/**
+ * Get the amount of rows accessible after the filtering process.
+ * Includes top level and descendant rows.
+ * @category Filtering
+ */
+export const gridFilteredRowCountSelector = createSelector(
+  gridFilteredSortedRowEntriesSelector,
+  (filteredSortedRowEntries) => filteredSortedRowEntries.length,
+);
+
+/**
+ * Get the amount of descendant rows accessible after the filtering process.
+ * @category Filtering
+ */
+export const gridFilteredDescendantRowCountSelector = createSelector(
+  gridFilteredRowCountSelector,
+  gridFilteredTopLevelRowCountSelector,
+  (totalRowCount, topLevelRowCount) => totalRowCount - topLevelRowCount,
 );
 
 /**

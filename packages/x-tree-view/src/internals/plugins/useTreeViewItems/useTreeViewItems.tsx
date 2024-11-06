@@ -9,6 +9,7 @@ import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from './useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
+import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 interface UpdateNodesStateParameters
   extends Pick<
@@ -22,7 +23,7 @@ const updateItemsState = ({
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: UpdateNodesStateParameters): UseTreeViewItemsState<any>['items'] => {
+}: UpdateNodesStateParameters): State => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
   const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
@@ -76,7 +77,6 @@ const updateItemsState = ({
     };
 
     itemMap[id] = item;
-    itemOrderedChildrenIds[id] = [];
     const parentIdWithDefault = parentId ?? TREE_VIEW_ROOT_PARENT_ID;
     if (!itemOrderedChildrenIds[parentIdWithDefault]) {
       itemOrderedChildrenIds[parentIdWithDefault] = [];
@@ -117,6 +117,20 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
+
+  const getItemTree = React.useCallback(() => {
+    const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
+      const { children: oldChildren, ...item } = state.items.itemMap[id];
+      const newChildren = state.items.itemOrderedChildrenIds[id];
+      if (newChildren) {
+        item.children = newChildren.map(getItemFromItemId);
+      }
+
+      return item;
+    };
+
+    return state.items.itemOrderedChildrenIds[TREE_VIEW_ROOT_PARENT_ID].map(getItemFromItemId);
+  }, [state.items.itemMap, state.items.itemOrderedChildrenIds]);
 
   const isItemDisabled = React.useCallback(
     (itemId: string | null): itemId is string => {
@@ -160,6 +174,17 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       state.items.itemOrderedChildrenIds[itemId ?? TREE_VIEW_ROOT_PARENT_ID] ?? [],
     [state.items.itemOrderedChildrenIds],
   );
+
+  const getItemDOMElement = (itemId: string) => {
+    const itemMeta = instance.getItemMeta(itemId);
+    if (itemMeta == null) {
+      return null;
+    }
+
+    return document.getElementById(
+      generateTreeItemIdAttribute({ treeId: state.id.treeId, itemId, id: itemMeta.idAttribute }),
+    );
+  };
 
   const isItemNavigable = (itemId: string) => {
     if (params.disabledItemsFocusable) {
@@ -214,7 +239,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         label: item.label!,
         itemId: item.id,
         id: item.idAttribute,
-        children: state.items.itemOrderedChildrenIds[id].map(getPropsFromItemId),
+        children: state.items.itemOrderedChildrenIds[id]?.map(getPropsFromItemId),
       };
     };
 
@@ -232,12 +257,17 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     }),
     publicAPI: {
       getItem,
+      getItemDOMElement,
+      getItemTree,
+      getItemOrderedChildrenIds,
     },
     instance: {
       getItemMeta,
       getItem,
+      getItemTree,
       getItemsToRender,
       getItemIndex,
+      getItemDOMElement,
       getItemOrderedChildrenIds,
       isItemDisabled,
       isItemNavigable,
@@ -245,8 +275,11 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       areItemUpdatesPrevented,
     },
     contextValue: {
-      disabledItemsFocusable: params.disabledItemsFocusable,
-      indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      items: {
+        onItemClick: params.onItemClick,
+        disabledItemsFocusable: params.disabledItemsFocusable,
+        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
+      },
     },
   };
 };
@@ -260,7 +293,7 @@ useTreeViewItems.getInitialState = (params) => ({
   }),
 });
 
-useTreeViewItems.getDefaultizedParams = (params) => ({
+useTreeViewItems.getDefaultizedParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
@@ -280,5 +313,6 @@ useTreeViewItems.params = {
   isItemDisabled: true,
   getItemLabel: true,
   getItemId: true,
+  onItemClick: true,
   itemChildrenIndentation: true,
 };

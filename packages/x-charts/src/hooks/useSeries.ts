@@ -1,5 +1,6 @@
+'use client';
 import * as React from 'react';
-import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
+import { FormattedSeries, SeriesContext } from '../context/SeriesProvider';
 
 /**
  * Get access to the internal state of series.
@@ -27,7 +28,7 @@ export function useSeries(): FormattedSeries {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
- * @returns { series: Record<SeriesId, DefaultizedPieSeriesType>; seriesOrder: SeriesId[]; } | undefined pieSeries
+ * @returns {{ series: Record<SeriesId, DefaultizedPieSeriesType>; seriesOrder: SeriesId[]; } | undefined}  pieSeries
  */
 export function usePieSeries(): FormattedSeries['pie'] {
   const series = useSeries();
@@ -40,7 +41,7 @@ export function usePieSeries(): FormattedSeries['pie'] {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
- * @returns { series: Record<SeriesId, DefaultizedLineSeriesType>; seriesOrder: SeriesId[]; } | undefined lineSeries
+ * @returns {{ series: Record<SeriesId, DefaultizedLineSeriesType>; seriesOrder: SeriesId[]; } | undefined}  lineSeries
  */
 export function useLineSeries(): FormattedSeries['line'] {
   const series = useSeries();
@@ -53,7 +54,7 @@ export function useLineSeries(): FormattedSeries['line'] {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
- * @returns { series: Record<SeriesId, DefaultizedBarSeriesType>; seriesOrder: SeriesId[]; } | undefined barSeries
+ * @returns {{ series: Record<SeriesId, DefaultizedBarSeriesType>; seriesOrder: SeriesId[]; } | undefined}  barSeries
  */
 export function useBarSeries(): FormattedSeries['bar'] {
   const series = useSeries();
@@ -66,7 +67,7 @@ export function useBarSeries(): FormattedSeries['bar'] {
  * The returned object contains:
  * - series: a mapping from ids to series attributes.
  * - seriesOrder: the array of series ids.
- * @returns { series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined scatterSeries
+ * @returns {{ series: Record<SeriesId, DefaultizedScatterSeriesType>; seriesOrder: SeriesId[]; } | undefined}  scatterSeries
  */
 export function useScatterSeries(): FormattedSeries['scatter'] {
   const series = useSeries();

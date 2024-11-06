@@ -5,11 +5,11 @@ import { DataGridPremium } from '@mui/x-data-grid-premium'
 
 function App () {
   return (
-    <DataGridPremium
+    (<DataGridPremium
       cellSelection
       cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }} 
       onCellSelectionModelChange={() => {}}
-    />
+    />)
   );
 }
 

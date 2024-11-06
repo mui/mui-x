@@ -19,7 +19,7 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { filterRowTreeFromTreeData, TREE_DATA_STRATEGY } from './gridTreeDataUtils';
+import { filterRowTreeFromTreeData, TreeDataStrategy } from './gridTreeDataUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -46,15 +46,16 @@ export const useGridTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
+    | 'unstable_dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       'rowTree',
-      TREE_DATA_STRATEGY,
-      props.treeData ? () => true : () => false,
+      TreeDataStrategy.Default,
+      props.treeData && !props.unstable_dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData]);
+  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -62,7 +63,7 @@ export const useGridTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
         fields: [],
       };
 
@@ -93,6 +94,9 @@ export const useGridTreeDataPreProcessors = (
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
+      if (props.unstable_dataSource) {
+        return columnsState;
+      }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
       const shouldHaveGroupingColumn = props.treeData;
@@ -122,7 +126,7 @@ export const useGridTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, getGroupingColDef],
+    [props.treeData, props.unstable_dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
@@ -154,7 +158,7 @@ export const useGridTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: TREE_DATA_STRATEGY,
+          groupingName: TreeDataStrategy.Default,
           onDuplicatePath,
         });
       }
@@ -169,7 +173,7 @@ export const useGridTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TreeDataStrategy.Default,
       });
     },
     [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -207,15 +211,20 @@ export const useGridTreeDataPreProcessors = (
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TreeDataStrategy.Default,
+    'filtering',
+    filterRows,
+  );
+  useGridRegisterStrategyProcessor(privateApiRef, TreeDataStrategy.Default, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TreeDataStrategy.Default,
     'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );

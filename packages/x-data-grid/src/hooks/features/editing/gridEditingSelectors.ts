@@ -1,4 +1,6 @@
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-// TODO v6: rename to gridEditingStateSelector
+/**
+ * Select the row editing state.
+ */
 export const gridEditRowsStateSelector = (state: GridStateCommunity) => state.editRows;

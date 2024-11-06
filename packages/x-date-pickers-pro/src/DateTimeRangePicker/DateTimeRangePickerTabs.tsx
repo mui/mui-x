@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -7,11 +8,11 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
 import {
   DateOrTimeViewWithMeridiem,
-  useLocaleText,
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
 } from '@mui/x-date-pickers/internals';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {
@@ -122,7 +123,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     sx,
   } = props;
 
-  const localeText = useLocaleText();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(props);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';
@@ -130,17 +131,23 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   const tabLabel = React.useMemo(() => {
     switch (value) {
       case 'start-date':
-        return localeText.startDate;
+        return translations.startDate;
       case 'start-time':
-        return localeText.startTime;
+        return translations.startTime;
       case 'end-date':
-        return localeText.endDate;
+        return translations.endDate;
       case 'end-time':
-        return localeText.endTime;
+        return translations.endTime;
       default:
         return '';
     }
-  }, [localeText.endDate, localeText.endTime, localeText.startDate, localeText.startTime, value]);
+  }, [
+    translations.endDate,
+    translations.endTime,
+    translations.startDate,
+    translations.startTime,
+    value,
+  ]);
 
   const handleRangePositionChange = useEventCallback((newTab: TabValue) => {
     if (newTab.includes('start')) {
@@ -176,7 +183,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         <IconButton
           onClick={changeToPreviousTab}
           className={classes.navigationButton}
-          title={localeText.openPreviousView}
+          title={translations.openPreviousView}
         >
           <ArrowLeftIcon />
         </IconButton>
@@ -195,7 +202,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
         <IconButton
           onClick={changeToNextTab}
           className={classes.navigationButton}
-          title={localeText.openNextView}
+          title={translations.openNextView}
         >
           <ArrowRightIcon />
         </IconButton>

@@ -11,15 +11,9 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-  act,
-  userEvent,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -92,10 +86,10 @@ describe('<DataGridPro /> - Detail panel', () => {
     await microtasks();
 
     const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
-    expect(virtualScrollerContent).toHaveInlineStyle({
-      width: 'auto',
+    expect(virtualScrollerContent).toHaveComputedStyle({
       height: `${rowHeight + detailPanelHeight}px`,
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     const detailPanels = $$('.MuiDataGrid-detailPanel');
     expect(detailPanels[0]).toHaveComputedStyle({
@@ -134,11 +128,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
 
     await waitFor(() => {
-      expect(virtualScrollerContent).toHaveInlineStyle({
-        width: 'auto',
-        height: `${rowHeight + 100}px`,
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     const detailPanels = $$('.MuiDataGrid-detailPanel');
     expect(detailPanels[0]).toHaveComputedStyle({
@@ -148,11 +140,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
 
     await waitFor(() => {
-      expect(virtualScrollerContent).toHaveInlineStyle({
-        width: 'auto',
-        height: `${rowHeight + 200}px`,
-      });
+      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
     });
+    expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
     expect(detailPanels[0]).toHaveComputedStyle({
       height: `200px`,
@@ -228,7 +218,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    userEvent.mousePress(getCell(2, 1));
+    fireUserEvent.mousePress(getCell(2, 1));
     fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
     expect(virtualScroller.scrollTop).to.equal(0);
     fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
@@ -259,7 +249,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const cell = getCell(0, 0);
 
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     virtualScroller.dispatchEvent(new Event('scroll'));
@@ -278,7 +268,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(0, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: ' ' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { key: ' ' });
@@ -438,7 +428,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 0);
-    userEvent.mousePress(cell);
+    fireUserEvent.mousePress(cell);
     expect(handleRowSelectionModelChange.callCount).to.equal(0);
   });
 
@@ -495,10 +485,31 @@ describe('<DataGridPro /> - Detail panel', () => {
       <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
     );
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
-    act(() => {
-      setProps({ detailPanelExpandedRowIds: [1] });
-    });
+    setProps({ detailPanelExpandedRowIds: [1] });
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
+  });
+
+  it("should not render detail panel for the focused row if it's outside of the viewport", function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 50}
+        getDetailPanelContent={() => <div />}
+        rowBufferPx={0}
+        nbRows={20}
+      />,
+    );
+
+    fireUserEvent.mousePress(screen.getAllByRole('button', { name: 'Expand' })[0]);
+
+    const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+    virtualScroller.scrollTop = 500;
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+
+    const detailPanels = document.querySelectorAll(`.${gridClasses.detailPanel}`);
+    expect(detailPanels.length).to.equal(0);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

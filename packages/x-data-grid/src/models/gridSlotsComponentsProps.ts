@@ -1,5 +1,8 @@
 import * as React from 'react';
+import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { MenuListProps } from '@mui/material/MenuList';
+import type { MenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -27,10 +30,18 @@ import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
 import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
-import type { GridRowCountProps } from '../components';
+import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
+import type { GridRowCountProps } from '../components/GridRowCount';
+import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+
+type DividerProps = {};
 
 // Overrides for module augmentation
+export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseDividerPropsOverrides {}
+export interface BaseMenuListPropsOverrides {}
+export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
@@ -46,6 +57,7 @@ export interface BaseChipPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
+export interface ColumnHeaderSortIconPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
 export interface DetailPanelsPropsOverrides {}
@@ -63,7 +75,11 @@ export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 
 export interface GridSlotProps {
+  baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
+  baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
@@ -84,6 +100,7 @@ export interface GridSlotProps {
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
     ColumnHeaderFilterIconButtonPropsOverrides;
+  columnHeaderSortIcon: GridColumnHeaderSortIconProps & ColumnHeaderSortIconPropsOverrides;
   columnMenu: GridColumnMenuProps & ColumnMenuPropsOverrides;
   columnsPanel: GridColumnsPanelProps & ColumnsPanelPropsOverrides;
   columnsManagement: GridColumnsManagementProps & ColumnsManagementPropsOverrides;
@@ -91,7 +108,7 @@ export interface GridSlotProps {
   filterPanel: GridFilterPanelProps & FilterPanelPropsOverrides;
   footer: GridFooterContainerProps & FooterPropsOverrides;
   footerRowCount: GridRowCountProps & FooterRowCountOverrides;
-  loadingOverlay: GridOverlayProps & LoadingOverlayPropsOverrides;
+  loadingOverlay: GridLoadingOverlayProps & LoadingOverlayPropsOverrides;
   noResultsOverlay: GridOverlayProps & NoResultsOverlayPropsOverrides;
   noRowsOverlay: GridOverlayProps & NoRowsOverlayPropsOverrides;
   pagination: Partial<TablePaginationProps> & PaginationPropsOverrides;

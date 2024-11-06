@@ -1,15 +1,15 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import composeClasses from '@mui/utils/composeClasses';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { isLandscape, classes } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -23,7 +23,7 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersLayoutProps<any, any, any> }>({
+})<{ ownerState: PickersLayoutProps<any, any> }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
@@ -79,6 +79,10 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
+type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
 /**
  * Demos:
  *
@@ -88,15 +92,14 @@ export const PickersLayoutContentWrapper = styled('div', {
  *
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
-const PickersLayout = function PickersLayout<
+const PickersLayout = React.forwardRef(function PickersLayout<
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TDate, TView>) {
+>(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref, wrapperVariant } = props;
+  const { sx, className, isLandscape, wrapperVariant } = props;
 
   const classes = useUtilityClasses(props);
 
@@ -104,7 +107,7 @@ const PickersLayout = function PickersLayout<
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={props}
     >
       {isLandscape ? shortcuts : toolbar}
@@ -125,7 +128,7 @@ const PickersLayout = function PickersLayout<
       {actionBar}
     </PickersLayoutRoot>
   );
-};
+}) as PickersLayoutComponent;
 
 PickersLayout.propTypes = {
   // ----------------------------- Warning --------------------------------

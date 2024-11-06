@@ -3,8 +3,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
-import { InferError, useValidation } from '../useValidation';
-import { FieldSection, PickerChangeHandlerContext, PickerValidDate } from '../../../models';
+import { useValidation } from '../../../validation';
+import { FieldSection, PickerChangeHandlerContext, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -146,7 +146,6 @@ const shouldClosePicker = <TValue, TError>(
  */
 export const usePickerValue = <
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
@@ -155,7 +154,7 @@ export const usePickerValue = <
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+}: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
   TSection,
   InferError<TExternalProps>
@@ -165,19 +164,19 @@ export const usePickerValue = <
   const {
     onAccept,
     onChange,
-    value: inValue,
+    value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
-  const { current: isControlled } = React.useRef(inValue !== undefined);
+  const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
     React.useEffect(() => {
-      if (isControlled !== (inValue !== undefined)) {
+      if (isControlled !== (inValueWithoutRenderTimezone !== undefined)) {
         console.error(
           [
             `MUI X: A component is changing the ${
@@ -191,7 +190,7 @@ export const usePickerValue = <
           ].join('\n'),
         );
       }
-    }, [inValue]);
+    }, [inValueWithoutRenderTimezone]);
 
     React.useEffect(() => {
       if (!isControlled && defaultValue !== inDefaultValue) {
@@ -206,15 +205,26 @@ export const usePickerValue = <
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
-
+  const utils = useUtils();
+  const adapter = useLocalizationContext();
   const { isOpen, setIsOpen } = useOpenState(props);
+
+  const {
+    timezone,
+    value: inValueWithTimezoneToRender,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValueWithoutRenderTimezone,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
     let initialValue: TValue;
-    if (inValue !== undefined) {
-      initialValue = inValue;
+    if (inValueWithTimezoneToRender !== undefined) {
+      initialValue = inValueWithTimezoneToRender;
     } else if (defaultValue !== undefined) {
       initialValue = defaultValue;
     } else {
@@ -225,25 +235,18 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       hasBeenModifiedSinceMount: false,
     };
   });
 
-  const { timezone, handleValueChange } = useValueWithTimezone({
-    timezone: timezoneProp,
-    value: inValue,
-    defaultValue,
-    onChange,
-    valueManager,
-  });
-
-  useValidation(
-    { ...props, value: dateState.draft, timezone },
+  const { getValidationErrorForNewValue } = useValidation({
+    props,
     validator,
-    valueManager.isSameError,
-    valueManager.defaultErrorState,
-  );
+    timezone,
+    value: dateState.draft,
+    onError: props.onError,
+  });
 
   const updateDate = useEventCallback((action: PickerValueUpdateAction<TValue, TError>) => {
     const updaterParams: PickerValueUpdaterParams<TValue, TError> = {
@@ -266,29 +269,32 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish) {
-      const validationError =
-        action.name === 'setValueFromField'
-          ? action.context.validationError
-          : validator({
-              adapter,
-              value: action.value,
-              props: { ...props, value: action.value, timezone },
-            });
+    let cachedContext: PickerChangeHandlerContext<TError> | null = null;
+    const getContext = (): PickerChangeHandlerContext<TError> => {
+      if (!cachedContext) {
+        const validationError =
+          action.name === 'setValueFromField'
+            ? action.context.validationError
+            : getValidationErrorForNewValue(action.value);
 
-      const context: PickerChangeHandlerContext<TError> = {
-        validationError,
-      };
+        cachedContext = {
+          validationError,
+        };
 
-      if (action.name === 'setValueFromShortcut') {
-        context.shortcut = action.shortcut;
+        if (action.name === 'setValueFromShortcut') {
+          cachedContext.shortcut = action.shortcut;
+        }
       }
 
-      handleValueChange(action.value, context);
+      return cachedContext;
+    };
+
+    if (shouldPublish) {
+      handleValueChange(action.value, getContext());
     }
 
     if (shouldCommit && onAccept) {
-      onAccept(action.value);
+      onAccept(action.value, getContext());
     }
 
     if (shouldClose) {
@@ -297,21 +303,29 @@ export const usePickerValue = <
   });
 
   if (
-    inValue !== undefined &&
+    inValueWithTimezoneToRender !== undefined &&
     (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
+      !valueManager.areValuesEqual(
+        utils,
+        dateState.lastControlledValue,
+        inValueWithTimezoneToRender,
+      ))
   ) {
-    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(
+      utils,
+      dateState.draft,
+      inValueWithTimezoneToRender,
+    );
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValue,
+      lastControlledValue: inValueWithTimezoneToRender,
       ...(isUpdateComingFromPicker
         ? {}
         : {
-            lastCommittedValue: inValue,
-            lastPublishedValue: inValue,
-            draft: inValue,
+            lastCommittedValue: inValueWithTimezoneToRender,
+            lastPublishedValue: inValueWithTimezoneToRender,
+            draft: inValueWithTimezoneToRender,
             hasBeenModifiedSinceMount: true,
           }),
     }));
@@ -422,7 +436,8 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue, timezone },
+      timezone,
+      props,
     });
 
     return !valueManager.hasError(error);

@@ -11,7 +11,8 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { useLocaleText, useUtils } from '../useUtils';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
+import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   const {
@@ -43,7 +44,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const localeText = useLocaleText();
+  const translations = usePickerTranslations();
   const utils = useUtils();
   const id = useId();
 
@@ -288,7 +289,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     (sectionIndex: number) => (event: React.MouseEvent<HTMLDivElement>) => {
       // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
       // We avoid this by checking if the call to this function is actually intended, or a side effect.
-      if (event.isDefaultPrevented() || readOnly) {
+      if (event.isDefaultPrevented()) {
         return;
       }
 
@@ -302,10 +303,6 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
   });
 
   const getInputContentFocusHandler = useEventCallback((sectionIndex: number) => () => {
-    if (readOnly) {
-      return;
-    }
-
     setSelectedSections(sectionIndex);
   });
 
@@ -314,7 +311,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       // prevent default to avoid the input `onInput` handler being called
       event.preventDefault();
 
-      if (readOnly || typeof parsedSelectedSections !== 'number') {
+      if (readOnly || disabled || typeof parsedSelectedSections !== 'number') {
         return;
       }
 
@@ -435,8 +432,10 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
           'aria-valuenow': getSectionValueNow(section, utils),
           'aria-valuemin': sectionBoundaries[section.type].minimum,
           'aria-valuemax': sectionBoundaries[section.type].maximum,
-          'aria-valuetext': section.value ? getSectionValueText(section, utils) : localeText.empty,
-          'aria-label': localeText[section.type],
+          'aria-valuetext': section.value
+            ? getSectionValueText(section, utils)
+            : translations.empty,
+          'aria-label': translations[section.type],
           'aria-disabled': disabled,
           spellCheck: isEditable ? false : undefined,
           autoCapitalize: isEditable ? 'off' : undefined,
@@ -471,7 +470,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
     disabled,
     readOnly,
     isContainerEditable,
-    localeText,
+    translations,
     utils,
     sectionBoundaries,
     id,

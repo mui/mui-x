@@ -587,6 +587,19 @@ async function initializeEnvironment(
         expect(groupHeaderWidth).to.equal(groupHeaderColumnsTotalWidth);
         expect(subGroupHeaderWidth).to.equal(subGroupHeaderColumnsTotalWidth);
       });
+
+      // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
+      it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
+        await renderFixture('DataGrid/MaxHeight');
+        await page.mouse.move(150, 150);
+        await page.mouse.wheel(0, 50);
+        await sleep(50);
+
+        const scrollTop = await page.evaluate(() => {
+          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
+        });
+        expect(scrollTop).not.to.equal(0);
+      });
     });
 
     describe('<DatePicker />', () => {
@@ -609,7 +622,8 @@ async function initializeEnvironment(
 
         // assertion for: https://github.com/mui/mui-x/issues/12652
         it('should allow field editing after opening and closing the picker', async () => {
-          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+
           // open picker
           await page.getByRole('button').click();
           await page.waitForSelector('[role="dialog"]', { state: 'attached' });
@@ -617,11 +631,13 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          // click on the input to focus it
-          await page.getByRole('textbox').click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
+          await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
 
-          // test that the input value is set after focus
-          expect(await page.getByRole('textbox').inputValue()).to.equal('MM/DD/YYYY');
+          const input = page.getByRole('textbox', { includeHidden: true });
+          expect(await input.inputValue()).to.equal('04/11/2022');
         });
 
         it('should allow filling in a value and clearing a value', async () => {
@@ -708,19 +724,19 @@ async function initializeEnvironment(
 
           const monthSection = page.getByRole('spinbutton', { name: 'Month' });
           await monthSection.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
-        it('should focus the first field section after clearing a value in v6 input', async () => {
-          await renderFixture('DatePicker/BasicClearableDesktopDatePicker');
+        it('should focus the first field section after clearing a value with the non-accessible DOM structure', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
 
           const textbox = page.getByRole('textbox');
           // locator.fill('2') does not work reliably for this case in all browsers
           await textbox.focus();
           await textbox.press('2');
-          await page.getByRole('button', { name: 'Clear value' }).click();
+          await page.getByRole('button', { name: 'Clear' }).click();
 
           // firefox does not support document.getSelection().toString() on input elements
           if (browserType.name() === 'firefox') {
@@ -739,7 +755,7 @@ async function initializeEnvironment(
         });
 
         it('should submit a form when clicking "Enter" key', async () => {
-          await renderFixture('DatePicker/DesktopDatePickerForm');
+          await renderFixture('DatePicker/DesktopDatePickerFormNonAccessibleDOMStructure');
 
           const textbox = page.getByRole('textbox');
           await textbox.focus();
@@ -799,6 +815,21 @@ async function initializeEnvironment(
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
+        });
+
+        it('should have consistent `placeholder` and `value` behavior in the non-accessible DOM structure', async () => {
+          await renderFixture(
+            'DatePicker/MobileDatePickerWithClearActionNonAccessibleDOMStructure',
+          );
+
+          const input = page.getByRole('textbox');
+
+          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button', { name: 'Clear' }).click();
+
+          await input.blur();
+          expect(await input.getAttribute('placeholder')).to.equal('MM/DD/YYYY');
+          expect(await input.inputValue()).to.equal('');
         });
       });
     });
@@ -964,13 +995,13 @@ async function initializeEnvironment(
         await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
       });
 
-      it('should have the same selection process when "readOnly" with single input v7 field', async () => {
+      it('should have the same selection process when "readOnly" with single input field with an accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
-        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV7');
+        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingle');
 
         await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
@@ -988,13 +1019,15 @@ async function initializeEnvironment(
         );
       });
 
-      it('should have the same selection process when "readOnly" with single input v6 field', async () => {
+      it('should have the same selection process when "readOnly" with single input field with a non-accessible DOM structure', async () => {
         // firefox in CI is not happy with this test
         if (browserType.name() === 'firefox') {
           return;
         }
 
-        await renderFixture('DatePicker/ReadonlyDesktopDateRangePickerSingleV6');
+        await renderFixture(
+          'DatePicker/ReadonlyDesktopDateRangePickerSingleNonAccessibleDOMStructure',
+        );
 
         await page.getByRole('textbox').click();
 

@@ -3,44 +3,23 @@ import { AxisInteractionData, ItemInteractionData } from '../context/Interaction
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
-export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
-  if (mousePosition === null) {
-    return {
-      getBoundingClientRect: () => ({
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        toJSON: () => '',
-      }),
-    };
-  }
-  const { x, y } = mousePosition;
-  return {
-    getBoundingClientRect: () => ({
-      width: 0,
-      height: 0,
-      x,
-      y,
-      top: y,
-      right: x,
-      bottom: y,
-      left: x,
-      toJSON: () =>
-        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
-    }),
-  };
-}
+type MousePosition = {
+  x: number;
+  y: number;
+  pointerType: 'mouse' | 'touch' | 'pen';
+  height: number;
+};
 
-export function useMouseTracker() {
+export type UseMouseTrackerReturnValue = null | MousePosition;
+
+/**
+ * @deprecated We recommend using vanilla JS to let popper track mouse position.
+ */
+export function useMouseTracker(): UseMouseTrackerReturnValue {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [mousePosition, setMousePosition] = React.useState<MousePosition | null>(null);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -48,31 +27,74 @@ export function useMouseTracker() {
       return () => {};
     }
 
-    const handleOut = () => {
-      setMousePosition(null);
+    const controller = new AbortController();
+
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setMousePosition(null);
+      }
     };
 
-    const handleMove = (event: MouseEvent | TouchEvent) => {
-      const target = 'targetTouches' in event ? event.targetTouches[0] : event;
+    const handleMove = (event: PointerEvent) => {
       setMousePosition({
-        x: target.clientX,
-        y: target.clientY,
+        x: event.clientX,
+        y: event.clientY,
+        height: event.height,
+        pointerType: event.pointerType as MousePosition['pointerType'],
       });
     };
 
-    element.addEventListener('mouseout', handleOut);
-    element.addEventListener('mousemove', handleMove);
-    element.addEventListener('touchend', handleOut);
-    element.addEventListener('touchmove', handleMove);
+    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
+    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
+    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
+
     return () => {
-      element.removeEventListener('mouseout', handleOut);
-      element.removeEventListener('mousemove', handleMove);
-      element.addEventListener('touchend', handleOut);
-      element.addEventListener('touchmove', handleMove);
+      // Calling `.abort()` removes ALL event listeners
+      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
+      controller.abort();
     };
   }, [svgRef]);
 
   return mousePosition;
+}
+
+type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+
+export function usePointerType(): null | PointerType {
+  const svgRef = useSvgRef();
+
+  // Use a ref to avoid rerendering on every mousemove event.
+  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+
+    const handleEnter = (event: PointerEvent) => {
+      setPointerType({
+        height: event.height,
+        pointerType: event.pointerType as PointerType['pointerType'],
+      });
+    };
+
+    element.addEventListener('pointerenter', handleEnter);
+    element.addEventListener('pointerup', handleOut);
+
+    return () => {
+      element.removeEventListener('pointerenter', handleEnter);
+      element.removeEventListener('pointerup', handleOut);
+    };
+  }, [svgRef]);
+
+  return pointerType;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';

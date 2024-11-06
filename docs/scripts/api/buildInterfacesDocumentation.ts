@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import { EOL } from 'os';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
   getSymbolDescription,
   getSymbolJSDocTags,
@@ -103,11 +103,9 @@ const parseInterfaceSymbol = async (
   };
 
   const properties: Record<string, ParsedProperty> = {};
-  // eslint-disable-next-line no-restricted-syntax
   for (const { type, project } of projectInterfaces) {
     const propertiesOnProject = type.getProperties();
 
-    // eslint-disable-next-line no-restricted-syntax
     for (const propertySymbol of propertiesOnProject) {
       if (properties[propertySymbol.name]) {
         properties[propertySymbol.name].projects.push(project.name);
@@ -170,7 +168,13 @@ function extractDemos(tagInfo: ts.JSDocTagInfo): { demos?: string } {
   }
   const demos = tagInfo.text
     .map(({ text }) => text.matchAll(/\[(.*)\]\((.*)\)/g).next().value)
-    .map(([, text, url]) => `<li><a href="${url}">${text}</a></li>`);
+    .map((match) => {
+      if (match) {
+        const [, text, url] = match;
+        return `<li><a href="${url}">${text}</a></li>`;
+      }
+      return '';
+    });
 
   if (demos.length === 0) {
     return {};
@@ -193,6 +197,40 @@ type BuildApiInterfacesJsonOptions = BuildInterfacesCommonOptions & {
   interfacesWithDedicatedPage: DocumentedInterfaces;
 };
 
+export interface InterfaceApiContent {
+  /**
+   * The name of the documented interface.
+   */
+  name: string;
+  /**
+   * The array of way to import this interface.
+   */
+  imports: string[];
+  /**
+   * The HTML content of the demonstrations list.
+   */
+  demos?: string;
+  /**
+   * The mapping of property name to their typing.
+   */
+  properties: {
+    [property: string]: {
+      /**
+       * The initial type definition.
+       */
+      type: { description: string };
+      default?: string;
+      required?: true;
+      isProPlan?: true;
+      isPremiumPlan?: true;
+    };
+  };
+}
+
+export interface InterfaceApiTranslation {
+  interfaceDescription: string;
+  propertiesDescriptions: { [property: string]: { description: string } };
+}
 export async function buildApiInterfacesJson(options: BuildApiInterfacesJsonOptions) {
   const { projects, apiPagesFolder, folder, interfaces, interfacesWithDedicatedPage } = options;
 
@@ -281,7 +319,6 @@ export async function buildInterfacesDocumentationPage(
     documentedInterfaces.set(interfaceName, packagesWithThisInterface);
   });
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const [interfaceName, packagesWithThisInterface] of Array.from(
     documentedInterfaces.entries(),
   )) {
@@ -298,14 +335,14 @@ export async function buildInterfacesDocumentationPage(
 
     const slug = kebabCase(parsedInterface.name);
 
-    const content = {
+    const content: InterfaceApiContent = {
       name: parsedInterface.name,
       imports: generateImportStatement(parsedInterface, projects),
       ...extractDemos(parsedInterface.tags.demos),
       properties: {},
     };
 
-    const translations = {
+    const translations: InterfaceApiTranslation = {
       interfaceDescription: renderMarkdown(
         linkify(
           escapeCell(parsedInterface.description || ''),

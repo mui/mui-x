@@ -1,14 +1,14 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { balanceSheet, addLabels } from './netflixsBalanceSheet';
 
-const series = [
-  { data: [1, 5, 2], stack: 'a' },
-  { data: [2, 3, 4], stack: 'a' },
-  { data: [3, 2, 3], stack: 'b' },
-  { data: [8, 3, 6], stack: 'b' },
-  { data: [11, 6, 9] },
-];
+const series = addLabels([
+  { dataKey: 'totAss' },
+  { dataKey: 'totLia', stack: 'passive' },
+  { dataKey: 'totEq', stack: 'passive' },
+]);
+
 export default function BarGapNoSnap() {
   return (
     <ChartsUsageDemo
@@ -33,18 +33,21 @@ export default function BarGapNoSnap() {
       ]}
       renderDemo={(props) => (
         <BarChart
+          dataset={balanceSheet}
           series={series}
           width={500}
           height={300}
-          margin={{ top: 5 }}
+          margin={{ top: 15 }}
           xAxis={[
             {
               scaleType: 'band',
-              data: ['Page 1', 'Page 2', 'Page 3'],
+              dataKey: 'year',
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
             },
           ]}
+          yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
+          slotProps={{ legend: { hidden: true } }}
         />
       )}
       getCode={({ props }) => {

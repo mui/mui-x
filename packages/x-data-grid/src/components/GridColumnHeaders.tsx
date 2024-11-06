@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { fastMemo } from '../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,

@@ -9,7 +9,7 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -20,7 +20,8 @@
   "name": "BarPlot",
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
-    "import { BarPlot } from '@mui/x-charts';"
+    "import { BarPlot } from '@mui/x-charts';",
+    "import { BarPlot } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

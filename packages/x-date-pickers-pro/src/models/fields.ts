@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
+import { SlotComponentProps } from '@mui/utils';
 import { BaseFieldProps, UseFieldResponse } from '@mui/x-date-pickers/internals';
 import {
   BaseSingleInputPickersTextFieldProps,
   FieldRef,
   FieldSection,
-  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { SxProps } from '@mui/material/styles';
@@ -64,12 +63,11 @@ export interface RangeFieldSeparatorProps {
  */
 export interface BaseMultiInputFieldProps<
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Omit<
-      BaseFieldProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+      BaseFieldProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
       'unstableFieldRef'
     >,
     RangeFieldSeparatorProps {

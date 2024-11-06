@@ -5,8 +5,8 @@ parameters:
     description: Whether to force browserstack usage. We have limited resources on browserstack so the pipeline might decide to skip browserstack if this parameter isn't set to true.
     type: boolean
     default: false
-  react-dist-tag:
-    description: The dist-tag of react to be used
+  react-version:
+    description: The version of react to be used
     type: string
     default: stable
   workflow:
@@ -20,23 +20,22 @@ parameters:
 
 default-job: &default-job
   parameters:
-    react-dist-tag:
-      description: The dist-tag of react to be used
+    react-version:
+      description: The version of react to be used
       type: string
-      default: << pipeline.parameters.react-dist-tag >>
+      default: << pipeline.parameters.react-version >>
     e2e-base-url:
       description: The base url for running end-to-end test
       type: string
       default: << pipeline.parameters.e2e-base-url >>
   environment:
-    # Keep in sync with "Save playwright cache"
-    PLAYWRIGHT_BROWSERS_PATH: /tmp/pw-browsers
     # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
-    REACT_DIST_TAG: << parameters.react-dist-tag >>
+    REACT_VERSION: << parameters.react-version >>
+    COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:18.20
+    - image: cimg/node:20.17
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -64,24 +63,15 @@ commands:
           steps:
             - run:
                 name: Install pnpm package manager
-                command: |
-                  corepack enable
-            - run:
-                name: Prepare playwright hash
-                command: pnpm list --json --filter playwright > /tmp/playwright_info.json
-            - store_artifacts:
-                name: Debug playwright hash
-                path: /tmp/playwright_info.json
-            - restore_cache:
-                name: Restore playwright cache
-                keys:
-                  - v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
+                command: corepack enable
       - when:
           condition:
             not: << parameters.browsers >>
           steps:
-            # See https://stackoverflow.com/a/73411601
-            - run: corepack enable --install-directory ~/bin
+            - run:
+                name: Install pnpm package manager
+                # See https://stackoverflow.com/a/73411601
+                command: corepack enable --install-directory ~/bin
 
       - run:
           name: View install environment
@@ -91,19 +81,21 @@ commands:
       - run:
           name: Install js dependencies
           command: pnpm install
+
+      - run:
+          name: Resolve React version
+          command: |
+            pnpm use-react-version
+            # log a patch for maintainers who want to check out this change
+            git --no-pager diff HEAD
+
       - when:
-          condition: << parameters.browsers >>
+          condition:
+            equal: [material-ui-v6, << pipeline.parameters.workflow >>]
           steps:
             - run:
-                name: Install playwright browsers
-                command: npx playwright install --with-deps
-            - save_cache:
-                name: Save playwright cache
-                key: v6-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-                paths:
-                  # Keep path in sync with "PLAYWRIGHT_BROWSERS_PATH"
-                  # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
-                  - /tmp/pw-browsers
+                name: Install @mui/material@next
+                command: pnpm use-material-ui-v6
 
 jobs:
   checkout:
@@ -115,9 +107,10 @@ jobs:
           name: Should not have any git not staged
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: Check for duplicated packages
+          name: '`pnpm dedupe` was run?'
           command: |
-            if [[ $(git diff --name-status next | grep pnpm-lock) == "" ]];
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
             then
                 echo "No changes to dependencies detected. Skipping..."
             else
@@ -128,9 +121,6 @@ jobs:
     steps:
       - checkout
       - install_js
-      - run:
-          name: Tests charts
-          command: pnpm test:charts:unit # Run special test for charts due to ESM compatibility issue
       - run:
           name: Tests fake browser
           command: pnpm test:coverage
@@ -146,7 +136,7 @@ jobs:
           command: |
             curl -Os https://uploader.codecov.io/latest/linux/codecov
             chmod +x codecov
-            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_DIST_TAG-jsdom"
+            ./codecov -t ${CODECOV_TOKEN} -Z -F "$REACT_VERSION-jsdom"
   test_lint:
     <<: *default-job
     steps:
@@ -168,7 +158,14 @@ jobs:
       - install_js
       - run:
           name: '`pnpm prettier` changes committed?'
-          command: pnpm prettier --check
+          command: |
+            # #default-branch-switch
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            then
+                pnpm prettier --check
+            else
+                pnpm prettier:check
+            fi
       - run:
           name: Generate PropTypes
           command: pnpm proptypes
@@ -192,16 +189,43 @@ jobs:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
+          name: Sync RSC "use client" directives
+          command: pnpm rsc:build
+      - run:
+          name: '`pnpm rsc:build` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
           name: '`pnpm docs:link-check` changes committed?'
           command: |
             pnpm docs:link-check
             git add -A && git diff --exit-code --staged
+      - run:
+          name: '`pnpm @mui/x-charts-vendor build` was run?'
+          command: |
+            # #default-branch-switch 
+            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]]; 
+            then
+              echo "No changes to dependencies detected. Skipping..."
+            else
+              pnpm --filter @mui/x-charts-vendor build
+              git add -A && git diff --exit-code --staged
+            fi
+      - run:
+          name: 'No dynamic date library import in the Pickers built types?'
+          command: |
+            pnpm --filter @mui/x-date-pickers* prebuild
+            pnpm --filter @mui/x-date-pickers* build:types
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            then
+                exit 1
+            else
+                exit 0
+            fi
+
   test_browser:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
       - install_js:
@@ -223,18 +247,16 @@ jobs:
           command: pnpm docs:typescript:formatted --disable-cache
       - run:
           name: '`pnpm docs:typescript:formatted` changes committed?'
-          command: git add -A && git diff --exit-code --staged
+          command: git add -A && git diff --exit-code --staged docs/src docs/data
       - run:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=1536
+            NODE_OPTIONS: --max-old-space-size=3584
   test_e2e:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
       - install_js:
@@ -246,8 +268,6 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
       - install_js:
@@ -261,8 +281,6 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-focal
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
       - checkout
       - install_js:
@@ -330,3 +348,51 @@ workflows:
       - test_e2e_website:
           requires:
             - checkout
+
+  react-next:
+    when:
+      equal: [react-next, << pipeline.parameters.workflow >>]
+    # triggers:
+    #   - schedule:
+    #       cron: '0 0 * * *'
+    #       filters:
+    #         branches:
+    #           only:
+    #             - master
+    jobs:
+      - test_unit:
+          <<: *default-context
+          react-version: next
+          name: test_unit-react@next
+      - test_browser:
+          <<: *default-context
+          react-version: next
+          name: test_browser-react@next
+      - test_regressions:
+          <<: *default-context
+          react-version: next
+          name: test_regressions-react@next
+      - test_e2e:
+          <<: *default-context
+          react-version: next
+          name: test_e2e-react@next
+
+  material-ui-v6:
+    when:
+      equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+    jobs:
+      - test_unit:
+          <<: *default-context
+          name: test_unit-material@next
+      - test_browser:
+          <<: *default-context
+          name: test_browser-material@next
+      - test_regressions:
+          <<: *default-context
+          name: test_regressions-material@next
+      - test_e2e:
+          <<: *default-context
+          name: test_e2e-material@next
+      - test_types:
+          <<: *default-context
+          name: test_types-material@next

@@ -1,5 +1,7 @@
 export { useTreeView } from './useTreeView';
-export { TreeViewProvider } from './TreeViewProvider';
+export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
+
+export { RichTreeViewItems } from './components/RichTreeViewItems';
 
 export { unstable_resetCleanupTracking } from './hooks/useInstanceEventHandler';
 
@@ -10,16 +12,15 @@ export type {
   MergeSignaturesProperty,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
+  TreeViewItemMeta,
+  TreeViewInstance,
+  TreeViewItemPlugin,
 } from './models';
 
+// Core plugins
+export type { TreeViewCorePluginParameters } from './corePlugins';
+
 // Plugins
-export { DEFAULT_TREE_VIEW_PLUGINS } from './plugins/defaultPlugins';
-export type {
-  DefaultTreeViewPluginSignatures,
-  DefaultTreeViewPluginSlots,
-  DefaultTreeViewPluginSlotProps,
-} from './plugins/defaultPlugins';
-export type { DefaultTreeViewPluginParameters } from './plugins/defaultPlugins';
 export { useTreeViewExpansion } from './plugins/useTreeViewExpansion';
 export type {
   UseTreeViewExpansionSignature,
@@ -37,23 +38,30 @@ export type {
 } from './plugins/useTreeViewFocus';
 export { useTreeViewKeyboardNavigation } from './plugins/useTreeViewKeyboardNavigation';
 export type { UseTreeViewKeyboardNavigationSignature } from './plugins/useTreeViewKeyboardNavigation';
-export { useTreeViewId } from './plugins/useTreeViewId';
-export type { UseTreeViewIdSignature, UseTreeViewIdParameters } from './plugins/useTreeViewId';
 export { useTreeViewIcons } from './plugins/useTreeViewIcons';
 export type {
   UseTreeViewIconsSignature,
   UseTreeViewIconsParameters,
 } from './plugins/useTreeViewIcons';
-export { useTreeViewItems } from './plugins/useTreeViewItems';
+export {
+  useTreeViewItems,
+  buildSiblingIndexes,
+  TREE_VIEW_ROOT_PARENT_ID,
+} from './plugins/useTreeViewItems';
 export type {
   UseTreeViewItemsSignature,
   UseTreeViewItemsParameters,
+  UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
+export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export type {
+  UseTreeViewLabelSignature,
+  UseTreeViewLabelParameters,
+} from './plugins/useTreeViewLabel';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,
   UseTreeViewJSXItemsParameters,
 } from './plugins/useTreeViewJSXItems';
 
-export { buildWarning } from './utils/warning';
-export { extractPluginParamsFromProps } from './utils/extractPluginParamsFromProps';
+export { isTargetInDescendants } from './utils/tree';

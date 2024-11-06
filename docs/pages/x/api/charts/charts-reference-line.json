@@ -32,7 +32,8 @@
   "name": "ChartsReferenceLine",
   "imports": [
     "import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';",
-    "import { ChartsReferenceLine } from '@mui/x-charts';"
+    "import { ChartsReferenceLine } from '@mui/x-charts';",
+    "import { ChartsReferenceLine } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {

@@ -10,10 +10,7 @@ import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregori
  * then we check that both dates have the same hour value.
  */
 // We change to
-const expectSameTimeInMonacoTZ = <TDate extends PickerValidDate>(
-  adapter: MuiPickersAdapter<TDate>,
-  value: TDate,
-) => {
+const expectSameTimeInMonacoTZ = (adapter: MuiPickersAdapter, value: PickerValidDate) => {
   const valueInMonacoTz = adapter.setTimezone(value, 'Europe/Monaco');
   expect(adapter.getHours(value)).to.equal(adapter.getHours(valueInMonacoTz));
 };
@@ -814,6 +811,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDaysInMonth(adapter.addMonths(testDateIso, 1))).to.equal(30);
   });
 
+  it('Method: getDayOfWeek', () => {
+    expect(adapter.getDayOfWeek(testDateIso)).to.equal(adapter.lib === 'luxon' ? 2 : 3);
+  });
+
   describe('Method: getWeekArray', () => {
     it('should work without timezones', () => {
       const weekArray = adapter.getWeekArray(testDateIso);
@@ -866,7 +867,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDateIso)).to.equal(44);
+    expect(adapter.getWeekNumber(testDateIso)).to.equal(44);
   });
 
   it('Method: getYearRange', () => {

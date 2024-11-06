@@ -1,62 +1,75 @@
-import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
+import {
+  ExtremumGetter,
+  ExtremumGetterResult,
+} from '../context/PluginProvider/ExtremumGetter.types';
 
 const mergeMinMax = (
   acc: ExtremumGetterResult,
   val: ExtremumGetterResult,
 ): ExtremumGetterResult => {
-  if (acc[0] === null || acc[1] === null) {
-    return val;
-  }
-  if (val[0] === null || val[1] === null) {
-    return acc;
-  }
   return [Math.min(acc[0], val[0]), Math.max(acc[1], val[1])];
 };
 
 export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis, isDefaultAxis } = params;
+  const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].xAxisKey === axis.id ||
-        (series[seriesId].xAxisKey === undefined && isDefaultAxis),
-    )
+    .filter((seriesId) => {
+      const axisId = series[seriesId].xAxisId;
+      return axisId === axis.id || (axisId === undefined && isDefaultAxis);
+    })
     .reduce(
-      (acc: ExtremumGetterResult, seriesId) => {
-        const seriesMinMax = series[seriesId].data.reduce(
-          (accSeries: ExtremumGetterResult, { x }) => {
-            const val = [x, x] as ExtremumGetterResult;
-            return mergeMinMax(accSeries, val);
+      (acc, seriesId) => {
+        const filter = getFilters?.({
+          currentAxisId: axis.id,
+          isDefaultAxis,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
+        });
+
+        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
+          (accSeries, d, dataIndex) => {
+            if (filter && !filter(d, dataIndex)) {
+              return accSeries;
+            }
+            return mergeMinMax(accSeries, [d.x, d.x]);
           },
-          [null, null],
+          [Infinity, -Infinity],
         );
-        return mergeMinMax(acc, seriesMinMax);
+        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
       },
-      [null, null] as ExtremumGetterResult,
+      [Infinity, -Infinity],
     );
 };
 
 export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis, isDefaultAxis } = params;
+  const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
-    .filter(
-      (seriesId) =>
-        series[seriesId].yAxisKey === axis.id ||
-        (series[seriesId].yAxisKey === undefined && isDefaultAxis),
-    )
+    .filter((seriesId) => {
+      const axisId = series[seriesId].yAxisId;
+      return axisId === axis.id || (axisId === undefined && isDefaultAxis);
+    })
     .reduce(
-      (acc: ExtremumGetterResult, seriesId) => {
-        const seriesMinMax = series[seriesId].data.reduce(
-          (accSeries: ExtremumGetterResult, { y }) => {
-            const val = [y, y] as ExtremumGetterResult;
-            return mergeMinMax(accSeries, val);
+      (acc, seriesId) => {
+        const filter = getFilters?.({
+          currentAxisId: axis.id,
+          isDefaultAxis,
+          seriesXAxisId: series[seriesId].xAxisId,
+          seriesYAxisId: series[seriesId].yAxisId,
+        });
+
+        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
+          (accSeries, d, dataIndex) => {
+            if (filter && !filter(d, dataIndex)) {
+              return accSeries;
+            }
+            return mergeMinMax(accSeries, [d.y, d.y]);
           },
-          [null, null],
+          [Infinity, -Infinity],
         );
-        return mergeMinMax(acc, seriesMinMax);
+        return mergeMinMax(acc, seriesMinMax ?? [Infinity, -Infinity]);
       },
-      [null, null] as ExtremumGetterResult,
+      [Infinity, -Infinity],
     );
 };

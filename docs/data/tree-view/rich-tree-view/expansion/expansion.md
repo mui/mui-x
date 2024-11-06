@@ -33,6 +33,12 @@ Use the `onItemExpansionToggle` prop if you want to react to an item expansion c
 
 {{"demo": "TrackItemExpansionToggle.js"}}
 
+## Limit expansion to icon container
+
+You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole Tree Item content.
+
+{{"demo": "IconExpansionTreeView.js"}}
+
 ## Imperative API
 
 :::success
@@ -56,9 +62,10 @@ Use the `setItemExpansion` API method to change the expansion of an item.
 apiRef.current.setItemExpansion(
   // The DOM event that triggered the change
   event,
-  // The ID of the item to expand or collapse
+  // The id of the item to expand or collapse
   itemId,
-  // `true` if the item should be expanded, `false` if it should be collapsed
+  // If `true` the item will be expanded
+  // If `false` the item will be collapsed
   isExpanded,
 );
 ```

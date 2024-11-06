@@ -1,18 +1,19 @@
 import * as React from 'react';
+import { EventListenerOptions } from '@mui/x-internals/EventManager';
 import { GridEventListener, GridEvents } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
-import { EventListenerOptions } from '../../utils/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import type { GridApiCommon } from '../../models';
 
 /**
  * Signal to the underlying logic what version of the public component API
- * of the data grid is exposed.
+ * of the Data Grid is exposed.
  */
 enum GridSignature {
   DataGrid = 'DataGrid',
   DataGridPro = 'DataGridPro',
+  DataGridPremium = 'DataGridPremium',
 }
 
 interface RegistryContainer {
@@ -121,7 +122,6 @@ export function useGridApiOptionHandler<Api extends GridApiCommon, E extends Gri
   eventName: E,
   handler?: GridEventListener<E>,
 ) {
-  // Validate that only one per event name?
   useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }
 

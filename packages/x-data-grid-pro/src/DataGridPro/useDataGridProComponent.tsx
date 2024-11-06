@@ -47,6 +47,10 @@ import {
   useGridVirtualization,
   useGridColumnResize,
   columnResizeStateInitializer,
+  useGridRowSpanning,
+  rowSpanningStateInitializer,
+  useGridListView,
+  listViewStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -58,6 +62,7 @@ import {
 } from '../hooks/features/columnReorder/useGridColumnReorder';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
+import { useGridDataSourceTreeDataPreProcessors } from '../hooks/features/serverSideTreeData/useGridDataSourceTreeDataPreProcessors';
 import {
   useGridColumnPinning,
   columnPinningStateInitializer,
@@ -77,6 +82,10 @@ import {
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
 import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+import {
+  useGridDataSource,
+  dataSourceStateInitializer,
+} from '../hooks/features/dataSource/useGridDataSource';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -90,6 +99,7 @@ export const useDataGridProComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -114,6 +124,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
   useGridInitializeState(filterStateInitializer, apiRef, props);
+  useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnReorderStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
@@ -122,16 +133,19 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(virtualizationStateInitializer, apiRef, props);
+  useGridInitializeState(dataSourceStateInitializer, apiRef, props);
+  useGridInitializeState(listViewStateInitializer, apiRef, props);
 
   useGridHeaderFiltering(apiRef, props);
-  useGridTreeData(apiRef);
+  useGridTreeData(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
+  useGridRowSpanning(apiRef, props);
+  useGridParamsApi(apiRef, props);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
@@ -157,6 +171,8 @@ export const useDataGridProComponent = (
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);
   useGridVirtualization(apiRef, props);
+  useGridDataSource(apiRef, props);
+  useGridListView(apiRef, props);
 
   return apiRef;
 };

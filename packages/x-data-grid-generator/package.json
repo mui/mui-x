@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "7.6.2",
+  "version": "7.21.0",
   "description": "Generate fake data for demo purposes only.",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -29,26 +29,36 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui/mui-x.git",
+    "url": "git+https://github.com/mui/mui-x.git",
     "directory": "packages/x-data-grid-generator"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.7",
-    "@mui/base": "^5.0.0-beta.40",
+    "@babel/runtime": "^7.26.0",
     "@mui/x-data-grid-premium": "workspace:*",
-    "chance": "^1.1.11",
+    "chance": "^1.1.12",
     "clsx": "^2.1.1",
-    "lru-cache": "^7.18.3"
+    "lru-cache": "^11.0.1"
   },
   "devDependencies": {
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
     "@types/chance": "^1.1.6",
-    "@types/lru-cache": "^7.10.10",
-    "rimraf": "^5.0.7"
+    "rimraf": "^6.0.1"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.4.1",
-    "@mui/material": "^5.15.14",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.4.1 || ^6.0.0",
+    "@mui/material": "^5.15.14 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=14.0.0"

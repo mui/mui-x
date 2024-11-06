@@ -6,7 +6,11 @@ import {
   useGridApiMethod,
   gridDimensionsSelector,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
+import {
+  useGridVisibleRows,
+  GridInfiniteLoaderPrivateApi,
+  useTimeout,
+} from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/system';
 import { GridRowScrollEndParams } from '../../../models';
@@ -35,6 +39,7 @@ export const useGridInfiniteLoader = (
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
+  const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
   const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
@@ -82,6 +87,17 @@ export const useGridInfiniteLoader = (
     }
   }, [virtualScroller, handleLoadMoreRows, isEnabled, marginBottom]);
 
+  const updateTarget = (node: HTMLElement | null) => {
+    if (triggerElement.current !== node) {
+      observer.current?.disconnect();
+
+      triggerElement.current = node;
+      if (triggerElement.current) {
+        observer.current?.observe(triggerElement.current);
+      }
+    }
+  };
+
   const triggerRef = React.useCallback(
     (node: HTMLElement | null) => {
       // Prevent the infite loading working in combination with lazy loading
@@ -89,16 +105,17 @@ export const useGridInfiniteLoader = (
         return;
       }
 
-      if (triggerElement.current !== node) {
-        observer.current?.disconnect();
-
-        triggerElement.current = node;
-        if (triggerElement.current) {
-          observer.current?.observe(triggerElement.current);
-        }
-      }
+      // If the user scrolls through the grid too fast it might happen that the observer is connected to the trigger element
+      // that will be intersecting the root inside the same render cycle (but not intersecting at the time of the connection).
+      // This will cause the observer to not call the callback with `isIntersecting` set to `true`.
+      // https://www.w3.org/TR/intersection-observer/#event-loop
+      // Delaying the connection to the next cycle helps since the observer will always call the callback the first time it is connected.
+      // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/observe
+      // Related to
+      // https://github.com/mui/mui-x/issues/14116
+      updateTargetTimeout.start(0, () => updateTarget(node));
     },
-    [isEnabled],
+    [isEnabled, updateTargetTimeout],
   );
 
   const getInfiniteLoadingTriggerElement = React.useCallback<

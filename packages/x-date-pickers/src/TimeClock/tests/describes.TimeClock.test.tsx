@@ -7,7 +7,6 @@ import {
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   timeClockHandler,
@@ -21,11 +20,10 @@ describe('<TimeClock /> - Describes', () => {
   describeConformance(<TimeClock />, () => ({
     classes,
     inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
     render,
     refInstanceof: window.HTMLDivElement,
     muiName: 'MuiTimeClock',
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
   describeValue(TimeClock, () => ({
@@ -53,7 +51,7 @@ describe('<TimeClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
       timeClockHandler.setViewValue(adapterToUse, newValue, 'hours');
       timeClockHandler.setViewValue(adapterToUse, newValue, 'minutes');

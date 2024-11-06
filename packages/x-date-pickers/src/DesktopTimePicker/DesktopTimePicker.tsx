@@ -1,16 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { resolveComponentProps } from '@mui/base/utils';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import { validateTime } from '../internals/utils/validation/validateTime';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
+import { useUtils } from '../internals/hooks/useUtils';
+import { extractValidationProps, validateTime } from '../validation';
 import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -19,13 +20,11 @@ import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { TimeView, PickerValidDate } from '../models';
+import { TimeView, PickerOwnerState } from '../models';
+import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
-type DesktopTimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -40,33 +39,31 @@ type DesktopTimePickerComponent = (<
  * - [DesktopTimePicker API](https://mui.com/x/api/date-pickers/desktop-time-picker/)
  */
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
-  const utils = useUtils<TDate>();
+  const translations = usePickerTranslations();
+  const utils = useUtils();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
-    TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopTimePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopTimePicker');
 
   const {
     shouldRenderTimeInASingleColumn,
     views: resolvedViews,
     timeSteps,
-  } = resolveTimeViewsResponse<TDate, TimeView, TimeViewWithMeridiem>(defaultizedProps);
+  } = resolveTimeViewsResponse<TimeView, TimeViewWithMeridiem>(defaultizedProps);
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimePickerViewRenderers<TDate, TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimePickerViewRenderers<TimeViewWithMeridiem, any> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
@@ -102,7 +99,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     },
     slotProps: {
       ...defaultizedProps.slotProps,
-      field: (ownerState: any) => ({
+      field: (ownerState: PickerOwnerState) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
@@ -120,7 +117,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
   };
 
   const { renderPicker } = useDesktopPicker<
-    TDate,
     TimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props
@@ -128,8 +124,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText:
-      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
+    getOpenDialogAriaText: buildGetOpenDialogAriaText({
+      utils,
+      formatKey: 'fullTime',
+      contextTranslation: translations.openTimePickerDialogue,
+      propsTranslation: props.localeText?.openTimePickerDialogue,
+    }),
     validator: validateTime,
   });
 
@@ -195,7 +195,7 @@ DesktopTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -243,14 +243,16 @@ DesktopTimePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -261,13 +263,13 @@ DesktopTimePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**
@@ -338,8 +340,7 @@ DesktopTimePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

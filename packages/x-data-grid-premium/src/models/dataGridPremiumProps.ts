@@ -24,7 +24,14 @@ import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  /**
+   * Enables accessibility improvements that will be enabled by default in V8.
+   * If you rely on the v7 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV8: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
@@ -51,7 +58,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 }
 
 /**
- * The props of the `DataGridPremium` component after the pre-processing phase.
+ * The props of the Data Grid Premium component after the pre-processing phase.
  */
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
@@ -61,7 +68,7 @@ export interface DataGridPremiumProcessedProps
 export type DataGridPremiumForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPremium` options with a default value overridable through props.
+ * The Data Grid Premium options with a default value overridable through props.
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface.
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */

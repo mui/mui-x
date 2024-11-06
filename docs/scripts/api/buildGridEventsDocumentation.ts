@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 import path from 'path';
-import { renderMarkdown } from '@mui/monorepo/packages/markdown';
+import { renderMarkdown } from '@mui/internal-markdown';
 import {
   DocumentedInterfaces,
   getSymbolDescription,
@@ -34,7 +34,6 @@ export default async function buildGridEventsDocumentation(
     };
   } = {};
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const projectName of GRID_PROJECTS) {
     const project = projects.get(projectName)!;
     const gridEventLookupSymbol = project.exports.GridEventLookup;

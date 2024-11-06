@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -8,6 +9,8 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
+import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -17,6 +20,15 @@ describe('<TimeField /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'field',
+  }));
+
+  describeConformance(<TimeField />, () => ({
+    classes: {} as any,
+    inheritComponent: PickersTextField,
+    render,
+    muiName: 'MuiTimeField',
+    refInstanceof: window.HTMLDivElement,
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeValue(TimeField, () => ({
@@ -39,7 +51,7 @@ describe('<TimeField /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { selectSection, pressKey }) => {
-      const newValue = adapterToUse.addHours(value, 1);
+      const newValue = adapterToUse.addHours(value!, 1);
       selectSection('hours');
       pressKey(undefined, 'ArrowUp');
 

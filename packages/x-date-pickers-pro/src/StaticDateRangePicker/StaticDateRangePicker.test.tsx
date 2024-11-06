@@ -3,12 +3,7 @@ import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { screen } from '@mui/internal-test-utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-  describeRangeValidation,
-} from 'test/utils/pickers';
+import { createPickerRenderer, adapterToUse, describeRangeValidation } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<StaticDateRangePicker />', () => {
@@ -21,8 +16,7 @@ describe('<StaticDateRangePicker />', () => {
     classes: {} as any,
     render,
     muiName: 'MuiStaticDateRangePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: undefined,
+    refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
       'componentsProp',
@@ -31,9 +25,6 @@ describe('<StaticDateRangePicker />', () => {
       'themeVariants',
       'mergeClassName',
       'propsSpread',
-      'refForwarding',
-      'rootClass',
-      'reactTestRenderer',
     ],
   }));
 
@@ -49,14 +40,14 @@ describe('<StaticDateRangePicker />', () => {
     render(
       <StaticDateRangePicker
         minDate={adapterToUse.date('2005-01-01')}
-        shouldDisableDate={isWeekend}
+        shouldDisableDate={isWeekend as any}
         defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
       />,
     );
 
     expect(
       screen
-        .getAllByMuiTest('DateRangePickerDay')
+        .getAllByTestId('DateRangePickerDay')
         .filter((day) => day.getAttribute('disabled') !== undefined),
     ).to.have.length(31);
   });

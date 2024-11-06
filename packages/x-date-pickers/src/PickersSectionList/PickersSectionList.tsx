@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -59,15 +60,6 @@ interface PickersSectionProps extends Pick<PickersSectionListProps, 'slots' | 's
   classes: PickersSectionListClasses;
 }
 
-/**
- * Demos:
- *
- * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
- *
- * API:
- *
- * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
- */
 function PickersSection(props: PickersSectionProps) {
   const { slots, slotProps, element, classes } = props;
 
@@ -115,10 +107,41 @@ function PickersSection(props: PickersSectionProps) {
   );
 }
 
+PickersSection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object.isRequired,
+  element: PropTypes.shape({
+    after: PropTypes.object.isRequired,
+    before: PropTypes.object.isRequired,
+    container: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired,
+  }).isRequired,
+  /**
+   * The props used for each component slot.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   */
+  slots: PropTypes.object,
+} as any;
+
 type PickersSectionListComponent = ((
   props: PickersSectionListProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * Demos:
+ *
+ * - [Custom field](https://mui.com/x/react-date-pickers/custom-field/)
+ *
+ * API:
+ *
+ * - [PickersSectionList API](https://mui.com/x/api/date-pickers/pickers-section-list/)
+ */
 const PickersSectionList = React.forwardRef(function PickersSectionList(
   inProps: PickersSectionListProps,
   ref: React.Ref<HTMLDivElement>,

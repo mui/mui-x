@@ -7,4 +7,5 @@
   groupingColDef={{
     leafField: 'traderEmail',
   }}
+  experimentalFeatures={{ ariaV8: true }}
 />

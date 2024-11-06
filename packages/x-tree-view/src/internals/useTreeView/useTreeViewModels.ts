@@ -3,14 +3,16 @@ import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
+  TreeViewPlugin,
 } from '../models';
+import { TreeViewCorePluginSignatures } from '../corePlugins';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state, and the state is only updated if the model is not controlled.
  */
 export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPluginSignature[]>(
-  plugins: ConvertSignaturesIntoPlugins<TSignatures>,
+  plugins: ConvertSignaturesIntoPlugins<readonly [...TreeViewCorePluginSignatures, ...TSignatures]>,
   props: MergeSignaturesProperty<TSignatures, 'defaultizedParams'>,
 ) => {
   type DefaultizedParams = MergeSignaturesProperty<TSignatures, 'defaultizedParams'>;
@@ -25,7 +27,7 @@ export const useTreeViewModels = <TSignatures extends readonly TreeViewAnyPlugin
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
     const initialState: { [modelName: string]: any } = {};
 
-    plugins.forEach((plugin) => {
+    plugins.forEach((plugin: TreeViewPlugin<TreeViewAnyPluginSignature>) => {
       if (plugin.models) {
         Object.entries(plugin.models).forEach(([modelName, modelInitializer]) => {
           modelsRef.current[modelName] = {

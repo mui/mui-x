@@ -10,7 +10,8 @@
   "name": "BarElement",
   "imports": [
     "import { BarElement } from '@mui/x-charts/BarChart';",
-    "import { BarElement } from '@mui/x-charts';"
+    "import { BarElement } from '@mui/x-charts';",
+    "import { BarElement } from '@mui/x-charts-pro';"
   ],
   "slots": [
     {

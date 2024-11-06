@@ -249,7 +249,7 @@ describe('<DataGridPro /> - State persistence', () => {
       expect(getColumnValues(0)).to.deep.equal(['3', '2']);
 
       // Preference panel
-      expect(screen.getByRole('button', { name: /Add Filter/i })).to.not.equal(null);
+      expect(screen.getByRole('button', { name: /Add Filter/i })).not.to.equal(null);
 
       // Columns visibility
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'category']);

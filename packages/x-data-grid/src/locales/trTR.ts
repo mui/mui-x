@@ -38,10 +38,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Excel olarak aktar',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: 'Arama',
+  columnsManagementNoColumns: 'Kolon yok',
+  columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
+  columnsManagementReset: 'Sıfırla',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -57,7 +57,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'içerir',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'eşittir',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'ile başlar',
   filterOperatorEndsWith: 'ile biter',
   filterOperatorIs: 'eşittir',
@@ -78,24 +80,26 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Şuna eşittir',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
-  // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Is not',
-  // headerFilterOperatorAfter: 'Is after',
-  // headerFilterOperatorOnOrAfter: 'Is on or after',
-  // headerFilterOperatorBefore: 'Is before',
-  // headerFilterOperatorOnOrBefore: 'Is on or before',
-  // headerFilterOperatorIsEmpty: 'Is empty',
-  // headerFilterOperatorIsNotEmpty: 'Is not empty',
-  // headerFilterOperatorIsAnyOf: 'Is any of',
-  // 'headerFilterOperator=': 'Equals',
-  // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Greater than',
-  // 'headerFilterOperator>=': 'Greater than or equal to',
-  // 'headerFilterOperator<': 'Less than',
-  // 'headerFilterOperator<=': 'Less than or equal to',
+  headerFilterOperatorIs: 'Eşittir',
+  headerFilterOperatorNot: 'Eşit değil',
+  headerFilterOperatorAfter: 'Sonra',
+  headerFilterOperatorOnOrAfter: 'Sonra veya eşit',
+  headerFilterOperatorBefore: 'Önce',
+  headerFilterOperatorOnOrBefore: 'Önce veya eşit',
+  headerFilterOperatorIsEmpty: 'Boş',
+  headerFilterOperatorIsNotEmpty: 'Boş değil',
+  headerFilterOperatorIsAnyOf: 'Herhangi biri',
+  'headerFilterOperator=': 'Eşittir',
+  'headerFilterOperator!=': 'Eşit değil',
+  'headerFilterOperator>': 'Büyüktür',
+  'headerFilterOperator>=': 'Büyük veya eşit',
+  'headerFilterOperator<': 'Küçüktür',
+  'headerFilterOperator<=': 'Küçük veya eşit',
 
   // Filter values text
   filterValueAny: 'herhangi',

@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: Scatter, ScatterChart, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
+components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsVoronoiHandler, ChartsGrid
 ---
 
 # Charts - Scatter
@@ -14,6 +14,18 @@ Scatter chart series should contain a `data` property containing an array of obj
 Those objects require `x`, `y`, and `id` properties.
 
 {{"demo": "BasicScatter.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
+
+You can reuse this data when defining the series.
+The scatter series work a bit differently than in other charts.
+You need to specify the `datasetKeys` properties which is an object that requires `x`, `y`, and `id` keys.
+With an optional `z` key if needed.
+
+{{"demo": "ScatterDataset.js"}}
 
 ## Interaction
 
@@ -67,7 +79,7 @@ The scatter charts use by priority:
 
 :::info
 The z-axis is a third axis that allows to customize scatter points independently from their position.
-It can be provided with `zAxis` props, or with `ZAxisContextProvider` when using composition.
+It can be provided with `zAxis` props.
 
 The value to map can either come from the `z` property of series data, or from the zAxis data.
 Here are three ways to set z value to 5.

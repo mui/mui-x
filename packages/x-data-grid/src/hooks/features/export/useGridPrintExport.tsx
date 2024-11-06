@@ -67,6 +67,7 @@ export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'headerFilterHeight'>,
 ): void => {
+  const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
@@ -76,7 +77,7 @@ export const useGridPrintExport = (
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
-  }, [apiRef]);
+  }, [apiRef, hasRootReference]);
 
   // Returns a promise because updateColumns triggers state update and
   // the new state needs to be in place before the grid can be sized correctly
@@ -177,15 +178,18 @@ export const useGridPrintExport = (
       // The height above does not include grid border width, so we need to exclude it
       gridClone.style.boxSizing = 'content-box';
 
-      // the footer is always being placed at the bottom of the page as if all rows are exported
-      // so if getRowsToExport is being used to only export a subset of rows then we need to
-      // adjust the footer position to be correctly placed at the bottom of the grid
-      const gridFooterElement: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.footerContainer}`,
-      );
-      gridFooterElement!.style.position = 'absolute';
-      gridFooterElement!.style.width = '100%';
-      gridFooterElement!.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
+      if (!normalizeOptions.hideFooter) {
+        // the footer is always being placed at the bottom of the page as if all rows are exported
+        // so if getRowsToExport is being used to only export a subset of rows then we need to
+        // adjust the footer position to be correctly placed at the bottom of the grid
+        const gridFooterElement: HTMLElement | null = gridClone.querySelector(
+          `.${gridClasses.footerContainer}`,
+        )!;
+
+        gridFooterElement.style.position = 'absolute';
+        gridFooterElement.style.width = '100%';
+        gridFooterElement.style.top = `${computedTotalHeight - gridFooterElementHeight}px`;
+      }
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it

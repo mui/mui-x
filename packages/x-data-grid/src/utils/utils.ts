@@ -190,9 +190,16 @@ function mulberry32(a: number): () => number {
   };
 }
 
-export function randomNumberBetween(seed: number, min: number, max: number): () => number {
+/**
+ * Create a random number generator from a seed. The seed
+ * ensures that the random number generator produces the
+ * same sequence of 'random' numbers on every render. It
+ * returns a function that generates a random number between
+ * a specified min and max.
+ */
+export function createRandomNumberGenerator(seed: number): (min: number, max: number) => number {
   const random = mulberry32(seed);
-  return () => min + (max - min) * random();
+  return (min: number, max: number) => min + (max - min) * random();
 }
 
 export function deepClone(obj: Record<string, any>) {

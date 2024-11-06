@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "@mui/internal-test-utils/initMatchers", "chai-dom", "mocha"]
+  },
+  "include": ["src/**/*"]
+}

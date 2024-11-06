@@ -1,4 +1,5 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
@@ -9,10 +10,12 @@ import {
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/internal-docs-utils';
 import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
+const COMPONENTS_WITHOUT_PROPTYPES = ['ChartsAxisTooltipContent', 'ChartsItemTooltipContent'];
+
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
-  const isTDate = (name: string) => {
+  const isDateObject = (name: string) => {
     if (['x-date-pickers', 'x-date-pickers-pro'].includes(project.name)) {
-      const T_DATE_PROPS = [
+      const DATE_OBJECT_PROPS = [
         'value',
         'defaultValue',
         'minDate',
@@ -27,7 +30,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'month',
       ];
 
-      if (T_DATE_PROPS.includes(name)) {
+      if (DATE_OBJECT_PROPS.includes(name)) {
         return true;
       }
     }
@@ -77,13 +80,13 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         return false;
       }
 
-      if (isTDate(name)) {
+      if (isDateObject(name)) {
         return false;
       }
 
       return undefined;
     },
-    shouldUseObjectForDate: ({ name }) => isTDate(name),
+    shouldUseObjectForDate: ({ name }) => isDateObject(name),
   });
 
   if (components.length === 0) {
@@ -175,14 +178,20 @@ async function run() {
     }
 
     const componentsWithPropTypes = project.getComponentsWithPropTypes(project);
-    return componentsWithPropTypes.map<Promise<void>>(async (filename) => {
-      try {
-        await generateProptypes(project, filename);
-      } catch (error: any) {
-        error.message = `${filename}: ${error.message}`;
-        throw error;
-      }
-    });
+    return componentsWithPropTypes
+      .filter((filename) =>
+        COMPONENTS_WITHOUT_PROPTYPES.every(
+          (ignoredComponent) => !filename.includes(ignoredComponent),
+        ),
+      )
+      .map<Promise<void>>(async (filename) => {
+        try {
+          await generateProptypes(project, filename);
+        } catch (error: any) {
+          error.message = `${filename}: ${error.message}`;
+          throw error;
+        }
+      });
   });
 
   const results = await Promise.allSettled(promises);
@@ -199,7 +208,7 @@ async function run() {
   }
 }
 
-yargs
+yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'Generates Component.propTypes from TypeScript declarations',

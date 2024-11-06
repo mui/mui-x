@@ -2,9 +2,30 @@
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
+## Enabling pagination
+
+The default pagination behavior depends on your plan:
+
+:::info
+Exported CSV and Excel files include all data and disregard pagination by default.
+To apply pagination to exported files, review the available [row selectors](/x/react-data-grid/export/#exported-rows).
+:::
+
+### Community plan
+
+For the Community Data Grid, pagination is enabled by default and cannot be disabled.
+
+{{"demo": "PaginationCommunityNoSnap.js", "bg": "inline"}}
+
+### Pro [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and Premium [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For the Pro and Premium Data Grid, pagination is disabled by default; use the `pagination` prop to enable it.
+
+{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
+
 ## Size of the page
 
-The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
+The Data Grid (MIT license) is limited to pages of up to 100 rows.
 If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
@@ -20,10 +41,10 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option. Define `value` as `-1` to display all results.
 
   ```jsx
-  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
@@ -37,20 +58,6 @@ You cannot use both the `autoPageSize` and `autoHeight` props at the same time b
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
-
-## Pagination on Pro and Premium [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-
-The default pagination behavior depends on your plan.
-
-- On the `DataGrid`, pagination is enabled by default and cannot be disabled.
-- On the `DataGridPro` and `DataGridPremium`, pagination is disabled by default; use the `pagination` prop to enable it.
-
-The following example activates pagination on a `DataGridPremium` component.
-
-:::info
-On a side note, exported CSV and Excel files will contain the full data and disregard the pagination by default. To apply pagination on exported files, please check the available [row selectors](/x/react-data-grid/export/#exported-rows).
-:::
-{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
 
 ## Pagination model
 
@@ -93,7 +100,7 @@ const [paginationModel, setPaginationModel] = React.useState({
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the data grid.
+This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
 
 In general, the server-side pagination could be categorized into two types:
@@ -222,7 +229,7 @@ If an external data fetching library sets the values to undefined during loading
 
 The Data Grid uses the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library which doesn't support `estimated` row count. Until this is supported natively by the Table Pagination component, a workaround to make the localization work is to provide the `labelDisplayedRows` function to the `localeText.MuiTablePagination` property as per the locale you are interested in.
 
-The Grid injects an additional variable `estimated` to the `labelDisplayedRows` function which you can use to accomodate the estimated row count.
+The Grid injects an additional variable `estimated` to the `labelDisplayedRows` function which you can use to accommodate the estimated row count.
 The following example demonstrates how to show the estimated row count in the pagination footer in the Croatian (hr-HR) language.
 
 ```jsx
@@ -243,7 +250,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
 />
 ```
 
-For more information, see [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.
+For more information, see the [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.
 
 :::
 

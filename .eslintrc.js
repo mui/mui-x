@@ -1,12 +1,24 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
 
+const chartsPackages = ['x-charts', 'x-charts-pro'];
+
+const dataGridPackages = [
+  'x-data-grid',
+  'x-data-grid-pro',
+  'x-data-grid-premium',
+  'x-data-grid-generator',
+];
+
+const datePickersPackages = ['x-date-pickers', 'x-date-pickers-pro'];
+
+const treeViewPackages = ['x-tree-view', 'x-tree-view-pro'];
+
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
 
 // Enable React Compiler Plugin rules per package
-const ENABLE_REACT_COMPILER_PLUGIN_CHARTS =
-  process.env.ENABLE_REACT_COMPILER_PLUGIN_CHARTS ?? false;
+const ENABLE_REACT_COMPILER_PLUGIN_CHARTS = process.env.ENABLE_REACT_COMPILER_PLUGIN_CHARTS ?? true;
 const ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID =
   process.env.ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID ?? false;
 const ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS =
@@ -30,6 +42,17 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
           'react-compiler/react-compiler': 'error',
         },
       }));
+
+const RESTRICTED_TOP_LEVEL_IMPORTS = [
+  '@mui/material',
+  '@mui/x-charts',
+  '@mui/x-charts-pro',
+  '@mui/x-codemod',
+  '@mui/x-date-pickers',
+  '@mui/x-date-pickers-pro',
+  '@mui/x-tree-view',
+  '@mui/x-tree-view-pro',
+];
 
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
@@ -73,43 +96,16 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
           files: [
             `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
             `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
-            'docs/data/**/*{.ts,.tsx,.js}',
           ],
           excludedFiles: ['*.d.ts'],
           rules: {
             'no-restricted-imports': [
               'error',
               {
-                paths: [
-                  {
-                    name: '@mui/x-charts',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-charts-pro',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-codemod',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-date-pickers',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-date-pickers-pro',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-tree-view',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-tree-view-pro',
-                    message: 'Use deeper import instead',
-                  },
-                ],
+                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+                  name,
+                  message: 'Use deeper import instead',
+                })),
               },
             ],
           },
@@ -138,8 +134,20 @@ module.exports = {
   rules: {
     ...baseline.rules,
     ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
-    // TODO move to @mui/monorepo/.eslintrc, codebase is moving away from default exports
+    // TODO move to @mui/monorepo, codebase is moving away from default exports https://github.com/mui/material-ui/issues/21862
     'import/prefer-default-export': 'off',
+    'import/no-restricted-paths': [
+      'error',
+      {
+        zones: [...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
+          (packageName) => ({
+            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+            from: `./packages/${packageName}/src/internals/index.ts`,
+            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+          }),
+        ),
+      },
+    ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
@@ -168,11 +176,24 @@ module.exports = {
     // TODO move to @mui/monorepo/.eslintrc
     // TODO Fix <Input> props names to not conflict
     'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
-    // TOOD move to @mui/monorepo/.eslintrc, these are false positive
+    // TODO move to @mui/monorepo/.eslintrc, these are false positive
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
     ...baseline.overrides,
+    {
+      files: [
+        // matching the pattern of the test runner
+        '*.test.js',
+        '*.test.ts',
+        '*.test.tsx',
+      ],
+      excludedFiles: ['test/e2e/**/*', 'test/regressions/**/*'],
+      extends: ['plugin:testing-library/react'],
+      rules: {
+        'testing-library/no-container': 'off',
+      },
+    },
     {
       files: [
         // matching the pattern of the test runner
@@ -245,6 +266,37 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['docs/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+              name,
+              message: 'Use deeper import instead',
+            })),
+            patterns: [
+              {
+                group: [
+                  '@mui/*/*/*',
+                  // Allow any import depth with any internal packages
+                  '!@mui/internal-*/**',
+
+                  // Exceptions (QUESTION: Keep or remove?)
+                  '!@mui/x-date-pickers/internals/demo',
+                  '!@mui/x-tree-view/hooks/useTreeViewApiRef',
+                  // TODO: export this from /ButtonBase in core. This will break after we move to package exports
+                  '!@mui/material/ButtonBase/TouchRipple',
+                ],
+                message: 'Use less deep import instead',
+              },
+            ],
+          },
+        ],
+      },
+    },
     ...buildPackageRestrictedImports('@mui/x-charts', 'x-charts', false),
     ...buildPackageRestrictedImports('@mui/x-charts-pro', 'x-charts-pro', false),
     ...buildPackageRestrictedImports('@mui/x-codemod', 'x-codemod', false),
@@ -258,18 +310,9 @@ module.exports = {
     ...buildPackageRestrictedImports('@mui/x-tree-view-pro', 'x-tree-view-pro', false),
     ...buildPackageRestrictedImports('@mui/x-license', 'x-license'),
 
-    ...addReactCompilerRule(['x-charts', 'x-charts-pro'], ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
-    ...addReactCompilerRule(
-      ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium', 'x-data-grid-generator'],
-      ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID,
-    ),
-    ...addReactCompilerRule(
-      ['x-date-pickers', 'x-date-pickers-pro'],
-      ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS,
-    ),
-    ...addReactCompilerRule(
-      ['x-tree-view', 'x-tree-view-pro'],
-      ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW,
-    ),
+    ...addReactCompilerRule(chartsPackages, ENABLE_REACT_COMPILER_PLUGIN_CHARTS),
+    ...addReactCompilerRule(dataGridPackages, ENABLE_REACT_COMPILER_PLUGIN_DATA_GRID),
+    ...addReactCompilerRule(datePickersPackages, ENABLE_REACT_COMPILER_PLUGIN_DATE_PICKERS),
+    ...addReactCompilerRule(treeViewPackages, ENABLE_REACT_COMPILER_PLUGIN_TREE_VIEW),
   ],
 };

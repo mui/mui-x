@@ -3,7 +3,8 @@
   "name": "ChartsClipPath",
   "imports": [
     "import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';",
-    "import { ChartsClipPath } from '@mui/x-charts';"
+    "import { ChartsClipPath } from '@mui/x-charts';",
+    "import { ChartsClipPath } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiChartsClipPath",

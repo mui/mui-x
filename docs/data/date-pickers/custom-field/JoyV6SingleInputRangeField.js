@@ -1,17 +1,16 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
-import { useSlotProps } from '@mui/base/utils';
 import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';

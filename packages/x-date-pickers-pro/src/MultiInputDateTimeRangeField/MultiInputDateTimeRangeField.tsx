@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -5,24 +6,20 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
+import useSlotProps from '@mui/utils/useSlotProps';
 import {
   unstable_composeClasses as composeClasses,
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import {
-  splitFieldInternalAndForwardedProps,
-  convertFieldResponseIntoMuiTextFieldProps,
-} from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputDateTimeRangeFieldProps,
   MultiInputDateTimeRangeFieldSlotProps,
 } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
-import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 import { MultiInputRangeFieldClasses, RangePosition } from '../models';
 
 export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
@@ -31,7 +28,7 @@ export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
 export const getMultiInputDateTimeRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputDateTimeRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any, any>) => {
+const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -61,10 +58,9 @@ const MultiInputDateTimeRangeFieldSeparator = styled(Typography, {
 });
 
 type MultiInputDateTimeRangeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  props: MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+  props: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -79,10 +75,9 @@ type MultiInputDateTimeRangeFieldComponent = (<
  * - [MultiInputDateTimeRangeField API](https://mui.com/x/api/multi-input-date-time-range-field/)
  */
 const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -90,10 +85,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
-  const { internalProps, forwardedProps } = splitFieldInternalAndForwardedProps<
-    typeof themeProps,
-    keyof Omit<UseDateTimeRangeFieldProps<any, any>, 'clearable' | 'onClear'>
-  >(themeProps, 'date-time');
+  const { internalProps, forwardedProps } = useSplitFieldProps(themeProps, 'date-time');
 
   const {
     slots,
@@ -121,12 +113,12 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
     {},
-    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -136,9 +128,9 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
   const endTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
     {},
-    MultiInputDateTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -159,7 +151,6 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
 
   const fieldResponse = useMultiInputDateTimeRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startTextFieldProps
   >({
@@ -246,7 +237,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
@@ -261,6 +252,7 @@ MultiInputDateTimeRangeField.propTypes = {
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable date.
+   * @default 2099-12-31
    */
   maxDate: PropTypes.object,
   /**
@@ -274,6 +266,7 @@ MultiInputDateTimeRangeField.propTypes = {
   maxTime: PropTypes.object,
   /**
    * Minimal selectable date.
+   * @default 1900-01-01
    */
   minDate: PropTypes.object,
   /**
@@ -292,18 +285,20 @@ MultiInputDateTimeRangeField.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**
@@ -352,16 +347,14 @@ MultiInputDateTimeRangeField.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

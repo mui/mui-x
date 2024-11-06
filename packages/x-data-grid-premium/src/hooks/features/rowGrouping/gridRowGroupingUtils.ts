@@ -9,12 +9,16 @@ import {
   GridRowModel,
   GridColDef,
   GridKeyValue,
+  GridDataSource,
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
   GridColumnRawLookup,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  getRowGroupingCriteriaFromGroupingField,
+  isGroupingColumn,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -26,9 +30,16 @@ import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
-export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
+export {
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  getRowGroupingCriteriaFromGroupingField,
+  isGroupingColumn,
+};
 
-export const ROW_GROUPING_STRATEGY = 'grouping-columns';
+export enum RowGroupingStrategy {
+  Default = 'grouping-columns',
+  DataSource = 'grouping-columns-data-source',
+}
 
 export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string | null) => {
   if (groupingCriteria === null) {
@@ -37,20 +48,6 @@ export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string
 
   return `__row_group_by_columns_group_${groupingCriteria}__`;
 };
-
-export const getRowGroupingCriteriaFromGroupingField = (groupingColDefField: string) => {
-  const match = groupingColDefField.match(/^__row_group_by_columns_group_(.*)__$/);
-
-  if (!match) {
-    return null;
-  }
-
-  return match[1];
-};
-
-export const isGroupingColumn = (field: string) =>
-  field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD ||
-  getRowGroupingCriteriaFromGroupingField(field) !== null;
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
@@ -83,6 +80,7 @@ export const filterRowTreeFromGroupingColumns = (
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredChildrenCountLookup: Record<GridRowId, number> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
   const filterCache = {};
 
@@ -110,6 +108,7 @@ export const filterRowTreeFromGroupingColumns = (
       isPassingFiltering = true;
     }
 
+    let filteredChildrenCount = 0;
     let filteredDescendantCount = 0;
     if (node.type === 'group') {
       node.children.forEach((childId) => {
@@ -120,6 +119,9 @@ export const filterRowTreeFromGroupingColumns = (
           [...ancestorsResults, filterResults],
         );
         filteredDescendantCount += childSubTreeSize;
+        if (childSubTreeSize > 0) {
+          filteredChildrenCount += 1;
+        }
       });
     }
 
@@ -145,6 +147,7 @@ export const filterRowTreeFromGroupingColumns = (
       return 0;
     }
 
+    filteredChildrenCountLookup[node.id] = filteredChildrenCount;
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
 
     if (node.type !== 'group') {
@@ -164,6 +167,7 @@ export const filterRowTreeFromGroupingColumns = (
 
   return {
     filteredRowsLookup,
+    filteredChildrenCountLookup,
     filteredDescendantCountLookup,
   };
 };
@@ -171,10 +175,11 @@ export const filterRowTreeFromGroupingColumns = (
 export const getColDefOverrides = (
   groupingColDefProp: DataGridPremiumProcessedProps['groupingColDef'],
   fields: string[],
+  strategy?: RowGroupingStrategy,
 ) => {
   if (typeof groupingColDefProp === 'function') {
     return groupingColDefProp({
-      groupingName: ROW_GROUPING_STRATEGY,
+      groupingName: strategy ?? RowGroupingStrategy.Default,
       fields,
     });
   }
@@ -192,6 +197,7 @@ export const mergeStateWithRowGroupingModel =
 export const setStrategyAvailability = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPremium>,
   disableRowGrouping: boolean,
+  dataSource?: GridDataSource,
 ) => {
   let isAvailable: () => boolean;
   if (disableRowGrouping) {
@@ -203,7 +209,9 @@ export const setStrategyAvailability = (
     };
   }
 
-  privateApiRef.current.setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
+  const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
+
+  privateApiRef.current.setStrategyAvailability('rowTree', strategy, isAvailable);
 };
 
 export const getCellGroupingCriteria = ({

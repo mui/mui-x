@@ -1,0 +1,16 @@
+<Button onClick={() => setZoom([{ axisId: 'my-x-axis', start: 0, end: 100 }])}>
+  Reset zoom
+</Button>
+<LineChartPro
+  {...chartProps}
+  zoom={zoom}
+  onZoomChange={setZoom}
+  xAxis={[
+    {
+      zoom: true,
+      scaleType: 'point',
+      id: 'my-x-axis',
+      data: data.map((v, i) => i),
+    },
+  ]}
+/>

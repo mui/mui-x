@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useControlled from '@mui/utils/useControlled';
@@ -28,15 +29,6 @@ export type HighlightedProviderProps = {
   onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
-const mergeDeprecatedOptions = (options?: Partial<HighlightScope>): HighlightScope => {
-  const { highlighted, faded, ...rest } = options ?? {};
-  return {
-    highlight: highlighted,
-    fade: faded,
-    ...rest,
-  };
-};
-
 function HighlightedProvider({
   children,
   highlightedItem: highlightedItemProps,
@@ -57,7 +49,7 @@ function HighlightedProvider({
       const seriesData = series[seriesType as ChartSeriesType];
       Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, mergeDeprecatedOptions(seriesItem?.highlightScope));
+        map.set(seriesId, seriesItem?.highlightScope);
       });
     });
     return map;
@@ -65,7 +57,7 @@ function HighlightedProvider({
 
   const highlightScope =
     highlightedItem && highlightedItem.seriesId
-      ? seriesById.get(highlightedItem.seriesId) ?? undefined
+      ? (seriesById.get(highlightedItem.seriesId) ?? undefined)
       : undefined;
 
   const providerValue = React.useMemo<Initializable<HighlightedState>>(() => {

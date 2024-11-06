@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   getExpectedOnChangeCount,
@@ -38,7 +38,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -49,7 +48,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        userEvent.mousePress(screen.getByText(/clear/i));
+        fireEvent.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
         expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
         expect(onAccept.callCount).to.equal(1);
@@ -64,7 +63,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -75,7 +73,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        userEvent.mousePress(screen.getByText(/clear/i));
+        fireEvent.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -103,7 +101,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
-        userEvent.mousePress(screen.getByText(/cancel/i));
+        fireEvent.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
@@ -125,7 +123,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -137,7 +134,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Cancel the modifications
-        userEvent.mousePress(screen.getByText(/cancel/i));
+        fireEvent.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -165,7 +162,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
-        userEvent.mousePress(screen.getByText(/ok/i));
+        fireEvent.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
@@ -180,7 +177,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -192,7 +188,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        userEvent.mousePress(screen.getByText(/ok/i));
+        fireEvent.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
@@ -205,7 +201,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -217,7 +212,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        userEvent.mousePress(screen.getByText(/ok/i));
+        fireEvent.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -232,7 +227,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -242,7 +236,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        userEvent.mousePress(screen.getByText(/today/i));
+        fireEvent.click(screen.getByText(/today/i));
 
         let startOfToday: any;
         if (pickerParams.type === 'date') {

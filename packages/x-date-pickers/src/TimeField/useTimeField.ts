@@ -1,35 +1,30 @@
+'use client';
 import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
 import { useField } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../internals/utils/validation/validateTime';
-import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
+import { validateTime } from '../validation';
+import { useSplitFieldProps } from '../hooks';
 import { PickerValidDate, FieldSection } from '../models';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 
 export const useTimeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedTimeField<
-    TDate,
-    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseTimeFieldProps<any, TEnableAccessibleFieldDOMStructure>
-  >(props, 'time');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
   return useField<
-    TDate | null,
-    TDate,
+    PickerValidDate | null,
     FieldSection,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,

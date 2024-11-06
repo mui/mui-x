@@ -4,9 +4,10 @@
   "properties": {
     "type": { "type": { "description": "'line'" }, "required": true },
     "area": { "type": { "description": "boolean" } },
+    "baseline": { "type": { "description": "number | 'min' | 'max'" }, "default": "0" },
     "color": { "type": { "description": "string" } },
     "connectNulls": { "type": { "description": "boolean" }, "default": "false" },
-    "curve": { "type": { "description": "CurveType" } },
+    "curve": { "type": { "description": "CurveType" }, "default": "'monotoneX'" },
     "data": { "type": { "description": "(number | null)[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableHighlight": { "type": { "description": "boolean" }, "default": "false" },
@@ -20,7 +21,7 @@
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'none'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisKey": { "type": { "description": "string" } },
-    "yAxisKey": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "string" } },
+    "yAxisId": { "type": { "description": "string" } }
   }
 }

@@ -13,7 +13,7 @@ export interface ContinuousColorConfig<Value = number | Date> {
   /**
    * The colors to render. It can be an array with the extremum colors, or an interpolation function.
    */
-  color: [string, string] | ((t: number) => string);
+  color: readonly [string, string] | ((t: number) => string);
 }
 
 export interface PiecewiseColorConfig<Value = number | Date> {

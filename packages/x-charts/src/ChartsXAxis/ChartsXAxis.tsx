@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useSlotProps } from '@mui/base/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { CartesianContext } from '../context/CartesianContextProvider';
+import useSlotProps from '@mui/utils/useSlotProps';
+import composeClasses from '@mui/utils/composeClasses';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -13,6 +14,8 @@ import { getMinXTranslation } from '../internals/geometry';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { getWordsByLines } from '../internals/getWordsByLines';
+import { isInfinity } from '../internals/isInfinity';
+import { isBandScale } from '../internals/isBandScale';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -81,6 +84,12 @@ function addLabelDimension(
   });
 }
 
+const XAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsXAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
+
 const defaultProps = {
   position: 'bottom',
   disableLine: false,
@@ -98,7 +107,7 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = useCartesianContext();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();
@@ -127,11 +136,12 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     tickLabelInterval,
     tickPlacement,
     tickLabelPlacement,
+    sx,
   } = defaultizedProps;
 
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
-  const { left, top, width, height } = useDrawingArea();
+  const { left, top, width, height, isPointInside } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -193,32 +203,32 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
   });
 
   const domain = xScale.domain();
-  if (domain.length === 0 || domain[0] === domain[1]) {
-    // Skip axis rendering if
-    // - the data is empty (for band and point axis)
-    // - No data is associated to the axis (other scale types)
+  const ordinalAxis = isBandScale(xScale);
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
     return null;
   }
   return (
-    <AxisRoot
+    <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
-        <Line
-          x1={xScale.range()[0]}
-          x2={xScale.range()[1]}
-          className={classes.line}
-          {...slotProps?.axisLine}
-        />
+        <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
 
       {xTicksWithDimension.map(({ formattedValue, offset, labelOffset, skipLabel }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSign * (tickSize + 3);
+
+        const showTick = isPointInside({ x: offset, y: -1 }, { direction: 'x' });
+        const showTickLabel = isPointInside({ x: offset + xTickLabel, y: -1 }, { direction: 'x' });
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && (
+            {!disableTicks && showTick && (
               <Tick
                 y2={positionSign * tickSize}
                 className={classes.tick}
@@ -226,7 +236,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
               />
             )}
 
-            {formattedValue !== undefined && !skipLabel && (
+            {formattedValue !== undefined && !skipLabel && showTickLabel && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -243,7 +253,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </XAxisRoot>
   );
 }
 
@@ -309,6 +319,11 @@ ChartsXAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The font size of the axis ticks text.
    * @default 12

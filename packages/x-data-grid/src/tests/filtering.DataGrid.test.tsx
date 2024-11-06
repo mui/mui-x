@@ -349,6 +349,74 @@ describe('<DataGrid /> - Filter', () => {
       });
     });
 
+    it('should filter with operator "does not contain"', () => {
+      testEval(() => {
+        expect(getRows({ operator: 'doesNotContain', value: 'Fra' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Trim value
+        expect(getRows({ operator: 'doesNotContain', value: ' Fra ' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Case-insensitive
+        expect(getRows({ operator: 'doesNotContain', value: 'fra' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+
+        // Number casting
+        expect(getRows({ operator: 'doesNotContain', value: '0' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'France (fr)',
+          'Germany',
+          '1',
+        ]);
+        expect(getRows({ operator: 'doesNotContain', value: '1' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'France (fr)',
+          'Germany',
+          '0',
+        ]);
+
+        // Empty values
+        expect(getRows({ operator: 'doesNotContain', value: undefined })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'doesNotContain', value: '' })).to.deep.equal(ALL_ROWS);
+
+        // Value with regexp special literal
+        expect(
+          getRows({ operator: 'doesNotContain', value: '[-[]{}()*+?.,\\^$|#s]' }),
+        ).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'doesNotContain', value: '(fr)' })).to.deep.equal([
+          '',
+          '',
+          '',
+          'Germany',
+          '0',
+          '1',
+        ]);
+      });
+    });
+
     it('should filter with operator "equals"', () => {
       expect(getRows({ operator: 'equals', value: 'France (fr)' })).to.deep.equal(['France (fr)']);
 
@@ -367,6 +435,59 @@ describe('<DataGrid /> - Filter', () => {
       // Empty values
       expect(getRows({ operator: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "doesNotEqual"', () => {
+      expect(getRows({ operator: 'doesNotEqual', value: 'France (fr)' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Trim value
+      expect(getRows({ operator: 'doesNotEqual', value: ' France (fr) ' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Case-insensitive
+      expect(getRows({ operator: 'doesNotEqual', value: 'france (fr)' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'Germany',
+        '0',
+        '1',
+      ]);
+
+      // Number casting
+      expect(getRows({ operator: 'doesNotEqual', value: '0' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '1',
+      ]);
+      expect(getRows({ operator: 'doesNotEqual', value: '1' })).to.deep.equal([
+        '',
+        '',
+        '',
+        'France (fr)',
+        'Germany',
+        '0',
+      ]);
+
+      // Empty values
+      expect(getRows({ operator: 'doesNotEqual', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'doesNotEqual', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "startsWith"', () => {
@@ -991,11 +1112,23 @@ describe('<DataGrid /> - Filter', () => {
     };
 
     const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
+    const TRUTHY_ROWS = ['true'];
+    const FALSY_ROWS = ['undefined', 'null', 'false'];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(['true']);
+      expect(getRows({ operator: 'is', value: 'TRUE' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'True' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: true })).to.deep.equal(TRUTHY_ROWS);
+
+      expect(getRows({ operator: 'is', value: 'FALSE' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'False' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: 'false' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: false })).to.deep.equal(FALSY_ROWS);
+
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
   });
 

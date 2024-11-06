@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'μεσημβρία',
 };
 
-const elGRPickers: Partial<PickersLocaleText<any>> = {
+const elGRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Προηγούμενος μήνας',
   nextMonth: 'Επόμενος μήνας',
@@ -43,8 +43,8 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Επιλέξτε εύρος ημερομηνιών',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Επιλέξτε ${views[view]}. ${time === null ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Επιλέξτε ${views[view]}. ${!formattedTime ? 'Δεν έχει επιλεγεί ώρα' : `Η επιλεγμένη ώρα είναι ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ώρες`,
   minutesClockNumberText: (minutes) => `${minutes} λεπτά`,
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
@@ -59,15 +59,13 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${utils.format(value, 'fullDate')}`
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate
+      ? `Επιλέξτε ημερομηνία, η επιλεγμένη ημερομηνία είναι ${formattedDate}`
       : 'Επιλέξτε ημερομηνία',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${utils.format(value, 'fullTime')}`
-      : 'Επιλέξτε ώρα',
-  // fieldClearLabel: 'Clear value',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Επιλέξτε ώρα, η επιλεγμένη ώρα είναι ${formattedTime}` : 'Επιλέξτε ώρα',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'επιλέξτε ώρα',
@@ -84,14 +82,14 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 
   // View names
-  // year: 'Year',
-  // month: 'Month',
-  // day: 'Day',
-  // weekDay: 'Week day',
-  // hours: 'Hours',
-  // minutes: 'Minutes',
-  // seconds: 'Seconds',
-  // meridiem: 'Meridiem',
+  year: 'Χρόνος',
+  month: 'Μήνας',
+  day: 'Ημέρα',
+  weekDay: 'Καθημερινή',
+  hours: 'Ώρες',
+  minutes: 'Λεπτά',
+  seconds: 'Δευτερόλεπτα',
+  meridiem: 'Προ Μεσημβρίας',
 
   // Common
   // empty: 'Empty',

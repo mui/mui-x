@@ -1,11 +1,9 @@
 import * as React from 'react';
-import {
-  Stack,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  Slider,
-} from '@mui/material';
+import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 const data = [

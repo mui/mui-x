@@ -11,7 +11,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/meter/
 
 <p class="description">Gauge charts let the user evaluate metrics.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
+{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
 ## Basics
 
@@ -101,7 +101,7 @@ import {
 
 ### Creating your components
 
-To create your own components, use the `useGaugeState` hook which provides all you need about the gauge configuration:
+To create your own components, use the `useGaugeState()` hook which provides all you need about the gauge configuration:
 
 - information about the value: `value`, `valueMin`, `valueMax`
 - information to plot the arc: `startAngle`, `endAngle`, `outerRadius`, `innerRadius`, `cornerRadius`, `cx`, and `cy`

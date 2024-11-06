@@ -8,7 +8,8 @@
   "name": "ChartsText",
   "imports": [
     "import { ChartsText } from '@mui/x-charts/ChartsText';",
-    "import { ChartsText } from '@mui/x-charts';"
+    "import { ChartsText } from '@mui/x-charts';",
+    "import { ChartsText } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiChartsText",
