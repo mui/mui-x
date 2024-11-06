@@ -549,8 +549,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       jscodeshift:
-        specifier: 17.0.0
-        version: 17.0.0(@babel/preset-env@7.26.0(@babel/core@7.26.0))
+        specifier: 17.1.1
+        version: 17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -964,8 +964,8 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
       jscodeshift:
-        specifier: 17.0.0
-        version: 17.0.0(@babel/preset-env@7.26.0(@babel/core@7.26.0))
+        specifier: 17.1.1
+        version: 17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0))
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
@@ -7109,8 +7109,8 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
-  jscodeshift@17.0.0:
-    resolution: {integrity: sha512-Af+MFsNwLSVO+t4kKjJdJKh6iNbNHfDfFGdyltJ2wUFN3furgbvHguJmB85iou+fY7wbHgI8eiEKpp6doGgtKg==}
+  jscodeshift@17.1.1:
+    resolution: {integrity: sha512-4vq5B1sD37aa9qed3zWq2XQPun5XjxebIv+Folr57lt8B4HLGDHEz1UG7pfcxzSaelzPbcY7yZSs033/S0i6wQ==}
     engines: {node: '>=16'}
     hasBin: true
     peerDependencies:
@@ -8935,11 +8935,6 @@ packages:
     peerDependencies:
       react: '>=16.8'
 
-  rimraf@2.6.3:
-    resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
-    deprecated: Rimraf versions prior to v4 are no longer supported
-    hasBin: true
-
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
     deprecated: Rimraf versions prior to v4 are no longer supported
@@ -9430,10 +9425,6 @@ packages:
   temp-dir@1.0.0:
     resolution: {integrity: sha512-xZFXEGbG7SNC3itwBzI3RYjq/cEhBkx2hJuKGIUOcEULmkQExXiHat2z/qkISYsuR+IKumhEfKKbV5qXmhICFQ==}
     engines: {node: '>=4'}
-
-  temp@0.9.4:
-    resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
-    engines: {node: '>=6.0.0'}
 
   terser-webpack-plugin@5.3.10:
     resolution: {integrity: sha512-BKFPWlPDndPs+NGGCr1U59t0XScL5317Y0UReNrHaw9/FwhPENlq6bfgs+4yPfyP51vqC1bQ4rp1EfXW5ZSH9w==}
@@ -16614,7 +16605,7 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jscodeshift@17.0.0(@babel/preset-env@7.26.0(@babel/core@7.26.0)):
+  jscodeshift@17.1.1(@babel/preset-env@7.26.0(@babel/core@7.26.0)):
     dependencies:
       '@babel/core': 7.26.0
       '@babel/parser': 7.26.1
@@ -16632,7 +16623,7 @@ snapshots:
       neo-async: 2.6.2
       picocolors: 1.1.0
       recast: 0.23.9
-      temp: 0.9.4
+      tmp: 0.2.3
       write-file-atomic: 5.0.1
     optionalDependencies:
       '@babel/preset-env': 7.26.0(@babel/core@7.26.0)
@@ -18839,10 +18830,6 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  rimraf@2.6.3:
-    dependencies:
-      glob: 7.2.3
-
   rimraf@2.7.1:
     dependencies:
       glob: 7.2.3
@@ -19460,11 +19447,6 @@ snapshots:
       yallist: 4.0.0
 
   temp-dir@1.0.0: {}
-
-  temp@0.9.4:
-    dependencies:
-      mkdirp: 0.5.6
-      rimraf: 2.6.3
 
   terser-webpack-plugin@5.3.10(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack@5.95.0):
     dependencies:
