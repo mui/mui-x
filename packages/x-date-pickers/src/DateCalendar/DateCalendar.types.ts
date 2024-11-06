@@ -13,7 +13,7 @@ import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerValidDate, TimezoneProps } from '../models';
+import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import {
   ExportedYearCalendarProps,
   YearCalendarSlots,
@@ -44,7 +44,7 @@ export interface DateCalendarSlotProps
     DayCalendarSlotProps,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps>;
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, PickerOwnerState>;
 }
 
 export interface ExportedDateCalendarProps

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useRtl } from '@mui/system/RtlProvider';
-import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
@@ -83,7 +83,7 @@ export const useFieldState = <
   >,
 ): UseFieldStateResponse<TIsRange> => {
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const adapter = useLocalizationContext();
   const isRtl = useRtl();
 

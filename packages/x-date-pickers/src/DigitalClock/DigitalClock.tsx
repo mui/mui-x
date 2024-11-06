@@ -9,7 +9,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
@@ -167,7 +167,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     valueManager: singleItemValueManager,
   });
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const now = useNow(timezone);
 
   const ownerState = React.useMemo(

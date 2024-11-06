@@ -9,7 +9,7 @@ import {
   usePreviousMonthDisabled,
   useUtils,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = ((
@@ -28,7 +28,7 @@ const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalenda
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   const { calendars, month, monthIndex, labelId, ...other } = props;
   const {

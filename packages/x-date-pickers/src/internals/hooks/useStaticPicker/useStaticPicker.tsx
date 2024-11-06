@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
-import { PickersProvider } from '../../components/PickersProvider';
+import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { DateOrTimeViewWithMeridiem } from '../../models';
@@ -48,7 +48,7 @@ export const useStaticPicker = <
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}
@@ -65,7 +65,7 @@ export const useStaticPicker = <
       >
         {renderCurrentView()}
       </Layout>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

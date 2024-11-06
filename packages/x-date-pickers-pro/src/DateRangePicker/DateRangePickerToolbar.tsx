@@ -12,7 +12,7 @@ import {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
@@ -90,7 +90,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
     ...other
   } = props;
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)

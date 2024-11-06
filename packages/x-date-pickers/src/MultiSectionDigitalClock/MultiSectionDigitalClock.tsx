@@ -6,7 +6,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
@@ -117,7 +117,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     valueManager: singleItemValueManager,
   });
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const now = useNow(timezone);
 
   const timeSteps = React.useMemo<Required<TimeStepOptions>>(

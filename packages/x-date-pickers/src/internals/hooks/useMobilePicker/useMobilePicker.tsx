@@ -13,7 +13,7 @@ import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
 import { BaseSingleInputFieldProps, FieldRef, InferError, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersProvider } from '../../components/PickersProvider';
+import { PickerProvider } from '../../components/PickerProvider';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -152,7 +152,7 @@ export const useMobilePicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -164,7 +164,7 @@ export const useMobilePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

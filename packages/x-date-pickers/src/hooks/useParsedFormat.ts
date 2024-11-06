@@ -4,7 +4,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useUtils } from '../internals/hooks/useUtils';
 import { buildSectionsFromFormat } from '../internals/hooks/useField/buildSectionsFromFormat';
 import { getLocalizedDigits } from '../internals/hooks/useField/useField.utils';
-import { usePickersTranslations } from './usePickersTranslations';
+import { usePickerTranslations } from './usePickerTranslations';
 import type { UseFieldInternalProps } from '../internals/hooks/useField';
 
 interface UseParsedFormatParameters
@@ -26,7 +26,7 @@ export const useParsedFormat = (parameters: UseParsedFormatParameters) => {
   const { format, formatDensity = 'dense', shouldRespectLeadingZeros = false } = parameters;
   const utils = useUtils();
   const isRtl = useRtl();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
   return React.useMemo(() => {

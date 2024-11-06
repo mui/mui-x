@@ -3,12 +3,12 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem, InferPickerValue } from '../internals/models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 function toolbarHasView<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TIsRange, TView> | any,
@@ -18,7 +18,7 @@ function toolbarHasView<TIsRange extends boolean, TView extends DateOrTimeViewWi
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
-  ownerState: PickersLayoutOwnerState,
+  ownerState: PickerLayoutOwnerState,
 ) => {
   const { isLandscape } = ownerState;
   const slots = {
@@ -46,7 +46,7 @@ interface UsePickerLayoutResponse<TIsRange extends boolean> extends SubComponent
 const usePickerLayout = <TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TIsRange, TView>,
 ): UsePickerLayoutResponse<TIsRange> => {
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
 
   const {
     wrapperVariant,
@@ -74,7 +74,7 @@ const usePickerLayout = <TIsRange extends boolean, TView extends DateOrTimeViewW
     // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TIsRange, TView>;
 
-  const ownerState: PickersLayoutOwnerState = {
+  const ownerState: PickerLayoutOwnerState = {
     ...pickersOwnerState,
     wrapperVariant,
     isLandscape,
