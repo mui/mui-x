@@ -337,7 +337,7 @@ If you were using them, you need to replace them with the following code:
     -      true,
     -      DateValidationError
     -    > {}
-    +interface CustomDateFieldProps extends DatePickerFieldProps<Dayjs> {}
+    +interface CustomDateFieldProps extends DatePickerFieldProps {}
     ```
 
   - If you are building a custom field for a Time Picker:
@@ -360,7 +360,7 @@ If you were using them, you need to replace them with the following code:
     -      true,
     -      TimeValidationError
     - > {}
-    +interface CustomTimeFieldProps extends TimePickerFieldProps<Dayjs> {}
+    +interface CustomTimeFieldProps extends TimePickerFieldProps {}
     ```
 
   - If you are building a custom field for a Date Time Picker:
@@ -383,7 +383,7 @@ If you were using them, you need to replace them with the following code:
     -      true,
     -      DateTimeValidationError
     -    > {}
-    +interface CustomDateTimeFieldProps extends DateTimePickerFieldProps<Dayjs> {}
+    +interface CustomDateTimeFieldProps extends DateTimePickerFieldProps {}
     ```
 
   - If you are building a custom single input field for a Date Range Picker:
@@ -408,7 +408,7 @@ If you were using them, you need to replace them with the following code:
     -      true,
     -      DateRangeValidationError
     -    >
-    +interface CustomDateRangeFieldProps extends DateRangePickerFieldProps<Dayjs> {}
+    +interface CustomDateRangeFieldProps extends DateRangePickerFieldProps {}
     ```
 
   - If you are building a custom single input field for a Date Time Range Picker:
@@ -435,7 +435,7 @@ If you were using them, you need to replace them with the following code:
     -      true,
     -      DateTimeRangeValidationError
     -    >
-    +interface CustomDateTimeRangeFieldProps extends DateTimeRangePickerFieldProps<Dayjs> {}
+    +interface CustomDateTimeRangeFieldProps extends DateTimeRangePickerFieldProps {}
     ```
 
 - `BaseMultiInputFieldProps`
@@ -464,7 +464,7 @@ If you were using them, you need to replace them with the following code:
     -    > {}
     +interface CustomDateRangeFieldProps
     +  extends Omit<
-    +     DateRangePickerFieldProps<Dayjs, true>,
+    +     DateRangePickerFieldProps<true>,
     +    'unstableFieldRef' | 'clearable' | 'onClear'
     +  >,
     +  MultiInputFieldRefs {}
@@ -496,7 +496,7 @@ If you were using them, you need to replace them with the following code:
     -    > {}
     +interface JoyMultiInputDateRangeFieldProps
     +  extends Omit<
-    +     DateTimeRangePickerFieldProps<Dayjs, false>,
+    +     DateTimeRangePickerFieldProps<false>,
     +    'unstableFieldRef' | 'clearable' | 'onClear'
     +  >,
     +  MultiInputFieldRefs {}
