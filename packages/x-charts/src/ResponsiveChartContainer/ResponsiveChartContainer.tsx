@@ -34,6 +34,10 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   const { hasIntrinsicSize, chartContainerProps, resizableChartContainerProps } =
     useResponsiveChartContainerProps(props, ref);
 
+  if (props.height && props.width) {
+    return <ChartContainer {...chartContainerProps} />;
+  }
+
   return (
     <ResizableContainer {...resizableChartContainerProps}>
       {hasIntrinsicSize ? <ChartContainer {...chartContainerProps} /> : null}
