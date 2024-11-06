@@ -5,6 +5,7 @@ import {
   GridColDef,
   GridColumnResizeParams,
   gridColumnFieldsSelector,
+  GridApiPro,
 } from '@mui/x-data-grid-pro';
 import Button from '@mui/material/Button';
 
@@ -18,7 +19,7 @@ const rows = [
 
 const useColumnsState = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  columns: GridColDef,
+  columns: GridColDef[],
 ) => {
   const [widths, setWidths] = React.useState<Record<GridColDef['field'], number>>(
     {},
@@ -40,16 +41,21 @@ const useColumnsState = (
 
   const computedColumns = React.useMemo(
     () =>
-      orderedFields.map((field) => {
+      orderedFields.reduce<GridColDef[]>((acc, field) => {
         const column = columns.find((col) => col.field === field);
+        if (!column) {
+          return acc;
+        }
         if (widths[field]) {
-          return {
+          acc.push({
             ...column,
             width: widths[field],
-          };
+          });
+          return acc;
         }
-        return column;
-      }),
+        acc.push(column);
+        return acc;
+      }, []),
     [columns, widths, orderedFields],
   );
 

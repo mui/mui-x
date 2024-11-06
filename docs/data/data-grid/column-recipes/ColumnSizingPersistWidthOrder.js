@@ -33,16 +33,21 @@ const useColumnsState = (apiRef, columns) => {
 
   const computedColumns = React.useMemo(
     () =>
-      orderedFields.map((field) => {
+      orderedFields.reduce((acc, field) => {
         const column = columns.find((col) => col.field === field);
+        if (!column) {
+          return acc;
+        }
         if (widths[field]) {
-          return {
+          acc.push({
             ...column,
             width: widths[field],
-          };
+          });
+          return acc;
         }
-        return column;
-      }),
+        acc.push(column);
+        return acc;
+      }, []),
     [columns, widths, orderedFields],
   );
 
