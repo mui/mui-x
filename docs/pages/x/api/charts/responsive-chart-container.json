@@ -54,18 +54,18 @@
       }
     }
   },
-  "name": "ResponsiveChartContainer",
+  "name": "ChartContainer",
   "imports": [
-    "import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';",
-    "import { ResponsiveChartContainer } from '@mui/x-charts';",
-    "import { ResponsiveChartContainer } from '@mui/x-charts-pro';"
+    "import { ChartContainer } from '@mui/x-charts/ChartContainer';",
+    "import { ChartContainer } from '@mui/x-charts';",
+    "import { ChartContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiResponsiveChartContainer",
   "forwardsRefTo": "SVGSVGElement",
-  "filename": "/packages/x-charts/src/ResponsiveChartContainer/ResponsiveChartContainer.tsx",
+  "filename": "/packages/x-charts/src/ChartContainer/ChartContainer.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
   "cssComponent": false

@@ -200,10 +200,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
-    pathname: '/x/api/charts/responsive-chart-container',
-    title: 'ResponsiveChartContainer',
-  },
-  {
     pathname: '/x/api/charts/responsive-chart-container-pro',
     title: 'ResponsiveChartContainerPro',
     plan: 'pro',
