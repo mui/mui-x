@@ -1022,11 +1022,6 @@ DataGridProRaw.propTypes = {
   unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
   /**
-   * If `true`, the Data Grid will not reset the column width when the `columns` prop is updated.
-   * @default false
-   */
-  unstable_persistColumnsWidth: PropTypes.bool,
-  /**
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */

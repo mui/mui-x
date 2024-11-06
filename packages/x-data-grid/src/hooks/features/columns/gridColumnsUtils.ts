@@ -164,7 +164,6 @@ export function computeFlexColumnsWidth({
 export const hydrateColumnsWidth = (
   rawState: GridColumnsRawState,
   dimensions: GridDimensions | undefined,
-  prevState?: GridColumnsState,
 ): GridColumnsState => {
   const columnsLookup: GridColumnLookup = {};
   let totalFlexUnits = 0;
@@ -184,16 +183,8 @@ export const hydrateColumnsWidth = (
         totalFlexUnits += column.flex;
         isFlex = true;
       } else {
-        const previousStateColumn = prevState?.lookup[columnField];
-        let widthToUse = column.width;
-        if (
-          previousStateColumn?.computedWidth &&
-          previousStateColumn.computedWidth !== column.width
-        ) {
-          widthToUse = previousStateColumn.computedWidth;
-        }
         computedWidth = clamp(
-          widthToUse || GRID_STRING_COL_DEF.width!,
+          column.width || GRID_STRING_COL_DEF.width!,
           column.minWidth || GRID_STRING_COL_DEF.minWidth!,
           column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
         );
@@ -317,14 +308,12 @@ export const createColumnsState = ({
   initialState,
   columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef),
   keepOnlyColumnsToUpsert = false,
-  previousColumnsState,
 }: {
   columnsToUpsert: readonly GridColDef[];
   initialState: GridColumnsInitialState | undefined;
   columnVisibilityModel?: GridColumnVisibilityModel;
   keepOnlyColumnsToUpsert: boolean;
   apiRef: React.MutableRefObject<GridApiCommunity>;
-  previousColumnsState?: GridColumnsState;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
@@ -415,7 +404,6 @@ export const createColumnsState = ({
   return hydrateColumnsWidth(
     columnsStateWithPortableColumns,
     apiRef.current.getRootDimensions?.() ?? undefined,
-    previousColumnsState,
   );
 };
 

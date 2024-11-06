@@ -58,6 +58,5 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingMode: 'client',
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
-  unstable_persistColumnsWidth: false,
   unstable_rowSpanning: false,
 };

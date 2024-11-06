@@ -656,7 +656,6 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_persistColumnsWidth": { "type": { "name": "bool" }, "default": "false" },
     "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",
