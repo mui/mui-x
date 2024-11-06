@@ -16,6 +16,11 @@ export enum RequestStatus {
   UNKNOWN,
 }
 
+export enum DataSourceRowsUpdateStrategy {
+  Default = 'set-new-rows',
+  LazyLoading = 'replace-row-range',
+}
+
 /**
  * Fetches row children from the server with option to limit the number of concurrent requests
  * Determines the status of a request based on the enum `RequestStatus`

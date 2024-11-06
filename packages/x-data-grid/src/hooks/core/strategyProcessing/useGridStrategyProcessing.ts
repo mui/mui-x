@@ -14,6 +14,7 @@ export const GRID_DEFAULT_STRATEGY = 'none';
 export const GRID_STRATEGIES_PROCESSORS: {
   [P in GridStrategyProcessorName]: GridStrategyProcessingLookup[P]['group'];
 } = {
+  dataSourceRowsUpdate: 'dataSource',
   rowTreeCreation: 'rowTree',
   filtering: 'rowTree',
   sorting: 'rowTree',
@@ -59,10 +60,7 @@ type UntypedStrategyProcessors = {
  * =====================================================================================================================
  *
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
- * For now, there is only one strategy group named `rowTree` which customize
- * - row tree creation algorithm.
- * - sorting algorithm.
- * - filtering algorithm.
+ * For now, there are two groupes named `rowTree` and `dataSource`.
  */
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(

@@ -13,6 +13,7 @@ import {
   GridSortingMethodParams,
   GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
+import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
@@ -20,6 +21,19 @@ export type GridStrategyGroup =
   GridStrategyProcessingLookup[keyof GridStrategyProcessingLookup]['group'];
 
 export interface GridStrategyProcessingLookup {
+  dataSourceRowsUpdate: {
+    group: 'dataSource';
+    params:
+      | {
+          response: GridGetRowsResponse;
+          fetchParams: GridGetRowsParams;
+        }
+      | {
+          error: Error;
+          fetchParams: GridGetRowsParams;
+        };
+    value: void;
+  };
   rowTreeCreation: {
     group: 'rowTree';
     params: GridRowTreeCreationParams;
