@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   GridToolbarProps,
   GridToolbarV8 as GridToolbar,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function Toolbar(props: GridToolbarProps) {
@@ -17,21 +17,19 @@ function Toolbar(props: GridToolbarProps) {
       <GridToolbar.Separator />
       <GridToolbar.PrintItem />
       <GridToolbar.ExportItem printOptions={{ disableToolbarButton: true }} />
-      <GridToolbar.Separator />
-      <GridToolbar.DensityItem />
     </GridToolbar.Root>
   );
 }
 
-export default function ToolbarBasic() {
+export default function GridToolbarBasic() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 100,
+    rowLength: 10,
   });
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} slots={{ toolbar: Toolbar }} />
+      <DataGrid {...data} slots={{ toolbar: Toolbar }} />
     </div>
   );
 }

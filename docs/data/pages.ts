@@ -129,7 +129,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
           { pathname: '/x/react-data-grid/scrolling' },
-          { pathname: '/x/react-data-grid/toolbar', unstable: true },
           {
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
@@ -168,13 +167,20 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-data-grid/components-group',
+        subheader: 'Subcomponents',
+        children: [
+          { pathname: '/x/react-data-grid/components', title: 'Overview' },
+          { pathname: '/x/react-data-grid/grid-toolbar', title: 'Grid Toolbar', unstable: true },
+        ],
+      },
+      {
         pathname: '/x/react-data-grid/customization-group',
         subheader: 'Customization',
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
           { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
-          { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
         ],
       },
       {
