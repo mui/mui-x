@@ -12,7 +12,9 @@ import {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerRangeValue,
+  usePickersPrivateContext,
 } from '@mui/x-date-pickers/internals';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
@@ -20,8 +22,7 @@ import {
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
 
-const useUtilityClasses = (ownerState: DateRangePickerToolbarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     container: ['container'],
@@ -32,7 +33,7 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps) => {
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'>,
+    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -47,7 +48,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateRangePickerToolbarProps;
+  ownerState: PickerOwnerState;
 }>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
@@ -88,10 +89,12 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
     onViewChange,
     view,
     views,
+    classes: classesProp,
     ...other
   } = props;
 
   const translations = usePickersTranslations();
+  const { ownerState } = usePickersPrivateContext();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -101,14 +104,12 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
     : translations.end;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <DateRangePickerToolbarRoot
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
-      isLandscape={false}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}

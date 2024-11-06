@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
+import { PickerOrientation, PickerVariant } from '../models';
 
 export const PickersContext = React.createContext<PickersContextValue | null>(null);
 
@@ -11,7 +12,11 @@ export const PickersPrivateContext = React.createContext<PickersPrivateContextVa
     isPickerReadOnly: false,
     isPickerValueEmpty: false,
     isPickerOpen: false,
+    pickerVariant: 'desktop',
+    pickerOrientation: 'portrait',
   },
+  variant: 'desktop',
+  orientation: 'portrait',
 });
 
 /**
@@ -61,4 +66,21 @@ export interface PickersPrivateContextValue {
    * The ownerState of the picker.
    */
   ownerState: PickerOwnerState;
+  /**
+   * The responsive variant of the picker.
+   * Is equal to "desktop" when using a desktop picker (like <DesktopDatePicker />).
+   * Is equal to "mobile" when using a mobile picker (like <MobileDatePicker />).
+   * Is equal to "mobile" or "desktop" when using a responsive picker (like <DatePicker />) depending on the `desktopModeMediaQuery` prop.
+   * Is equal to "mobile" or "desktop" when using a static picker (like <StaticDatePicker />) depending on the `displayStaticWrapperAs` prop.
+   * Is always equal to "desktop" if the component you are accessing the ownerState from is not wrapped by a picker.
+   */
+  variant: PickerVariant;
+  /**
+   * The orientation of the picker.
+   * Is equal to "landscape" when the picker is in landscape orientation.
+   * Is equal to "portrait" when the picker is in portrait orientation.
+   * You can use the "orientation" on any picker component to force the orientation.
+   * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
+   */
+  orientation: PickerOrientation;
 }

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
@@ -9,6 +10,7 @@ import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { PickersPrivateContextValue } from '../internals/components/PickersProvider';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -20,9 +22,9 @@ const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
   ownerState: PickersLayoutOwnerState,
 ) => {
-  const { isLandscape } = ownerState;
+  const { pickerOrientation } = ownerState;
   const slots = {
-    root: ['root', isLandscape && 'landscape'],
+    root: ['root', pickerOrientation === 'landscape' && 'landscape'],
     contentWrapper: ['contentWrapper'],
     toolbar: ['toolbar'],
     actionBar: ['actionBar'],
@@ -38,15 +40,16 @@ interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeVi
   extends PickersLayoutProps<TValue, TView> {
   value: TValue;
 }
-interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
+interface UsePickerLayoutResponse<TValue>
+  extends SubComponents<TValue>,
+    Pick<PickersPrivateContextValue, 'orientation' | 'variant' | 'ownerState'> {}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickerOwnerState, variant, orientation } = usePickersPrivateContext();
 
   const {
-    wrapperVariant,
     onAccept,
     onClear,
     onCancel,
@@ -58,7 +61,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     onChange,
     onSelectShortcut,
     isValid,
-    isLandscape,
     disabled,
     readOnly,
     children,
@@ -71,11 +73,9 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
 
-  const ownerState: PickersLayoutOwnerState = {
-    ...pickersOwnerState,
-    wrapperVariant,
-    isLandscape,
-  };
+  const isRtl = useRtl();
+  const ownerState: PickersLayoutOwnerState = { ...pickerOwnerState, isRtl };
+
   const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar
@@ -88,8 +88,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
       onClear,
       onCancel,
       onSetToday,
-      actions:
-        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
     ownerState,
@@ -102,7 +101,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     elementType: Toolbar!,
     externalSlotProps: slotProps?.toolbar,
     additionalProps: {
-      isLandscape,
       onChange,
       value,
       view,
@@ -133,7 +131,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     externalSlotProps: slotProps?.shortcuts,
     additionalProps: {
       isValid,
-      isLandscape,
       onChange: onSelectShortcut,
     },
     className: classes.shortcuts,
@@ -147,6 +144,9 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     tabs,
     actionBar,
     shortcuts,
+    orientation,
+    variant,
+    ownerState,
   };
 };
 

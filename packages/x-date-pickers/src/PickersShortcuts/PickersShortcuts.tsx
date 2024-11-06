@@ -41,7 +41,6 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
 }
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
-  isLandscape: boolean;
   onChange: (
     newValue: TValue,
     changeImportance: PickerShortcutChangeImportance,
@@ -60,7 +59,7 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'accept', onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -129,7 +128,6 @@ PickersShortcuts.propTypes = {
    * @default false
    */
   disablePadding: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   /**
    * Ordered array of shortcuts to display.

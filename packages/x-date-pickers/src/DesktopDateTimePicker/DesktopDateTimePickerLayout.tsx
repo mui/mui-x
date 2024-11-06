@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useRtl } from '@mui/system/RtlProvider';
 import Divider from '@mui/material/Divider';
 import {
   PickersLayoutContentWrapper,
@@ -23,11 +22,10 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
-  const isRtl = useRtl();
-  const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, classes } = props;
+  const { toolbar, tabs, content, actionBar, shortcuts, orientation, ownerState } =
+    usePickerLayout(props);
+  const { sx, className, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
-  const ownerState = { ...props, isRtl };
 
   return (
     <PickersLayoutRoot
@@ -42,8 +40,8 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
       ]}
       ownerState={ownerState}
     >
-      {isLandscape ? shortcuts : toolbar}
-      {isLandscape ? toolbar : shortcuts}
+      {orientation === 'landscape' ? shortcuts : toolbar}
+      {orientation === 'landscape' ? toolbar : shortcuts}
       <PickersLayoutContentWrapper
         className={clsx(pickersLayoutClasses.contentWrapper, classes?.contentWrapper)}
         sx={{ display: 'grid' }}
@@ -69,11 +67,6 @@ DesktopDateTimePickerLayout.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -85,10 +78,6 @@ DesktopDateTimePickerLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
@@ -113,7 +102,6 @@ DesktopDateTimePickerLayout.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DesktopDateTimePickerLayout };

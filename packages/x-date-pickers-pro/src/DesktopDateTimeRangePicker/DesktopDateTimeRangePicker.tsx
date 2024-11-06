@@ -13,7 +13,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import { PickersLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -190,10 +189,9 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       },
       toolbar: {
         hidden: true,
-        toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickersLayoutOwnerState) => ({
+      actionBar: (ownerState: PickerOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),

@@ -13,7 +13,11 @@ import {
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { UsePickerProviderParameters, UsePickerProviderReturnValue } from './usePickerProvider';
+import {
+  UsePickerProviderParameters,
+  UsePickerProviderProps,
+  UsePickerProviderReturnValue,
+} from './usePickerProvider';
 
 /**
  * Props common to all picker headless implementations.
@@ -26,7 +30,8 @@ export interface UsePickerBaseProps<
   TAdditionalProps extends {},
 > extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerLayoutProps,
+    UsePickerProviderProps {}
 
 export interface UsePickerProps<
   TValue,
@@ -36,7 +41,8 @@ export interface UsePickerProps<
   TAdditionalProps extends {},
 > extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerLayoutProps,
+    UsePickerProviderProps {}
 
 export interface UsePickerParams<
   TValue,
@@ -46,7 +52,7 @@ export interface UsePickerParams<
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TExternalProps>,
-      'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
+      'valueManager' | 'valueType' | 'variant' | 'validator'
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TSection, TExternalProps, TAdditionalProps>,
@@ -62,7 +68,7 @@ export interface UsePickerResponse<
   TSection extends FieldSection,
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;

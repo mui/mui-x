@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
-import { DateOrTimeViewWithMeridiem } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerOrientation } from '../models';
 
-type Orientation = 'portrait' | 'landscape';
-
-function getOrientation(): Orientation {
+function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
     return 'portrait';
   }
@@ -22,9 +20,9 @@ function getOrientation(): Orientation {
   return 'portrait';
 }
 
-export const useIsLandscape = (
+export const usePickerOrientation = (
   views: readonly DateOrTimeViewWithMeridiem[],
-  customOrientation: Orientation | undefined,
+  customOrientation: PickerOrientation | undefined,
 ): boolean => {
   const [orientation, setOrientation] = React.useState(getOrientation);
 

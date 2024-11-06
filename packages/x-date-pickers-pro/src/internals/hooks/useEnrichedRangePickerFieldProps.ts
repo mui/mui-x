@@ -22,7 +22,7 @@ import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   onSpaceOrEnter,
   UsePickerResponse,
-  WrapperVariant,
+  PickerVariant,
   DateOrTimeViewWithMeridiem,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
@@ -110,7 +110,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
       'open' | 'actions'
     >,
     UseRangePositionResponse {
-  wrapperVariant: WrapperVariant;
+  variant: PickerVariant;
   fieldType: FieldType;
   readOnly?: boolean;
   labelId?: string;
@@ -138,7 +138,7 @@ const useMultiInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
-  wrapperVariant,
+  variant,
   open,
   actions,
   readOnly,
@@ -255,7 +255,7 @@ const useMultiInputFieldSlotProps = <
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
-          ...(wrapperVariant === 'mobile' && { readOnly: true }),
+          ...(variant === 'mobile' && { readOnly: true }),
         };
         if (anchorRef) {
           InputProps = {
@@ -272,7 +272,7 @@ const useMultiInputFieldSlotProps = <
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
-          ...(wrapperVariant === 'mobile' && { readOnly: true }),
+          ...(variant === 'mobile' && { readOnly: true }),
         };
         InputProps = resolvedComponentProps?.InputProps;
       }
@@ -316,7 +316,7 @@ const useSingleInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
-  wrapperVariant,
+  variant,
   open,
   actions,
   readOnly,
@@ -427,7 +427,7 @@ const useSingleInputFieldSlotProps = <
     },
     focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
-    ...(wrapperVariant === 'mobile' && { readOnly: true }),
+    ...(variant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !fieldProps.disabled && { onClick: openPicker }),

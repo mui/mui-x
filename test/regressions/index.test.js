@@ -65,7 +65,7 @@ async function main() {
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
 
   // Simulate portrait mode for date pickers.
-  // See `useIsLandscape`.
+  // See `usePickerOrientation` hook.
   await page.evaluate(() => {
     Object.defineProperty(window.screen.orientation, 'angle', {
       get() {

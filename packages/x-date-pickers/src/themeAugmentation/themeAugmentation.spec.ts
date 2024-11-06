@@ -414,7 +414,7 @@ createTheme({
     },
     MuiPickersToolbar: {
       defaultProps: {
-        isLandscape: true,
+        toolbarTitle: 'some title',
         // @ts-expect-error invalid MuiPickersToolbar prop
         someRandomProp: true,
       },

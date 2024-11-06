@@ -106,7 +106,7 @@ export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './mo
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type {
-  WrapperVariant,
+  PickerVariant,
   TimeViewWithMeridiem,
   DateOrTimeViewWithMeridiem,
 } from './models/common';

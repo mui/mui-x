@@ -93,7 +93,7 @@ export const useMobileRangePicker = <
   >({
     ...pickerParams,
     props,
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     autoFocusView: true,
     fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     localeText,
@@ -141,7 +141,7 @@ export const useMobileRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     fieldType,
     open,
     actions,

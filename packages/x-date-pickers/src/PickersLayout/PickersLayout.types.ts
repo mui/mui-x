@@ -6,7 +6,7 @@ import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
+import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 import {
   ExportedPickersShortcutProps,
@@ -35,19 +35,18 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
 }
 
 export interface PickersLayoutOwnerState extends PickerOwnerState {
-  wrapperVariant: WrapperVariant;
-  isLandscape: boolean;
+  isRtl: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Props passed down to the action bar component.
    */
-  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickersLayoutOwnerState>;
+  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickerOwnerState>;
   /**
    * Props passed down to the shortcuts component.
    */
-  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersLayoutOwnerState>;
+  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickerOwnerState>;
   /**
    * Props passed down to the layoutRoot component.
    */
@@ -102,10 +101,6 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeViewWithMeri
    * @default {}
    */
   slotProps?: PickersLayoutSlotProps<TValue, TView>;
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: boolean;
 }
 
 export interface SubComponents<TValue> {

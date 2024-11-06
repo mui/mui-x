@@ -87,7 +87,7 @@ export const useDesktopPicker = <
     localeText,
     autoFocusView: true,
     additionalViewProps: {},
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
   });
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
