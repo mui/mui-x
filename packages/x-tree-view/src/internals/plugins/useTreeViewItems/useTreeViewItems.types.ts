@@ -91,6 +91,7 @@ export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItems
    */
   areItemUpdatesPrevented: () => boolean;
   addItems: (args: AddItemsParams<R>) => void;
+  removeChildren: (parentId?: TreeViewItemId) => void;
   isTreeViewLoading: boolean;
   setTreeViewLoading: (loading: boolean) => void;
 }

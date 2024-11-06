@@ -21,7 +21,7 @@ export interface TreeViewDataSourceCache {
    * @param {string} key The key of type `string`
    * @returns {TreeViewItemMeta[]} The value stored in the cache
    */
-  get: (key: string) => TreeViewItemMeta[] | undefined;
+  get: (key: string) => TreeViewItemMeta[] | undefined | -1;
   /**
    * Clear the cache.
    */
@@ -43,14 +43,14 @@ export class TreeViewDataSourceCacheDefault {
     this.cache[key] = { value, expiry };
   }
 
-  get(key: string): TreeViewItemMeta[] | undefined {
+  get(key: string): TreeViewItemMeta[] | undefined | -1 {
     const entry = this.cache[key];
     if (!entry) {
       return undefined;
     }
     if (Date.now() > entry.expiry) {
       delete this.cache[key];
-      return undefined;
+      return -1;
     }
     return entry.value;
   }

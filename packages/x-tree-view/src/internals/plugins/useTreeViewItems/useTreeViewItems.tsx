@@ -223,7 +223,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
-  const addItems = async ({
+  const addItems = ({
     items,
     parentId,
     depth,
@@ -272,6 +272,44 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return { ...prevState, items: { ...newItems, loading: prevState.items.loading } };
       });
     }
+  };
+  const removeChildren = (parentId) => {
+    setState((prevState) => {
+      if (!parentId) {
+        return {
+          ...prevState,
+          items: {
+            ...prevState.items,
+            itemMetaMap: {},
+            itemOrderedChildrenIds: {},
+            itemChildrenIndexes: {},
+          },
+        };
+      }
+      const newMetaMap = Object.keys(prevState.items.itemMetaMap).reduce((acc, key) => {
+        const item = prevState.items.itemMetaMap[key];
+        if (item.parentId === parentId) {
+          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+          return acc;
+        }
+        return { ...acc, [item.id]: item };
+      }, {});
+
+      const newItemOrderedChildrenIds = prevState.items.itemOrderedChildrenIds;
+      const newItemChildrenIndexes = prevState.items.itemChildrenIndexes;
+      delete newItemChildrenIndexes[parentId];
+      delete newItemOrderedChildrenIds[parentId];
+
+      return {
+        ...prevState,
+        items: {
+          ...prevState.items,
+          itemMetaMap: newMetaMap,
+          itemOrderedChildrenIds: newItemOrderedChildrenIds,
+          itemChildrenIndexes: newItemChildrenIndexes,
+        },
+      };
+    });
   };
 
   React.useEffect(() => {
@@ -350,6 +388,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       addItems,
       isTreeViewLoading,
       setTreeViewLoading,
+      removeChildren,
     },
     contextValue: {
       items: {

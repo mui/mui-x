@@ -95,7 +95,7 @@ export const useTreeItemUtils = <
     error: instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false,
   };
 
-  const handleExpansion = (event: React.MouseEvent) => {
+  const handleExpansion = async (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -109,9 +109,8 @@ export const useTreeItemUtils = <
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
       if (instance?.fetchItems && lazyLoading && !status.expanded) {
-        instance.fetchItems([itemId]);
+        await instance.fetchItems([itemId]);
       }
-
       instance.toggleItemExpansion(event, itemId);
     }
   };
