@@ -276,7 +276,7 @@ jobs:
           name: Tests real browsers (vitest)
           command: pnpm vitest --project "browser/*" --pool=forks
           environment:
-            VITEST_MAX_FORKS: 2
+            VITEST_MAX_FORKS: 1
             VITEST_MIN_FORKS: 1
 
   test_types:
