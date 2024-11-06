@@ -9,6 +9,11 @@
     },
     "data": { "type": { "description": "V[]" } },
     "dataKey": { "type": { "description": "string" } },
+    "domainLimit": {
+      "type": {
+        "description": "'nice' | 'strict' | ((range: [number, number]) =&gt; [number, number])"
+      }
+    },
     "hideTooltip": { "type": { "description": "boolean" } },
     "max": { "type": { "description": "number | Date" } },
     "min": { "type": { "description": "number | Date" } },

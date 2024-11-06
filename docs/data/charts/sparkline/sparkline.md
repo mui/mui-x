@@ -58,3 +58,7 @@ The following demo shows two sparklines, one with small and another with large v
 The first row has the default y-axis values, while on the second row a fixed range from `0` to `100` has been set.
 
 {{"demo": "CustomYAxis.js"}}
+
+You can adjust the y-axis range of a sparkline using the `domainLimit` option in the `yAxis` configuration. The demo below shows different ways to set the y-axis range, including default behavior, a strict data-bound range, and a custom function that adjusts the range to rounded values.
+
+{{"demo": "CustomDomainYAxis.js"}}
