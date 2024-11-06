@@ -78,14 +78,6 @@ export const useGridDataSourceLazyLoader = (
   const loadingTrigger = React.useRef<LoadingTrigger | null>(null);
   const rowsStale = React.useRef<boolean>(false);
 
-  const heights = React.useMemo(
-    () => ({
-      viewport: dimensions.viewportInnerSize.height,
-      content: dimensions.contentSize.height,
-    }),
-    [dimensions.viewportInnerSize.height, dimensions.contentSize.height],
-  );
-
   // Adjust the render context range to fit the pagination model's page size
   // First row index should be decreased to the start of the page, end row index should be increased to the end of the page
   const adjustRowParams = React.useCallback(
@@ -272,8 +264,8 @@ export const useGridDataSourceLazyLoader = (
         return;
       }
 
-      const position = newScrollPosition.top + heights.viewport;
-      const target = heights.content - props.scrollEndThreshold;
+      const position = newScrollPosition.top + dimensions.viewportInnerSize.height;
+      const target = dimensions.contentSize.height - props.scrollEndThreshold;
 
       if (position >= target) {
         previousLastRowIndex.current = renderContext.lastRowIndex;
@@ -294,7 +286,7 @@ export const useGridDataSourceLazyLoader = (
       props.scrollEndThreshold,
       sortModel,
       filterModel,
-      heights,
+      dimensions,
       paginationModel.pageSize,
       renderContext.lastRowIndex,
       adjustRowParams,
