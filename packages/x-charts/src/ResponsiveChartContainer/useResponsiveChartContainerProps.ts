@@ -1,5 +1,5 @@
 'use client';
-import { ChartContainerProps } from '../ChartContainer';
+import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
 
@@ -43,7 +43,7 @@ export const useResponsiveChartContainerProps = (
     ref: containerRef,
   };
 
-  const chartContainerProps: ChartContainerProps & { ref: React.ForwardedRef<unknown> } = {
+  const chartDataProviderProps: ChartDataProviderProps & { ref: React.ForwardedRef<unknown> } = {
     margin,
     children,
     series,
@@ -68,7 +68,7 @@ export const useResponsiveChartContainerProps = (
 
   return {
     hasIntrinsicSize: dWidth && dHeight,
-    chartContainerProps,
+    chartDataProviderProps,
     resizableChartContainerProps,
   };
 };

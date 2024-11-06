@@ -5,15 +5,15 @@ import type { DrawingProviderProps } from '../context/DrawingProvider';
 import type { CartesianProviderProps } from '../context/CartesianProvider';
 import type { SeriesProviderProps } from '../context/SeriesProvider';
 import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
-import type { ChartContainerProps } from './ChartContainer';
+import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../context';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../context/PluginProvider';
 import { AnimationProviderProps } from '../context/AnimationProvider';
 
-export const useChartContainerProps = (
-  props: ChartContainerProps,
+export const useChartDataProviderProps = (
+  props: ChartDataProviderProps,
   ref: React.ForwardedRef<unknown>,
 ) => {
   const {

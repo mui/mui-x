@@ -12,7 +12,7 @@ export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useBarChartProps } from '../BarChart/useBarChartProps';
 export { useResponsiveChartContainerProps } from '../ResponsiveChartContainer/useResponsiveChartContainerProps';
-export { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+export { useChartDataProviderProps as useChartContainerProps } from '../ChartDataProvider/useChartDataProviderProps';
 
 // utils
 export * from './defaultizeValueFormatter';

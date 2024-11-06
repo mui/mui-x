@@ -15,11 +15,11 @@ import {
   ZAxisContextProviderProps,
 } from '../context';
 import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
-import { useChartContainerProps } from './useChartContainerProps';
+import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../context/AnimationProvider';
 
-export type ChartContainerProps = Omit<
+export type ChartDataProviderProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
@@ -45,7 +45,10 @@ export type ChartContainerProps = Omit<
   children?: React.ReactNode;
 };
 
-const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
+const ChartDataProvider = React.forwardRef(function ChartDataProvider(
+  props: ChartDataProviderProps,
+  ref,
+) {
   const {
     children,
     drawingProviderProps,
@@ -56,7 +59,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
     chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
-  } = useChartContainerProps(props, ref);
+  } = useChartDataProviderProps(props, ref);
 
   return (
     <DrawingProvider {...drawingProviderProps}>
@@ -66,10 +69,12 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
             <ZAxisContextProvider {...zAxisContextProps}>
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
-                  <ChartsSurface {...chartsSurfaceProps}>
-                    <ChartsAxesGradients />
-                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-                  </ChartsSurface>
+                  <AnimationProvider {...animationProviderProps}>
+                    <ChartsSurface {...chartsSurfaceProps}>
+                      <ChartsAxesGradients />
+                      {children}
+                    </ChartsSurface>
+                  </AnimationProvider>
                 </HighlightedProvider>
               </InteractionProvider>
             </ZAxisContextProvider>
@@ -80,7 +85,7 @@ const ChartContainer = React.forwardRef(function ChartContainer(props: ChartCont
   );
 });
 
-ChartContainer.propTypes = {
+ChartDataProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -355,4 +360,4 @@ ChartContainer.propTypes = {
   ),
 } as any;
 
-export { ChartContainer };
+export { ChartDataProvider };

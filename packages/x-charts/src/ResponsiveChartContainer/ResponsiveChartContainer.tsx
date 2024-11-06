@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
 import { useResponsiveChartContainerProps } from './useResponsiveChartContainerProps';
 
 export interface ResponsiveChartContainerProps
-  extends Omit<ChartContainerProps, 'width' | 'height'> {
+  extends Omit<ChartDataProviderProps, 'width' | 'height'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -31,16 +31,16 @@ const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContai
   props: ResponsiveChartContainerProps,
   ref,
 ) {
-  const { hasIntrinsicSize, chartContainerProps, resizableChartContainerProps } =
+  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
     useResponsiveChartContainerProps(props, ref);
 
   if (props.height && props.width) {
-    return <ChartContainer {...chartContainerProps} />;
+    return <ChartDataProvider {...chartDataProviderProps} />;
   }
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartContainer {...chartContainerProps} /> : null}
+      {hasIntrinsicSize ? <ChartDataProvider {...chartDataProviderProps} /> : null}
     </ResizableContainer>
   );
 });
