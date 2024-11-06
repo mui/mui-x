@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -126,7 +126,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     timezone,
   });
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const now = useNow(timezone);
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({

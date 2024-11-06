@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateView, PickerValidDate } from '../models';
@@ -90,7 +90,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     ...other
   } = props;
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(props);
 
   const dateText = React.useMemo(() => {

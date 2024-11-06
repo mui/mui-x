@@ -3,9 +3,9 @@ import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 
-export const PickersContext = React.createContext<PickersContextValue | null>(null);
+export const PickerContext = React.createContext<PickerContextValue | null>(null);
 
-export const PickersPrivateContext = React.createContext<PickersPrivateContextValue>({
+export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
   ownerState: {
     isPickerDisabled: false,
     isPickerReadOnly: false,
@@ -21,26 +21,26 @@ export const PickersPrivateContext = React.createContext<PickersPrivateContextVa
  *
  * @ignore - do not document.
  */
-export function PickersProvider(props: PickersProviderProps) {
+export function PickerProvider(props: PickerProviderProps) {
   const { contextValue, privateContextValue, localeText, children } = props;
 
   return (
-    <PickersContext.Provider value={contextValue}>
-      <PickersPrivateContext.Provider value={privateContextValue}>
+    <PickerContext.Provider value={contextValue}>
+      <PickerPrivateContext.Provider value={privateContextValue}>
         <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-      </PickersPrivateContext.Provider>
-    </PickersContext.Provider>
+      </PickerPrivateContext.Provider>
+    </PickerContext.Provider>
   );
 }
 
-export interface PickersProviderProps {
-  contextValue: PickersContextValue;
-  privateContextValue: PickersPrivateContextValue;
+export interface PickerProviderProps {
+  contextValue: PickerContextValue;
+  privateContextValue: PickerPrivateContextValue;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
 }
 
-export interface PickersContextValue {
+export interface PickerContextValue {
   /**
    * Open the picker.
    * @param {React.UIEvent} event The DOM event that triggered the change.
@@ -56,7 +56,7 @@ export interface PickersContextValue {
    */
   open: boolean;
 }
-export interface PickersPrivateContextValue {
+export interface PickerPrivateContextValue {
   /**
    * The ownerState of the picker.
    */

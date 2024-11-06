@@ -9,7 +9,7 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -166,7 +166,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     ...other
   } = props;
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const isRtl = useRtl();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));

@@ -11,7 +11,7 @@ import {
 import clsx from 'clsx';
 import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -30,7 +30,7 @@ import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate, getWeekdays } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { DateCalendarClasses } from './dateCalendarClasses';
 
 export interface DayCalendarSlots {
@@ -269,7 +269,7 @@ function WrappedDay({
 
   const utils = useUtils();
   const now = useNow(timezone);
-  const { ownerState } = usePickersPrivateContext();
+  const { ownerState } = usePickerPrivateContext();
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
@@ -390,7 +390,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
     timezone,
   });
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'DayCalendar',

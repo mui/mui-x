@@ -4,7 +4,7 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
-export { PickersProvider } from './components/PickersProvider';
+export { PickerProvider } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,
@@ -84,7 +84,7 @@ export type {
   PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
-export { usePickersPrivateContext } from './hooks/usePickersPrivateContext';
+export { usePickerPrivateContext } from './hooks/usePickerPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
