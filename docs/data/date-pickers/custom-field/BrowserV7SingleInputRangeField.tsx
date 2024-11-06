@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
@@ -105,8 +104,7 @@ const BrowserTextField = React.forwardRef(
   },
 );
 
-interface BrowserSingleInputDateRangeFieldProps
-  extends DateRangePickerFieldProps<Dayjs> {}
+interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProps {}
 
 type BrowserSingleInputDateRangeFieldComponent = ((
   props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -143,11 +141,9 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ),
     };
 
-    const fieldResponse = useSingleInputDateRangeField<
-      Dayjs,
-      true,
-      typeof textFieldProps
-    >({ ...textFieldProps, enableAccessibleFieldDOMStructure: true });
+    const fieldResponse = useSingleInputDateRangeField<true, typeof textFieldProps>(
+      textFieldProps,
+    );
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -171,7 +167,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
 const BrowserSingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         ref={ref}

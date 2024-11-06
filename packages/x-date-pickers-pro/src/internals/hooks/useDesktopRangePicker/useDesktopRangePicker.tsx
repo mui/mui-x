@@ -11,8 +11,9 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickersProvider,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { PickerValidDate, FieldRef, InferError } from '@mui/x-date-pickers/models';
+import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -23,17 +24,15 @@ import {
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangeFieldSection } from '../../../models';
+import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopRangePickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
@@ -42,12 +41,7 @@ export const useDesktopRangePicker = <
 >({
   props,
   ...pickerParams
-}: UseDesktopRangePickerParams<
-  TDate,
-  TView,
-  TEnableAccessibleFieldDOMStructure,
-  TExternalProps
->) => {
+}: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -95,8 +89,7 @@ export const useDesktopRangePicker = <
     fieldProps: pickerFieldProps,
     ownerState,
   } = usePicker<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     TView,
     RangeFieldSection,
     TExternalProps,
@@ -138,7 +131,6 @@ export const useDesktopRangePicker = <
 
   const fieldProps: RangePickerPropsForFieldSlot<
     boolean,
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   > = useSlotProps({
@@ -168,7 +160,6 @@ export const useDesktopRangePicker = <
   });
 
   const enrichedFieldProps = useEnrichedRangePickerFieldProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
@@ -195,7 +186,7 @@ export const useDesktopRangePicker = <
     onViewChange: layoutProps.onViewChange,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<DateRange<TDate>, TDate, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
     ...slotProps,
     tabs: {
       ...slotProps?.tabs,

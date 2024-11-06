@@ -1,13 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "axisHighlight": {
-      "description": "The configuration of axes highlight.",
-      "seeMoreText": "See {{link}} for more details."
-    },
-    "bottomAxis": {
-      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
-    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -21,9 +14,6 @@
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
-    "leftAxis": {
-      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "margin": {
       "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend. Accepts an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
@@ -36,9 +26,6 @@
     "resolveSizeBeforeRender": {
       "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
     },
-    "rightAxis": {
-      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
-    },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
     },
@@ -50,9 +37,6 @@
     "tooltip": {
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
-    },
-    "topAxis": {
-      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
@@ -67,10 +51,6 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
-    "axisLabel": "Custom component for axis label.",
-    "axisLine": "Custom component for the axis main line.",
-    "axisTick": "Custom component for the axis tick.",
-    "axisTickLabel": "Custom component for tick label.",
     "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

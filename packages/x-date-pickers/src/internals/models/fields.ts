@@ -5,7 +5,7 @@ import type {
   UseClearableFieldSlotProps,
   UseClearableFieldSlots,
 } from '../../hooks/useClearableField';
-import type { FieldSection, PickerOwnerState, PickerValidDate } from '../../models';
+import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
 interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
@@ -52,13 +52,12 @@ export type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructur
  */
 export type BaseSingleInputFieldProps<
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > = MakeRequired<
   Pick<
-    UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
     | 'readOnly'
     | 'disabled'
     | 'format'

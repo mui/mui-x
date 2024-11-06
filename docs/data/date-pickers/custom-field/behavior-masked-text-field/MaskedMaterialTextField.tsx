@@ -26,7 +26,7 @@ function getInputValueFromValue(value: Dayjs | null, format: string) {
   return value.isValid() ? value.format(format) : '';
 }
 
-function MaskedDateField(props: DatePickerFieldProps<Dayjs>) {
+function MaskedDateField(props: DatePickerFieldProps) {
   const { slots, slotProps, ...other } = props;
 
   const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
@@ -135,7 +135,7 @@ function MaskedDateField(props: DatePickerFieldProps<Dayjs>) {
   );
 }
 
-function MaskedFieldDatePicker(props: DatePickerProps<Dayjs>) {
+function MaskedFieldDatePicker(props: DatePickerProps) {
   return (
     <DatePicker slots={{ ...props.slots, field: MaskedDateField }} {...props} />
   );

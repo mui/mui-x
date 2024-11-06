@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersArrowSwitcher,
   useNextMonthDisabled,
@@ -13,8 +12,8 @@ import {
 import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
 import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
-type PickersRangeCalendarHeaderComponent = (<TDate extends PickerValidDate>(
-  props: PickersRangeCalendarHeaderProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type PickersRangeCalendarHeaderComponent = ((
+  props: PickersRangeCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher)({
@@ -24,11 +23,12 @@ const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSw
   justifyContent: 'space-between',
 });
 
-const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader<
-  TDate extends PickerValidDate,
->(props: PickersRangeCalendarHeaderProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
+const PickersRangeCalendarHeader = React.forwardRef(function PickersRangeCalendarHeader(
+  props: PickersRangeCalendarHeaderProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const utils = useUtils();
+  const translations = usePickersTranslations();
 
   const { calendars, month, monthIndex, labelId, ...other } = props;
   const {

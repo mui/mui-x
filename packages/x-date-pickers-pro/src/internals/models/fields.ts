@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
 import { MakeRequired } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldSection, PickerValidDate } from '@mui/x-date-pickers/models';
+import { FieldSection } from '@mui/x-date-pickers/models';
 import type {
   MultiInputFieldRefs,
   MultiInputFieldSlotRootProps,
@@ -18,13 +18,12 @@ import type {
  */
 export interface BaseMultiInputFieldProps<
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends MakeRequired<
       Pick<
-        UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+        UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
         | 'readOnly'
         | 'disabled'
         | 'format'

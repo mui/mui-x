@@ -1,5 +1,4 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   StaticRangeOnlyPickerProps,
   UseStaticRangePickerSlots,
@@ -11,16 +10,16 @@ import {
   BaseDateRangePickerSlotProps,
 } from '../DateRangePicker/shared';
 
-export interface StaticDateRangePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateRangePickerSlots<TDate>,
-    UseStaticRangePickerSlots<TDate, 'day'> {}
+export interface StaticDateRangePickerSlots
+  extends BaseDateRangePickerSlots,
+    UseStaticRangePickerSlots<'day'> {}
 
-export interface StaticDateRangePickerSlotProps<TDate extends PickerValidDate>
-  extends BaseDateRangePickerSlotProps<TDate>,
-    Omit<UseStaticRangePickerSlotProps<TDate, 'day'>, 'toolbar'> {}
+export interface StaticDateRangePickerSlotProps
+  extends BaseDateRangePickerSlotProps,
+    Omit<UseStaticRangePickerSlotProps<'day'>, 'toolbar'> {}
 
-export interface StaticDateRangePickerProps<TDate extends PickerValidDate>
-  extends BaseDateRangePickerProps<TDate>,
+export interface StaticDateRangePickerProps
+  extends BaseDateRangePickerProps,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * The number of calendars to render.
@@ -31,10 +30,10 @@ export interface StaticDateRangePickerProps<TDate extends PickerValidDate>
    * Overridable component slots.
    * @default {}
    */
-  slots?: StaticDateRangePickerSlots<TDate>;
+  slots?: StaticDateRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: StaticDateRangePickerSlotProps<TDate>;
+  slotProps?: StaticDateRangePickerSlotProps;
 }

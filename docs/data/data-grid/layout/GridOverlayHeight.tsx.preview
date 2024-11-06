@@ -1,5 +1,4 @@
 <DataGrid
-  autoHeight
   columns={[{ field: 'ID' }, { field: 'First name' }, { field: 'Last name' }]}
   rows={[]}
   slots={{ noRowsOverlay: CustomNoRowsOverlay }}

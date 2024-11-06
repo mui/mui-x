@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -96,10 +95,10 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 const JoyDateField = React.forwardRef(
-  (props: DatePickerFieldProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, false, typeof textFieldProps>({
+    const fieldResponse = useDateField<false, typeof textFieldProps>({
       ...textFieldProps,
       enableAccessibleFieldDOMStructure: false,
     });
@@ -116,7 +115,7 @@ const JoyDateField = React.forwardRef(
 );
 
 const JoyDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}

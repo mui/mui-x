@@ -7,12 +7,7 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  FieldSelectedSections,
-  FieldRef,
-  PickerValidDate,
-  PickerOwnerState,
-} from '@mui/x-date-pickers/models';
+import { FieldSelectedSections, FieldRef, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
@@ -25,12 +20,12 @@ import {
   WrapperVariant,
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
-  DateRange,
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
@@ -59,14 +54,11 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   textField?: React.ElementType;
 }
 
-export interface RangePickerFieldSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseClearableFieldSlotProps {
+export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
     PickersRangeFieldSlotProps<
-      DateRange<TDate>,
-      TDate,
+      PickerRangeValue,
       RangeFieldSection,
       TEnableAccessibleFieldDOMStructure
     >,
@@ -78,20 +70,18 @@ export interface RangePickerFieldSlotProps<
   textField?: SlotComponentProps<
     typeof TextField,
     {},
-    UseDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
+    UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
   >;
 }
 
 export type RangePickerPropsForFieldSlot<
   TIsSingleInput extends boolean,
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > =
   | (TIsSingleInput extends true
       ? BaseSingleInputFieldProps<
-          DateRange<TDate>,
-          TDate,
+          PickerRangeValue,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TError
@@ -99,8 +89,7 @@ export type RangePickerPropsForFieldSlot<
       : never)
   | (TIsSingleInput extends false
       ? BaseMultiInputFieldProps<
-          DateRange<TDate>,
-          TDate,
+          PickerRangeValue,
           RangeFieldSection,
           TEnableAccessibleFieldDOMStructure,
           TError
@@ -109,12 +98,11 @@ export type RangePickerPropsForFieldSlot<
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TIsSingleInput extends boolean,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends Pick<
-      UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
+      UsePickerResponse<PickerRangeValue, TView, RangeFieldSection, any>,
       'open' | 'actions'
     >,
     UseRangePositionResponse {
@@ -126,11 +114,10 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   onBlur?: () => void;
   label?: React.ReactNode;
   localeText: PickersInputLocaleText | undefined;
-  pickerSlotProps: RangePickerFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure> | undefined;
+  pickerSlotProps: RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> | undefined;
   pickerSlots: RangePickerFieldSlots | undefined;
   fieldProps: RangePickerPropsForFieldSlot<
     TIsSingleInput,
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
@@ -143,7 +130,6 @@ export interface UseEnrichedRangePickerFieldPropsParams<
 }
 
 const useMultiInputFieldSlotProps = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -169,20 +155,18 @@ const useMultiInputFieldSlotProps = <
   endFieldRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   false,
-  TDate,
   TView,
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
   type ReturnType = BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickersTranslations();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 
@@ -324,7 +308,6 @@ const useMultiInputFieldSlotProps = <
 };
 
 const useSingleInputFieldSlotProps = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -348,14 +331,12 @@ const useSingleInputFieldSlotProps = <
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   true,
-  TDate,
   TView,
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
   type ReturnType = BaseSingleInputFieldProps<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError
@@ -452,14 +433,12 @@ const useSingleInputFieldSlotProps = <
 };
 
 export const useEnrichedRangePickerFieldProps = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >(
   params: UseEnrichedRangePickerFieldPropsParams<
     boolean,
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     TError
@@ -477,9 +456,8 @@ export const useEnrichedRangePickerFieldProps = <
 
   if (params.fieldType === 'multi-input') {
     return useMultiInputFieldSlotProps(
-      params as unknown as UseEnrichedRangePickerFieldPropsParams<
+      params as UseEnrichedRangePickerFieldPropsParams<
         false,
-        TDate,
         TView,
         TEnableAccessibleFieldDOMStructure,
         TError
@@ -490,7 +468,6 @@ export const useEnrichedRangePickerFieldProps = <
   return useSingleInputFieldSlotProps(
     params as UseEnrichedRangePickerFieldPropsParams<
       true,
-      TDate,
       TView,
       TEnableAccessibleFieldDOMStructure,
       TError

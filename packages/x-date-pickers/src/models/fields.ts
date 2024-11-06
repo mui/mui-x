@@ -7,7 +7,6 @@ import type {
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { PickerValidDate } from './pickers';
 import { BaseForwardedSingleInputFieldProps } from '../internals/models';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
@@ -125,12 +124,11 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
  */
 export type PickersFieldSlotProps<
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = ExportedUseClearableFieldProps &
   Pick<
-    UseFieldInternalProps<TValue, TDate, TSection, TEnableAccessibleFieldDOMStructure, unknown>,
+    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'
   > &
   React.HTMLAttributes<HTMLDivElement> & {
