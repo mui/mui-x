@@ -17,13 +17,17 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
   ref,
 ) {
-  const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize } =
-    useChartContainerProProps(props, ref);
+  const {
+    chartDataProviderProProps,
+    resizableChartContainerProps,
+    hasIntrinsicSize,
+    sizedChartDataProviderProProps,
+  } = useChartContainerProProps(props, ref);
 
   if (props.height && props.width) {
     return (
       <React.Fragment>
-        <ChartDataProviderPro {...chartDataProviderProProps} />
+        <ChartDataProviderPro {...sizedChartDataProviderProProps} />
         <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
       </React.Fragment>
     );

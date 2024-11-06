@@ -69,6 +69,11 @@ export const useChartContainerProps = (
   return {
     hasIntrinsicSize: dWidth && dHeight,
     chartDataProviderProps,
+    sizedChartDataProviderProps: {
+      ...other,
+      ...chartDataProviderProps,
+      ref,
+    },
     resizableChartContainerProps,
   };
 };

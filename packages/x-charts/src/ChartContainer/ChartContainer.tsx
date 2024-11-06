@@ -27,11 +27,15 @@ export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width
 }
 
 const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
-  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
-    useChartContainerProps(props, ref);
+  const {
+    hasIntrinsicSize,
+    chartDataProviderProps,
+    resizableChartContainerProps,
+    sizedChartDataProviderProps,
+  } = useChartContainerProps(props, ref);
 
   if (props.height && props.width) {
-    return <ChartDataProvider {...chartDataProviderProps} />;
+    return <ChartDataProvider {...sizedChartDataProviderProps} />;
   }
 
   return (
