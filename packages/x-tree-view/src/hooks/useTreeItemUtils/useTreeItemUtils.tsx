@@ -6,7 +6,7 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
-import { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
+import { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
 import {
   UseTreeViewLabelSignature,
   useTreeViewLabel,
@@ -32,14 +32,16 @@ type UseTreeItemUtilsMinimalPlugins = readonly [
   UseTreeViewExpansionSignature,
   UseTreeViewItemsSignature,
   UseTreeViewFocusSignature,
-  UseTreeViewLazyLoadingSignature,
 ];
 
 /**
  * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
  */
 
-export type UseTreeItemUtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
+export type UseTreeItemUtilsOptionalPlugins = readonly [
+  UseTreeViewLabelSignature,
+  UseTreeViewLazyLoadingSignature,
+];
 
 interface UseTreeItemUtilsReturnValue<
   TSignatures extends UseTreeItemUtilsMinimalPlugins,
@@ -53,12 +55,12 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-// const isItemExpandable = (reactChildren: React.ReactNode) => {
-//   if (Array.isArray(reactChildren)) {
-//     return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
-//   }
-//   return Boolean(reactChildren);
-// };
+const itemHasChildren = (reactChildren: React.ReactNode) => {
+  if (Array.isArray(reactChildren)) {
+    return reactChildren.length > 0 && reactChildren.some(itemHasChildren);
+  }
+  return Boolean(reactChildren);
+};
 
 export const useTreeItemUtils = <
   TSignatures extends UseTreeItemUtilsMinimalPlugins = UseTreeItemUtilsMinimalPlugins,
@@ -78,12 +80,7 @@ export const useTreeItemUtils = <
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = () => {
-    let expandable = false;
-    if (Array.isArray(children)) {
-      expandable = children.length > 0 && children.some(isItemExpandable);
-    }
-    expandable = expandable || instance?.isItemExpandable(itemId);
-    return Boolean(children) || expandable;
+    return itemHasChildren(children) || instance?.isItemExpandable(itemId);
   };
 
   const status: UseTreeItemStatus = {
@@ -92,9 +89,10 @@ export const useTreeItemUtils = <
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
     disabled: instance.isItemDisabled(itemId),
-    editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
+    editing: instance?.isItemBeingEdited ? instance.isItemBeingEdited(itemId) : false,
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
-    loading: instance.isTreeItemLoading(itemId),
+    loading: instance?.isTreeItemLoading ? instance.isTreeItemLoading(itemId) : false,
+    error: instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false,
   };
 
   const handleExpansion = (event: React.MouseEvent) => {
@@ -106,14 +104,14 @@ export const useTreeItemUtils = <
       instance.focusItem(event, itemId);
     }
 
-    if (lazyLoading && !status.expanded) {
-      instance.fetchItems([itemId]);
-    }
-
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+      if (instance?.fetchItems && lazyLoading && !status.expanded) {
+        instance.fetchItems([itemId]);
+      }
+
       instance.toggleItemExpansion(event, itemId);
     }
   };

@@ -104,6 +104,8 @@ export interface UseTreeItemCheckboxSlotOwnProps {
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemCheckboxSlotOwnProps;
 
+export type UseTreeItemErrorContainerSlotProps<ExternalProps = {}> = ExternalProps & {};
+
 export interface UseTreeItemGroupTransitionSlotOwnProps {
   unmountOnExit: boolean;
   in: boolean;
@@ -133,6 +135,7 @@ export interface UseTreeItemStatus {
   editing: boolean;
   editable: boolean;
   loading: boolean;
+  error: boolean;
 }
 
 export interface UseTreeItemReturnValue<
@@ -204,6 +207,15 @@ export interface UseTreeItemReturnValue<
   getDragAndDropOverlayProps: <ExternalProps extends Record<string, any> = {}>(
     externalProps?: ExternalProps,
   ) => UseTreeItemDragAndDropOverlaySlotProps<ExternalProps>;
+  /**
+   * Resolver for the ErrorContainer slot's props.
+   * Warning: This slot is only useful when using the `<RichTreeView />` component.
+   * @param {ExternalProps} externalProps Additional props for the ErrorContainer slot.
+   * @returns {UseTreeItemErrorContainerSlotProps<ExternalProps>} Props that should be spread on the ErrorContainer slot.
+   */
+  getErrorContainerProps: <ExternalProps extends Record<string, any> = {}>(
+    externalProps?: ExternalProps,
+  ) => UseTreeItemErrorContainerSlotProps<ExternalProps>;
   /**
    * A ref to the component's root DOM element.
    */

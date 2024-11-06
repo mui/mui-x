@@ -2,6 +2,7 @@ import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeViewDataSourceCache } from './cache';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 type TreeViewDataSource<R extends {}> = {
   /**
@@ -14,6 +15,14 @@ type TreeViewDataSource<R extends {}> = {
    * @default (item) => number
    */
   getChildrenCount?: (item: R) => number;
+  /**
+   * Method used for fetching the items.
+   * Only relevant for lazy-loaded tree views.
+   *
+   * @template R
+   * @param {TreeViewItemId} parentId The id of the item the children belong to.
+   * @returns { Promise<R[]>} The children of the item.
+   */
   getTreeItems?: (parentId?: TreeViewItemId) => Promise<R[]>;
 };
 
@@ -55,6 +64,6 @@ export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   instance: UseTreeViewLazyLoadingInstance;
   state: UseTreeViewLazyLoadingState;
   experimentalFeatures: 'lazyLoading';
-  dependencies: [UseTreeViewItemsSignature];
+  dependencies: [UseTreeViewItemsSignature, UseTreeViewExpansionSignature];
   contextValue: UseTreeViewLazyLoadingContextValue;
 }>;

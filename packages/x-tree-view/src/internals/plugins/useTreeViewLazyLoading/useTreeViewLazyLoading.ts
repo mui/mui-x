@@ -106,6 +106,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
       if (parentIds) {
         nestedDataManager.queue(parentIds);
+
         return;
       }
       // this should be the first
@@ -135,8 +136,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       } catch (error) {
         // set the items to empty
         instance.addItems({ items: [], depth: 0, getChildrenCount });
-
-        // handle errors here
       } finally {
         // set loading state
         instance.setTreeViewLoading(false);
@@ -192,10 +191,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.addItems({ items: getTreeItemsResponse, depth, parentId: id, getChildrenCount });
       } catch (error) {
         const childrenFetchError = error as Error;
-        instance.addItems({ items: [], depth, getChildrenCount });
+        instance.addItems({ items: [], depth, parentId: id, getChildrenCount });
 
         // handle errors here
         instance.setDataSourceError(id, childrenFetchError);
+        instance.setItemExpansion(null, id, false);
       } finally {
         // unset loading
         instance.setDataSourceLoading(id, false);

@@ -72,24 +72,11 @@ export class NestedDataManager {
 
   public queue = async (ids: TreeViewItemId[]) => {
     const loadingIds: Record<TreeViewItemId, boolean> = {};
-    console.log('ids', ids);
     ids.forEach((id) => {
       this.queuedRequests.add(id);
       loadingIds[id] = true;
     });
-    // this.instance.setState((state) => {
-    //   console.log('state', state);
-    //   return {
-    //     ...state,
-    //     dataSource: {
-    //       ...state.dataSource,
-    //       loading: {
-    //         ...state.dataSource.loading,
-    //         ...loadingIds,
-    //       },
-    //     },
-    //   };
-    // });
+
     this.processQueue();
   };
 
@@ -105,7 +92,6 @@ export class NestedDataManager {
   };
 
   public clearPendingRequest = (id: TreeViewItemId) => {
-    // this.instance.unstable_dataSource.setChildrenLoading(id, false);
     this.pendingRequests.delete(id);
     this.processQueue();
   };

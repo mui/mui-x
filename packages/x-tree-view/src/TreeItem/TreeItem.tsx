@@ -147,6 +147,7 @@ export const TreeItemIconContainer = styled('div', {
   display: 'flex',
   flexShrink: 0,
   justifyContent: 'center',
+  position: 'relative',
   '& svg': {
     fontSize: 18,
   },
@@ -167,6 +168,19 @@ export const TreeItemGroupTransition = styled(Collapse, {
       style: { paddingLeft: 0 },
     },
   ],
+});
+
+export const TreeItemErrorContainer = styled('div', {
+  name: 'MuiTreeItem',
+  slot: 'ErrorContainer',
+  overridesResolver: (props, styles) => styles.errorContainer,
+})({
+  position: 'absolute',
+  right: -3,
+  width: 7,
+  height: 7,
+  borderRadius: '50%',
+  backgroundColor: 'red',
 });
 
 export const TreeItemCheckbox = styled(
@@ -207,6 +221,7 @@ const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
     groupTransition: ['groupTransition'],
     labelInput: ['labelInput'],
     dragAndDropOverlay: ['dragAndDropOverlay'],
+    errorContainer: ['errorContainer'],
   };
 
   return composeClasses(slots, getTreeItemUtilityClass, classes);
@@ -243,6 +258,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     getGroupTransitionProps,
     getLabelInputProps,
     getDragAndDropOverlayProps,
+    getErrorContainerProps,
     status,
   } = useTreeItem({
     id,
@@ -343,11 +359,22 @@ export const TreeItem = React.forwardRef(function TreeItem(
     className: classes.dragAndDropOverlay,
   });
 
+  const ErrorContainer: React.ElementType = slots.errorContainer ?? TreeItemErrorContainer;
+  const errorContainerProps = useSlotProps({
+    elementType: ErrorContainer,
+    getSlotProps: getErrorContainerProps,
+    externalSlotProps: slotProps.errorContainer,
+    ownerState: {},
+    className: classes.errorContainer,
+  });
+
   return (
     <TreeItemProvider itemId={itemId}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
+            {status.error && <ErrorContainer {...errorContainerProps} />}
+
             {status.loading ? (
               <CircularProgress size="12px" sx={{ color: 'text.primary' }} thickness={6} />
             ) : (

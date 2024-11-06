@@ -5,6 +5,7 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
+  AddItemsParams,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -56,7 +57,7 @@ const updateItemsState = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-}: UpdateNodesStateParameters): State => {
+}: UpdateNodesStateParameters): Omit<State, 'loading'> => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
   const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
@@ -222,8 +223,12 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
-  const addItems = async ({ items, parentId, depth, getChildrenCount }) => {
-    console.log('addItems', items, parentId, depth);
+  const addItems = async ({
+    items,
+    parentId,
+    depth,
+    getChildrenCount,
+  }: AddItemsParams<TreeViewBaseItem>) => {
     if (items) {
       const newState = updateItemsState({
         items,
@@ -263,9 +268,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
             publishTreeViewEvent(instance, 'removeItem', { id: item.id });
           }
         });
-        console.log('newState', newItems);
 
-        return { ...prevState, items: newItems };
+        return { ...prevState, items: { ...newItems, loading: prevState.items.loading } };
       });
     }
   };
@@ -289,7 +293,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         }
       });
 
-      return { ...prevState, items: newState };
+      return { ...prevState, items: { ...newState, loading: false } };
     });
   }, [
     instance,

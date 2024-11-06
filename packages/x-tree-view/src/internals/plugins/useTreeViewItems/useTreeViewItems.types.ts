@@ -9,7 +9,7 @@ export interface TreeViewItemToRenderProps {
   children?: TreeViewItemToRenderProps[];
 }
 
-type AddItemsParams<R> = {
+export type AddItemsParams<R> = {
   items: R[];
   parentId?: TreeViewItemId;
   depth: number;
