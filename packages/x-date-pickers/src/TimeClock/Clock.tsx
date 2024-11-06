@@ -17,8 +17,9 @@ import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
+import { FormProps } from '../internals/models/formProps';
 
-export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -40,8 +41,6 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
    * The current full date value.
    */
   value: PickerValidDate | null;
-  disabled?: boolean;
-  readOnly?: boolean;
   className?: string;
   classes?: Partial<ClockClasses>;
 }

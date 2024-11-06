@@ -2,9 +2,11 @@
   "props": {
     "isRtl": { "type": { "name": "bool" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

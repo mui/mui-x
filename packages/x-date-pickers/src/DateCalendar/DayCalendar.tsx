@@ -32,6 +32,7 @@ import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarCla
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
 import { DateCalendarClasses } from './dateCalendarClasses';
+import { FormProps } from '../internals/models/formProps';
 
 export interface DayCalendarSlots {
   /**
@@ -89,18 +90,17 @@ export interface DayCalendarProps
     MonthValidationProps,
     YearValidationProps,
     Required<BaseDateValidationProps>,
-    DefaultizedProps<TimezoneProps, 'timezone'> {
+    DefaultizedProps<TimezoneProps, 'timezone'>,
+    FormProps {
   autoFocus?: boolean;
   className?: string;
   currentMonth: PickerValidDate;
   selectedDays: (PickerValidDate | null)[];
   onSelectedDaysChange: PickerOnChangeFn;
-  disabled?: boolean;
   focusedDay: PickerValidDate | null;
   isMonthSwitchingAnimating: boolean;
   onFocusedDayChange: (newFocusedDay: PickerValidDate) => void;
   onMonthSwitchingAnimationEnd: () => void;
-  readOnly?: boolean;
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
