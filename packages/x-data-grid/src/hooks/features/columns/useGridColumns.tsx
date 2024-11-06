@@ -400,7 +400,6 @@ export function useGridColumns(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),
           apiRef.current.getRootDimensions(),
-          props.unstable_persistColumnsWidth ? previousColumnsState.current : undefined,
         ),
       );
     }
