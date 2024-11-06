@@ -21,7 +21,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { MarkPlotProps } from '@mui/x-charts';
-import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ChartContainerPro } from '../ChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
@@ -165,12 +165,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(inProps: LineChartPr
   } = useLineChartProps(other);
 
   return (
-    <ResponsiveChartContainerPro
-      ref={ref}
-      {...chartContainerProps}
-      zoom={zoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
@@ -190,7 +185,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(inProps: LineChartPr
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />
       {children}
-    </ResponsiveChartContainerPro>
+    </ChartContainerPro>
   );
 });
 

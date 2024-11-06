@@ -73,6 +73,8 @@
     "import { ChartContainerPro } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartContainerPro",
   "filename": "/packages/x-charts-pro/src/ChartContainerPro/ChartContainerPro.tsx",
   "inheritance": null,

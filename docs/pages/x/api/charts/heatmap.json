@@ -22,11 +22,31 @@
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "xAxisIds[0] The id of the first provided axis"
     },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
+      }
+    },
     "leftAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "yAxisIds[0] The id of the first provided axis"
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      },
+      "default": "object Depends on the charts type."
+    },
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {
@@ -34,6 +54,14 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "rightAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
@@ -54,6 +82,13 @@
     "topAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
+    },
+    "width": { "type": { "name": "number" } },
+    "zAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+      }
     }
   },
   "name": "Heatmap",
