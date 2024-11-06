@@ -51,6 +51,7 @@ export default defineConfig({
       reportsDirectory: path.resolve(MONOREPO_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
     },
+    reporters: ['dot'],
     sequence: {
       hooks: 'list',
     },
