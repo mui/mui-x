@@ -124,11 +124,31 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
             plan: 'premium',
+            children: [
+              { pathname: '/x/react-data-grid/row-grouping', title: 'Overview' },
+              {
+                pathname: '/x/react-data-grid/recipes-row-grouping',
+                title: 'Recipes',
+              },
+            ],
+          },
+          { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
+          { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
+          { pathname: '/x/react-data-grid/export' },
+          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+          { pathname: '/x/react-data-grid/scrolling' },
+
+          {
+            pathname: '/x/react-data-grid/list-view',
+            title: 'List view',
+            plan: 'pro',
+            unstable: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data-group',
             title: 'Server-side data',
             plan: 'pro',
+            newFeature: true,
             children: [
               {
                 pathname: '/x/react-data-grid/server-side-data',
@@ -148,7 +168,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/server-side-data/row-grouping',
                 plan: 'premium',
-                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
