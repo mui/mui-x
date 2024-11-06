@@ -26,7 +26,7 @@ const fetchData = async (): Promise<
 
 export default function BasicLazyLoading() {
   return (
-    <Box sx={{ maxWidth: '300px', margin: 4 }}>
+    <Box sx={{ width: '300px' }}>
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}

@@ -23,7 +23,7 @@ const lowTTLCache = new TreeViewDataSourceCacheDefault({ ttl: 1000 * 10 }); // 1
 
 export default function LowTTLCache() {
   return (
-    <Box sx={{ maxWidth: '300px', margin: 4 }}>
+    <Box sx={{ width: '300px' }}>
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}

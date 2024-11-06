@@ -194,7 +194,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       } catch (error) {
         const childrenFetchError = error as Error;
         instance.removeChildren(id);
-        console.log('error when fetching children', id, childrenFetchError);
         instance.setItemExpansion(null, id, false);
         // handle errors here
         instance.setDataSourceError(id, childrenFetchError);

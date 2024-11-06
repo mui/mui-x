@@ -13,25 +13,27 @@ const fetchData = async (
     childrenCount?: number;
   }>[]
 > => {
-  if (parentId) {
-    throw new Error('Parent ID should be null');
-  }
   const rows = Array.from({ length: 10 }, () => ({
     id: randomId(),
     label: randomName({}, {}),
     childrenCount: 10,
   }));
 
-  return new Promise((resolve) => {
+  // make the promise fail if the item has a parent
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(rows);
+      if (parentId) {
+        reject(new Error('Error fetching data'));
+      } else {
+        resolve(rows);
+      }
     }, 1000);
   });
 };
 
 export default function ErrorManagement() {
   return (
-    <Box sx={{ maxWidth: '300px', margin: 4 }}>
+    <Box sx={{ width: '300px' }}>
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}

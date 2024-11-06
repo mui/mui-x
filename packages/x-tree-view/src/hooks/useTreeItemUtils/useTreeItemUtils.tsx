@@ -108,10 +108,10 @@ export const useTreeItemUtils = <
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+      instance.toggleItemExpansion(event, itemId);
       if (instance?.fetchItems && lazyLoading && !status.expanded) {
         await instance.fetchItems([itemId]);
       }
-      instance.toggleItemExpansion(event, itemId);
     }
   };
 
