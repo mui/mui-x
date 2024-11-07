@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import { useChartContainerDimensions } from '../ResponsiveChartContainer/useChartContainerDimensions';
+import { useChartContainerDimensions } from '../ChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';

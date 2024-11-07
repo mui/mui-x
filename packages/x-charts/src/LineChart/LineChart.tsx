@@ -5,10 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
@@ -60,7 +57,7 @@ export interface LineChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface LineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
@@ -132,7 +129,10 @@ export interface LineChartProps
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, ref) {
+const LineChart = React.forwardRef(function LineChart(
+  inProps: LineChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartContainerProps,
@@ -153,7 +153,7 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
   } = useLineChartProps(props);
 
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
@@ -172,7 +172,7 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 

@@ -1,36 +1,91 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Watermark } from '@mui/x-license/Watermark';
-import { ResponsiveChartContainerProps } from '@mui/x-charts/ResponsiveChartContainer';
-import { ResizableContainer } from '@mui/x-charts/internals';
-import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomProps } from '../context/ZoomProvider';
-import { useResponsiveChartContainerProProps } from './useResponsiveChartContainerProProps';
+import { MakeOptional } from '@mui/x-internals/types';
+import { DrawingProvider, DrawingProviderProps } from '../DrawingProvider';
+import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
+import { InteractionProvider } from '../InteractionProvider';
+import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
+import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
+import { ChartsAxesGradients } from '../../internals/components/ChartsAxesGradients';
+import {
+  HighlightedProvider,
+  HighlightedProviderProps,
+  ZAxisContextProvider,
+  ZAxisContextProviderProps,
+} from '..';
+import { PluginProvider, PluginProviderProps } from '../PluginProvider';
+import { useChartDataProviderProps } from './useChartDataProviderProps';
+import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
+import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
 
-export interface ResponsiveChartContainerProProps
-  extends ResponsiveChartContainerProps,
-    ZoomProps {}
+export type ChartDataProviderProps = Omit<
+  ChartsSurfaceProps &
+    Omit<SeriesProviderProps, 'seriesFormatters'> &
+    Omit<DrawingProviderProps, 'svgRef'> &
+    Pick<CartesianProviderProps, 'dataset'> &
+    ZAxisContextProviderProps &
+    HighlightedProviderProps &
+    PluginProviderProps &
+    AnimationProviderProps,
+  'children'
+> & {
+  /**
+   * The configuration of the x-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
+  /**
+   * The configuration of the y-axes.
+   * If not provided, a default axis config is used.
+   * An array of [[AxisConfig]] objects.
+   */
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  children?: React.ReactNode;
+};
 
-const releaseInfo = getReleaseInfo();
-
-const ResponsiveChartContainerPro = React.forwardRef(function ResponsiveChartContainerPro(
-  props: ResponsiveChartContainerProProps,
-  ref,
+const ChartDataProvider = React.forwardRef(function ChartDataProvider(
+  props: ChartDataProviderProps,
+  ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartContainerProProps, resizableChartContainerProps, hasIntrinsicSize } =
-    useResponsiveChartContainerProProps(props, ref);
+  const {
+    children,
+    drawingProviderProps,
+    seriesProviderProps,
+    cartesianProviderProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    chartsSurfaceProps,
+    pluginProviderProps,
+    animationProviderProps,
+  } = useChartDataProviderProps(props, ref);
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartContainerPro {...chartContainerProProps} /> : null}
-      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ResizableContainer>
+    <DrawingProvider {...drawingProviderProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
+          <CartesianProvider {...cartesianProviderProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
+              <InteractionProvider>
+                <HighlightedProvider {...highlightedProviderProps}>
+                  <AnimationProvider {...animationProviderProps}>
+                    <ChartsSurface {...chartsSurfaceProps}>
+                      <ChartsAxesGradients />
+                      {children}
+                    </ChartsSurface>
+                  </AnimationProvider>
+                </HighlightedProvider>
+              </InteractionProvider>
+            </ZAxisContextProvider>
+          </CartesianProvider>
+        </SeriesProvider>
+      </PluginProvider>
+    </DrawingProvider>
   );
 });
 
-ResponsiveChartContainerPro.propTypes = {
+ChartDataProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -54,9 +109,9 @@ ResponsiveChartContainerPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * The height of the chart in px.
    */
-  height: PropTypes.number,
+  height: PropTypes.number.isRequired,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -83,26 +138,10 @@ ResponsiveChartContainerPro.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
-   * Callback fired when the zoom has changed.
-   *
-   * @param {ZoomData[]} zoomData Updated zoom data.
-   */
-  onZoomChange: PropTypes.func,
-  /**
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
@@ -127,9 +166,9 @@ ResponsiveChartContainerPro.propTypes = {
     y: PropTypes.number,
   }),
   /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * The width of the chart in px.
    */
-  width: PropTypes.number,
+  width: PropTypes.number.isRequired,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -203,18 +242,6 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
-      zoom: PropTypes.oneOfType([
-        PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
-          maxEnd: PropTypes.number,
-          maxSpan: PropTypes.number,
-          minSpan: PropTypes.number,
-          minStart: PropTypes.number,
-          panning: PropTypes.bool,
-          step: PropTypes.number,
-        }),
-        PropTypes.bool,
-      ]),
     }),
   ),
   /**
@@ -290,18 +317,6 @@ ResponsiveChartContainerPro.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
-      zoom: PropTypes.oneOfType([
-        PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
-          maxEnd: PropTypes.number,
-          maxSpan: PropTypes.number,
-          minSpan: PropTypes.number,
-          minStart: PropTypes.number,
-          panning: PropTypes.bool,
-          step: PropTypes.number,
-        }),
-        PropTypes.bool,
-      ]),
     }),
   ),
   /**
@@ -343,16 +358,6 @@ ResponsiveChartContainerPro.propTypes = {
       min: PropTypes.number,
     }),
   ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
-  ),
 } as any;
 
-export { ResponsiveChartContainerPro };
+export { ChartDataProvider };

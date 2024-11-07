@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import { MakeOptional } from '@mui/x-internals/types';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { AxisConfig, ScaleName } from '../models';
-import { ChartsAxisProps } from '../models/axis';
-import { DatasetType } from '../models/seriesType/config';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
+import { AxisConfig, ScaleName } from '../../models';
+import { ChartsAxisProps } from '../../models/axis';
+import { DatasetType } from '../../models/seriesType/config';
 
 const defaultizeAxis = (
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,

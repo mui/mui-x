@@ -1,47 +1,73 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { ResizableContainer } from './ResizableContainer';
-import { useResponsiveChartContainerProps } from './useResponsiveChartContainerProps';
+import {
+  ChartDataProviderProps,
+  ChartsAxesGradients,
+  DrawingProvider,
+  InteractionProvider,
+  PluginProvider,
+  SeriesProvider,
+  AnimationProvider,
+} from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
+import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { getReleaseInfo } from '../../internals/utils/releaseInfo';
+import { CartesianProviderPro } from '../CartesianProviderPro';
+import { ZoomProps, ZoomProvider } from '../ZoomProvider';
+import { useChartContainerProProps } from './useChartDataProviderProProps';
 
-export interface ResponsiveChartContainerProps
-  extends Omit<ChartContainerProps, 'width' | 'height'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender?: boolean;
-}
+const releaseInfo = getReleaseInfo();
 
-const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
-  props: ResponsiveChartContainerProps,
-  ref,
+export interface ChartDataProviderProProps extends ChartDataProviderProps, ZoomProps {}
+
+const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
+  props: ChartDataProviderProProps,
+  ref: React.Ref<SVGSVGElement>,
 ) {
-  const { hasIntrinsicSize, chartContainerProps, resizableChartContainerProps } =
-    useResponsiveChartContainerProps(props, ref);
+  const {
+    zoomProviderProps,
+    drawingProviderProps,
+    seriesProviderProps,
+    zAxisContextProps,
+    highlightedProviderProps,
+    cartesianProviderProps,
+    chartsSurfaceProps,
+    pluginProviderProps,
+    animationProviderProps,
+    children,
+  } = useChartContainerProProps(props, ref);
+
+  useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartContainer {...chartContainerProps} /> : null}
-    </ResizableContainer>
+    <DrawingProvider {...drawingProviderProps}>
+      <AnimationProvider {...animationProviderProps}>
+        <PluginProvider {...pluginProviderProps}>
+          <ZoomProvider {...zoomProviderProps}>
+            <SeriesProvider {...seriesProviderProps}>
+              <CartesianProviderPro {...cartesianProviderProps}>
+                <ZAxisContextProvider {...zAxisContextProps}>
+                  <InteractionProvider>
+                    <HighlightedProvider {...highlightedProviderProps}>
+                      <ChartsSurface {...chartsSurfaceProps}>
+                        <ChartsAxesGradients />
+                        {children}
+                      </ChartsSurface>
+                    </HighlightedProvider>
+                  </InteractionProvider>
+                </ZAxisContextProvider>
+              </CartesianProviderPro>
+            </SeriesProvider>
+          </ZoomProvider>
+        </PluginProvider>
+      </AnimationProvider>
+    </DrawingProvider>
   );
 });
 
-ResponsiveChartContainer.propTypes = {
+ChartDataProviderPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -65,9 +91,9 @@ ResponsiveChartContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   * The height of the chart in px.
    */
-  height: PropTypes.number,
+  height: PropTypes.number.isRequired,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -94,20 +120,16 @@ ResponsiveChartContainer.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
+  /**
    * An array of plugins defining how to preprocess data.
    * If not provided, the container supports line, bar, scatter and pie charts.
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.
@@ -132,9 +154,9 @@ ResponsiveChartContainer.propTypes = {
     y: PropTypes.number,
   }),
   /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   * The width of the chart in px.
    */
-  width: PropTypes.number,
+  width: PropTypes.number.isRequired,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -208,6 +230,18 @@ ResponsiveChartContainer.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -283,6 +317,18 @@ ResponsiveChartContainer.propTypes = {
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ),
   /**
@@ -324,6 +370,16 @@ ResponsiveChartContainer.propTypes = {
       min: PropTypes.number,
     }),
   ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
 } as any;
 
-export { ResponsiveChartContainer };
+export { ChartDataProviderPro };
