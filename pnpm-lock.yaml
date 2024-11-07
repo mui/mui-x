@@ -567,8 +567,8 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-hijri:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.0.0
+        version: 3.0.0
       moment-jalaali:
         specifier: ^0.10.1
         version: 0.10.1
@@ -1281,8 +1281,8 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-hijri:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.0.0
+        version: 3.0.0
       moment-jalaali:
         specifier: ^0.10.1
         version: 0.10.1
@@ -1321,8 +1321,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       moment-hijri:
-        specifier: ^2.1.2
-        version: 2.30.0
+        specifier: ^2.1.2 || ^3.0.0
+        version: 3.0.0
       moment-jalaali:
         specifier: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
         version: 0.10.1
@@ -7842,8 +7842,8 @@ packages:
     resolution: {integrity: sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==}
     engines: {node: '>=0.10.0'}
 
-  moment-hijri@2.30.0:
-    resolution: {integrity: sha512-A3Ss8ASkhkT160laK9gXv+Yle0jA6eg92o8Uw78mU3OlUyaWjW2ntMd04kutawFb01KR0GIeJ8lqgIABGbWj7g==}
+  moment-hijri@3.0.0:
+    resolution: {integrity: sha512-UcBcbHDA8ToVcKjY+vBEa/hI3GZYraueavWUSLY2TdrHDHhx+wUpRw96rssAqsbT4xo/TMimwQVBP4KhJ3EN5A==}
 
   moment-jalaali@0.10.1:
     resolution: {integrity: sha512-/iwLtt3onvI6wFydUSTj10nFeNkD9sZ0fSY1gmqC2dwt1yGYJun6agI7E7SiBYi8uzGlt3P4KuPYCMLiv43E+g==}
@@ -17612,7 +17612,7 @@ snapshots:
 
   modify-values@1.0.1: {}
 
-  moment-hijri@2.30.0:
+  moment-hijri@3.0.0:
     dependencies:
       moment: 2.30.1
 
