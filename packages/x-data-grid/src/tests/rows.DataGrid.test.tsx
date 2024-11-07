@@ -21,6 +21,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
   GridApi,
+  gridClasses,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -31,6 +32,7 @@ import {
   getActiveCell,
   getCell,
   microtasks,
+  $$,
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import Dialog from '@mui/material/Dialog';
@@ -750,7 +752,7 @@ describe('<DataGrid /> - Rows', () => {
             width={100}
           />,
         );
-        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
+        expect($$(`.${gridClasses.cell}:not(.${gridClasses.cellEmpty})`)).to.have.length(2);
       });
 
       it('should measure rows while scrolling', async () => {

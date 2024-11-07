@@ -4,7 +4,6 @@ import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import { CustomItemTooltipContent } from './CustomItemTooltipContent';
-import { generateVirtualElement } from './generateVirtualElement';
 
 function usePointer() {
   const svgRef = useSvgRef();
@@ -56,7 +55,7 @@ export function ItemTooltipFixedY() {
   const { isActive } = usePointer();
 
   const popperRef = React.useRef(null);
-  const virtualElement = React.useRef(generateVirtualElement({ x: 0, y: 0 }));
+  const positionRef = React.useRef({ x: 0, y: 0 });
   const svgRef = useSvgRef(); // Get the ref of the <svg/> component.
   const drawingArea = useDrawingArea(); // Get the dimensions of the chart inside the <svg/>.
 
@@ -67,11 +66,10 @@ export function ItemTooltipFixedY() {
     }
 
     const handleMove = (event) => {
-      virtualElement.current = generateVirtualElement({
+      positionRef.current = {
         x: event.clientX,
-        // Add the y-coordinate of the <svg/> to the to margin between the <svg/> and the drawing area
-        y: svgRef.current.getBoundingClientRect().top + drawingArea.top,
-      });
+        y: event.clientY,
+      };
       popperRef.current?.update();
     };
 
@@ -96,7 +94,19 @@ export function ItemTooltipFixedY() {
         }}
         open
         placement="top"
-        anchorEl={virtualElement.current}
+        anchorEl={{
+          getBoundingClientRect: () => ({
+            x: positionRef.current.x,
+            y: positionRef.current.y,
+            top: positionRef.current.y,
+            left: positionRef.current.x,
+            right: positionRef.current.x,
+            bottom: positionRef.current.y,
+            width: 0,
+            height: 0,
+            toJSON: () => '',
+          }),
+        }}
         popperRef={popperRef}
       >
         <CustomItemTooltipContent {...tooltipData} />

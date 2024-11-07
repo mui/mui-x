@@ -8,10 +8,10 @@ components: PickersSectionList, PickersTextField
 
 # Custom field
 
-<p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
+<p class="description">The Date and Time Pickers let you customize the field by passing props or custom components.</p>
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Customize the default field
@@ -163,20 +163,18 @@ On the examples below, you can see that the typing of the props received by a cu
 
 ```tsx
 interface JoyDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>, // The headless field props
+  extends UseDateFieldProps<true>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
-      Dayjs,
       FieldSection,
       true, // `false` for `enableAccessibleFieldDOMStructure={false}`
       DateValidationError
     > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
-  extends UseDateTimeFieldProps<Dayjs, true>, // The headless field props
+  extends UseDateTimeFieldProps<true>, // The headless field props
     BaseSingleInputFieldProps<
       Dayjs | null,
-      Dayjs,
       FieldSection,
       true, // `false` for `enableAccessibleFieldDOMStructure={false}`
       DateTimeValidationError
