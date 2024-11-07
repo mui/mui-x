@@ -216,7 +216,7 @@ function extractColumnWidths(
         const style = window.getComputedStyle(header, null);
         const titleContainerStyle = window.getComputedStyle(titleContainer, null);
         const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const flexGap = iconContainer ? parseInt(titleContainerStyle.gap, 10) : 0;
+        const flexGap = iconContainer && !menuContainer ? parseInt(titleContainerStyle.gap, 10) : 0;
         const contentWidth = element.scrollWidth + 1;
         const width =
           contentWidth +

@@ -579,7 +579,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [211, 233]);
+        await autosize({ includeHeaders: true }, [211, 235]);
       });
 
       it('.includeOutliers works', async () => {
