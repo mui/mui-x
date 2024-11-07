@@ -70,7 +70,6 @@ export default function SendAllItemsToServer() {
           itemsReordering
           defaultExpandedItems={['grid', 'pickers']}
           experimentalFeatures={{
-            indentationAtItemLevel: true,
             itemsReordering: true,
           }}
           onItemPositionChange={handleItemPositionChangeTreeViewA}
