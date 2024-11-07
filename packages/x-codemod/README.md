@@ -72,6 +72,7 @@ npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
 The corresponding sub-sections are listed below
 
 - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
+- [`preset-safe-for-charts`](#preset-safe-for-charts-v800)
 
 ### Tree View codemods
 
@@ -118,6 +119,29 @@ Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or u
 
 -import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 +import { TreeItem } from '@mui/x-tree-view/TreeItem';
+```
+
+### Charts codemods
+
+#### `preset-safe` for charts v8.0.0
+
+The `preset-safe` codemods for charts.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+
+#### `rename-legend-to-slots-legend`
+
+Place the `legend` props propagation by the `slotProps.legend`.
+
+```diff
+- <PieChart legend={{ hidden: true }} />
++ <PieChart slotProps={{ legend: { hidden: true } }} />
 ```
 
 ## v7.0.0
