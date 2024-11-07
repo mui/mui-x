@@ -13,7 +13,6 @@ import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
-import { GridToolbarTooltip } from './v8/GridToolbarTooltip';
 
 interface GridToolbarDensitySelectorProps {
   /**
@@ -108,9 +107,11 @@ const GridToolbarDensitySelector = React.forwardRef<
 
   return (
     <React.Fragment>
-      <GridToolbarTooltip
+      <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarDensityLabel')}
+        enterDelay={1000}
         {...tooltipProps}
+        {...rootProps.slotProps?.baseTooltip}
       >
         <rootProps.slots.baseButton
           ref={handleRef}
@@ -121,13 +122,13 @@ const GridToolbarDensitySelector = React.forwardRef<
           aria-expanded={open}
           aria-controls={open ? densityMenuId : undefined}
           id={densityButtonId}
+          {...buttonProps}
           onClick={handleDensitySelectorOpen}
           {...rootProps.slotProps?.baseButton}
-          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
         </rootProps.slots.baseButton>
-      </GridToolbarTooltip>
+      </rootProps.slots.baseTooltip>
       <GridMenu
         open={open}
         target={buttonRef.current}

@@ -19,44 +19,37 @@ import useId from '@mui/utils/useId';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
+const DENSITY_ICONS = {
+  compact: <GridDensityCompactIcon fontSize="small" />,
+  standard: <GridDensityStandardIcon fontSize="small" />,
+  comfortable: <GridDensityComfortableIcon fontSize="small" />,
+};
+
+const DENSITY_OPTIONS: GridDensityOption[] = [
+  {
+    icon: DENSITY_ICONS.compact,
+    label: 'Compact',
+    value: 'compact',
+  },
+  {
+    icon: DENSITY_ICONS.standard,
+    label: 'Standard',
+    value: 'standard',
+  },
+  {
+    icon: DENSITY_ICONS.comfortable,
+    label: 'Comfortable',
+    value: 'comfortable',
+  },
+];
+
 function DensityMenu() {
   const apiRef = useGridApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-  const densityButtonId = useId();
-  const densityMenuId = useId();
-
-  const handleDensitySelectorOpen = (event: React.MouseEvent) => {
-    if (anchorEl) {
-      setAnchorEl(null);
-    } else {
-      setAnchorEl(event.currentTarget as HTMLButtonElement);
-    }
-  };
-
-  const densityIcons = {
-    compact: <GridDensityCompactIcon fontSize="small" />,
-    standard: <GridDensityStandardIcon fontSize="small" />,
-    comfortable: <GridDensityComfortableIcon fontSize="small" />,
-  };
-
-  const densityOptions: GridDensityOption[] = [
-    {
-      icon: densityIcons.compact,
-      label: apiRef.current.getLocaleText('toolbarDensityCompact'),
-      value: 'compact',
-    },
-    {
-      icon: densityIcons.standard,
-      label: apiRef.current.getLocaleText('toolbarDensityStandard'),
-      value: 'standard',
-    },
-    {
-      icon: densityIcons.comfortable,
-      label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
-      value: 'comfortable',
-    },
-  ];
+  const buttonId = useId();
+  const menuId = useId();
+  const open = !!anchorEl;
 
   const handleDensityUpdate = (newDensity: GridDensity) => {
     if (newDensity !== null) {
@@ -67,24 +60,28 @@ function DensityMenu() {
 
   return (
     <React.Fragment>
-      <GridToolbar.ToggleButton
-        id={densityButtonId}
-        value="density"
-        selected={!!anchorEl}
-        onChange={handleDensitySelectorOpen}
+      <GridToolbar.Button
+        id={buttonId}
+        aria-haspopup="menu"
+        aria-expanded={open ? 'true' : undefined}
+        aria-controls={open ? menuId : undefined}
+        onClick={(event) => setAnchorEl(event.currentTarget)}
       >
-        {densityIcons[density]}
+        {DENSITY_ICONS[density]}
         Density
         <GridArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
-      </GridToolbar.ToggleButton>
+      </GridToolbar.Button>
 
       <Menu
-        id={densityMenuId}
+        id={menuId}
         anchorEl={anchorEl}
-        open={!!anchorEl}
+        open={open}
         onClose={() => setAnchorEl(null)}
+        MenuListProps={{
+          'aria-labelledby': buttonId,
+        }}
       >
-        {densityOptions.map((option) => (
+        {DENSITY_OPTIONS.map((option) => (
           <MenuItem
             key={option.value}
             onClick={() => handleDensityUpdate(option.value)}

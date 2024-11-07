@@ -12,8 +12,8 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import useId from '@mui/utils/useId';
 
 function ColumnsPanelTrigger() {
-  const columnButtonId = useId();
-  const columnPanelId = useId();
+  const buttonId = useId();
+  const panelId = useId();
   const apiRef = useGridApiContext();
   const { open, openedPanelValue } = useGridSelector(
     apiRef,
@@ -21,27 +21,29 @@ function ColumnsPanelTrigger() {
   );
   const isOpen = open && openedPanelValue === GridPreferencePanelsValue.columns;
 
-  const toggleColumns = () => {
+  const toggleColumnsPanel = () => {
     if (isOpen) {
       apiRef.current.hidePreferences();
     } else {
       apiRef.current.showPreferences(
         GridPreferencePanelsValue.columns,
-        columnPanelId,
-        columnButtonId,
+        panelId,
+        buttonId,
       );
     }
   };
 
   return (
-    <GridToolbar.ToggleButton
-      value="columns"
-      selected={isOpen}
-      onChange={toggleColumns}
+    <GridToolbar.Button
+      id={buttonId}
+      aria-haspopup="true"
+      aria-expanded={isOpen ? 'true' : undefined}
+      aria-controls={isOpen ? panelId : undefined}
+      onClick={toggleColumnsPanel}
     >
       <ViewColumnIcon fontSize="small" />
       Columns
-    </GridToolbar.ToggleButton>
+    </GridToolbar.Button>
   );
 }
 

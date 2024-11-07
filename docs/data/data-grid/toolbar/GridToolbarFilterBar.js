@@ -38,14 +38,15 @@ function FilterPanelTrigger() {
   };
 
   return (
-    <GridToolbar.ToggleButton
+    <GridToolbar.Button
       aria-label="Filters"
-      value="filters"
-      selected={isOpen}
-      onChange={toggleFilters}
+      aria-haspopup="true"
+      aria-expanded={isOpen ? 'true' : undefined}
+      aria-controls={isOpen ? filterPanelId : undefined}
+      onClick={toggleFilters}
     >
       <FilterListIcon fontSize="small" />
-    </GridToolbar.ToggleButton>
+    </GridToolbar.Button>
   );
 }
 

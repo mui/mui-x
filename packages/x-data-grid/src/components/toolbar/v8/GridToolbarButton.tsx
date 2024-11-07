@@ -27,6 +27,7 @@ const StyledButton = styled(Button, {
   overridesResolver: (_, styles) => styles.toolbarButton,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   gap: theme.spacing(0.5),
+  minWidth: 'auto',
   // Styles below from:
   // https://github.com/mui/material-ui/blob/master/packages/mui-material/src/ToggleButton/ToggleButton.js
   ...theme.typography.button,

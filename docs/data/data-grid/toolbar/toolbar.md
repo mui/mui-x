@@ -1,4 +1,4 @@
-# Data Grid - Grid Toolbar
+# Data Grid - Toolbar
 
 <p class="description">The toolbar component provides a set way to add custom controls and functionality to the Data Grid.</p>
 
@@ -101,7 +101,7 @@ Separate items and groups in the toolbar. Renders a `div` with `role="separator"
 <GridToolbar.Separator />
 ```
 
-## Recipes
+## Examples
 
 Below are some common examples of toolbar items.
 
@@ -125,17 +125,19 @@ Show active filter chips in the toolbar.
 
 ### Print trigger
 
-Open the print dialog.
+Open the print dialog. See [Print export](/x/react-data-grid/export/#print-export) for more details.
 
 {{"demo": "GridToolbarPrintTrigger.js", "bg": "inline"}}
 
-### Export menu
+### Download menu
 
-TODO
+Download grid data as a CSV or Excel file. See [CSV export](/x/react-data-grid/export/#csv-export) and [Excel export](/x/react-data-grid/export/#excel-export) for more details.
+
+{{"demo": "GridToolbarDownloadMenu.js", "bg": "inline"}}
 
 ### Density menu
 
-Change row density.
+Change row density. See [Density](/x/react-data-grid/accessibility/#density) for more details.
 
 {{"demo": "GridToolbarDensityMenu.js", "bg": "inline"}}
 

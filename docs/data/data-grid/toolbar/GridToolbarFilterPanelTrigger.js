@@ -12,8 +12,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import useId from '@mui/utils/useId';
 
 function FilterPanelTrigger() {
-  const filterButtonId = useId();
-  const filterPanelId = useId();
+  const buttonId = useId();
+  const panelId = useId();
   const apiRef = useGridApiContext();
   const { open, openedPanelValue } = useGridSelector(
     apiRef,
@@ -21,27 +21,29 @@ function FilterPanelTrigger() {
   );
   const isOpen = open && openedPanelValue === GridPreferencePanelsValue.filters;
 
-  const toggleFilters = () => {
+  const toggleFilterPanel = () => {
     if (isOpen) {
       apiRef.current.hidePreferences();
     } else {
       apiRef.current.showPreferences(
         GridPreferencePanelsValue.filters,
-        filterPanelId,
-        filterButtonId,
+        panelId,
+        buttonId,
       );
     }
   };
 
   return (
-    <GridToolbar.ToggleButton
-      value="filters"
-      selected={isOpen}
-      onChange={toggleFilters}
+    <GridToolbar.Button
+      id={buttonId}
+      aria-haspopup="true"
+      aria-expanded={isOpen ? 'true' : undefined}
+      aria-controls={isOpen ? panelId : undefined}
+      onClick={toggleFilterPanel}
     >
       <FilterListIcon fontSize="small" />
       Filters
-    </GridToolbar.ToggleButton>
+    </GridToolbar.Button>
   );
 }
 

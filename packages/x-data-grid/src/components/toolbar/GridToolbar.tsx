@@ -23,14 +23,6 @@ export interface GridToolbarProps
    * Props passed to the quick filter component.
    */
   quickFilterProps?: GridToolbarQuickFilterProps;
-  /**
-   * Ref for the filter button.
-   */
-  filterButtonRef?: React.RefObject<HTMLButtonElement>;
-  /**
-   * Ref for the column button.
-   */
-  columnsButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
@@ -44,8 +36,6 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
       excelOptions,
       showQuickFilter = false,
       quickFilterProps = {},
-      filterButtonRef,
-      columnsButtonRef,
       ...other
     } = props;
     const rootProps = useGridRootProps();
@@ -61,8 +51,8 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
 
     return (
       <GridToolbarContainer ref={ref} {...other}>
-        <GridToolbarColumnsButton ref={columnsButtonRef} />
-        <GridToolbarFilterButton ref={filterButtonRef} />
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
         <GridToolbarExport
           csvOptions={csvOptions}
@@ -82,18 +72,6 @@ GridToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Ref for the column button.
-   */
-  columnsButtonRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
-  /**
-   * Ref for the filter button.
-   */
-  filterButtonRef: PropTypes.shape({
-    current: PropTypes.object,
-  }),
   /**
    * Props passed to the quick filter component.
    */

@@ -171,7 +171,7 @@ const pages: MuiPage[] = [
         subheader: 'Subcomponents',
         children: [
           { pathname: '/x/react-data-grid/components', title: 'Overview' },
-          { pathname: '/x/react-data-grid/grid-toolbar', title: 'Grid Toolbar', unstable: true },
+          { pathname: '/x/react-data-grid/toolbar', title: 'Toolbar', unstable: true },
         ],
       },
       {
