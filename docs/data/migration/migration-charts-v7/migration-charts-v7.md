@@ -89,6 +89,30 @@ To pass props to the legend, use the `slotProps.legend`.
 + <PieChart slotProps={{ legend: { ... } }} />
 ```
 
+## Removing ResponsiveChartContainer ✅
+
+The `ResponsiveChartContainer` got removed.
+You can now use `ChartContainer` as a responsive container which works now exactly the same way.
+
+```diff
+- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+- import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++ import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++ import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
+
+- <ResponsiveChartContainer>
++ <ChartContainer>
+   <BarPlot />
+- </ResponsiveChartContainer>
++ </ChartContainer>
+```
+
+## New DOM structure for ChartContainer
+
+The `<ChartContainer />` now wrap the `svg` component into a `div`.
+
+This change should not impact your codebase except for some CSS selector edge cases.
+
 ## Remove Pie Chart axes
 
 The `<PieChart />` got by error the code to render axes.
