@@ -37,16 +37,6 @@ Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
 
 - [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (@arminmeh) (#15222) @github-actions[bot]
 
-### Date and Time Pickers
-
-#### `@mui/x-date-pickers@7.22.2`
-
-No changes since `@mui/x-date-pickers@v7.22.1`.
-
-#### `@mui/x-date-pickers-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-date-pickers@7.22.2`.
-
 ### Charts
 
 #### `@mui/x-charts@7.22.2`
@@ -56,16 +46,6 @@ Same changes as in `@mui/x-date-pickers@7.22.2`.
 #### `@mui/x-charts-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@7.22.2`.
-
-### Tree View
-
-#### `@mui/x-tree-view@7.22.2`
-
-No changes since `@mui/x-tree-view@v7.22.1`.
-
-#### `@mui/x-tree-view-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@7.22.2`.
 
 ## 7.22.1
 
