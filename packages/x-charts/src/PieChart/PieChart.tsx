@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import {
   ChartsTooltip,
@@ -38,10 +35,7 @@ export interface PieChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface PieChartProps
-  extends Omit<
-      ResponsiveChartContainerProps,
-      'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'
-    >,
+  extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<PiePlotProps, 'skipAnimation'> {
   /**
@@ -84,7 +78,10 @@ const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
  *
  * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
  */
-const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref) {
+const PieChart = React.forwardRef(function PieChart(
+  inProps: PieChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiPieChart' });
   const {
     xAxis,
@@ -112,7 +109,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
 
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       {...other}
       ref={ref}
       series={series.map((s) => ({ type: 'pie', ...s }))}
@@ -137,7 +134,7 @@ const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref)
       />
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
