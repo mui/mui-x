@@ -15,7 +15,7 @@ import { ChartContainer } from '@mui/x-charts/ChartContainer';
       tooltip: { trigger: 'axis' },
       legend: { hidden: true }
     }} />
-    <ChartContainer>
-      <BarPlot />
-    </ChartContainer>
+  <ChartContainer>
+    <BarPlot />
+  </ChartContainer>
 </div>;

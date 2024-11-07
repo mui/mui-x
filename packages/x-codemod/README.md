@@ -141,11 +141,10 @@ The list includes these transformers
 Renames legend props to the corresponding slotProps.
 
 ```diff
-
-<LineChart
+  <LineChart
 -   legend={{ hiden: true}}
 +   slotProps={{ legend: { hiden: true} }}
-/>
+  />
 ```
 
 #### `rename-responsive-chart-container`
