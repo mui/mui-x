@@ -17,13 +17,8 @@ export default function StackBars() {
       ])}
       xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
       slotProps={{ legend: { hidden: true } }}
-      {...baseProps}
+      width={600}
+      height={350}
     />
   );
 }
-
-const baseProps = {
-  width: 600,
-  height: 350,
-  margin: { left: 70 },
-};

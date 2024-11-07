@@ -11,5 +11,6 @@
   ])}
   xAxis={[{ scaleType: 'band', dataKey: 'year' }]}
   slotProps={{ legend: { hidden: true } }}
-  {...baseProps}
+  width={600}
+  height={350}
 />
