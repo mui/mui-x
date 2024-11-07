@@ -251,4 +251,14 @@ See [Tree Item Customization—Change nested item's indentation](/x/react-tree-v
 
 If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior:
 
-{{"demo": "ItemIndentationWithBorder.js"}}
+```tsx
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
+  // Remove the additional padding of nested elements
+  padding: theme.spacing(0.5, 1),
+}));
+
+const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)({
+  // Add the padding back on the group transition element
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation) !important',
+});
+```
