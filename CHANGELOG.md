@@ -17,6 +17,10 @@ Special thanks go out to the community contributors who have helped make this re
 Following are all team members who have contributed to this release:
 @MBilalShafi, @KenanYusuf, @arminmeh.
 
+### Upcoming alpha
+
+Keep an eye out for the MUI⠀X `v8.0.0-aplha.0` release soon. It will follow a weekly release schedule as always until it is stable.
+
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
