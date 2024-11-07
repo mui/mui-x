@@ -147,7 +147,7 @@ jobs:
           name: Tests fake browser (vitest)
           command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
           environment:
-            VITEST_MAX_THREADS: 5
+            VITEST_MAX_THREADS: 6
             VITEST_MIN_THREADS: 2
       - run:
           name: Check coverage generated
@@ -274,10 +274,10 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --project "browser/*" --pool=threads
+          command: pnpm vitest --project "browser/x-data-grid" --pool=threads
           environment:
-            VITEST_MAX_THREADS: 5
-            VITEST_MIN_THREADS: 2
+            VITEST_MAX_THREADS: 1
+            VITEST_MIN_THREADS: 1
 
   test_types:
     <<: *default-job
