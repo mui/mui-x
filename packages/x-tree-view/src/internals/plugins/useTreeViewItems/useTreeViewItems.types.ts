@@ -121,7 +121,6 @@ export interface UseTreeViewItemsState<R extends {}> {
 interface UseTreeViewItemsContextValue {
   items: {
     onItemClick: (event: React.MouseEvent, itemId: string) => void;
-    indentationAtItemLevel: boolean;
   };
 }
 
@@ -133,7 +132,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
   contextValue: UseTreeViewItemsContextValue;
-  experimentalFeatures: 'indentationAtItemLevel';
 }>;
 
 export type TreeViewItemMetaLookup = { [itemId: string]: TreeViewItemMeta };

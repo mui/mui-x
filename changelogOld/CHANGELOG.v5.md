@@ -956,7 +956,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [docs] New location for the legal content (#5595) @oliviertassinari
 - [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
-- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
+- [docs] Add missing `date-fns` dependency when opening CodeSandbox demo (#5692) @cherniavskii
 
 ### Core
 
@@ -2819,7 +2819,7 @@ _Nov 4, 2021_
 - [core] Group update of MUI Core (#3055) @oliviertassinari
 - [core] Ignore `*.tsbuildinfo` files (#3068) @m4theushw
 - [core] Implement tree-based row management (#2996) @flaviendelangle
-- [core] Invert Codesandbox examples on README (#3073) @flaviendelangle
+- [core] Invert CodeSandbox examples on README (#3073) @flaviendelangle
 - [core] Prefix selectors from `useGridContainerProps` with `unsafe` (#3002) @flaviendelangle
 - [core] Reduce `setGridState` and `applyFilters` call when updating `filterModel` (#3023) @flaviendelangle
 - [core] Reduce styles complexity (#3012) @DanailH

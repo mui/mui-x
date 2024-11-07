@@ -3,17 +3,16 @@ import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { FieldSection, PickerValidDate, InferError } from '../../../models';
+import { FieldSection, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { usePickerOwnerState } from './usePickerOwnerState';
 import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -26,14 +25,12 @@ export const usePicker = <
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<
+}: UsePickerParams<TValue, TView, TSection, TExternalProps, TAdditionalProps>): UsePickerResponse<
   TValue,
-  TDate,
   TView,
   TSection,
-  TExternalProps,
-  TAdditionalProps
->): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
+  InferError<TExternalProps>
+> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
@@ -43,7 +40,7 @@ export const usePicker = <
       ]);
     }
   }
-  const pickerValueResponse = usePickerValue({
+  const pickerValueResponse = usePickerValue<TValue, TSection, TExternalProps>({
     props,
     valueManager,
     valueType,
@@ -53,7 +50,6 @@ export const usePicker = <
 
   const pickerViewsResponse = usePickerViews<
     TValue,
-    TDate,
     TView,
     TSection,
     TExternalProps,

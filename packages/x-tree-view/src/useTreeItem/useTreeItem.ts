@@ -38,7 +38,7 @@ export const useTreeItem = <
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
-    items: { onItemClick, indentationAtItemLevel },
+    items: { onItemClick },
     selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     label: labelContext,
@@ -227,16 +227,14 @@ export const useTreeItem = <
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
+      style: {
+        ...(externalProps.style ?? {}),
+        '--TreeView-itemDepth': depth,
+      } as React.CSSProperties,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
     };
-
-    if (indentationAtItemLevel) {
-      props.style = {
-        '--TreeView-itemDepth': depth,
-      } as React.CSSProperties;
-    }
 
     const enhancedRootProps =
       propsEnhancers.root?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
@@ -260,10 +258,6 @@ export const useTreeItem = <
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
-
-    if (indentationAtItemLevel) {
-      props.indentationAtItemLevel = true;
-    }
 
     const enhancedContentProps =
       propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
@@ -361,10 +355,6 @@ export const useTreeItem = <
       children,
       ...externalProps,
     };
-
-    if (indentationAtItemLevel) {
-      response.indentationAtItemLevel = true;
-    }
 
     return response;
   };

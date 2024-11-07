@@ -7,19 +7,14 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 /**
  * Validation props used by the Time Picker, Time Field and Clock components.
  */
-export interface ExportedValidateTimeProps<TDate extends PickerValidDate>
-  extends BaseTimeValidationProps,
-    TimeValidationProps<TDate> {}
+export interface ExportedValidateTimeProps extends BaseTimeValidationProps, TimeValidationProps {}
 
-export interface ValidateTimeProps<TDate extends PickerValidDate>
-  extends Required<BaseTimeValidationProps>,
-    TimeValidationProps<TDate> {}
+export interface ValidateTimeProps extends Required<BaseTimeValidationProps>, TimeValidationProps {}
 
 export const validateTime: Validator<
-  any | null,
-  any,
+  PickerValidDate | null,
   TimeValidationError,
-  ValidateTimeProps<any>
+  ValidateTimeProps
 > = ({ adapter, value, timezone, props }): TimeValidationError => {
   if (value === null) {
     return null;

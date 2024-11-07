@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
@@ -37,10 +36,6 @@ const ITEMS: TreeViewBaseItem[] = [
   },
 ];
 
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1),
-}));
-
 interface CustomTreeItemProps
   extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
@@ -66,7 +61,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   return (
     <TreeItemProvider {...getContextProviderProps()}>
       <TreeItemRoot {...getRootProps(other)}>
-        <CustomTreeItemContent {...getContentProps()}>
+        <TreeItemContent {...getContentProps()}>
           <TreeItemIconContainer {...getIconContainerProps()}>
             <TreeItemIcon status={status} />
           </TreeItemIconContainer>
@@ -85,7 +80,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             <TreeItemLabel {...getLabelProps()} />
           </Box>
           <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
-        </CustomTreeItemContent>
+        </TreeItemContent>
         {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
       </TreeItemRoot>
     </TreeItemProvider>

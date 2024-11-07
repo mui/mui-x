@@ -50,10 +50,7 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  style?: React.CSSProperties;
+  style: React.CSSProperties;
 }
 
 export interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromUseTreeItem {}
@@ -66,10 +63,6 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItemStatus;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  indentationAtItemLevel?: true;
 }
 
 export interface UseTreeItemContentSlotOwnProps
@@ -115,10 +108,6 @@ export interface UseTreeItemGroupTransitionSlotOwnProps {
   component: 'ul';
   role: 'group';
   children: React.ReactNode;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItemGroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &

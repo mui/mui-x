@@ -20,7 +20,7 @@ Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 ### Docs
 
-- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+- [docs] Use MUI X v6 in CodeSandbox and StackBlitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 
@@ -2596,7 +2596,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Fix date pickers typo in the docs (#8939) @richbustos
 - [docs] Fix master detail demo (#8894) @m4theushw
 - [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
-- [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
+- [docs] Reduce list of dependencies in CodeSandbox/StackBlitz demos (#8535) @cherniavskii
 
 ### Core
 

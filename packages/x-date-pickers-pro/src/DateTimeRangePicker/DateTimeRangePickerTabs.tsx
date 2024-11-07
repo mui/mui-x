@@ -6,14 +6,13 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateOrTimeViewWithMeridiem,
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {
@@ -108,7 +107,7 @@ const DateTimeRangePickerTabFiller = styled('div', {
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];
 
-const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends PickerValidDate>(
+const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   inProps: DateTimeRangePickerTabsProps,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerTabs' });
@@ -124,7 +123,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends P
     sx,
   } = props;
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(props);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';

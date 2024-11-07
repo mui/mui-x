@@ -77,7 +77,7 @@ describeTreeView<
   describe('itemReordering prop', () => {
     it('should allow to drag and drop items when props.itemsReordering={true}', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
       });
@@ -91,7 +91,7 @@ describeTreeView<
 
     it('should not allow to drag and drop items when props.itemsReordering={false}', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: false,
       });
@@ -102,7 +102,6 @@ describeTreeView<
 
     it('should not allow to drag and drop items when props.itemsReordering is not defined', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
       });
 
@@ -112,7 +111,7 @@ describeTreeView<
 
     it('should allow to expand the new parent of the dragged item when it was not expandable before', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
         itemsReordering: true,
         defaultExpandedItems: ['1'],
@@ -134,7 +133,7 @@ describeTreeView<
     it('should call onItemPositionChange when an item is moved', () => {
       const onItemPositionChange = spy();
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         onItemPositionChange,
@@ -153,7 +152,7 @@ describeTreeView<
   describe('isItemReorderable prop', () => {
     it('should not allow to drag an item when isItemReorderable returns false', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         isItemReorderable: () => false,
@@ -165,7 +164,7 @@ describeTreeView<
 
     it('should allow to drag an item when isItemReorderable returns true', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         isItemReorderable: () => true,
@@ -183,7 +182,7 @@ describeTreeView<
     it('should call canMoveItemToNewPosition with the correct parameters', () => {
       const canMoveItemToNewPosition = spy();
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition,
@@ -199,7 +198,7 @@ describeTreeView<
 
     it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => false,
@@ -211,7 +210,7 @@ describeTreeView<
 
     it('should allow to drop an item when canMoveItemToNewPosition returns true', () => {
       const view = render({
-        experimentalFeatures: { indentationAtItemLevel: true, itemsReordering: true },
+        experimentalFeatures: { itemsReordering: true },
         items: [{ id: '1' }, { id: '2' }, { id: '3' }],
         itemsReordering: true,
         canMoveItemToNewPosition: () => true,

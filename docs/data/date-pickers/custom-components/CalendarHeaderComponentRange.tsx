@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -18,7 +17,7 @@ const CustomCalendarHeaderRoot = styled('div')({
   alignItems: 'center',
 });
 
-function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps<Dayjs>) {
+function CustomCalendarHeader(props: PickersRangeCalendarHeaderProps) {
   const { currentMonth, onMonthChange, month, calendars, monthIndex } = props;
 
   const selectNextMonth = () =>

@@ -50,7 +50,7 @@ describe('<YearCalendar /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addYears(value, 1);
+      const newValue = adapterToUse.addYears(value!, 1);
       fireEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );

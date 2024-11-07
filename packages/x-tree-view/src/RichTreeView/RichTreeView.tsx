@@ -163,7 +163,6 @@ RichTreeView.propTypes = {
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    indentationAtItemLevel: PropTypes.bool,
     labelEditing: PropTypes.bool,
   }),
   /**

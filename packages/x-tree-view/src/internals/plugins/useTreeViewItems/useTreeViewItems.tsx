@@ -121,7 +121,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
   params,
   store,
-  experimentalFeatures,
 }) => {
   const getItem = React.useCallback(
     (itemId: string) => selectorItemModel(store.value, itemId),
@@ -213,10 +212,9 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     () => ({
       items: {
         onItemClick: handleItemClick,
-        indentationAtItemLevel: experimentalFeatures.indentationAtItemLevel ?? false,
       },
     }),
-    [handleItemClick, experimentalFeatures.indentationAtItemLevel],
+    [handleItemClick],
   );
 
   return {

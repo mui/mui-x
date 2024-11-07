@@ -7,7 +7,7 @@ import { RangeFieldSection } from '../../models';
 
 interface UseMultiInputFieldSelectedSectionsParams
   extends Pick<
-    UseFieldInternalProps<any, any, RangeFieldSection, any, any>,
+    UseFieldInternalProps<any, RangeFieldSection, any, any>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
