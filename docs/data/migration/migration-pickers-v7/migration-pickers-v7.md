@@ -307,7 +307,7 @@ If you were passing your date object type as a generic to any element of one of 
 +type Props = DatePickerToolbarProps;
 ```
 
-The full list of the impacted element will be added to the migration guide in a follow up release.
+A follow-up release will add the full list of the impacted elements to the migration guide.
 
 ### Removed types
 
