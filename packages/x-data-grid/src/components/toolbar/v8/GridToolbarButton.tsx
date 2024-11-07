@@ -1,13 +1,13 @@
 import * as React from 'react';
-import Button, { ButtonProps, buttonClasses } from '@mui/material/Button';
-import { alpha, styled } from '@mui/material/styles';
+import ToggleButton, { ToggleButtonProps } from '@mui/material/ToggleButton';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
-export type GridToolbarButtonProps = ButtonProps;
+export type GridToolbarButtonProps = Omit<ToggleButtonProps, 'selected'>;
 
 type OwnerState = DataGridProcessedProps;
 
@@ -21,68 +21,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const StyledButton = styled(Button, {
+const StyledButton = styled(ToggleButton, {
   name: 'MuiDataGrid',
   slot: 'ToolbarButton',
   overridesResolver: (_, styles) => styles.toolbarButton,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   gap: theme.spacing(0.5),
-  minWidth: 'auto',
-  // Styles from:
-  // https://github.com/mui/material-ui/blob/master/packages/mui-material/src/ToggleButton/ToggleButton.js
-  ...theme.typography.button,
-  borderRadius: (theme.vars || theme).shape.borderRadius,
-  color: (theme.vars || theme).palette.action.active,
-  [`&.${buttonClasses.disabled}`]: {
-    color: (theme.vars || theme).palette.action.disabled,
-    border: `1px solid ${(theme.vars || theme).palette.action.disabledBackground}`,
-  },
-  '&:hover': {
-    textDecoration: 'none',
-    // Reset on mouse devices
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.text.primary, theme.palette.action.hoverOpacity),
-    '@media (hover: none)': {
-      backgroundColor: 'transparent',
-    },
-  },
-  // Matches the state of the ToggleButton when a button has an expanded popup
-  '&[aria-expanded="true"]': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.selectedOpacity})`
-      : alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
-    '&:hover': {
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.text.primaryChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
-        : alpha(
-            theme.palette.text.primary,
-            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-          ),
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {
-        backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.selectedOpacity})`
-          : alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
-      },
-    },
-  },
-  variants: [
-    {
-      props: { size: 'small' },
-      style: {
-        padding: 7,
-        fontSize: theme.typography.pxToRem(13),
-      },
-    },
-    {
-      props: { size: 'large' },
-      style: {
-        padding: 15,
-        fontSize: theme.typography.pxToRem(15),
-      },
-    },
-  ],
+  border: 0,
 }));
 
 const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
@@ -93,10 +38,14 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
 
     return (
       <StyledButton
+        as={rootProps.slots.baseToggleButton}
+        ref={ref}
         ownerState={rootProps}
         className={clsx(classes.root, className)}
-        ref={ref}
         size="small"
+        selected={other['aria-expanded'] === 'true'} // adds the "selected" styles when the button has an expanded popup
+        aria-pressed={undefined} // removes the aria-pressed attribute that the ToggleButton component adds by default if `selected` is true
+        {...rootProps.slotProps?.baseToggleButton}
         {...other}
       >
         {children}
