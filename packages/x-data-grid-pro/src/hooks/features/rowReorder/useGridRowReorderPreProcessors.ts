@@ -41,6 +41,10 @@ export const useGridRowReorderPreProcessors = (
       const haveReorderColumn = columnsState.lookup[reorderColumn.field] != null;
 
       if (shouldHaveReorderColumn && haveReorderColumn) {
+        columnsState.lookup[reorderColumn.field] = {
+          ...reorderColumn,
+          ...columnsState.lookup[reorderColumn.field],
+        };
         return columnsState;
       }
 

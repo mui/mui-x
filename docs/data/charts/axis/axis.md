@@ -86,6 +86,20 @@ xAxis={[
 
 {{"demo": "MinMaxExample.js"}}
 
+### Relative axis sub domain
+
+You can adjust the axis range relatively to its data by using the `domainLimit` option.
+It can take 3 different values:
+
+- `"nice"` Rounds the domain at human friendly values. It's the default behavior.
+- `"strict"` Sets the domain to the min/max value to display.
+- `([minValue, maxValue]) => [min, max]` Receives the calculated extremums as parameters, and should return the axis domain.
+
+The demo below shows different ways to set the y-axis range.
+They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+
+{{"demo": "CustomDomainYAxis.js"}}
+
 ### Axis direction
 
 By default, the axes' directions are left to right and bottom to top.

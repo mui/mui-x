@@ -105,7 +105,7 @@ you can declare your component using the `PropsFromSlot` interface:
 ```tsx
 function CustomCalendarHeader({
   currentMonth,
-}: PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>) {
+}: PropsFromSlot<DateCalendarSlots['calendarHeader']>) {
   return <div>{currentMonth?.format('MM-DD-YYYY')}</div>;
 }
 ```
@@ -129,7 +129,7 @@ import { DateCalendarSlots } from '@mui/x-date-pickers';
 type ToolbarProps = PropsFromSlot<GridSlots['toolbar']>;
 
 // Most of the picker slots interfaces need to receive the date type as a generic.
-type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']>;
+type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots['calendarHeader']>;
 ```
 
 :::
@@ -140,7 +140,7 @@ If you are passing additional props to your slot, you can add them to the props 
 
 ```ts
 interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DateCalendarSlots<Dayjs>['calendarHeader']> {
+  extends PropsFromSlot<DateCalendarSlots['calendarHeader']> {
   displayWeekNumber: boolean;
   setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
 }
@@ -178,14 +178,13 @@ function MyApp() {
     <DateCalendar
       displayWeekNumber={displayWeekNumber}
       slots={{
-        calendarHeader:
-          CustomCalendarHeader as DateCalendarSlots<Dayjs>['calendarHeader'],
+        calendarHeader: CustomCalendarHeader as DateCalendarSlots['calendarHeader'],
       }}
       slotProps={{
         calendarHeader: {
           displayWeekNumber,
           setDisplayWeekNumber,
-        } as DateCalendarSlotProps<Dayjs>['calendarHeader'],
+        } as DateCalendarSlotProps['calendarHeader'],
       }}
     />
   );

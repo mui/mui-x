@@ -30,11 +30,11 @@ npm install luxon
 npm install moment
 ```
 
-This component has the following peer dependencies that you will need to install as well.
+This component has the following peer dependencies that you need to install as well.
 
 ```json
 "peerDependencies": {
-  "@mui/material": "^5.15.14",
+  "@mui/material": "^5.15.14 || ^6.0.0",
   "react": "^17.0.0 || ^18.0.0",
   "react-dom": "^17.0.0 || ^18.0.0"
 },

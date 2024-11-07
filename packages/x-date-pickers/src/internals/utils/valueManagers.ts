@@ -4,7 +4,6 @@ import {
   TimeValidationError,
   DateTimeValidationError,
   FieldSection,
-  PickerValidDate,
 } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
@@ -16,9 +15,8 @@ import {
 
 export type SingleItemPickerValueManager<
   TValue = any,
-  TDate extends PickerValidDate = any,
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
-> = PickerValueManager<TValue, TDate, TError>;
+> = PickerValueManager<TValue, TError>;
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
@@ -45,7 +43,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
+export const singleItemFieldValueManager: FieldValueManager<any, FieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {

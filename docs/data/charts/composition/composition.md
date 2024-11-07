@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'component: charts'
-components: ChartContainer, ChartContainerPro, ResponsiveChartContainer, ResponsiveChartContainerPro, ChartsGrid
+components: ChartContainer, ChartContainerPro, ChartsGrid
 packageName: '@mui/x-charts'
 ---
 
@@ -23,18 +23,17 @@ Or you can [create your own components](/x/react-charts/components/).
 
 ### Responsive
 
-There are two types of Chart containers available: `<ChartContainer />` and `<ResponsiveChartContainer />`.
-As the names suggest, the only difference between them is responsiveness.
+The `<ChartContainer />` is responsive by default. The component automatically adjusts its dimensions to fit the available space defined by the parent element.
 
-The first container requires you to provide `width` and `height` props.
-In contrast, `<ResponsiveChartContainer />` automatically adjusts its dimensions to fit the available space defined by the parent element.
+To control the dimensions of the chart, the `width` and `height` props can be provided.
+The chart then renders with the specified dimensions.
 
 :::warning
 The parent element must have intrinsic dimensions.
 If the parent's dimensions rely on its content, the responsive charts will not render.
 :::
 
-The following demo lets you switch between a chart using `<ChartContainer />` with `width` set to `500` and `height` set to `300`, and a chart using `<ResponsiveChartContainer />`, so you can see how they differ.
+The following demo lets you switch between a chart using defined sizes, `<ChartContainer width={500} height={300} />`, and a chart without any sizes, `<ChartContainer />`, so you can see how they differ.
 
 {{"demo": "BasicComposition.js" }}
 
@@ -81,7 +80,7 @@ In the next demo, the chart is made by composing the `<BarPlot />` and `<LinePlo
 By modifying the series `type` property, you can switch between rendering a line and a bar.
 
 ```jsx
-<ResponsiveChartContainer
+<ChartContainer
   series={[
     { type, data: [1, 2, 3, 2, 1] },
     { type, data: [4, 3, 1, 3, 4] },
@@ -90,7 +89,7 @@ By modifying the series `type` property, you can switch between rendering a line
   <BarPlot />
   <LinePlot />
   <ChartsXAxis label="X axis" position="bottom" axisId="x-axis-id" />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "SwitchSeriesType.js" }}
