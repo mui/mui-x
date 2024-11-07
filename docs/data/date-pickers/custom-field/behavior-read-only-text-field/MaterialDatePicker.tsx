@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,16 +11,16 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 import {
   useSplitFieldProps,
   useParsedFormat,
-  usePickersContext,
+  usePickerContext,
 } from '@mui/x-date-pickers/hooks';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
-function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs>) {
+function ReadOnlyDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
   const { InputProps, slotProps, slots, ...other } = forwardedProps;
 
-  const pickersContext = usePickersContext();
+  const pickerContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
@@ -32,10 +31,10 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs>) {
   });
 
   const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
     } else {
-      pickersContext.onOpen(event);
+      pickerContext.onOpen(event);
     }
   };
 
@@ -56,7 +55,7 @@ function ReadOnlyDateField(props: DatePickerFieldProps<Dayjs>) {
   );
 }
 
-function ReadOnlyFieldDatePicker(props: DatePickerProps<Dayjs>) {
+function ReadOnlyFieldDatePicker(props: DatePickerProps) {
   return (
     <DatePicker {...props} slots={{ ...props.slots, field: ReadOnlyDateField }} />
   );

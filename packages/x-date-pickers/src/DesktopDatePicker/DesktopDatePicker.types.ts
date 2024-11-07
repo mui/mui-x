@@ -9,35 +9,31 @@ import {
   BaseDatePickerSlots,
   BaseDatePickerSlotProps,
 } from '../DatePicker/shared';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
-export interface DesktopDatePickerSlots<TDate extends PickerValidDate>
-  extends BaseDatePickerSlots<TDate>,
-    MakeOptional<UseDesktopPickerSlots<TDate, DateView>, 'field' | 'openPickerIcon'> {}
+export interface DesktopDatePickerSlots
+  extends BaseDatePickerSlots,
+    MakeOptional<UseDesktopPickerSlots<DateView>, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDatePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDatePickerSlotProps<TDate>,
-    ExportedUseDesktopPickerSlotProps<TDate, DateView, TEnableAccessibleFieldDOMStructure> {}
+export interface DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDatePickerSlotProps,
+    ExportedUseDesktopPickerSlotProps<DateView, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DesktopDatePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDatePickerProps<TDate>,
+export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends BaseDatePickerProps,
     DesktopOnlyPickerProps,
     ExportedYearCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDatePickerSlots<TDate>;
+  slots?: DesktopDatePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
   /**
    * Years rendered per row.
    * @default 4

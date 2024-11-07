@@ -67,28 +67,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
 
-function EmptyCell({ width }: { width: number }) {
-  if (!width) {
-    return null;
-  }
-
-  return (
-    <div
-      role="presentation"
-      className={clsx(gridClasses.cell, gridClasses.cellEmpty)}
-      style={{ '--width': `${width}px` } as React.CSSProperties}
-    />
-  );
-}
-
-EmptyCell.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  width: PropTypes.number.isRequired,
-} as any;
-
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
@@ -454,10 +432,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     : null;
 
-  const expandedWidth =
-    dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth - scrollbarWidth;
-  const emptyCellWidth = Math.max(0, expandedWidth);
-
   return (
     <div
       ref={handleRef}
@@ -477,8 +451,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         style={{ width: offsetLeft }}
       />
       {cells}
-      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      {rightCells.length > 0 && <div role="presentation" className={gridClasses.filler} />}
+      <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
       {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
     </div>

@@ -18,7 +18,7 @@ describe('<AdapterDateFnsJalaliV3 />', () => {
       const adapter = new AdapterDateFnsJalali();
 
       const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Date;
 
         expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
