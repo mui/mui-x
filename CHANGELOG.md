@@ -66,6 +66,7 @@ No changes since `@mui/x-tree-view@v7.22.1`.
 #### `@mui/x-tree-view-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-tree-view@7.22.2`.
+
 ## 7.22.1
 
 _Nov 1, 2024_
