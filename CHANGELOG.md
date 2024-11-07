@@ -133,14 +133,17 @@ From https://github.com/mui/mui-x/pull/14651
   Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
   Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
   **Fallback to the non-accessible DOM structure:**
+
   ```tsx
   <DateField enableAccessibleFieldDOMStructure={false} />
   <DatePicker enableAccessibleFieldDOMStructure={false} />
   <DateRangePicker enableAccessibleFieldDOMStructure={false} />
   ```
+
   **Migrate `slotProps.field`:**
   When using `slotProps.field` to pass props to your field component,
   the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+
   - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
     Both components below will respect the leading zeroes on digit sections:
@@ -169,10 +172,12 @@ From https://github.com/mui/mui-x/pull/14651
       slotProps={{ field: { size: 'small' } }}
     />
     ```
-  **Migrate `slotProps.textField`:**
-  If you are passing props to `slotProps.textField`,
-  these props will now be received by `PickersTextField` and should keep working the same way as before.
-  Both components below will render a small size UI:
+
+    **Migrate `slotProps.textField`:**
+    If you are passing props to `slotProps.textField`,
+    these props will now be received by `PickersTextField` and should keep working the same way as before.
+    Both components below will render a small size UI:
+
   ```js
   <DatePicker
     slotProps={{ textField: { size: 'small' } }}
@@ -182,6 +187,7 @@ From https://github.com/mui/mui-x/pull/14651
     slotProps={{ textField: { size: 'small' } }}
   />
   ```
+
   Side note: If you are passing `inputProps` to `slotProps.textField`, these props will now be passed to the hidden `<input />` element.
   **Migrate `slots.field`:**
   If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
@@ -197,6 +203,7 @@ From https://github.com/mui/mui-x/pull/14651
   **Migrate the theme:**
   If you are using the theme to customize `MuiTextField`,
   you need to pass the same config to `MuiPickersTextField`:
+
   ```js
   const theme = createTheme({
     components: {
@@ -227,8 +234,10 @@ From https://github.com/mui/mui-x/pull/14651
     },
   });
   ```
+
   If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
   you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
+
   ```js
   const theme = createTheme({
     components: {
@@ -257,8 +266,10 @@ From https://github.com/mui/mui-x/pull/14651
     },
   });
   ```
+
   If you are using the theme to customize `MuiInputBase`,
   you need to pass the same config to `MuiPickersInputBase`:
+
   ```js
   const theme = createTheme({
     components: {
@@ -285,13 +296,16 @@ From https://github.com/mui/mui-x/pull/14651
     },
   });
   ```
+
   From https://github.com/mui/mui-x/pull/14986
 
 ### Pickers
 
 - Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
   If you have customized those translation keys, you have to update them following the examples below:
+
   - If you are setting a custom value in a picker component:
+
   ```diff
   -clockLabelText: (view, time, utils) =>
   -   `Select ${view}. ${
@@ -318,7 +332,9 @@ From https://github.com/mui/mui-x/pull/14651
   +openTimePickerDialogue: (formattedTime) =>
   +  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
   ```
+
   - If you are setting a custom value in the `LocalizationProvider`:
+
   ```diff
    <LocalizationProvider localeText={{
   -   clockLabelText: (view, time, utils) =>
@@ -345,7 +361,9 @@ From https://github.com/mui/mui-x/pull/14651
   +     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
    }} >
   ```
+
   - If you using this translation key in a custom component:
+
   ```diff
    const translations = usePickersTranslations();
 
@@ -378,11 +396,13 @@ From https://github.com/mui/mui-x/pull/14651
   +  value == null ? null : value.format('hh:mm:ss')
   +);
   ```
+
   From https://github.com/mui/mui-x/pull/15093
 
 ### Tree View
 
 - The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
+
   ```diff
   -import { TreeView } from '@mui/x-tree-view';
   +import { SimpleTreeView } from '@mui/x-tree-view';
@@ -398,7 +418,9 @@ From https://github.com/mui/mui-x/pull/14651
   +    </SimpleTreeView>
      );
   ```
+
   If you were using theme augmentation, you will also need to migrate it:
+
   ```diff
    const theme = createTheme({
      components: {
@@ -413,7 +435,9 @@ From https://github.com/mui/mui-x/pull/14651
      },
    });
   ```
+
   If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
+
   ```diff
    import { treeViewClasses } from '@mui/x-tree-view/TreeView';
    import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
@@ -427,6 +451,7 @@ From https://github.com/mui/mui-x/pull/14651
 
 - The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
   If you were using them, you need to replace them with the following code:
+
   - `UseDateFieldComponentProps`
 
     ```ts
@@ -456,9 +481,10 @@ From https://github.com/mui/mui-x/pull/14651
     ```
 
   - `UseDateTimeFieldComponentProps`
-        ```ts
-        import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
-        import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+    ````ts
+    import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+    import { PickerValidDate } from '@mui/x-date-pickers/models';
 
         type UseDateTimeFieldComponentProps<
           TDate extends PickerValidDate,
@@ -470,7 +496,9 @@ From https://github.com/mui/mui-x/pull/14651
         > &
           UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
         ```
+
     From https://github.com/mui/mui-x/pull/15001
+    ````
 
 ### Pickers
 
@@ -616,6 +644,7 @@ From https://github.com/mui/mui-x/pull/15187
 - [DataGrid] Set default overlay height in flex parent layout (#15202) @cherniavskii
 - [DataGrid] refactor: baseMenuList & baseMenuItem (#15049) @romgrk
 - [DataGrid] refactor: remove more material imports (#15063) @romgrk
+- [DataGrid] - Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
 - [I10n][DataGrid] Improve Polish (pl-PL) locale (#15227) @belkocik
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -712,8 +741,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [core] Fix changelog reference to VoiceOver @oliviertassinari
 - [core] Fix tools-public.mui.com redirection @oliviertassinari
 - [core] Move `helpers` to `@mui/x-internals` package (#15188) @LukasTy
-- Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
-- [code-infra] Set renovate to automerge `devDependencies` (#13463) @JCQuintas
+- [code-infra] Set renovate to automerge devDependencies (#13463) @JCQuintas
 - [infra] Introduce automated cherry-picking workflow (#15262) @michelengelen
 - [infra] Reintroduce the cherry pick workflow (#15293) @michelengelen
 - [infra] Revert "[infra] Introduce automated cherry-picking workflow (#15262)" (#15287) @michelengelen
