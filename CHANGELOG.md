@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.2
+
+<!-- generated comparing v7.22.1..v7.x -->
+
+_Nov 7, 2024_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@clins1994, @k-rajat19.
+Following are all team members who have contributed to this release:
+@MBilalShafi, @KenanYusuf, @arminmeh.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.2`
+
+- [DataGrid] Fix `null` reference error in `GridVirtualScrollbar` (#15009) (#15289) @MBilalShafi
+- [DataGrid] Fix filtering with `boolean` column type (@k-rajat19) (#15257) @github-actions[bot]
+- [DataGrid] Improve row selection propagation trigger (#15274) @MBilalShafi
+- [DataGrid] Preprocess edit cell props on backspace/delete (@KenanYusuf) (#15223) @github-actions[bot]
+
+#### `@mui/x-data-grid-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.2`.
+
+#### `@mui/x-data-grid-premium@7.22.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
+
+- [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (@arminmeh) (#15222) @github-actions[bot]
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.2`
+
+No changes since `@mui/x-date-pickers@v7.22.1`.
+
+#### `@mui/x-date-pickers-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.22.2`
+
+- [charts] Allow `SeriesValueFormatter` to return `null` value (@clins1994) (#15295) @github-actions[bot]
+
+#### `@mui/x-charts-pro@__VERSION-ALPHA__` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.22.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@7.22.2`
+
+No changes since `@mui/x-tree-view@v7.22.1`.
+
 ## 7.22.1
 
 _Nov 1, 2024_
