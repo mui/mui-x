@@ -46,7 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
 
 #### `@mui/x-date-pickers@7.22.2`
 
-- [pickers] Allow `moment-hijri@3.0.0` to be used with `DatePickers` (#15248) @LukasTy
+- [pickers] Add support for `moment-hijri@3.0.0` (#15248) @LukasTy
 
 #### `@mui/x-date-pickers-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
