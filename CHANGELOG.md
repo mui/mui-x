@@ -27,7 +27,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Improve row selection propagation trigger (#15274) @MBilalShafi
 - [DataGrid] Preprocess edit cell props on backspace/delete (#15223) @KenanYusuf
 - [DataGrid] Add a recipe to persist column width and order (#15309) @MBilalShafi
- 
+
 #### `@mui/x-data-grid-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.22.2`, plus:
@@ -40,6 +40,16 @@ Same changes as in `@mui/x-data-grid@7.22.2`, plus:
 Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
 
 - [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (#15222) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.2`
+
+- [pickers] Allow `moment-hijri@3.0.0` to be used with `DatePickers` (#15248) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.2`.
 
 ### Charts
 
