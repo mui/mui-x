@@ -22,28 +22,30 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.22.2`
 
-- [DataGrid] Fix `null` reference error in `GridVirtualScrollbar` (#15009) (#15289) @MBilalShafi
-- [DataGrid] Fix filtering with `boolean` column type (@k-rajat19) (#15257) @github-actions[bot]
+- [DataGrid] Fix `null` reference error in `GridVirtualScrollbar` (#15289) @MBilalShafi
+- [DataGrid] Fix filtering with `boolean` column type (#15257) @k-rajat19
 - [DataGrid] Improve row selection propagation trigger (#15274) @MBilalShafi
-- [DataGrid] Preprocess edit cell props on backspace/delete (@KenanYusuf) (#15223) @github-actions[bot]
-
+- [DataGrid] Preprocess edit cell props on backspace/delete (#15223) @KenanYusuf
+- [DataGrid] Add a recipe to persist column width and order (#15309) @MBilalShafi
+ 
 #### `@mui/x-data-grid-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@7.22.2`, plus:
 
-- [DataGridPro] Toggle row expansion with `Enter` key in Tree data (@k-rajat19) (#15313)
+- [DataGridPro] Apply default properties if they are not passed in a reorder column (#15320) @k-rajat19
+- [DataGridPro] Toggle row expansion with `Enter` key in Tree data (#15313) @k-rajat19
 
 #### `@mui/x-data-grid-premium@7.22.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
 
-- [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (@arminmeh) (#15222) @github-actions[bot]
+- [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (#15222) @arminmeh
 
 ### Charts
 
 #### `@mui/x-charts@7.22.2`
 
-- [charts] Allow `SeriesValueFormatter` to return `null` value (@clins1994) (#15295) @github-actions[bot]
+- [charts] Allow `SeriesValueFormatter` to return `null` value (#15295) @clins1994
 
 #### `@mui/x-charts-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
