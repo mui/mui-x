@@ -55,6 +55,9 @@ function ServerSideLazyLoadingErrorHandling() {
         const getRowsResponse = await fetchRows(
           `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
         );
+
+        // Reset the retryParams when new rows are fetched
+        setRetryParams(null);
         return {
           rows: getRowsResponse.rows,
           rowCount: getRowsResponse.rowCount,
