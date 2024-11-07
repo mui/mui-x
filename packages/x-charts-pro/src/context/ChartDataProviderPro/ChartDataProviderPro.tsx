@@ -24,7 +24,7 @@ export interface ChartDataProviderProProps extends ChartDataProviderProps, ZoomP
 
 const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
   props: ChartDataProviderProProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const {
     zoomProviderProps,

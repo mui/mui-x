@@ -12,7 +12,7 @@ export type UseChartContainerProPropsReturnValue = Omit<
 
 export const useChartContainerProProps = (
   props: ChartContainerProProps,
-  ref: React.ForwardedRef<SVGSVGElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 

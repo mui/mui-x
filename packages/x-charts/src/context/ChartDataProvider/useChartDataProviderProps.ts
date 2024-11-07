@@ -14,7 +14,7 @@ import { AnimationProviderProps } from '../AnimationProvider';
 
 export const useChartDataProviderProps = (
   props: ChartDataProviderProps,
-  ref: React.ForwardedRef<unknown>,
+  ref: React.Ref<SVGSVGElement>,
 ) => {
   const {
     width,

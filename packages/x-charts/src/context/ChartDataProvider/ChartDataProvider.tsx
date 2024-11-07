@@ -47,7 +47,7 @@ export type ChartDataProviderProps = Omit<
 
 const ChartDataProvider = React.forwardRef(function ChartDataProvider(
   props: ChartDataProviderProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const {
     children,

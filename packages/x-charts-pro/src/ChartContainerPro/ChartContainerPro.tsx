@@ -15,7 +15,7 @@ const releaseInfo = getReleaseInfo();
 
 const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
-  ref: React.ForwardedRef<SVGSVGElement>,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize } =
     useChartContainerProProps(props, ref);

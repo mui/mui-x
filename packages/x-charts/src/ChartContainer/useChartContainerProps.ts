@@ -8,13 +8,13 @@ export type UseChartContainerPropsReturnValue = {
   chartDataProviderProps: ChartDataProviderProps;
   resizableChartContainerProps: {
     ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
-    ref: React.ForwardedRef<HTMLDivElement>;
+    ref: React.Ref<HTMLDivElement>;
   };
 };
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
-  ref: React.ForwardedRef<SVGSVGElement>,
+  ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerPropsReturnValue => {
   const {
     width,

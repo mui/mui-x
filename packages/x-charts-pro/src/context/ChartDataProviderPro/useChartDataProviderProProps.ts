@@ -5,7 +5,7 @@ import type { ChartDataProviderProProps } from './ChartDataProviderPro';
 
 export const useChartContainerProProps = (
   props: ChartDataProviderProProps,
-  ref: React.ForwardedRef<unknown>,
+  ref: React.Ref<SVGSVGElement>,
 ) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 

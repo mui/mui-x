@@ -30,7 +30,7 @@ export interface ScatterChartProProps extends ScatterChartProps, ZoomProps {}
  */
 const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   inProps: ScatterChartProProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
   const { zoom, onZoomChange, ...other } = props;
