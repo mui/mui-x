@@ -2,9 +2,11 @@
   {...data}
   filterModel={filterModel}
   onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
-  slots={{ toolbar: Toolbar }}
+  slots={{ toolbar: Toolbar as GridSlots['toolbar'] }}
   slotProps={{
+    panel: { anchorEl: filterButtonEl },
     toolbar: {
+      filterButtonRef: setFilterButtonEl,
       onRemoveFilter,
     },
   }}

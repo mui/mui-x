@@ -6,13 +6,13 @@ import { PrintTrigger } from './PrintTrigger';
 import { DownloadMenu } from './DownloadMenu';
 
 export function Toolbar(props) {
-  const { quickFilterProps, filterButtonRef, columnsButtonRef } = props;
+  const { quickFilterProps } = props;
 
   return (
     <GridToolbar.Root>
       <GridToolbar.QuickFilter sx={{ mr: 'auto' }} {...quickFilterProps} />
-      <ColumnsPanelTrigger ref={columnsButtonRef} />
-      <FilterPanelTrigger ref={filterButtonRef} />
+      <ColumnsPanelTrigger />
+      <FilterPanelTrigger />
       <GridToolbar.Separator />
       <PrintTrigger />
       <DownloadMenu />

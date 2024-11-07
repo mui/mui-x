@@ -8,7 +8,6 @@ import {
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
   GridToolbarV8 as GridToolbar,
-  GridToolbarProps,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
@@ -17,8 +16,13 @@ import Chip from '@mui/material/Chip';
 import useId from '@mui/utils/useId';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { GridSlots } from '@mui/x-data-grid';
 
-function FilterPanelTrigger() {
+function FilterPanelTrigger({
+  buttonRef,
+}: {
+  buttonRef: React.RefObject<HTMLButtonElement>;
+}) {
   const filterButtonId = useId();
   const filterPanelId = useId();
   const apiRef = useGridApiContext();
@@ -42,6 +46,8 @@ function FilterPanelTrigger() {
 
   return (
     <GridToolbar.Button
+      ref={buttonRef}
+      id={filterButtonId}
       aria-label="Filters"
       aria-haspopup="true"
       aria-expanded={isOpen ? 'true' : undefined}
@@ -53,14 +59,19 @@ function FilterPanelTrigger() {
   );
 }
 
-function Toolbar({ onRemoveFilter }: GridToolbarProps) {
+type ToolbarProps = GridSlots['toolbar'] & {
+  filterButtonRef: React.RefObject<HTMLButtonElement>;
+  onRemoveFilter: (filterId: GridFilterItem['id']) => void;
+};
+
+function Toolbar({ filterButtonRef, onRemoveFilter, ...rest }: ToolbarProps) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <GridToolbar.Root>
-      <FilterPanelTrigger />
+    <GridToolbar.Root {...rest}>
+      <FilterPanelTrigger buttonRef={filterButtonRef} />
       {activeFilters.map((filter) => {
         const column = columns[filter.field];
         const field = column?.headerName ?? filter.field;
@@ -87,6 +98,9 @@ function Toolbar({ onRemoveFilter }: GridToolbarProps) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'position'];
 
 export default function GridToolbarFilterBar() {
+  const [filterButtonEl, setFilterButtonEl] =
+    React.useState<HTMLButtonElement | null>(null);
+
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -122,9 +136,11 @@ export default function GridToolbarFilterBar() {
         {...data}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
-        slots={{ toolbar: Toolbar }}
+        slots={{ toolbar: Toolbar as GridSlots['toolbar'] }}
         slotProps={{
+          panel: { anchorEl: filterButtonEl },
           toolbar: {
+            filterButtonRef: setFilterButtonEl,
             onRemoveFilter,
           },
         }}

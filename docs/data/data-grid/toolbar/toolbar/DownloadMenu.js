@@ -48,6 +48,14 @@ export function DownloadMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         MenuListProps={{
           'aria-labelledby': buttonId,
         }}

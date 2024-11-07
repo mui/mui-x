@@ -11,13 +11,9 @@ interface GridPreferencesPanelProps {
    * Type of the panel.
    */
   type: GridPreferencePanelsValue;
-  /**
-   * Anchor element for the panel.
-   */
-  anchorEl: HTMLButtonElement | null;
 }
 
-export function GridPreferencesPanel({ type, anchorEl }: GridPreferencesPanelProps) {
+export function GridPreferencesPanel({ type }: GridPreferencesPanelProps) {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const rootProps = useGridRootProps();
@@ -36,7 +32,6 @@ export function GridPreferencesPanel({ type, anchorEl }: GridPreferencesPanelPro
       open={isOpen}
       id={preferencePanelState.panelId}
       aria-labelledby={preferencePanelState.labelId}
-      anchorEl={anchorEl}
       {...rootProps.slotProps?.panel}
       {...rootProps.slotProps?.basePopper}
     >

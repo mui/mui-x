@@ -3,6 +3,7 @@ import {
   DataGrid,
   gridPreferencePanelStateSelector,
   GridPreferencePanelsValue,
+  GridSlots,
   GridToolbarV8 as GridToolbar,
   useGridApiContext,
   useGridSelector,
@@ -11,7 +12,11 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import useId from '@mui/utils/useId';
 
-function FilterPanelTrigger() {
+function FilterPanelTrigger({
+  buttonRef,
+}: {
+  buttonRef: React.RefObject<HTMLButtonElement>;
+}) {
   const buttonId = useId();
   const panelId = useId();
   const apiRef = useGridApiContext();
@@ -35,6 +40,7 @@ function FilterPanelTrigger() {
 
   return (
     <GridToolbar.Button
+      ref={buttonRef}
       id={buttonId}
       aria-haspopup="true"
       aria-expanded={isOpen ? 'true' : undefined}
@@ -47,15 +53,22 @@ function FilterPanelTrigger() {
   );
 }
 
-function Toolbar() {
+type ToolbarProps = GridSlots['toolbar'] & {
+  filterButtonRef: React.RefObject<HTMLButtonElement>;
+};
+
+function Toolbar({ filterButtonRef, ...rest }: ToolbarProps) {
   return (
-    <GridToolbar.Root>
-      <FilterPanelTrigger />
+    <GridToolbar.Root {...rest}>
+      <FilterPanelTrigger buttonRef={filterButtonRef} />
     </GridToolbar.Root>
   );
 }
 
 export default function GridToolbarFilterPanelTrigger() {
+  const [filterButtonEl, setFilterButtonEl] =
+    React.useState<HTMLButtonElement | null>(null);
+
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
@@ -63,7 +76,16 @@ export default function GridToolbarFilterPanelTrigger() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} slots={{ toolbar: Toolbar }} />
+      <DataGrid
+        {...data}
+        slots={{ toolbar: Toolbar as GridSlots['toolbar'] }}
+        slotProps={{
+          panel: { anchorEl: filterButtonEl },
+          toolbar: {
+            filterButtonRef: setFilterButtonEl,
+          },
+        }}
+      />
     </div>
   );
 }

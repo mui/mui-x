@@ -15,7 +15,7 @@ import useId from '@mui/utils/useId';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function FilterPanelTrigger() {
+function FilterPanelTrigger({ buttonRef }) {
   const filterButtonId = useId();
   const filterPanelId = useId();
   const apiRef = useGridApiContext();
@@ -39,6 +39,8 @@ function FilterPanelTrigger() {
 
   return (
     <GridToolbar.Button
+      ref={buttonRef}
+      id={filterButtonId}
       aria-label="Filters"
       aria-haspopup="true"
       aria-expanded={isOpen ? 'true' : undefined}
@@ -50,14 +52,14 @@ function FilterPanelTrigger() {
   );
 }
 
-function Toolbar({ onRemoveFilter }) {
+function Toolbar({ filterButtonRef, onRemoveFilter, ...rest }) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <GridToolbar.Root>
-      <FilterPanelTrigger />
+    <GridToolbar.Root {...rest}>
+      <FilterPanelTrigger buttonRef={filterButtonRef} />
       {activeFilters.map((filter) => {
         const column = columns[filter.field];
         const field = column?.headerName ?? filter.field;
@@ -84,6 +86,8 @@ function Toolbar({ onRemoveFilter }) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'position'];
 
 export default function GridToolbarFilterBar() {
+  const [filterButtonEl, setFilterButtonEl] = React.useState(null);
+
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -121,7 +125,9 @@ export default function GridToolbarFilterBar() {
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
         slots={{ toolbar: Toolbar }}
         slotProps={{
+          panel: { anchorEl: filterButtonEl },
           toolbar: {
+            filterButtonRef: setFilterButtonEl,
             onRemoveFilter,
           },
         }}

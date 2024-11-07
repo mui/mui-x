@@ -1,1 +1,10 @@
-<DataGrid {...data} slots={{ toolbar: Toolbar }} />
+<DataGrid
+  {...data}
+  slots={{ toolbar: Toolbar as GridSlots['toolbar'] }}
+  slotProps={{
+    panel: { anchorEl: columnsButtonEl },
+    toolbar: {
+      columnsButtonRef: setColumnsButtonEl,
+    },
+  }}
+/>
