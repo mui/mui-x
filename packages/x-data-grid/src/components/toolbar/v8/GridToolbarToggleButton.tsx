@@ -38,10 +38,10 @@ const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarT
 
     return (
       <StyledToggleButton
+        ref={ref}
+        as={rootProps.slots.baseToggleButton}
         ownerState={rootProps}
         className={clsx(classes.root, className)}
-        as={rootProps.slots.baseToggleButton}
-        ref={ref}
         size="small"
         {...rootProps.slotProps?.baseToggleButton}
         {...other}

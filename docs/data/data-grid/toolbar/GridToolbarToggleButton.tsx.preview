@@ -1,1 +1,8 @@
-<DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+<GridToolbar.ToggleButton
+  color="primary"
+  value="filters"
+  selected={pivotEnabled}
+  onChange={() => setPivotEnabled(!pivotEnabled)}
+>
+  <PivotTableChartIcon fontSize="small" /> Pivot
+</GridToolbar.ToggleButton>

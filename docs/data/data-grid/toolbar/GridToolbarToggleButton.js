@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { DataGrid, GridToolbarV8 as GridToolbar } from '@mui/x-data-grid';
+import { GridToolbarV8 as GridToolbar } from '@mui/x-data-grid';
 import PivotTableChartIcon from '@mui/icons-material/PivotTableChart';
 
-function Toolbar() {
+// IGNORE THE FOLLOWING IMPORT
+import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext'; // eslint-disable-line
+
+export default function GridToolbarToggleButton() {
   const [pivotEnabled, setPivotEnabled] = React.useState(false);
 
   return (
-    <GridToolbar.Root>
+    <DemoContainer>
       <GridToolbar.ToggleButton
         color="primary"
         value="filters"
@@ -15,14 +18,17 @@ function Toolbar() {
       >
         <PivotTableChartIcon fontSize="small" /> Pivot
       </GridToolbar.ToggleButton>
-    </GridToolbar.Root>
+    </DemoContainer>
   );
 }
 
-export default function GridToolbarToggleButton() {
+// WARNING: DO NOT USE ANY OF THE FOLLOWING IN YOUR CODE
+// IT IS FOR DEMONSTRATION PURPOSES ONLY.
+const contextValue = { slots: {} };
+function DemoContainer({ children }) {
   return (
-    <div style={{ height: 48, width: '100%' }}>
-      <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
-    </div>
+    <GridRootPropsContext.Provider value={contextValue}>
+      {children}
+    </GridRootPropsContext.Provider>
   );
 }

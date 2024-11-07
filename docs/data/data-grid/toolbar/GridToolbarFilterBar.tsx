@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  DataGridPro,
   gridColumnLookupSelector,
   gridFilterActiveItemsSelector,
   GridFilterItem,
@@ -10,13 +11,12 @@ import {
   GridToolbarProps,
   useGridApiContext,
   useGridSelector,
-} from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+} from '@mui/x-data-grid-pro';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import Chip from '@mui/material/Chip';
 import useId from '@mui/utils/useId';
 import { unstable_capitalize as capitalize } from '@mui/utils';
-import Chip from '@mui/material/Chip';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
 
 function FilterPanelTrigger() {
   const filterButtonId = useId();
@@ -28,7 +28,7 @@ function FilterPanelTrigger() {
   );
   const isOpen = open && openedPanelValue === GridPreferencePanelsValue.filters;
 
-  const toggleFilters = () => {
+  const toggleFilterPanel = () => {
     if (isOpen) {
       apiRef.current.hidePreferences();
     } else {
@@ -46,7 +46,7 @@ function FilterPanelTrigger() {
       aria-haspopup="true"
       aria-expanded={isOpen ? 'true' : undefined}
       aria-controls={isOpen ? filterPanelId : undefined}
-      onClick={toggleFilters}
+      onClick={toggleFilterPanel}
     >
       <FilterListIcon fontSize="small" />
     </GridToolbar.Button>

@@ -50,48 +50,19 @@ The top level toolbar component that positions items in a row. Renders a `div` w
 
 A button item that can be used to perform actions from the toolbar. Renders a [Button](/material-ui/react-button/) component with some overrides.
 
-{{"demo": "GridToolbarButton.js", "bg": "inline", "hideToolbar": true}}
-
-```tsx
-<GridToolbar.Button>
-  <PrintIcon /> Print
-</GridToolbar.Button>
-```
+{{"demo": "GridToolbarButton.js"}}
 
 ### ToggleButtonGroup
 
 A toggle button group that can be used to switch between multiple states. Renders a [ToggleButtonGroup](/material-ui/react-toggle-button/) component with some overrides.
 
-{{"demo": "GridToolbarToggleButtonGroup.js", "bg": "inline", "hideToolbar": true}}
-
-```tsx
-<GridToolbar.ToggleButtonGroup value="standard">
-  <GridToolbar.ToggleButton value="compact">
-    <GridDensityCompactIcon />
-  </GridToolbar.ToggleButton>
-
-  <GridToolbar.ToggleButton value="standard">
-    <GridDensityStandardIcon />
-  </GridToolbar.ToggleButton>
-
-  <GridToolbar.ToggleButton value="comfortable">
-    <GridDensityComfortableIcon />
-  </GridToolbar.ToggleButton>
-</GridToolbar.ToggleButtonGroup>
-```
+{{"demo": "GridToolbarToggleButtonGroup.js"}}
 
 ### ToggleButton
 
 A toggle button item that can be used to switch between two states. Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
 
-{{"demo": "GridToolbarToggleButton.js", "bg": "inline", "hideToolbar": true}}
-
-```tsx
-<GridToolbar.ToggleButton value="pivot" selected>
-  <PivotTableChartIcon />
-  Pivot
-</GridToolbar.ToggleButton>
-```
+{{"demo": "GridToolbarToggleButton.js"}}
 
 ### Separator
 

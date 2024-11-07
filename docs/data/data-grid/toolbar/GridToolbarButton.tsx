@@ -1,21 +1,27 @@
 import * as React from 'react';
-import { DataGrid, GridToolbarV8 as GridToolbar } from '@mui/x-data-grid';
+import { GridToolbarV8 as GridToolbar } from '@mui/x-data-grid';
 import PrintIcon from '@mui/icons-material/Print';
 
-function Toolbar() {
-  return (
-    <GridToolbar.Root>
-      <GridToolbar.ToggleButton value="filters">
-        <PrintIcon fontSize="small" /> Print
-      </GridToolbar.ToggleButton>
-    </GridToolbar.Root>
-  );
-}
+// IGNORE THE FOLLOWING IMPORT
+import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext'; // eslint-disable-line
 
 export default function GridToolbarButton() {
   return (
-    <div style={{ height: 48, width: '100%' }}>
-      <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
-    </div>
+    <DemoContainer>
+      <GridToolbar.Button>
+        <PrintIcon fontSize="small" /> Print
+      </GridToolbar.Button>
+    </DemoContainer>
+  );
+}
+
+// WARNING: DO NOT USE ANY OF THE FOLLOWING IN YOUR CODE
+// IT IS FOR DEMONSTRATION PURPOSES ONLY.
+const contextValue = { slots: {} };
+function DemoContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <GridRootPropsContext.Provider value={contextValue}>
+      {children}
+    </GridRootPropsContext.Provider>
   );
 }

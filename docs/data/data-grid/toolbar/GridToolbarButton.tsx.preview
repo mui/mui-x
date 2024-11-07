@@ -1,1 +1,3 @@
-<DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
+<GridToolbar.Button>
+  <PrintIcon fontSize="small" /> Print
+</GridToolbar.Button>

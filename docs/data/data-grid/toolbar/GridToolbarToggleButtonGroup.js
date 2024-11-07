@@ -1,48 +1,50 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridDensityComfortableIcon,
-  GridDensityCompactIcon,
-  GridDensityStandardIcon,
-  GridToolbarV8 as GridToolbar,
-} from '@mui/x-data-grid';
+import { GridToolbarV8 as GridToolbar } from '@mui/x-data-grid';
+import ColumnsLayoutIcon from '@mui/icons-material/ViewWeek';
+import ListLayoutIcon from '@mui/icons-material/ViewStream';
 
-function Toolbar() {
-  const [density, setDensity] = React.useState('standard');
+// IGNORE THE FOLLOWING IMPORTS
+import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import MUIToggleButton from '@mui/material/ToggleButton';
+import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext'; // eslint-disable-line
+
+export default function GridToolbarToggleButtonGroup() {
+  const [layout, setLayout] = React.useState('columns');
 
   return (
-    <GridToolbar.Root>
-      <GridToolbar.ToggleButtonGroup value={density}>
+    <DemoContainer>
+      <GridToolbar.ToggleButtonGroup value={layout}>
         <GridToolbar.ToggleButton
           color="primary"
-          value="compact"
-          onChange={() => setDensity('compact')}
+          value="columns"
+          onChange={() => setLayout('columns')}
         >
-          <GridDensityCompactIcon fontSize="small" />
+          <ColumnsLayoutIcon fontSize="small" />
         </GridToolbar.ToggleButton>
         <GridToolbar.ToggleButton
           color="primary"
-          value="standard"
-          onChange={() => setDensity('standard')}
+          value="list"
+          onChange={() => setLayout('list')}
         >
-          <GridDensityStandardIcon fontSize="small" />
-        </GridToolbar.ToggleButton>
-        <GridToolbar.ToggleButton
-          color="primary"
-          value="comfortable"
-          onChange={() => setDensity('comfortable')}
-        >
-          <GridDensityComfortableIcon fontSize="small" />
+          <ListLayoutIcon fontSize="small" />
         </GridToolbar.ToggleButton>
       </GridToolbar.ToggleButtonGroup>
-    </GridToolbar.Root>
+    </DemoContainer>
   );
 }
 
-export default function GridToolbarToggleButtonGroup() {
+// WARNING: DO NOT USE ANY OF THE FOLLOWING IN YOUR CODE
+// IT IS FOR DEMONSTRATION PURPOSES ONLY.
+const contextValue = {
+  slots: {
+    baseToggleButtonGroup: MUIToggleButtonGroup,
+    baseToggleButton: MUIToggleButton,
+  },
+};
+function DemoContainer({ children }) {
   return (
-    <div style={{ height: 48, width: '100%' }}>
-      <DataGrid columns={[]} rows={[]} slots={{ toolbar: Toolbar }} />
-    </div>
+    <GridRootPropsContext.Provider value={contextValue}>
+      {children}
+    </GridRootPropsContext.Provider>
   );
 }

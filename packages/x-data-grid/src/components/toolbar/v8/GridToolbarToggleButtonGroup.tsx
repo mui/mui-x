@@ -9,12 +9,7 @@ function GridToolbarToggleButtonGroup(props: GridToolbarToggleButtonGroupProps) 
   const { children, ...other } = props;
 
   return (
-    <rootProps.slots.baseToggleButtonGroup
-      color="primary"
-      size="small"
-      {...rootProps.slotProps?.baseToggleButtonGroup}
-      {...other}
-    >
+    <rootProps.slots.baseToggleButtonGroup color="primary" size="small" {...other}>
       {children}
     </rootProps.slots.baseToggleButtonGroup>
   );
