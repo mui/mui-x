@@ -1,6 +1,6 @@
 # Data Grid - Toolbar
 
-<p class="description">The toolbar component provides a set way to add custom controls and functionality to the Data Grid.</p>
+<p class="description">The toolbar component provides a way to add custom controls and functionality to the Data Grid.</p>
 
 {{"demo": "GridToolbarBasic.js", "bg": "inline"}}
 
