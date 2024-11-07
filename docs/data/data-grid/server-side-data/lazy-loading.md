@@ -18,17 +18,13 @@ This loading strategy is often referred to as [**viewport loading**](#viewport-l
 If the total row count is unknown, the Data Grid fetches more data when the user scrolls to the bottom. This loading strategy is often referred to as [**infinite loading**](#infinite-loading).
 
 :::info
-Row count can be provided either by returning the `rowCount` in the response of the `getRows` method in `unstable_dataSource`, via the `rowCount` prop or by calling [`setRowCount`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API.
-:::
+Row count can be provided in either of the following ways.
 
-:::warning
-Order of precedence for the row count:
+- Pass as [`rowCount`](/x/api/data-grid/data-grid/#data-grid-prop-rowCount) prop
+- Return `rowCount` in the `getRows` method of the [data source](/x/react-data-grid/server-side-data/#data-source)
+- Set the `rowCount` using the [`setRowCount`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API method.
 
-- `rowCount` prop
-- `rowCount` returned by the `getRows` method
-- row count set using the `setRowCount` API
-
-This means that, if the row count is set using the API, that value gets overridden once a new value is returned by the `getRows` method, even if it is `undefined`.
+The above list is given in the order of precedence, which means if the row count is set using the API, that value gets overridden once a new value is returned by the `getRows` method, even if it is `undefined`.
 :::
 
 ## Viewport loading
