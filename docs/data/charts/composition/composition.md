@@ -25,7 +25,8 @@ Or you can [create your own components](/x/react-charts/components/).
 
 The `<ChartContainer />` is responsive by default. The component automatically adjusts its dimensions to fit the available space defined by the parent element.
 
-To control the dimensions of the chart, The `width` and `height` props can be provided. The chart will then be rendered with the specified dimensions.
+To control the dimensions of the chart, the `width` and `height` props can be provided.
+The chart then renders with the specified dimensions.
 
 :::warning
 The parent element must have intrinsic dimensions.
