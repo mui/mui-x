@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-  GridArrowDropDownIcon,
   GridToolbarV8 as GridToolbar,
   useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import MenuItem from '@mui/material/MenuItem';
 import useId from '@mui/utils/useId';
 import Menu from '@mui/material/Menu';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Tooltip from '@mui/material/Tooltip';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export function DownloadMenu() {
   const apiRef = useGridApiContext();
@@ -39,7 +39,7 @@ export function DownloadMenu() {
           onClick={(event) => setAnchorEl(event.currentTarget)}
         >
           <FileDownloadIcon fontSize="small" />
-          <GridArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
+          <ArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
         </GridToolbar.Button>
       </Tooltip>
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridArrowDropDownIcon,
   GridDensity,
   GridDensityComfortableIcon,
   GridDensityCompactIcon,
@@ -18,6 +17,7 @@ import MenuItem from '@mui/material/MenuItem';
 import useId from '@mui/utils/useId';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const DENSITY_ICONS = {
   compact: <GridDensityCompactIcon fontSize="small" />,
@@ -69,7 +69,7 @@ function DensityMenu() {
       >
         {DENSITY_ICONS[density]}
         Density
-        <GridArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
+        <ArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
       </GridToolbar.Button>
 
       <Menu

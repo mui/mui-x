@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridArrowDropDownIcon,
   GridToolbarV8 as GridToolbar,
   useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useId from '@mui/utils/useId';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function ExportMenu() {
   const apiRef = useGridApiContext();
@@ -39,7 +39,7 @@ function ExportMenu() {
       >
         <FileDownloadIcon fontSize="small" />
         Download
-        <GridArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
+        <ArrowDropDownIcon fontSize="small" sx={{ mx: -0.25 }} />
       </GridToolbar.Button>
 
       <Menu
