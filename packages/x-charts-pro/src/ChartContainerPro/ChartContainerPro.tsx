@@ -15,23 +15,10 @@ const releaseInfo = getReleaseInfo();
 
 const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
-  ref,
+  ref: React.ForwardedRef<SVGSVGElement>,
 ) {
-  const {
-    chartDataProviderProProps,
-    resizableChartContainerProps,
-    hasIntrinsicSize,
-    sizedChartDataProviderProProps,
-  } = useChartContainerProProps(props, ref);
-
-  if (props.height && props.width) {
-    return (
-      <React.Fragment>
-        <ChartDataProviderPro {...sizedChartDataProviderProProps} />
-        <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-      </React.Fragment>
-    );
-  }
+  const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useChartContainerProProps(props, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>

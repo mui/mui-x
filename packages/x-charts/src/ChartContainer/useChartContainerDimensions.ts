@@ -11,7 +11,7 @@ export const useChartContainerDimensions = (
 ) => {
   const hasInSize = inWidth !== undefined && inHeight !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
-  const rootRef = React.useRef(null);
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);

@@ -1,11 +1,18 @@
 'use client';
-import { useChartContainerProps } from '@mui/x-charts/internals';
+import { useChartContainerProps, UseChartContainerPropsReturnValue } from '@mui/x-charts/internals';
 import type { ChartDataProviderProProps } from '../context/ChartDataProviderPro';
 import type { ChartContainerProProps } from './ChartContainerPro';
 
+export type UseChartContainerProPropsReturnValue = Omit<
+  UseChartContainerPropsReturnValue,
+  'chartDataProviderProps'
+> & {
+  chartDataProviderProProps: ChartDataProviderProProps;
+};
+
 export const useChartContainerProProps = (
   props: ChartContainerProProps,
-  ref: React.ForwardedRef<unknown>,
+  ref: React.ForwardedRef<SVGSVGElement>,
 ) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 
@@ -14,20 +21,12 @@ export const useChartContainerProProps = (
     onZoomChange,
   };
 
-  const {
-    chartDataProviderProps,
-    resizableChartContainerProps,
-    hasIntrinsicSize,
-    sizedChartDataProviderProps,
-  } = useChartContainerProps(baseProps, ref);
+  const { chartDataProviderProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useChartContainerProps(baseProps, ref);
 
   return {
     chartDataProviderProProps: {
       ...chartDataProviderProps,
-      ...chartDataProviderProProps,
-    },
-    sizedChartDataProviderProProps: {
-      ...sizedChartDataProviderProps,
       ...chartDataProviderProProps,
     },
     resizableChartContainerProps,

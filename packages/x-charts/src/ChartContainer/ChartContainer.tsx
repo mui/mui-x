@@ -26,17 +26,12 @@ export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width
   resolveSizeBeforeRender?: boolean;
 }
 
-const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
-  const {
-    hasIntrinsicSize,
-    chartDataProviderProps,
-    resizableChartContainerProps,
-    sizedChartDataProviderProps,
-  } = useChartContainerProps(props, ref);
-
-  if (props.height && props.width) {
-    return <ChartDataProvider {...sizedChartDataProviderProps} />;
-  }
+const ChartContainer = React.forwardRef(function ChartContainer(
+  props: ChartContainerProps,
+  ref: React.ForwardedRef<SVGSVGElement>,
+) {
+  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
+    useChartContainerProps(props, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>

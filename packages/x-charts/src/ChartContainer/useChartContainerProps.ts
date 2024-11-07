@@ -3,10 +3,19 @@ import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { useChartContainerDimensions } from './useChartContainerDimensions';
 
+export type UseChartContainerPropsReturnValue = {
+  hasIntrinsicSize: boolean;
+  chartDataProviderProps: ChartDataProviderProps;
+  resizableChartContainerProps: {
+    ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
+    ref: React.ForwardedRef<HTMLDivElement>;
+  };
+};
+
 export const useChartContainerProps = (
   props: ChartContainerProps,
-  ref: React.ForwardedRef<unknown>,
-) => {
+  ref: React.ForwardedRef<SVGSVGElement>,
+): UseChartContainerPropsReturnValue => {
   const {
     width,
     height,
@@ -43,7 +52,7 @@ export const useChartContainerProps = (
     ref: containerRef,
   };
 
-  const chartDataProviderProps: ChartDataProviderProps & { ref: React.ForwardedRef<unknown> } = {
+  const chartDataProviderProps = {
     margin,
     children,
     series,
@@ -67,13 +76,8 @@ export const useChartContainerProps = (
   };
 
   return {
-    hasIntrinsicSize: dWidth && dHeight,
+    hasIntrinsicSize: Boolean(dWidth && dHeight),
     chartDataProviderProps,
-    sizedChartDataProviderProps: {
-      ...other,
-      ...chartDataProviderProps,
-      ref,
-    },
     resizableChartContainerProps,
   };
 };
