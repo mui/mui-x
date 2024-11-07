@@ -11,7 +11,7 @@ _Nov 7, 2024_
 
 We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
 From https://github.com/mui/mui-x/pull/14913
 
@@ -598,7 +598,15 @@ From https://github.com/mui/mui-x/pull/15297
 
 From https://github.com/mui/mui-x/pull/14487
 
-- [pickers] The `LicenseInfo` is not exported anymore from `@mui/x-date-pickers-pro`. Import it from `@mui/x-license` instead.
+- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+  You can import it from `@mui/x-license` instead:
+
+  ```diff
+  -import { LicenseInfo } from '@mui/x-date-pickers-pro';
+  +import { LicenseInfo } from '@mui/x-license';
+  
+   LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+  ```
 
 From https://github.com/mui/mui-x/pull/15187
 
@@ -645,7 +653,7 @@ From https://github.com/mui/mui-x/pull/15187
 - [DataGrid] refactor: baseMenuList & baseMenuItem (#15049) @romgrk
 - [DataGrid] refactor: remove more material imports (#15063) @romgrk
 - [DataGrid] - Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
-- [I10n][DataGrid] Improve Polish (pl-PL) locale (#15227) @belkocik
+- [I10n] Improve Polish (pl-PL) locale (#15227) @belkocik
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -653,7 +661,8 @@ Same changes as in `@mui/x-data-grid@8.0.0-alpha.0`, plus:
 
 - [DataGridPro] Add list view tests (#15043) @KenanYusuf
 - [DataGridPro] Fix column pinning layout (#14966) @cherniavskii
-- [DataGridPro] Should toggle row expansion with Enter key in Tree data (#15271) @k-rajat19
+- [DataGridPro] Apply default properties if they are not passed in a reorder column (#14473) @k-rajat19
+- [DataGridPro] Toggle row expansion with `Enter` key in "tree data" (#15271) @k-rajat19
 
 #### `@mui/x-data-grid-premium@8.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -698,8 +707,8 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 - [charts] Remove axis from the pie chart (#15187) @alexfauquette
 - [charts] Remove deprecated `legend` props (#15081) @alexfauquette
 - [charts] Remove deprecated highlight properties (#15191) @alexfauquette
-- [charts] Update Popper position outside of react (#15003) @alexfauquette
-- [charts] perf: getSymbol (#15233) @romgrk
+- [charts] Update Popper position outside of React (#15003) @alexfauquette
+- [charts] Improve the performance of the `getSymbol` method  (#15233) @romgrk
 
 #### `@mui/x-charts-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -718,6 +727,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 ### Docs
 
+- [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle 
 - [docs] Add section explaining how to keep the selection while filtering (#15185) @arminmeh
 - [docs] Apply the new DX to the Button Field demos (#14860) @flaviendelangle
 - [docs] Apply the new DX to the `Autocomplete` Field demo (#15165) @flaviendelangle
@@ -734,17 +744,15 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 ### Core
 
-- [core] Adjust cherry-pick GH actions (#15099) @LukasTy
+- [core] Adjust the `cherry-pick` GitHub actions (#15099) @LukasTy
 - [core] Add `()` at the name of function name in the doc (#15075) @oliviertassinari
 - [core] Fix CodeSandbox and StackBlitz for next doc-infra sync @oliviertassinari
-- [core] Fix Vale error on master @oliviertassinari
+- [core] Fix Vale error on `master` @oliviertassinari
 - [core] Fix changelog reference to VoiceOver @oliviertassinari
-- [core] Fix tools-public.mui.com redirection @oliviertassinari
+- [core] Fix `tools-public.mui.com` redirection @oliviertassinari
 - [core] Move `helpers` to `@mui/x-internals` package (#15188) @LukasTy
 - [code-infra] Set renovate to automerge devDependencies (#13463) @JCQuintas
-- [infra] Introduce automated cherry-picking workflow (#15262) @michelengelen
 - [infra] Reintroduce the cherry pick workflow (#15293) @michelengelen
-- [infra] Revert "[infra] Introduce automated cherry-picking workflow (#15262)" (#15287) @michelengelen
 - [release] v8 preparation (#15054) @michelengelen
 - [test] Fix advanced list view regression test snapshot (#15260) @KenanYusuf
 
