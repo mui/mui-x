@@ -1013,6 +1013,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
+    "toolbarSeparator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar separator element"
+    },
+    "toolbarToggleButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar toggle button element"
+    },
+    "toolbarToggleButtonGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar toggle button group element"
+    },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the grouping column of the tree data"
@@ -1048,7 +1060,6 @@
     }
   },
   "slotDescriptions": {
-    "arrowDropDownIcon": "Icon displayed on dropdown toggles.",
     "baseBadge": "The custom Badge component used in the grid for both header and cells.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
@@ -1113,7 +1124,6 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
-    "printIcon": "Icon displayed on the print button in the toolbar.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",

@@ -5,11 +5,6 @@ import * as React from 'react';
  */
 export interface GridIconSlotsComponent {
   /**
-   * Icon displayed on dropdown toggles.
-   * @default GridArrowDropDownIcon
-   */
-  arrowDropDownIcon: React.JSXElementConstructor<any>;
-  /**
    * Icon displayed on the boolean cell to represent the true value.
    * @default GridCheckIcon
    */
@@ -184,9 +179,4 @@ export interface GridIconSlotsComponent {
    * @default GridDragIcon
    */
   columnReorderIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed on the print button in the toolbar.
-   * @default GridPrintIcon
-   */
-  printIcon: React.JSXElementConstructor<any>;
 }

@@ -718,12 +718,6 @@
       "class": null
     },
     {
-      "name": "arrowDropDownIcon",
-      "description": "Icon displayed on dropdown toggles.",
-      "default": "GridArrowDropDownIcon",
-      "class": null
-    },
-    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -931,12 +925,6 @@
       "name": "columnReorderIcon",
       "description": "Icon displayed on the column reorder button.",
       "default": "GridDragIcon",
-      "class": null
-    },
-    {
-      "name": "printIcon",
-      "description": "Icon displayed on the print button in the toolbar.",
-      "default": "GridPrintIcon",
       "class": null
     }
   ],
@@ -1701,6 +1689,24 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarSeparator",
+      "className": "MuiDataGrid-toolbarSeparator",
+      "description": "Styles applied to the toolbar separator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarToggleButton",
+      "className": "MuiDataGrid-toolbarToggleButton",
+      "description": "Styles applied to the toolbar toggle button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarToggleButtonGroup",
+      "className": "MuiDataGrid-toolbarToggleButtonGroup",
+      "description": "Styles applied to the toolbar toggle button group element.",
       "isGlobal": false
     },
     {

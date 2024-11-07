@@ -1,11 +1,8 @@
 import * as React from 'react';
 import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
-import type { MenuProps } from '@mui/material/Menu';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps } from '@mui/material/MenuItem';
-import type { ListItemIconProps } from '@mui/material/ListItemIcon';
-import type { ListItemTextProps } from '@mui/material/ListItemText';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -16,7 +13,6 @@ import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
-import type { PopoverProps } from '@mui/material/Popover';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
 import type { ToggleButtonProps } from '@mui/material/ToggleButton';
@@ -46,11 +42,8 @@ type DividerProps = {};
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
-export interface BaseMenuPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
-export interface BaseListItemIconPropsOverrides {}
-export interface BaseListItemTextPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
@@ -60,7 +53,6 @@ export interface BaseIconButtonPropsOverrides {}
 export interface BaseInputAdornmentPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
-export interface BasePopoverPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
@@ -90,11 +82,8 @@ export interface GridSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
-  baseMenu: MenuProps & BaseMenuPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
-  baseListItemIcon: ListItemIconProps & BaseListItemIconPropsOverrides;
-  baseListItemText: ListItemTextProps & BaseListItemTextPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseFormControl: FormControlProps & BaseFormControlPropsOverrides;
   baseSelect: SelectProps & BaseSelectPropsOverrides;
@@ -102,7 +91,6 @@ export interface GridSlotProps {
   baseButton: ButtonProps & BaseButtonPropsOverrides;
   baseIconButton: IconButtonProps & BaseIconButtonPropsOverrides;
   basePopper: PopperProps & BasePopperPropsOverrides;
-  basePopover: PopoverProps & BasePopoverPropsOverrides;
   baseTooltip: TooltipProps & BaseTooltipPropsOverrides;
   baseInputLabel: InputLabelProps & BaseInputLabelPropsOverrides;
   baseInputAdornment: InputAdornmentProps & BaseInputAdornmentPropsOverrides;

@@ -1,11 +1,8 @@
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIDivider from '@mui/material/Divider';
-import MUIMenu from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
-import MUIListItemIcon from '@mui/material/ListItemIcon';
-import MUIListItemText from '@mui/material/ListItemText';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
@@ -14,14 +11,12 @@ import MUIIconButton from '@mui/material/IconButton';
 import MUIInputAdornment from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
-import MUIPopover from '@mui/material/Popover';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
 import MUIToggleButton from '@mui/material/ToggleButton';
 import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
-  GridArrowDropDownIcon,
   GridAddIcon,
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
@@ -47,14 +42,12 @@ import {
   GridDensityCompactIcon,
   GridDensityStandardIcon,
   GridDensityComfortableIcon,
-  GridPrintIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import MUISelectOption from './components/MUISelectOption';
 
 const iconSlots: GridIconSlotsComponent = {
-  arrowDropDownIcon: GridArrowDropDownIcon,
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,
@@ -90,7 +83,6 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelAddIcon: GridAddIcon,
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
-  printIcon: GridPrintIcon,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
@@ -98,11 +90,8 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
   baseDivider: MUIDivider,
-  baseMenu: MUIMenu,
   baseMenuList: MUIMenuList,
   baseMenuItem: MUIMenuItem,
-  baseListItemIcon: MUIListItemIcon,
-  baseListItemText: MUIListItemText,
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,
@@ -111,7 +100,6 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseInputAdornment: MUIInputAdornment,
   baseTooltip: MUITooltip,
   basePopper: MUIPopper,
-  basePopover: MUIPopover,
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseChip: MUIChip,
