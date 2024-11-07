@@ -312,7 +312,7 @@ export const datePickerExamples: PickersSubcomponentType = {
           'Because of the structure of the DesktopDatePicker and the way the popper renders, the `desktopPaper` slot will need to be replaced with a styled component',
       },
     },
-    slots: ['root', 'paper'],
+    slots: ['paper', 'root'],
   },
 };
 
