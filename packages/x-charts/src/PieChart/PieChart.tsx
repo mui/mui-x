@@ -78,7 +78,10 @@ const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
  *
  * - [PieChart API](https://mui.com/x/api/charts/pie-chart/)
  */
-const PieChart = React.forwardRef(function PieChart(inProps: PieChartProps, ref) {
+const PieChart = React.forwardRef(function PieChart(
+  inProps: PieChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiPieChart' });
   const {
     xAxis,

@@ -103,7 +103,10 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+const Heatmap = React.forwardRef(function Heatmap(
+  inProps: HeatmapProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,

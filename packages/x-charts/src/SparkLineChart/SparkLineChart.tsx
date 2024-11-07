@@ -129,7 +129,10 @@ const SPARKLINE_DEFAULT_MARGIN = {
  *
  * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
  */
-const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
+const SparkLineChart = React.forwardRef(function SparkLineChart(
+  props: SparkLineChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     xAxis,
     yAxis,

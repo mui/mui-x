@@ -143,7 +143,10 @@ export interface LineChartProProps extends LineChartProps, ZoomProps {}
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChartPro = React.forwardRef(function LineChartPro(inProps: LineChartProProps, ref) {
+const LineChartPro = React.forwardRef(function LineChartPro(
+  inProps: LineChartProProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {

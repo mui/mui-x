@@ -99,7 +99,10 @@ export interface BarChartProps
  *
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
-const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref) {
+const BarChart = React.forwardRef(function BarChart(
+  inProps: BarChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChart' });
   const {
     chartContainerProps,
