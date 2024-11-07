@@ -88,8 +88,9 @@ Let's take a look at the minimal `GridDataSource` interface configuration.
 interface GridDataSource {
   /**
    * This method will be called when the grid needs to fetch some rows.
-   * @param {GridGetRowsParams} params The parameters required to fetch the rows
-   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
+   * @param {GridGetRowsParams} params The parameters required to fetch the rows.
+   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of
+   * type [GridGetRowsResponse].
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
 }
@@ -167,7 +168,8 @@ When the corresponding models update, the Data Grid calls the `getRows` method w
 ```tsx
 <DataGridPro
   columns={columns}
-  unstable_dataSource={customDataSource} // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
+  // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
+  unstable_dataSource={customDataSource}
 />
 ```
 

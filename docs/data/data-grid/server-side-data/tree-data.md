@@ -20,14 +20,14 @@ The data source also requires some additional props to handle tree data:
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
-    // Fetch the data from the server
+    // Fetch the data from the server.
   },
   getGroupKey: (row) => {
-    // Return the group key for the row, e.g. `name`
+    // Return the group key for the row, e.g. `name`.
     return row.name;
   },
   getChildrenCount: (row) => {
-    // Return the number of children for the row
+    // Return the number of children for the row.
     return row.childrenCount;
   },
 };
@@ -39,11 +39,11 @@ Use `groupKeys` on the server to extract the rows for a given nested level.
 ```tsx
 const getRows: async (params) => {
   const urlParams = new URLSearchParams({
-    // Example: JSON.stringify(['Billy Houston', 'Lora Dean'])
+    // Example: JSON.stringify(['Billy Houston', 'Lora Dean']).
     groupKeys: JSON.stringify(params.groupKeys),
   });
   const getRowsResponse = await fetchRows(
-    // Server should extract the rows for the nested level based on `groupKeys`
+    // Server should extract the rows for the nested level based on `groupKeys`.
     `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
   );
   return {
