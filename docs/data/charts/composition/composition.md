@@ -32,7 +32,7 @@ The parent element must have intrinsic dimensions.
 If the parent's dimensions rely on its content, the responsive charts will not render.
 :::
 
-The following demo lets you switch between a chart using defined sizes, `<ChartContainer width="500" height="300" />`, and a chart without any sizes, `<ChartContainer />`, so you can see how they differ.
+The following demo lets you switch between a chart using defined sizes, `<ChartContainer width={500} height={300} />`, and a chart without any sizes, `<ChartContainer />`, so you can see how they differ.
 
 {{"demo": "BasicComposition.js" }}
 
