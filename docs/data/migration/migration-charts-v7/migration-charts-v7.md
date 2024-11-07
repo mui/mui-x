@@ -29,6 +29,70 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v8. You can run `v8.0.0/charts/preset-safe` targeting only Charts or `v8.0.0/preset-safe` to target the other packages as well.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
+<!-- #default-branch-switch -->
+
+```bash
+// Charts specific
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path>
+
+// Target the other packages as well
+npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
+```
+
 :::info
-The list is currently empty, but as we move forward with development during the alpha and beta phases, we'll feed this page with all changes in the API.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for the Charts](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/README.md#preset-safe-for-charts-v800) for more details.
 :::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v8.0.0/charts/preset-safe` (or `v8.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
+
+All other changes must be handled manually.
+
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading or cross-file dependencies, the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<PieChart {...pickerProps} /> // The codemod will not modify the content of `pickerProps`.
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
+## Series properties renaming
+
+Some properties got deprecated in v7 in favor of a more consistent naming convention.
+Those deprecated properties got removed in v8.
+
+The impacted properties are:
+
+- The `xAxisKey`, `yAxisKey`, and `zAxisKey` are renamed `xAxisId`, `yAxisId`, and `zAxisId`.
+- The `highlighted` and `faded` properties of `series.highlightScope` are renamed `highlight` and `fade`.
+
+## Legend props propagation ✅
+
+The `legend` props of charts single components got removed.
+To pass props to the legend, use the `slotProps.legend`.
+
+```diff
+- <PieChart legend={{ ... }} />
++ <PieChart slotProps={{ legend: { ... } }} />
+```
+
+## Remove Pie Chart axes
+
+The `<PieChart />` got by error the code to render axes.
+This code is removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+
+This should not impact your code.
+If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.

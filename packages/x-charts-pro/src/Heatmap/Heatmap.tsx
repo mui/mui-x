@@ -30,10 +30,7 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import {
-  ResponsiveChartContainerPro,
-  ResponsiveChartContainerProProps,
-} from '../ResponsiveChartContainerPro';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
@@ -53,7 +50,7 @@ export interface HeatmapSlotProps
 
 export interface HeatmapProps
   extends Omit<
-      ResponsiveChartContainerProProps,
+      ChartContainerProProps,
       'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -106,7 +103,10 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+const Heatmap = React.forwardRef(function Heatmap(
+  inProps: HeatmapProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
@@ -162,7 +162,7 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
   );
 
   return (
-    <ResponsiveChartContainerPro
+    <ChartContainerPro
       ref={ref}
       plugins={[heatmapPlugin]}
       series={series.map((s) => ({
@@ -206,7 +206,7 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
 
       <ChartsClipPath id={clipPathId} />
       {children}
-    </ResponsiveChartContainerPro>
+    </ChartContainerPro>
   );
 });
 
