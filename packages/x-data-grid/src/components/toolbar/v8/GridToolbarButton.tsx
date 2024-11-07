@@ -28,7 +28,7 @@ const StyledButton = styled(Button, {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   minWidth: 'auto',
-  // Styles below from:
+  // Styles from:
   // https://github.com/mui/material-ui/blob/master/packages/mui-material/src/ToggleButton/ToggleButton.js
   ...theme.typography.button,
   borderRadius: (theme.vars || theme).shape.borderRadius,
@@ -45,6 +45,26 @@ const StyledButton = styled(Button, {
       : alpha(theme.palette.text.primary, theme.palette.action.hoverOpacity),
     '@media (hover: none)': {
       backgroundColor: 'transparent',
+    },
+  },
+  // Matches the state of the ToggleButton when a button has an expanded popup
+  '&[aria-expanded="true"]': {
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.selectedOpacity})`
+      : alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.text.primaryChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))`
+        : alpha(
+            theme.palette.text.primary,
+            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+          ),
+      // Reset on touch devices, it doesn't add specificity
+      '@media (hover: none)': {
+        backgroundColor: theme.vars
+          ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.selectedOpacity})`
+          : alpha(theme.palette.text.primary, theme.palette.action.selectedOpacity),
+      },
     },
   },
   variants: [
