@@ -34,7 +34,7 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
   >;
 }
 
-export interface PickersLayoutOwnerState extends PickerOwnerState {
+export interface PickerLayoutOwnerState extends PickerOwnerState {
   wrapperVariant: WrapperVariant;
   isLandscape: boolean;
 }
@@ -43,11 +43,11 @@ export interface ExportedPickersLayoutSlotProps<TValue, TView extends DateOrTime
   /**
    * Props passed down to the action bar component.
    */
-  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickersLayoutOwnerState>;
+  actionBar?: SlotComponentProps<typeof PickersActionBar, {}, PickerLayoutOwnerState>;
   /**
    * Props passed down to the shortcuts component.
    */
-  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickersLayoutOwnerState>;
+  shortcuts?: SlotComponentProps<typeof PickersShortcuts, {}, PickerLayoutOwnerState>;
   /**
    * Props passed down to the layoutRoot component.
    */

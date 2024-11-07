@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import {
@@ -47,7 +44,7 @@ export interface BarChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface BarChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -102,7 +99,10 @@ export interface BarChartProps
  *
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
-const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref) {
+const BarChart = React.forwardRef(function BarChart(
+  inProps: BarChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChart' });
   const {
     chartContainerProps,
@@ -120,7 +120,7 @@ const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref)
   } = useBarChartProps(props);
 
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
@@ -133,7 +133,7 @@ const BarChart = React.forwardRef(function BarChart(inProps: BarChartProps, ref)
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 

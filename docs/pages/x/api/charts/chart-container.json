@@ -1,17 +1,16 @@
 {
   "props": {
-    "height": { "type": { "name": "number" }, "required": true },
     "series": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "width": { "type": { "name": "number" }, "required": true },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "blueberryTwilightPalette"
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -33,7 +32,9 @@
       }
     },
     "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
+    "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
         "name": "arrayOf",

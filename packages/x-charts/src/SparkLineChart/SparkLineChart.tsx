@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
@@ -41,10 +38,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps<'line' | 'bar'> {}
 
 export interface SparkLineChartProps
-  extends Omit<
-    ResponsiveChartContainerProps,
-    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'
-  > {
+  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -135,7 +129,10 @@ const SPARKLINE_DEFAULT_MARGIN = {
  *
  * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
  */
-const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
+const SparkLineChart = React.forwardRef(function SparkLineChart(
+  props: SparkLineChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     xAxis,
     yAxis,
@@ -168,7 +165,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
   };
 
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       {...other}
       ref={ref}
       series={[
@@ -227,7 +224,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
 
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 

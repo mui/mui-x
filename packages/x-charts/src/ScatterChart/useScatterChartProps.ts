@@ -6,7 +6,7 @@ import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsTooltipProps } from '../ChartsTooltip';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
@@ -49,7 +49,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,

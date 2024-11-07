@@ -2,25 +2,25 @@ import * as React from 'react';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { UsePickerValueResponse } from './usePickerValue.types';
 import {
-  PickersProviderProps,
-  PickersContextValue,
-  PickersPrivateContextValue,
-} from '../../components/PickersProvider';
+  PickerProviderProps,
+  PickerContextValue,
+  PickerPrivateContextValue,
+} from '../../components/PickerProvider';
 
 export interface UsePickerProviderParameters<TValue>
-  extends Pick<PickersProviderProps, 'localeText'> {
+  extends Pick<PickerProviderProps, 'localeText'> {
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
   ownerState: PickerOwnerState;
 }
 
-export interface UsePickerProviderReturnValue extends Omit<PickersProviderProps, 'children'> {}
+export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
 
 export function usePickerProvider<TValue>(
   parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
   const { pickerValueResponse, ownerState, localeText } = parameters;
 
-  const contextValue = React.useMemo<PickersContextValue>(
+  const contextValue = React.useMemo<PickerContextValue>(
     () => ({
       onOpen: pickerValueResponse.actions.onOpen,
       onClose: pickerValueResponse.actions.onClose,
@@ -33,7 +33,7 @@ export function usePickerProvider<TValue>(
     ],
   );
 
-  const privateContextValue = React.useMemo<PickersPrivateContextValue>(
+  const privateContextValue = React.useMemo<PickerPrivateContextValue>(
     () => ({ ownerState }),
     [ownerState],
   );

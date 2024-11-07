@@ -9,10 +9,7 @@ import {
   ScatterPlotSlotProps,
   ScatterPlotSlots,
 } from './ScatterPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import {
@@ -52,7 +49,7 @@ export interface ScatterChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -111,7 +108,10 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChartProps, ref) {
+const ScatterChart = React.forwardRef(function ScatterChart(
+  inProps: ScatterChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartContainerProps,
@@ -127,7 +127,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
     children,
   } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
@@ -142,7 +142,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
