@@ -62,7 +62,7 @@ npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quo
 
 A combination of all important transformers for migrating v7 to v8.
 ⚠️ This codemod should be run only once.
-It runs codemods for both Data Grid and Date and Time Pickers packages.
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
@@ -134,15 +134,45 @@ npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`rename-responsive-chart-container`](#rename-responsive-chart-container)
 
 #### `rename-legend-to-slots-legend`
 
-Place the `legend` props propagation by the `slotProps.legend`.
+Renames legend props to the corresponding slotProps.
 
 ```diff
-- <PieChart legend={{ hidden: true }} />
-+ <PieChart slotProps={{ legend: { hidden: true } }} />
+  <LineChart
+-   legend={{ hiden: true}}
++   slotProps={{ legend: { hiden: true} }}
+  />
 ```
+
+#### `rename-responsive-chart-container`
+
+Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
+
+```diff
+- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+
+- <ResponsiveChartContainer>
++ <ChartContainer>
+   <BarPlot />
+- </ResponsiveChartContainer>
++ </ChartContainer>
+```
+
+:::warning
+If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+Verify the git diff to remove the duplicate.
+
+```diff
+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+```
+
+:::
 
 ## v7.0.0
 
