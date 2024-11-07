@@ -11,6 +11,7 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid';
 import {
+  GridGetRowsResponse,
   gridRowGroupsToFetchSelector,
   GridStateInitializer,
   GridStrategyProcessor,
@@ -103,11 +104,9 @@ export const useGridDataSource = (
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(
     () => new CacheChunkManager({ chunkSize: cacheChunkSize }),
   ).current;
-
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
     getCache(props.unstable_dataSourceCache),
   );
-  cacheChunkManager.setDataSourceCache(cache);
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
@@ -134,7 +133,12 @@ export const useGridDataSource = (
         ...params,
       };
 
-      const cachedData = cacheChunkManager.getCacheData(fetchParams);
+      const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
+      const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
+      const cachedData = responses.some((response) => response === undefined)
+        ? undefined
+        : CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]);
+
       if (cachedData !== undefined) {
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: cachedData,
@@ -150,7 +154,12 @@ export const useGridDataSource = (
 
       try {
         const getRowsResponse = await getRows(fetchParams);
-        cacheChunkManager.setCacheData(fetchParams, getRowsResponse);
+
+        const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
+        cacheResponses.forEach((response, key) => {
+          cache.set(key, response);
+        });
+
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: getRowsResponse,
           fetchParams,
@@ -170,6 +179,7 @@ export const useGridDataSource = (
     [
       nestedDataManager,
       cacheChunkManager,
+      cache,
       apiRef,
       defaultRowsUpdateStrategyActive,
       props.unstable_dataSource?.getRows,
@@ -202,7 +212,12 @@ export const useGridDataSource = (
         groupKeys: rowNode.path,
       };
 
-      const cachedData = cacheChunkManager.getCacheData(fetchParams);
+      const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
+      const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
+      const cachedData = responses.some((response) => response === undefined)
+        ? undefined
+        : CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]);
+
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
@@ -230,7 +245,12 @@ export const useGridDataSource = (
           return;
         }
         nestedDataManager.setRequestSettled(id);
-        cacheChunkManager.setCacheData(fetchParams, getRowsResponse);
+
+        const cacheResponses = cacheChunkManager.splitResponse(fetchParams, getRowsResponse);
+        cacheResponses.forEach((response, key) => {
+          cache.set(key, response);
+        });
+
         apiRef.current.setRowCount(
           getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
         );
@@ -248,6 +268,7 @@ export const useGridDataSource = (
     [
       nestedDataManager,
       cacheChunkManager,
+      cache,
       onError,
       apiRef,
       props.treeData,
@@ -381,12 +402,8 @@ export const useGridDataSource = (
       return;
     }
     const newCache = getCache(props.unstable_dataSourceCache);
-    setCache((prevCache) => {
-      const cacheToUse = prevCache !== newCache ? newCache : prevCache;
-      cacheChunkManager.setDataSourceCache(cacheToUse);
-      return cacheToUse;
-    });
-  }, [props.unstable_dataSourceCache, cacheChunkManager]);
+    setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
+  }, [props.unstable_dataSourceCache]);
 
   React.useEffect(() => {
     if (!isFirstRender.current) {

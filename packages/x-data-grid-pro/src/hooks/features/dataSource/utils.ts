@@ -1,10 +1,5 @@
 import { GridRowId } from '@mui/x-data-grid';
-import {
-  GridPrivateApiPro,
-  GridDataSourceCache,
-  GridGetRowsParams,
-  GridGetRowsResponse,
-} from '../../../models';
+import { GridPrivateApiPro, GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -138,89 +133,32 @@ export class NestedDataManager {
  * Merges multiple cache entries into a single response
  */
 export class CacheChunkManager {
-  private dataSourceCache: GridDataSourceCache | undefined;
-
   private chunkSize: number;
 
   constructor(config: GridDataSourceCacheChunkManagerConfig) {
     this.chunkSize = config.chunkSize;
   }
 
-  private generateChunkedKeys = (params: GridGetRowsParams): GridGetRowsParams[] => {
-    if (this.chunkSize < 1 || typeof params.start !== 'number') {
-      return [params];
+  public getCacheKeys = (key: GridGetRowsParams) => {
+    if (this.chunkSize < 1 || typeof key.start !== 'number') {
+      return [key];
     }
 
     // split the range into chunks
     const chunkedKeys: GridGetRowsParams[] = [];
-    for (let i = params.start; i < params.end; i += this.chunkSize) {
-      const end = Math.min(i + this.chunkSize - 1, params.end);
-      chunkedKeys.push({ ...params, start: i, end });
+    for (let i = key.start; i < key.end; i += this.chunkSize) {
+      const end = Math.min(i + this.chunkSize - 1, key.end);
+      chunkedKeys.push({ ...key, start: i, end });
     }
 
     return chunkedKeys;
   };
 
-  private getCacheKeys = (key: GridGetRowsParams) => {
-    const chunkedKeys = this.generateChunkedKeys(key);
-
-    const startChunk = chunkedKeys.findIndex((chunkedKey) => chunkedKey.start === key.start);
-    const endChunk = chunkedKeys.findIndex((chunkedKey) => chunkedKey.end === key.end);
-
-    // If desired range cannot fit completely in chunks, then it is a cache miss
-    if (startChunk === -1 || endChunk === -1) {
-      return [key];
-    }
-
-    const keys = [];
-    for (let i = startChunk; i <= endChunk; i += 1) {
-      keys.push(chunkedKeys[i]);
-    }
-
-    return keys;
-  };
-
-  public setDataSourceCache = (newDataSourceCache: GridDataSourceCache) => {
-    this.dataSourceCache = newDataSourceCache;
-  };
-
-  public getCacheData = (key: GridGetRowsParams): GridGetRowsResponse | undefined => {
-    if (!this.dataSourceCache) {
-      return undefined;
-    }
-
+  public splitResponse = (key: GridGetRowsParams, response: GridGetRowsResponse) => {
     const cacheKeys = this.getCacheKeys(key);
-    const responses = cacheKeys.map((cacheKey) =>
-      (this.dataSourceCache as GridDataSourceCache).get(cacheKey),
-    );
-
-    // If any of the chunks is missing, then it is a cache miss
-    if (responses.some((response) => response === undefined)) {
-      return undefined;
-    }
-
-    return (responses as GridGetRowsResponse[]).reduce(
-      (acc, response) => {
-        return {
-          rows: [...acc.rows, ...response.rows],
-          rowCount: response.rowCount,
-          pageInfo: response.pageInfo,
-        };
-      },
-      { rows: [], rowCount: 0, pageInfo: {} },
-    );
-  };
-
-  public setCacheData = (key: GridGetRowsParams, response: GridGetRowsResponse) => {
-    if (!this.dataSourceCache) {
-      return;
-    }
-
-    const cacheKeys = this.getCacheKeys(key);
-    const lastIndex = cacheKeys.length - 1;
-
-    cacheKeys.forEach((chunkKey, index) => {
-      const isLastChunk = index === lastIndex;
+    const responses = new Map<GridGetRowsParams, GridGetRowsResponse>();
+    cacheKeys.forEach((chunkKey) => {
+      const isLastChunk = chunkKey.end === key.end;
       const responseSlice: GridGetRowsResponse = {
         ...response,
         pageInfo: {
@@ -240,7 +178,26 @@ export class CacheChunkManager {
             : response.rows.slice(chunkKey.start - key.start, chunkKey.end - key.start + 1),
       };
 
-      (this.dataSourceCache as GridDataSourceCache).set(chunkKey, responseSlice);
+      responses.set(chunkKey, responseSlice);
     });
+
+    return responses;
+  };
+
+  static mergeResponses = (responses: GridGetRowsResponse[]): GridGetRowsResponse => {
+    if (responses.length === 1) {
+      return responses[0];
+    }
+
+    return responses.reduce(
+      (acc, response) => {
+        return {
+          rows: [...acc.rows, ...response.rows],
+          rowCount: response.rowCount,
+          pageInfo: response.pageInfo,
+        };
+      },
+      { rows: [], rowCount: 0, pageInfo: {} },
+    );
   };
 }
