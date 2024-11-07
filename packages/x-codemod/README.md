@@ -172,6 +172,7 @@ Verify the git diff to remove the duplicate.
 - import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 + import { ChartContainer } from '@mui/x-charts/ChartContainer';
 ```
+
 :::
 
 ## v7.0.0
