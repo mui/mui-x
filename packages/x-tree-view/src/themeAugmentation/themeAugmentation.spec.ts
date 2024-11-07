@@ -2,7 +2,6 @@ import { createTheme } from '@mui/material/styles';
 import { treeItemClasses } from '../TreeItem';
 import { richTreeViewClasses } from '../RichTreeView';
 import { simpleTreeViewClasses } from '../SimpleTreeView';
-import { treeViewClasses } from '../TreeView';
 
 createTheme({
   components: {
@@ -39,25 +38,6 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiRichTreeView class key
-        main: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
-    MuiTreeView: {
-      defaultProps: {
-        defaultExpandedItems: ['root'],
-        // @ts-expect-error invalid MuiTreeView prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${treeViewClasses.root}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiTreeView class key
         main: {
           backgroundColor: 'blue',
         },

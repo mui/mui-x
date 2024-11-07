@@ -85,7 +85,28 @@ npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
 - [`rename-tree-item-2`](#rename-tree-item-2)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the Tree View component to Simple Tree View
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem itemId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
 
 #### `rename-tree-item-2`
 
@@ -280,7 +301,7 @@ npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path|folder>
 
 The list includes these transformers
 
-- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view-1)
 - [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)
