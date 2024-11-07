@@ -60,7 +60,6 @@ export default defineConfig({
     poolOptions: {
       threads: {
         useAtomics: true,
-        singleThread: true,
       },
     },
   },
