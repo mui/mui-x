@@ -50,7 +50,7 @@
     "d3-format": "^3.1.0",
     "d3-path": "^3.1.0",
     "d3-time-format": "^4.1.0",
-    "execa": "^9.4.1",
+    "execa": "^9.5.1",
     "internmap": "^2.0.3",
     "rimraf": "^6.0.1"
   },
