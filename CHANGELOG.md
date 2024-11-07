@@ -735,7 +735,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 ### Core
 
 - [core] Adjust cherry-pick GH actions (#15099) @LukasTy
-- [core] Apply () function convention (#15075) @oliviertassinari
+- [core] Add `()` at the name of function name in the doc (#15075) @oliviertassinari
 - [core] Fix CodeSandbox and StackBlitz for next doc-infra sync @oliviertassinari
 - [core] Fix Vale error on master @oliviertassinari
 - [core] Fix changelog reference to VoiceOver @oliviertassinari
