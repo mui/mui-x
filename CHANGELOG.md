@@ -61,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@7.22.2`.
 #### `@mui/x-charts@7.22.2`
 
 - [charts] Allow `SeriesValueFormatter` to return `null` value (#15295) @clins1994
+- [charts] Allow configuring the `domainLimit` for each axis. (#15325) @GuillaumeMeheut
 
 #### `@mui/x-charts-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
