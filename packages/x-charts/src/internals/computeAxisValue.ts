@@ -200,10 +200,14 @@ export function computeAxisValue({
 
     const domainLimit = axis.domainLimit ?? 'nice';
 
-    const axisExtremums =
-      typeof domainLimit === 'function'
-        ? domainLimit([minData, maxData])
-        : [axis.min ?? minData, axis.max ?? maxData];
+    const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+
+    if (typeof domainLimit === 'function') {
+      const { min, max } = domainLimit(minData, maxData);
+      axisExtremums[0] = min;
+      axisExtremums[1] = max;
+    }
+
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
