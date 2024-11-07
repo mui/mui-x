@@ -31,7 +31,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     variant: 'mobile',
   }));
 
-  describeConformance(<MobileTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<MobileTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiMobileTimePicker',
@@ -74,20 +74,20 @@ describe('<MobileTimePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       // change hours
       const hourClockEvent = getClockTouchEvent(
         adapterToUse.getHours(newValue),
         hasMeridiem ? '12hours' : '24hours',
       );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       // change minutes
       const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minutesClockEvent);
 
       if (hasMeridiem) {
         const newHours = adapterToUse.getHours(newValue);

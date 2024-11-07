@@ -3,12 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { getSeriesToDisplay } from './utils';
 import { getLegendUtilityClass } from './chartsLegendClasses';
-import { DefaultizedProps } from '../models/helpers';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
-import { useDrawingArea } from '../hooks';
 import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
 
@@ -23,11 +22,11 @@ export interface ChartsLegendSlots {
    * Custom rendering of the legend.
    * @default DefaultChartsLegend
    */
-  legend?: React.JSXElementConstructor<ChartsLegendPropsBase>;
+  legend?: React.JSXElementConstructor<LegendRendererProps>;
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<ChartsLegendPropsBase>;
+  legend?: Partial<LegendRendererProps>;
 }
 
 export interface ChartsLegendProps extends ChartsLegendPropsBase {
@@ -74,7 +73,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const drawingArea = useDrawingArea();
   const series = useSeries();
 
   const seriesToDisplay = getSeriesToDisplay(series);
@@ -86,7 +84,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     additionalProps: {
       ...other,
       classes,
-      drawingArea,
       series,
       seriesToDisplay,
     },

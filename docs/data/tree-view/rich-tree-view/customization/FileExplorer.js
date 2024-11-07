@@ -14,18 +14,18 @@ import ImageIcon from '@mui/icons-material/Image';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { useTreeItem2 } from '@mui/x-tree-view/useTreeItem2';
+import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
 import {
-  TreeItem2Checkbox,
-  TreeItem2Content,
-  TreeItem2IconContainer,
-  TreeItem2Label,
-  TreeItem2Root,
-} from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
-import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
-import { TreeItem2DragAndDropOverlay } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
+  TreeItemCheckbox,
+  TreeItemContent,
+  TreeItemIconContainer,
+  TreeItemLabel,
+  TreeItemRoot,
+  treeItemClasses,
+} from '@mui/x-tree-view/TreeItem';
+import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
+import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
+import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 
 const ITEMS = [
   {
@@ -79,7 +79,7 @@ function DotIcon() {
   );
 }
 
-const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
+const StyledTreeItemRoot = styled(TreeItemRoot)(({ theme }) => ({
   color: theme.palette.grey[400],
   position: 'relative',
   [`& .${treeItemClasses.groupTransition}`]: {
@@ -90,7 +90,7 @@ const StyledTreeItemRoot = styled(TreeItem2Root)(({ theme }) => ({
   }),
 }));
 
-const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   flexDirection: 'row-reverse',
   borderRadius: theme.spacing(0.7),
   marginBottom: theme.spacing(0.5),
@@ -156,7 +156,7 @@ const StyledTreeItemLabelText = styled(Typography)({
 
 function CustomLabel({ icon: Icon, expandable, children, ...other }) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       sx={{
         display: 'flex',
@@ -174,7 +174,7 @@ function CustomLabel({ icon: Icon, expandable, children, ...other }) {
 
       <StyledTreeItemLabelText variant="body2">{children}</StyledTreeItemLabelText>
       {expandable && <DotIcon />}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
@@ -219,7 +219,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     getDragAndDropOverlayProps,
     status,
     publicAPI,
-  } = useTreeItem2({ id, itemId, children, label, disabled, rootRef: ref });
+  } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
   const item = publicAPI.getItem(itemId);
   const expandable = isExpandable(children);
@@ -231,7 +231,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   }
 
   return (
-    <TreeItem2Provider itemId={itemId}>
+    <TreeItemProvider itemId={itemId}>
       <StyledTreeItemRoot {...getRootProps(other)}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -243,18 +243,18 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             }),
           })}
         >
-          <TreeItem2IconContainer {...getIconContainerProps()}>
-            <TreeItem2Icon status={status} />
-          </TreeItem2IconContainer>
-          <TreeItem2Checkbox {...getCheckboxProps()} />
+          <TreeItemIconContainer {...getIconContainerProps()}>
+            <TreeItemIcon status={status} />
+          </TreeItemIconContainer>
+          <TreeItemCheckbox {...getCheckboxProps()} />
           <CustomLabel
             {...getLabelProps({ icon, expandable: expandable && status.expanded })}
           />
-          <TreeItem2DragAndDropOverlay {...getDragAndDropOverlayProps()} />
+          <TreeItemDragAndDropOverlay {...getDragAndDropOverlayProps()} />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
       </StyledTreeItemRoot>
-    </TreeItem2Provider>
+    </TreeItemProvider>
   );
 });
 

@@ -2,9 +2,9 @@
 
 <p class="description">Learn how to override parts of the grid.</p>
 
-## Interacting with the data grid
+## Interacting with the Data Grid
 
-The grid exposes two hooks to help you access the data grid data while overriding component slots.
+The grid exposes two hooks to help you access the Data Grid data while overriding component slots.
 
 They can be used as below:
 
@@ -31,10 +31,16 @@ function CustomPagination() {
 
 :::success
 
-- See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+- See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 - See [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) to learn about the available slots.
 
   :::
+
+### Columns panel
+
+In the following demo, the columns panel is replaced with a custom component that represents the [column groups](/x/react-data-grid/column-groups/) as a nested list.
+
+{{"demo": "CustomColumnsPanel.js", "bg": "inline"}}
 
 ### Column menu
 

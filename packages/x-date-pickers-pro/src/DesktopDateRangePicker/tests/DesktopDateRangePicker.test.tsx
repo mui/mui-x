@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
@@ -30,7 +31,6 @@ describe('<DesktopDateRangePicker />', () => {
   it('should scroll current month to the active selection when focusing appropriate field', () => {
     render(
       <DesktopDateRangePicker
-        enableAccessibleFieldDOMStructure
         reduceAnimations
         defaultValue={[adapterToUse.date('2019-05-19'), adapterToUse.date('2019-10-30')]}
       />,
@@ -49,10 +49,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   it(`should not crash when opening picker with invalid date value`, () => {
     render(
-      <DesktopDateRangePicker
-        enableAccessibleFieldDOMStructure
-        defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]}
-      />,
+      <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
     );
 
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
@@ -74,7 +71,6 @@ describe('<DesktopDateRangePicker />', () => {
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
           <DesktopDateRangePicker
-            enableAccessibleFieldDOMStructure
             // We set the variant to standard to avoid having the label rendered in two places.
             slotProps={{
               textField: {
@@ -92,12 +88,9 @@ describe('<DesktopDateRangePicker />', () => {
 
   describe('Field slot: SingleInputDateRangeField', () => {
     it('should add focused class to the field when it is focused', () => {
-      // test v7 behavior
+      // Test with accessible DOM structure
       const { unmount } = render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          slots={{ field: SingleInputDateRangeField }}
-        />,
+        <DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />,
       );
 
       const sectionsContainer = getFieldSectionsContainer();
@@ -107,8 +100,13 @@ describe('<DesktopDateRangePicker />', () => {
 
       unmount();
 
-      // test v6 behavior
-      render(<DesktopDateRangePicker slots={{ field: SingleInputDateRangeField }} />);
+      // Test with non-accessible DOM structure
+      render(
+        <DesktopDateRangePicker
+          enableAccessibleFieldDOMStructure={false}
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
 
       const input = getTextbox();
       act(() => input.focus());
@@ -117,20 +115,22 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should render the input with a given `name` when `SingleInputDateRangeField` is used', () => {
-      // Test with v7 input
+      // Test with accessible DOM structure
       const { unmount } = render(
-        <DesktopDateRangePicker
-          name="test"
-          enableAccessibleFieldDOMStructure
-          slots={{ field: SingleInputDateRangeField }}
-        />,
+        <DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />,
       );
       expect(screen.getByRole<HTMLInputElement>('textbox', { hidden: true }).name).to.equal('test');
 
       unmount();
 
-      // Test with v6 input
-      render(<DesktopDateRangePicker name="test" slots={{ field: SingleInputDateRangeField }} />);
+      // Test with non-accessible DOM structure
+      render(
+        <DesktopDateRangePicker
+          enableAccessibleFieldDOMStructure={false}
+          name="test"
+          slots={{ field: SingleInputDateRangeField }}
+        />,
+      );
       expect(screen.getByRole<HTMLInputElement>('textbox').name).to.equal('test');
     });
   });
@@ -141,7 +141,6 @@ describe('<DesktopDateRangePicker />', () => {
       const handleTouchStart = spy();
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           open
           slotProps={{
             popper: {
@@ -167,7 +166,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should open when clicking the start input', () => {
       const onOpen = spy();
 
-      render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<DesktopDateRangePicker onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -178,7 +177,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should open when clicking the end input', () => {
       const onOpen = spy();
 
-      render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<DesktopDateRangePicker onOpen={onOpen} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
@@ -190,7 +189,7 @@ describe('<DesktopDateRangePicker />', () => {
       it(`should open when pressing "${key}" in the start input`, () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+        render(<DesktopDateRangePicker onOpen={onOpen} />);
 
         const startInput = getFieldSectionsContainer();
         act(() => startInput.focus());
@@ -206,7 +205,7 @@ describe('<DesktopDateRangePicker />', () => {
       it(`should open when pressing "${key}" in the end input`, () => {
         const onOpen = spy();
 
-        render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+        render(<DesktopDateRangePicker onOpen={onOpen} />);
 
         const endInput = getFieldSectionsContainer(1);
         act(() => endInput.focus());
@@ -222,14 +221,13 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -265,14 +263,13 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -300,14 +297,13 @@ describe('<DesktopDateRangePicker />', () => {
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
@@ -328,14 +324,13 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -365,12 +360,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <div>
-          <DesktopDateRangePicker
-            enableAccessibleFieldDOMStructure
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-          />
+          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
           <input id="test-id" />
         </div>,
       );
@@ -396,7 +386,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -404,7 +394,6 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <div>
           <DesktopDateRangePicker
-            enableAccessibleFieldDOMStructure
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -443,14 +432,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
 
-      render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-        />,
-      );
+      render(<DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />);
 
       // Dismiss the picker
       fireEvent.click(document.body);
@@ -471,12 +453,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <React.Fragment>
-          <DesktopDateRangePicker
-            enableAccessibleFieldDOMStructure
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-          />
+          <DesktopDateRangePicker onChange={onChange} onAccept={onAccept} onClose={onClose} />
           <button type="button" id="test">
             {' '}
             focus me
@@ -499,7 +476,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -507,7 +484,6 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <div>
           <DesktopDateRangePicker
-            enableAccessibleFieldDOMStructure
             defaultValue={defaultValue}
             onChange={onChange}
             onAccept={onAccept}
@@ -540,14 +516,13 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -574,7 +549,6 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -602,7 +576,6 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -627,7 +600,6 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(
         <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -648,7 +620,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   describe('disabled dates', () => {
     it('should respect the disablePast prop', () => {
-      render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disablePast />);
+      render(<DesktopDateRangePicker disablePast />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -660,7 +632,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the disableFuture prop', () => {
-      render(<DesktopDateRangePicker enableAccessibleFieldDOMStructure disableFuture />);
+      render(<DesktopDateRangePicker disableFuture />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -672,12 +644,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the minDate prop', () => {
-      render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          minDate={adapterToUse.date('2018-01-15')}
-        />,
-      );
+      render(<DesktopDateRangePicker minDate={adapterToUse.date('2018-01-15')} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
@@ -689,12 +656,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
 
     it('should respect the maxDate prop', () => {
-      render(
-        <DesktopDateRangePicker
-          enableAccessibleFieldDOMStructure
-          maxDate={adapterToUse.date('2018-01-15')}
-        />,
-      );
+      render(<DesktopDateRangePicker maxDate={adapterToUse.date('2018-01-15')} />);
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 

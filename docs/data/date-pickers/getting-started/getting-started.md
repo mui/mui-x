@@ -1,34 +1,38 @@
 ---
 productId: x-date-pickers
-title: Date and Time Picker - Getting started
+title: Date and Time Pickers - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
-# Date and Time Pickers - Getting Started
+# Date and Time Pickers - Getting started
 
-<p class="description">Get started with the Date and Time Pickers. Install the package, configure your application and start using the components.</p>
+<p class="description">Install the Date and Time Pickers package and set up your date library to start building.</p>
 
 ## Installation
 
-Using your favorite package manager, install:
+Install the base package (which can either be the free Community version or the paid Pro version) along with a required third-party date library.
+The Pickers currently support [Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), [Luxon](https://moment.github.io/luxon/#/), and [Moment.js](https://momentjs.com/).
 
-- `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
-- The date library to manipulate the date.
+Choose your packages and manager through the toggles below, then run the commands as provided to install:
 
 <!-- #default-branch-switch -->
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-:::info
-If you need more information about the date library supported by the Date and Time Pickers,
-take a look at the [dedicated section](/x/react-date-pickers/base-concepts/#date-library)
+:::success
+Not sure which date library to choose?
+If you're starting from scratch with no other date libraries in your app, we recommend Day.js because of its small bundle size.
 :::
 
-The Date and Time Pickers package has a peer dependency on `@mui/material`.
-If you are not already using it in your project, you can install it with:
+### Peer dependencies
+
+#### Material UI
+
+The Date and Time Pickers have a peer dependency on `@mui/material`.
+If you're not already using it, install it with the following command:
 
 <codeblock storageKey="package-manager">
 
@@ -46,9 +50,11 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 </codeblock>
 
+#### React
+
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
+[`react`](https://www.npmjs.com/package/react) and [`react-dom`](https://www.npmjs.com/package/react-dom) are also peer dependencies:
 
 ```json
 "peerDependencies": {
@@ -57,70 +63,40 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 },
 ```
 
-### Style engine
+## Date library adapter setup
 
-Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+To integrate your chosen date library with the Date and Time Pickers, you'll need to plug the corresponding adapter into a `LocalizationProvider` that wraps your Picker components.
 
-<codeblock storageKey="package-manager">
+Adapters are provided for each of the supported libraries, and all are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`—for example,`AdapterDayjs`, which is used throughout this documentation for [Day.js](https://day.js.org/) integration:
 
-```bash npm
-npm install @mui/styled-engine-sc styled-components
+```tsx
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 ```
 
-```bash pnpm
-pnpm add @mui/styled-engine-sc styled-components
+### LocalizationProvider
+
+The `LocalizationProvider` component is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+
+```tsx
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
-</codeblock>
-
-Take a look at the [Styled engine guide](/material-ui/integrations/styled-components/) for more information about how to configure `styled-components` as the style engine.
-
-## Setup your date library adapter
-
-Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
-
-Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
-This is **not** a pattern to reproduce.
-The reason is to keep examples atomic and functional, especially when running in a CodeSandbox.
-
-The general recommendation is to declare the `LocalizationProvider` once, wrapping your entire application.
-Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.
+:::warning
+For practical purposes, each demo in the documentation has its own `LocalizationProvider` wrapper.
+**We _do not_ recommend reproducing this pattern as-is.**
+For almost all use cases, you should wrap your entire app with a single `LocalizationProvider` to avoid repeating boilerplate code in multiple places.
+:::
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 
-:::success
-
-- All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
-
-  ```tsx
-  import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-  import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-  ```
-
-- `LocalizationProvider` is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
-
-  ```tsx
-  import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-  import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
-  ```
-
-:::
-
 :::info
-If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+To use the Date and Time Pickers with a custom locale, see [Date and format localization](/x/react-date-pickers/adapters-locale/).
 :::
 
 ## Render your first component
 
-To make sure that everything is set up correctly, try rendering a simple `DatePicker` component:
+To confirm that everything is set up correctly, try rendering a basic Date Picker component:
 
 {{"demo": "FirstComponent.js"}}
-
-## What's next?
-
-Continue to the [next page](/x/react-date-pickers/base-concepts/) and discover the components available and how to use them.

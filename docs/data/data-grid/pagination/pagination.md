@@ -25,7 +25,7 @@ For the Pro and Premium Data Grid, pagination is disabled by default; use the `p
 
 ## Size of the page
 
-The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
+The Data Grid (MIT license) is limited to pages of up to 100 rows.
 If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
@@ -41,10 +41,10 @@ You should provide an array of items, each item should be one of these types:
   <DataGrid pageSizeOptions={[5, 10, 25]}>
   ```
 
-- **object**, the `value` and `label` keys will be used respectively for the value and label of the option.
+- **object**, the `value` and `label` keys will be used respectively for the value and label of the option. Define `value` as `-1` to display all results.
 
   ```jsx
-  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }]}>
+  <DataGrid pageSizeOptions={[10, 100, { value: 1000, label: '1,000' }, { value: -1, label: 'All' }]}>
   ```
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
@@ -100,7 +100,7 @@ const [paginationModel, setPaginationModel] = React.useState({
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the data grid.
+This means you have to give the rows of all pages to the Data Grid.
 If your dataset is too big, and you want to fetch the pages on demand, you can use server-side pagination.
 
 In general, the server-side pagination could be categorized into two types:

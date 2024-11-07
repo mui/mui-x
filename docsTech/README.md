@@ -13,7 +13,7 @@ Since `@mui/x-data-grid-pro` is an extension of `@mui/x-data-grid`, it imports a
 
 In each package, the most used folders are:
 
-- `components` which contains all the React components. These files are responsible for displaying the data grid and listening for user interactions.
+- `components` which contains all the React components. These files are responsible for displaying the Data Grid and listening for user interactions.
 - `hooks` which contains all the logic of the DataGrid.
   - `hooks/core` defines logics for developers: initialization of the grid, error handling, translations, ...
   - `hooks/utils` defines logics for contributors: manipulating the state, managing events, ...

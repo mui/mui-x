@@ -1,17 +1,18 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useCartesianContext } from '../context/CartesianProvider';
-import { MarkElement, MarkElementProps } from './MarkElement';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { useChartId } from '../hooks/useChartId';
+import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { LineItemIdentifier } from '../models/seriesType/line';
-import { cleanId } from '../internals/cleanId';
-import getColor from './getColor';
-import { useLineSeries } from '../hooks/useSeries';
+import { useSkipAnimation } from '../context/AnimationProvider';
+import { useCartesianContext } from '../context/CartesianProvider';
+import { useChartId } from '../hooks/useChartId';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { getValueToPositionMapper } from '../hooks/useScale';
+import { useLineSeries } from '../hooks/useSeries';
+import { cleanId } from '../internals/cleanId';
+import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
+import getColor from './getColor';
+import { MarkElement, MarkElementProps } from './MarkElement';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -62,7 +63,15 @@ export interface MarkPlotProps
  * - [MarkPlot API](https://mui.com/x/api/charts/mark-plot/)
  */
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps, skipAnimation, onItemClick, experimentalRendering, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    experimentalRendering,
+    ...other
+  } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
@@ -84,10 +93,8 @@ function MarkPlot(props: MarkPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             showMark = true,
@@ -96,9 +103,6 @@ function MarkPlot(props: MarkPlotProps) {
           if (showMark === false) {
             return null;
           }
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;
