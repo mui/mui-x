@@ -11,7 +11,7 @@
     "dataKey": { "type": { "description": "string" } },
     "domainLimit": {
       "type": {
-        "description": "'nice' | 'strict' | ((range: [number, number]) =&gt; [number, number])"
+        "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
       }
     },
     "hideTooltip": { "type": { "description": "boolean" } },
