@@ -20,7 +20,13 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridGetRowsParamsSelector, gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 import { GridDataSourceApi, GridDataSourceApiBase, GridDataSourcePrivateApi } from './interfaces';
-import { DataSourceRowsUpdateStrategy, NestedDataManager, RequestStatus, runIf } from './utils';
+import {
+  CacheChunkManager,
+  DataSourceRowsUpdateStrategy,
+  NestedDataManager,
+  RequestStatus,
+  runIf,
+} from './utils';
 import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
@@ -94,11 +100,14 @@ export const useGridDataSource = (
     return Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
   }, [paginationModel.pageSize, props.pageSizeOptions]);
 
+  const cacheChunkManager = useLazyRef<CacheChunkManager, void>(
+    () => new CacheChunkManager({ chunkSize: cacheChunkSize }),
+  ).current;
+
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.unstable_dataSourceCache, {
-      chunkSize: cacheChunkSize,
-    }),
+    getCache(props.unstable_dataSourceCache),
   );
+  cacheChunkManager.setDataSourceCache(cache);
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
@@ -125,8 +134,7 @@ export const useGridDataSource = (
         ...params,
       };
 
-      const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
-
+      const cachedData = cacheChunkManager.getCacheData(fetchParams);
       if (cachedData !== undefined) {
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: cachedData,
@@ -142,7 +150,7 @@ export const useGridDataSource = (
 
       try {
         const getRowsResponse = await getRows(fetchParams);
-        apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
+        cacheChunkManager.setCacheData(fetchParams, getRowsResponse);
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: getRowsResponse,
           fetchParams,
@@ -161,6 +169,7 @@ export const useGridDataSource = (
     },
     [
       nestedDataManager,
+      cacheChunkManager,
       apiRef,
       defaultRowsUpdateStrategyActive,
       props.unstable_dataSource?.getRows,
@@ -193,8 +202,7 @@ export const useGridDataSource = (
         groupKeys: rowNode.path,
       };
 
-      const cachedData = apiRef.current.unstable_dataSource.cache.get(fetchParams);
-
+      const cachedData = cacheChunkManager.getCacheData(fetchParams);
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         nestedDataManager.setRequestSettled(id);
@@ -222,7 +230,7 @@ export const useGridDataSource = (
           return;
         }
         nestedDataManager.setRequestSettled(id);
-        apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
+        cacheChunkManager.setCacheData(fetchParams, getRowsResponse);
         apiRef.current.setRowCount(
           getRowsResponse.rowCount === undefined ? -1 : getRowsResponse.rowCount,
         );
@@ -237,7 +245,14 @@ export const useGridDataSource = (
         nestedDataManager.setRequestSettled(id);
       }
     },
-    [nestedDataManager, onError, apiRef, props.treeData, props.unstable_dataSource?.getRows],
+    [
+      nestedDataManager,
+      cacheChunkManager,
+      onError,
+      apiRef,
+      props.treeData,
+      props.unstable_dataSource?.getRows,
+    ],
   );
 
   const setChildrenLoading = React.useCallback<GridDataSourceApiBase['setChildrenLoading']>(
@@ -365,11 +380,13 @@ export const useGridDataSource = (
       isFirstRender.current = false;
       return;
     }
-    const newCache = getCache(props.unstable_dataSourceCache, {
-      chunkSize: cacheChunkSize,
+    const newCache = getCache(props.unstable_dataSourceCache);
+    setCache((prevCache) => {
+      const cacheToUse = prevCache !== newCache ? newCache : prevCache;
+      cacheChunkManager.setDataSourceCache(cacheToUse);
+      return cacheToUse;
     });
-    setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.unstable_dataSourceCache, cacheChunkSize]);
+  }, [props.unstable_dataSourceCache, cacheChunkManager]);
 
   React.useEffect(() => {
     if (!isFirstRender.current) {
