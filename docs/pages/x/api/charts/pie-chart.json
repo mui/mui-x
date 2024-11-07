@@ -11,6 +11,7 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "shape",

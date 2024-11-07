@@ -50,6 +50,10 @@ export interface PieChartProps
    */
   tooltip?: ChartsTooltipProps<'pie'>;
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
+  /**
    * Callback fired when a pie arc is clicked.
    */
   onItemClick?: PiePlotProps['onItemClick'];
@@ -94,6 +98,7 @@ const PieChart = React.forwardRef(function PieChart(
     sx,
     tooltip = { trigger: 'item' },
     skipAnimation,
+    hideLegend,
     children,
     slots,
     slotProps,
@@ -126,12 +131,14 @@ const PieChart = React.forwardRef(function PieChart(
     >
       <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      <ChartsLegend
-        direction="column"
-        position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
-        slots={slots}
-        slotProps={slotProps}
-      />
+      {!hideLegend && (
+        <ChartsLegend
+          direction="column"
+          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
+          slots={slots}
+          slotProps={slotProps}
+        />
+      )}
       {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
       {children}
     </ChartContainer>
@@ -165,6 +172,10 @@ PieChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */

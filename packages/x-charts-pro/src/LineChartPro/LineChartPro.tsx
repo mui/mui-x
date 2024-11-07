@@ -183,7 +183,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
         <MarkPlotZoom {...markPlotProps} />
       </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />
@@ -249,6 +249,10 @@ LineChartPro.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
