@@ -150,7 +150,7 @@ Renames legend props to the corresponding slotProps.
 
 #### `rename-responsive-chart-container`
 
-Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainer` which have the same behavior in v8.
+Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
 
 ```diff
 - import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
