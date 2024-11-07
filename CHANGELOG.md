@@ -713,7 +713,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [core] Fix tools-public.mui.com redirection @oliviertassinari
 - [core] Move `helpers` to `@mui/x-internals` package (#15188) @LukasTy
 - Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
-- [code-infra] Set renovate to automerge devDependencies (#13463) @JCQuintas
+- [code-infra] Set renovate to automerge `devDependencies` (#13463) @JCQuintas
 - [infra] Introduce automated cherry-picking workflow (#15262) @michelengelen
 - [infra] Reintroduce the cherry pick workflow (#15293) @michelengelen
 - [infra] Revert "[infra] Introduce automated cherry-picking workflow (#15262)" (#15287) @michelengelen
