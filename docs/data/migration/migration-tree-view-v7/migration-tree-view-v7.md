@@ -225,3 +225,40 @@ All the new Tree Item-related components and utils (introduced in the previous m
 - } from '@mui/x-tree-view/TreeItem2LabelInput';
 + } from '@mui/x-tree-view/TreeItemLabelInput';
 ```
+
+## Apply the indentation on the item content instead of it's parent's group
+
+The indentation of nested Tree Items is now applied on the content of the element.
+This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
+
+### Apply custom indentation
+
+If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure:
+
+```tsx
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  itemChildrenIndentation={24}
+  defaultExpandedItems={['grid']}
+/>
+```
+
+:::info
+See [Tree Item Customization—Change nested item's indentation](/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
+:::
+
+### Fallback to the old behavior
+
+If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior:
+
+```tsx
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
+  // Remove the additional padding of nested elements
+  padding: theme.spacing(0.5, 1),
+}));
+
+const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)({
+  // Add the padding back on the group transition element
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation) !important',
+});
+```
