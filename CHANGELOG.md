@@ -5,8 +5,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.22.2
 
-<!-- generated comparing v7.22.1..v7.x -->
-
 _Nov 7, 2024_
 
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
