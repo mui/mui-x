@@ -141,19 +141,14 @@ these props will now be passed to the hidden `<input />` element.
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
-You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
-
-:::info
-If your custom field was used to create a Joy UI design component,
-you may want to wait a few weeks for the release of an out-of-the-box Joy `PickersTextField` component instead of implementing it yourself.
-:::
+You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section to have a concrete example.
 
 ### Migrate `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the accessible DOM structure.
 
-You can have a look at the second demo of the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) to have a concrete example.
+You can have a look at the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) section to have a concrete example.
 
 :::info
 If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
@@ -293,7 +288,28 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + const pickerContext = usePickerContext();
   ```
 
-## Removed types
+## Typing breaking changes
+
+### Remove `TDate` generic
+
+The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+
+If you were passing your date object type as a generic to any element of one of those packages, you can remove it:
+
+```diff
+-<DatePicker<Dayjs> value={value} onChange={onChange} />
++<DatePicker value={value} onChange={onChange} />
+
+-type Slot = DateCalendarSlots<Dayjs>['calendarHeader'];
++type Slot = DateCalendarSlots['calendarHeader'];
+
+-type Props = DatePickerToolbarProps<Dayjs>;
++type Props = DatePickerToolbarProps;
+```
+
+A follow-up release will add the full list of the impacted elements to the migration guide.
+
+### Removed types
 
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
 If you were using them, you need to replace them with the following code:
@@ -446,11 +462,3 @@ If you have customized those translation keys, you have to update them following
 +  value == null ? null : value.format('hh:mm:ss')
 +);
 ```
-
-Also the following types and interfaces no longer receive a generic type parameter:
-
-- `PickersComponentAgnosticLocaleText`
-- `PickersInputComponentLocaleText`
-- `PickersInputLocaleText`
-- `PickersLocaleText`
-- `PickersTranslationKeys`
