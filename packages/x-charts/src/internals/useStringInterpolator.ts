@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 

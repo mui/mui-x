@@ -28,7 +28,7 @@ describe('<DesktopTimePicker /> - Field', () => {
   });
 
   it('should adapt the default field format based on the props of the picker', () => {
-    const testFormat = (props: DesktopTimePickerProps<any, any>, expectedFormat: string) => {
+    const testFormat = (props: DesktopTimePickerProps<any>, expectedFormat: string) => {
       // Test with accessible DOM structure
       let view = renderWithProps(
         { ...props, enableAccessibleFieldDOMStructure: true as const },

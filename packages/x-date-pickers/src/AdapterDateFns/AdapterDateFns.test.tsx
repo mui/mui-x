@@ -29,7 +29,7 @@ describe('<AdapterDateFns />', () => {
 
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
-      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING) as Date;
 
       it('getWeekArray: should start on Sunday', () => {
         const result = adapter.getWeekArray(date);
@@ -45,7 +45,7 @@ describe('<AdapterDateFns />', () => {
       const adapter = new AdapterDateFns({ locale: ru });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO_STRING)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING) as Date;
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('пн');
       });
@@ -68,7 +68,7 @@ describe('<AdapterDateFns />', () => {
         expectedWithEn: string,
         expectedWithRu: string,
       ) => {
-        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Date;
 
         expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);

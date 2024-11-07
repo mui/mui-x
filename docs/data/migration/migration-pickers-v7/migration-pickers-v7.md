@@ -259,6 +259,40 @@ const theme = createTheme({
 });
 ```
 
+## Renamed variables
+
+The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
+
+- `usePickersTranslation`
+
+  ```diff
+  - import { usePickersTranslation } from '@mui/x-date-pickers/hooks';
+  - import { usePickersTranslation } from '@mui/x-date-pickers';
+  - import { usePickersTranslation } from '@mui/x-date-pickers-pro';
+
+  + import { usePickerTranslation } from '@mui/x-date-pickers/hooks';
+  + import { usePickerTranslation } from '@mui/x-date-pickers';
+  + import { usePickerTranslation } from '@mui/x-date-pickers-pro';
+
+  - const translations = usePickersTranslation();
+  + const translations = usePickerTranslation();
+  ```
+
+  - `usePickersContext`
+
+  ```diff
+  - import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  - import { usePickersContext } from '@mui/x-date-pickers';
+  - import { usePickersContext } from '@mui/x-date-pickers-pro';
+
+  + import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  + import { usePickerContext } from '@mui/x-date-pickers';
+  + import { usePickerContext } from '@mui/x-date-pickers-pro';
+
+  - const pickersContext = usePickersContext();
+  + const pickerContext = usePickerContext();
+  ```
+
 ## Removed types
 
 The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
@@ -381,7 +415,7 @@ If you have customized those translation keys, you have to update them following
 - If you using this translation key in a custom component:
 
 ```diff
- const translations = usePickersTranslations();
+ const translations = usePickerTranslations();
 
 -const clockLabelText = translations.clockLabelText(
 -  view,
