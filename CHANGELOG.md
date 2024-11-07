@@ -9,7 +9,8 @@ _Nov 7, 2024_
 
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 👨🏽‍💻 API enhancements
+- 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @clins1994, @k-rajat19.
