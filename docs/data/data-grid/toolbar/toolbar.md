@@ -44,23 +44,31 @@ Pass the toolbar component to the `toolbar` slot.
 
 ### Root
 
-The top level toolbar component that positions items in a row. Renders a `div` with `role="toolbar"`.
+The top level toolbar component that positions items in a row.
+
+Renders a `div` with `role="toolbar"`.
 
 ### Button
 
-A button item that can be used to perform actions from the toolbar. Renders a [Button](/material-ui/react-button/) component with some overrides.
+A button item that can be used to perform actions from the toolbar.
+
+Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
 
 {{"demo": "GridToolbarButton.js"}}
 
 ### ToggleButtonGroup
 
-A toggle button group that can be used to switch between multiple states. Renders a [ToggleButtonGroup](/material-ui/react-toggle-button/) component with some overrides.
+A toggle button group that can be used to switch between multiple states.
+
+Renders a [ToggleButtonGroup](/material-ui/react-toggle-button/) component with some overrides.
 
 {{"demo": "GridToolbarToggleButtonGroup.js"}}
 
 ### ToggleButton
 
-A toggle button item that can be used to switch between two states. Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
+A toggle button item that can be used to switch between two states.
+
+Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
 
 {{"demo": "GridToolbarToggleButton.js"}}
 
@@ -96,19 +104,25 @@ Show active filter chips in the toolbar.
 
 ### Print trigger
 
-Open the print dialog. See [Print export](/x/react-data-grid/export/#print-export) for more details.
+Open the print dialog.
+
+See [Print export](/x/react-data-grid/export/#print-export) for more details.
 
 {{"demo": "GridToolbarPrintTrigger.js", "bg": "inline"}}
 
 ### Download menu
 
-Download grid data as a CSV or Excel file. See [CSV export](/x/react-data-grid/export/#csv-export) and [Excel export](/x/react-data-grid/export/#excel-export) for more details.
+Download grid data as a CSV or Excel file.
+
+See [CSV export](/x/react-data-grid/export/#csv-export) and [Excel export](/x/react-data-grid/export/#excel-export) for more details.
 
 {{"demo": "GridToolbarDownloadMenu.js", "bg": "inline"}}
 
 ### Density menu
 
-Change row density. See [Density](/x/react-data-grid/accessibility/#density) for more details.
+Change row density.
+
+See [Density](/x/react-data-grid/accessibility/#density) for more details.
 
 {{"demo": "GridToolbarDensityMenu.js", "bg": "inline"}}
 
