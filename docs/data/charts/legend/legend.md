@@ -60,6 +60,12 @@ Style applied by other means will not be taken into account.
 Which can lead to label overflow.
 :::
 
+### Rounded symbol
+
+To create a rounded symbol, use the `sx` prop to style the symbol class directly. Import `legendClasses.mark` to target the symbol, and set the `ry` property to control the symbol's corner radius.
+
+{{"demo": "LegendRoundedSymbol.js"}}
+
 ## Color legend
 
 To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#values-color), you can use:
