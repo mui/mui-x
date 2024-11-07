@@ -294,7 +294,7 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
 
 The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
-If you were passing your date object as a generic to any element of one of those packages, you can remove it:
+If you were passing your date object type as a generic to any element of one of those packages, you can remove it:
 
 ```diff
 -<DatePicker<Dayjs> value={value} onChange={onChange} />
