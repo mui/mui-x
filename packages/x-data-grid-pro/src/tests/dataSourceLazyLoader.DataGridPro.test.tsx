@@ -297,22 +297,22 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
     it('should reset the grid if the rowCount becomes smaller than the actual row count', async () => {
       // override rowCount
       transformGetRowsResponse = (response) => ({ ...response, rowCount: undefined });
-      const { setProps } = render(
+      render(
         <TestDataSourceLazyLoader rowCount={100} paginationModel={{ page: 0, pageSize: 30 }} />,
       );
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-      const getRowsEventSpy = spy();
-      apiRef.current.subscribeEvent('getRows', getRowsEventSpy);
+      // reset the spy call count
+      fetchRowsSpy.resetHistory();
 
       // reduce the rowCount to be more than the number of rows
-      setProps({ rowCount: 80 });
-      expect(getRowsEventSpy.callCount).to.equal(0);
+      apiRef.current.setRowCount(80);
+      expect(fetchRowsSpy.callCount).to.equal(0);
 
       // reduce the rowCount once more, but now to be less than the number of rows
-      setProps({ rowCount: 20 });
-      expect(getRowsEventSpy.callCount).to.equal(1);
+      apiRef.current.setRowCount(20);
+      await waitFor(() => expect(fetchRowsSpy.callCount).to.equal(1));
     });
 
     it('should allow setting the row count via API', async () => {

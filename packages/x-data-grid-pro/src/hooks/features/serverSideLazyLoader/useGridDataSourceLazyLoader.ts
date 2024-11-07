@@ -107,7 +107,7 @@ export const useGridDataSourceLazyLoader = (
       filterModel,
     };
 
-    privateApiRef.current.publishEvent('getRows', getRowsParams);
+    privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
   }, [privateApiRef, sortModel, filterModel, paginationModel.pageSize]);
 
   const ensureValidRowCount = React.useCallback(
@@ -240,7 +240,6 @@ export const useGridDataSourceLazyLoader = (
       addSkeletonRows();
       privateApiRef.current.setLoading(false);
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
-      privateApiRef.current.publishEvent('rowsFetched');
     },
     [privateApiRef, filteredSortedRowIds, updateLoadingTrigger, addSkeletonRows],
   );
@@ -278,7 +277,10 @@ export const useGridDataSourceLazyLoader = (
         };
 
         privateApiRef.current.setLoading(true);
-        privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
+        privateApiRef.current.unstable_dataSource.fetchRows(
+          GRID_ROOT_GROUP_ID,
+          adjustRowParams(getRowsParams),
+        );
       }
     },
     [
@@ -341,7 +343,10 @@ export const useGridDataSourceLazyLoader = (
       getRowsParams.start = skeletonRowsSection.firstRowIndex;
       getRowsParams.end = skeletonRowsSection.lastRowIndex;
 
-      privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
+      privateApiRef.current.unstable_dataSource.fetchRows(
+        GRID_ROOT_GROUP_ID,
+        adjustRowParams(getRowsParams),
+      );
     },
     [
       privateApiRef,
@@ -387,7 +392,10 @@ export const useGridDataSourceLazyLoader = (
         rowsStale.current = true;
       }
 
-      privateApiRef.current.publishEvent('getRows', adjustRowParams(getRowsParams));
+      privateApiRef.current.unstable_dataSource.fetchRows(
+        GRID_ROOT_GROUP_ID,
+        adjustRowParams(getRowsParams),
+      );
     },
     [
       privateApiRef,
@@ -411,7 +419,7 @@ export const useGridDataSourceLazyLoader = (
       };
 
       privateApiRef.current.setLoading(true);
-      privateApiRef.current.publishEvent('getRows', getRowsParams);
+      privateApiRef.current.unstable_dataSource.fetchRows(GRID_ROOT_GROUP_ID, getRowsParams);
     },
     [privateApiRef, sortModel, paginationModel.pageSize],
   );

@@ -3,7 +3,6 @@ import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
   GridFetchRowsParams,
-  GridGetRowsParams,
 } from '../models';
 import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
 import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
@@ -46,17 +45,6 @@ export interface GridEventLookupPro {
    * Used to trigger `onFetchRows`.
    */
   fetchRows: { params: GridFetchRowsParams };
-  // Data source
-  /**
-   * Fired to make a new request through the data source's `getRows` method.
-   * @ignore - do not document.
-   */
-  getRows: { params: GridGetRowsParams };
-  /**
-   * Fired when the data request is resolved either via the data source or from the cache.
-   * @ignore - do not document.
-   */
-  rowsFetched: {};
 }
 
 export interface GridPipeProcessingLookupPro {

@@ -11,7 +11,6 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid';
 import {
-  GridGetRowsParams,
   gridRowGroupsToFetchSelector,
   GridStateInitializer,
   GridStrategyProcessor,
@@ -306,7 +305,6 @@ export const useGridDataSource = (
         apiRef.current.setRowCount(response.rowCount);
       }
       apiRef.current.setRows(response.rows);
-      apiRef.current.publishEvent('rowsFetched');
     },
     [apiRef],
   );
@@ -359,9 +357,6 @@ export const useGridDataSource = (
     apiRef,
     'paginationModelChange',
     runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(apiRef, 'getRows', (params: GridGetRowsParams) =>
-    fetchRows(GRID_ROOT_GROUP_ID, params),
   );
 
   const isFirstRender = React.useRef(true);
