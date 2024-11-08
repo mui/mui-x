@@ -1,8 +1,10 @@
+# Performance Charts
+
 ## How to run
 
 First build the project.
 
-```sh
+```bash
 pnpm release:build
 ```
 
@@ -22,12 +24,12 @@ To run the tests locally, you will need to uncomment all the `browser` options f
 
 Then `cd` into the project folder and run the tests.
 
-```sh
+```bash
 pnpm test:performance
 ```
 
 or from the root of the project
 
-```sh
+```bash
 pnpm --filter "@mui-x-internal/performance-charts" test:performance
 ```

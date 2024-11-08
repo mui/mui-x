@@ -24,7 +24,14 @@ describe('ScatterChartPro', () => {
     async () => {
       const { findByText } = render(
         <ScatterChartPro
-          xAxis={[{ id: 'x', data: xData, zoom: { filterMode: 'discard' } }]}
+          xAxis={[
+            {
+              id: 'x',
+              data: xData,
+              zoom: { filterMode: 'discard' },
+              valueFormatter: (v) => v.toLocaleString('en-US'),
+            },
+          ]}
           zoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
           series={[
             {
@@ -36,7 +43,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('70', { ignore: 'span' });
+      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
     },
     options,
   );
