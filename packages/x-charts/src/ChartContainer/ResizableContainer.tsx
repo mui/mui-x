@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
+import type { ChartContainerProps } from './ChartContainer';
 
 /**
  * Wrapping div that take the shape of its parent.
@@ -9,7 +9,7 @@ import type { ResponsiveChartContainerProps } from './ResponsiveChartContainer';
 export const ResizableContainer = styled('div', {
   name: 'MuiResponsiveChart',
   slot: 'Container',
-})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
+})<{ ownerState: Pick<ChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',

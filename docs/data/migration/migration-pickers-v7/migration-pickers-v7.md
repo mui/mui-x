@@ -365,6 +365,18 @@ If you were using them, you need to replace them with the following code:
     UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
   ```
 
+## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
+
+The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+You can import it from `@mui/x-license` instead:
+
+```diff
+-import { LicenseInfo } from '@mui/x-date-pickers-pro';
++import { LicenseInfo } from '@mui/x-license';
+
+ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
 ## Stop passing `utils` and the date object to some translation keys
 
 Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
