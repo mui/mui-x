@@ -556,14 +556,6 @@ From https://github.com/mui/mui-x/pull/15089
   });
   ```
 
-From https://github.com/mui/mui-x/pull/15191
-
-The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
-The deprecated ones are now removed.
-From https://github.com/mui/mui-x/pull/15192
-
-The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
-Those deprecated properties are now removed.
 From https://github.com/mui/mui-x/pull/15297
 
 ### Pickers
@@ -608,23 +600,6 @@ From https://github.com/mui/mui-x/pull/14487
    LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
   ```
 
-From https://github.com/mui/mui-x/pull/15187
-
-- The Pie Chart lost all props and render linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us.
-  From https://github.com/mui/mui-x/pull/15081
-
-- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.
-
-  ```jsx
-  // Supported by the codemod
-  <LineChart legend={{ ... }} />
-
-  // Not supported by the codemod
-  const props = { legend: { ... }, ... }
-  <Line {...props} />
-  ```
-
-- The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
   Special thanks go out to the community contributors who have helped make this release possible:
   @belkocik, @clins1994, @dpak-maurya, @GeorgiosDrivas, @k-rajat19, @kalyan90, @wojtkolos.
   Following are all team members who have contributed to this release:
@@ -699,8 +674,31 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 ### Charts
 
+#### Breaking changes
+
+- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.
+
+  ```jsx
+  // Supported by the codemod
+  <LineChart legend={{ ... }} />
+
+  // Not supported by the codemod
+  const props = { legend: { ... }, ... }
+  <Line {...props} />
+  ```
+  :::
+  If you find `slotProps={{ legend: { hidden: true } }}` too long, you can now use the `hideLegend` prop to prevent rendering the legend.
+  :::
+- The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
+
+- The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
+The deprecated ones are now removed.
+- The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
+- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us.
+
 #### `@mui/x-charts@8.0.0-alpha.0`
 
+- [charts] Introduce `hideLegend` prop (#15277) @alexfauquette
 - [charts] Allow `SeriesValueFormatter` to return `null` value (#15057) @clins1994
 - [charts] Fix tooltip follow mouse (#15189) @alexfauquette
 - [charts] Remove `xAxisKey`, `yAxisKey`, and `zAxisKey` (#15192) @alexfauquette
@@ -728,6 +726,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 ### Docs
 
 - [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle 
+- [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
 - [docs] Add section explaining how to keep the selection while filtering (#15185) @arminmeh
 - [docs] Apply the new DX to the Button Field demos (#14860) @flaviendelangle
 - [docs] Apply the new DX to the `Autocomplete` Field demo (#15165) @flaviendelangle
