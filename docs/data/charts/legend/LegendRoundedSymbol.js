@@ -21,7 +21,7 @@ export default function LegendRoundedSymbol() {
       height={200}
       sx={{
         [`& .${legendClasses.mark}`]: {
-          ry: 10,
+          ry: '50%',
         },
       }}
     />
