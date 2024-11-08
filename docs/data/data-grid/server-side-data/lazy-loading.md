@@ -33,8 +33,6 @@ The viewport loading mode is enabled when the row count is known (`rowCount >= 0
 
 If the user scrolls too fast, the grid loads multiple pages with one request (by adjusting `start` and `end` param) in order to reduce the server load.
 
-In addition to this, the grid throttles new requests made to the data source after each rendering context change. This can be controlled with `lazyLoadingRequestThrottleMs` prop.
-
 The demo below shows the viewport loading mode.
 
 {{"demo": "ServerSideLazyLoadingViewport.js", "bg": "inline"}}
@@ -45,6 +43,14 @@ In a real-world scenario, you should replace this with your own server-side data
 
 Open info section of the browser console to see the requests being made and the data being fetched in response.
 :::
+
+### Request throttling
+
+While user is scrolling through the grid, rendering context changes and the Data Grid tries to fill in any missing rows by making a new data source request. This avoid making huge amount of request, Data Grid throttles new data fetches on the rendering context change. By default throttle is set to 500 ms, but the time can be controlled with `lazyLoadingRequestThrottleMs` prop.
+
+The demo below shows the difference in behavior for different values of the `lazyLoadingRequestThrottleMs` prop. In the footer of the Data Grid, you can see amount of requests made while scrolling.
+
+{{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
 
 ## Infinite loading
 
