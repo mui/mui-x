@@ -198,22 +198,31 @@ export function computeAxisValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
+    const domainLimit = axis.domainLimit ?? 'nice';
+
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+
+    if (typeof domainLimit === 'function') {
+      const { min, max } = domainLimit(minData, maxData);
+      axisExtremums[0] = min;
+      axisExtremums[1] = max;
+    }
+
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
-    // TODO: move nice to prop? Disable when there is zoom?
-    const scale = getScale(scaleType, axisExtremums, zoomedRange).nice(rawTickNumber);
-    const [minDomain, maxDomain] = scale.domain();
+    const scale = getScale(scaleType, axisExtremums, zoomedRange);
+    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
       ...axis,
       data,
       scaleType: scaleType as any,
-      scale: scale.domain(domain) as any,
+      scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };

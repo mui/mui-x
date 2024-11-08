@@ -13,7 +13,7 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
@@ -42,7 +42,7 @@ import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
-import { PickersLayoutOwnerState } from '../PickersLayout';
+import { PickerLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TView extends DateOrTimeViewWithMeridiem,
@@ -130,7 +130,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
@@ -205,7 +205,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: (ownerState: PickersLayoutOwnerState) => ({
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),

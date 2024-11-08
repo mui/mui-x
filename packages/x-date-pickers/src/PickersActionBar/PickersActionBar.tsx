@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 
 export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
 
@@ -33,7 +33,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
 function PickersActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   if (actions == null || actions.length === 0) {
     return null;

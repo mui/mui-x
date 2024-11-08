@@ -12,7 +12,7 @@ import {
   ExportedBaseTabsProps,
   isDatePickerView,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {
@@ -123,7 +123,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     sx,
   } = props;
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(props);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';
