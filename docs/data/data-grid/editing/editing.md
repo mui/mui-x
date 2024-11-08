@@ -162,7 +162,7 @@ The callback is called with three arguments:
 3. An object with additional properties such as `rowId`.
 
 Please note that the `processRowUpdate` must return the row object to update the Data Grid internal state.
-The value returned is used later as an argument on a call to `apiRef.current.updateRows`.
+The value returned is used later as an argument on a call to `apiRef.current.updateRows()`.
 
 ```tsx
 <DataGrid
@@ -176,7 +176,7 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
 ```
 
 If you want to delete a row from the internal state of the Data Grid, you can return an additional property `_action: 'delete'` in the row object from the `processRowUpdate` callback. This will remove the row from the internal state of the Data Grid.
-It is a more performant way to delete a row as compared to updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or using `setRows` API method because `processRowUpdate` uses the [`updateRows`](https://mui.com/x/react-data-grid/row-updates/#the-updaterows-method) under the hood which doesn't cause a full regeneration of the row tree.
+It is a more performant way to delete a row as compared to updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or using `setRows()` API method because `processRowUpdate` uses the [`updateRows()`](https://mui.com/x/react-data-grid/row-updates/#the-updaterows-method) under the hood which doesn't cause a full regeneration of the row tree.
 
 ```tsx
 <DataGrid
@@ -378,7 +378,7 @@ These are the most important params to consider:
 - `isProcessingProps`: whether `preProcessEditCellProps` is being executed or not
 
 Once a new value is entered into the input, it must be sent to the Data Grid.
-To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue`.
+To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue()`.
 The new value will be parsed and validated, and the `value` prop will reflect the changes in the next render.
 
 It's important to also handle the [accessibility](/x/react-data-grid/accessibility/) of custom edit components.
@@ -413,17 +413,17 @@ The following demo implements a custom edit component, based on the [`Rating`](h
 
 ### With debounce
 
-By default, each call to `apiRef.current.setEditCellValue` triggers a new render.
+By default, each call to `apiRef.current.setEditCellValue()` triggers a new render.
 If the edit component requires the user to type a new value, re-rendering the Data Grid too often will drastically reduce performance.
 One way to avoid this is to debounce the API calls.
-You can use `apiRef.current.setEditCellValue` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
+You can use `apiRef.current.setEditCellValue()` to handle debouncing by setting the `debounceMs` param to a positive integer that defines a set time period in milliseconds.
 No matter how many times the API method is called, the Data Grid will only be re-rendered after that period of time has passed.
 
 ```tsx
 apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs: 200 });
 ```
 
-When the Data Grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue` call.
+When the Data Grid is only set to re-render after a given period of time has passed, the `value` prop will not be updated on each `apiRef.current.setEditCellValue()` call.
 To avoid a frozen UI, the edit component can keep the current value in an internal state and sync it once `value` changes.
 Modify the edit component to enable this feature:
 
@@ -456,8 +456,8 @@ To picture better, imagine an edit component with a combo, created following the
 By default, it would require two clicks to change the value of the cell: one click inside the cell to select a new value, and another click outside the cell to save.
 This second click can be avoided if the first click also stops the edit mode.
 To create an edit component with auto-stop, call `apiRef.current.stopCellEditMode` after setting the new value.
-Since `apiRef.current.setEditCellValue` may do additional processing, you must wait for it to resolve before stopping the edit mode.
-Also, it is a good practice to check if `apiRef.current.setEditCellValue` has returned `true`.
+Since `apiRef.current.setEditCellValue()` may do additional processing, you must wait for it to resolve before stopping the edit mode.
+Also, it is a good practice to check if `apiRef.current.setEditCellValue()` has returned `true`.
 It will be `false` if `preProcessEditProps` set an error during [validation](#validation).
 
 ```tsx
@@ -479,7 +479,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue()`.
 Instead, use the provided interactions to exit edit mode.
 :::
 
