@@ -420,3 +420,12 @@ Also the following types and interfaces no longer receive a generic type paramet
 - `PickersInputLocaleText`
 - `PickersLocaleText`
 - `PickersTranslationKeys`
+
+## `FieldValueType` renaming
+
+If you are using `FieldValueType` in your project you must rename it to its new name. The type value remains the same.
+
+```diff
+-import { FieldValueType } from '@mui/x-date-pickers';
++import { PickerValueType } from '@mui/x-date-pickers';
+```
