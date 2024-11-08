@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internals",
-  "version": "7.18.0",
+  "version": "7.21.0",
   "description": "Utility functions for the MUI X packages (internal use only).",
   "author": "MUI Team",
   "license": "MIT",
@@ -41,14 +41,14 @@
     "directory": "packages/x-internals"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.7",
+    "@babel/runtime": "^7.26.0",
     "@mui/utils": "^5.16.6 || ^6.0.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.15",
+    "@mui/internal-test-utils": "^1.0.19",
     "rimraf": "^6.0.1"
   },
   "engines": {

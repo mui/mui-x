@@ -5,7 +5,6 @@ export interface GridPinnedRowsProps {
   virtualScroller: VirtualScroller;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function GridPinnedRows(_: GridPinnedRowsProps) {
   return null;
 }

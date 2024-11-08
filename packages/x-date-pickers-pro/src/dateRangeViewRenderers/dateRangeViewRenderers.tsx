@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Omit<DateRangeCalendarProps<TDate>, 'views'> {
+export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
+  extends Omit<DateRangeCalendarProps, 'views'> {
   views: readonly TView[];
 }
 
@@ -14,7 +11,7 @@ export interface DateRangeViewRendererProps<
  * We don't pass all the props down to `DateRangeCalendar`,
  * because otherwise some unwanted props would be passed to the HTML element.
  */
-export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
+export const renderDateRangeViewCalendar = ({
   value,
   defaultValue,
   referenceDate,
@@ -53,7 +50,7 @@ export const renderDateRangeViewCalendar = <TDate extends PickerValidDate>({
   views,
   view,
   onViewChange,
-}: DateRangeViewRendererProps<TDate, 'day'>) => (
+}: DateRangeViewRendererProps<'day'>) => (
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}

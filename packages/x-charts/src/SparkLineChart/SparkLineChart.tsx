@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import {
   ChartsTooltip,
@@ -16,7 +14,6 @@ import {
 } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { MakeOptional } from '../models/helpers';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
 import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
@@ -41,10 +38,7 @@ export interface SparkLineChartSlotProps
     ChartsTooltipSlotProps<'line' | 'bar'> {}
 
 export interface SparkLineChartProps
-  extends Omit<
-    ResponsiveChartContainerProps,
-    'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'
-  > {
+  extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -135,7 +129,10 @@ const SPARKLINE_DEFAULT_MARGIN = {
  *
  * - [SparkLineChart API](https://mui.com/x/api/charts/spark-line-chart/)
  */
-const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLineChartProps, ref) {
+const SparkLineChart = React.forwardRef(function SparkLineChart(
+  props: SparkLineChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     xAxis,
     yAxis,
@@ -168,7 +165,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
   };
 
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       {...other}
       ref={ref}
       series={[
@@ -227,7 +224,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
       {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
 
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
@@ -343,6 +340,11 @@ SparkLineChart.propTypes = {
    */
   showTooltip: PropTypes.bool,
   /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -418,6 +420,7 @@ SparkLineChart.propTypes = {
     dataKey: PropTypes.string,
     disableLine: PropTypes.bool,
     disableTicks: PropTypes.bool,
+    domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -484,6 +487,7 @@ SparkLineChart.propTypes = {
     dataKey: PropTypes.string,
     disableLine: PropTypes.bool,
     disableTicks: PropTypes.bool,
+    domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
     fill: PropTypes.string,
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

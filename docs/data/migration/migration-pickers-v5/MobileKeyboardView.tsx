@@ -22,9 +22,7 @@ import {
   DatePickerToolbarProps,
 } from '@mui/x-date-pickers/DatePicker';
 
-function LayoutWithKeyboardView(
-  props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>,
-) {
+function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null, DateView>) {
   const { value, onChange } = props;
   const [showKeyboardView, setShowKeyboardView] = React.useState(false);
 
@@ -61,7 +59,7 @@ function LayoutWithKeyboardView(
 }
 
 function ToolbarWithKeyboardViewSwitch(
-  props: DatePickerToolbarProps<any> & {
+  props: DatePickerToolbarProps & {
     showKeyboardViewSwitch?: boolean;
     showKeyboardView?: boolean;
     setShowKeyboardView?: React.Dispatch<React.SetStateAction<boolean>>;

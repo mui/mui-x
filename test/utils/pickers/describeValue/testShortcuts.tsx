@@ -28,7 +28,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -65,7 +64,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -103,7 +101,6 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}

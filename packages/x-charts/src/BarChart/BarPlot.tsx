@@ -15,6 +15,7 @@ import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 /**
  * Solution of the equations
@@ -55,7 +56,7 @@ export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps
 export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation?: boolean;
   /**
@@ -102,8 +103,8 @@ const useAggregatedData = (): {
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
     return groupIds.flatMap((seriesId) => {
-      const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
-      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
+      const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
+      const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
       const xAxisConfig = xAxis[xAxisId];
       const yAxisConfig = yAxis[yAxisId];
@@ -224,7 +225,8 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
@@ -321,7 +323,7 @@ BarPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation: PropTypes.bool,
   /**

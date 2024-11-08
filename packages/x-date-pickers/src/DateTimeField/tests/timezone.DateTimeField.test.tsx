@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { DateTime } from 'luxon';
 import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
@@ -83,7 +84,9 @@ describe('<DateTimeField /> - Timezone', () => {
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
@@ -127,7 +130,7 @@ describe('<DateTimeField /> - Timezone', () => {
     it('should update the field when time zone changes (timestamp remains the same)', () => {
       const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
+      const date = (adapter.date('2020-06-18T14:30:10.000Z') as DateTime).setZone('UTC');
       view.setProps({ value: date });
 
       expectFieldValueV7(view.getSectionsContainer(), '06/18/2020 02:30 PM');

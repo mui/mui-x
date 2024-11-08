@@ -17,19 +17,17 @@ import {
 import { adjustSectionValue, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
-import { PickerValidDate, FieldSection } from '../../../models';
+import { FieldSection } from '../../../models';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 
 export const useField = <
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
   TInternalProps extends UseFieldInternalProps<
-    any,
     any,
     any,
     TEnableAccessibleFieldDOMStructure,
@@ -40,21 +38,20 @@ export const useField = <
 >(
   params: UseFieldParams<
     TValue,
-    TDate,
     TSection,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
 ): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const {
     internalProps,
     internalProps: {
       unstableFieldRef,
       minutesStep,
-      enableAccessibleFieldDOMStructure = false,
+      enableAccessibleFieldDOMStructure = true,
       disabled = false,
       readOnly = false,
     },
@@ -81,7 +78,7 @@ export const useField = <
     timezone,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing<TDate, TSection>({
+  const characterEditingResponse = useFieldCharacterEditing<TSection>({
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,
@@ -125,7 +122,7 @@ export const useField = <
     switch (true) {
       // Select all
       case (event.ctrlKey || event.metaKey) &&
-        event.key.toLowerCase() === 'a' &&
+        String.fromCharCode(event.keyCode) === 'A' &&
         !event.shiftKey &&
         !event.altKey: {
         // prevent default to make sure that the next line "select all" while updating

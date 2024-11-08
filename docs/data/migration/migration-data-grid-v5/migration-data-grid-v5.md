@@ -12,7 +12,7 @@ To get started, check out [the blog post about the release of MUI X v6](https:/
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `^6.0.0`.
+In `package.json`, change the version of the Data Grid package to `^6.0.0`.
 
 ```diff
 -"@mui/x-data-grid": "^5.0.0",
@@ -41,7 +41,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v600) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for Data Grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid-v600) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -297,8 +297,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +  const focusedField = props.focusedCell;
   +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
   ```
-- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows` will now remove the expansion state of the grid as these methods are meant to replace the rows.
-  For partial row updates, use the [`apiRef.current.updateRows`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
+- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows()` will now remove the expansion state of the grid as these methods are meant to replace the rows.
+  For partial row updates, use the [`apiRef.current.updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
 
 ### Pagination
 
@@ -493,7 +493,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
 This is a slow and ongoing effort between all the different libraries maintained by MUI.
-To smooth the transition, data grid support both the `components` props which are deprecated, and the new `slots` props.
+To smooth the transition, Data Grid support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 

@@ -130,6 +130,9 @@ export const GridRootStyles = styled('div', {
     {
       [`& .${c.treeDataGroupingCellLoadingContainer}`]: styles.treeDataGroupingCellLoadingContainer,
     },
+    {
+      [`& .${c.groupingCriteriaCellLoadingContainer}`]: styles.groupingCriteriaCellLoadingContainer,
+    },
     { [`& .${c.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
     {
       [`& .${c['detailPanelToggleCell--expanded']}`]: styles['detailPanelToggleCell--expanded'],
@@ -535,6 +538,7 @@ export const GridRootStyles = styled('div', {
 
     /* Cell styles */
     [`& .${c.cell}`]: {
+      flex: '0 0 auto',
       height: 'var(--height)',
       width: 'var(--width)',
       lineHeight: 'calc(var(--height) - 1px)', // -1px for the border
@@ -563,6 +567,7 @@ export const GridRootStyles = styled('div', {
       lineHeight: 'inherit',
     },
     [`& .${c.cellEmpty}`]: {
+      flex: 1,
       padding: 0,
       height: 'unset',
     },
@@ -707,7 +712,7 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: t.spacing(2),
     },
-    [`& .${c.treeDataGroupingCellLoadingContainer}`]: {
+    [`& .${c.treeDataGroupingCellLoadingContainer}, .${c.groupingCriteriaCellLoadingContainer}`]: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -742,7 +747,7 @@ export const GridRootStyles = styled('div', {
     },
 
     [`& .${c.filler}`]: {
-      flex: 1,
+      flex: '1 0 auto',
     },
     [`& .${c['filler--borderBottom']}`]: {
       borderBottom: '1px solid var(--DataGrid-rowBorderColor)',

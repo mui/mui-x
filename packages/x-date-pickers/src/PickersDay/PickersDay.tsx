@@ -40,7 +40,7 @@ export interface ExportedPickersDayProps {
   showDaysOutsideCurrentMonth?: boolean;
 }
 
-export interface PickersDayProps<TDate extends PickerValidDate>
+export interface PickersDayProps
   extends ExportedPickersDayProps,
     Omit<
       ExtendMui<ButtonBaseProps>,
@@ -53,7 +53,7 @@ export interface PickersDayProps<TDate extends PickerValidDate>
   /**
    * The date to show.
    */
-  day: TDate;
+  day: PickerValidDate;
   /**
    * If `true`, renders as disabled.
    * @default false
@@ -65,11 +65,11 @@ export interface PickersDayProps<TDate extends PickerValidDate>
    */
   disableMargin?: boolean;
   isAnimating?: boolean;
-  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
-  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
-  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: TDate) => void;
-  onDaySelect: (day: TDate) => void;
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: PickerValidDate) => void;
+  onDaySelect: (day: PickerValidDate) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -96,9 +96,9 @@ export interface PickersDayProps<TDate extends PickerValidDate>
   today?: boolean;
 }
 
-type OwnerState = Partial<PickersDayProps<any>>;
+type OwnerState = Partial<PickersDayProps>;
 
-const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
+const useUtilityClasses = (ownerState: PickersDayProps) => {
   const {
     selected,
     disableMargin,
@@ -231,12 +231,12 @@ const PickersDayFiller = styled('div', {
 
 const noop = () => {};
 
-type PickersDayComponent = (<TDate extends PickerValidDate>(
-  props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+type PickersDayComponent = ((
+  props: PickersDayProps & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerValidDate>(
-  inProps: PickersDayProps<TDate>,
+const PickersDayRaw = React.forwardRef(function PickersDay(
+  inProps: PickersDayProps,
   forwardedRef: React.Ref<HTMLButtonElement>,
 ) {
   const props = useThemeProps({
@@ -283,7 +283,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate extends PickerV
 
   const classes = useUtilityClasses(ownerState);
 
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   const ref = React.useRef<HTMLButtonElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
 

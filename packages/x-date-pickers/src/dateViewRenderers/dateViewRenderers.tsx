@@ -1,23 +1,18 @@
 import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { isDatePickerView } from '../internals/utils/date-utils';
 
-export interface DateViewRendererProps<
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends Omit<
-    DateCalendarProps<TDate>,
-    'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'
-  > {
+export interface DateViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
+  extends Omit<DateCalendarProps, 'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'> {
   view: TView;
   onViewChange?: (view: TView) => void;
   views: readonly TView[];
   focusedView: TView | null;
 }
 
-export const renderDateViewCalendar = <TDate extends PickerValidDate>({
+export const renderDateViewCalendar = ({
   view,
   onViewChange,
   views,
@@ -56,7 +51,7 @@ export const renderDateViewCalendar = <TDate extends PickerValidDate>({
   fixedWeekNumber,
   displayWeekNumber,
   timezone,
-}: DateViewRendererProps<TDate, DateView>) => (
+}: DateViewRendererProps<DateView>) => (
   <DateCalendar
     view={view}
     onViewChange={onViewChange}

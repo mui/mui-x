@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -89,8 +88,8 @@ const pieChartsParams = {
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
-  const [highlighted, setHighlighted] = React.useState('item');
-  const [faded, setFaded] = React.useState('global');
+  const [highlight, setHighlight] = React.useState('item');
+  const [fade, setFade] = React.useState('global');
 
   const handleChartType = (event, newChartType) => {
     if (newChartType !== null) {
@@ -124,12 +123,13 @@ export default function ElementHighlights() {
             series={barChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
-                highlighted,
-                faded,
+                highlight,
+                fade,
               },
             }))}
           />
         )}
+
         {chartType === 'line' && (
           <LineChart
             {...lineChartsParams}
@@ -137,32 +137,34 @@ export default function ElementHighlights() {
               ...series,
               area: withArea,
               highlightScope: {
-                highlighted,
-                faded,
+                highlight,
+                fade,
               },
             }))}
           />
         )}
+
         {chartType === 'scatter' && (
           <ScatterChart
             {...scatterChartsParams}
             series={scatterChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
-                highlighted,
-                faded,
+                highlight,
+                fade,
               },
             }))}
           />
         )}
+
         {chartType === 'pie' && (
           <PieChart
             {...pieChartsParams}
             series={pieChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
-                highlighted,
-                faded,
+                highlight,
+                fade,
               },
             }))}
           />
@@ -177,9 +179,9 @@ export default function ElementHighlights() {
       >
         <TextField
           select
-          label="highlighted"
-          value={highlighted}
-          onChange={(event) => setHighlighted(event.target.value)}
+          label="highlight"
+          value={highlight}
+          onChange={(event) => setHighlight(event.target.value)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
@@ -188,9 +190,9 @@ export default function ElementHighlights() {
         </TextField>
         <TextField
           select
-          label="faded"
-          value={faded}
-          onChange={(event) => setFaded(event.target.value)}
+          label="fade"
+          value={fade}
+          onChange={(event) => setFade(event.target.value)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>

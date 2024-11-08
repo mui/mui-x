@@ -5,15 +5,15 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckIcon from '@mui/icons-material/Check';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-import { TreeItem2, TreeItem2Label } from '@mui/x-tree-view/TreeItem2';
-import { TreeItem2LabelInput } from '@mui/x-tree-view/TreeItem2LabelInput';
+import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
+import { TreeItemLabelInput } from '@mui/x-tree-view/TreeItemLabelInput';
 
 import { MUI_X_PRODUCTS } from './products';
 
 function CustomLabel({ editing, editable, children, toggleItemEditing, ...other }) {
   return (
-    <TreeItem2Label
+    <TreeItemLabel
       {...other}
       editable={editable}
       sx={{
@@ -33,7 +33,7 @@ function CustomLabel({ editing, editable, children, toggleItemEditing, ...other 
           <EditOutlinedIcon fontSize="small" />
         </IconButton>
       )}
-    </TreeItem2Label>
+    </TreeItemLabel>
   );
 }
 
@@ -43,7 +43,7 @@ function CustomLabelInput(props) {
 
   return (
     <React.Fragment>
-      <TreeItem2LabelInput {...other} value={value} />
+      <TreeItemLabelInput {...other} value={value} />
       <IconButton
         color="success"
         size="small"
@@ -60,8 +60,8 @@ function CustomLabelInput(props) {
   );
 }
 
-const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
-  const { interactions, status } = useTreeItem2Utils({
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
+  const { interactions, status } = useTreeItemUtils({
     itemId: props.itemId,
     children: props.children,
   });
@@ -79,7 +79,7 @@ const CustomTreeItem2 = React.forwardRef(function CustomTreeItem2(props, ref) {
   };
 
   return (
-    <TreeItem2
+    <TreeItem
       {...props}
       ref={ref}
       slots={{ label: CustomLabel, labelInput: CustomLabelInput }}
@@ -106,7 +106,7 @@ export default function EditWithIcons() {
     <Box sx={{ minHeight: 352, minWidth: 260 }}>
       <RichTreeView
         items={MUI_X_PRODUCTS}
-        slots={{ item: CustomTreeItem2 }}
+        slots={{ item: CustomTreeItem }}
         experimentalFeatures={{ labelEditing: true }}
         isItemEditable
         defaultExpandedItems={['grid', 'pickers']}
