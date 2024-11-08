@@ -5,16 +5,19 @@ import {
   GridListColDef,
   GridColDef,
   GridRowParams,
+  GridToolbarContainer,
+  GridSlots,
 } from '@mui/x-data-grid-pro';
-import Box from '@mui/material/Box';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import MessageIcon from '@mui/icons-material/Message';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import ViewStreamIcon from '@mui/icons-material/ViewStream';
 
 function MessageAction(params: Pick<GridRowParams, 'row'>) {
   const handleMessage = () => {
@@ -58,8 +61,53 @@ const listColDef: GridListColDef = {
 
 const VISIBLE_FIELDS = ['avatar', 'name', 'position'];
 
+type ToolbarProps = {
+  view: 'grid' | 'list';
+  onChangeView: (view: 'grid' | 'list') => void;
+};
+
+function Toolbar({ view, onChangeView }: ToolbarProps) {
+  return (
+    <GridToolbarContainer
+      sx={{ borderBottom: '1px solid', borderColor: 'divider', py: 1 }}
+    >
+      <ToggleButtonGroup
+        size="small"
+        sx={{ ml: 'auto' }}
+        value={view}
+        exclusive
+        onChange={(_, newView) => {
+          if (newView) {
+            onChangeView(newView);
+          }
+        }}
+      >
+        <ToggleButton
+          size="small"
+          color="primary"
+          sx={{ gap: 0.5 }}
+          value="grid"
+          selected={view === 'grid'}
+        >
+          <ViewWeekIcon fontSize="small" /> Grid
+        </ToggleButton>
+        <ToggleButton
+          size="small"
+          color="primary"
+          sx={{ gap: 0.5 }}
+          value="list"
+          selected={view === 'list'}
+        >
+          <ViewStreamIcon fontSize="small" /> List
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </GridToolbarContainer>
+  );
+}
+
 export default function ListView() {
-  const [isListView, setIsListView] = React.useState(true);
+  const [view, setView] = React.useState<'grid' | 'list'>('list');
+  const isListView = view === 'list';
 
   const { data } = useDemoData({
     dataSet: 'Employee',
@@ -82,32 +130,23 @@ export default function ListView() {
   const rowHeight = isListView ? 64 : 52;
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isListView}
-            onChange={(event) => setIsListView(event.target.checked)}
-          />
-        }
-        label="Enable list view"
-      />
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: isListView ? 360 : undefined,
-          height: 600,
-          margin: '0 auto',
+    <div style={{ maxWidth: 360, height: 600 }}>
+      <DataGridPro
+        {...data}
+        columns={columns}
+        rowHeight={rowHeight}
+        unstable_listView={isListView}
+        unstable_listColumn={listColDef}
+        slots={{
+          toolbar: Toolbar as GridSlots['toolbar'],
         }}
-      >
-        <DataGridPro
-          {...data}
-          columns={columns}
-          rowHeight={rowHeight}
-          unstable_listView={isListView}
-          unstable_listColumn={listColDef}
-        />
-      </Box>
-    </Box>
+        slotProps={{
+          toolbar: {
+            view,
+            onChangeView: setView,
+          },
+        }}
+      />
+    </div>
   );
 }
