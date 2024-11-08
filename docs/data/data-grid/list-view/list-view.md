@@ -2,7 +2,7 @@
 title: Data Grid - List view
 ---
 
-# Data Grid - List view [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - List view [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
 
 <p class="description">Display data in a single-column list view. Can be used to present a more compact grid on smaller screens and mobile devices.</p>
 
