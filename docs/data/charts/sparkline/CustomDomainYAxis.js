@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 const settings = {
-  valueFormatter: (v) => `${v}%`,
+  valueFormatter: (value) => `${value}%`,
   height: 100,
   showTooltip: true,
   showHighlight: true,
@@ -66,7 +66,6 @@ export default function CustomDomainYAxis() {
         </TextField>
         <Typography>y-axis range: {yRange[domainLimitKey]}</Typography>
       </Stack>
-
       <Stack
         sx={{
           width: '100%',

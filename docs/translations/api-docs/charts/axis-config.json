@@ -11,7 +11,7 @@
       "description": "The key used to retrieve <code>data</code> from the <code>dataset</code> prop."
     },
     "domainLimit": {
-      "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extras space is added.<br />- function: eceives the calculated extremums as parameters, and should return the axis domain."
+      "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extras space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "max": {
