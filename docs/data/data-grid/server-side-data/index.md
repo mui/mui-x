@@ -132,7 +132,7 @@ The code has been significantly reduced, the need for managing the controlled st
 
 The data source changes how the existing server-side features like `filtering`, `sorting`, and `pagination` work.
 
-**Without data source**
+### Without data source
 
 When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
 In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
@@ -157,7 +157,7 @@ In order for them to work with server-side data, you need to set them to `server
 />
 ```
 
-**With data source**
+### With data source
 
 With the data source, the features `filtering`, `sorting`, `pagination` are automatically set to `server`.
 
@@ -187,9 +187,7 @@ Open info section of the browser console to see the requests being made and the 
 The data source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the demo below.
-
-{{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
 
 ### Customize the cache lifetime
 
