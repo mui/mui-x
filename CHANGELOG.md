@@ -5,600 +5,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-alpha.0
 
-<img width="600" alt="MUI X v8 Alpha is live" src="https://github.com/user-attachments/assets/114cf615-b617-435f-8499-76ac3c26c57b">
+<img width="100%" alt="MUI X v8 Alpha is live" src="https://github.com/user-attachments/assets/114cf615-b617-435f-8499-76ac3c26c57b">
 
 _Nov 7, 2024_
 
 We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
-
-From https://github.com/mui/mui-x/pull/14913
-
-### Tree View
-
-- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
-
-  Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](https://next.mui.com/x/react-tree-view/tree-item-customization/).
-
-- The `onClick` and `onMouseDown` were the only event callback that were passed to the content of the Tree Item instead of its root.
-  The goal was to make sure that the callback was not fired when clicking on a descendant of a giving item.
-  This inconsistency has been solved, all the event manager now target the root of the item, and you can use the `onItemClick` prop on the Tree View component to target the content of an item:
-
-  ```diff
-  -<SimpleTreeView>
-  +<SimpleTreeView onItemClick={handleItemClick}>
-  -  <TreeItem onClick={handleItemClick}>
-  +  <TreeItem >
-   </SimpleTreeView>
-  ```
-
-- All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
-
-  ```diff
-   import * as React from 'react';
-   import {
-  -  TreeItem2,
-  +  TreeItem,
-  -  TreeItem2Root,
-  +  TreeItemRoot,
-  -  TreeItem2Content,
-  +  TreeItemContent,
-  -  TreeItem2IconContainer,
-  +  TreeItemIconContainer,
-  -  TreeItem2GroupTransition,
-  +  TreeItemGroupTransition,
-  -  TreeItem2Checkbox,
-  +  TreeItemCheckbox,
-  -  TreeItem2Label,
-  +  TreeItemLabel,
-  -  TreeItem2Props,
-  +  TreeItemProps,
-  -  TreeItem2Slots,
-  +  TreeItemSlots,
-  -  TreeItem2SlotProps,
-  +  TreeItemSlotProps,
-  - } from '@mui/x-tree-view/TreeItem2';
-  + } from '@mui/x-tree-view/TreeItem';
-   import {
-  -  useTreeItem2,
-  +  useTreeItem,
-  -  unstable_useTreeItem2 as useAliasedTreeItem,
-  +  unstable_useTreeItem as useAliasedTreeItem,
-  -  UseTreeItem2Parameters,
-  +  UseTreeItemParameters,
-  -  UseTreeItem2ReturnValue,
-  +  UseTreeItemReturnValue,
-  -  UseTreeItem2Status,
-  +  UseTreeItemStatus,
-  -  UseTreeItem2RootSlotOwnProps,
-  +  UseTreeItemRootSlotOwnProps,
-  -  UseTreeItem2ContentSlotOwnProps,
-  +  UseTreeItemContentSlotOwnProps,
-  -  UseTreeItem2LabelInputSlotOwnProps,
-  +  UseTreeItemLabelInputSlotOwnProps,
-  -  UseTreeItem2LabelSlotOwnProps,
-  +  UseTreeItemLabelSlotOwnProps,
-  -  UseTreeItem2CheckboxSlotOwnProps,
-  +  UseTreeItemCheckboxSlotOwnProps,
-  -  UseTreeItem2IconContainerSlotOwnProps,
-  +  UseTreeItemIconContainerSlotOwnProps,
-  -  UseTreeItem2GroupTransitionSlotOwnProps,
-  +  UseTreeItemGroupTransitionSlotOwnProps,
-  -  UseTreeItem2DragAndDropOverlaySlotOwnProps,
-  +  UseTreeItemDragAndDropOverlaySlotOwnProps,
-  - } from '@mui/x-tree-view/useTreeItem2';
-  + } from '@mui/x-tree-view/useTreeItem';
-  - import { useTreeItem2Utils } from '@mui/x-tree-view/hooks';
-  + import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-   import {
-  -  TreeItem2Provider,
-  +  TreeItemProvider,
-  -  TreeItem2ProviderProps,
-  +  TreeItemProviderProps,
-  - } from '@mui/x-tree-view/TreeItem2Provider';
-  + } from '@mui/x-tree-view/TreeItemProvider';
-   import {
-  -  TreeItem2Icon,
-  +  TreeItemIcon,
-  -  TreeItem2IconProps,
-  +  TreeItemIconProps,
-  -  TreeItem2IconSlots,
-  +  TreeItemIconSlots,
-  -  TreeItem2IconSlotProps,
-  +  TreeItemIconSlotProps,
-  - } from '@mui/x-tree-view/TreeItem2Icon';
-  + } from '@mui/x-tree-view/TreeItemIcon';
-   import {
-  -  TreeItem2DragAndDropOverlay,
-  +  TreeItemDragAndDropOverlay,
-  -  TreeItem2DragAndDropOverlayProps,
-  +  TreeItemDragAndDropOverlayProps,
-  - } from '@mui/x-tree-view/TreeItem2DragAndDropOverlay';
-  + } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-   import {
-  -  TreeItem2LabelInput,
-  +  TreeItemLabelInput,
-  -  TreeItem2LabelInputProps,
-  +  TreeItemLabelInputProps,
-  - } from '@mui/x-tree-view/TreeItem2LabelInput';
-  + } from '@mui/x-tree-view/TreeItemLabelInput';
-  ```
-
-From https://github.com/mui/mui-x/pull/14651
-
-### Pickers
-
-- The default DOM structure of the field has changed.
-  Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
-  Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
-  **Fallback to the non-accessible DOM structure:**
-
-  ```tsx
-  <DateField enableAccessibleFieldDOMStructure={false} />
-  <DatePicker enableAccessibleFieldDOMStructure={false} />
-  <DateRangePicker enableAccessibleFieldDOMStructure={false} />
-  ```
-
-  **Migrate `slotProps.field`:**
-  When using `slotProps.field` to pass props to your field component,
-  the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
-
-  - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
-
-    Both components below will respect the leading zeroes on digit sections:
-
-    ```js
-    <DatePicker
-      slotProps={{ field: { shouldRespectLeadingZeros: true } }}
-      enableAccessibleFieldDOMStructure={false}
-     />
-    <DatePicker
-      slotProps={{ field: { shouldRespectLeadingZeros: true } }}
-    />
-    ```
-
-  - For the props forwarded to the `TextField`,
-    you can have a look at the next section to see how the migration impact them.
-
-    Both components below will render a small size UI:
-
-    ```js
-    <DatePicker
-      slotProps={{ field: { size: 'small' } }}
-      enableAccessibleFieldDOMStructure={false}
-     />
-    <DatePicker
-      slotProps={{ field: { size: 'small' } }}
-    />
-    ```
-
-    **Migrate `slotProps.textField`:**
-    If you are passing props to `slotProps.textField`,
-    these props will now be received by `PickersTextField` and should keep working the same way as before.
-    Both components below will render a small size UI:
-
-  ```js
-  <DatePicker
-    slotProps={{ textField: { size: 'small' } }}
-    enableAccessibleFieldDOMStructure={false}
-  />
-  <DatePicker
-    slotProps={{ textField: { size: 'small' } }}
-  />
-  ```
-
-  Side note: If you are passing `inputProps` to `slotProps.textField`, these props will now be passed to the hidden `<input />` element.
-  **Migrate `slots.field`:**
-  If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
-  This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
-  You can have a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
-  **Migrate `slots.textField`:**
-  If you are passing a custom `TextField` component to your fields and pickers,
-  you need to create a new one that is using the accessible DOM structure.
-  You can have a look at the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) section to have a concrete example.
-  Side note: If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
-  please consider having a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) section which uses `slots.field`.
-  This approach can be more appropriate for deeper changes.
-  **Migrate the theme:**
-  If you are using the theme to customize `MuiTextField`,
-  you need to pass the same config to `MuiPickersTextField`:
-
-  ```js
-  const theme = createTheme({
-    components: {
-      MuiTextField: {
-        defaultProps: {
-          variant: 'outlined',
-        },
-        styleOverrides: {
-          root: {
-            '& .MuiInputLabel-outlined.Mui-focused': {
-              color: 'red',
-            },
-          },
-        },
-      },
-      MuiPickersTextField: {
-        defaultProps: {
-          variant: 'outlined',
-        },
-        styleOverrides: {
-          root: {
-            '& .MuiInputLabel-outlined.Mui-focused': {
-              color: 'red',
-            },
-          },
-        },
-      },
-    },
-  });
-  ```
-
-  If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
-  you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
-
-  ```js
-  const theme = createTheme({
-    components: {
-      // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
-      MuiInput: {
-        defaultProps: {
-          margin: 'dense',
-        },
-        styleOverrides: {
-          root: {
-            color: 'red',
-          },
-        },
-      },
-      // Replace with `MuiPickersOutlinedInput` or `MuiPickersFilledInput` if needed
-      MuiPickersInput: {
-        defaultProps: {
-          margin: 'dense',
-        },
-        styleOverrides: {
-          root: {
-            color: 'red',
-          },
-        },
-      },
-    },
-  });
-  ```
-
-  If you are using the theme to customize `MuiInputBase`,
-  you need to pass the same config to `MuiPickersInputBase`:
-
-  ```js
-  const theme = createTheme({
-    components: {
-      MuiInputBase: {
-        defaultProps: {
-          margin: 'dense',
-        },
-        styleOverrides: {
-          root: {
-            color: 'red',
-          },
-        },
-      },
-      MuiPickersInputBase: {
-        defaultProps: {
-          margin: 'dense',
-        },
-        styleOverrides: {
-          root: {
-            color: 'red',
-          },
-        },
-      },
-    },
-  });
-  ```
-
-  From https://github.com/mui/mui-x/pull/14986
-
-### Pickers
-
-- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
-  If you have customized those translation keys, you have to update them following the examples below:
-
-  - If you are setting a custom value in a picker component:
-
-  ```diff
-  -clockLabelText: (view, time, utils) =>
-  -   `Select ${view}. ${
-  -     time === null || !utils.isValid(time)
-  -       ? 'No time selected'
-  -       : `Selected time is ${utils.format(time, 'fullTime')}`
-  -   }`
-  +clockLabelText: (view, formattedTime) =>
-  +   `Select ${view}. ${
-  +     formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
-  +   }`
-
-  -openDatePickerDialogue: (value, utils) =>
-  -  value !== null && utils.isValid(value)
-  -    ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
-  -    : 'Choose date',
-  +openDatePickerDialogue: (formattedDate) =>
-  +  formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
-
-  -openTimePickerDialogue: (value, utils) =>
-  -  value !== null && utils.isValid(value)
-  -    ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
-  -    : 'Choose time',
-  +openTimePickerDialogue: (formattedTime) =>
-  +  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
-  ```
-
-  - If you are setting a custom value in the `LocalizationProvider`:
-
-  ```diff
-   <LocalizationProvider localeText={{
-  -   clockLabelText: (view, time, utils) =>
-  -     `Select ${view}. ${
-  -       time === null || !utils.isValid(time)
-  -         ? 'No time selected'
-  -         : `Selected time is ${utils.format(time, 'fullTime')}`
-  -     }`
-  +   clockLabelText: (view, formattedTime) =>
-  +     `Select ${view}. ${
-  +       formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
-  +     }`
-  -   openDatePickerDialogue: (value, utils) =>
-  -     value !== null && utils.isValid(value)
-  -      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
-  -      : 'Choose date',
-  +   openDatePickerDialogue: (formattedDate) =>
-  +     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
-  -   openTimePickerDialogue: (value, utils) =>
-  -     value !== null && utils.isValid(value)
-  -       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
-  -       : 'Choose time',
-  +   openTimePickerDialogue: (formattedTime) =>
-  +     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
-   }} >
-  ```
-
-  - If you using this translation key in a custom component:
-
-  ```diff
-   const translations = usePickersTranslations();
-
-  -const clockLabelText = translations.clockLabelText(
-  -  view,
-  -  value,
-  -  {} as any,
-  -  value == null ? null : value.format('hh:mm:ss')
-  -);
-  +const clockLabelText = translations.clockLabelText(
-  +  view,
-  +  value == null ? null : value.format('hh:mm:ss')
-  +);
-
-  -const openDatePickerDialogue = translations.openDatePickerDialogue(
-  -  value,
-  -  {} as any,
-  -  value == null ? null : value.format('MM/DD/YYY')
-  -);
-  +const openDatePickerDialogue = translations.openDatePickerDialogue(
-  +  value == null ? null : value.format('MM/DD/YYY')
-  +);
-
-  -const openTimePickerDialogue = translations.openTimePickerDialogue(
-  -  value,
-  -  {} as any,
-  -  value == null ? null : value.format('hh:mm:ss')
-  -);
-  +const openTimePickerDialogue = translations.openTimePickerDialogue(
-  +  value == null ? null : value.format('hh:mm:ss')
-  +);
-  ```
-
-  From https://github.com/mui/mui-x/pull/15093
-
-### Tree View
-
-- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
-
-  ```diff
-  -import { TreeView } from '@mui/x-tree-view';
-  +import { SimpleTreeView } from '@mui/x-tree-view';
-
-  -import { TreeView } from '@mui/x-tree-view/TreeView';
-  +import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-
-     return (
-  -    <TreeView>
-  +    <SimpleTreeView>
-         <TreeItem itemId="1" label="First item" />
-  -    </TreeView>
-  +    </SimpleTreeView>
-     );
-  ```
-
-  If you were using theme augmentation, you will also need to migrate it:
-
-  ```diff
-   const theme = createTheme({
-     components: {
-  -    MuiTreeView: {
-  +    MuiSimpleTreeView: {
-         styleOverrides: {
-           root: {
-             opacity: 0.5,
-           },
-         },
-       },
-     },
-   });
-  ```
-
-  If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
-
-  ```diff
-   import { treeViewClasses } from '@mui/x-tree-view/TreeView';
-   import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
-
-  -const rootClass = treeViewClasses.root;
-  +const rootClass = simpleTreeViewClasses.root;
-  From https://github.com/mui/mui-x/pull/15053
-  ```
-
-### Pickers
-
-- The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
-  If you were using them, you need to replace them with the following code:
-
-  - `UseDateFieldComponentProps`
-
-    ```ts
-    import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
-    import { PickerValidDate } from '@mui/x-date-pickers/models';
-
-    type UseDateFieldComponentProps<
-      TDate extends PickerValidDate,
-      TEnableAccessibleFieldDOMStructure extends boolean,
-      TChildProps extends {},
-    > = Omit<TChildProps, keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
-      UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
-    ```
-
-  - `UseTimeFieldComponentProps`
-
-    ```ts
-    import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
-    import { PickerValidDate } from '@mui/x-date-pickers/models';
-
-    type UseTimeFieldComponentProps<
-      TDate extends PickerValidDate,
-      TEnableAccessibleFieldDOMStructure extends boolean,
-      TChildProps extends {},
-    > = Omit<TChildProps, keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>> &
-      UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
-    ```
-
-  - `UseDateTimeFieldComponentProps`
-
-    ````ts
-    import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
-    import { PickerValidDate } from '@mui/x-date-pickers/models';
-
-        type UseDateTimeFieldComponentProps<
-          TDate extends PickerValidDate,
-          TEnableAccessibleFieldDOMStructure extends boolean,
-          TChildProps extends {},
-        > = Omit<
-          TChildProps,
-          keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
-        > &
-          UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
-        ```
-
-    From https://github.com/mui/mui-x/pull/15001
-    ````
-
-### Pickers
-
-- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
-
-  If you were passing your date object type as a generic to any element of one of those packages, you can remove it:
-
-  ```diff
-  -<DatePicker<Dayjs> value={value} onChange={onChange} />
-  +<DatePicker value={value} onChange={onChange} />
-
-  -type Slot = DateCalendarSlots<Dayjs>['calendarHeader'];
-  +type Slot = DateCalendarSlots['calendarHeader'];
-
-  -type Props = DatePickerToolbarProps<Dayjs>;
-  +type Props = DatePickerToolbarProps;
-  ```
-
-  A follow-up release will add the full list of the impacted elements to the migration guide.
-
-From https://github.com/mui/mui-x/pull/15089
-
-### Tree View
-
-- The indentation of nested Tree Items is now applied on the content of the element.
-  This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
-
-  **Apply custom indentation:**
-
-  If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure:
-
-  ```tsx
-  <RichTreeView
-    items={MUI_X_PRODUCTS}
-    itemChildrenIndentation={24}
-    defaultExpandedItems={['grid']}
-  />
-  ```
-
-  See [Tree Item Customization—Change nested item's indentation](https://next.mui.com/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
-
-  **Fallback to the old behavior:**
-
-  If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior:
-
-  ```tsx
-  const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
-    // Remove the additional padding of nested elements
-    padding: theme.spacing(0.5, 1),
-  }));
-
-  const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)({
-    // Add the padding back on the group transition element
-    paddingLeft: 'var(--TreeView-itemChildrenIndentation) !important',
-  });
-  ```
-
-From https://github.com/mui/mui-x/pull/15297
-
-### Pickers
-
-- The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
-
-`usePickersTranslation`
-
-```diff
-- import { usePickersTranslation } from '@mui/x-date-pickers/hooks';
-- import { usePickersTranslation } from '@mui/x-date-pickers';
-- import { usePickersTranslation } from '@mui/x-date-pickers-pro';
-+ import { usePickerTranslation } from '@mui/x-date-pickers/hooks';
-+ import { usePickerTranslation } from '@mui/x-date-pickers';
-+ import { usePickerTranslation } from '@mui/x-date-pickers-pro';
-- const translations = usePickersTranslation();
-+ const translations = usePickerTranslation();
-```
-
-`usePickersContext`
-
-```diff
-- import { usePickersContext } from '@mui/x-date-pickers/hooks';
-- import { usePickersContext } from '@mui/x-date-pickers';
-- import { usePickersContext } from '@mui/x-date-pickers-pro';
-+ import { usePickerContext } from '@mui/x-date-pickers/hooks';
-+ import { usePickerContext } from '@mui/x-date-pickers';
-+ import { usePickerContext } from '@mui/x-date-pickers-pro';
-- const pickersContext = usePickersContext();
-+ const pickerContext = usePickerContext();
-```
-
-From https://github.com/mui/mui-x/pull/14487
-
-- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
-  You can import it from `@mui/x-license` instead:
-
-  ```diff
-  -import { LicenseInfo } from '@mui/x-date-pickers-pro';
-  +import { LicenseInfo } from '@mui/x-license';
-  
-   LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
-  ```
 
   Special thanks go out to the community contributors who have helped make this release possible:
   @belkocik, @clins1994, @dpak-maurya, @GeorgiosDrivas, @k-rajat19, @kalyan90, @wojtkolos.
@@ -649,6 +62,64 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- The default DOM structure of the field has changed.
+  Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+  Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+  **Fallback to the non-accessible DOM structure:**
+
+  **Migrate `slotProps.field`:**
+  When using `slotProps.field` to pass props to your field component,
+  the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+
+  **Migrate `slotProps.textField`:**
+  If you are passing props to `slotProps.textField`,
+  these props will now be received by `PickersTextField` and should keep working the same way as before.
+
+  Side note: If you are passing `inputProps` to `slotProps.textField`, these props will now be passed to the hidden `<input />` element.
+  **Migrate `slots.field`:**
+  If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
+  This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
+  You can have a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
+  **Migrate `slots.textField`:**
+  If you are passing a custom `TextField` component to your fields and pickers,
+  you need to create a new one that is using the accessible DOM structure.
+  You can have a look at the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) section to have a concrete example.
+  Side note: If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
+  please consider having a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) section which uses `slots.field`.
+  This approach can be more appropriate for deeper changes.
+  **Migrate the theme:**
+  If you are using the theme to customize `MuiTextField`,
+  you need to pass the same config to `MuiPickersTextField`
+
+  If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
+  you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`
+
+  If you are using the theme to customize `MuiInputBase`,
+  you need to pass the same config to `MuiPickersInputBase`
+
+- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
+
+- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+
+  - `UseDateFieldComponentProps`
+  - `UseTimeFieldComponentProps`
+  - `UseDateTimeFieldComponentProps`
+
+- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+
+  If you were passing your date object type as a generic to any element of one of those packages, you can remove it
+
+  A follow-up release will add the full list of the impacted elements to the migration guide.
+
+- The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
+  `usePickersTranslation` to `usePickerTranslation`
+  `usePickersContext` to `usePickerContext`
+
+- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+  You can import it from `@mui/x-license` instead.
+
 #### `@mui/x-date-pickers@8.0.0-alpha.0`
 
 - [fields] Enable the new field DOM structure by default (#14651) @flaviendelangle
@@ -686,13 +157,15 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
   const props = { legend: { ... }, ... }
   <Line {...props} />
   ```
+
   :::
   If you find `slotProps={{ legend: { hidden: true } }}` too long, you can now use the `hideLegend` prop to prevent rendering the legend.
   :::
+
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
 - The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
-The deprecated ones are now removed.
+  The deprecated ones are now removed.
 - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
 - The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us.
 
@@ -706,13 +179,42 @@ The deprecated ones are now removed.
 - [charts] Remove deprecated `legend` props (#15081) @alexfauquette
 - [charts] Remove deprecated highlight properties (#15191) @alexfauquette
 - [charts] Update Popper position outside of React (#15003) @alexfauquette
-- [charts] Improve the performance of the `getSymbol` method  (#15233) @romgrk
+- [charts] Improve the performance of the `getSymbol` method (#15233) @romgrk
 
 #### `@mui/x-charts-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 ### Tree View
+
+#### Breaking changes
+
+- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
+
+  Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](https://next.mui.com/x/react-tree-view/tree-item-customization/).
+
+- The `onClick` and `onMouseDown` were the only event callback that were passed to the content of the Tree Item instead of its root.
+  The goal was to make sure that the callback was not fired when clicking on a descendant of a giving item.
+  This inconsistency has been solved, all the event manager now target the root of the item, and you can use the `onItemClick` prop on the Tree View component to target the content of an item.
+
+- All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix.
+
+- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
+  If you were using theme augmentation, you will also need to migrate it.
+  If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object.
+
+- The indentation of nested Tree Items is now applied on the content of the element.
+  This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
+
+  **Apply custom indentation:**
+
+  If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure
+
+  See [Tree Item Customization—Change nested item's indentation](https://next.mui.com/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
+
+  **Fallback to the old behavior:**
+
+  If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior.
 
 #### `@mui/x-tree-view@8.0.0-alpha.0`
 
@@ -725,7 +227,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 ### Docs
 
-- [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle 
+- [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle
 - [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
 - [docs] Add section explaining how to keep the selection while filtering (#15185) @arminmeh
 - [docs] Apply the new DX to the Button Field demos (#14860) @flaviendelangle
