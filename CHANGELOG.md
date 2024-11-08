@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.2
+
+_Nov 8, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 👨🏽‍💻 API enhancements
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@clins1994, @GuillaumeMeheut, @k-rajat19.
+Following are all team members who have contributed to this release:
+@LukasTy, @MBilalShafi, @KenanYusuf, @arminmeh.
+
+### Upcoming alpha
+
+Keep an eye out for the MUI⠀X `v8.0.0-aplha.0` release soon. It will follow a weekly release schedule as always until it is stable.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.2`
+
+- [DataGrid] Fix `null` reference error in `GridVirtualScrollbar` (#15289) @MBilalShafi
+- [DataGrid] Fix filtering with `boolean` column type (#15257) @k-rajat19
+- [DataGrid] Improve row selection propagation trigger (#15274) @MBilalShafi
+- [DataGrid] Preprocess edit cell props on backspace/delete (#15223) @KenanYusuf
+- [DataGrid] Add a recipe to persist column width and order (#15309) @MBilalShafi
+
+#### `@mui/x-data-grid-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.2`, plus:
+
+- [DataGridPro] Apply default properties if they are not passed in a reorder column (#15320) @k-rajat19
+- [DataGridPro] Toggle row expansion with `Enter` key in Tree data (#15313) @k-rajat19
+
+#### `@mui/x-data-grid-premium@7.22.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.2`, plus:
+
+- [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (#15222) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.2`
+
+- [pickers] Add support for `moment-hijri@3.0.0` (#15248) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.22.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.22.2`
+
+- [charts] Allow `SeriesValueFormatter` to return `null` value (#15295) @clins1994
+- [charts] Allow configuring the `domainLimit` for each axis. (#15325) @GuillaumeMeheut
+
+#### `@mui/x-charts-pro@7.0.0-beta.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.22.2`.
+
 ## 7.22.1
 
 _Nov 1, 2024_
