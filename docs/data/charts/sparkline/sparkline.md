@@ -58,3 +58,11 @@ The following demo shows two sparklines, one with small and another with large v
 The first row has the default y-axis values, while on the second row a fixed range from `0` to `100` has been set.
 
 {{"demo": "CustomYAxis.js"}}
+
+You can adjust the y-axis range of a sparkline relatively to its data by using the `domainLimit` option in the `yAxis` configuration.
+See the [axis docs page](http://localhost:3001/x/react-charts/axis/#relative-axis-sub-domain) form more information.
+
+The demo below shows different ways to set the y-axis range.
+They always display the same data, going from -15 to 92, but with different `domainLimit` settings.
+
+{{"demo": "CustomDomainYAxis.js"}}
