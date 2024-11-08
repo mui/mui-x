@@ -270,6 +270,7 @@ export function Clock(inProps: ClockProps) {
       setTime(event, 'finish');
       isMoving.current = false;
     }
+    event.preventDefault();
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
