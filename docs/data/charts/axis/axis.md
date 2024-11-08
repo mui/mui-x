@@ -86,7 +86,7 @@ xAxis={[
 
 {{"demo": "MinMaxExample.js"}}
 
-### Relative axis sub domain
+### Relative axis subdomain
 
 You can adjust the axis range relatively to its data by using the `domainLimit` option.
 It can take 3 different values:
