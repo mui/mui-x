@@ -1,8 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -26,6 +28,12 @@ const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
 
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
+
+const YAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsYAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
 
 const defaultProps = {
   position: 'left',
@@ -77,7 +85,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   } = defaultizedProps;
 
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
@@ -106,7 +114,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const revertAnchor = (!isRTL && position === 'right') || (isRTL && position !== 'right');
+  const revertAnchor = (!isRtl && position === 'right') || (isRtl && position !== 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -156,7 +164,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   }
 
   return (
-    <AxisRoot
+    <YAxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
       sx={sx}
@@ -203,7 +211,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </YAxisRoot>
   );
 }
 

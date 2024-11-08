@@ -3,8 +3,8 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
-import { InferError, useValidation } from '../useValidation';
-import { FieldSection, PickerChangeHandlerContext, PickerValidDate } from '../../../models';
+import { useValidation } from '../../../validation';
+import { FieldSection, PickerChangeHandlerContext, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -146,7 +146,6 @@ const shouldClosePicker = <TValue, TError>(
  */
 export const usePickerValue = <
   TValue,
-  TDate extends PickerValidDate,
   TSection extends FieldSection,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
@@ -155,7 +154,7 @@ export const usePickerValue = <
   valueType,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+}: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
   TSection,
   InferError<TExternalProps>
@@ -206,8 +205,8 @@ export const usePickerValue = <
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
+  const utils = useUtils();
+  const adapter = useLocalizationContext();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const {
@@ -241,12 +240,13 @@ export const usePickerValue = <
     };
   });
 
-  useValidation(
-    { ...props, value: dateState.draft, timezone },
+  const { getValidationErrorForNewValue } = useValidation({
+    props,
     validator,
-    valueManager.isSameError,
-    valueManager.defaultErrorState,
-  );
+    timezone,
+    value: dateState.draft,
+    onError: props.onError,
+  });
 
   const updateDate = useEventCallback((action: PickerValueUpdateAction<TValue, TError>) => {
     const updaterParams: PickerValueUpdaterParams<TValue, TError> = {
@@ -275,11 +275,7 @@ export const usePickerValue = <
         const validationError =
           action.name === 'setValueFromField'
             ? action.context.validationError
-            : validator({
-                adapter,
-                value: action.value,
-                props: { ...props, value: action.value, timezone },
-              });
+            : getValidationErrorForNewValue(action.value);
 
         cachedContext = {
           validationError,
@@ -440,7 +436,8 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue, timezone },
+      timezone,
+      props,
     });
 
     return !valueManager.hasError(error);

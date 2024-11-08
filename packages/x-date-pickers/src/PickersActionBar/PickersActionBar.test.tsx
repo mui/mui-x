@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<PickersActionBar />', () => {
-  const { render } = createPickerRenderer({
-    clock: 'fake',
-  });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('should not render buttons if actions array is empty', () => {
     const onAccept = () => {};
@@ -45,7 +42,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/clear/i));
+    fireEvent.click(screen.getByText(/clear/i));
     expect(onClear.callCount).to.equal(1);
   });
 
@@ -65,7 +62,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/cancel/i));
+    fireEvent.click(screen.getByText(/cancel/i));
     expect(onCancel.callCount).to.equal(1);
   });
 
@@ -85,7 +82,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/ok/i));
+    fireEvent.click(screen.getByText(/ok/i));
     expect(onAccept.callCount).to.equal(1);
   });
 
@@ -105,7 +102,7 @@ describe('<PickersActionBar />', () => {
       />,
     );
 
-    fireUserEvent.mousePress(screen.getByText(/today/i));
+    fireEvent.click(screen.getByText(/today/i));
     expect(onSetToday.callCount).to.equal(1);
   });
 

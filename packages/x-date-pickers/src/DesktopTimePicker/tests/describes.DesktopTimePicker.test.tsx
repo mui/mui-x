@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -12,7 +12,6 @@ import {
 } from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -31,7 +30,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     variant: 'desktop',
   }));
 
-  describeConformance(<DesktopTimePicker enableAccessibleFieldDOMStructure />, () => ({
+  describeConformance(<DesktopTimePicker />, () => ({
     classes: {} as any,
     render,
     muiName: 'MuiDesktopTimePicker',
@@ -70,25 +69,21 @@ describe('<DesktopTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
       if (isOpened) {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        fireUserEvent.mousePress(
-          screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }),
-        );
-        fireUserEvent.mousePress(
+        fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        fireEvent.click(
           screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
         );
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
-          fireUserEvent.mousePress(
-            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
-          );
+          fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
         }
       } else {
         selectSection('hours');
@@ -100,7 +95,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         if (hasMeridiem) {
           selectSection('meridiem');
-          const previousHours = adapterToUse.getHours(value);
+          const previousHours = adapterToUse.getHours(value!);
           const newHours = adapterToUse.getHours(newValue);
           // update meridiem section if it changed
           if ((previousHours < 12 && newHours >= 12) || (previousHours >= 12 && newHours < 12)) {

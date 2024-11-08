@@ -248,7 +248,7 @@ const arrowKeys: KeyType[] = [
 const RootRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
   stroke: theme.palette.grey[500],
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     stroke: theme.palette.grey[600],
     fill: theme.palette.background.paper,
   }),
@@ -261,7 +261,7 @@ const KeyRoot = styled('g')(({ theme }) => ({
 const KeyRectangle = styled('rect')(({ theme }) => ({
   fill: 'white',
   stroke: theme.palette.grey[500],
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     stroke: theme.palette.grey[600],
     fill: theme.palette.background.paper,
   }),
@@ -270,7 +270,7 @@ const KeyText = styled('text')(({ theme }) => ({
   fill: theme.palette.grey[800],
   fontSize: 9,
   fontFamily: 'IBM Plex Sans',
-  ...(theme.palette.mode === 'dark' && { fill: theme.palette.text.primary }),
+  ...theme.applyStyles('dark', { fill: theme.palette.text.primary }),
 }));
 
 type KeyboardSvgProps = {
@@ -410,20 +410,20 @@ export default function Keyboard() {
   const brandingTheme = useTheme();
   const theme = createTheme({ palette: { mode: brandingTheme.palette.mode } });
 
-  const handleKeySelection = (e: React.SyntheticEvent, key: SelectedKey | null) => {
+  const handleKeySelection = (event: React.SyntheticEvent, key: SelectedKey | null) => {
     const sectionContent = (ref.current as any).querySelector(
       `.MuiPickersSectionList-section[data-sectionindex="${selectedSection.current || 0}"] .MuiPickersSectionList-sectionContent`,
     );
     sectionContent.focus();
 
     if (key) {
-      const event = new KeyboardEvent('keydown', {
+      const keydownEvent = new KeyboardEvent('keydown', {
         ...key,
         bubbles: true,
         cancelable: true,
       });
 
-      sectionContent.dispatchEvent(event);
+      sectionContent.dispatchEvent(keydownEvent);
 
       if (key.key === 'Backspace') {
         sectionContent.textContent = '';
@@ -487,7 +487,6 @@ export default function Keyboard() {
               onKeyUp={() => {
                 setSelectedKey(null);
               }}
-              enableAccessibleFieldDOMStructure
               onSelectedSectionsChange={(newSelectedSection) => {
                 selectedSection.current = newSelectedSection;
               }}

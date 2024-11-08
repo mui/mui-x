@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { PluginContext } from './PluginContext';

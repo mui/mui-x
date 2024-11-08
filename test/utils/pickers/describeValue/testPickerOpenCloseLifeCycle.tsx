@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
@@ -10,7 +10,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, clock, ...pickerParams } =
     options;
 
   if (componentFamily !== 'picker') {
@@ -22,18 +22,18 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
   describe('Picker open / close lifecycle', () => {
     it('should not open on mount if `props.open` is false', () => {
-      render(<ElementToTest enableAccessibleFieldDOMStructure />);
+      render(<ElementToTest />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
     });
 
     it('should open on mount if `prop.open` is true', () => {
-      render(<ElementToTest enableAccessibleFieldDOMStructure open />);
+      render(<ElementToTest open />);
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest enableAccessibleFieldDOMStructure disabled onOpen={onOpen} />);
+      render(<ElementToTest disabled onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -41,7 +41,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should not open when `prop.readOnly` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest enableAccessibleFieldDOMStructure readOnly onOpen={onOpen} />);
+      render(<ElementToTest readOnly onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -82,7 +82,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
@@ -140,7 +140,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
@@ -216,7 +216,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -245,7 +245,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
             // meridiem does not change this time in case of multi section digital clock
             (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis);
       }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -273,7 +273,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       if (isRangeType) {
@@ -281,7 +281,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue);
       }
       expect(onClose.callCount).to.equal(1);
     });
@@ -298,7 +298,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -342,10 +341,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      fireUserEvent.mousePress(document.body);
+      fireUserEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue);
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -356,7 +355,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -365,7 +363,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Dismiss the picker
-      fireUserEvent.mousePress(document.body);
+      fireEvent.click(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -376,17 +374,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      render(
-        <ElementToTest
-          enableAccessibleFieldDOMStructure
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-        />,
-      );
+      render(<ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />);
 
       // Dismiss the picker
-      fireUserEvent.keyPress(document.body, { key: 'Escape' });
+      fireEvent.keyDown(document.body, { key: 'Escape' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

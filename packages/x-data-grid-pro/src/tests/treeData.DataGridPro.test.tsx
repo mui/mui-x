@@ -216,7 +216,7 @@ describe('<DataGridPro /> - Tree data', () => {
       ]);
       setProps({
         getTreeDataPath: (row) => [...row.name.split('.').reverse()],
-      } as DataGridProProps);
+      } as Pick<DataGridProProps, 'getTreeDataPath'>);
       expect(getColumnValues(1)).to.deep.equal([
         'A',
         'A.A',

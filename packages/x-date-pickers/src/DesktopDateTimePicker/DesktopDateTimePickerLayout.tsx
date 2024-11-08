@@ -10,15 +10,10 @@ import {
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
-import { PickerValidDate } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 
-type DesktopDateTimePickerLayoutComponent = (<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,9 +21,8 @@ type DesktopDateTimePickerLayoutComponent = (<
  */
 const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(props: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
+>(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const isRtl = useRtl();
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, classes } = props;
@@ -38,7 +32,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   return (
     <PickersLayoutRoot
       ref={ref}
-      className={clsx(className, pickersLayoutClasses.root, classes?.root)}
+      className={clsx(pickersLayoutClasses.root, classes?.root, className)}
       sx={[
         {
           [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },

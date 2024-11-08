@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireTouchChangedEvent, screen, act } from '@mui/internal-test-utils';
+import { fireEvent, fireTouchChangedEvent, screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -10,7 +10,6 @@ import {
   getClockTouchEvent,
   getFieldSectionsContainer,
 } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -19,9 +18,9 @@ describe('<MobileTimePicker />', () => {
     it('should open when clicking the input', () => {
       const onOpen = spy();
 
-      render(<MobileTimePicker enableAccessibleFieldDOMStructure onOpen={onOpen} />);
+      render(<MobileTimePicker onOpen={onOpen} />);
 
-      fireUserEvent.mousePress(getFieldSectionsContainer());
+      fireEvent.click(getFieldSectionsContainer());
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
@@ -31,7 +30,6 @@ describe('<MobileTimePicker />', () => {
       const handleChange = spy();
       render(
         <MobileTimePicker
-          enableAccessibleFieldDOMStructure
           ampm
           onChange={handleChange}
           open
@@ -41,9 +39,7 @@ describe('<MobileTimePicker />', () => {
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
 
-      act(() => {
-        buttonPM.click();
-      });
+      fireEvent.click(buttonPM);
 
       expect(handleChange.callCount).to.equal(1);
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
@@ -61,7 +57,6 @@ describe('<MobileTimePicker />', () => {
 
       render(
         <MobileTimePicker
-          enableAccessibleFieldDOMStructure
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -73,15 +68,15 @@ describe('<MobileTimePicker />', () => {
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:00:00'));
 
       // Change the minutes
       const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', minuteClockEvent);
+      fireTouchChangedEvent(screen.getByTestId('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T11:53:00'));
       expect(onAccept.callCount).to.equal(0);

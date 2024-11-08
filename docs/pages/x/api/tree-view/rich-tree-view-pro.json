@@ -29,10 +29,7 @@
       "default": "'content'"
     },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ indentationAtItemLevel?: bool, itemsReordering?: bool, labelEditing?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ itemsReordering?: bool, labelEditing?: bool }" }
     },
     "getItemId": {
       "type": { "name": "func" },
@@ -134,6 +131,10 @@
       }
     },
     "selectedItems": { "type": { "name": "any" } },
+    "selectionPropagation": {
+      "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
+      "default": "{ parents: false, descendants: false }"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -178,7 +179,7 @@
     },
     {
       "name": "endIcon",
-      "description": "The default icon displayed next to an end item.\nThis is applied to all tree items and can be overridden by the TreeItem `icon` slot prop.",
+      "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
       "class": null
     }
   ],

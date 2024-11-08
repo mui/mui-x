@@ -56,7 +56,7 @@ function ChartsAxisTooltipContent(props: {
 }) {
   const { content, contentProps, axisData, sx, classes } = props;
 
-  const isXaxis = (axisData.x && axisData.x.index) !== undefined;
+  const isXaxis = axisData.x && axisData.x.index !== -1;
 
   const dataIndex = isXaxis ? axisData.x && axisData.x.index : axisData.y && axisData.y.index;
   const axisValue = isXaxis ? axisData.x && axisData.x.value : axisData.y && axisData.y.value;
@@ -77,8 +77,8 @@ function ChartsAxisTooltipContent(props: {
         series[seriesType]!.seriesOrder.forEach((seriesId) => {
           const item = series[seriesType]!.series[seriesId];
 
-          const providedXAxisId = item.xAxisId ?? item.xAxisKey;
-          const providedYAxisId = item.yAxisId ?? item.yAxisKey;
+          const providedXAxisId = item.xAxisId;
+          const providedYAxisId = item.yAxisId;
 
           const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
 
@@ -87,8 +87,7 @@ function ChartsAxisTooltipContent(props: {
 
             const xAxisId = providedXAxisId ?? xAxisIds[0];
             const yAxisId = providedYAxisId ?? yAxisIds[0];
-            const zAxisId =
-              (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+            const zAxisId = (seriesToAdd as any).zAxisId ?? zAxisIds[0];
 
             const getColor =
               colorProcessors[seriesType]?.(

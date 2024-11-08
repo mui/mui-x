@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -221,16 +228,15 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
 
-    it('should set focus on the cell when clicking the checkbox', () => {
+    it('should set focus on the cell when clicking the checkbox', async () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getActiveCell()).to.equal(null);
 
-      // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
       fireUserEvent.mousePress(checkboxInput!);
 
-      expect(getActiveCell()).to.equal('0-0');
+      await waitFor(() => expect(getActiveCell()).to.equal('0-0'));
     });
 
     it('should select all visible rows regardless of pagination', () => {
@@ -358,6 +364,36 @@ describe('<DataGrid /> - Row selection', () => {
       expect(input2.checked).to.equal(true);
     });
 
+    it('should remove the selection from rows that are filtered out', async function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(selectAllCheckbox);
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
+      await waitFor(() => {
+        // Previous selection is cleaned with only the filtered rows
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+    });
+
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
       render(
         <TestDataGridSelection
@@ -381,10 +417,10 @@ describe('<DataGrid /> - Row selection', () => {
         target: { value: 1 },
       });
       await waitFor(() => {
-        // Previous selection remains, but only one row is visible
+        // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
-      expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
+      expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
       fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
@@ -397,6 +433,26 @@ describe('<DataGrid /> - Row selection', () => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
+    });
+
+    describe('prop: indeterminateCheckboxAction = "select"', () => {
+      it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="select" />);
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+        fireEvent.click(selectAllCheckbox);
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      });
+    });
+
+    describe('prop: indeterminateCheckboxAction = "deselect"', () => {
+      it('should deselect all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="deselect" />);
+        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+        fireEvent.click(selectAllCheckbox);
+        expect(getSelectedRowIds()).to.deep.equal([]);
+      });
     });
   });
 
@@ -527,7 +583,7 @@ describe('<DataGrid /> - Row selection', () => {
     describe('ripple', () => {
       clock.withFakeTimers();
 
-      it('should keep only one ripple visible when navigating between checkboxes', function test() {
+      it('should keep only one ripple visible when navigating between checkboxes', async function test() {
         if (isJSDOM) {
           // JSDOM doesn't fire "blur" when .focus is called in another element
           // FIXME Firefox doesn't show any ripple
@@ -539,13 +595,14 @@ describe('<DataGrid /> - Row selection', () => {
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition
+        await flushMicrotasks();
         expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
       });
     });
   });
 
   describe('prop: isRowSelectable', () => {
-    it('should update the selected rows when the isRowSelectable prop changes', async () => {
+    it('should update the selected rows when the isRowSelectable prop changes', () => {
       const { setProps } = render(
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );
@@ -623,6 +680,27 @@ describe('<DataGrid /> - Row selection', () => {
         rows: data.rows.slice(0, 1),
       });
       expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+
+    // Related to https://github.com/mui/mui-x/issues/14964
+    it('should call `onRowSelectionModelChange` when outdated selected rows are removed', () => {
+      const data = getBasicGridData(4, 2);
+      const onRowSelectionModelChangeSpy = spy();
+
+      const { setProps } = render(
+        <TestDataGridSelection
+          rowSelectionModel={[0, 1, 2]}
+          onRowSelectionModelChange={onRowSelectionModelChangeSpy}
+          checkboxSelection
+          {...data}
+        />,
+      );
+
+      setProps({
+        rows: data.rows.slice(0, 1),
+      });
+
+      expect(onRowSelectionModelChangeSpy.called).to.equal(true);
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
@@ -803,7 +881,7 @@ describe('<DataGrid /> - Row selection', () => {
       }
 
       render(<ControlCase />);
-      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).not.to.throw();
     });
   });
 

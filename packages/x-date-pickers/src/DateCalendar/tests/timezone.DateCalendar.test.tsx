@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
@@ -18,7 +17,7 @@ describe('<DateCalendar /> - Timezone', () => {
       const onChange = spy();
       render(<DateCalendar onChange={onChange} />);
 
-      fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+      fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
       const expectedDate = adapter.setDate(adapter.date(undefined, 'default'), 25);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
@@ -30,12 +29,55 @@ describe('<DateCalendar /> - Timezone', () => {
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
+    it('should use "default" timezone for onChange when provided', () => {
+      const onChange = spy();
+      const value = adapter.date('2022-04-25T15:30');
+
+      render(<DateCalendar value={value} onChange={onChange} timezone="default" />);
+
+      fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
+      const expectedDate = adapter.setDate(value, 25);
+
+      // Check the `onChange` value (uses timezone prop)
+      const actualDate = onChange.lastCall.firstArg;
+      expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
+      expect(actualDate).toEqualDateTime(expectedDate);
+    });
+
+    it('should correctly render month days when timezone changes', () => {
+      function DateCalendarWithControlledTimezone() {
+        const [timezone, setTimezone] = React.useState('Europe/Paris');
+        return (
+          <React.Fragment>
+            <DateCalendar timezone={timezone} />
+            <button onClick={() => setTimezone('America/New_York')}>Switch timezone</button>
+          </React.Fragment>
+        );
+      }
+      render(<DateCalendarWithControlledTimezone />);
+
+      expect(
+        screen.getAllByRole('gridcell', {
+          name: (_, element) => element.nodeName === 'BUTTON',
+        }).length,
+      ).to.equal(30);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Switch timezone' }));
+
+      // the amount of rendered days should remain the same after changing timezone
+      expect(
+        screen.getAllByRole('gridcell', {
+          name: (_, element) => element.nodeName === 'BUTTON',
+        }).length,
+      ).to.equal(30);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange when no value is provided', () => {
           const onChange = spy();
           render(<DateCalendar onChange={onChange} timezone={timezone} />);
-          fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+          fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
           const expectedDate = adapter.setDate(
             adapter.startOfDay(adapter.date(undefined, timezone)),
             25,
@@ -43,7 +85,9 @@ describe('<DateCalendar /> - Timezone', () => {
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
@@ -53,7 +97,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
           render(<DateCalendar value={value} onChange={onChange} timezone="America/Chicago" />);
 
-          fireUserEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
+          fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
           const expectedDate = adapter.setDate(value, 25);
 
           // Check the `onChange` value (uses timezone prop)

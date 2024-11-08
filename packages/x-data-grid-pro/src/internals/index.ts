@@ -33,7 +33,6 @@ export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorde
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
-export { TREE_DATA_STRATEGY } from '../hooks/features/treeData/gridTreeDataUtils';
 export {
   useGridRowPinning,
   rowPinningStateInitializer,
@@ -60,5 +59,7 @@ export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
 export { insertNodeInTree, removeNodeFromTree, getVisibleRowsLookup } from '../utils/tree/utils';
 export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';
+
+export { skipSorting, skipFiltering } from '../hooks/features/serverSideTreeData/utils';
 
 export * from './propValidation';

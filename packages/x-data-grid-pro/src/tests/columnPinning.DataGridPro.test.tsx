@@ -39,7 +39,7 @@ function createDragOverEvent(target: ChildNode) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -328,11 +328,12 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('prop: disableColumnPinning', () => {
-    it('should not add any button to the column menu', () => {
-      render(<TestCase disableColumnPinning />);
+    it('should not add any button to the column menu', async () => {
+      const { user } = render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
+
+      await user.click(menuIconButton);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
     });
@@ -460,76 +461,80 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('column menu', () => {
-    it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
-      render(<TestCase />);
+    it('should pin the column to the left when clicking the "Pin to left" pinning button', async () => {
+      const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
-      render(<TestCase />);
+    it('should pin the column to the right when clicking the "Pin to right" pinning button', async () => {
+      const { user } = render(<TestCase />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
-      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
-      render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
+    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect($(`.${gridClasses['cell--pinnedRight']}[data-field="id"]`)).to.equal(null);
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).not.to.equal(null);
     });
 
-    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
-      render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
+    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', async () => {
+      const { user } = render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = $('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
-      fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
+      await user.click(menuIconButton);
+      await user.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       expect($(`.${gridClasses['cell--pinnedLeft']}[data-field="id"]`)).to.equal(null);
     });
 
-    it('should not render menu items if the column has `pinnable` equals to false', () => {
-      render(
-        <TestCase
-          columns={[
-            { field: 'brand', pinnable: true },
-            { field: 'year', pinnable: false },
-          ]}
-          rows={[{ id: 0, brand: 'Nike', year: 1941 }]}
-        />,
-      );
+    describe('with fake timers', () => {
+      clock.withFakeTimers();
 
-      const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
-      fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
-      fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+      it('should not render menu items if the column has `pinnable` equals to false', () => {
+        render(
+          <TestCase
+            columns={[
+              { field: 'brand', pinnable: true },
+              { field: 'year', pinnable: false },
+            ]}
+            rows={[{ id: 0, brand: 'Nike', year: 1941 }]}
+          />,
+        );
 
-      clock.runToLast();
-      // Ensure that the first menu was closed
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
+        fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]')!);
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
+        fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
 
-      const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
-      fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        clock.runToLast();
+        // Ensure that the first menu was closed
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+
+        const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
+        fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+      });
     });
   });
 

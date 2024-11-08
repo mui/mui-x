@@ -29,14 +29,13 @@ const useUtilityClasses = (
   loadingOverlayVariant: GridLoadingOverlayVariant | null,
 ) => {
   const { classes } = ownerState;
-
   const slots = {
     root: [
       'main',
       dimensions.rightPinnedWidth > 0 && 'main--hasPinnedRight',
       loadingOverlayVariant === 'skeleton' && 'main--hasSkeletonLoadingOverlay',
     ],
-    scroller: ['virtualScroller'],
+    scroller: ['virtualScroller', dimensions.hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -49,8 +48,11 @@ const Scroller = styled('div', {
 })<{ ownerState: OwnerState }>({
   position: 'relative',
   height: '100%',
+  flexGrow: 1,
   overflow: 'scroll',
   scrollbarWidth: 'none' /* Firefox */,
+  display: 'flex',
+  flexDirection: 'column',
   '&::-webkit-scrollbar': {
     display: 'none' /* Safari and Chrome */,
   },
@@ -93,7 +95,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="right" />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={rootProps}>
         <TopContainer>
-          <GridHeaders />
+          {!rootProps.unstable_listView && <GridHeaders />}
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
@@ -113,7 +115,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
         </BottomContainer>
       </Scroller>
       {dimensions.hasScrollY && <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />}
-      {dimensions.hasScrollX && (
+      {dimensions.hasScrollX && !rootProps.unstable_listView && (
         <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
       )}
       {props.children}

@@ -5,10 +5,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function DesktopDatePickerForm() {
-  const [submittedDate, setSubmittedDate] = React.useState<string | null>(null);
+  const [submittedDate, setSubmittedDate] = React.useState<string | undefined>(undefined);
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    setSubmittedDate(new FormData(event.target as HTMLFormElement).values().next().value);
+    setSubmittedDate(
+      new FormData(event.target as HTMLFormElement).values().next().value?.toString(),
+    );
   };
   return (
     <form onSubmit={submitHandler}>

@@ -10,7 +10,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'мерыдыем',
 };
 
-const beBYPickers: Partial<PickersLocaleText<any>> = {
+const beBYPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Папярэдні месяц',
   nextMonth: 'Наступны месяц',
@@ -44,8 +44,8 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Абраць каляндарны перыяд',
 
   // Clock labels
-  clockLabelText: (view, time, adapter) =>
-    `Абярыце ${views[view]}. ${time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Абярыце ${views[view]}. ${!formattedTime ? 'Час не абраны' : `Абраны час ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
   minutesClockNumberText: (minutes) => `${minutes} хвілін`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
@@ -60,15 +60,11 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць дату, абрана дата  ${utils.format(value, 'fullDate')}`
-      : 'Абраць дату',
-  openTimePickerDialogue: (value, utils) =>
-    value !== null && utils.isValid(value)
-      ? `Абраць час, абрыны час  ${utils.format(value, 'fullTime')}`
-      : 'Абраць час',
-  // fieldClearLabel: 'Clear value',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Абраць дату, абрана дата  ${formattedDate}` : 'Абраць дату',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Абраць час, абрыны час  ${formattedTime}` : 'Абраць час',
+  // fieldClearLabel: 'Clear',
 
   // Table labels
   timeTableLabel: 'абраць час',

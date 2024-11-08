@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useCartesianContext } from '../context/CartesianProvider';
@@ -97,7 +98,7 @@ function ChartsAxis(props: ChartsAxisProps) {
   const rightId = getAxisId(rightAxis, yAxisIds[0]);
 
   if (topId !== null && !xAxis[topId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for top axis "${topId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,
@@ -105,7 +106,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (leftId !== null && !yAxis[leftId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for left axis "${leftId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
@@ -113,7 +114,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (rightId !== null && !yAxis[rightId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for right axis "${rightId}" is not defined.`,
         `Available ids are: ${yAxisIds.join(', ')}.`,
@@ -121,7 +122,7 @@ function ChartsAxis(props: ChartsAxisProps) {
     );
   }
   if (bottomId !== null && !xAxis[bottomId]) {
-    throw Error(
+    throw new Error(
       [
         `MUI X: id used for bottom axis "${bottomId}" is not defined.`,
         `Available ids are: ${xAxisIds.join(', ')}.`,

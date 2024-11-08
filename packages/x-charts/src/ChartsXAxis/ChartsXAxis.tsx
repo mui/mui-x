@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
@@ -82,6 +83,12 @@ function addLabelDimension(
     return item;
   });
 }
+
+const XAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsXAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
 
 const defaultProps = {
   position: 'bottom',
@@ -204,7 +211,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     return null;
   }
   return (
-    <AxisRoot
+    <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
       sx={sx}
@@ -246,7 +253,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </XAxisRoot>
   );
 }
 

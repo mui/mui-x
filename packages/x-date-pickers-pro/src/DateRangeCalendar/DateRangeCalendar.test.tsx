@@ -15,7 +15,6 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { describeConformance } from 'test/utils/describeConformance';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { RangePosition } from '../models';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -86,7 +85,7 @@ describe('<DateRangeCalendar />', () => {
       fireEvent.click(getPickerDay('30', 'January 2019'));
       fireEvent.click(getPickerDay('19', 'January 2019'));
 
-      expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
+      expect(screen.queryByTestId('DateRangeHighlight')).to.equal(null);
 
       fireEvent.click(getPickerDay('30', 'January 2019'));
 
@@ -103,7 +102,7 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
+      expect(screen.getAllByTestId('DateRangeHighlight')).to.have.length(31);
     });
 
     it('prop: disableDragEditing - should not allow dragging range', () => {
@@ -488,6 +487,23 @@ describe('<DateRangeCalendar />', () => {
       clock.runToLast();
       expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
     });
+
+    describe('prop: currentMonthCalendarPosition', () => {
+      it('should switch to the selected month when changing value from the outside', () => {
+        const { setProps } = render(
+          <DateRangeCalendar
+            value={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-15')]}
+            currentMonthCalendarPosition={2}
+          />,
+        );
+
+        setProps({
+          value: [adapterToUse.date('2018-02-11'), adapterToUse.date('2018-02-22')],
+        });
+        clock.runToLast();
+        expect(getPickerDay('1', 'February 2018')).not.to.equal(null);
+      });
+    });
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
@@ -519,7 +535,7 @@ describe('<DateRangeCalendar />', () => {
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 
-    expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
+    expect(screen.getAllByTestId('pickers-calendar')).to.have.length(3);
   });
 
   describe('Performance', () => {
@@ -535,7 +551,7 @@ describe('<DateRangeCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      fireUserEvent.mousePress(getPickerDay('2'));
+      fireEvent.click(getPickerDay('2'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
     });
 
@@ -550,10 +566,10 @@ describe('<DateRangeCalendar />', () => {
         />,
       );
 
-      fireUserEvent.mousePress(getPickerDay('2'));
+      fireEvent.click(getPickerDay('2'));
 
       const renderCountBeforeChange = RenderCount.callCount;
-      fireUserEvent.mousePress(getPickerDay('4'));
+      fireEvent.click(getPickerDay('4'));
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
     });
   });

@@ -4,7 +4,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { useTheme, Direction } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import {
   findGridCellElementsFromCol,
   findGridElement,
@@ -112,11 +112,11 @@ function flipResizeDirection(side: ResizeDirection) {
   return 'Right';
 }
 
-function getResizeDirection(separator: HTMLElement, direction: Direction) {
+function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
   const side = separator.classList.contains(gridClasses['columnSeparator--sideRight'])
     ? 'Right'
     : 'Left';
-  if (direction === 'rtl') {
+  if (isRtl) {
     // Resizing logic should be mirrored in the RTL case
     return flipResizeDirection(side);
   }
@@ -280,7 +280,7 @@ export const useGridColumnResize = (
     | 'onColumnWidthChange'
   >,
 ) => {
-  const theme = useTheme();
+  const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const refs = useLazyRef(createResizeRefs).current;
@@ -300,26 +300,24 @@ export const useGridColumnResize = (
     const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
     const columnWidthDiff = newWidth - refs.initialColWidth;
-    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
 
-    apiRef.current.rootElementRef?.current?.style.setProperty(
-      '--DataGrid-rowWidth',
-      `${newTotalWidth}px`,
-    );
+    if (columnWidthDiff > 0) {
+      const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-rowWidth',
+        `${newTotalWidth}px`,
+      );
+    }
 
     refs.colDef!.computedWidth = newWidth;
     refs.colDef!.width = newWidth;
     refs.colDef!.flex = 0;
 
     refs.columnHeaderElement!.style.width = `${newWidth}px`;
-    refs.columnHeaderElement!.style.minWidth = `${newWidth}px`;
-    refs.columnHeaderElement!.style.maxWidth = `${newWidth}px`;
 
     const headerFilterElement = refs.headerFilterElement;
     if (headerFilterElement) {
       headerFilterElement.style.width = `${newWidth}px`;
-      headerFilterElement.style.minWidth = `${newWidth}px`;
-      headerFilterElement.style.maxWidth = `${newWidth}px`;
     }
 
     refs.groupHeaderElements!.forEach((element) => {
@@ -335,8 +333,6 @@ export const useGridColumnResize = (
       }
 
       div.style.width = finalWidth;
-      div.style.minWidth = finalWidth;
-      div.style.maxWidth = finalWidth;
     });
 
     refs.cellElements!.forEach((element) => {
@@ -427,8 +423,6 @@ export const useGridColumnResize = (
         const finalWidth: `${number}px` = `${newWidth}px`;
 
         div.style.width = finalWidth;
-        div.style.minWidth = finalWidth;
-        div.style.maxWidth = finalWidth;
       });
     }
 
@@ -464,8 +458,14 @@ export const useGridColumnResize = (
 
     refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
 
-    refs.fillerLeft = findGridElement(apiRef.current, 'filler--pinnedLeft');
-    refs.fillerRight = findGridElement(apiRef.current, 'filler--pinnedRight');
+    refs.fillerLeft = findGridElement(
+      apiRef.current,
+      isRtl ? 'filler--pinnedRight' : 'filler--pinnedLeft',
+    );
+    refs.fillerRight = findGridElement(
+      apiRef.current,
+      isRtl ? 'filler--pinnedLeft' : 'filler--pinnedRight',
+    );
 
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
@@ -476,22 +476,22 @@ export const useGridColumnResize = (
     refs.leftPinnedCellsAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedCellsAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedCellsBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedCellsBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
     refs.leftPinnedHeadersAfter =
       pinnedPosition !== GridPinnedColumnPosition.LEFT
         ? []
-        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement);
+        : findLeftPinnedHeadersAfterCol(apiRef.current, refs.columnHeaderElement, isRtl);
     refs.rightPinnedHeadersBefore =
       pinnedPosition !== GridPinnedColumnPosition.RIGHT
         ? []
-        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement);
+        : findRightPinnedHeadersBeforeCol(apiRef.current, refs.columnHeaderElement, isRtl);
 
-    resizeDirection.current = getResizeDirection(separator, theme.direction);
+    resizeDirection.current = getResizeDirection(separator, isRtl);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       xStart,

@@ -50,8 +50,8 @@ describe('License: verifyLicense', () => {
       process.env.NODE_ENV = 'production';
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
-        scope: 'pro',
-        licensingModel: 'perpetual',
+        planScope: 'pro',
+        licenseModel: 'perpetual',
         orderNumber: 'MUI-123',
         planVersion: 'initial',
       });
@@ -82,16 +82,16 @@ describe('License: verifyLicense', () => {
     const licenseKeyPro = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'pro',
-      licensingModel: 'subscription',
+      planScope: 'pro',
+      licenseModel: 'subscription',
       planVersion: 'initial',
     });
 
     const licenseKeyPremium = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'premium',
-      licensingModel: 'subscription',
+      planScope: 'premium',
+      licenseModel: 'subscription',
       planVersion: 'initial',
     });
 
@@ -148,8 +148,8 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
-          scope: 'pro',
-          licensingModel: 'subscription',
+          planScope: 'pro',
+          licenseModel: 'subscription',
           planVersion: 'initial',
         });
 
@@ -166,8 +166,8 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS),
           orderNumber: 'MUI-123',
-          scope: 'pro',
-          licensingModel: 'subscription',
+          planScope: 'pro',
+          licenseModel: 'subscription',
           planVersion: 'initial',
         });
 
@@ -185,8 +185,8 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
           orderNumber: 'MUI-123',
-          scope: 'pro',
-          licensingModel: 'subscription',
+          planScope: 'pro',
+          licenseModel: 'subscription',
           planVersion: 'initial',
         });
 
@@ -203,8 +203,8 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
-          scope: 'pro',
-          licensingModel: 'perpetual',
+          planScope: 'pro',
+          licenseModel: 'perpetual',
           planVersion: 'initial',
         });
 
@@ -235,12 +235,12 @@ describe('License: verifyLicense', () => {
     const licenseKeyPro = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'pro',
-      licensingModel: 'annual',
+      planScope: 'pro',
+      licenseModel: 'annual',
       planVersion: 'initial',
     });
 
-    it('should accept licensingModel="annual"', () => {
+    it('should accept licenseModel="annual"', () => {
       process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
@@ -256,24 +256,24 @@ describe('License: verifyLicense', () => {
     const proLicenseKeyInitial = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'pro',
-      licensingModel: 'annual',
+      planScope: 'pro',
+      licenseModel: 'annual',
       planVersion: 'initial',
     });
 
     const premiumLicenseKeyInitial = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'premium',
-      licensingModel: 'annual',
+      planScope: 'premium',
+      licenseModel: 'annual',
       planVersion: 'initial',
     });
 
     const proLicenseKeyQ32024 = generateLicense({
       expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
       orderNumber: 'MUI-123',
-      scope: 'pro',
-      licensingModel: 'annual',
+      planScope: 'pro',
+      licenseModel: 'annual',
       planVersion: 'Q3-2024',
     });
 

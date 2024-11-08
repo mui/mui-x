@@ -17,6 +17,8 @@ export function mergePlugins(plugins?: ChartsPlugin<ChartSeriesType>[]) {
   const colorProcessors: ColorProcessorsConfig<ChartSeriesType> = {};
   const xExtremumGetters: ExtremumGettersConfig<ChartSeriesType> = {};
   const yExtremumGetters: ExtremumGettersConfig<ChartSeriesType> = {};
+  const rotationExtremumGetters: ExtremumGettersConfig<ChartSeriesType> = {};
+  const radiusExtremumGetters: ExtremumGettersConfig<ChartSeriesType> = {};
 
   for (let i = 0; i < defaultizedPlugins.length; i += 1) {
     const plugin = defaultizedPlugins[i];
@@ -33,6 +35,17 @@ export function mergePlugins(plugins?: ChartsPlugin<ChartSeriesType>[]) {
     if (plugin.yExtremumGetter) {
       yExtremumGetters[seriesType] = plugin.yExtremumGetter as ExtremumGetter<typeof seriesType>;
     }
+
+    if (plugin.rotationExtremumGetter) {
+      rotationExtremumGetters[seriesType] = plugin.rotationExtremumGetter as ExtremumGetter<
+        typeof seriesType
+      >;
+    }
+    if (plugin.radiusExtremumGetter) {
+      radiusExtremumGetters[seriesType] = plugin.radiusExtremumGetter as ExtremumGetter<
+        typeof seriesType
+      >;
+    }
   }
 
   return {
@@ -40,5 +53,7 @@ export function mergePlugins(plugins?: ChartsPlugin<ChartSeriesType>[]) {
     colorProcessors,
     xExtremumGetters,
     yExtremumGetters,
+    rotationExtremumGetters,
+    radiusExtremumGetters,
   };
 }

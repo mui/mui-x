@@ -1,6 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
@@ -69,17 +70,12 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             disableHighlight,
           } = series[seriesId];
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           if (disableHighlight || data[highlightedIndex] == null) {
             return null;

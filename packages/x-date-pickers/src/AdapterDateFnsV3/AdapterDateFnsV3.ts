@@ -84,7 +84,7 @@ declare module '@mui/x-date-pickers/models' {
  */
 export class AdapterDateFns
   extends AdapterDateFnsBase<DateFnsLocale>
-  implements MuiPickersAdapter<Date, DateFnsLocale>
+  implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     /* istanbul ignore next */
@@ -93,7 +93,7 @@ export class AdapterDateFns
         throw new Error(
           [
             `MUI: The \`date-fns\` package v2.x is not compatible with this adapter.`,
-            'Please, install v3.x of the package or use the `AdapterDateFns` instead.',
+            'Please, install v3.x or v4.x of the package or use the `AdapterDateFns` instead.',
           ].join('\n'),
         );
       }

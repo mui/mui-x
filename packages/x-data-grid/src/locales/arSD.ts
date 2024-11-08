@@ -58,7 +58,9 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'يحتوي',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'يساوي',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'يبدأ بـ',
   filterOperatorEndsWith: 'ينتهي بـ',
   filterOperatorIs: 'يكون',
@@ -79,7 +81,9 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'يحتوي على',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'يساوي',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'يبدأ ب',
   headerFilterOperatorEndsWith: 'ينتهي ب',
   headerFilterOperatorIs: 'هو',
