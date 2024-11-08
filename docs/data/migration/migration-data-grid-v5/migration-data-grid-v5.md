@@ -297,8 +297,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +  const focusedField = props.focusedCell;
   +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
   ```
-- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows` will now remove the expansion state of the grid as these methods are meant to replace the rows.
-  For partial row updates, use the [`apiRef.current.updateRows`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
+- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows()` will now remove the expansion state of the grid as these methods are meant to replace the rows.
+  For partial row updates, use the [`apiRef.current.updateRows()`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
 
 ### Pagination
 
