@@ -2,7 +2,7 @@
 title: React Server-side row grouping
 ---
 
-# Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
 
 <p class="description">Lazy-loaded row grouping with server-side data source.</p>
 

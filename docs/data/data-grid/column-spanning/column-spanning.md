@@ -2,7 +2,6 @@
 
 <p class="description">Span cells across several columns.</p>
 
-
 By default, each cell takes up the width of one column.
 You can modify this behavior with column spanning.
 It allows cells to span multiple columns.
