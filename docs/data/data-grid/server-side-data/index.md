@@ -6,6 +6,12 @@ title: React Data Grid - Server-side data
 
 <p class="description">The Data Grid server-side data.</p>
 
+:::warning
+This feature is under development and is marked as **unstable**.
+While you can use this feature in production, the API could change in the future.
+Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
+:::
+
 ## Introduction
 
 Server-side data management in React can become complex with growing datasets.
@@ -71,14 +77,6 @@ Trying to solve these problems one after the other can make the code complex and
 The idea for a centralized data source is to simplify server-side data fetching.
 It's an abstraction layer between the Data Grid and the server, providing a simple interface for interacting with the server.
 Think of it like an intermediary handling the communication between the Data Grid (client) and the actual data source (server).
-
-:::warning
-
-This feature is under development and is marked as **unstable**.
-The information shared on this page could change in the future.
-Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
-
-:::
 
 It has an initial set of required methods that you need to implement. The Data Grid will use these methods internally to fetch a subset of data when needed.
 
