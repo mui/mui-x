@@ -76,7 +76,9 @@ Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some 
 
 ### Separator
 
-Separate items and groups in the toolbar. Renders a `div` with `role="separator"`.
+Separate items and groups in the toolbar.
+
+Renders a `div` with `role="separator"`.
 
 ```tsx
 <GridToolbar.Separator />
