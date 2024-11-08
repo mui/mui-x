@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 const settings = {
-  valueFormatter: (v) => `${v}%`,
+  valueFormatter: (value) => `${value}%`,
   height: 200,
   showTooltip: true,
   showHighlight: true,
@@ -39,7 +39,6 @@ export default function CustomDomainYAxis() {
         <MenuItem value="strict">strict</MenuItem>
         <MenuItem value="function">function</MenuItem>
       </TextField>
-
       <BarChart
         yAxis={[
           {
