@@ -90,7 +90,7 @@
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.5",
+    "@mui/icons-material": "^6.1.6",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
     "@mui/internal-markdown": "^1.0.20",
     "@mui/internal-test-utils": "^1.0.21",
@@ -198,11 +198,11 @@
     "yargs": "^17.7.2"
   },
   "resolutions": {
-    "react-is": "19.0.0-rc-1631855f-20241023",
+    "react-is": "19.0.0-rc-5c56b873-20241107",
     "@types/node": "^20.16.14",
-    "react-dom": "19.0.0-rc-1631855f-20241023",
-    "react": "19.0.0-rc-1631855f-20241023",
-    "scheduler": "0.25.0-rc-1631855f-20241023"
+    "react-dom": "19.0.0-rc-5c56b873-20241107",
+    "react": "19.0.0-rc-5c56b873-20241107",
+    "scheduler": "0.25.0-rc-5c56b873-20241107"
   },
   "packageManager": "pnpm@9.13.2",
   "engines": {
