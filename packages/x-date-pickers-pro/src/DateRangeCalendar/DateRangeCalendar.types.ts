@@ -3,12 +3,13 @@ import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/DateCalendar';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,
@@ -16,7 +17,6 @@ import {
   DayCalendarSlotProps,
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
-  DayCalendarProps,
   ExportedUseViewsOptions,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
@@ -49,12 +49,12 @@ export interface DateRangeCalendarSlotProps
   extends PickersArrowSwitcherSlotProps,
     Omit<DayCalendarSlotProps, 'day'>,
     PickersCalendarHeaderSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateRangeCalendarProps>;
-  day?: SlotComponentProps<
-    typeof DateRangePickerDay,
+  calendarHeader?: SlotComponentProps<
+    typeof PickersCalendarHeader,
     {},
-    DayCalendarProps & { day: PickerValidDate; selected: boolean }
+    DateRangeCalendarOwnerState
   >;
+  day?: SlotComponentProps<typeof DateRangePickerDay, {}, PickerDayOwnerState>;
 }
 
 export interface ExportedDateRangeCalendarProps
@@ -151,8 +151,8 @@ export interface DateRangeCalendarProps
   availableRangePositions?: RangePosition[];
 }
 
-export interface DateRangeCalendarOwnerState extends DateRangeCalendarProps {
-  isDragging: boolean;
+export interface DateRangeCalendarOwnerState extends PickerOwnerState {
+  isDraggingDay: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps = DefaultizedProps<

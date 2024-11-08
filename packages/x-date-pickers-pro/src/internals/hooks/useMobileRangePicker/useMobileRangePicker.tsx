@@ -8,10 +8,10 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  PickersProvider,
+  PickerProvider,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
@@ -74,7 +74,7 @@ export const useMobileRangePicker = <
     fieldType === 'single-input' ? startFieldRef : undefined,
   );
   const labelId = useId();
-  const contextTranslations = usePickersTranslations();
+  const contextTranslations = usePickerTranslations();
 
   const {
     open,
@@ -208,7 +208,7 @@ export const useMobileRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Field {...enrichedFieldProps} />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout
@@ -220,7 +220,7 @@ export const useMobileRangePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return {

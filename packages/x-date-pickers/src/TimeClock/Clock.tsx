@@ -8,7 +8,7 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -224,7 +224,7 @@ export function Clock(inProps: ClockProps) {
   const ownerState = props;
 
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 

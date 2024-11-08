@@ -95,7 +95,7 @@
     "@mui/internal-markdown": "^1.0.19",
     "@mui/internal-test-utils": "^1.0.19",
     "@mui/material": "^5.16.7",
-    "@mui/monorepo": "github:mui/material-ui#32112b76aa821c2a1e98120545019ef1a71ea274",
+    "@mui/monorepo": "github:mui/material-ui#8a34771a34f6e029caa73cc055d14a125123dc3b",
     "@mui/utils": "^5.16.6",
     "@next/eslint-plugin-next": "15.0.2",
     "@octokit/plugin-retry": "^7.1.2",
@@ -107,9 +107,9 @@
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.9",
-    "@types/lodash": "^4.17.12",
+    "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.9",
-    "@types/node": "^20.17.3",
+    "@types/node": "^20.17.6",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@types/react-test-renderer": "^18.3.0",
@@ -150,7 +150,7 @@
     "eslint-plugin-mocha": "^10.5.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-compiler": "0.0.0-experimental-9ed098e-20240725",
+    "eslint-plugin-react-compiler": "19.0.0-beta-63b359f-20241101",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-testing-library": "^6.4.0",
     "fast-glob": "^3.3.2",
@@ -169,10 +169,10 @@
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
     "karma-webpack": "^5.0.1",
-    "lerna": "^8.1.8",
+    "lerna": "^8.1.9",
     "lodash": "^4.17.21",
     "markdownlint-cli2": "^0.14.0",
-    "mocha": "^10.7.3",
+    "mocha": "^10.8.2",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
     "nyc": "^17.1.0",
@@ -192,18 +192,18 @@
     "typescript": "^5.6.3",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
-    "webpack": "^5.95.0",
+    "webpack": "^5.96.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^20.17.3"
+    "@types/node": "^20.17.6"
   },
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@9.12.3",
   "engines": {
-    "pnpm": "9.12.2"
+    "pnpm": "9.12.3"
   },
   "pnpm": {
     "patchedDependencies": {

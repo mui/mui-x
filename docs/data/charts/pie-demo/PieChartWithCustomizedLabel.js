@@ -13,7 +13,7 @@ const sizing = {
   margin: { right: 5 },
   width: 200,
   height: 200,
-  slotProps: { legend: { hidden: true } },
+  hideLegend: true,
 };
 const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
 

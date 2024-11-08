@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -12,7 +12,7 @@ export default function CustomAxisTooltipContent() {
   const clipPathId = `${id}-clip-path`;
   return (
     <div style={{ width: '100%' }}>
-      <ResponsiveChartContainer
+      <ChartContainer
         height={300}
         dataset={dataset}
         series={[
@@ -28,7 +28,7 @@ export default function CustomAxisTooltipContent() {
         <ChartsXAxis />
         <ChartsYAxis />
         <CustomAxisTooltip />
-      </ResponsiveChartContainer>
+      </ChartContainer>
     </div>
   );
 }
