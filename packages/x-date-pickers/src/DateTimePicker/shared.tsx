@@ -16,11 +16,7 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  DateTimeValidationProps,
-} from '../internals/models/validation';
+import { DateTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -33,6 +29,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
+import { ValidateDateTimePropsToDefault } from '../validation/validateDateTime';
 
 export interface BaseDateTimePickerSlots extends DateCalendarSlots, TimeClockSlots {
   /**
@@ -106,12 +103,7 @@ type UseDateTimePickerDefaultizedProps<
 > = LocalizedComponent<
   DefaultizedProps<
     Props,
-    | 'views'
-    | 'openTo'
-    | 'orientation'
-    | 'ampm'
-    | keyof BaseDateValidationProps
-    | keyof BaseTimeValidationProps
+    'views' | 'openTo' | 'orientation' | 'ampm' | ValidateDateTimePropsToDefault
   >
 >;
 
