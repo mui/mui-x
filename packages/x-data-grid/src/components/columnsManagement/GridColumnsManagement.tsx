@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
+import { TextFieldProps } from '@mui/material/TextField';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -24,6 +25,7 @@ export interface GridColumnsManagementProps {
    */
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
+  searchInputProps?: Partial<TextFieldProps>;
   /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
@@ -95,6 +97,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     disableResetButton = false,
     toggleAllMode = 'all',
     getTogglableColumns,
+    searchInputProps,
   } = props;
 
   const isResetDisabled = React.useMemo(
@@ -228,6 +231,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           }}
           fullWidth
           {...rootProps.slotProps?.baseTextField}
+          {...searchInputProps}
         />
       </GridColumnsManagementHeader>
       <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
@@ -321,6 +325,7 @@ GridColumnsManagement.propTypes = {
    * @returns {GridColDef['field'][]} The list of togglable columns' field names.
    */
   getTogglableColumns: PropTypes.func,
+  searchInputProps: PropTypes.object,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
   /**
