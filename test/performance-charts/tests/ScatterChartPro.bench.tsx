@@ -11,7 +11,7 @@ describe('ScatterChartPro', () => {
     cleanup();
   });
 
-  const dataLength = 1_000;
+  const dataLength = 500;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
@@ -54,7 +54,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText('70', { ignore: 'span' });
+      await findByText('60', { ignore: 'span' });
     },
     options,
   );
