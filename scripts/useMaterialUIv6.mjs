@@ -11,6 +11,7 @@ const pnpmUpdate = childProcess.spawnSync(
     '@mui/utils@6.x',
     '@mui/material-nextjs@6.x',
     '@mui/styles@6.x',
+    '@mui/lab@6.0.0-beta.14',
   ],
   {
     shell: true,
