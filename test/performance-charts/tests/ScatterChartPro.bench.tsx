@@ -43,7 +43,7 @@ describe('ScatterChartPro', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
+      await findByText('70', { ignore: 'span' });
     },
     options,
   );
