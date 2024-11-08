@@ -3,6 +3,7 @@ import * as React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { LicenseInfo, generateLicense } from '@mui/x-license';
 import { options } from '../utils/options';
 
 describe('BarChartPro', () => {
@@ -22,6 +23,16 @@ describe('BarChartPro', () => {
   bench(
     'BarChartPro with big data amount',
     async () => {
+      const licenseKey = generateLicense({
+        expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
+        orderNumber: 'MUI-123',
+        planScope: 'pro',
+        licenseModel: 'subscription',
+        planVersion: 'Q3-2024',
+      });
+
+      LicenseInfo.setLicenseKey(licenseKey);
+
       const { findByText } = render(
         <BarChartPro
           xAxis={[{ id: 'x', scaleType: 'band', data: xData, zoom: { filterMode: 'discard' } }]}
