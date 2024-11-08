@@ -48,7 +48,7 @@ Open info section of the browser console to see the requests being made and the 
 
 While user is scrolling through the grid, rendering context changes and the Data Grid tries to fill in any missing rows by making a new data source request. This avoid making huge amount of request, Data Grid throttles new data fetches on the rendering context change. By default throttle is set to 500 ms, but the time can be controlled with `lazyLoadingRequestThrottleMs` prop.
 
-The demo below shows the difference in behavior for different values of the `lazyLoadingRequestThrottleMs` prop. In the footer of the Data Grid, you can see amount of requests made while scrolling.
+The demo below shows the difference in behavior for different values of the `lazyLoadingRequestThrottleMs` prop. In the footer of the Data Grid, you can see the amount of requests made while scrolling.
 
 {{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
 
