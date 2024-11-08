@@ -9,8 +9,9 @@ export const useChartContainerDimensions = (
   inHeight?: number,
   resolveSizeBeforeRender?: boolean,
 ) => {
+  const hasInSize = inWidth !== undefined && inHeight !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
-  const rootRef = React.useRef(null);
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
@@ -46,6 +47,7 @@ export const useChartContainerDimensions = (
   useEnhancedEffect(() => {
     // computeRun is used to avoid infinite loops.
     if (
+      hasInSize ||
       !resolveSizeBeforeRender ||
       !stateRef.current.initialCompute ||
       stateRef.current.computeRun > 20
@@ -59,10 +61,10 @@ export const useChartContainerDimensions = (
     } else if (stateRef.current.initialCompute) {
       stateRef.current.initialCompute = false;
     }
-  }, [width, height, computeSize, resolveSizeBeforeRender]);
+  }, [width, height, computeSize, resolveSizeBeforeRender, hasInSize]);
 
   useEnhancedEffect(() => {
-    if (inWidth !== undefined && inHeight !== undefined) {
+    if (hasInSize) {
       return () => {};
     }
     computeSize();
@@ -93,7 +95,7 @@ export const useChartContainerDimensions = (
         observer.unobserve(elementToObserve);
       }
     };
-  }, [computeSize, inHeight, inWidth]);
+  }, [computeSize, hasInSize]);
 
   if (process.env.NODE_ENV !== 'production') {
     if (stateRef.current.displayError && inWidth === undefined && width === 0) {
