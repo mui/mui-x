@@ -266,6 +266,7 @@ export function Clock(inProps: ClockProps) {
   };
 
   const handleTouchEnd = (event: React.TouchEvent) => {
+    event.preventDefault();
     if (isMoving.current) {
       setTime(event, 'finish');
       isMoving.current = false;
