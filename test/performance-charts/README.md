@@ -1,0 +1,33 @@
+## How to run
+
+First build the project.
+
+```sh
+pnpm release:build
+```
+
+To run the tests locally, you will need to uncomment all the `browser` options from [vitest.config.ts](./vitest.config.ts) file.
+
+```ts
+    browser: {
+      enabled: true,
+      headless: true,
+      name: 'chromium',
+      provider: 'playwright',
+      providerOptions: {
+        timeout: 60000,
+      },
+    },
+```
+
+Then `cd` into the project folder and run the tests.
+
+```sh
+pnpm test:performance
+```
+
+or from the root of the project
+
+```sh
+pnpm --filter "@mui-x-internal/performance-charts" test:performance
+```
