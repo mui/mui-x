@@ -210,25 +210,61 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     }
     return false;
   };
+  const handleSearchReset = React.useCallback(() => {
+    setSearchValue('');
+    searchInputRef.current!.focus();
+  }, []);
 
   return (
     <React.Fragment>
       <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
         <rootProps.slots.baseTextField
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
+          aria-label={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
           value={searchValue}
           onChange={handleSearchValueChange}
           variant="outlined"
           size="small"
+          type="search"
           InputProps={{
             startAdornment: (
               <rootProps.slots.baseInputAdornment position="start">
                 <rootProps.slots.quickFilterIcon />
               </rootProps.slots.baseInputAdornment>
             ),
-            sx: { pl: 1.5 },
+            endAdornment: (
+              <rootProps.slots.baseIconButton
+                aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
+                size="small"
+                sx={[
+                  searchValue
+                    ? {
+                        visibility: 'visible',
+                      }
+                    : {
+                        visibility: 'hidden',
+                      },
+                ]}
+                tabIndex={-1}
+                onClick={handleSearchReset}
+                {...rootProps.slotProps?.baseIconButton}
+              >
+                <rootProps.slots.quickFilterClearIcon fontSize="small" />
+              </rootProps.slots.baseIconButton>
+            ),
+            sx: {
+              pl: 1.5,
+              [`& input[type="search"]::-webkit-search-decoration,
+              & input[type="search"]::-webkit-search-cancel-button,
+              & input[type="search"]::-webkit-search-results-button,
+              & input[type="search"]::-webkit-search-results-decoration`]: {
+                /* clears the 'X' icon from Chrome */
+                display: 'none',
+              },
+            },
           }}
+          autoComplete="off"
           fullWidth
           {...rootProps.slotProps?.baseTextField}
           {...searchInputProps}
