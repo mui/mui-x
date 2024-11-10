@@ -82,7 +82,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   headerFilterOperatorContains: '包含',
   headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等于',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等于',
   headerFilterOperatorStartsWith: '开始于',
   headerFilterOperatorEndsWith: '结束于',
   headerFilterOperatorIs: '是',
