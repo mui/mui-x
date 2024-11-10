@@ -58,9 +58,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'no contiene',
   filterOperatorEquals: 'es igual',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'es diferente a',
   filterOperatorStartsWith: 'comienza con',
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
@@ -81,9 +81,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'No contiene',
   headerFilterOperatorEquals: 'Es igual a',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Es diferente a',
   headerFilterOperatorStartsWith: 'Comienza con',
   headerFilterOperatorEndsWith: 'Termina con',
   headerFilterOperatorIs: 'Es',
