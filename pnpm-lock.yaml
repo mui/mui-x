@@ -570,8 +570,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       moment-jalaali:
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.4
+        version: 0.10.4
       moment-timezone:
         specifier: ^0.5.46
         version: 0.5.46
@@ -1284,8 +1284,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       moment-jalaali:
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.4
+        version: 0.10.4
       moment-timezone:
         specifier: ^0.5.46
         version: 0.5.46
@@ -1325,7 +1325,7 @@ importers:
         version: 3.0.0
       moment-jalaali:
         specifier: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
-        version: 0.10.1
+        version: 0.10.4
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -1598,8 +1598,8 @@ importers:
         specifier: ^2.30.1
         version: 2.30.1
       moment-jalaali:
-        specifier: ^0.10.1
-        version: 0.10.1
+        specifier: ^0.10.4
+        version: 0.10.4
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -7088,8 +7088,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  jalaali-js@1.2.6:
-    resolution: {integrity: sha512-io974va+Qyu+UfuVX3UIAgJlxLhAMx9Y8VMfh+IG00Js7hXQo1qNQuwSiSa0xxco0SVgx5HWNkaiCcV+aZ8WPw==}
+  jalaali-js@1.2.7:
+    resolution: {integrity: sha512-gE+YHWSbygYAoJa+Xg8LWxGILqFOxZSBQQw39ghel01fVFUxV7bjL0x1JFsHcLQ3uPjvn81HQMa+kxwyPWnxGQ==}
 
   jest-diff@29.7.0:
     resolution: {integrity: sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==}
@@ -7858,8 +7858,8 @@ packages:
   moment-hijri@3.0.0:
     resolution: {integrity: sha512-UcBcbHDA8ToVcKjY+vBEa/hI3GZYraueavWUSLY2TdrHDHhx+wUpRw96rssAqsbT4xo/TMimwQVBP4KhJ3EN5A==}
 
-  moment-jalaali@0.10.1:
-    resolution: {integrity: sha512-/iwLtt3onvI6wFydUSTj10nFeNkD9sZ0fSY1gmqC2dwt1yGYJun6agI7E7SiBYi8uzGlt3P4KuPYCMLiv43E+g==}
+  moment-jalaali@0.10.4:
+    resolution: {integrity: sha512-/eD0HeyvATznb5iE0G1BHjKRZAFEpJ9ZNUkcHwXhNgt1WJJVVzHD7+uDmqzZWVFLdbGme2gvIXKb3ezDYOXcZA==}
 
   moment-timezone@0.5.46:
     resolution: {integrity: sha512-ZXm9b36esbe7OmdABqIWJuBBiLLwAjrN7CE+7sYdCCx82Nabt1wHDj8TVseS59QIlfFPbOoiBPm6ca9BioG4hw==}
@@ -16592,7 +16592,7 @@ snapshots:
       filelist: 1.0.4
       minimatch: 3.1.2
 
-  jalaali-js@1.2.6: {}
+  jalaali-js@1.2.7: {}
 
   jest-diff@29.7.0:
     dependencies:
@@ -17635,12 +17635,11 @@ snapshots:
     dependencies:
       moment: 2.30.1
 
-  moment-jalaali@0.10.1:
+  moment-jalaali@0.10.4:
     dependencies:
-      jalaali-js: 1.2.6
+      jalaali-js: 1.2.7
       moment: 2.30.1
       moment-timezone: 0.5.46
-      rimraf: 3.0.2
 
   moment-timezone@0.5.46:
     dependencies:
