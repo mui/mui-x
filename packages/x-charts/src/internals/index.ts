@@ -35,7 +35,6 @@ export * from '../context/PluginProvider';
 export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
 export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
-export * from '../context/ChartDataProvider';
 
 // series configuration
 export * from '../models/seriesType/config';
