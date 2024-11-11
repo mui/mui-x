@@ -1,5 +1,7 @@
 # Changelog
 
+> For full v7 changelog, please refer to the [v.7x branch](https://github.com/mui/mui-x/blob/v7.x/CHANGELOG.md).
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
@@ -9,12 +11,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 7, 2024_
 
-We'd like to offer a big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
   Special thanks go out to the community contributors who have helped make this release possible:
-  @belkocik, @clins1994, @dpak-maurya, @GeorgiosDrivas, @k-rajat19, @kalyan90, @wojtkolos.
+  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90.
   Following are all team members who have contributed to this release:
   @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore.
 
@@ -24,19 +26,7 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 
 #### `@mui/x-data-grid@8.0.0-alpha.0`
 
-- [DataGrid] Add a recipe to persist column width and order (#14560) @MBilalShafi
-- [DataGrid] Fix `null` reference error in `GridVirtualScrollbar` (#15009) @MBilalShafi
-- [DataGrid] Fix failing CI (#15273) @MBilalShafi
-- [DataGrid] Fix filtering with `boolean` column type (#15252) @k-rajat19
-- [DataGrid] Fix overlay height in `autoHeight` mode (#15201) @cherniavskii
 - [DataGrid] Fix resizing right pinned column (#15107) @KenanYusuf
-- [DataGrid] Fix right column group header border (#15105) @KenanYusuf
-- [DataGrid] Fix scroll jump when holding down arrow keys (#15164) @arminmeh
-- [DataGrid] Focus next row when the focused row is deleted (#15061) @cherniavskii
-- [DataGrid] Improve row selection propagation trigger (#15184) @MBilalShafi
-- [DataGrid] Move `rowGroupingModelChange` handler to respective hook (#15124) @MBilalShafi
-- [DataGrid] Preprocess edit cell props on backspace/delete (#15151) @KenanYusuf
-- [DataGrid] Prevent error when deleting the last row (#15146) @dpak-maurya
 - [DataGrid] Set default overlay height in flex parent layout (#15202) @cherniavskii
 - [DataGrid] refactor: baseMenuList & baseMenuItem (#15049) @romgrk
 - [DataGrid] refactor: remove more material imports (#15063) @romgrk
@@ -47,17 +37,12 @@ We'd like to offer a big thanks to the 21 contributors who made this release pos
 
 Same changes as in `@mui/x-data-grid@8.0.0-alpha.0`, plus:
 
-- [DataGridPro] Add list view tests (#15043) @KenanYusuf
 - [DataGridPro] Fix column pinning layout (#14966) @cherniavskii
-- [DataGridPro] Apply default properties if they are not passed in a reorder column (#14473) @k-rajat19
-- [DataGridPro] Toggle row expansion with `Enter` key in "tree data" (#15271) @k-rajat19
 
 #### `@mui/x-data-grid-premium@8.0.0-alpha.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
-- [DataGridPremium] Fix incorrect rows selection count when selection propagation is enabled with row grouping (#15216) @arminmeh
-- [DataGridPremium] Keep focus on the grouping cell on space bar press (#15108) @k-rajat19
 - [DataGridPremium] Server-side data source with row grouping (#13826) @MBilalShafi
 
 ### Date and Time Pickers
@@ -126,7 +111,6 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 - [fields] Remove `UseDateFieldComponentProps` and equivalent interfaces (#15053) @flaviendelangle
 - [fields] Remove clear button from the tab sequence (#14616) @k-rajat19
 - [l10n] Improve Greek (el-GR) locale (#15250) @GeorgiosDrivas
-- [l10n] Improve Polish (plPL) locale (#14891) @wojtkolos
 - [pickers] Clean definition of validation props (#15198) @flaviendelangle
 - [pickers] Clean the new `ownerState` object (#15056) @flaviendelangle
 - [pickers] Correctly type the `ownerState` of the `field` and `actionBar` slots when resolved in a picker component (#15162) @flaviendelangle
@@ -172,7 +156,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 #### `@mui/x-charts@8.0.0-alpha.0`
 
 - [charts] Introduce `hideLegend` prop (#15277) @alexfauquette
-- [charts] Allow `SeriesValueFormatter` to return `null` value (#15057) @clins1994
 - [charts] Fix tooltip follow mouse (#15189) @alexfauquette
 - [charts] Remove `xAxisKey`, `yAxisKey`, and `zAxisKey` (#15192) @alexfauquette
 - [charts] Remove axis from the pie chart (#15187) @alexfauquette
@@ -220,7 +203,6 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 - [TreeView] Always apply the indentation on the item content instead of its parent's group (#15089) @flaviendelangle
 - [TreeView] Automatic parents and children selection (#14899) @flaviendelangle
-- [TreeView] Fix drag and drop color usage (#15042) @LukasTy
 - [TreeView] Remove deprecated `TreeView` component (#15093) @flaviendelangle
 - [TreeView] Replace `<TreeItem />` with `<TreeItem2 />` and migrate all the components and utils (#14913) @flaviendelangle
 - [TreeView] Replace the Tree Item anatomy images (#15066) @noraleonte
@@ -229,7 +211,6 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 - [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle
 - [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
-- [docs] Add section explaining how to keep the selection while filtering (#15185) @arminmeh
 - [docs] Apply the new DX to the Button Field demos (#14860) @flaviendelangle
 - [docs] Apply the new DX to the `Autocomplete` Field demo (#15165) @flaviendelangle
 - [docs] Cleanup the pickers migration guide (#15310) @flaviendelangle
