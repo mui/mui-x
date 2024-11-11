@@ -132,11 +132,6 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         await page.mouse.move(0, 0);
 
-        if (/^\docs-charts-.*/.test(pathURL)) {
-          // Run one tick of the clock to get the final animation state
-          await sleep(10);
-        }
-
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
 
@@ -160,7 +155,13 @@ async function main() {
           { timeout: 1000 },
         );
 
-        await sleep(10);
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
+        }
+
+        // Wait for the page to settle after taking the screenshot.
+        await page.waitForLoadState();
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
