@@ -12,6 +12,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts';
 import { ChartContainerPro } from '../ChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { ZoomProps } from '../context/ZoomProvider';
@@ -51,19 +52,21 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   return (
     <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
       <ZAxisContextProvider {...zAxisProps}>
-        {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-        <ChartsAxis {...chartsAxisProps} />
-        <ChartsGrid {...gridProps} />
-        <g data-drawing-container>
-          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-          <ScatterPlot {...scatterPlotProps} />
-        </g>
-        <ChartsOverlay {...overlayProps} />
-        {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <ChartsTooltip {...tooltipProps} />}
-        <ZoomSetup />
-        {children}
+        <ChartsSurface>
+          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+          <ChartsAxis {...chartsAxisProps} />
+          <ChartsGrid {...gridProps} />
+          <g data-drawing-container>
+            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+            <ScatterPlot {...scatterPlotProps} />
+          </g>
+          <ChartsOverlay {...overlayProps} />
+          {!props.hideLegend && <ChartsLegend {...legendProps} />}
+          <ChartsAxisHighlight {...axisHighlightProps} />
+          {!props.loading && <ChartsTooltip {...tooltipProps} />}
+          <ZoomSetup />
+          {children}
+        </ChartsSurface>
       </ZAxisContextProvider>
     </ChartContainerPro>
   );

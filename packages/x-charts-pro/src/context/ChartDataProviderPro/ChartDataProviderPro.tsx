@@ -3,14 +3,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ChartDataProviderProps,
-  ChartsAxesGradients,
   DrawingProvider,
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
+  SurfacePropsProvider,
 } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../../internals/utils/releaseInfo';
@@ -33,7 +32,7 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
     zAxisContextProps,
     highlightedProviderProps,
     cartesianProviderProps,
-    chartsSurfaceProps,
+    surfacePropsProviderProps,
     pluginProviderProps,
     animationProviderProps,
     children,
@@ -51,10 +50,9 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
                 <ZAxisContextProvider {...zAxisContextProps}>
                   <InteractionProvider>
                     <HighlightedProvider {...highlightedProviderProps}>
-                      <ChartsSurface {...chartsSurfaceProps}>
-                        <ChartsAxesGradients />
+                      <SurfacePropsProvider {...surfacePropsProviderProps}>
                         {children}
-                      </ChartsSurface>
+                      </SurfacePropsProvider>
                     </HighlightedProvider>
                   </InteractionProvider>
                 </ZAxisContextProvider>
