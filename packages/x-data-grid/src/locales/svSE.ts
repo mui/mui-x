@@ -42,7 +42,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',
   columnsManagementShowHideAllText: 'Visa/Dölj alla',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Återställ',
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
