@@ -5,21 +5,17 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingProvider, DrawingProviderProps } from '../DrawingProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
 import { InteractionProvider } from '../InteractionProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '..';
 import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
+import { SurfacePropsProvider, SurfacePropsProviderProps } from '../SurfacePropsProvider';
+import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
+import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 
 export type ChartDataProviderProps = Omit<
-  ChartsSurfaceProps &
+  SurfacePropsProviderProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef'> &
     Pick<CartesianProviderProps, 'dataset'> &
@@ -55,7 +51,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    chartsSurfaceProps,
+    surfacePropsProviderProps,
     pluginProviderProps,
     animationProviderProps,
   } = useChartDataProviderProps(props, ref);
@@ -69,7 +65,9 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
                   <AnimationProvider {...animationProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+                    <SurfacePropsProvider {...surfacePropsProviderProps}>
+                      {children}
+                    </SurfacePropsProvider>
                   </AnimationProvider>
                 </HighlightedProvider>
               </InteractionProvider>

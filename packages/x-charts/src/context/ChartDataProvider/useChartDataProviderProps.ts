@@ -6,11 +6,11 @@ import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { HighlightedProviderProps } from '..';
-import { ChartsSurfaceProps } from '../../ChartsSurface';
+import { HighlightedProviderProps } from '../HighlightedProvider';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
+import { SurfacePropsProviderProps } from '../SurfacePropsProvider';
 
 export const useChartDataProviderProps = (
   props: ChartDataProviderProps,
@@ -79,7 +79,9 @@ export const useChartDataProviderProps = (
     onHighlightChange,
   };
 
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
+  const surfacePropsProviderProps: Omit<SurfacePropsProviderProps, 'children'> & {
+    ref: any;
+  } = {
     ...other,
     width,
     height,
@@ -97,7 +99,7 @@ export const useChartDataProviderProps = (
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    chartsSurfaceProps,
+    surfacePropsProviderProps,
     pluginProviderProps,
     animationProviderProps,
     xAxis: defaultizedXAxis,
