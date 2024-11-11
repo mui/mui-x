@@ -2,7 +2,7 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
-import useControlled from '@mui/utils/useControlled';
+import { useControlled } from '@mui/x-date-pickers/utils';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
