@@ -1,6 +1,6 @@
 import type {
   CartesianChartSeriesType,
-  ChartSeries,
+  ChartSeriesDefaultized,
   ChartSeriesType,
 } from '../../models/seriesType/config';
 import type { AxisConfig, AxisId } from '../../models/axis';
@@ -11,7 +11,7 @@ export type ExtremumGettersConfig<T extends ChartSeriesType = CartesianChartSeri
 };
 
 type ExtremumGetterParams<T extends ChartSeriesType> = {
-  series: Record<SeriesId, ChartSeries<T>>;
+  series: Record<SeriesId, ChartSeriesDefaultized<T>>;
   axis: AxisConfig;
   axisIndex: number;
   isDefaultAxis: boolean;

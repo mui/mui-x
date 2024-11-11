@@ -16,6 +16,16 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
+export const sanitizeFilterItemValue = (value: any): boolean | undefined => {
+  if (String(value).toLowerCase() === 'true') {
+    return true;
+  }
+  if (String(value).toLowerCase() === 'false') {
+    return false;
+  }
+  return undefined;
+};
+
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',
   alignItems: 'center',
@@ -39,7 +49,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     InputLabelProps,
     ...others
   } = props;
-  const [filterValueState, setFilterValueState] = React.useState(item.value || '');
+  const [filterValueState, setFilterValueState] = React.useState<boolean | undefined>(
+    sanitizeFilterItemValue(item.value),
+  );
   const rootProps = useGridRootProps();
 
   const labelId = useId();
@@ -52,15 +64,16 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
+      const value = sanitizeFilterItemValue(event.target.value);
       setFilterValueState(value);
-      applyValue({ ...item, value: Boolean(value) });
+
+      applyValue({ ...item, value });
     },
     [applyValue, item],
   );
 
   React.useEffect(() => {
-    setFilterValueState(item.value || '');
+    setFilterValueState(sanitizeFilterItemValue(item.value));
   }, [item.value]);
 
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
@@ -80,7 +93,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           labelId={labelId}
           id={selectId}
           label={label}
-          value={filterValueState}
+          value={filterValueState === undefined ? '' : String(filterValueState)}
           onChange={onFilterChange}
           variant={variant}
           notched={variant === 'outlined' ? true : undefined}

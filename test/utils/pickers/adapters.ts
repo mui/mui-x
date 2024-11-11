@@ -19,7 +19,7 @@ export type AdapterName =
   | 'date-fns-jalali';
 
 export const availableAdapters: {
-  [key in AdapterName]: new (...args: any) => MuiPickersAdapter<any>;
+  [key in AdapterName]: new (...args: any) => MuiPickersAdapter;
 } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
@@ -59,4 +59,4 @@ if (/jsdom/.test(window.navigator.userAgent)) {
 
 export class AdapterClassToUse extends AdapterClassToExtend {}
 
-export const adapterToUse = new AdapterClassToUse();
+export const adapterToUse = new AdapterClassToUse() as MuiPickersAdapter;

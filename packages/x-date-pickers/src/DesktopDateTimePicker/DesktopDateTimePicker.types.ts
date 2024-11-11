@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlots,
   BaseDateTimePickerSlotProps,
 } from '../DateTimePicker/shared';
-import { DateOrTimeView, PickerValidDate } from '../models';
+import { DateOrTimeView } from '../models';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
@@ -19,21 +19,15 @@ import {
 import { DigitalClockSlots, DigitalClockSlotProps } from '../DigitalClock';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
-export interface DesktopDateTimePickerSlots<TDate extends PickerValidDate>
-  extends BaseDateTimePickerSlots<TDate>,
-    MakeOptional<
-      UseDesktopPickerSlots<TDate, DateOrTimeViewWithMeridiem>,
-      'field' | 'openPickerIcon'
-    >,
+export interface DesktopDateTimePickerSlots
+  extends BaseDateTimePickerSlots,
+    MakeOptional<UseDesktopPickerSlots<DateOrTimeViewWithMeridiem>, 'field' | 'openPickerIcon'>,
     DigitalClockSlots,
     MultiSectionDigitalClockSlots {}
 
-export interface DesktopDateTimePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateTimePickerSlotProps<TDate>,
+export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends BaseDateTimePickerSlotProps,
     ExportedUseDesktopPickerSlotProps<
-      TDate,
       DateOrTimeViewWithMeridiem,
       TEnableAccessibleFieldDOMStructure
     >,
@@ -41,22 +35,21 @@ export interface DesktopDateTimePickerSlotProps<
     MultiSectionDigitalClockSlotProps {}
 
 export interface DesktopDateTimePickerProps<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
+> extends BaseDateTimePickerProps<DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps,
-    DesktopOnlyTimePickerProps<TDate>,
+    DesktopOnlyTimePickerProps,
     ExportedYearCalendarProps {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: DesktopDateTimePickerSlots<TDate>;
+  slots?: DesktopDateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
   /**
    * Available views.
    */

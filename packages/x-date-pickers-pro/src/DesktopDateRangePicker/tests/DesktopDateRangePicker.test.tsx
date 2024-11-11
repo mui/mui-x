@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import {
   createPickerRenderer,
@@ -220,7 +221,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -262,7 +263,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -296,7 +297,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should not call onClose and onAccept when selecting the end date if props.closeOnSelect = false', () => {
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -323,7 +324,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -385,7 +386,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -475,7 +476,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];
@@ -515,7 +516,7 @@ describe('<DesktopDateRangePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const defaultValue: DateRange<any> = [
+      const defaultValue: DateRange<PickerValidDate> = [
         adapterToUse.date('2018-01-01'),
         adapterToUse.date('2018-01-06'),
       ];

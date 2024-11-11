@@ -1,45 +1,35 @@
 'use client';
-import { useChartContainerProps } from '@mui/x-charts/internals';
-import { ZoomProviderProps } from '../context/ZoomProvider';
+import { useChartContainerProps, UseChartContainerPropsReturnValue } from '@mui/x-charts/internals';
+import type { ChartDataProviderProProps } from '../context/ChartDataProviderPro';
 import type { ChartContainerProProps } from './ChartContainerPro';
+
+export type UseChartContainerProPropsReturnValue = Omit<
+  UseChartContainerPropsReturnValue,
+  'chartDataProviderProps'
+> & {
+  chartDataProviderProProps: ChartDataProviderProProps;
+};
 
 export const useChartContainerProProps = (
   props: ChartContainerProProps,
-  ref: React.ForwardedRef<unknown>,
+  ref: React.Ref<SVGSVGElement>,
 ) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 
-  const {
-    children,
-    drawingProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    chartsSurfaceProps,
-    pluginProviderProps,
-    animationProviderProps,
-    xAxis,
-    yAxis,
-  } = useChartContainerProps(baseProps, ref);
-
-  const zoomProviderProps: Omit<ZoomProviderProps, 'children'> = {
+  const chartDataProviderProProps: Pick<ChartDataProviderProProps, 'zoom' | 'onZoomChange'> = {
     zoom,
     onZoomChange,
-    xAxis,
-    yAxis,
   };
 
+  const { chartDataProviderProps, resizableChartContainerProps, hasIntrinsicSize } =
+    useChartContainerProps(baseProps, ref);
+
   return {
-    zoomProviderProps,
-    children,
-    drawingProviderProps,
-    pluginProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    chartsSurfaceProps,
-    animationProviderProps,
+    chartDataProviderProProps: {
+      ...chartDataProviderProps,
+      ...chartDataProviderProProps,
+    },
+    resizableChartContainerProps,
+    hasIntrinsicSize,
   };
 };
