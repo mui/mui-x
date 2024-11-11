@@ -108,13 +108,13 @@ The `legacy` bundle that used to support old browsers like IE 11 is no longer i
 If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
-### Drop Webpack 4 support
+### Drop webpack 4 support
 
 Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
 
-These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+These features are not supported by webpack 4, so if you are using webpack 4, you will need to transpile these features yourself or upgrade to webpack 5.
 
-Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+Here is an example of how you can transpile these features on webpack 4 using the `@babel/preset-env` preset:
 
 ```diff
  // webpack.config.js
