@@ -36,6 +36,7 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
+import { ChartsSurface } from '../ChartsSurface';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -158,24 +159,26 @@ const LineChart = React.forwardRef(function LineChart(
 
   return (
     <ChartContainer ref={ref} {...chartContainerProps}>
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <AreaPlot {...areaPlotProps} />
-        <LinePlot {...linePlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      <g data-drawing-container>
-        {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-        <MarkPlot {...markPlotProps} />
-      </g>
-      <LineHighlightPlot {...lineHighlightPlotProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <ChartsTooltip {...tooltipProps} />}
-      <ChartsClipPath {...clipPathProps} />
-      {children}
+      <ChartsSurface>
+        {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+        <ChartsGrid {...gridProps} />
+        <g {...clipPathGroupProps}>
+          <AreaPlot {...areaPlotProps} />
+          <LinePlot {...linePlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
+        </g>
+        <ChartsAxis {...chartsAxisProps} />
+        <g data-drawing-container>
+          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+          <MarkPlot {...markPlotProps} />
+        </g>
+        <LineHighlightPlot {...lineHighlightPlotProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        <ChartsClipPath {...clipPathProps} />
+        {children}
+      </ChartsSurface>
     </ChartContainer>
   );
 });

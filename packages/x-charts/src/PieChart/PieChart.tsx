@@ -21,6 +21,7 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
+import { ChartsSurface } from '../ChartsSurface';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -129,18 +130,20 @@ const PieChart = React.forwardRef(function PieChart(
       className={className}
       skipAnimation={skipAnimation}
     >
-      <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
-      <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      {!hideLegend && (
-        <ChartsLegend
-          direction="column"
-          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
-          slots={slots}
-          slotProps={slotProps}
-        />
-      )}
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
-      {children}
+      <ChartsSurface>
+        <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+        {!hideLegend && (
+          <ChartsLegend
+            direction="column"
+            position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
+            slots={slots}
+            slotProps={slotProps}
+          />
+        )}
+        {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
+        {children}
+      </ChartsSurface>
     </ChartContainer>
   );
 });

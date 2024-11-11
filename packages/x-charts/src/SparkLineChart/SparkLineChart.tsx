@@ -21,6 +21,7 @@ import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartsSurface } from '../ChartsSurface';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -203,27 +204,29 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && (
-        <BarPlot
-          skipAnimation
-          slots={slots}
-          slotProps={slotProps}
-          sx={{ shapeRendering: 'auto' }}
-        />
-      )}
+      <ChartsSurface>
+        {plotType === 'bar' && (
+          <BarPlot
+            skipAnimation
+            slots={slots}
+            slotProps={slotProps}
+            sx={{ shapeRendering: 'auto' }}
+          />
+        )}
 
-      {plotType === 'line' && (
-        <React.Fragment>
-          <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
-          <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
-          <LineHighlightPlot slots={slots} slotProps={slotProps} />
-        </React.Fragment>
-      )}
+        {plotType === 'line' && (
+          <React.Fragment>
+            <AreaPlot skipAnimation slots={slots} slotProps={slotProps} />
+            <LinePlot skipAnimation slots={slots} slotProps={slotProps} />
+            <LineHighlightPlot slots={slots} slotProps={slotProps} />
+          </React.Fragment>
+        )}
 
-      <ChartsAxisHighlight {...axisHighlight} />
-      {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
+        <ChartsAxisHighlight {...axisHighlight} />
+        {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
 
-      {children}
+        {children}
+      </ChartsSurface>
     </ChartContainer>
   );
 });

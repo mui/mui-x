@@ -29,6 +29,7 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useBarChartProps } from './useBarChartProps';
+import { ChartsSurface } from '../ChartsSurface';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -125,18 +126,20 @@ const BarChart = React.forwardRef(function BarChart(
 
   return (
     <ChartContainer ref={ref} {...chartContainerProps}>
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <BarPlot {...barPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <ChartsTooltip {...tooltipProps} />}
-      <ChartsClipPath {...clipPathProps} />
-      {children}
+      <ChartsSurface>
+        {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+        <ChartsGrid {...gridProps} />
+        <g {...clipPathGroupProps}>
+          <BarPlot {...barPlotProps} />
+          <ChartsOverlay {...overlayProps} />
+          <ChartsAxisHighlight {...axisHighlightProps} />
+        </g>
+        <ChartsAxis {...chartsAxisProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        <ChartsClipPath {...clipPathProps} />
+        {children}
+      </ChartsSurface>
     </ChartContainer>
   );
 });

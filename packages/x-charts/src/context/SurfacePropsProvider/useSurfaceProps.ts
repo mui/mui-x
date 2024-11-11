@@ -3,7 +3,7 @@ import * as React from 'react';
 import { SurfacePropsContext } from './SurfacePropsContext';
 import { SurfacePropsContextState } from './SurfaceProps.types';
 
-export const useSurfacePropsContext = (): SurfacePropsContextState => {
+export const useSurfaceProps = (): SurfacePropsContextState => {
   const { data } = React.useContext(SurfacePropsContext);
   return data;
 };
