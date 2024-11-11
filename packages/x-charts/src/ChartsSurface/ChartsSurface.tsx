@@ -3,6 +3,7 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { useAxisEvents } from '../hooks/useAxisEvents';
+import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 
 type ViewBox = {
   x?: number;
@@ -71,8 +72,9 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       className={className}
       {...other}
     >
-      <title>{title}</title>
-      <desc>{desc}</desc>
+      {title && <title>{title}</title>}
+      {desc && <desc>{desc}</desc>}
+      <ChartsAxesGradients />
       {children}
     </ChartChartsSurfaceStyles>
   );

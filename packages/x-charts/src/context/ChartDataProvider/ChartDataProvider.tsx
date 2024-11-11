@@ -7,7 +7,6 @@ import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
 import { InteractionProvider } from '../InteractionProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
-import { ChartsAxesGradients } from '../../internals/components/ChartsAxesGradients';
 import {
   HighlightedProvider,
   HighlightedProviderProps,
@@ -70,10 +69,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
               <InteractionProvider>
                 <HighlightedProvider {...highlightedProviderProps}>
                   <AnimationProvider {...animationProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
+                    <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
                   </AnimationProvider>
                 </HighlightedProvider>
               </InteractionProvider>
