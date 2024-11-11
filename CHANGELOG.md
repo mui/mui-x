@@ -49,61 +49,25 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 #### Breaking changes
 
-- The default DOM structure of the field has changed.
-  Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
-  Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
-  **Fallback to the non-accessible DOM structure:**
+- The default DOM structure of the field has changed. [Migration Guide - New DOM structure for the field](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#new-dom-structure-for-the-field)
 
-  **Migrate `slotProps.field`:**
-  When using `slotProps.field` to pass props to your field component,
-  the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+  - Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+  - Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
-  **Migrate `slotProps.textField`:**
-  If you are passing props to `slotProps.textField`,
-  these props will now be received by `PickersTextField` and should keep working the same way as before.
+- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`. [Migration Guide - Stop passing utils and the date object to some translation keys](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#stop-passing-utils-and-the-date-object-to-some-translation-keys)
 
-  Side note: If you are passing `inputProps` to `slotProps.textField`, these props will now be passed to the hidden `<input />` element.
-  **Migrate `slots.field`:**
-  If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
-  This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
-  You can have a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
-  **Migrate `slots.textField`:**
-  If you are passing a custom `TextField` component to your fields and pickers,
-  you need to create a new one that is using the accessible DOM structure.
-  You can have a look at the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) section to have a concrete example.
-  Side note: If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
-  please consider having a look at the [Using a custom input](https://next.mui.com//x/react-date-pickers/custom-field/#using-a-custom-input) section which uses `slots.field`.
-  This approach can be more appropriate for deeper changes.
-  **Migrate the theme:**
-  If you are using the theme to customize `MuiTextField`,
-  you need to pass the same config to `MuiPickersTextField`
-
-  If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFilledInput`,
-  you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`
-
-  If you are using the theme to customize `MuiInputBase`,
-  you need to pass the same config to `MuiPickersInputBase`
-
-- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
-
-- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`. [Migration Guide - Removed Types](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#removed-types)
 
   - `UseDateFieldComponentProps`
   - `UseTimeFieldComponentProps`
   - `UseDateTimeFieldComponentProps`
 
-- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages. [Migration Guide - Remove TDate Generic](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#remove-tdate-generic)
 
-  If you were passing your date object type as a generic to any element of one of those packages, you can remove it
-
-  A follow-up release will add the full list of the impacted elements to the migration guide.
-
-- The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
-  `usePickersTranslation` to `usePickerTranslation`
-  `usePickersContext` to `usePickerContext`
+- The renamed `usePickersTranslation` and `usePickersContext` to have a coherent `Picker` prefix instead of `Pickers` [Migration Guide - Renamed variables](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#renamed-variables)
 
 - The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
-  You can import it from `@mui/x-license` instead.
+  You can import it from `@mui/x-license` instead. [Migration Guide - Stop using LicenseInfo from @mui/x-date-pickers-pro](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#stop-using-licenseinfo-from-muix-date-pickers-pro)
 
 #### `@mui/x-date-pickers@8.0.0-alpha.0`
 
@@ -131,27 +95,17 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.
-
-  ```jsx
-  // Supported by the codemod
-  <LineChart legend={{ ... }} />
-
-  // Not supported by the codemod
-  const props = { legend: { ... }, ... }
-  <Line {...props} />
-  ```
-
-  :::
-  If you find `slotProps={{ legend: { hidden: true } }}` too long, you can now use the `hideLegend` prop to prevent rendering the legend.
-  :::
+- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.[Migration Guide - Legend props propagation](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#legend-props-propagation-)
 
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
-- The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
-  The deprecated ones are now removed.
-- The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
-- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us.
+- Removed or renamed multiple props from Series [Migration Guide - Series properties renaming](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#series-properties-renaming)
+
+  - The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
+    The deprecated ones are now removed.
+  - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
+
+- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us. [Migration Guide - Remove Pie Chart axes](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#remove-pie-chart-axes)
 
 #### `@mui/x-charts@8.0.0-alpha.0`
 
@@ -172,32 +126,22 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
+- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook. [Migration Guide - New API to customize the Tree Item](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#new-api-to-customize-the-tree-item)
 
   Learn more about the anatomy of the Tree Items and the customization utilities provided on the [Tree Item Customization page](https://next.mui.com/x/react-tree-view/tree-item-customization/).
 
-- The `onClick` and `onMouseDown` were the only event callback that were passed to the content of the Tree Item instead of its root.
+- The `onClick` and `onMouseDown` were the only event callback that were passed to the content of the Tree Item instead of its root. [Migration Guide - Behavior change on the onClick and onMouseDown props of TreeItem](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#behavior-change-on-the-onclick-and-onmousedown-props-of-treeitem)
   The goal was to make sure that the callback was not fired when clicking on a descendant of a giving item.
   This inconsistency has been solved, all the event manager now target the root of the item, and you can use the `onItemClick` prop on the Tree View component to target the content of an item.
 
-- All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix.
+- Remove `2` suffix. All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item. [Migration Guide - Rename the TreeItem2 (and related utils)](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#-rename-the-treeitem2-and-related-utils)
 
 - The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
   If you were using theme augmentation, you will also need to migrate it.
-  If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object.
+  If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object. [Migration Guide - Use Simple Tree View instead of Tree View](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#-use-simple-tree-view-instead-of-tree-view)
 
 - The indentation of nested Tree Items is now applied on the content of the element.
-  This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
-
-  **Apply custom indentation:**
-
-  If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure
-
-  See [Tree Item Customization—Change nested item's indentation](https://next.mui.com/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
-
-  **Fallback to the old behavior:**
-
-  If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior.
+  This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View. [Migration Guide - Apply the indentation on the item content instead of it's parent's group](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#apply-the-indentation-on-the-item-content-instead-of-its-parents-group)
 
 #### `@mui/x-tree-view@8.0.0-alpha.0`
 
