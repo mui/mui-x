@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { unstable_useControlled as useControlled } from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
+import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
-import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { PickerValidDate } from '../../models';
 
-export type PickerOnChangeFn<TDate extends PickerValidDate> = (
-  date: TDate | null,
+export type PickerOnChangeFn = (
+  date: PickerValidDate | null,
   selectionState?: PickerSelectionState,
 ) => void;
 
@@ -63,8 +63,8 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
   onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
 }
 
-export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<UseViewsOptions<any, TView>, 'onChange' | 'openTo' | 'views'> {}
+export interface ExportedUseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem>
+  extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 

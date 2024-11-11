@@ -1,4 +1,10 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { MakeRequired } from '@mui/x-internals/types';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
 import {
   DesktopDateTimeRangePickerProps,
   DesktopDateTimeRangePickerSlots,
@@ -9,22 +15,20 @@ import {
   MobileDateTimeRangePickerSlots,
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
+import { UseDateTimeRangeFieldProps } from '../internals/models';
+import { DateTimeRangeValidationError, RangeFieldSection } from '../models';
 
-export interface DateTimeRangePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDateTimeRangePickerSlots<TDate>,
-    MobileDateTimeRangePickerSlots<TDate> {}
+export interface DateTimeRangePickerSlots
+  extends DesktopDateTimeRangePickerSlots,
+    MobileDateTimeRangePickerSlots {}
 
-export interface DateTimeRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DesktopDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+export interface DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface DateTimeRangePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends DesktopDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
+export interface DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -35,10 +39,31 @@ export interface DateTimeRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimeRangePickerSlots<TDate>;
+  slots?: DateTimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }
+
+/**
+ * Props the field can receive when used inside a `DateTimeRangePicker`, `DesktopDateTimeRangePicker` or `MobileDateTimeRangePicker` component.
+ */
+export type DateTimeRangePickerFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+> = MakeRequired<
+  UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  | 'format'
+  | 'timezone'
+  | 'value'
+  | 'ampm'
+  | keyof BaseDateValidationProps
+  | keyof BaseTimeValidationProps
+> &
+  BaseSingleInputFieldProps<
+    PickerRangeValue,
+    RangeFieldSection,
+    false,
+    DateTimeRangeValidationError
+  >;

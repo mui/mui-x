@@ -139,7 +139,7 @@ It contains:
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can use the `useMouseTracker()`, or track events on the SVG thanks to `useSvgRef()`.
+To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
 
 {{"demo": "CustomTooltipContent.js"}}
 
@@ -153,7 +153,7 @@ It contains:
 - `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
-To follow the mouse position, you can use the `useMouseTracker()`, or track events on the SVG thanks to `useSvgRef()`.
+To follow the mouse position, you can track pointer events on the SVG thanks to `useSvgRef`.
 
 {{"demo": "CustomAxisTooltipContent.js"}}
 

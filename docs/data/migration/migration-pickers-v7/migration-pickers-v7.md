@@ -141,19 +141,14 @@ these props will now be passed to the hidden `<input />` element.
 If you are passing a custom field component to your pickers, you need to create a new one that is using the accessible DOM structure.
 This new component will need to use the `PickersSectionList` component instead of an `<input />` HTML element.
 
-You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) to have a concrete example.
-
-:::info
-If your custom field was used to create a Joy UI design component,
-you may want to wait a few weeks for the release of an out-of-the-box Joy `PickersTextField` component instead of implementing it yourself.
-:::
+You can have a look at the [Using a custom input](/x/react-date-pickers/custom-field/#using-a-custom-input) section to have a concrete example.
 
 ### Migrate `slots.textField`
 
 If you are passing a custom `TextField` component to your fields and pickers,
 you need to create a new one that is using the accessible DOM structure.
 
-You can have a look at the second demo of the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) to have a concrete example.
+You can have a look at the [Wrapping PickersTextField](/x/react-date-pickers/custom-field/#wrapping-pickerstextfield) section to have a concrete example.
 
 :::info
 If your custom `TextField` was used to apply a totally different input that did not use `@mui/material/TextField`,
@@ -257,4 +252,225 @@ const theme = createTheme({
     },
   },
 });
+```
+
+## Renamed variables
+
+The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
+
+- `usePickersTranslation`
+
+  ```diff
+  - import { usePickersTranslation } from '@mui/x-date-pickers/hooks';
+  - import { usePickersTranslation } from '@mui/x-date-pickers';
+  - import { usePickersTranslation } from '@mui/x-date-pickers-pro';
+
+  + import { usePickerTranslation } from '@mui/x-date-pickers/hooks';
+  + import { usePickerTranslation } from '@mui/x-date-pickers';
+  + import { usePickerTranslation } from '@mui/x-date-pickers-pro';
+
+  - const translations = usePickersTranslation();
+  + const translations = usePickerTranslation();
+  ```
+
+  - `usePickersContext`
+
+  ```diff
+  - import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  - import { usePickersContext } from '@mui/x-date-pickers';
+  - import { usePickersContext } from '@mui/x-date-pickers-pro';
+
+  + import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  + import { usePickerContext } from '@mui/x-date-pickers';
+  + import { usePickerContext } from '@mui/x-date-pickers-pro';
+
+  - const pickersContext = usePickersContext();
+  + const pickerContext = usePickerContext();
+  ```
+
+## Typing breaking changes
+
+### Remove `TDate` generic
+
+The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+
+If you were passing your date object type as a generic to any element of one of those packages, you can remove it:
+
+```diff
+-<DatePicker<Dayjs> value={value} onChange={onChange} />
++<DatePicker value={value} onChange={onChange} />
+
+-type Slot = DateCalendarSlots<Dayjs>['calendarHeader'];
++type Slot = DateCalendarSlots['calendarHeader'];
+
+-type Props = DatePickerToolbarProps<Dayjs>;
++type Props = DatePickerToolbarProps;
+```
+
+A follow-up release will add the full list of the impacted elements to the migration guide.
+
+### Removed types
+
+The following types are no longer exported by `@mui/x-date-pickers` and/or `@mui/x-date-pickers-pro`.
+If you were using them, you need to replace them with the following code:
+
+- `UseDateFieldComponentProps`
+
+  ```ts
+  import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseTimeFieldComponentProps`
+
+  ```ts
+  import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+- `UseDateTimeFieldComponentProps`
+
+  ```ts
+  import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+  import { PickerValidDate } from '@mui/x-date-pickers/models';
+
+  type UseDateTimeFieldComponentProps<
+    TDate extends PickerValidDate,
+    TEnableAccessibleFieldDOMStructure extends boolean,
+    TChildProps extends {},
+  > = Omit<
+    TChildProps,
+    keyof UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>
+  > &
+    UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  ```
+
+## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
+
+The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+You can import it from `@mui/x-license` instead:
+
+```diff
+-import { LicenseInfo } from '@mui/x-date-pickers-pro';
++import { LicenseInfo } from '@mui/x-license';
+
+ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
+## Stop passing `utils` and the date object to some translation keys
+
+Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`.
+If you have customized those translation keys, you have to update them following the examples below:
+
+- If you are setting a custom value in a picker component:
+
+```diff
+-clockLabelText: (view, time, utils) =>
+-   `Select ${view}. ${
+-     time === null || !utils.isValid(time)
+-       ? 'No time selected'
+-       : `Selected time is ${utils.format(time, 'fullTime')}`
+-   }`
++clockLabelText: (view, formattedTime) =>
++   `Select ${view}. ${
++     formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++   }`
+
+-openDatePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-    : 'Choose date',
++openDatePickerDialogue: (formattedDate) =>
++  formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+
+-openTimePickerDialogue: (value, utils) =>
+-  value !== null && utils.isValid(value)
+-    ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-    : 'Choose time',
++openTimePickerDialogue: (formattedTime) =>
++  formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+```
+
+- If you are setting a custom value in the `LocalizationProvider`:
+
+```diff
+ <LocalizationProvider localeText={{
+-   clockLabelText: (view, time, utils) =>
+-     `Select ${view}. ${
+-       time === null || !utils.isValid(time)
+-         ? 'No time selected'
+-         : `Selected time is ${utils.format(time, 'fullTime')}`
+-     }`
++   clockLabelText: (view, formattedTime) =>
++     `Select ${view}. ${
++       formattedTime == null ? 'No time selected' : `Selected time is ${formattedTime}`
++     }`
+-   openDatePickerDialogue: (value, utils) =>
+-     value !== null && utils.isValid(value)
+-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
+-      : 'Choose date',
++   openDatePickerDialogue: (formattedDate) =>
++     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date'
+-   openTimePickerDialogue: (value, utils) =>
+-     value !== null && utils.isValid(value)
+-       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
+-       : 'Choose time',
++   openTimePickerDialogue: (formattedTime) =>
++     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time'
+ }} >
+```
+
+- If you using this translation key in a custom component:
+
+```diff
+ const translations = usePickerTranslations();
+
+-const clockLabelText = translations.clockLabelText(
+-  view,
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('hh:mm:ss')
+-);
++const clockLabelText = translations.clockLabelText(
++  view,
++  value == null ? null : value.format('hh:mm:ss')
++);
+
+-const openDatePickerDialogue = translations.openDatePickerDialogue(
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('MM/DD/YYY')
+-);
++const openDatePickerDialogue = translations.openDatePickerDialogue(
++  value == null ? null : value.format('MM/DD/YYY')
++);
+
+-const openTimePickerDialogue = translations.openTimePickerDialogue(
+-  value,
+-  {} as any,
+-  value == null ? null : value.format('hh:mm:ss')
+-);
++const openTimePickerDialogue = translations.openTimePickerDialogue(
++  value == null ? null : value.format('hh:mm:ss')
++);
 ```

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
 import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -13,11 +12,8 @@ import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.type
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 import { FieldType } from '../models';
 
-type DateRangeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DateRangeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: FieldType };
 
@@ -32,10 +28,9 @@ type DateRangeFieldComponent = (<
  * - [SingleInputTimeRangeField API](https://mui.com/x/api/single-input-time-range-field/)
  */
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   inRef: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -58,14 +53,13 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     additionalProps: {
       ref: inRef,
     },
-  }) as SingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as SingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const fieldResponse = useSingleInputTimeRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
@@ -303,8 +297,7 @@ SingleInputTimeRangeField.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

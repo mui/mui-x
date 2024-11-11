@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen, waitFor } from '@mui/internal-test-utils';
 import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
@@ -904,6 +904,25 @@ describe('<DataGridPro /> - Row editing', () => {
           id: 0,
           fieldToFocus: 'currencyPair',
           deleteValue: true,
+        });
+      });
+
+      it('should call preProcessEditCellProps', async () => {
+        const preProcessEditCellProps = spy(({ props }: GridPreProcessEditCellProps) => props);
+        render(<TestCase column1Props={{ preProcessEditCellProps }} />);
+
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Delete' });
+
+        await waitFor(() => {
+          expect(preProcessEditCellProps.callCount).to.equal(1);
+        });
+
+        expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
+          value: '',
+          error: false,
+          isProcessingProps: true,
         });
       });
     });

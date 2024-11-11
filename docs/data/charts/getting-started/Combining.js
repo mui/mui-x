@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -42,7 +42,7 @@ export default function Combining() {
     <div style={{ width: '100%' }}>
       <Typography>Alphabet stocks</Typography>
       <div>
-        <ResponsiveChartContainer
+        <ChartContainer
           series={series}
           height={400}
           margin={{ top: 10 }}
@@ -104,7 +104,7 @@ export default function Combining() {
             }}
           />
           <ChartsTooltip />
-        </ResponsiveChartContainer>
+        </ChartContainer>
       </div>
     </div>
   );

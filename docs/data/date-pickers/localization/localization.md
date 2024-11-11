@@ -134,12 +134,12 @@ Note that these translations of the date and time picker components depend on th
 
 ## Access the translations in slots and subcomponents
 
-You can use the `usePickersTranslations` hook to access the translations in your custom components.
+You can use the `usePickerTranslations` hook to access the translations in your custom components.
 
 ```tsx
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
-const translations = usePickersTranslations();
+const translations = usePickerTranslations();
 ```
 
 :::info

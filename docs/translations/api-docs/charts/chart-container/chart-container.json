@@ -8,7 +8,9 @@
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
-    "height": { "description": "The height of the chart in px." },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
@@ -22,13 +24,18 @@
     "plugins": {
       "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
     },
+    "resolveSizeBeforeRender": {
+      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
+    },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
     },
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
-    "width": { "description": "The width of the chart in px." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    },
     "xAxis": {
       "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
