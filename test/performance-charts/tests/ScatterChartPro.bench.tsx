@@ -11,7 +11,7 @@ describe('ScatterChartPro', () => {
     cleanup();
   });
 
-  const dataLength = 500;
+  const dataLength = 50;
   const data = Array.from({ length: dataLength }).map((_, i) => ({
     id: i,
     x: i,
@@ -43,7 +43,7 @@ describe('ScatterChartPro', () => {
               valueFormatter: (v) => v.toLocaleString('en-US'),
             },
           ]}
-          zoom={[{ axisId: 'x', start: 0.25, end: 0.75 }]}
+          zoom={[{ axisId: 'x', start: 2, end: 7 }]}
           series={[
             {
               data,

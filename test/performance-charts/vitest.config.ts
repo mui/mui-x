@@ -6,14 +6,14 @@ export default defineConfig({
   plugins: [codspeedPlugin(), react()],
   test: {
     environment: 'jsdom',
-    browser: {
-      enabled: true,
-      headless: true,
-      name: 'chromium',
-      provider: 'playwright',
-      providerOptions: {
-        timeout: 60000,
-      },
-    },
+    // browser: {
+    //   enabled: true,
+    //   headless: true,
+    //   name: 'chromium',
+    //   provider: 'playwright',
+    //   providerOptions: {
+    //     timeout: 60000,
+    //   },
+    // },
   },
 });

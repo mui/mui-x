@@ -8,7 +8,11 @@ First build the project.
 pnpm release:build
 ```
 
-To run the tests locally, you will need to uncomment all the `browser` options from [vitest.config.ts](./vitest.config.ts) file.
+To run the tests locally, you have two options
+
+1. Initialize a git repo inside the `test/performance-charts` folder.
+
+2. Or uncomment all the `browser` options from [vitest.config.ts](./vitest.config.ts) file.
 
 ```ts
     browser: {
