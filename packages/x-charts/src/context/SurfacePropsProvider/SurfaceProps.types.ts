@@ -1,4 +1,4 @@
-import { ChartsSurfaceProps } from '../../ChartsSurface';
+import type { ChartsSurfaceProps } from '../../ChartsSurface';
 
 export type SurfacePropsProviderProps = ChartsSurfaceProps;
 
