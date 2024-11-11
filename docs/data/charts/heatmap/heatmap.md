@@ -1,19 +1,12 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapItem, DefaultHeatmapTooltip
+components: Heatmap, HeatmapPlot, DefaultHeatmapTooltip
 ---
 
-# Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') 🚧
+# Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Heatmap charts visually represents data with color variations to highlight patterns and trends across two dimensions.</p>
-
-:::warning
-The Heatmap Chart component is part of the pro package which is **not yet** released.
-
-You can test demos.
-Don't hesitate to open issues to give feedback.
-:::
 
 ## Basics
 

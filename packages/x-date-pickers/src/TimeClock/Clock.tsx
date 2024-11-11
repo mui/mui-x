@@ -8,7 +8,7 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -18,8 +18,7 @@ import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 
-export interface ClockProps<TDate extends PickerValidDate>
-  extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -40,14 +39,14 @@ export interface ClockProps<TDate extends PickerValidDate>
   /**
    * The current full date value.
    */
-  value: TDate | null;
+  value: PickerValidDate | null;
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
   classes?: Partial<ClockClasses>;
 }
 
-const useUtilityClasses = (ownerState: ClockProps<any>) => {
+const useUtilityClasses = (ownerState: ClockProps) => {
   const { classes, meridiemMode } = ownerState;
   const slots = {
     root: ['root'],
@@ -99,7 +98,7 @@ const ClockWrapper = styled('div', {
 });
 
 type ClockSquareMaskOwnerState = {
-  disabled?: ClockProps<any>['disabled'];
+  disabled?: ClockProps['disabled'];
 };
 
 const ClockSquareMask = styled('div', {
@@ -170,7 +169,7 @@ const ClockAmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'AmButton',
   overridesResolver: (_, styles) => styles.amButton,
-})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+})<{ ownerState: ClockProps }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'am'),
   // keeping it here to make TS happy
   position: 'absolute',
@@ -181,7 +180,7 @@ const ClockPmButton = styled(IconButton, {
   name: 'MuiClock',
   slot: 'PmButton',
   overridesResolver: (_, styles) => styles.pmButton,
-})<{ ownerState: ClockProps<any> }>(({ theme }) => ({
+})<{ ownerState: ClockProps }>(({ theme }) => ({
   ...meridiemButtonCommonStyles(theme, 'pm'),
   // keeping it here to make TS happy
   position: 'absolute',
@@ -201,7 +200,7 @@ const ClockMeridiemText = styled(Typography, {
 /**
  * @ignore - internal component.
  */
-export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>) {
+export function Clock(inProps: ClockProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,
@@ -224,8 +223,8 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
 
   const ownerState = props;
 
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
+  const utils = useUtils();
+  const translations = usePickerTranslations();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 
@@ -261,7 +260,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     handleValueChange(newSelectedValue, isFinish);
   };
 
-  const handleTouchMove = (event: React.TouchEvent) => {
+  const handleTouchSelection = (event: React.TouchEvent) => {
     isMoving.current = true;
     setTime(event, 'shallow');
   };
@@ -332,17 +331,31 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
+      case 'PageUp':
+        handleValueChange(viewValue + 5, 'partial');
+        event.preventDefault();
+        break;
+      case 'PageDown':
+        handleValueChange(viewValue - 5, 'partial');
+        event.preventDefault();
+        break;
+      case 'Enter':
+      case ' ':
+        handleValueChange(viewValue, 'finish');
+        event.preventDefault();
+        break;
       default:
       // do nothing
     }
   };
 
   return (
-    <ClockRoot className={clsx(className, classes.root)}>
+    <ClockRoot className={clsx(classes.root, className)}>
       <ClockClock className={classes.clock}>
         <ClockSquareMask
-          data-mui-test="clock"
-          onTouchMove={handleTouchMove}
+          data-testid="clock"
+          onTouchMove={handleTouchSelection}
+          onTouchStart={handleTouchSelection}
           onTouchEnd={handleTouchEnd}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
@@ -364,7 +377,10 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={translations.clockLabelText(type, value, utils)}
+          aria-label={translations.clockLabelText(
+            type,
+            value == null ? null : utils.format(value, 'fullTime'),
+          )}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}
@@ -377,7 +393,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
       {ampm && ampmInClock && (
         <React.Fragment>
           <ClockAmButton
-            data-mui-test="in-clock-am-btn"
+            data-testid="in-clock-am-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
@@ -390,7 +406,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
           </ClockAmButton>
           <ClockPmButton
             disabled={disabled || meridiemMode === null}
-            data-mui-test="in-clock-pm-btn"
+            data-testid="in-clock-pm-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
             className={classes.pmButton}

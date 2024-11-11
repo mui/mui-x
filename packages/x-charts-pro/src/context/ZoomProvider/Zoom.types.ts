@@ -96,6 +96,16 @@ export type ZoomOptions = {
    * @default true
    */
   panning?: boolean;
+  /**
+   * Defines how to filter the axis data when it is outside of the zoomed range of this axis.
+   *
+   * - `keep`: The data outside the zoomed range is kept. And the other axes will stay the same.
+   * - `discard`: The data outside the zoomed range is discarded for the other axes.
+   *    The other axes will be adjusted to fit the zoomed range.
+   *
+   * @default 'keep'
+   */
+  filterMode?: 'discard' | 'keep';
 };
 
 export type ZoomData = {

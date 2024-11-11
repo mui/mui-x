@@ -43,6 +43,17 @@ const addReactCompilerRule = (packagesNames, isEnabled) =>
         },
       }));
 
+const RESTRICTED_TOP_LEVEL_IMPORTS = [
+  '@mui/material',
+  '@mui/x-charts',
+  '@mui/x-charts-pro',
+  '@mui/x-codemod',
+  '@mui/x-date-pickers',
+  '@mui/x-date-pickers-pro',
+  '@mui/x-tree-view',
+  '@mui/x-tree-view-pro',
+];
+
 // TODO move this helper to @mui/monorepo/.eslintrc
 // It needs to know about the parent "no-restricted-imports" to not override them.
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
@@ -85,43 +96,16 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
           files: [
             `packages/${root}/src/**/*.test{.ts,.tsx,.js}`,
             `packages/${root}/src/**/*.spec{.ts,.tsx,.js}`,
-            'docs/data/**/*{.ts,.tsx,.js}',
           ],
           excludedFiles: ['*.d.ts'],
           rules: {
             'no-restricted-imports': [
               'error',
               {
-                paths: [
-                  {
-                    name: '@mui/x-charts',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-charts-pro',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-codemod',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-date-pickers',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-date-pickers-pro',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-tree-view',
-                    message: 'Use deeper import instead',
-                  },
-                  {
-                    name: '@mui/x-tree-view-pro',
-                    message: 'Use deeper import instead',
-                  },
-                ],
+                paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+                  name,
+                  message: 'Use deeper import instead',
+                })),
               },
             ],
           },
@@ -164,6 +148,11 @@ module.exports = {
         ),
       },
     ],
+    // TODO remove rule from here once it's merged in `@mui/monorepo/.eslintrc`
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: '^_' },
+    ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
     'no-restricted-imports': 'off',
@@ -197,6 +186,19 @@ module.exports = {
   },
   overrides: [
     ...baseline.overrides,
+    {
+      files: [
+        // matching the pattern of the test runner
+        '*.test.js',
+        '*.test.ts',
+        '*.test.tsx',
+      ],
+      excludedFiles: ['test/e2e/**/*', 'test/regressions/**/*'],
+      extends: ['plugin:testing-library/react'],
+      rules: {
+        'testing-library/no-container': 'off',
+      },
+    },
     {
       files: [
         // matching the pattern of the test runner
@@ -264,6 +266,37 @@ module.exports = {
               'useMonthCalendarDefaultizedProps',
               'useYearCalendarDefaultizedProps',
               'useDateRangeCalendarDefaultizedProps',
+            ],
+          },
+        ],
+      },
+    },
+    {
+      files: ['docs/**/*{.ts,.tsx,.js}'],
+      excludedFiles: ['*.d.ts'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((name) => ({
+              name,
+              message: 'Use deeper import instead',
+            })),
+            patterns: [
+              {
+                group: [
+                  '@mui/*/*/*',
+                  // Allow any import depth with any internal packages
+                  '!@mui/internal-*/**',
+
+                  // Exceptions (QUESTION: Keep or remove?)
+                  '!@mui/x-date-pickers/internals/demo',
+                  '!@mui/x-tree-view/hooks/useTreeViewApiRef',
+                  // TODO: export this from /ButtonBase in core. This will break after we move to package exports
+                  '!@mui/material/ButtonBase/TouchRipple',
+                ],
+                message: 'Use less deep import instead',
+              },
             ],
           },
         ],

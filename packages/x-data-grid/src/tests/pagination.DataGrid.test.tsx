@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -13,6 +13,7 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -631,7 +632,7 @@ describe('<DataGrid /> - Pagination', () => {
         pageSizeOptions={[1]}
       />,
     );
-    userEvent.mousePress(getCell(0, 0));
+    fireUserEvent.mousePress(getCell(0, 0));
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getCell(1, 0)).to.have.attr('tabindex', '0');
   });

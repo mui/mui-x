@@ -38,7 +38,7 @@ function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: S
 
   return (
     <GridPanelContentRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={rootProps}
       {...other}
     />

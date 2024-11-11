@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
@@ -8,7 +9,6 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { PieItemId } from '../models';
-import { HighlightScope } from '../context';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -63,10 +63,6 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
   PieArcOwnerState & {
     cornerRadius: SpringValue<number>;
     endAngle: SpringValue<number>;
-    /**
-     * @deprecated Use the `isFaded` or `isHighlighted` props instead.
-     */
-    highlightScope?: Partial<HighlightScope>;
     innerRadius: SpringValue<number>;
     onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
     outerRadius: SpringValue<number>;
@@ -89,7 +85,6 @@ function PieArc(props: PieArcProps) {
     outerRadius,
     paddingAngle,
     startAngle,
-    highlightScope,
     ...other
   } = props;
 
@@ -136,15 +131,6 @@ PieArc.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  /**
-   * @deprecated Use the `isFaded` or `isHighlighted` props instead.
-   */
-  highlightScope: PropTypes.shape({
-    fade: PropTypes.oneOf(['global', 'none', 'series']),
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlight: PropTypes.oneOf(['item', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,

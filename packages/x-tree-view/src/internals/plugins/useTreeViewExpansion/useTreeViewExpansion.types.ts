@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
 
 export interface UseTreeViewExpansionPublicAPI {
   /**
@@ -56,13 +58,13 @@ export interface UseTreeViewExpansionParameters {
    */
   defaultExpandedItems?: string[];
   /**
-   * Callback fired when tree items are expanded/collapsed.
+   * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange?: (event: React.SyntheticEvent, itemIds: string[]) => void;
   /**
-   * Callback fired when a tree item is expanded or collapsed.
+   * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    * @param {array} itemId The itemId of the modified item.
    * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
@@ -96,4 +98,5 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   modelNames: 'expandedItems';
   contextValue: UseTreeViewExpansionContextValue;
   dependencies: [UseTreeViewItemsSignature];
+  optionalDependencies: [UseTreeViewLabelSignature];
 }>;

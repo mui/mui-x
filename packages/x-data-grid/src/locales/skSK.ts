@@ -65,7 +65,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'obsahuje',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'rovná sa',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'začína s',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
@@ -86,7 +88,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Obsahuje',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'Rovná sa',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Začína s',
   headerFilterOperatorEndsWith: 'Končí na',
   headerFilterOperatorIs: 'Je',

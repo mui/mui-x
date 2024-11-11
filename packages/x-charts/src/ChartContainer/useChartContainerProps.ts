@@ -1,107 +1,83 @@
-import type { DrawingProviderProps } from '../context/DrawingProvider';
-import type { ColorProviderProps } from '../context/ColorProvider';
-import type { CartesianContextProviderProps } from '../context/CartesianProvider';
-import type { SeriesProviderProps } from '../context/SeriesProvider';
-import type { ZAxisContextProviderProps } from '../context/ZAxisContextProvider';
+'use client';
+import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { useChartContainerHooks } from './useChartContainerHooks';
-import { HighlightedProviderProps } from '../context';
-import { ChartsSurfaceProps } from '../ChartsSurface';
-import { useDefaultizeAxis } from './useDefaultizeAxis';
+import { useChartContainerDimensions } from './useChartContainerDimensions';
+
+export type UseChartContainerPropsReturnValue = {
+  hasIntrinsicSize: boolean;
+  chartDataProviderProps: ChartDataProviderProps;
+  resizableChartContainerProps: {
+    ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
+    ref: React.Ref<HTMLDivElement>;
+  };
+};
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
-  ref: React.ForwardedRef<unknown>,
-) => {
+  ref: React.Ref<SVGSVGElement>,
+): UseChartContainerPropsReturnValue => {
   const {
     width,
     height,
-    series,
+    resolveSizeBeforeRender,
     margin,
-    xAxis,
-    yAxis,
-    zAxis,
+    children,
+    series,
     colors,
     dataset,
-    sx,
-    title,
     desc,
     disableAxisListener,
     highlightedItem,
     onHighlightChange,
     plugins,
-    children,
+    sx,
+    title,
+    viewBox,
+    xAxis,
+    yAxis,
+    zAxis,
+    skipAnimation,
     ...other
   } = props;
 
   const {
-    svgRef,
-    chartSurfaceRef,
-    xExtremumGetters,
-    yExtremumGetters,
-    seriesFormatters,
-    colorProcessors,
-  } = useChartContainerHooks(ref, plugins);
+    containerRef,
+    width: dWidth,
+    height: dHeight,
+  } = useChartContainerDimensions(width, height, resolveSizeBeforeRender);
 
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis);
+  const resizableChartContainerProps = {
+    ...other,
+    ownerState: { width, height },
+    ref: containerRef,
+  };
 
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    width,
-    height,
+  const chartDataProviderProps = {
     margin,
-    svgRef,
-  };
-
-  const colorProviderProps: Omit<ColorProviderProps, 'children'> = {
-    colorProcessors,
-  };
-
-  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
+    children,
     series,
     colors,
     dataset,
-    seriesFormatters,
-  };
-
-  const cartesianContextProps: Omit<CartesianContextProviderProps, 'children'> = {
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    dataset,
-    xExtremumGetters,
-    yExtremumGetters,
-  };
-
-  const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
-    zAxis,
-    dataset,
-  };
-
-  const highlightedProviderProps: Omit<HighlightedProviderProps, 'children'> = {
-    highlightedItem,
-    onHighlightChange,
-  };
-
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...other,
-    width,
-    height,
-    ref: chartSurfaceRef,
-    sx,
-    title,
     desc,
     disableAxisListener,
+    highlightedItem,
+    onHighlightChange,
+    plugins,
+    sx,
+    title,
+    viewBox,
+    xAxis,
+    yAxis,
+    zAxis,
+    skipAnimation,
+    width: dWidth,
+    height: dHeight,
+    ref,
   };
 
   return {
-    children,
-    drawingProviderProps,
-    colorProviderProps,
-    seriesProviderProps,
-    cartesianContextProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    chartsSurfaceProps,
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
+    hasIntrinsicSize: Boolean(dWidth && dHeight),
+    chartDataProviderProps,
+    resizableChartContainerProps,
   };
 };

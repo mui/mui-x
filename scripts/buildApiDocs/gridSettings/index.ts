@@ -9,7 +9,7 @@ type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 
 
 export const projectGridSettings: ProjectSettings = {
   output: {
-    apiManifestPath: path.join(process.cwd(), 'docs/data/data-grid-component-api-pages.ts'),
+    apiManifestPath: path.join(process.cwd(), 'docs/data/dataGridApiPages.ts'),
   },
   onWritingManifestFile: (
     builds: PromiseSettledResult<ComponentReactApi | HookReactApi | null | never[]>[],
@@ -31,10 +31,10 @@ export const projectGridSettings: ProjectSettings = {
       .filter((page): page is PageType => page !== null)
       .sort((a: PageType, b: PageType) => a.title.localeCompare(b.title));
 
-    return `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+    return `import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
-export default apiPages;
+const dataGridApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default dataGridApiPages;
 `;
   },
   typeScriptProjects: [

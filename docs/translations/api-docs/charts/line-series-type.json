@@ -3,11 +3,16 @@
   "propertiesDescriptions": {
     "type": { "description": "" },
     "area": { "description": "" },
+    "baseline": {
+      "description": "<p>The value of the line at the base of the series area.<br /><br />- <code>&#39;min&#39;</code> the area will fill the space <strong>under</strong> the line.<br />- <code>&#39;max&#39;</code> the area will fill the space <strong>above</strong> the line.<br />- <code>number</code> the area will fill the space between this value and the line</p>\n"
+    },
     "color": { "description": "" },
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
     },
-    "curve": { "description": "" },
+    "curve": {
+      "description": "The type of curve to use for the line.<br />Read more about curves at <a href=\"https://mui.com/x/react-charts/lines/#interpolation\">line interpolation</a>."
+    },
     "data": { "description": "Data associated to the line." },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "disableHighlight": {
@@ -32,8 +37,6 @@
       "description": "Formatter used to render values in tooltip or other data display."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
-    "xAxisKey": { "description": "The id of the x-axis used to render the series." },
-    "yAxisId": { "description": "The id of the y-axis used to render the series." },
-    "yAxisKey": { "description": "The id of the y-axis used to render the series." }
+    "yAxisId": { "description": "The id of the y-axis used to render the series." }
   }
 }

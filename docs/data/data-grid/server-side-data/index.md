@@ -4,7 +4,7 @@ title: React Data Grid - Server-side data
 
 # Data Grid - Server-side data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">The data grid server-side data.</p>
+<p class="description">The Data Grid server-side data.</p>
 
 ## Introduction
 
@@ -80,14 +80,14 @@ Feel free to subscribe or comment on the official GitHub [umbrella issue](https:
 
 :::
 
-It has an initial set of required methods that you need to implement. The data grid will use these methods internally to fetch a subset of data when needed.
+It has an initial set of required methods that you need to implement. The Data Grid will use these methods internally to fetch a subset of data when needed.
 
 Let's take a look at the minimal `GridDataSource` interface configuration.
 
 ```tsx
 interface GridDataSource {
   /**
-   * This method will be called when the grid needs to fetch some rows
+   * This method will be called when the grid needs to fetch some rows.
    * @param {GridGetRowsParams} params The parameters required to fetch the rows
    * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
    */
@@ -136,7 +136,7 @@ The data source changes how the existing server-side features like `filtering`, 
 **Without data source**
 
 When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
-In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
+In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
 
 ```tsx
 <DataGrid
@@ -162,7 +162,7 @@ In order for them to work with server-side data, you need to set them to `server
 
 With the data source, the features `filtering`, `sorting`, `pagination` are automatically set to `server`.
 
-When the corresponding models update, the data grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
+When the corresponding models update, the Data Grid calls the `getRows` method with the updated values of type `GridGetRowsParams` to get updated data.
 
 ```tsx
 <DataGridPro

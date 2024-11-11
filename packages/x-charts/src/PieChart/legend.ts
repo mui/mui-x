@@ -1,6 +1,6 @@
 import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
 import { getLabel } from '../internals/getLabel';
-import { LegendGetter } from '../models/seriesType/config';
+import { LegendGetter } from '../context/PluginProvider';
 
 const legendGetter: LegendGetter<'pie'> = (params) => {
   const { seriesOrder, series } = params;
@@ -13,9 +13,11 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       }
 
       acc.push({
+        id: item.id,
+        seriesId,
         color: item.color,
         label: formattedLabel,
-        id: item.id,
+        itemId: item.id,
       });
     });
     return acc;

@@ -13,25 +13,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-tree-view`:
+Using your favorite package manager, install `@mui/x-tree-view-pro` for the commercial version, or `@mui/x-tree-view` for the free community version.
 
 <!-- #default-branch-switch -->
 
-<codeblock storageKey="package-manager">
-
-```bash npm
-npm install @mui/x-tree-view
-```
-
-```bash pnpm
-pnpm add @mui/x-tree-view
-```
-
-```bash yarn
-yarn add @mui/x-tree-view
-```
-
-</codeblock>
+{{"component": "modules/components/TreeViewInstallationInstructions.js"}}
 
 The Tree View package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
@@ -72,12 +58,12 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styli
 npm install @mui/styled-engine-sc styled-components
 ```
 
-```bash yarn
-yarn add @mui/styled-engine-sc styled-components
-```
-
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
@@ -86,7 +72,7 @@ Take a look at the [Styled engine guide](/material-ui/integrations/styled-compon
 
 ## Render your first component
 
-To make sure that everything is set up correctly, try rendering a `SimpleTreeView` component:
+To make sure that everything is set up correctly, try rendering a Simple Tree View component:
 
 {{"demo": "FirstComponent.js"}}
 
@@ -96,7 +82,7 @@ To make sure that everything is set up correctly, try rendering a `SimpleTreeVie
 
 The component follows the WAI-ARIA authoring practices.
 
-To have an accessible tree view you must use `aria-labelledby`
+To have an accessible Tree View you must use `aria-labelledby`
 or `aria-label` to reference or provide a label on the TreeView,
 otherwise, screen readers will announce it as "tree", making it hard to understand the context of a specific tree item.
 
@@ -106,10 +92,7 @@ In order to benefit from the [CSS overrides](/material-ui/customization/theme-co
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-tree-view/themeAugmentation';
-// When using TypeScript 3.x and below
-import '@mui/x-tree-view/themeAugmentation';
 
 const theme = createTheme({
   components: {

@@ -4,7 +4,7 @@
 
 ## Remove cell focus outline
 
-The data grid cells are actionable elements and visually indicate the `focus` state by default.
+The Data Grid cells are actionable elements and visually indicate the `focus` state by default.
 You can remove the focus outline by overriding the `:focus` and `:focus-within` styles for the cells and header cells.
 
 :::warning

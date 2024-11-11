@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -29,7 +27,10 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
+import {
+  BaseSingleInputFieldProps,
+  PickerValidDate,
+} from '@mui/x-date-pickers/models';
 import {
   RangeFieldSection,
   DateRange,
@@ -102,10 +103,10 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
+  extends UseSingleInputDateRangeFieldProps<false>,
     BaseSingleInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
+      // This usage of PickerValidDate will go away with TIsRange
+      DateRange<PickerValidDate>,
       RangeFieldSection,
       false,
       DateRangeValidationError
@@ -129,7 +130,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
     });
 
     const fieldResponse = useSingleInputDateRangeField<
-      Dayjs,
       false,
       JoySingleInputDateRangeFieldProps
     >({ ...textFieldProps, enableAccessibleFieldDOMStructure: false });
@@ -163,7 +163,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DateRangePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleOpen = (event: React.PointerEvent) => {

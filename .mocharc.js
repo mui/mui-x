@@ -21,5 +21,4 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  spec: ['packages/**/*.test.{js,ts,tsx}', 'docs/src/modules/**/*.test.{js,ts,tsx}'],
 };

@@ -7,7 +7,7 @@ import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
-import { useColorProcessor } from '../hooks/useColor';
+import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { useSeries } from '../hooks/useSeries';
 
 export interface ChartsItemContentProps<T extends ChartSeriesType> {
@@ -16,7 +16,7 @@ export interface ChartsItemContentProps<T extends ChartSeriesType> {
    */
   itemData: ItemInteractionData<T>;
   /**
-   * The series linked to the triggered axis.
+   * The series linked to the triggered item.
    */
   series: ChartSeriesDefaultized<T>;
   /**
@@ -54,9 +54,9 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 
-  const xAxisId = (series as any).xAxisId ?? (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisId = (series as any).yAxisId ?? (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisId = (series as any).zAxisId ?? (series as any).zAxisKey ?? zAxisIds[0];
+  const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
+  const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
+  const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
 
   const getColor =
     colorProcessors[series.type]?.(

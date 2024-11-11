@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { getExtremumX } from './extremums';
-import { ExtremumGetter } from '../models/seriesType/config';
+import { ExtremumGetter } from '../context/PluginProvider';
 
 const buildData = (
   data: number[],
@@ -20,12 +20,14 @@ const buildData = (
             ]
           : [],
         layout,
+        valueFormatter: () => '',
       },
     },
     axis: {
       id: 'id',
       data,
     },
+    axisIndex: 0,
     isDefaultAxis: true,
   };
 };
@@ -55,8 +57,8 @@ describe('BarChart - extremums', () => {
 
       it('should correctly get Infinity when empty data', () => {
         const [x, y] = getExtremumX(buildData([], 'horizontal'));
-        expect(x).to.equal(null);
-        expect(y).to.equal(null);
+        expect(x).to.equal(Infinity);
+        expect(y).to.equal(-Infinity);
       });
     });
   });

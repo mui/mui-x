@@ -9,13 +9,16 @@ function GridGroupingColumnLeafCell(props: GridRenderCellParams) {
 
   return (
     <Box
-      sx={{
-        ml:
-          rootProps.rowGroupingColumnMode === 'multiple'
-            ? 1
-            : (theme) =>
-                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
-      }}
+      sx={[
+        rootProps.rowGroupingColumnMode === 'multiple'
+          ? {
+              ml: 1,
+            }
+          : (theme) => ({
+              ml: `calc(var(--DataGrid-cellOffsetMultiplier) * var(--depth) * ${theme.spacing(1)})`,
+            }),
+      ]}
+      style={{ '--depth': rowNode.depth } as any}
     >
       {props.formattedValue ?? props.value}
     </Box>

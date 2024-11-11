@@ -175,6 +175,20 @@ Different series could even have different interpolations.
 
 {{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true}}
 
+### Baseline
+
+The area chart draws a `baseline` on the Y axis `0`.
+This is useful as a base value, but customized visualizations may require a different baseline.
+
+To get the area filling the space above or below the line, set `baseline` to `"min"` or `"max"`.
+It is also possible to provide a `number` value to fix the baseline at the desired position.
+
+:::warning
+The `baseline` should not be used with stacked areas, as it will not work as expected.
+:::
+
+{{"demo": "AreaBaseline.js"}}
+
 ### Optimization
 
 To show mark elements, use `showMark` series property.
@@ -221,7 +235,7 @@ sx={{
 To skip animation at the creation and update of your chart, you can use the `skipAnimation` prop.
 When set to `true` it skips animation powered by `@react-spring/web`.
 
-Charts containers already use the `useReducedMotion` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
+Charts containers already use the `useReducedMotion()` from `@react-spring/web` to skip animation [according to user preferences](https://react-spring.dev/docs/utilities/use-reduced-motion#why-is-it-important).
 
 :::warning
 If you support interactive ways to add or remove series from your chart, you have to provide the series' id.
@@ -235,10 +249,10 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}

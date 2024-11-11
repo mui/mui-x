@@ -5,7 +5,7 @@ import {
   GridPinnedColumnFields,
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
-import { gridThemeSelector } from '../../core/gridCoreSelector';
+import { gridIsRtlSelector } from '../../core/gridCoreSelector';
 
 /**
  * Get the columns state
@@ -85,13 +85,9 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
   gridColumnsStateSelector,
   gridPinnedColumnsSelector,
   gridVisibleColumnFieldsSelector,
-  gridThemeSelector,
-  (columnsState, model, visibleColumnFields, theme) => {
-    const visiblePinnedFields = filterVisibleColumns(
-      model,
-      visibleColumnFields,
-      theme.direction === 'rtl',
-    );
+  gridIsRtlSelector,
+  (columnsState, model, visibleColumnFields, isRtl) => {
+    const visiblePinnedFields = filterVisibleColumns(model, visibleColumnFields, isRtl);
     const visiblePinnedColumns = {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),

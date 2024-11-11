@@ -29,6 +29,51 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers-pro';
 ```
 
+## Date library
+
+The Date and Time Pickers are focused on UI/UX and, like most other picker components available, require a third-party library to format, parse, and mutate dates.
+
+MUI's components let you choose which library you prefer for this purpose.
+This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
+
+To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` export a set of **adapters** that expose the date manipulation libraries under a unified API.
+
+### Available libraries
+
+The Date and Time Pickers currently support the following date libraries:
+
+- [Day.js](https://day.js.org/)
+- [date-fns](https://date-fns.org/)
+- [Luxon](https://moment.github.io/luxon/#/)
+- [Moment.js](https://momentjs.com/)
+
+:::info
+If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
+:::
+
+### Recommended library
+
+If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
+This will avoid bundling two libraries.
+
+If you don't have your own requirements or don't manipulate dates outside of MUI X components, then the recommendation is to use `dayjs` because it has the smallest impact on your application's bundle size.
+
+Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
+
+| Library           | Gzipped size |
+| :---------------- | -----------: |
+| `dayjs@1.11.5`    |      6.77 kB |
+| `date-fns@2.29.3` |     19.39 kB |
+| `luxon@3.0.4`     |     23.26 kB |
+| `moment@2.29.4`   |     20.78 kB |
+
+:::info
+The results above were obtained in October 2022 with the latest version of each library.
+The bundling of the JavaScript modules was done by a Create React App, and no locale was loaded for any of the libraries.
+
+The results may vary in your application depending on the version of each library, the locale, and the bundler used.
+:::
+
 ## Other components
 
 ### Choose interaction style
@@ -110,12 +155,8 @@ To benefit from the [CSS overrides](/material-ui/customization/theme-components/
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
-// When using TypeScript 4.x and above
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
-// When using TypeScript 3.x and below
-import '@mui/x-date-pickers/themeAugmentation';
-import '@mui/x-date-pickers-pro/themeAugmentation';
 
 const theme = createTheme({
   components: {
@@ -144,14 +185,27 @@ To correctly type all the props that are date-related, the adapters override a g
 to allow the usage of their own date format.
 This allows TypeScript to throw an error if you try to pass `value={new Date()}` to a component using `AdapterDayjs` for instance.
 
-If you run into TypeScript errors such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`,
-it is probably because you are not importing the adapter in the same TypeScript project as the rest of your codebase.
-You can fix it by manually importing the adapter in some file of your project as follows:
+If you are not sure your adapter is set up correctly to infer the type of date-related props, you can import the `PickerValidDate` type and check its current value.
+
+If its equal to the format used by your date library, then you don't have to do anything:
+
+<img src="/static/x/date-pickers/picker-valid-date-configured.png" alt="PickerValidDate correctly configured" />
+
+If it's equal to `any`, you can fix it by manually importing the adapter in some file of your project as show below:
+
+<img src="/static/x/date-pickers/picker-valid-date-not-configured.png" alt="PickerValidDate not correctly configured" />
 
 ```ts
 // Replace `AdapterDayjs` with the adapter you are using.
 import type {} from '@mui/x-date-pickers/AdapterDayjs';
 ```
+
+:::info
+Before version 7.19.0, TypeScript was throwing an error such as `DesktopDatePickerProps<Date> error Type 'Date' does not satisfy the constraint 'never'`
+when you were not importing the adapter in the same TypeScript project as the rest of your codebase.
+
+The fix described above should also solve the problem.
+:::
 
 ## Testing caveats
 

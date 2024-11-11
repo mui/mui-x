@@ -1059,6 +1059,26 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
     });
 
+    it('should not cause unexpected behavior when props are explictly set to undefined', () => {
+      expect(() => {
+        render(
+          <TestCase
+            columns={[
+              {
+                field: 'actions',
+                headerName: 'Actions',
+                type: 'actions',
+                width: 80,
+                filterOperators: undefined,
+                getActions: () => [<React.Fragment>action</React.Fragment>],
+              },
+            ]}
+            headerFilters
+          />,
+        );
+      }).not.toErrorDev();
+    });
+
     // See https://github.com/mui/mui-x/issues/13217
     it('should not throw when custom filter operator is used with an initilaized value', () => {
       expect(() => {
@@ -1161,11 +1181,9 @@ describe('<DataGridPro /> - Filter', () => {
           openedPanelValue: GridPreferencePanelsValue.filters,
         },
       };
-      const { getAllByRole } = render(
-        <TestCase initialState={initialState} filterModel={newModel} columns={columns} />,
-      );
+      render(<TestCase initialState={initialState} filterModel={newModel} columns={columns} />);
       // For JSDom, the first hidden combo is also found which we are not interested in
-      const select = getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
+      const select = screen.getAllByRole('combobox', { name: 'Logic operator' })[isJSDOM ? 1 : 0];
       expect(select).not.to.have.class('Mui-disabled');
     });
 

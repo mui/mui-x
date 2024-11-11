@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
 import { SeriesProvider } from '../SeriesProvider';
+import { PluginProvider } from '../PluginProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -41,14 +42,16 @@ describe('useHighlighted', () => {
   });
 
   it('should not throw an error when parent context is present', () => {
-    const { getByText } = render(
-      <SeriesProvider series={[]} seriesFormatters={{}}>
-        <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
-          <UseHighlighted />
-        </HighlightedProvider>
-      </SeriesProvider>,
+    render(
+      <PluginProvider>
+        <SeriesProvider series={[]}>
+          <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
+            <UseHighlighted />
+          </HighlightedProvider>
+        </SeriesProvider>
+      </PluginProvider>,
     );
 
-    expect(getByText('test-id')).toBeVisible();
+    expect(screen.getByText('test-id')).toBeVisible();
   });
 });

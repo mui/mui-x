@@ -146,7 +146,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       variant="standard"
       value={searchValue}
       onChange={handleSearchValueChange}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
@@ -157,7 +157,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
-            sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
+            sx={[
+              searchValue
+                ? {
+                    visibility: 'visible',
+                  }
+                : {
+                    visibility: 'hidden',
+                  },
+            ]}
             onClick={handleSearchReset}
             {...rootProps.slotProps?.baseIconButton}
           >

@@ -1,16 +1,16 @@
 # Data Grid - Overlays
 
-<p class="description">The various data grid overlays.</p>
+<p class="description">The various Data Grid overlays.</p>
 
 ## Loading overlay
 
-To display a loading overlay and signify that the data grid is in a loading state, set the `loading` prop to `true`.
+To display a loading overlay and signify that the Data Grid is in a loading state, set the `loading` prop to `true`.
 
-The data grid supports 3 loading overlay variants out of the box:
+The Data Grid supports 3 loading overlay variants out of the box:
 
 - `circular-progress` (default): a circular loading spinner.
 - `linear-progress`: an indeterminate linear progress bar.
-- `skeleton`: an animated placeholder of the data grid.
+- `skeleton`: an animated placeholder of the Data Grid.
 
 The type of loading overlay to display can be set via `slotProps.loadingOverlay` for the following two props:
 
@@ -44,7 +44,7 @@ An indeterminate linear progress bar.
 
 ### Skeleton
 
-An animated placeholder of the data grid.
+An animated placeholder of the Data Grid.
 
 {{"demo": "LoadingOverlaySkeleton.js", "bg": "inline"}}
 
@@ -58,7 +58,7 @@ In the following demo, a labeled determinate [CircularProgress](/material-ui/rea
 
 ## No rows overlay
 
-The no-rows overlay is displayed when the data grid has no rows.
+The no-rows overlay is displayed when the Data Grid has no rows.
 
 {{"demo": "NoRowsOverlay.js", "bg": "inline"}}
 
@@ -72,7 +72,7 @@ In the following demo, an illustration is added on top of the default "No rows" 
 
 ## No results overlay
 
-The no-results overlay is displayed when the data grid has no results after filtering.
+The no-results overlay is displayed when the Data Grid has no results after filtering.
 
 {{"demo": "NoResultsOverlay.js", "bg": "inline"}}
 

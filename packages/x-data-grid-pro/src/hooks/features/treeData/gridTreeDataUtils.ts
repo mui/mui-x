@@ -20,7 +20,10 @@ interface FilterRowTreeFromTreeDataParams {
   apiRef: React.MutableRefObject<GridPrivateApiPro>;
 }
 
-export const TREE_DATA_STRATEGY = 'tree-data';
+export enum TreeDataStrategy {
+  Default = 'tree-data',
+  DataSource = 'tree-data-source',
+}
 
 /**
  * A node is visible if one of the following criteria is met:
@@ -32,6 +35,7 @@ export const filterRowTreeFromTreeData = (
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredChildrenCountLookup: Record<GridRowId, number> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
   const filterCache = {};
 
@@ -64,6 +68,7 @@ export const filterRowTreeFromTreeData = (
       );
     }
 
+    let filteredChildrenCount = 0;
     let filteredDescendantCount = 0;
     if (node.type === 'group') {
       node.children.forEach((childId) => {
@@ -75,6 +80,9 @@ export const filterRowTreeFromTreeData = (
         );
 
         filteredDescendantCount += childSubTreeSize;
+        if (childSubTreeSize > 0) {
+          filteredChildrenCount += 1;
+        }
       });
     }
 
@@ -100,6 +108,7 @@ export const filterRowTreeFromTreeData = (
       return 0;
     }
 
+    filteredChildrenCountLookup[node.id] = filteredChildrenCount;
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
 
     if (node.type === 'footer') {
@@ -119,6 +128,7 @@ export const filterRowTreeFromTreeData = (
 
   return {
     filteredRowsLookup,
+    filteredChildrenCountLookup,
     filteredDescendantCountLookup,
   };
 };

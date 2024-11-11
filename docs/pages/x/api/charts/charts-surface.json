@@ -6,13 +6,13 @@
   },
   "name": "ChartsSurface",
   "imports": [
-    "import { ChartsSurface } from '/packages/x-charts/src/ChartsSurface.tsx';",
+    "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts';",
     "import { ChartsSurface } from '@mui/x-charts-pro';"
   ],
   "classes": [],
   "muiName": "MuiChartsSurface",
-  "filename": "/packages/x-charts/src/ChartsSurface.tsx",
+  "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>",
   "cssComponent": false

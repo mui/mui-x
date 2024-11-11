@@ -41,12 +41,9 @@ const GridAggregationFunctionLabel = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => {
   return {
     fontSize: theme.typography.caption.fontSize,
-    lineHeight: theme.typography.caption.fontSize,
-    position: 'absolute',
-    bottom: 4,
-    fontWeight: theme.typography.fontWeightMedium,
-    color: (theme.vars || theme).palette.primary.dark,
-    textTransform: 'uppercase',
+    lineHeight: 'normal',
+    color: theme.palette.text.secondary,
+    marginTop: -1,
   };
 });
 

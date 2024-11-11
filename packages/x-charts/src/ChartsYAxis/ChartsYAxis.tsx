@@ -1,8 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -10,6 +12,8 @@ import { ChartsYAxisProps } from '../models/axis';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
 import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
+import { isInfinity } from '../internals/isInfinity';
+import { isBandScale } from '../internals/isBandScale';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -24,6 +28,12 @@ const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
 
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
+
+const YAxisRoot = styled(AxisRoot, {
+  name: 'MuiChartsYAxis',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
 
 const defaultProps = {
   position: 'left',
@@ -71,14 +81,15 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
+    sx,
   } = defaultizedProps;
 
   const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
+  const isRtl = useRtl();
 
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const { left, top, width, height } = useDrawingArea();
+  const { left, top, width, height, isPointInside } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -103,7 +114,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   const TickLabel = slots?.axisTickLabel ?? ChartsText;
   const Label = slots?.axisLabel ?? ChartsText;
 
-  const revertAnchor = (!isRTL && position === 'right') || (isRTL && position !== 'right');
+  const revertAnchor = (!isRtl && position === 'right') || (isRtl && position !== 'right');
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
     externalSlotProps: slotProps?.axisTickLabel,
@@ -144,17 +155,19 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
   });
 
   const domain = yScale.domain();
-  if (domain.length === 0 || domain[0] === domain[1]) {
-    // Skip axis rendering if
-    // - the data is empty (for band and point axis)
-    // - No data is associated to the axis (other scale types)
+  const ordinalAxis = isBandScale(yScale);
+  // Skip axis rendering if no data is available
+  // - The domain is an empty array for band/point scales.
+  // - The domains contains Infinity for continuous scales.
+  if ((ordinalAxis && domain.length === 0) || (!ordinalAxis && domain.some(isInfinity))) {
     return null;
   }
 
   return (
-    <AxisRoot
+    <YAxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
+      sx={sx}
     >
       {!disableLine && (
         <Line y1={top} y2={top + height} className={classes.line} {...lineSlotProps} />
@@ -166,7 +179,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = offset >= top - 1 && offset <= height + top + 1;
+        const showLabel = isPointInside({ x: -1, y: offset }, { direction: 'y' });
 
         if (!showLabel) {
           return null;
@@ -198,7 +211,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
-    </AxisRoot>
+    </YAxisRoot>
   );
 }
 
@@ -264,6 +277,11 @@ ChartsYAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The font size of the axis ticks text.
    * @default 12

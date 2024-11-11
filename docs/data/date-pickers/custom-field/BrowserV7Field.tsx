@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import { useForkRef } from '@mui/x-date-pickers/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,12 +14,16 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
+  PickerValidDate,
 } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
+  '& .MuiInputAdornment-root': {
+    height: 'auto',
+  },
 });
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
@@ -102,10 +105,10 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserDateFieldProps
-  extends UseDateFieldProps<Dayjs, true>,
+  extends UseDateFieldProps<true>,
     BaseSingleInputFieldProps<
-      Dayjs | null,
-      Dayjs,
+      // This usage of PickerValidDate will go away with TIsRange
+      PickerValidDate | null,
       FieldSection,
       true,
       DateValidationError
@@ -115,10 +118,7 @@ const BrowserDateField = React.forwardRef(
   (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
-    const fieldResponse = useDateField<Dayjs, true, typeof textFieldProps>({
-      ...textFieldProps,
-      enableAccessibleFieldDOMStructure: true,
-    });
+    const fieldResponse = useDateField<true, typeof textFieldProps>(textFieldProps);
 
     /* If you don't need a clear button, you can skip the use of this hook */
     const processedFieldProps = useClearableField({
@@ -132,7 +132,7 @@ const BrowserDateField = React.forwardRef(
 );
 
 const BrowserDatePicker = React.forwardRef(
-  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerProps, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DatePicker
         ref={ref}

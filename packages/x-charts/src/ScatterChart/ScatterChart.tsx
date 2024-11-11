@@ -1,30 +1,24 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
+import { MakeOptional } from '@mui/x-internals/types';
 import {
   ScatterPlot,
   ScatterPlotProps,
   ScatterPlotSlotProps,
   ScatterPlotSlots,
 } from './ScatterPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { MakeOptional } from '../models/helpers';
 import {
   ChartsTooltip,
   ChartsTooltipProps,
   ChartsTooltipSlotProps,
   ChartsTooltipSlots,
 } from '../ChartsTooltip';
-import {
-  ChartsLegend,
-  ChartsLegendProps,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -55,7 +49,7 @@ export interface ScatterChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -73,7 +67,7 @@ export interface ScatterChartProps
   tooltip?: ChartsTooltipProps<'scatter'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -87,9 +81,9 @@ export interface ScatterChartProps
    */
   disableVoronoi?: boolean;
   /**
-   * @deprecated Consider using `slotProps.legend` instead.
+   * If `true`, the legend is not rendered.
    */
-  legend?: ChartsLegendProps;
+  hideLegend?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -118,7 +112,11 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
+const ScatterChart = React.forwardRef(function ScatterChart(
+  inProps: ScatterChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartContainerProps,
     zAxisProps,
@@ -133,22 +131,22 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     children,
   } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
-        {props.grid && <ChartsGrid {...gridProps} />}
+        <ChartsGrid {...gridProps} />
         <g data-drawing-container>
           {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
           <ScatterPlot {...scatterPlotProps} />
         </g>
         <ChartsOverlay {...overlayProps} />
-        <ChartsLegend {...legendProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
@@ -159,7 +157,7 @@ ScatterChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -207,6 +205,10 @@ ScatterChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
+  /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
@@ -219,20 +221,6 @@ ScatterChart.propTypes = {
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -263,6 +251,16 @@ ScatterChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -273,6 +271,11 @@ ScatterChart.propTypes = {
    * An array of [[ScatterSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -362,6 +365,7 @@ ScatterChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -376,6 +380,11 @@ ScatterChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -432,6 +441,7 @@ ScatterChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -446,6 +456,11 @@ ScatterChart.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),

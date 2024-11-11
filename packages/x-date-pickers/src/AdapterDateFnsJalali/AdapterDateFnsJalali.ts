@@ -123,7 +123,7 @@ declare module '@mui/x-date-pickers/models' {
  */
 export class AdapterDateFnsJalali
   extends AdapterDateFnsBase<DateFnsLocale>
-  implements MuiPickersAdapter<Date, DateFnsLocale>
+  implements MuiPickersAdapter<DateFnsLocale>
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     /* istanbul ignore next */

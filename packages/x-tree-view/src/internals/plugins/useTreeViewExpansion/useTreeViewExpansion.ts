@@ -88,8 +88,12 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       return params.expansionTrigger;
     }
 
+    if (instance.isTreeViewEditable) {
+      return 'iconContainer';
+    }
+
     return 'content';
-  }, [params.expansionTrigger]);
+  }, [params.expansionTrigger, instance.isTreeViewEditable]);
 
   return {
     publicAPI: {
@@ -118,7 +122,7 @@ useTreeViewExpansion.models = {
 
 const DEFAULT_EXPANDED_ITEMS: string[] = [];
 
-useTreeViewExpansion.getDefaultizedParams = (params) => ({
+useTreeViewExpansion.getDefaultizedParams = ({ params }) => ({
   ...params,
   defaultExpandedItems: params.defaultExpandedItems ?? DEFAULT_EXPANDED_ITEMS,
 });

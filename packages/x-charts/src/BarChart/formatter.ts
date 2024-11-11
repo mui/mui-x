@@ -1,20 +1,15 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
+import { warnOnce } from '@mui/x-internals/warning';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { getStackingGroups } from '../internals/stackSeries';
-import {
-  ChartSeries,
-  DatasetElementType,
-  DatasetType,
-  Formatter,
-} from '../models/seriesType/config';
+import { ChartSeries, DatasetElementType, DatasetType } from '../models/seriesType/config';
 import { defaultizeValueFormatter } from '../internals/defaultizeValueFormatter';
-import { DefaultizedProps } from '../models/helpers';
 import { SeriesId } from '../models/seriesType/common';
-
-let warnOnce = false;
+import { SeriesFormatter } from '../context/PluginProvider/SeriesFormatter.types';
 
 type BarDataset = DatasetType<number | null>;
 
-const formatter: Formatter<'bar'> = (params, dataset) => {
+const formatter: SeriesFormatter<'bar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
@@ -67,14 +62,13 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
           ? dataset!.map((data) => {
               const value = data[dataKey];
               if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production' && !warnOnce && value !== null) {
-                  warnOnce = true;
-                  console.error(
-                    [
-                      `MUI X charts: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
+                if (process.env.NODE_ENV !== 'production') {
+                  if (value !== null) {
+                    warnOnce([
+                      `MUI X: your dataset key "${dataKey}" is used for plotting bars, but contains nonnumerical elements.`,
                       'Bar plots only support numbers and null values.',
-                    ].join('\n'),
-                  );
+                    ]);
+                  }
                 }
                 return 0;
               }

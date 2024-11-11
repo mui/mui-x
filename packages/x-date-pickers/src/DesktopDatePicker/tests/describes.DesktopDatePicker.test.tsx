@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -59,10 +59,10 @@ describe('<DesktopDatePicker /> - Describes', () => {
       expectFieldValueV7(fieldRoot, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
-      const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
+      const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {
-        userEvent.mousePress(
+        fireEvent.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { getDateOffset, describeAdapters } from 'test/utils/pickers';
 
@@ -25,7 +25,7 @@ describe('<DigitalClock /> - Timezone', () => {
       const onChange = spy();
       render(<DigitalClock onChange={onChange} />);
 
-      userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+      fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
       const expectedDate = adapter.setHours(adapter.date(), 8);
 
@@ -38,13 +38,78 @@ describe('<DigitalClock /> - Timezone', () => {
       expect(actualDate).toEqualDateTime(expectedDate);
     });
 
+    it('should render correct time options when fall back DST occurs', () => {
+      render(
+        <DigitalClock
+          referenceDate={adapter.date('2023-11-05T12:00:00', 'America/New_York')}
+          timezone="America/New_York"
+          timeStep={30}
+        />,
+      );
+      const oneAM = adapter.setMinutes(adapter.setHours(adapter.date(undefined, 'default'), 1), 0);
+      const elevenPM = adapter.setMinutes(
+        adapter.setHours(adapter.date(undefined, 'default'), 23),
+        0,
+      );
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            oneAM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(adapter.lib === 'dayjs' ? 1 : 2);
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            elevenPM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+    });
+
+    it('should contain time options until the end of day when spring forward DST occurs', () => {
+      render(
+        <DigitalClock
+          referenceDate={adapter.date('2024-03-10T12:00:00', 'America/New_York')}
+          timezone="America/New_York"
+          timeStep={30}
+        />,
+      );
+      const startOfDay = adapter.setMinutes(
+        adapter.setHours(adapter.date(undefined, 'default'), 0),
+        0,
+      );
+      const eleven30PM = adapter.setMinutes(
+        adapter.setHours(adapter.date(undefined, 'default'), 23),
+        30,
+      );
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            startOfDay,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+      expect(
+        screen.getAllByText(
+          adapter.format(
+            eleven30PM,
+            adapter.is12HourCycleInCurrentLocale() ? 'fullTime12h' : 'fullTime24h',
+          ),
+        ),
+      ).to.have.length(1);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange when no value is provided', () => {
           const onChange = spy();
           render(<DigitalClock onChange={onChange} timezone={timezone} />);
 
-          userEvent.mousePress(screen.getByRole('option', { name: '08:00 AM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:00 AM' }));
 
           const expectedDate = adapter.setHours(
             adapter.startOfDay(adapter.date(undefined, timezone)),
@@ -53,7 +118,9 @@ describe('<DigitalClock /> - Timezone', () => {
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
@@ -75,7 +142,7 @@ describe('<DigitalClock /> - Timezone', () => {
             (adapter.getHours(value) + offsetDiff / 60 + 24) % 24,
           );
 
-          userEvent.mousePress(screen.getByRole('option', { name: '08:30 PM' }));
+          fireEvent.click(screen.getByRole('option', { name: '08:30 PM' }));
 
           const actualDate = onChange.lastCall.firstArg;
 

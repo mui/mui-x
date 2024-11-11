@@ -9,7 +9,7 @@ import {
   gridFilteredDescendantRowCountSelector,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 
 function CustomFooterRowCount(props: GridRowCountProps) {
   const { visibleRowCount: topLevelRowCount } = props;

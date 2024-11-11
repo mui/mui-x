@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { Initializable } from '@mui/x-charts/internals';
@@ -28,6 +29,7 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
 
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
+    // eslint-disable-next-line react-compiler/react-compiler
     default: defaultZoomData.current,
     name: 'ZoomProvider',
     state: 'zoom',

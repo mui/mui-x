@@ -13,16 +13,16 @@ To read more about the changes from the new major, check out [the blog post abou
 
 ## Start using the new release
 
-In `package.json`, change the version of the data grid package to `^7.0.0`.
+In `package.json`, change the version of the Data Grid package to `^7.0.0`.
 
 ```diff
--"@mui/x-data-grid": "6.x.x",
+-"@mui/x-data-grid": "^6.0.0",
 +"@mui/x-data-grid": "^7.0.0",
 
--"@mui/x-data-grid-pro": "6.x.x",
+-"@mui/x-data-grid-pro": "^6.0.0",
 +"@mui/x-data-grid-pro": "^7.0.0",
 
--"@mui/x-data-grid-premium": "6.x.x",
+-"@mui/x-data-grid-premium": "^6.0.0",
 +"@mui/x-data-grid-premium": "^7.0.0",
 ```
 
@@ -48,14 +48,14 @@ If you're using the commercial version of the Data Grid ([Pro](/x/introduction/l
 If you have `@mui/x-license-pro` in the `dependencies` section of your `package.json`, rename and update the license package to the latest version:
 
 ```diff
--"@mui/x-license-pro": "6.x.x",
+-"@mui/x-license-pro": "^6.0.0",
 +"@mui/x-license": "^7.0.0",
 ```
 
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v7.
-You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like Date and Time pickers as well.
+You can run `v7.0.0/data-grid/preset-safe` targeting only Data Grid or `v7.0.0/preset-safe` to target other MUI X components like the Date and Time pickers as well.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
@@ -108,13 +108,13 @@ The `legacy` bundle that used to support old browsers like IE 11 is no longer i
 If you need support for IE 11, you will need to keep using the latest version of the `v6` release.
 :::
 
-### Drop Webpack 4 support
+### Drop webpack 4 support
 
 Dropping old browsers support also means that we no longer transpile some features that are natively supported by modern browsers – like [Nullish Coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) and [Optional Chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining).
 
-These features are not supported by Webpack 4, so if you are using Webpack 4, you will need to transpile these features yourself or upgrade to Webpack 5.
+These features are not supported by webpack 4, so if you are using webpack 4, you will need to transpile these features yourself or upgrade to webpack 5.
 
-Here is an example of how you can transpile these features on Webpack 4 using the `@babel/preset-env` preset:
+Here is an example of how you can transpile these features on webpack 4 using the `@babel/preset-env` preset:
 
 ```diff
  // webpack.config.js
