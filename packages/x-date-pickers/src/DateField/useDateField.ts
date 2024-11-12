@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import {
   singleItemFieldValueManager,
   singleItemValueManager,
@@ -8,6 +9,7 @@ import { UseDateFieldProps } from './DateField.types';
 import { validateDate } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
+import { getDateValueManager } from '../valueManagers';
 
 export const useDateField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -15,6 +17,11 @@ export const useDateField = <
 >(
   inProps: TAllProps,
 ) => {
+  const valueManager = React.useMemo(
+    () => getDateValueManager(inProps.enableAccessibleFieldDOMStructure),
+    [inProps.enableAccessibleFieldDOMStructure],
+  );
+
   const props = useDefaultizedDateField<
     UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
     TAllProps

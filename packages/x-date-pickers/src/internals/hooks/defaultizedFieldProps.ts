@@ -8,29 +8,6 @@ import {
   TimeValidationProps,
 } from '../models/validation';
 
-export interface UseDefaultizedDateFieldBaseProps extends BaseDateValidationProps {
-  format?: string;
-}
-
-export const useDefaultizedDateField = <
-  TKnownProps extends UseDefaultizedDateFieldBaseProps,
-  TAllProps extends {},
->(
-  props: TKnownProps & TAllProps,
-): TAllProps & DefaultizedProps<TKnownProps, keyof UseDefaultizedDateFieldBaseProps> => {
-  const utils = useUtils();
-  const defaultDates = useDefaultDates();
-
-  return {
-    ...props,
-    disablePast: props.disablePast ?? false,
-    disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDate,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
-  };
-};
-
 export interface UseDefaultizedTimeFieldBaseProps extends BaseTimeValidationProps {
   format?: string;
 }

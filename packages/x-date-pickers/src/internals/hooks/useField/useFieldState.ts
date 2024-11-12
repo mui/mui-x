@@ -4,13 +4,10 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
-  UseFieldInternalProps,
-  UseFieldParams,
   UseFieldState,
   FieldParsedSelectedSections,
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
-  UseFieldForwardedProps,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -27,6 +24,8 @@ import {
   PickerValidDate,
   InferError,
   InferFieldSection,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
@@ -69,19 +68,12 @@ export interface UseFieldStateResponse<TIsRange extends boolean> {
   timezone: PickersTimezone;
 }
 
-export const useFieldState = <
-  TIsRange extends boolean,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, any>,
->(
-  params: UseFieldParams<
-    TIsRange,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
-): UseFieldStateResponse<TIsRange> => {
+export const useFieldState = <TManager extends PickerAnyValueManagerV8>(
+  params: UseFieldStateParameters<TManager>,
+): UseFieldStateResponse<PickerManagerProperties<TManager>['isRange']> => {
+  type Properties = PickerManagerProperties<TManager>;
+  type TIsRange = Properties['isRange'];
+
   const utils = useUtils();
   const translations = usePickerTranslations();
   const adapter = useLocalizationContext();
@@ -89,11 +81,8 @@ export const useFieldState = <
 
   const {
     valueManager,
-    fieldValueManager,
-    valueType,
-    validator,
-    internalProps,
-    internalProps: {
+    internalPropsWithDefaults,
+    internalPropsWithDefaults: {
       value: valueProp,
       defaultValue,
       referenceDate: referenceDateProp,
@@ -112,12 +101,12 @@ export const useFieldState = <
     timezone,
     value: valueFromTheOutside,
     handleValueChange,
-  } = useValueWithTimezone({
+  } = useValueWithTimezone<TIsRange, typeof onChange>({
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
     onChange,
-    valueManager,
+    valueManager: valueManager.legacyValueManager,
   });
 
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
@@ -132,7 +121,7 @@ export const useFieldState = <
       value: InferPickerValue<TIsRange>,
       fallbackSections: InferFieldSection<TIsRange>[] | null = null,
     ) =>
-      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
+      valueManager.fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
         buildSectionsFromFormat({
           utils,
           localeText: translations,
@@ -146,7 +135,7 @@ export const useFieldState = <
         }),
       ),
     [
-      fieldValueManager,
+      valueManager.fieldValueManager,
       format,
       translations,
       localizedDigits,
@@ -160,7 +149,7 @@ export const useFieldState = <
 
   const [state, setState] = React.useState<UseFieldState<TIsRange>>(() => {
     const sections = getSectionsFromValue(valueFromTheOutside);
-    validateSections(sections, valueType);
+    validateSections(sections, valueManager.valueType);
 
     const stateWithoutReferenceDate: Omit<UseFieldState<TIsRange>, 'referenceValue'> = {
       sections,
@@ -169,11 +158,11 @@ export const useFieldState = <
     };
 
     const granularity = getSectionTypeGranularity(sections);
-    const referenceValue = valueManager.getInitialReferenceValue({
+    const referenceValue = valueManager.legacyValueManager.getInitialReferenceValue({
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps,
+      props: internalPropsWithDefaults as GetDefaultReferenceDateProps,
       granularity,
       timezone,
     });
@@ -294,9 +283,13 @@ export const useFieldState = <
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
-    const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
+    const newValue = valueManager.fieldValueManager.parseValueStr(
+      valueStr,
+      state.referenceValue,
+      parseDateStr,
+    );
 
-    const newReferenceValue = fieldValueManager.updateReferenceValue(
+    const newReferenceValue = valueManager.fieldValueManager.updateReferenceValue(
       utils,
       newValue,
       state.referenceValue,
@@ -324,7 +317,11 @@ export const useFieldState = <
     /**
      * 2. Try to build a valid date from the new section value
      */
-    const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
+    const activeDateManager = valueManager.fieldValueManager.getActiveDateManager(
+      utils,
+      state,
+      activeSection,
+    );
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
@@ -375,7 +372,7 @@ export const useFieldState = <
 
   React.useEffect(() => {
     const sections = getSectionsFromValue(state.value);
-    validateSections(sections, valueType);
+    validateSections(sections, valueManager.valueType);
     setState((prevState) => ({
       ...prevState,
       sections,
@@ -384,19 +381,19 @@ export const useFieldState = <
 
   React.useEffect(() => {
     let shouldUpdate: boolean;
-    if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
+    if (!valueManager.legacyValueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       shouldUpdate = true;
     } else {
       shouldUpdate =
-        valueManager.getTimezone(utils, state.value) !==
-        valueManager.getTimezone(utils, valueFromTheOutside);
+        valueManager.legacyValueManager.getTimezone(utils, state.value) !==
+        valueManager.legacyValueManager.getTimezone(utils, valueFromTheOutside);
     }
 
     if (shouldUpdate) {
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,
-        referenceValue: fieldValueManager.updateReferenceValue(
+        referenceValue: valueManager.fieldValueManager.updateReferenceValue(
           utils,
           valueFromTheOutside,
           prevState.referenceValue,
@@ -422,3 +419,8 @@ export const useFieldState = <
     timezone,
   };
 };
+
+interface UseFieldStateParameters<TManager extends PickerAnyValueManagerV8> {
+  valueManager: TManager;
+  internalPropsWithDefaults: PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'];
+}

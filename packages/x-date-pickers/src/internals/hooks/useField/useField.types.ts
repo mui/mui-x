@@ -6,15 +6,13 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
   PickerValidDate,
   FieldRef,
   OnErrorProps,
-  InferError,
   InferFieldSection,
+  PickerAnyValueManagerV8,
+  PickerManagerProperties,
 } from '../../../models';
-import type { PickerValueManager } from '../usePicker';
-import type { Validator } from '../../../validation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
@@ -22,18 +20,13 @@ import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField
 import { InferNonNullablePickerValue, InferPickerValue } from '../../models';
 
 export interface UseFieldParams<
-  TIsRange extends boolean,
-  TEnableAccessibleFieldDOMStructure extends boolean,
+  TManager extends PickerAnyValueManagerV8,
   TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, any>,
+    UseFieldForwardedProps<PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']>,
 > {
   forwardedProps: TForwardedProps;
-  internalProps: TInternalProps;
-  valueManager: PickerValueManager<TIsRange, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TIsRange>;
-  validator: Validator<TIsRange, InferError<TInternalProps>, TInternalProps>;
-  valueType: FieldValueType;
+  internalProps: PickerManagerProperties<TManager>['fieldInternalProps'];
+  valueManager: TManager;
 }
 
 export interface UseFieldInternalProps<

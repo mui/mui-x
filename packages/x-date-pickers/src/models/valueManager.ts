@@ -26,14 +26,31 @@ export interface PickerValueManagerV8<
   // This will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
   legacyValueManager: PickerValueManager<TIsRange, TError>;
   fieldValueManager: FieldValueManager<TIsRange>;
+  /**
+   * Checks if a value is valid and returns an error code otherwise.
+   */
   validator: Validator<TIsRange, TError, TFieldInternalPropsWithDefaults>;
+  /**
+   * Applies the default values to the field internal props.
+   * This usually includes:
+   * - a default format to display the value in the field
+   * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
+   * @param {ApplyDefaultsToFieldInternalPropsParameters} parameters The parameters to apply the defaults.
+   * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
+   */
   applyDefaultsToFieldInternalProps: (
-    params: MuiPickersAdapterContextValue & {
-      internalProps: TFieldInternalProps;
-    },
+    parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => TFieldInternalPropsWithDefaults;
+  /**
+   * The type of the value (e.g. 'date', 'date-time', 'time').
+   */
   valueType: FieldValueType;
   enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
+}
+
+interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
+  extends MuiPickersAdapterContextValue {
+  internalProps: TFieldInternalProps;
 }
 
 export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any>;

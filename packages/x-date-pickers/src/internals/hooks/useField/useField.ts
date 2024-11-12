@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useValidation } from '../../../validation';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   UseFieldParams,
   UseFieldResponse,
@@ -19,43 +19,43 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
+import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
 
 export const useField = <
-  TIsRange extends boolean,
-  TEnableAccessibleFieldDOMStructure extends boolean,
+  TManager extends PickerAnyValueManagerV8,
   TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    TIsRange,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
-    minutesStep?: number;
-  },
+    UseFieldForwardedProps<PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']>,
 >(
-  params: UseFieldParams<
-    TIsRange,
-    TEnableAccessibleFieldDOMStructure,
-    TForwardedProps,
-    TInternalProps
-  >,
-): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+  params: UseFieldParams<TManager, TForwardedProps>,
+): UseFieldResponse<
+  PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'],
+  TForwardedProps
+> => {
+  type Properties = PickerManagerProperties<TManager>;
+  type TIsRange = Properties['isRange'];
+  type TEnableAccessibleFieldDOMStructure = Properties['enableAccessibleFieldDOMStructure'];
+
   const utils = useUtils();
+  const localizationContext = useLocalizationContext();
 
   const {
     internalProps,
-    internalProps: {
-      unstableFieldRef,
-      minutesStep,
-      enableAccessibleFieldDOMStructure = true,
-      disabled = false,
-      readOnly = false,
-    },
     forwardedProps: { onKeyDown, error, clearable, onClear },
-    fieldValueManager,
     valueManager,
-    validator,
   } = params;
+
+  const internalPropsWithDefaults = React.useMemo(
+    () => valueManager.applyDefaultsToFieldInternalProps({ ...localizationContext, internalProps }),
+    [internalProps, localizationContext, valueManager],
+  );
+
+  const {
+    unstableFieldRef,
+    minutesStep,
+    enableAccessibleFieldDOMStructure = true,
+    disabled = false,
+    readOnly = false,
+  } = internalPropsWithDefaults;
 
   const isRtl = useRtl();
 
@@ -85,10 +85,10 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
+  const areAllSectionsEmpty = valueManager.legacyValueManager.areValuesEqual(
     utils,
     state.value,
-    valueManager.emptyValue,
+    valueManager.legacyValueManager.emptyValue,
   );
 
   const useFieldTextField = (
@@ -188,7 +188,7 @@ export const useField = <
         }
 
         const activeSection = state.sections[activeSectionIndex];
-        const activeDateManager = fieldValueManager.getActiveDateManager(
+        const activeDateManager = valueManager.fieldValueManager.getActiveDateManager(
           utils,
           state,
           activeSection,
@@ -220,8 +220,8 @@ export const useField = <
   });
 
   const { hasValidationError } = useValidation({
-    props: internalProps,
-    validator,
+    props: internalPropsWithDefaults,
+    validator: valueManager.validator,
     timezone,
     value: state.value,
     onError: internalProps.onError,
