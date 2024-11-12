@@ -107,6 +107,7 @@
       }
     },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"

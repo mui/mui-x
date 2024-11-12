@@ -5,15 +5,15 @@ import * as childProcess from 'child_process';
 import { chromium } from '@playwright/test';
 import materialPackageJson from '@mui/material/package.json';
 
-function sleep(timeoutMS) {
+function sleep(timeoutMS: number | undefined) {
   return new Promise((resolve) => {
-    setTimeout(() => resolve(), timeoutMS);
+    setTimeout(resolve, timeoutMS);
   });
 }
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
-const isConsoleWarningIgnored = (msg) => {
+const isConsoleWarningIgnored = (msg?: string) => {
   if (
     msg &&
     isMaterialUIv6 &&
@@ -51,7 +51,7 @@ async function main() {
     }
   });
 
-  let errorConsole;
+  let errorConsole: string | undefined;
 
   page.on('console', (msg) => {
     // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
@@ -62,7 +62,7 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
+  await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
   // See `useIsLandscape`.
@@ -76,20 +76,20 @@ async function main() {
 
   const routes = await page.$$eval('#tests a', (links) => {
     return links.map((link) => {
-      return link.href;
+      return (link as HTMLAnchorElement).href;
     });
   });
 
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
-  function navigateToTest(testIndex) {
+  function navigateToTest(testIndex: number) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
     // Could become an issue with test isolation.
     // If tests are flaky due to global pollution switch to page.goto(route);
     // puppeteers built-in click() times out
     return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
-      link.click();
+      (link as HTMLAnchorElement).click();
     });
   }
 
@@ -130,12 +130,7 @@ async function main() {
           await navigateToTest(index + 1);
         }
         // Move cursor offscreen to not trigger unwanted hover effects.
-        page.mouse.move(0, 0);
-
-        if (/^\docs-charts-.*/.test(pathURL)) {
-          // Run one tick of the clock to get the final animation state
-          await sleep(10);
-        }
+        await page.mouse.move(0, 0);
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
@@ -160,6 +155,14 @@ async function main() {
           { timeout: 1000 },
         );
 
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
+        }
+
+        // Wait for the page to settle after taking the screenshot.
+        await page.waitForLoadState();
+
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
@@ -183,7 +186,7 @@ async function main() {
 
       const testcaseIndex = routes.indexOf(route);
       await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        link.click();
+        (link as HTMLAnchorElement).click();
       });
 
       const testcase = await page.waitForSelector(
@@ -192,6 +195,11 @@ async function main() {
 
       await page.evaluate(() => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
+
+        if (!virtualScroller) {
+          throw new Error('missing virtualScroller');
+        }
+
         virtualScroller.scrollLeft = 400;
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
@@ -208,12 +216,12 @@ async function main() {
 
       const testcaseIndex = routes.indexOf(route);
       await page.$eval(`#tests li:nth-of-type(${testcaseIndex + 1}) a`, (link) => {
-        link.click();
+        (link as HTMLAnchorElement).click();
       });
 
       // Click the export button in the toolbar.
       await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
-        exportButton.click();
+        (exportButton as HTMLAnchorElement).click();
       });
 
       // Click the print export option from the export menu in the toolbar.
@@ -221,7 +229,7 @@ async function main() {
         // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
         setTimeout(() => {
-          printButton.click();
+          (printButton as HTMLAnchorElement).click();
         });
       });
 

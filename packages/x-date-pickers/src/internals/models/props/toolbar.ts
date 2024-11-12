@@ -2,12 +2,14 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
+import { FormProps } from '../formProps';
 import { InferPickerValue } from '../value';
 
 export interface BaseToolbarProps<
   TIsRange extends boolean,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedBaseToolbarProps {
+> extends ExportedBaseToolbarProps,
+    FormProps {
   isLandscape: boolean;
   onChange: (newValue: InferPickerValue<TIsRange>) => void;
   value: InferPickerValue<TIsRange>;
@@ -25,8 +27,6 @@ export interface BaseToolbarProps<
    * Available views.
    */
   views: readonly TView[];
-  disabled?: boolean;
-  readOnly?: boolean;
   titleId?: string;
 }
 
