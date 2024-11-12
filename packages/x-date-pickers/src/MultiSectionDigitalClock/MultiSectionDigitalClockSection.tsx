@@ -56,11 +56,9 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
   ({ theme }) => ({
     maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-    width: '100%',
+    width: 56,
     padding: 0,
     overflow: 'hidden',
-    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-    scrollbarGutter: 'stable',
     '@media (prefers-reduced-motion: no-preference)': {
       scrollBehavior: 'auto',
     },
@@ -72,8 +70,8 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '@media (pointer: none), (pointer: coarse)': {
       overflowY: 'auto',
     },
-    '&:first-of-type': {
-      borderColor: 'transparent',
+    '&:not(:first-of-type)': {
+      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
     '&::after': {
       display: 'block',
