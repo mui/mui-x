@@ -47,7 +47,6 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  justifyContent: 'space-evenly',
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
