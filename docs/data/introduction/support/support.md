@@ -85,7 +85,7 @@ Including your Order ID (or Support key) in the issue helps us prioritize the is
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
 3. MUI X Priority Support add-on (coming soon): Provides a 24h SLA for the first answer.
 
-## Long-term support
+## Long-term support (LTS)
 
 Bug fixes, performance enhancements, and other improvements are delivered in new releases.
 However, we remain committed to providing security updates and addressing regressions for the immediate predecessor of the current major version.
