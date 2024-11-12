@@ -7,6 +7,7 @@ let globalId = 0;
 export function useCharts() {
   const storeRef = React.useRef<ChartsStore | null>(null);
   if (storeRef.current == null) {
+    // eslint-disable-next-line react-compiler/react-compiler
     globalId += 1;
     const initialState: ChartsState = {
       interaction: {
