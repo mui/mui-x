@@ -40,7 +40,7 @@ function ChartsAxisTooltipContent(props: {
   const { axisDirection, axisValue, axisFormattedValue, seriesItems } = tootlipData;
 
   const axis = axisDirection === 'x' ? xAxis : yAxis;
-  
+
   return (
     <ChartsTooltipPaper sx={sx} className={classes.paper}>
       <ChartsTooltipTable className={classes.table}>

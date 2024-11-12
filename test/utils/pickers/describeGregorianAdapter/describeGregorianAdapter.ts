@@ -1,5 +1,5 @@
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
@@ -8,9 +8,9 @@ import {
   DescribeGregorianAdapterTestSuiteParams,
 } from './describeGregorianAdapter.types';
 
-function innerGregorianDescribeAdapter<TDate extends PickerValidDate, TLocale>(
-  Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
-  params: DescribeGregorianAdapterParams<TDate, TLocale>,
+function innerGregorianDescribeAdapter<TLocale>(
+  Adapter: new (...args: any) => MuiPickersAdapter,
+  params: DescribeGregorianAdapterParams<TLocale>,
 ) {
   const prepareAdapter = params.prepareAdapter ?? ((adapter) => adapter);
 
@@ -29,7 +29,7 @@ function innerGregorianDescribeAdapter<TDate extends PickerValidDate, TLocale>(
   prepareAdapter(adapterTZ);
 
   describe(adapter.lib, () => {
-    const testSuitParams: DescribeGregorianAdapterTestSuiteParams<TDate, TLocale> = {
+    const testSuitParams: DescribeGregorianAdapterTestSuiteParams<TLocale> = {
       ...params,
       adapter,
       adapterTZ,
@@ -42,15 +42,15 @@ function innerGregorianDescribeAdapter<TDate extends PickerValidDate, TLocale>(
   });
 }
 
-type Params<TDate extends PickerValidDate, TLocale> = [
-  Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
-  params: DescribeGregorianAdapterParams<TDate, TLocale>,
+type Params<TLocale> = [
+  Adapter: new (...args: any) => MuiPickersAdapter,
+  params: DescribeGregorianAdapterParams<TLocale>,
 ];
 
 type DescribeGregorianAdapter = {
-  <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>): void;
-  skip: <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>) => void;
-  only: <TDate extends PickerValidDate, TLocale>(...args: Params<TDate, TLocale>) => void;
+  <TLocale>(...args: Params<TLocale>): void;
+  skip: <TLocale>(...args: Params<TLocale>) => void;
+  only: <TLocale>(...args: Params<TLocale>) => void;
 };
 
 export const describeGregorianAdapter = createDescribe(

@@ -21,7 +21,7 @@ import {
   PickerOwnerState,
 } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { PickersProvider } from '../../components/PickersProvider';
+import { PickerProvider } from '../../components/PickerProvider';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -30,11 +30,9 @@ import { PickersProvider } from '../../components/PickersProvider';
  * - DesktopTimePicker
  */
 export const useDesktopPicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TExternalProps extends UseDesktopPickerProps<
-    TDate,
     TView,
     TEnableAccessibleFieldDOMStructure,
     any,
@@ -44,7 +42,7 @@ export const useDesktopPicker = <
   props,
   getOpenDialogAriaText,
   ...pickerParams
-}: UseDesktopPickerParams<TDate, TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
     slots,
     slotProps: innerSlotProps,
@@ -82,7 +80,7 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+  } = usePicker<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
@@ -125,11 +123,10 @@ export const useDesktopPicker = <
   const Field = slots.field;
   const fieldProps = useSlotProps<
     typeof Field,
-    UseDesktopPickerSlotProps<TDate, TView, TEnableAccessibleFieldDOMStructure>['field'],
+    UseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
     Partial<
       BaseSingleInputFieldProps<
-        TDate | null,
-        TDate,
+        PickerValidDate | null,
         FieldSection,
         TEnableAccessibleFieldDOMStructure,
         InferError<TExternalProps>
@@ -210,7 +207,7 @@ export const useDesktopPicker = <
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Field
         {...fieldProps}
         slots={slotsForField}
@@ -232,7 +229,7 @@ export const useDesktopPicker = <
           {renderCurrentView()}
         </Layout>
       </PickersPopper>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

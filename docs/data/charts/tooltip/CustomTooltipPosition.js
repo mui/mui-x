@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -41,7 +41,7 @@ export default function CustomTooltipPosition() {
           <FormControlLabel value="itemTop" control={<Radio />} label="top of bar" />
         </RadioGroup>
       </FormControl>
-      <ResponsiveChartContainer
+      <ChartContainer
         height={300}
         dataset={dataset}
         series={[
@@ -59,7 +59,7 @@ export default function CustomTooltipPosition() {
         {tooltipType === 'fixedY' && <ItemTooltipFixedY />}
         {tooltipType === 'itemTop' && <ItemTooltipTopElement />}
         <ChartsClipPath id={clipPathId} />
-      </ResponsiveChartContainer>
+      </ChartContainer>
     </div>
   );
 }
