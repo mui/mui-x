@@ -69,6 +69,8 @@ GridToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  csvOptions: PropTypes.object,
+  printOptions: PropTypes.object,
   /**
    * Props passed to the quick filter component.
    */
