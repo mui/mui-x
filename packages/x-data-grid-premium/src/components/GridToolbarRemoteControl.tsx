@@ -5,27 +5,27 @@ import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
-import {
-  getDataGridUtilityClass,
-  useGridApiContext,
-  useGridRootProps,
-  gridColumnLookupSelector,
-  GridLogicOperator,
-  GridSingleSelectColDef,
-  GRID_CHECKBOX_SELECTION_FIELD,
-} from '@mui/x-data-grid';
-import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
+import { getValueOptions, getVisibleRows } from '@mui/x-data-grid-pro/internals';
 import MicrophoneIcon from '@mui/icons-material/Mic';
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
 import * as remoteControl from '../hooks/features/remoteControl/api';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridApiPro } from '../models';
+import {
+  getDataGridUtilityClass,
+  GRID_CHECKBOX_SELECTION_FIELD,
+  GridLogicOperator,
+  useGridApiContext,
+  useGridRootProps,
+  gridColumnLookupSelector,
+  GridSingleSelectColDef,
+} from '..';
+import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { GridApiPremium } from '../models/gridApiPremium';
 
 const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition;
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = DataGridPremiumProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
   const { classes } = ownerState;
@@ -50,9 +50,24 @@ const Style = styled('div', {
   flexDirection: 'row',
 });
 
-function GridToolbarRemoteControl() {
-  const apiRef = useGridApiContext<GridApiPro>();
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+export type GridToolbarRemoteControlProps = {
+  /**
+   * Additional context for the prompt.
+   * For example, the short description of what the data in the grid represents.
+   */
+  promptContext?: string;
+  /**
+   * The language to use for the speech recognition.
+   * @default 'en-US'
+   */
+  lang?: string;
+};
+
+function GridToolbarRemoteControl(props: GridToolbarRemoteControlProps) {
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const { promptContext, lang } = props;
+
   const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isRecording, setRecording] = React.useState(false);
@@ -60,7 +75,7 @@ function GridToolbarRemoteControl() {
   const [query, setQuery] = React.useState('');
 
   const sendRequest = React.useCallback(() => {
-    const context = generateContext(apiRef, rootProps);
+    const context = generateContext(apiRef, rootProps, promptContext);
     const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
@@ -192,6 +207,7 @@ function GridToolbarRemoteControl() {
                 <RecordButton
                   className={classes.recordButton}
                   label={isLoading ? 'Loading…' : undefined}
+                  lang={lang}
                   recording={isRecording}
                   setRecording={setRecording}
                   disabled={isLoading}
@@ -231,13 +247,14 @@ function RecordButton(
   props: SpeechRecognitionOptions & {
     disabled: boolean;
     label?: string;
+    lang?: string;
     recording: boolean;
     setRecording: (value: boolean) => void;
     className: string;
   },
 ) {
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  const { recording, setRecording } = props;
+  const rootProps = useGridRootProps();
+  const { lang, recording, setRecording } = props;
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const recognition = useLazyRef(() => {
@@ -245,7 +262,7 @@ function RecordButton(
     const instance = new BrowserSpeechRecognition();
     instance.continuous = true;
     instance.interimResults = true;
-    instance.lang = rootProps.lang ?? 'en-US';
+    instance.lang = lang ?? 'en-US';
 
     let finalResult = '';
     let interimResult = '';
@@ -298,7 +315,7 @@ function RecordButton(
   });
 
   return (
-    <rootProps.slots.baseTooltip title={recording ? 'Stop recording' : props.label ?? 'Record'}>
+    <rootProps.slots.baseTooltip title={recording ? 'Stop recording' : (props.label ?? 'Record')}>
       <rootProps.slots.baseIconButton
         className={props.className}
         disabled={props.disabled}
@@ -326,29 +343,29 @@ RecordButton.propTypes = {
 export { GridToolbarRemoteControl };
 
 function generateContext(
-  apiRef: React.MutableRefObject<GridApiPro>,
-  rootProps: DataGridProProcessedProps,
+  apiRef: React.MutableRefObject<GridApiPremium>,
+  rootProps: DataGridPremiumProcessedProps,
+  promptContext?: string,
 ) {
   const columns = Object.values(gridColumnLookupSelector(apiRef));
   const rows = rootProps.rows;
-
   const columnsContext = Object.values(columns).map((c) => ({
     field: c.field,
     description: c.description ?? null,
     examples: rows.slice(0, 5).map(() => {
       const row = rows[Math.floor(Math.random() * rows.length)];
       if (c.valueGetter) {
-        return c.valueGetter(row[c.field] as never, row, c, apiRef);
+        return c.valueGetter(row[c.field as any] as never, row, c, apiRef);
       }
-      return row[c.field];
+      return row[c.field as any];
     }),
     type: c.type ?? 'string',
     allowedOperators: c.filterOperators?.map((o) => o.value) ?? [],
   }));
 
   let context = '';
-  if (rootProps.description) {
-    context += `The rows represent: ${rootProps.description}\n\n`;
+  if (promptContext) {
+    context += `The rows represent: ${promptContext}\n\n`;
   }
   context += `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`;
 

@@ -560,8 +560,6 @@
   { "name": "GridToolbarProps", "kind": "Interface" },
   { "name": "GridToolbarQuickFilter", "kind": "Function" },
   { "name": "GridToolbarQuickFilterProps", "kind": "TypeAlias" },
-  { "name": "GridToolbarRemoteControl", "kind": "Function" },
-  { "name": "GridToolbarRemoteControlProps", "kind": "TypeAlias" },
   { "name": "gridTopLevelRowCountSelector", "kind": "Variable" },
   { "name": "GridTranslationKeys", "kind": "TypeAlias" },
   { "name": "GridTreeBasicNode", "kind": "Interface" },

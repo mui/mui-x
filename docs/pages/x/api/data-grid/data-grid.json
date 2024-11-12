@@ -36,6 +36,7 @@
       },
       "default": "\"standard\""
     },
+    "description": { "type": { "name": "string" } },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnFilter": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
@@ -151,6 +152,7 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
+    "lang": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
@@ -1683,6 +1685,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRemoteControl",
+      "className": "MuiDataGrid-toolbarRemoteControl",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRemoteControl--recording",
+      "className": "MuiDataGrid-toolbarRemoteControl--recording",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRemoteControlRecordButton",
+      "className": "MuiDataGrid-toolbarRemoteControlRecordButton",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRemoteControlRecordingIndicator",
+      "className": "MuiDataGrid-toolbarRemoteControlRecordingIndicator",
+      "description": "",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRemoteControlSendButton",
+      "className": "MuiDataGrid-toolbarRemoteControlSendButton",
+      "description": "",
       "isGlobal": false
     },
     {
