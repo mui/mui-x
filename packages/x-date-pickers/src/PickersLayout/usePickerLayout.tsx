@@ -88,8 +88,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
       onClear,
       onCancel,
       onSetToday,
-      actions:
-        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
     },
     className: classes.actionBar,
     ownerState,

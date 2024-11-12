@@ -5,7 +5,7 @@
         "name": "arrayOf",
         "description": "Array&lt;'accept'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'clear'<br>&#124;&nbsp;'today'&gt;"
       },
-      "default": "`['cancel', 'accept']` for mobile and `[]` for desktop"
+      "default": "`[]` for Desktop Date Picker and Desktop Date Range Picker\n- `['cancel', 'accept']` for all other Pickers"
     },
     "disableSpacing": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
