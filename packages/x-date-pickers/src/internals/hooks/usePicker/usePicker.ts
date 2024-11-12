@@ -66,7 +66,6 @@ export const usePicker = <
   const pickerLayoutResponse = usePickerLayoutProps({
     props,
     wrapperVariant,
-    valueType,
     propsFromPickerValue: pickerValueResponse.layoutProps,
     propsFromPickerViews: pickerViewsResponse.layoutProps,
   });

@@ -3,7 +3,6 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
-import { FieldValueType } from '../../../models';
 import { FormProps } from '../../models';
 
 /**
@@ -26,7 +25,6 @@ export interface UsePickerLayoutPropsResponseLayoutProps<
   isLandscape: boolean;
   isRtl: boolean;
   wrapperVariant: WrapperVariant;
-  valueType: FieldValueType;
   isValid: (value: TValue) => boolean;
 }
 
@@ -39,7 +37,6 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
-  valueType: FieldValueType;
 }
 
 /**
@@ -50,7 +47,6 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
   propsFromPickerValue,
   propsFromPickerViews,
   wrapperVariant,
-  valueType,
 }: UsePickerLayoutPropsParams<TValue, TView>): UsePickerLayoutPropsResponse<TValue, TView> => {
   const { orientation } = props;
   const isLandscape = useIsLandscape(propsFromPickerViews.views, orientation);
@@ -62,7 +58,6 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
     isLandscape,
     isRtl,
     wrapperVariant,
-    valueType,
     disabled: props.disabled,
     readOnly: props.readOnly,
   };
