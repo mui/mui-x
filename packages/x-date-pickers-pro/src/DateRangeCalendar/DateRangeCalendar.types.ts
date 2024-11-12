@@ -19,6 +19,7 @@ import {
   PickersArrowSwitcherSlotProps,
   ExportedUseViewsOptions,
   PickerRangeValue,
+  FormProps,
 } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -60,22 +61,13 @@ export interface DateRangeCalendarSlotProps
 export interface ExportedDateRangeCalendarProps
   extends ExportedDayCalendarProps,
     ExportedValidateDateRangeProps,
-    TimezoneProps {
+    TimezoneProps,
+    FormProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
    */
   disableAutoMonthSwitching?: boolean;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
