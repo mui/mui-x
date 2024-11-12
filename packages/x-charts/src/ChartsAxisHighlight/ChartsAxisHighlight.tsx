@@ -5,11 +5,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { styled } from '@mui/material/styles';
-import { useStore } from '../context/InteractionProvider';
-
 import { getValueToPositionMapper, useXScale, useYScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,

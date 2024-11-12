@@ -2,16 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/useSelector';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useStore } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;

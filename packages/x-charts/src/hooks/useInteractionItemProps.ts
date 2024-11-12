@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '../context/InteractionProvider';
+import { useStore } from '../internals/useStore';
 import { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
 

@@ -1,17 +1,17 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
 import { useXAxis, useYAxis } from '../hooks/useAxis';
-import { useSelector } from '../internals/useSelector';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,

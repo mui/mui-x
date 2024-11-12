@@ -6,11 +6,11 @@ import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useStore } from '../context/InteractionProvider';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 import { useXAxis } from '../hooks';
 import {
   selectorChartsInteractionItemIsDefined,

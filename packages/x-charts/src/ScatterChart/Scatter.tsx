@@ -8,12 +8,12 @@ import {
 } from '../models/seriesType/scatter';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { useStore } from '../context/InteractionProvider';
+import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/useSelector';
 import { D3Scale } from '../models/axis';
 import { useHighlighted } from '../context';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { selectorChartsInteractionUseVoronoid } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
