@@ -220,18 +220,9 @@ async function main() {
       });
 
       // Click the export button in the toolbar.
-      await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
-        (exportButton as HTMLAnchorElement).click();
-      });
-
+      await page.getByRole('button', { name: 'Export' }).click();
       // Click the print export option from the export menu in the toolbar.
-      await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-        // Trigger the action async because window.print() is blocking the main thread
-        // like window.alert() is.
-        setTimeout(() => {
-          (printButton as HTMLAnchorElement).click();
-        });
-      });
+      await page.getByRole('menuitem', { name: 'Print' }).click();
 
       await sleep(4000);
 
