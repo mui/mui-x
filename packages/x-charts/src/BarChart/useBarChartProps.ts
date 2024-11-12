@@ -52,6 +52,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     barLabel,
     className,
     hideLegend,
+    maxBarSize,
     ...rest
   } = props;
 
@@ -106,6 +107,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     slotProps,
     borderRadius,
     barLabel,
+    maxBarSize,
   };
 
   const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {

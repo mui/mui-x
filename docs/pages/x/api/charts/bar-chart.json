@@ -53,6 +53,7 @@
       },
       "default": "object Depends on the charts type."
     },
+    "maxBarSize": { "type": { "name": "number" } },
     "onAxisClick": {
       "type": { "name": "func" },
       "signature": {

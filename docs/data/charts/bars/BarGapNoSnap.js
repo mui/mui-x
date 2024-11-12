@@ -30,6 +30,14 @@ export default function BarGapNoSnap() {
           min: -2,
           max: 5,
         },
+        {
+          propName: `maxBarSize`,
+          knob: 'number',
+          defaultValue: 20,
+          step: 1,
+          min: 0,
+          max: 40,
+        },
       ]}
       renderDemo={(props) => (
         <BarChart
@@ -48,6 +56,7 @@ export default function BarGapNoSnap() {
           ]}
           yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
           hideLegend
+          maxBarSize={props.maxBarSize}
         />
       )}
       getCode={({ props }) => {
@@ -63,6 +72,7 @@ export default function BarGapNoSnap() {
           `      categoryGapRatio: ${props.categoryGapRatio}`,
           `      barGapRatio: ${props.barGapRatio}`,
           `    }`,
+          `  maxBarSize={${props.maxBarSize}}`,
           '/>',
         ].join('\n');
       }}

@@ -42,6 +42,10 @@ BarChartPlotZoom.propTypes = {
    */
   borderRadius: PropTypes.number,
   /**
+   * The maximum size of the bar element.
+   */
+  maxBarSize: PropTypes.number,
+  /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
@@ -218,6 +222,10 @@ BarChartPro.propTypes = {
     right: PropTypes.number,
     top: PropTypes.number,
   }),
+  /**
+   * The maximum size of the bar element.
+   */
+  maxBarSize: PropTypes.number,
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.

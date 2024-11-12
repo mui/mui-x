@@ -243,6 +243,10 @@ BarChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
+   * The maximum size of the bar element.
+   */
+  maxBarSize: PropTypes.number,
+  /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.

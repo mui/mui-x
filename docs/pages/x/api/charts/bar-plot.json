@@ -2,6 +2,7 @@
   "props": {
     "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
     "borderRadius": { "type": { "name": "number" } },
+    "maxBarSize": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {

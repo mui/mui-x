@@ -24,29 +24,27 @@ import { useSkipAnimation } from '../context/AnimationProvider';
  * @param bandWidth The width available to place bars.
  * @param numberOfGroups The number of bars to place in that space.
  * @param gapRatio The ratio of the gap between bars over the bar width.
+ * @param maxBarSize Optional maximum allowed size for a bar.
  * @returns The bar width and the offset between bars.
  */
 function getBandSize({
   bandWidth: W,
   numberOfGroups: N,
   gapRatio: r,
+  maxBarSize,
 }: {
   bandWidth: number;
   numberOfGroups: number;
   gapRatio: number;
+  maxBarSize?: number;
 }) {
-  if (r === 0) {
-    return {
-      barWidth: W / N,
-      offset: 0,
-    };
-  }
-  const barWidth = W / (N + (N - 1) * r);
-  const offset = r * barWidth;
-  return {
-    barWidth,
-    offset,
-  };
+  const baseWidth = W / (N + (N - 1) * r);
+  const barWidth = Math.min(baseWidth, maxBarSize ?? baseWidth);
+  const offset = r === 0 ? 0 : r * barWidth;
+  const totalWidth = barWidth * N + offset * (N - 1);
+  const centeringOffset = (W - totalWidth) / 2;
+
+  return { barWidth, offset, centeringOffset };
 }
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
@@ -73,6 +71,10 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
    */
   borderRadius?: number;
   /**
+   * The maximum size of the bar element.
+   */
+  maxBarSize?: number;
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -84,7 +86,9 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   slots?: BarPlotSlots;
 }
 
-const useAggregatedData = (): {
+const useAggregatedData = (
+  maxBarSize?: number,
+): {
   completedData: CompletedBarData[];
   masksData: MaskData[];
 } => {
@@ -130,12 +134,14 @@ const useAggregatedData = (): {
       const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
       const bandWidth = baseScaleConfig.scale.bandwidth();
 
-      const { barWidth, offset } = getBandSize({
+      const { barWidth, offset, centeringOffset } = getBandSize({
         bandWidth,
         numberOfGroups: stackingGroups.length,
         gapRatio: baseScaleConfig.barGapRatio,
+        maxBarSize,
       });
-      const barOffset = groupIndex * (barWidth + offset);
+
+      const barOffset = groupIndex * (barWidth + offset) + centeringOffset;
 
       const { stackedData } = series[seriesId];
 
@@ -246,8 +252,15 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const {
+    skipAnimation: inSkipAnimation,
+    onItemClick,
+    borderRadius,
+    barLabel,
+    maxBarSize,
+    ...other
+  } = props;
+  const { completedData, masksData } = useAggregatedData(maxBarSize);
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
@@ -337,6 +350,10 @@ BarPlot.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
+  /**
+   * The maximum size of the bar element.
+   */
+  maxBarSize: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
