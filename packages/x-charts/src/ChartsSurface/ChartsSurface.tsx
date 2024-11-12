@@ -104,7 +104,7 @@ ChartsSurface.propTypes = {
   /**
    * The height of the chart in px.
    */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -120,7 +120,7 @@ ChartsSurface.propTypes = {
   /**
    * The width of the chart in px.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
 } as any;
 
 export { ChartsSurface };
