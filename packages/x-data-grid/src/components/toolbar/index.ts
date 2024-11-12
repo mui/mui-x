@@ -6,12 +6,12 @@ export type {
   GridExportMenuItemProps,
   GridCsvExportMenuItemProps,
   GridPrintExportMenuItemProps,
+  GridToolbarExportProps,
 } from './GridToolbarExport';
 export {
   GridCsvExportMenuItem,
   GridPrintExportMenuItem,
   GridToolbarExport,
-  GridToolbarExportProps,
 } from './GridToolbarExport';
 export * from './GridToolbarFilterButton';
 export * from './GridToolbarExportContainer';
