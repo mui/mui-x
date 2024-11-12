@@ -36,7 +36,6 @@ const ChartContainer = React.forwardRef(function ChartContainer(
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {false}
       {hasIntrinsicSize && (
         <ChartDataProvider {...chartDataProviderProps}>
           <ChartsSurface>{children}</ChartsSurface>

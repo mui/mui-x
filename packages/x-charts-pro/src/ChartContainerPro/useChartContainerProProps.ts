@@ -21,7 +21,7 @@ export const useChartContainerProProps = (
     onZoomChange,
   };
 
-  const { chartDataProviderProps, resizableChartContainerProps, hasIntrinsicSize } =
+  const { chartDataProviderProps, resizableChartContainerProps, hasIntrinsicSize, children } =
     useChartContainerProps(baseProps, ref);
 
   return {
@@ -31,5 +31,6 @@ export const useChartContainerProProps = (
     },
     resizableChartContainerProps,
     hasIntrinsicSize,
+    children,
   };
 };

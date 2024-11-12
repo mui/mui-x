@@ -5,6 +5,7 @@ import type {} from '../typeOverloads';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ResizableContainer } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
 import { ZoomProps } from '../context/ZoomProvider';
@@ -18,12 +19,16 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize } =
+  const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize, children } =
     useChartContainerProProps(props, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartDataProviderPro {...chartDataProviderProProps} /> : null}
+      {hasIntrinsicSize && (
+        <ChartDataProviderPro {...chartDataProviderProProps}>
+          <ChartsSurface>{children}</ChartsSurface>
+        </ChartDataProviderPro>
+      )}
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ResizableContainer>
   );
