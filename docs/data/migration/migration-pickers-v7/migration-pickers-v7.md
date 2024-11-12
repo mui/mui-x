@@ -196,7 +196,6 @@ If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFi
 you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
 
 ```js
-const theme = createTheme({
   components: {
     // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
     MuiInput: {
@@ -270,7 +269,6 @@ const theme = createTheme({
        Layout content
      </PickersLayoutRoot>
    );
-  }
   ```
 
 - The component passed to the `layout` slot no longer receives a `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
