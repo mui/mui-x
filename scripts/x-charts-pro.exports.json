@@ -309,7 +309,6 @@
   { "name": "useItemTooltip", "kind": "Function" },
   { "name": "UseItemTooltipReturnValue", "kind": "Interface" },
   { "name": "useMouseTracker", "kind": "Function" },
-  { "name": "useStore", "kind": "Function" },
   { "name": "useSvgRef", "kind": "Function" },
   { "name": "useXAxis", "kind": "Function" },
   { "name": "useXColorScale", "kind": "Function" },
