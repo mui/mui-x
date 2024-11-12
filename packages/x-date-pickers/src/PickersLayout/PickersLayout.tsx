@@ -182,6 +182,7 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.any,
+  valueType: PropTypes.oneOf(['date-time', 'date', 'time']).isRequired,
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
