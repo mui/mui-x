@@ -181,9 +181,9 @@ Charts containers already use the `useReducedMotion()` from `@react-spring/web` 
 <BarChart skipAnimation />
 
 // For a composed chart
-<ResponsiveChartContainer>
+<ChartContainer>
   <BarPlot skipAnimation />
-</ResponsiveChartContainer>
+</ChartContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}
