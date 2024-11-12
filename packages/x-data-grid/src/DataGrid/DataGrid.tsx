@@ -183,10 +183,6 @@ DataGridRaw.propTypes = {
    */
   density: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   /**
-   * Set the description of the Data Grid.
-   */
-  description: PropTypes.string,
-  /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
    */
@@ -401,10 +397,6 @@ DataGridRaw.propTypes = {
    * @default false
    */
   keepNonExistentRowsSelected: PropTypes.bool,
-  /**
-   * Set the language of the Data Grid (format: en-US).
-   */
-  lang: PropTypes.string,
   /**
    * If `true`, a loading overlay is displayed.
    * @default false

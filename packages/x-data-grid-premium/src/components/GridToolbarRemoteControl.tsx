@@ -239,6 +239,23 @@ function GridToolbarRemoteControl(props: GridToolbarRemoteControlProps) {
   );
 }
 
+GridToolbarRemoteControl.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The language to use for the speech recognition.
+   * @default 'en-US'
+   */
+  lang: PropTypes.string,
+  /**
+   * Additional context for the prompt.
+   * For example, the short description of what the data in the grid represents.
+   */
+  promptContext: PropTypes.string,
+} as any;
+
 type SpeechRecognitionOptions = {
   onUpdate: (value: string) => void;
   onDone: (value: string) => void;
@@ -332,12 +349,16 @@ function RecordButton(
 RecordButton.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
   label: PropTypes.string,
+  lang: PropTypes.string,
   onDone: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  recording: PropTypes.bool.isRequired,
+  setRecording: PropTypes.func.isRequired,
 } as any;
 
 export { GridToolbarRemoteControl };

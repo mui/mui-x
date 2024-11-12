@@ -36,7 +36,6 @@
       },
       "default": "\"standard\""
     },
-    "description": { "type": { "name": "string" } },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnFilter": { "type": { "name": "bool" }, "default": "false" },
     "disableColumnMenu": { "type": { "name": "bool" }, "default": "false" },
@@ -152,7 +151,6 @@
       }
     },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "lang": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {

@@ -49,7 +49,6 @@
       },
       "default": "\"standard\""
     },
-    "description": { "type": { "name": "string" } },
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
@@ -219,7 +218,6 @@
     },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" }, "default": "false" },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "default": "false" },
-    "lang": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "logger": {
