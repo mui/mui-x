@@ -114,7 +114,8 @@ StaticDateRangePicker.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -220,6 +221,11 @@ StaticDateRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
