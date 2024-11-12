@@ -11,6 +11,7 @@ export {
   GridCsvExportMenuItem,
   GridPrintExportMenuItem,
   GridToolbarExport,
+  GridToolbarExportProps,
 } from './GridToolbarExport';
 export * from './GridToolbarFilterButton';
 export * from './GridToolbarExportContainer';

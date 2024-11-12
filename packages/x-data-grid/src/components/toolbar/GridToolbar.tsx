@@ -11,9 +11,7 @@ import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
 
-export interface GridToolbarProps
-  extends GridToolbarContainerProps,
-    Omit<GridToolbarExportProps, 'color'> {
+export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
    * Show the quick filter component.
    * @default false
@@ -57,7 +55,6 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
         <GridToolbarExport
           csvOptions={csvOptions}
           printOptions={printOptions}
-          // TODO: remove the reference to excelOptions in community package
           excelOptions={excelOptions}
         />
         <div style={{ flex: 1 }} />

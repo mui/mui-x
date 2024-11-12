@@ -35,7 +35,6 @@ export interface GridToolbarExportProps {
   // TODO v8: Remove this loophole
   // Refactored from: [key: string]: any;
   [x: `data-${string}`]: string;
-  [x: `${string}Options`]: any;
 }
 
 function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
