@@ -233,7 +233,7 @@ export interface UsePickerValueBaseProps<TValue extends PickerValidValue, TError
 export interface UsePickerValueNonStaticProps {
   /**
    * If `true`, the Picker will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default false
    */
   closeOnSelect?: boolean;
   /**
