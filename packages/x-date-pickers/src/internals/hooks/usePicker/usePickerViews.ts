@@ -57,11 +57,6 @@ export interface UsePickerViewsBaseProps<
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
     TimezoneProps {
   /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */
