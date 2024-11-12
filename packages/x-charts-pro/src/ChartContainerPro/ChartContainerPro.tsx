@@ -23,14 +23,12 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
     useChartContainerProProps(props, ref);
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize && (
-        <ChartDataProviderPro {...chartDataProviderProProps}>
-          <ChartsSurface>{children}</ChartsSurface>
-        </ChartDataProviderPro>
-      )}
-      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ResizableContainer>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ResizableContainer {...resizableChartContainerProps}>
+        {hasIntrinsicSize && <ChartsSurface>{children}</ChartsSurface>}
+        <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
+      </ResizableContainer>
+    </ChartDataProviderPro>
   );
 });
 
