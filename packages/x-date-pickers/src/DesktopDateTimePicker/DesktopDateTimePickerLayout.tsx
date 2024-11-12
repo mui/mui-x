@@ -67,17 +67,6 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * If `true`, the component is disabled.
-   * When disabled, the value cannot be changed and no interaction is possible.
-   * @default false
-   */
-  disabled: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -89,16 +78,6 @@ DesktopDateTimePickerLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * If `true`, the component is read-only.
-   * When read-only, the value cannot be changed but the user can interact with the interface.
-   * @default false
-   */
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

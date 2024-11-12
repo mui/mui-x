@@ -97,11 +97,6 @@ StaticTimePicker.propTypes = {
    * Used when the component is not controlled.
    */
   defaultValue: PropTypes.object,
-  /**
-   * If `true`, the component is disabled.
-   * When disabled, the value cannot be changed and no interaction is possible.
-   * @default false
-   */
   disabled: PropTypes.bool,
   /**
    * If `true`, disable values after the current date for date components, time for time components and both for date time components.
@@ -191,6 +186,7 @@ StaticTimePicker.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13

@@ -142,6 +142,7 @@ DatePickerToolbar.propTypes = {
    * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
+  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -159,6 +160,7 @@ DatePickerToolbar.propTypes = {
    * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
+  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
