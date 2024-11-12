@@ -44,7 +44,7 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
   props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { variant, orientation } = usePickerContext();
+  const { orientation } = usePickerContext();
   const isRtl = useRtl();
 
   const {
@@ -85,7 +85,7 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
       onClear,
       onCancel,
       onSetToday,
-      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
     },
     className: classes.actionBar,
     ownerState,

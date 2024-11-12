@@ -73,6 +73,10 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: any) => ({
+        actions: [],
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
