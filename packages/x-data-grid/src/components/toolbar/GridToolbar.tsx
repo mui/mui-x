@@ -35,7 +35,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
       showQuickFilter = false,
       quickFilterProps = {},
       ...other
-    } = props;
+    } = props as typeof props & { excelOptions: any };
     const rootProps = useGridRootProps();
 
     if (
@@ -55,6 +55,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
         <GridToolbarExport
           csvOptions={csvOptions}
           printOptions={printOptions}
+          // @ts-ignore
           excelOptions={excelOptions}
         />
         <div style={{ flex: 1 }} />
