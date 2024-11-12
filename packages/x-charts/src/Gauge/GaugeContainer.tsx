@@ -107,8 +107,9 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
               desc={desc}
               disableAxisListener
               aria-hidden="true"
+              ref={chartSurfaceRef}
             >
-              <ChartsSurface ref={chartSurfaceRef}>{children}</ChartsSurface>
+              <ChartsSurface>{children}</ChartsSurface>
             </SurfacePropsProvider>
           </GaugeProvider>
         </DrawingProvider>

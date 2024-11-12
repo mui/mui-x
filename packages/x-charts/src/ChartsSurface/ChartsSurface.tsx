@@ -36,7 +36,7 @@ export interface ChartsSurfaceProps {
   disableAxisListener?: boolean;
 }
 
-const ChartChartsSurfaceStyles = styled('svg', {
+const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
 })(() => ({
@@ -71,7 +71,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   useAxisEvents(disableAxisListener);
 
   return (
-    <ChartChartsSurfaceStyles
+    <ChartsSurfaceStyles
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
@@ -83,7 +83,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {desc && <desc>{desc}</desc>}
       <ChartsAxesGradients />
       {children}
-    </ChartChartsSurfaceStyles>
+    </ChartsSurfaceStyles>
   );
 });
 
