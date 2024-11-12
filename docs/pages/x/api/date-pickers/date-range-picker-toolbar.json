@@ -11,7 +11,9 @@
       "required": true
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "disabled": { "type": { "name": "bool" }, "default": "false" },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "sx": {
       "type": {
         "name": "union",
