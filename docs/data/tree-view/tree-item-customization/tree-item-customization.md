@@ -147,7 +147,7 @@ You can use the `useTreeItem` hook to access the `publicAPI` object from within 
 See the **Imperative API** section on each feature page to learn more about the public API methods available on the Tree View.
 
 :::warning
-The `publicAPI` object should not be used in the render because the item won't necessary re-render when the value returned is updated.
+The `publicAPI` object should not be used in the render because the item won't necessarily re-render when the returned value is updated.
 
 If you want to access the item model, you can use the `useTreeItemModel` hook.
 See [Tree Item Customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.

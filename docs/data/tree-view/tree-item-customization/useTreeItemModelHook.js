@@ -2,54 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
-
-export const MUI_X_PRODUCTS = [
-  {
-    id: 'grid',
-    label: 'Data Grid',
-    children: [
-      {
-        id: 'grid-community',
-        label: '@mui/x-data-grid',
-      },
-      {
-        id: 'grid-pro',
-        label: '@mui/x-data-grid-pro',
-      },
-      {
-        id: 'grid-premium',
-        label: '@mui/x-data-grid-premium',
-      },
-    ],
-  },
-  {
-    id: 'pickers',
-    label: 'Date and Time pickers',
-    children: [
-      {
-        id: 'pickers-community',
-        label: '@mui/x-date-pickers',
-      },
-      {
-        id: 'pickers-pro',
-        label: '@mui/x-date-pickers-pro',
-        isHighlighted: true,
-      },
-    ],
-  },
-  {
-    id: 'charts',
-    label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
-  },
-  {
-    id: 'tree-view',
-    label: 'Tree View',
-    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
-  },
-];
+import { MUI_X_PRODUCTS } from './products';
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const item = useTreeItemModel(props.itemId);
