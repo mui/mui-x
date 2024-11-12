@@ -160,8 +160,8 @@ async function main() {
           await sleep(10);
         }
 
-        // Wait for the page to settle after taking the screenshot.
-        await page.waitForLoadState();
+        // Wait for the page to settle before taking the screenshot.
+        await page.waitForLoadState('domcontentloaded');
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
