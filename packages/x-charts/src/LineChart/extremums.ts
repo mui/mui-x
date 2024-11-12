@@ -12,11 +12,15 @@ type GetValues = (d: [number, number]) => [number, number];
 
 function getSeriesExtremums(
   getValues: GetValues,
+  data: (number | null)[],
   stackedData: [number, number][],
   filter?: ExtremumFilter,
 ): [number, number] {
   return stackedData.reduce<[number, number]>(
     (seriesAcc, stackedValue, index) => {
+      if (data[index] === null) {
+        return seriesAcc;
+      }
       const [base, value] = getValues(stackedValue);
       if (
         filter &&
@@ -41,7 +45,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
     })
     .reduce(
       (acc, seriesId) => {
-        const { area, stackedData } = series[seriesId];
+        const { area, stackedData, data } = series[seriesId];
         const isArea = area !== undefined;
 
         const filter = getFilters?.({
@@ -57,7 +61,7 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
             ? (d) => d
             : (d) => [d[1], d[1]];
 
-        const seriesExtremums = getSeriesExtremums(getValues, stackedData, filter);
+        const seriesExtremums = getSeriesExtremums(getValues, data, stackedData, filter);
 
         const [seriesMin, seriesMax] = seriesExtremums;
         return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];

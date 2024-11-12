@@ -3,14 +3,13 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
+import { FormProps } from '../../models';
 
 /**
  * Props used to create the layout of the views.
  * Those props are exposed on all the pickers.
  */
-export interface UsePickerLayoutProps {
-  disabled?: boolean;
-  readOnly?: boolean;
+export interface UsePickerLayoutProps extends FormProps {
   /**
    * Force rendering in particular orientation.
    */
