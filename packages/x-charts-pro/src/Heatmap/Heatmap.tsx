@@ -30,7 +30,6 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import { ChartsSurface } from '@mui/x-charts';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
@@ -183,32 +182,30 @@ const Heatmap = React.forwardRef(function Heatmap(
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
     >
-      <ChartsSurface>
-        {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
-        <g clipPath={`url(#${clipPathId})`}>
-          <HeatmapPlot slots={slots} slotProps={slotProps} />
-          <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-        </g>
-        <ChartsAxis
-          topAxis={topAxis}
-          leftAxis={leftAxis}
-          rightAxis={rightAxis}
-          bottomAxis={bottomAxis}
-          slots={slots}
+      {onAxisClick && <ChartsOnAxisClickHandler onAxisClick={onAxisClick} />}
+      <g clipPath={`url(#${clipPathId})`}>
+        <HeatmapPlot slots={slots} slotProps={slotProps} />
+        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+      </g>
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
+      />
+      {!loading && (
+        <ChartsTooltip
+          trigger="item"
+          {...tooltip}
+          slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
           slotProps={slotProps}
         />
-        {!loading && (
-          <ChartsTooltip
-            trigger="item"
-            {...tooltip}
-            slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
-            slotProps={slotProps}
-          />
-        )}
+      )}
 
-        <ChartsClipPath id={clipPathId} />
-        {children}
-      </ChartsSurface>
+      <ChartsClipPath id={clipPathId} />
+      {children}
     </ChartContainerPro>
   );
 });

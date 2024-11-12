@@ -10,6 +10,7 @@ export type UseChartContainerPropsReturnValue = {
     ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
     ref: React.Ref<HTMLDivElement>;
   };
+  children: React.ReactNode;
 };
 
 export const useChartContainerProps = (
@@ -54,7 +55,6 @@ export const useChartContainerProps = (
 
   const chartDataProviderProps = {
     margin,
-    children,
     series,
     colors,
     dataset,
@@ -79,5 +79,6 @@ export const useChartContainerProps = (
     hasIntrinsicSize: Boolean(dWidth && dHeight),
     chartDataProviderProps,
     resizableChartContainerProps,
+    children,
   };
 };

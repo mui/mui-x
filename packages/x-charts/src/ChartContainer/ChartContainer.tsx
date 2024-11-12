@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
+import { ChartsSurface } from '../ChartsSurface';
 
 export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width' | 'height'> {
   /**
@@ -30,12 +31,17 @@ const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
+  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps, children } =
     useChartContainerProps(props, ref);
 
   return (
     <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartDataProvider {...chartDataProviderProps} /> : null}
+      {false}
+      {hasIntrinsicSize && (
+        <ChartDataProvider {...chartDataProviderProps}>
+          <ChartsSurface>{children}</ChartsSurface>
+        </ChartDataProvider>
+      )}
     </ResizableContainer>
   );
 });
