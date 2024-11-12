@@ -3,18 +3,24 @@ import * as React from 'react';
 import { SurfacePropsContext } from './SurfacePropsContext';
 import { SurfacePropsProviderProps } from './SurfaceProps.types';
 
-function SurfacePropsProvider(props: SurfacePropsProviderProps) {
+const SurfacePropsProvider = React.forwardRef(function SurfacePropsProvider(
+  props: SurfacePropsProviderProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const { children, ...other } = props;
 
   const value = React.useMemo(
     () => ({
       isInitialized: true,
-      data: other,
+      data: {
+        ...other,
+        ref,
+      },
     }),
-    [other],
+    [other, ref],
   );
 
   return <SurfacePropsContext.Provider value={value}>{children}</SurfacePropsContext.Provider>;
-}
+});
 
 export { SurfacePropsProvider };
