@@ -116,11 +116,6 @@ export interface BaseDateTimeRangePickerProps
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<DateTimeRangePickerRenderers<DateTimeRangePickerView>>;
-  /**
-   * If `true`, the Picker will close after submitting the full date.
-   * @default false
-   */
-  closeOnSelect?: boolean;
 }
 
 type UseDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePickerProps> =

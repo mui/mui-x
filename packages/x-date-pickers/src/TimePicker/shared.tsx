@@ -64,11 +64,6 @@ export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<TimePickerViewRenderers<TView>>;
-  /**
-   * If `true`, the Picker will close after submitting the full date.
-   * @default false
-   */
-  closeOnSelect?: boolean;
 }
 
 type UseTimePickerDefaultizedProps<

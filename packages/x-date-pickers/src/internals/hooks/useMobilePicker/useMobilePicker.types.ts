@@ -69,13 +69,7 @@ export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
-    UsePickerViewsNonStaticProps {
-  /**
-   * If `true`, the Picker will close after submitting the full date.
-   * @default false
-   */
-  closeOnSelect?: boolean;
-}
+    UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,

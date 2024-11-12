@@ -98,11 +98,6 @@ export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridie
    * If `undefined`, internally defined view will be used.
    */
   viewRenderers?: Partial<DateTimePickerViewRenderers<TView>>;
-  /**
-   * If `true`, the Picker will close after submitting the full date.
-   * @default false
-   */
-  closeOnSelect?: boolean;
 }
 
 type UseDateTimePickerDefaultizedProps<
