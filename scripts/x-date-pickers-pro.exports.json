@@ -163,6 +163,7 @@
   { "name": "FieldSectionType", "kind": "TypeAlias" },
   { "name": "FieldSelectedSections", "kind": "TypeAlias" },
   { "name": "FieldType", "kind": "TypeAlias" },
+  { "name": "FieldValueType", "kind": "TypeAlias" },
   { "name": "getDateCalendarUtilityClass", "kind": "Variable" },
   { "name": "getDateRangeCalendarUtilityClass", "kind": "Variable" },
   { "name": "getDateRangePickerDayUtilityClass", "kind": "Function" },

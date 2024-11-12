@@ -51,10 +51,10 @@ In all the below scenarios, the picker closes when `onClose` is called, except i
 #### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
-The default value of `closeOnSelect` varies among the components:
+The default value of `closeOnSelect` depends on the component used:
 
-- `DatePicker` and `DateRangePicker`: `true` on desktop and `false` on mobile variants;
-- `TimePicker`, `DateTimePicker` and `DateTimeRangePicker`: `false` on both desktop and mobile variants.
+- Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
+- Time Picker, Date Time Picker and Date Time Range Picker: `false` on both desktop and mobile variants.
 
   Here are a few examples:
 
@@ -228,10 +228,10 @@ You can use the second argument passed to the `onAccept` callback to get the val
 #### When the last view is completed
 
 When a selection in the last view is made, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
-The default value of `closeOnSelect` varies among the components:
+The default value of `closeOnSelect` depends on the component used:
 
-- `DatePicker` and `DateRangePicker`: `true` on desktop and `false` on mobile variants;
-- `TimePicker`, `DateTimePicker` and `DateTimeRangePicker`: `false` on both desktop and mobile variants.
+- Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
+- Time Picker, Date Time Picker and Date Time Range Picker: `false` on both desktop and mobile variants.
 
 Here are a few examples:
 

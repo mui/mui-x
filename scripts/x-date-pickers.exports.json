@@ -109,6 +109,7 @@
   { "name": "FieldSectionContentType", "kind": "TypeAlias" },
   { "name": "FieldSectionType", "kind": "TypeAlias" },
   { "name": "FieldSelectedSections", "kind": "TypeAlias" },
+  { "name": "FieldValueType", "kind": "TypeAlias" },
   { "name": "getDateCalendarUtilityClass", "kind": "Variable" },
   { "name": "getDayCalendarSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getDigitalClockUtilityClass", "kind": "Function" },
