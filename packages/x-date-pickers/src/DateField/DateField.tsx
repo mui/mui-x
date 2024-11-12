@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
@@ -9,14 +10,9 @@ import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { PickerValidDate } from '../models';
 
-type DateFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,12 +26,8 @@ type DateFieldComponent = (<
  * - [DateField API](https://mui.com/x/api/date-pickers/date-field/)
  */
 const DateField = React.forwardRef(function DateField<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  inProps: DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  inRef: React.Ref<HTMLDivElement>,
-) {
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+>(inProps: DateFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiDateField',
@@ -47,7 +39,7 @@ const DateField = React.forwardRef(function DateField<
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -56,17 +48,15 @@ const DateField = React.forwardRef(function DateField<
       ref: inRef,
     },
     ownerState,
-  }) as DateFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as DateFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useDateField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
+    textFieldProps,
+  );
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -108,6 +98,7 @@ DateField.propTypes = {
   defaultValue: PropTypes.object,
   /**
    * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -122,7 +113,7 @@ DateField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
@@ -210,8 +201,8 @@ DateField.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -221,11 +212,13 @@ DateField.propTypes = {
    */
   onClear: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,
@@ -235,8 +228,8 @@ DateField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -280,22 +273,19 @@ DateField.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific month.
-   * @template TDate
-   * @param {TDate} month The month to test.
+   * @param {PickerValidDate} month The month to test.
    * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
-   * @template TDate
-   * @param {TDate} year The year to test.
+   * @param {PickerValidDate} year The year to test.
    * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,

@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import Box from '@mui/material/Box';

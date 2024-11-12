@@ -1,41 +1,32 @@
+'use client';
 import * as React from 'react';
-import {
-  useField,
-  splitFieldInternalAndForwardedProps,
-  useDefaultizedTimeField,
-} from '@mui/x-date-pickers/internals';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { useField, useDefaultizedTimeField, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateTimeRange } from '../internals/utils/validation/validateTimeRange';
-import { RangeFieldSection, DateRange } from '../models';
+import { validateTimeRange } from '../validation';
+import { RangeFieldSection } from '../models';
 
 export const useSingleInputTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TAllProps extends UseSingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  TAllProps extends UseSingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
   inProps: TAllProps,
 ) => {
   const props = useDefaultizedTimeField<
-    TDate,
-    UseSingleInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseSingleInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     TAllProps
   >(inProps);
 
-  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
-    typeof props,
-    keyof UseSingleInputTimeRangeFieldProps<any, any>
-  >(props, 'time');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
   const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager<TDate>({ dateSeparator: internalProps.dateSeparator }),
+    () => getRangeFieldValueManager({ dateSeparator: internalProps.dateSeparator }),
     [internalProps.dateSeparator],
   );
 
   return useField<
-    DateRange<TDate>,
-    TDate,
+    PickerRangeValue,
     RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,

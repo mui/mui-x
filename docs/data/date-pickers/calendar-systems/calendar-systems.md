@@ -41,14 +41,17 @@ The following demo shows how to use the `moment-jalaali` adapter:
 
 ## Hijri
 
-:::error
-The adapter with `moment-hijri` does not support the new fields components because the date library seems buggy when parsing a month only.
-If you want to help on the support of hijri calendar, please have a look at [this issue](https://github.com/xsoh/moment-hijri/issues/83).
-:::
-
 You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
 
 {{"demo": "AdapterHijri.js"}}
+
+:::error
+The adapter with `moment-hijri` does not support the new fields components because the date library seems buggy when parsing a month only.
+If you want to help on the support of hijri calendar, please have a look at [this issue](https://github.com/xsoh/moment-hijri/issues/83).
+
+The demo is based on the [Custom Field—Using a Button](/x/react-date-pickers/custom-field/#using-a-button) demo to let you pick a value using only the view.
+You can have a look at the other demos in the [Custom Field—With a custom editing experience](/x/react-date-pickers/custom-field/#with-a-custom-editing-experience) section if you want a different editing experience that works with `AdapterMomentHijri`.
+:::
 
 ## Unsupported libraries
 

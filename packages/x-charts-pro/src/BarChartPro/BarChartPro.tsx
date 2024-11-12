@@ -1,5 +1,7 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useThemeProps } from '@mui/material/styles';
 import { BarChartProps, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsOnAxisClickHandler } from '@mui/x-charts/ChartsOnAxisClickHandler';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -11,10 +13,56 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { BarPlotProps } from '@mui/x-charts';
-import { ResponsiveChartContainerPro } from '../ResponsiveChartContainerPro';
+import { ChartContainerPro } from '../ChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
+
+function BarChartPlotZoom(props: BarPlotProps) {
+  const { isInteracting } = useZoom();
+
+  return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
+}
+
+BarChartPlotZoom.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * Defines the border radius of the bar element.
+   */
+  borderRadius: PropTypes.number,
+  /**
+   * Callback fired when a bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * If `true`, animations are skipped.
+   * @default undefined
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 export interface BarChartProProps extends BarChartProps, ZoomProps {}
 
@@ -29,7 +77,11 @@ export interface BarChartProProps extends BarChartProps, ZoomProps {}
  *
  * - [BarChart API](https://mui.com/x/api/charts/bar-chart/)
  */
-const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProps, ref) {
+const BarChartPro = React.forwardRef(function BarChartPro(
+  inProps: BarChartProProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {
     chartContainerProps,
@@ -47,26 +99,21 @@ const BarChartPro = React.forwardRef(function BarChartPro(props: BarChartProProp
   } = useBarChartProps(other);
 
   return (
-    <ResponsiveChartContainerPro
-      ref={ref}
-      {...chartContainerProps}
-      zoom={zoom}
-      onZoomChange={onZoomChange}
-    >
+    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      {props.grid && <ChartsGrid {...gridProps} />}
+      <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
         <BarChartPlotZoom {...barPlotProps} />
         <ChartsOverlay {...overlayProps} />
         <ChartsAxisHighlight {...axisHighlightProps} />
       </g>
       <ChartsAxis {...chartsAxisProps} />
-      <ChartsLegend {...legendProps} />
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <ChartsTooltip {...tooltipProps} />}
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />
       {children}
-    </ResponsiveChartContainerPro>
+    </ChartContainerPro>
   );
 });
 
@@ -79,7 +126,7 @@ BarChartPro.propTypes = {
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/#highlights highlight docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
    */
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
@@ -133,6 +180,10 @@ BarChartPro.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
+  /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
   highlightedItem: PropTypes.shape({
@@ -150,20 +201,6 @@ BarChartPro.propTypes = {
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  /**
-   * @deprecated Consider using `slotProps.legend` instead.
-   */
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-  }),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -201,6 +238,22 @@ BarChartPro.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
+  /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -213,7 +266,7 @@ BarChartPro.propTypes = {
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
   /**
@@ -267,7 +320,6 @@ BarChartPro.propTypes = {
    */
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -300,6 +352,7 @@ BarChartPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -314,6 +367,11 @@ BarChartPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -331,6 +389,7 @@ BarChartPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -349,7 +408,6 @@ BarChartPro.propTypes = {
    */
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       classes: PropTypes.object,
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
@@ -382,6 +440,7 @@ BarChartPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -396,6 +455,11 @@ BarChartPro.propTypes = {
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
+      sx: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+        PropTypes.func,
+        PropTypes.object,
+      ]),
       tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
@@ -413,6 +477,7 @@ BarChartPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -424,52 +489,16 @@ BarChartPro.propTypes = {
       ]),
     }),
   ),
-} as any;
-
-function BarChartPlotZoom(props: BarPlotProps) {
-  const { isInteracting } = useZoom();
-
-  return <BarPlot {...props} skipAnimation={isInteracting ? true : props.skipAnimation} />;
-}
-
-BarChartPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
   /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
+   * The list of zoom data related to each axis.
    */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
-   * Defines the border radius of the bar element.
-   */
-  borderRadius: PropTypes.number,
-  /**
-   * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default false
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
+  zoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
 } as any;
 
 export { BarChartPro };

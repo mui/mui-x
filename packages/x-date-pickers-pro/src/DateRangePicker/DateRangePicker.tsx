@@ -1,18 +1,15 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import { refType } from '@mui/utils';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -27,10 +24,9 @@ type DatePickerComponent = (<
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
 const DateRangePicker = React.forwardRef(function DateRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DateRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
@@ -77,9 +73,9 @@ DateRangePicker.propTypes = {
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
-   * @param {TDate} date The date of the day of week provided by the adapter.
+   * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
-   * @default (date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
+   * @default (date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
@@ -105,7 +101,8 @@ DateRangePicker.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -144,7 +141,7 @@ DateRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -201,16 +198,16 @@ DateRangePicker.propTypes = {
   name: PropTypes.string,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -221,19 +218,18 @@ DateRangePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
-   *
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error describing why the current value is not valid.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**
    * Callback fired on month change.
-   * @template TDate
-   * @param {TDate} month The new month.
+   * @param {PickerValidDate} month The new month.
    */
   onMonthChange: PropTypes.func,
   /**
@@ -261,6 +257,11 @@ DateRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -307,8 +308,7 @@ DateRangePicker.propTypes = {
    *
    * Warning: This function can be called multiple times (for example when rendering date calendar, checking if focus can be moved to a certain date, etc.). Expensive computations can impact performance.
    *
-   * @template TDate
-   * @param {TDate} day The date to test.
+   * @param {PickerValidDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */

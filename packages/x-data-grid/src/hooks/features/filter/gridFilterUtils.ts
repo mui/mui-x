@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   GridColDef,
   GridFilterItem,
@@ -14,7 +15,6 @@ import {
   GridFilterItemResult,
   GridQuickFilterValueResult,
 } from './gridFilterState';
-import { warnOnce } from '../../../internals/utils/warning';
 import { getPublicApiRef } from '../../../utils/getPublicApiRef';
 import {
   gridColumnFieldsSelector,
@@ -88,7 +88,7 @@ export const sanitizeFilterModel = (
       warnOnce(
         [
           'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-          'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
         ],
         'error',
       );

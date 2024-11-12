@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { expect } from 'chai';
+import { DateTime } from 'luxon';
 import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
@@ -46,16 +47,16 @@ describe('<DateTimeField /> - Timezone', () => {
 
     it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
       const onChange = spy();
-      const v7Response = renderWithProps({
+      const view = renderWithProps({
         enableAccessibleFieldDOMStructure: true,
         onChange,
         format,
       });
 
-      const expectedDate = fillEmptyValue(v7Response, 'default');
+      const expectedDate = fillEmptyValue(view, 'default');
 
       // Check the rendered value (uses default timezone, e.g: UTC, see TZ env variable)
-      expectFieldValueV7(v7Response.getSectionsContainer(), '12/31/2022 23');
+      expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -70,26 +71,28 @@ describe('<DateTimeField /> - Timezone', () => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange and rendering when no value is provided', () => {
           const onChange = spy();
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             onChange,
             format,
             timezone,
           });
-          const expectedDate = fillEmptyValue(v7Response, timezone);
+          const expectedDate = fillEmptyValue(view, timezone);
 
           // Check the rendered value (uses timezone prop)
-          expectFieldValueV7(v7Response.getSectionsContainer(), '12/31/2022 23');
+          expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(
+            adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
+          );
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
         it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          const v7Response = renderWithProps({
+          const view = renderWithProps({
             enableAccessibleFieldDOMStructure: true,
             value: adapter.date(undefined, timezone),
             onChange,
@@ -97,11 +100,11 @@ describe('<DateTimeField /> - Timezone', () => {
             timezone: 'America/Chicago',
           });
 
-          v7Response.selectSection('month');
-          fireEvent.keyDown(v7Response.getActiveSection(0), { key: 'ArrowDown' });
+          view.selectSection('month');
+          fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
           // Check the rendered value (uses America/Chicago timezone)
-          expectFieldValueV7(v7Response.getSectionsContainer(), '05/14/2022 19');
+          expectFieldValueV7(view.getSectionsContainer(), '05/14/2022 19');
 
           // Check the `onChange` value (uses timezone prop)
           const expectedDate = adapter.addMonths(adapter.date(undefined, timezone), -1);
@@ -125,16 +128,16 @@ describe('<DateTimeField /> - Timezone', () => {
     });
 
     it('should update the field when time zone changes (timestamp remains the same)', () => {
-      const v7Response = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+      const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
 
-      const date = adapter.date('2020-06-18T14:30:10.000Z').setZone('UTC');
-      v7Response.setProps({ value: date });
+      const date = (adapter.date('2020-06-18T14:30:10.000Z') as DateTime).setZone('UTC');
+      view.setProps({ value: date });
 
-      expectFieldValueV7(v7Response.getSectionsContainer(), '06/18/2020 02:30 PM');
+      expectFieldValueV7(view.getSectionsContainer(), '06/18/2020 02:30 PM');
 
-      v7Response.setProps({ value: date.setZone('America/Los_Angeles') });
+      view.setProps({ value: date.setZone('America/Los_Angeles') });
 
-      expectFieldValueV7(v7Response.getSectionsContainer(), '06/18/2020 07:30 AM');
+      expectFieldValueV7(view.getSectionsContainer(), '06/18/2020 07:30 AM');
     });
   });
 });

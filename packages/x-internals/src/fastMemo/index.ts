@@ -1,0 +1,1 @@
+export { fastMemo } from './fastMemo';

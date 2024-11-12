@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/utils';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -5,7 +6,7 @@ import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
-import { usePickersTranslations } from './usePickersTranslations';
+import { usePickerTranslations } from './usePickerTranslations';
 
 export interface ExportedUseClearableFieldProps {
   /**
@@ -52,7 +53,7 @@ export type UseClearableFieldResponse<TFieldProps extends UseClearableFieldProps
 export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
 ): UseClearableFieldResponse<TFieldProps> => {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
 
@@ -65,6 +66,7 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
+      tabIndex: -1,
     },
   });
   const EndClearIcon = slots?.clearIcon ?? ClearIcon;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fastMemo } from '../utils/fastMemo';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

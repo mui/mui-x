@@ -58,7 +58,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
+  // filterOperatorDoesNotContain: 'does not contain',
   filterOperatorEquals: 'on yhtä suuri kuin',
+  // filterOperatorDoesNotEqual: 'does not equal',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -79,7 +81,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sisältää',
+  // headerFilterOperatorDoesNotContain: 'Does not contain',
   headerFilterOperatorEquals: 'On yhtä suuri kuin',
+  // headerFilterOperatorDoesNotEqual: 'Does not equal',
   headerFilterOperatorStartsWith: 'Alkaa',
   headerFilterOperatorEndsWith: 'Päättyy',
   headerFilterOperatorIs: 'On',

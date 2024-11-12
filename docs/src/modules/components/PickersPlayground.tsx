@@ -50,9 +50,12 @@ const ComponentSection = styled('div')(({ theme }) => ({
   '& .MuiPickersLayout-root': {
     borderRadius: 8,
     border: '1px dashed',
-    borderColor: theme.palette.mode === 'light' ? theme.palette.grey[300] : theme.palette.divider,
-    ...(theme.palette.mode === 'dark' && {
+    borderColor: theme.palette.divider,
+    ...theme.applyStyles('dark', {
       backgroundColor: alpha(theme.palette.grey[900], 0.2),
+    }),
+    ...theme.applyStyles('light', {
+      borderColor: theme.palette.grey[300],
     }),
   },
 }));
@@ -60,7 +63,7 @@ const ComponentSection = styled('div')(({ theme }) => ({
 const PropControlsSection = styled('div')(({ theme }) => ({
   flexGrow: 1,
   background: alpha(theme.palette.grey[50], 0.5),
-  ...(theme.palette.mode === 'dark' && {
+  ...theme.applyStyles('dark', {
     backgroundColor: alpha(theme.palette.grey[900], 0.3),
   }),
 }));
@@ -367,7 +370,7 @@ export default function PickersPlayground() {
   const dateViews = React.useMemo(() => availableViews.filter(isDatePickerView), [availableViews]);
   const timeViews = React.useMemo(() => availableViews.filter(isTimeView), [availableViews]);
 
-  const commonProps = React.useMemo<StaticDateTimePickerProps<Dayjs>>(
+  const commonProps = React.useMemo<StaticDateTimePickerProps>(
     () => ({
       orientation: isLandscape ? 'landscape' : 'portrait',
       showDaysOutsideCurrentMonth,

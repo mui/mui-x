@@ -1,22 +1,59 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
-import { DrawingArea } from '../context/DrawingProvider';
+import { LegendItemParams, SeriesLegendItemContext } from './chartsLegend.types';
 
-export interface LegendRendererProps extends Omit<LegendPerItemProps, 'itemsToDisplay'> {
+const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
+  ({
+    type: 'series',
+    color: context.color,
+    label: context.label,
+    seriesId: context.seriesId!,
+    itemId: context.itemId,
+  }) as const;
+
+export interface LegendRendererProps
+  extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
-   * @deprecated Use the `useDrawingArea` hook instead.
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
    */
-  drawingArea: Omit<DrawingArea, 'isPointInside'>;
+  onItemClick?: (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>,
+    legendItem: SeriesLegendItemContext,
+    index: number,
+  ) => void;
+  /**
+   * Set to true to hide the legend.
+   * @default false
+   */
+  hidden?: boolean;
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { drawingArea, seriesToDisplay, ...other } = props;
+  const { seriesToDisplay, hidden, onItemClick, ...other } = props;
 
-  return <LegendPerItem {...other} itemsToDisplay={seriesToDisplay} />;
+  if (hidden) {
+    return null;
+  }
+
+  return (
+    <LegendPerItem
+      {...other}
+      itemsToDisplay={seriesToDisplay}
+      onItemClick={
+        onItemClick
+          ? (event, i) => onItemClick(event, seriesContextBuilder(seriesToDisplay[i]), i)
+          : undefined
+      }
+    />
+  );
 }
 
 DefaultChartsLegend.propTypes = {
@@ -33,17 +70,6 @@ DefaultChartsLegend.propTypes = {
    * The default depends on the chart.
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
-  /**
-   * @deprecated Use the `useDrawingArea` hook instead.
-   */
-  drawingArea: PropTypes.shape({
-    bottom: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
-    right: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-  }).isRequired,
   /**
    * Set to true to hide the legend.
    * @default false
@@ -75,6 +101,13 @@ DefaultChartsLegend.propTypes = {
    */
   markGap: PropTypes.number,
   /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Legend padding (in px).
    * Can either be a single number, or an object with top, left, bottom, right properties.
    * @default 10
@@ -100,7 +133,11 @@ DefaultChartsLegend.propTypes = {
     PropTypes.shape({
       color: PropTypes.string.isRequired,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string.isRequired,
+      maxValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      minValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     }),
   ).isRequired,
 } as any;

@@ -36,7 +36,7 @@ function GridPanelFooter(props: React.HTMLAttributes<HTMLDivElement> & { sx?: Sx
 
   return (
     <GridPanelFooterRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={rootProps}
       {...other}
     />

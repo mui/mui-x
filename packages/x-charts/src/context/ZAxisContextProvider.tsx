@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { DatasetType } from '../models/seriesType/config';
-import { MakeOptional } from '../models/helpers';
 import { getColorScale, getOrdinalColorScale } from '../internals/colorScale';
 import { ZAxisConfig, ZAxisDefaultized } from '../models/z-axis';
 
@@ -47,7 +48,7 @@ function ZAxisContextProvider(props: ZAxisContextProviderProps) {
           return axisConfig;
         }
         if (dataset === undefined) {
-          throw Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
+          throw new Error('MUI X: z-axis uses `dataKey` but no `dataset` is provided.');
         }
         return {
           ...axisConfig,

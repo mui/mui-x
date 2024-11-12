@@ -27,7 +27,7 @@ export default function PickersRenderingInstructions() {
     `import { ${adapterName} } from '${componentPackage}/${adapterName}'`,
     ...(libraryUsed === 'date-fns'
       ? [
-          '// If you are using date-fns v3.x, please import the v3 adapter',
+          '// If you are using date-fns v3.x or v4.x, please import the v3 adapter',
           `import { ${adapterName} } from '${componentPackage}/AdapterDateFnsV3'`,
         ]
       : []),

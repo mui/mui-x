@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -50,8 +51,8 @@ const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   top: 15,
 });
 
-type TimeClockComponent = (<TDate extends PickerValidDate>(
-  props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimeClockComponent = ((
+  props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
@@ -66,11 +67,11 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  *
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
-export const TimeClock = React.forwardRef(function TimeClock<TDate extends PickerValidDate>(
-  inProps: TimeClockProps<TDate>,
+export const TimeClock = React.forwardRef(function TimeClock(
+  inProps: TimeClockProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const props = useThemeProps({
     props: inProps,
@@ -125,8 +126,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     timezone,
   });
 
-  const translations = usePickersTranslations<TDate>();
-  const now = useNow<TDate>(timezone);
+  const translations = usePickerTranslations();
+  const now = useNow(timezone);
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
@@ -138,7 +139,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     onFocusedViewChange,
   });
 
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(
     valueOrReferenceDate,
     ampm,
     setValueAndGoToNextView,
@@ -150,7 +151,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
 
-      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
+      const containsValidTime = ({
+        start,
+        end,
+      }: {
+        start: PickerValidDate;
+        end: PickerValidDate;
+      }) => {
         if (minTime && isAfter(minTime, end)) {
           return false;
         }
@@ -184,13 +191,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
                 utils.setMinutes(valueOrReferenceDate, timeValue),
                 'minutes',
               );
-
             case 'seconds':
               return !shouldDisableTime(
                 utils.setSeconds(valueOrReferenceDate, timeValue),
                 'seconds',
               );
-
             default:
               return false;
           }
@@ -248,9 +253,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
 
   const selectedId = useId();
 
-  const viewProps = React.useMemo<
-    Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
-  >(() => {
+  const viewProps = React.useMemo<Pick<ClockProps, 'onChange' | 'viewValue' | 'children'>>(() => {
     switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
@@ -290,7 +293,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
         return {
           viewValue: minutesValue,
           onChange: handleMinutesChange,
-          children: getMinutesNumbers<TDate>({
+          children: getMinutesNumbers({
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
@@ -354,7 +357,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
       ownerState={ownerState}
       {...other}
     >
-      <Clock<TDate>
+      <Clock
         autoFocus={autoFocus ?? !!focusedView}
         ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
@@ -420,7 +423,8 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -460,7 +464,7 @@ TimeClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
    * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
@@ -487,7 +491,8 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -498,8 +503,7 @@ TimeClock.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

@@ -78,6 +78,10 @@ export {
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
+export {
+  useGridRowSpanning,
+  rowSpanningStateInitializer,
+} from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
@@ -129,6 +133,11 @@ export {
   useGridColumnResize,
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
+export { ROW_SELECTION_PROPAGATION_DEFAULT } from '../hooks/features/rowSelection/utils';
+export {
+  useGridListView,
+  listViewStateInitializer,
+} from '../hooks/features/listView/useGridListView';
 
 export { useTimeout } from '../hooks/utils/useTimeout';
 export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
@@ -139,16 +148,21 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export { createSelector, createSelectorMemoized } from '../utils/createSelector';
+export {
+  createSelector,
+  createSelectorV8,
+  createSelectorMemoized,
+  createSelectorMemoizedV8,
+} from '../utils/createSelector';
+export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey, isPasteShortcut } from '../utils/keyboardUtils';
+export { isNavigationKey, isPasteShortcut, isCopyShortcut } from '../utils/keyboardUtils';
 export * from '../utils/utils';
-export * from '../utils/fastMemo';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
 export * from '../utils/cellBorderUtils';
@@ -163,4 +177,5 @@ export type { GridApiCaches } from '../models/gridApiCaches';
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
 export * from './utils';
+export * from './constants';
 export type { Localization } from '../utils/getGridLocalization';

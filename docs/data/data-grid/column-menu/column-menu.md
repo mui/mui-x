@@ -126,7 +126,7 @@ As a reference, here are the column menu `slots` along with the default item com
 
 ## Custom menu component
 
-You can also customize and replace the column menu by [passing a fully custom component](/x/react-data-grid/components/#overriding-components) to the `columnMenu` slot of the Data Grid. If you want to add some of the default menu items to your custom component, you can import and re-use them.
+You can also customize and replace the column menu by [passing a fully custom component](/x/react-data-grid/components/#component-slots) to the `columnMenu` slot of the Data Grid. If you want to add some of the default menu items to your custom component, you can import and re-use them.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 

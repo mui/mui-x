@@ -1,30 +1,32 @@
+import { MakeRequired } from '@mui/x-internals/types';
+import { UseDateFieldProps } from '../DateField';
 import {
   DesktopDatePickerProps,
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import { PickerValidDate } from '../models';
+import {
+  BaseSingleInputFieldProps,
+  DateValidationError,
+  FieldSection,
+  PickerValidDate,
+} from '../models';
 
-export interface DatePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDatePickerSlots<TDate>,
-    MobileDatePickerSlots<TDate> {}
+export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
-export interface DatePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DesktopDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+export interface DatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDatePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface DatePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> extends DesktopDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDatePickerProps<TDate, TEnableAccessibleFieldDOMStructure> {
+export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDatePickerProps<TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -32,18 +34,28 @@ export interface DatePickerProps<
    */
   desktopModeMediaQuery?: string;
   /**
-   * Years rendered per row.
-   * @default 4 on desktop, 3 on mobile
-   */
-  yearsPerRow?: 3 | 4;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: DatePickerSlots<TDate>;
+  slots?: DatePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DatePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DatePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow?: 3 | 4;
 }
+
+/**
+ * Props the field can receive when used inside a `DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component.
+ */
+export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
+  MakeRequired<
+    UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
+    'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
+  > &
+    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateValidationError>;

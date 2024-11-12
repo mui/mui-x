@@ -14,9 +14,8 @@ import {
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
 } from '../useTreeViewItems/useTreeViewItems.utils';
-import type { TreeItemProps } from '../../../TreeItem';
-import type { TreeItem2Props } from '../../../TreeItem2';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
+import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -41,7 +40,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
         items: {
           ...prevState.items,
           itemMetaMap: { ...prevState.items.itemMetaMap, [item.id]: item },
-          // For `SimpleTreeView`, we don't have a proper `item` object, so we create a very basic one.
+          // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
           itemMap: { ...prevState.items.itemMap, [item.id]: { id: item.id, label: item.label } },
         },
       };
@@ -116,12 +115,8 @@ const isItemExpandable = (reactChildren: React.ReactNode) => {
   return Boolean(reactChildren);
 };
 
-const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem2Props> = ({
-  props,
-  rootRef,
-  contentRef,
-}) => {
-  const { instance } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
+  const { instance, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -142,13 +137,13 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin<TreeItemProps | TreeItem
 
   // Prevent any flashing
   useEnhancedEffect(() => {
-    const idAttributeWithDefault = instance.getTreeItemIdAttribute(itemId, id);
-    registerChild(idAttributeWithDefault, itemId);
+    const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
+    registerChild(idAttribute, itemId);
 
     return () => {
-      unregisterChild(idAttributeWithDefault);
+      unregisterChild(idAttribute);
     };
-  }, [instance, registerChild, unregisterChild, itemId, id]);
+  }, [registerChild, unregisterChild, itemId, id, treeId]);
 
   React.useEffect(() => {
     return instance.insertJSXItem({

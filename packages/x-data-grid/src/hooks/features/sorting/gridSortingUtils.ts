@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import { GridSortingModelApplier } from './gridSortingState';
 import type { GridRowId, GridTreeNode } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -10,7 +11,6 @@ import {
   GridSortModel,
   GridSortCellParams,
 } from '../../../models/gridSortModel';
-import { warnOnce } from '../../../internals/utils/warning';
 
 type GridSortingFieldComparator = {
   getSortCellParams: (id: GridRowId) => GridSortCellParams;
@@ -28,7 +28,7 @@ export const sanitizeSortModel = (model: GridSortModel, disableMultipleColumnsSo
       warnOnce(
         [
           'MUI X: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
-          'If you are using the community version of the `DataGrid`, this prop is always `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
         ],
         'error',
       );

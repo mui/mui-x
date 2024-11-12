@@ -24,6 +24,7 @@ pnpm release:changelog
    --githubToken   YOUR_GITHUB_TOKEN (needs "public_repo" permission)
    --lastRelease   The release to compare against (default: the last one)
    --release       The branch to release (default: master)
+   --nextVersion   Expected version of the next release (if not provided, __VERSION__ placeholders must be updated manually)
 ```
 
 > :warning: the script will add a separator string in form of a comment like this right after the highlights:
@@ -37,6 +38,8 @@ In case of a problem, another method to generate the changelog is available at t
 2. Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 3. Update the root `package.json`'s version
 4. Update the versions of the other `package.json` files and of the dependencies with `pnpm release:version` (`pnpm release:version prerelease` for alpha / beta releases).
+   Do not skip the version bump if Lerna detects a change in the package. It is important to release the package if there are **any** changes to it.
+   If Lerna doesn't suggest a version bump for the package, don't release it.
 5. Open PR with changes and wait for review and green CI.
 6. Once CI is green and you have enough approvals, send a message on the `team-x` slack channel announcing a merge freeze.
 7. Merge PR.
@@ -57,7 +60,7 @@ Push the working branch on the documentation release branch to deploy the docume
 <!-- #default-branch-switch -->
 
 ```bash
-git push -f upstream master:docs-v7
+pnpm docs:deploy
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v7)

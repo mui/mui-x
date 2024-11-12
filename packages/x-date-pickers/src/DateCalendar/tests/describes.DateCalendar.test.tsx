@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { screen, userEvent } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
 import {
@@ -46,8 +46,8 @@ describe('<DateCalendar /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addDays(value, 1);
-      userEvent.mousePress(
+      const newValue = adapterToUse.addDays(value!, 1);
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 

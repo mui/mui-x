@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
@@ -16,6 +15,9 @@ import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-p
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
   alignItems: 'center',
+  '& .MuiInputAdornment-root': {
+    height: 'auto',
+  },
 });
 
 const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content' })(
@@ -102,10 +104,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ),
   };
 
-  const fieldResponse = useSingleInputDateRangeField({
-    ...textFieldProps,
-    enableAccessibleFieldDOMStructure: true,
-  });
+  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({

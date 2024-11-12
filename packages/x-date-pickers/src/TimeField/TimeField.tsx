@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
@@ -9,14 +10,9 @@ import { useTimeField } from './useTimeField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
-import { PickerValidDate } from '../models';
 
-type TimeFieldComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,12 +26,8 @@ type TimeFieldComponent = (<
  * - [TimeField API](https://mui.com/x/api/date-pickers/time-field/)
  */
 const TimeField = React.forwardRef(function TimeField<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  inProps: TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  inRef: React.Ref<HTMLDivElement>,
-) {
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+>(inProps: TimeFieldProps<TEnableAccessibleFieldDOMStructure>, inRef: React.Ref<HTMLDivElement>) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiTimeField',
@@ -47,7 +39,7 @@ const TimeField = React.forwardRef(function TimeField<
 
   const TextField =
     slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure ? PickersTextField : MuiTextField);
+    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -56,17 +48,15 @@ const TimeField = React.forwardRef(function TimeField<
     additionalProps: {
       ref: inRef,
     },
-  }) as TimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  }) as TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
   textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
-  const fieldResponse = useTimeField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof textFieldProps
-  >(textFieldProps);
+  const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
+    textFieldProps,
+  );
   const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
   const processedFieldProps = useClearableField({
@@ -113,6 +103,7 @@ TimeField.propTypes = {
   defaultValue: PropTypes.object,
   /**
    * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -132,7 +123,7 @@ TimeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.bool,
   /**
@@ -225,8 +216,8 @@ TimeField.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
@@ -236,11 +227,13 @@ TimeField.propTypes = {
    */
   onClear: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback fired when the error associated with the current value changes.
+   * When a validation error is detected, the `error` parameter contains a non-null value.
+   * This can be used to render an appropriate form error.
+   * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TError} error The reason why the current value is not valid.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   onFocus: PropTypes.func,
@@ -250,8 +243,8 @@ TimeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -292,8 +285,7 @@ TimeField.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
