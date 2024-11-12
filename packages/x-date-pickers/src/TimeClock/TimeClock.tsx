@@ -423,7 +423,7 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the component will be disabled.
+   * If `true`, the component is disabled.
    * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
@@ -491,7 +491,7 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the component will be read-only.
+   * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */

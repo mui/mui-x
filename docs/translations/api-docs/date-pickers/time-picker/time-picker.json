@@ -18,7 +18,7 @@
       "description": "CSS media query when <code>Mobile</code> mode will be changed to <code>Desktop</code>."
     },
     "disabled": {
-      "description": "If <code>true</code>, the component will be disabled. When disabled, the value cannot be changed and no interaction is possible."
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
@@ -94,7 +94,7 @@
     },
     "orientation": { "description": "Force rendering in particular orientation." },
     "readOnly": {
-      "description": "If <code>true</code>, the component will be read-only. When read-only, the value cannot be changed but the user can interact with the interface."
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {
