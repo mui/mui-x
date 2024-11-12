@@ -13,7 +13,7 @@ import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from
 import { DateCalendarClasses } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerValidDate, TimezoneProps } from '../models';
+import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import {
   ExportedYearCalendarProps,
   YearCalendarSlots,
@@ -25,6 +25,7 @@ import {
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
 import { ExportedValidateDateProps } from '../validation/validateDate';
+import { FormProps } from '../internals/models/formProps';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
@@ -44,7 +45,7 @@ export interface DateCalendarSlotProps
     DayCalendarSlotProps,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps>;
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, PickerOwnerState>;
 }
 
 export interface ExportedDateCalendarProps
@@ -52,17 +53,8 @@ export interface ExportedDateCalendarProps
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     ExportedValidateDateProps,
-    TimezoneProps {
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
+    TimezoneProps,
+    FormProps {
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13

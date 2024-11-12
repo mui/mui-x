@@ -4,8 +4,13 @@ import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
-import { PickerValidDate, TimezoneProps } from '../models';
-import type { PickersYearProps } from './PickersYear';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import { FormProps } from '../internals/models/formProps';
+
+export interface PickerYearOwnerState extends PickerOwnerState {
+  isYearSelected: boolean;
+  isYearDisabled: boolean;
+}
 
 export interface YearCalendarSlots {
   /**
@@ -19,7 +24,7 @@ export interface YearCalendarSlotProps {
   yearButton?: SlotComponentPropsFromProps<
     React.HTMLAttributes<HTMLButtonElement> & { sx: SxProps },
     {},
-    PickersYearProps
+    PickerYearOwnerState
   >;
 }
 
@@ -41,7 +46,8 @@ export interface YearCalendarProps
   extends ExportedYearCalendarProps,
     YearValidationProps,
     BaseDateValidationProps,
-    TimezoneProps {
+    TimezoneProps,
+    FormProps {
   autoFocus?: boolean;
   className?: string;
   /**
@@ -62,8 +68,6 @@ export interface YearCalendarProps
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -84,8 +88,6 @@ export interface YearCalendarProps
    * @param {PickerValidDate} value The new value.
    */
   onChange?: (value: PickerValidDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false

@@ -19,6 +19,7 @@ import {
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { FormProps } from '../internals/models/formProps';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -28,10 +29,9 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>
-  extends ExportedMultiSectionDigitalClockSectionProps {
+  extends FormProps,
+    ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
   items: MultiSectionDigitalClockOption<TValue>[];
   onChange: (value: TValue) => void;
   active?: boolean;

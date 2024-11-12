@@ -14,16 +14,16 @@ It replaces the previous values. This approach has some drawbacks:
 
 :::warning
 Updating the `rows` prop causes the Data Grid to recompute the row tree, resulting in losing the current tree information like the expanded rows state.
-Unless the recomputation is explicitly required, the API method `updateRows` should be used.
+Unless the recomputation is explicitly required, the API method `updateRows()` should be used.
 :::
 
-## The `updateRows` method
+## The `updateRows()` method
 
-If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
+If you want to only update part of the rows, you can use the `apiRef.current.updateRows()` method.
 
 {{"demo": "UpdateRowsApiRef.js", "bg": "inline"}}
 
-The default behavior of `updateRows` API is to upsert rows.
+The default behavior of `updateRows()` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the Data Grid.
 
 Alternatively, if you would like to delete a row, you would need to pass an extra `_action` property in the update object as below.
@@ -33,7 +33,7 @@ apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
 :::info
-The community version of the Data Grid is limited to a single row update per `apiRef.current.updateRows` call.
+The community version of the Data Grid is limited to a single row update per `apiRef.current.updateRows()` call.
 Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 :::
 

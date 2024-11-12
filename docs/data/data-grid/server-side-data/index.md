@@ -136,7 +136,7 @@ The data source changes how the existing server-side features like `filtering`, 
 **Without data source**
 
 When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
-In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](https://mui.com/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](https://mui.com/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](https://mui.com/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
+In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
 
 ```tsx
 <DataGrid
