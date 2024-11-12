@@ -20,7 +20,7 @@ export interface StaticTimePickerSlotProps
     UseStaticPickerSlotProps<TimeView> {}
 
 export interface StaticTimePickerProps
-  extends Omit<BaseTimePickerProps<TimeView>, 'closeOnSelect'>,
+  extends BaseTimePickerProps<TimeView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.
