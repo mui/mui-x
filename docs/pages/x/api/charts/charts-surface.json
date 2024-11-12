@@ -1,8 +1,8 @@
 {
   "props": {
-    "height": { "type": { "name": "number" }, "required": true },
-    "width": { "type": { "name": "number" }, "required": true },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" }
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "width": { "type": { "name": "number" } }
   },
   "name": "ChartsSurface",
   "imports": [
