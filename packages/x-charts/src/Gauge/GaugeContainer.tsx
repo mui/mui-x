@@ -7,6 +7,7 @@ import { useChartContainerDimensions } from '../ChartContainer/useChartContainer
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
+import { SurfacePropsProvider } from '../context/SurfacePropsProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
@@ -99,17 +100,16 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
             cx={cx}
             cy={cy}
           >
-            <ChartsSurface
+            <SurfacePropsProvider
               width={width}
               height={height}
-              ref={chartSurfaceRef}
               title={title}
               desc={desc}
               disableAxisListener
               aria-hidden="true"
             >
-              {children}
-            </ChartsSurface>
+              <ChartsSurface ref={chartSurfaceRef}>{children}</ChartsSurface>
+            </SurfacePropsProvider>
           </GaugeProvider>
         </DrawingProvider>
       ) : null}
