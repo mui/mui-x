@@ -18,7 +18,7 @@ export type Aggregation = {
   [column: string]: AggregationFunction;
 };
 
-export type Response = {
+export type PromptResponse = {
   select: number;
   filters: Filter[];
   filterOperator?: 'and' | 'or';

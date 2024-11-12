@@ -1,11 +1,9 @@
-import { Response } from './apiTypes';
+import { PromptResponse } from './types';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
-const REMOTE_ENDPOINT = process.env.NODE_ENV === 'development' ? 'http://localhost:3007' : '';
-
-export function controls(context: string, query: string) {
-  return fetch(`${REMOTE_ENDPOINT}/api/datagrid-remote`, {
+export function processPrompt(url: string, context: string, query: string) {
+  return fetch(url, {
     mode: 'cors',
     method: 'post',
     headers: {
@@ -19,7 +17,7 @@ export function controls(context: string, query: string) {
     }),
   })
     .then((result) => result.json())
-    .then((result: Result<Response>) => {
+    .then((result: Result<PromptResponse>) => {
       if (result.ok === false) {
         return Promise.reject(new Error(result.message));
       }

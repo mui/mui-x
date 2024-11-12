@@ -1686,33 +1686,33 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControl",
-      "className": "MuiDataGrid-toolbarRemoteControl",
-      "description": "",
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGrid-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControl--recording",
-      "className": "MuiDataGrid-toolbarRemoteControl--recording",
-      "description": "",
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGrid-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlRecordButton",
-      "className": "MuiDataGrid-toolbarRemoteControlRecordButton",
-      "description": "",
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGrid-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlRecordingIndicator",
-      "className": "MuiDataGrid-toolbarRemoteControlRecordingIndicator",
-      "description": "",
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGrid-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlSendButton",
-      "className": "MuiDataGrid-toolbarRemoteControlSendButton",
-      "description": "",
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGrid-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

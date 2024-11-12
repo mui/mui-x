@@ -41,10 +41,11 @@ export interface GridLocaleText {
   toolbarQuickFilterLabel: string;
   toolbarQuickFilterDeleteIconLabel: string;
 
-  // Remote control toolbar field
-  toolbarRemoteControlPlaceholder: string;
-  toolbarRemoteControlLabel: string;
-  toolbarRemoteControlDeleteIconLabel: string;
+  // Prompt control toolbar field
+  toolbarPromptControlPlaceholder: string;
+  toolbarPromptControlRecordingPlaceholder: string;
+  toolbarPromptControlLabel: string;
+  toolbarPromptControlDeleteIconLabel: string;
 
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;

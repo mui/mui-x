@@ -1897,33 +1897,33 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControl",
-      "className": "MuiDataGridPremium-toolbarRemoteControl",
-      "description": "",
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGridPremium-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControl--recording",
-      "className": "MuiDataGridPremium-toolbarRemoteControl--recording",
-      "description": "",
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGridPremium-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlRecordButton",
-      "className": "MuiDataGridPremium-toolbarRemoteControlRecordButton",
-      "description": "",
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlRecordingIndicator",
-      "className": "MuiDataGridPremium-toolbarRemoteControlRecordingIndicator",
-      "description": "",
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
       "isGlobal": false
     },
     {
-      "key": "toolbarRemoteControlSendButton",
-      "className": "MuiDataGridPremium-toolbarRemoteControlSendButton",
-      "description": "",
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {
