@@ -15,7 +15,6 @@ export interface BaseFieldProps<
     ExportedUseClearableFieldProps {
   className?: string;
   format?: string;
-  disabled?: boolean;
   ref?: React.Ref<HTMLDivElement>;
   ownerState?: PickerOwnerState;
 }
