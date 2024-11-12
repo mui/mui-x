@@ -49,7 +49,7 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
    */
   yearsPerRow?: 3 | 4;
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
+   * If `true`, the Picker will close after submitting the full date.
    * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect?: boolean;

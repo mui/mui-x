@@ -231,7 +231,7 @@ DesktopDateTimeRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
+   * If `true`, the Picker will close after submitting the full date.
    * @default false
    */
   closeOnSelect: PropTypes.bool,

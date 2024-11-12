@@ -117,7 +117,7 @@ export interface BaseDateTimeRangePickerProps
    */
   viewRenderers?: Partial<DateTimeRangePickerRenderers<DateTimeRangePickerView>>;
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
+   * If `true`, the Picker will close after submitting the full date.
    * @default false
    */
   closeOnSelect?: boolean;

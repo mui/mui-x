@@ -40,7 +40,7 @@ export interface DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure exten
    */
   yearsPerRow?: 3 | 4;
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
+   * If `true`, the Picker will close after submitting the full date.
    * @default true
    */
   closeOnSelect?: boolean;

@@ -99,7 +99,7 @@ export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridie
    */
   viewRenderers?: Partial<DateTimePickerViewRenderers<TView>>;
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
+   * If `true`, the Picker will close after submitting the full date.
    * @default false
    */
   closeOnSelect?: boolean;
