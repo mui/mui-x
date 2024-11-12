@@ -9,7 +9,7 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -21,8 +21,8 @@ import {
 import { TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { PickerOwnerState, PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
-import { usePickersContext } from '../hooks';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { usePickerContext } from '../hooks';
 
 export interface TimePickerToolbarProps
   extends BaseToolbarProps<PickerValidDate | null, TimeViewWithMeridiem>,
@@ -169,10 +169,10 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     ...other
   } = props;
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const isRtl = useRtl();
-  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
-  const { disabled, readOnly } = usePickersContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const { disabled, readOnly } = usePickerContext();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);

@@ -13,7 +13,7 @@ import {
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { PickerOwnerState } from '../models/pickers';
-import { usePickersContext } from '../hooks/usePickersContext';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
@@ -108,7 +108,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
-  const { orientation, variant } = usePickersContext();
+  const { orientation, variant } = usePickerContext();
   const { sx, className, classes: classesProp } = props;
 
   const classes = useUtilityClasses(classesProp, ownerState);

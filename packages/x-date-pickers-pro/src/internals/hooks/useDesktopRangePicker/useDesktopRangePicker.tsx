@@ -10,7 +10,7 @@ import {
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
-  PickersProvider,
+  PickerProvider,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -203,7 +203,7 @@ export const useDesktopRangePicker = <
   const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"
@@ -227,7 +227,7 @@ export const useDesktopRangePicker = <
           {renderCurrentView()}
         </Layout>
       </PickersPopper>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return {

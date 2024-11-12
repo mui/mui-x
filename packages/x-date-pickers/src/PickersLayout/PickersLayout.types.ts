@@ -35,7 +35,7 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
   >;
 }
 
-export interface PickersLayoutOwnerState extends PickerOwnerState {
+export interface PickerLayoutOwnerState extends PickerOwnerState {
   isRtl: boolean;
 }
 

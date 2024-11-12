@@ -10,7 +10,7 @@ import {
   usePickerLayout,
 } from '../PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
-import { usePickersContext } from '../hooks/usePickersContext';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
@@ -24,7 +24,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
-  const { orientation } = usePickersContext();
+  const { orientation } = usePickerContext();
   const { sx, className, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
 
@@ -67,6 +67,17 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -78,6 +89,16 @@ DesktopDateTimePickerLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
+  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

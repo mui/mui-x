@@ -7,7 +7,7 @@ import {
   DIALOG_WIDTH,
   ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
-  PickersProvider,
+  PickerProvider,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -69,7 +69,7 @@ export const useStaticRangePicker = <
   };
 
   const renderPicker = () => (
-    <PickersProvider {...providerProps}>
+    <PickerProvider {...providerProps}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}
@@ -86,7 +86,7 @@ export const useStaticRangePicker = <
       >
         {renderCurrentView()}
       </Layout>
-    </PickersProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

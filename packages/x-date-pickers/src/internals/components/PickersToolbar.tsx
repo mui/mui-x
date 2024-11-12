@@ -7,7 +7,7 @@ import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { PickerOwnerState } from '../../models';
-import { usePickersPrivateContext } from '../hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<BaseToolbarProps<TValue, TView>, 'hidden' | 'titleId'> {
@@ -115,7 +115,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     ...other
   } = props;
 
-  const { ownerState } = usePickersPrivateContext();
+  const { ownerState } = usePickerPrivateContext();
   const classes = useUtilityClasses(classesProp, ownerState);
 
   if (hidden) {

@@ -4,10 +4,10 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import {
-  PickersProviderProps,
-  PickersContextValue,
-  PickersPrivateContextValue,
-} from '../../components/PickersProvider';
+  PickerProviderProps,
+  PickerContextValue,
+  PickerPrivateContextValue,
+} from '../../components/PickerProvider';
 import type { UsePickerProps } from './usePicker.types';
 import { DateOrTimeViewWithMeridiem, PickerOrientation, PickerVariant } from '../../models';
 import { useUtils } from '../useUtils';
@@ -90,7 +90,7 @@ export function usePickerProvider<TValue>(
     ],
   );
 
-  const contextValue = React.useMemo<PickersContextValue>(
+  const contextValue = React.useMemo<PickerContextValue>(
     () => ({
       onOpen: pickerValueResponse.actions.onOpen,
       onClose: pickerValueResponse.actions.onClose,
@@ -111,7 +111,7 @@ export function usePickerProvider<TValue>(
     ],
   );
 
-  const privateContextValue = React.useMemo<PickersPrivateContextValue>(
+  const privateContextValue = React.useMemo<PickerPrivateContextValue>(
     () => ({
       ownerState,
       variant,
@@ -128,7 +128,7 @@ export function usePickerProvider<TValue>(
 }
 
 export interface UsePickerProviderParameters<TValue>
-  extends Pick<PickersProviderProps, 'localeText'> {
+  extends Pick<PickerProviderProps, 'localeText'> {
   props: UsePickerProps<TValue, any, any, any, any>;
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
   valueManager: PickerValueManager<TValue, any>;
@@ -136,7 +136,7 @@ export interface UsePickerProviderParameters<TValue>
   views: readonly DateOrTimeViewWithMeridiem[];
 }
 
-export interface UsePickerProviderReturnValue extends Omit<PickersProviderProps, 'children'> {}
+export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
 
 /**
  * Props used to create the private context.

@@ -462,7 +462,7 @@ createTheme({
     },
     MuiPickersLayout: {
       defaultProps: {
-        disabled: true,
+        className: 'some classname',
         // @ts-expect-error invalid MuiPickersLayout prop
         someRandomProp: true,
       },

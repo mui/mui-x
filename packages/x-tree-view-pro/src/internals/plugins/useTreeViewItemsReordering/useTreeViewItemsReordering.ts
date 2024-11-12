@@ -249,14 +249,13 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 useTreeViewItemsReordering.itemPlugin = useTreeViewItemsReorderingItemPlugin;
 
 useTreeViewItemsReordering.getDefaultizedParams = ({ params, experimentalFeatures }) => {
-  const canUseFeature =
-    experimentalFeatures?.indentationAtItemLevel && experimentalFeatures?.itemsReordering;
+  const canUseFeature = experimentalFeatures?.itemsReordering;
 
   if (process.env.NODE_ENV !== 'production') {
     if (params.itemsReordering && !canUseFeature) {
       warnOnce([
-        'MUI X: The items reordering feature requires the `indentationAtItemLevel` and `itemsReordering` experimental features to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}` to the `<RichTreeViewPro />`component.',
+        'MUI X: The items reordering feature requires the `itemsReordering` experimental feature to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ itemsReordering: true }}` to the `<RichTreeViewPro />`component.',
         'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/items/',
       ]);
     }

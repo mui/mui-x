@@ -9,7 +9,7 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
@@ -24,8 +24,8 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerOwnerState, PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
-import { usePickersContext } from '../hooks/usePickersContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -253,15 +253,15 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   } = props;
 
   const isRtl = useRtl();
-  const { ownerState: pickerOwnerState } = usePickersPrivateContext();
-  const { orientation, variant, disabled, readOnly } = usePickersContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const { orientation, variant, disabled, readOnly } = usePickerContext();
   const ownerState: DateTimePickerToolbarOwnerState = { ...pickerOwnerState, isRtl };
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const showAmPmControl = Boolean(ampm && !ampmInClock);
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(classesProp, ownerState);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
@@ -426,6 +426,11 @@ DateTimePickerToolbar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
+  /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
@@ -437,6 +442,11 @@ DateTimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

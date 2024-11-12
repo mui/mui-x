@@ -21,7 +21,7 @@ import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReference
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { DIALOG_WIDTH, MAX_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const useUtilityClasses = (classes: Partial<YearCalendarClasses> | undefined) => {
   const slots = {
@@ -131,7 +131,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
   const now = useNow(timezone);
   const isRtl = useRtl();
   const utils = useUtils();
-  const { ownerState } = usePickersPrivateContext();
+  const { ownerState } = usePickerPrivateContext();
 
   const referenceDate = React.useMemo(
     () =>
@@ -349,7 +349,9 @@ YearCalendar.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true` picker is disabled
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -387,7 +389,9 @@ YearCalendar.propTypes = {
   onFocusedViewChange: PropTypes.func,
   onYearFocus: PropTypes.func,
   /**
-   * If `true` picker is readonly
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**

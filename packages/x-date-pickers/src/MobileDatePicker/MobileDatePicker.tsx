@@ -6,7 +6,7 @@ import { refType } from '@mui/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDate } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
@@ -37,7 +37,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<
   inProps: MobileDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers
@@ -126,7 +126,8 @@ MobileDatePicker.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,

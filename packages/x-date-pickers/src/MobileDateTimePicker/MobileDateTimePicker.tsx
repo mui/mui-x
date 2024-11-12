@@ -10,7 +10,7 @@ import {
   DateTimePickerViewRenderers,
   useDateTimePickerDefaultizedProps,
 } from '../DateTimePicker/shared';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateDateTime } from '../validation';
 import { DateOrTimeView, PickerOwnerState } from '../models';
@@ -41,7 +41,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
   inProps: MobileDateTimePickerProps<DateOrTimeView, TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
@@ -151,7 +151,8 @@ MobileDateTimePicker.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,

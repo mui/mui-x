@@ -9,7 +9,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
@@ -167,7 +167,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     valueManager: singleItemValueManager,
   });
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const now = useNow(timezone);
 
   const ownerState = React.useMemo(
@@ -400,7 +400,8 @@ DigitalClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -467,7 +468,8 @@ DigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,

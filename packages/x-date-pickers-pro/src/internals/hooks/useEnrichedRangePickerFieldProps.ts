@@ -16,7 +16,7 @@ import {
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
-  usePickersTranslations,
+  usePickerTranslations,
 } from '@mui/x-date-pickers/hooks';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
@@ -170,7 +170,7 @@ const useMultiInputFieldSlotProps = <
     TError
   >;
 
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
   const handleEndFieldRef = useForkRef(fieldProps.unstableEndFieldRef, endFieldRef);
 

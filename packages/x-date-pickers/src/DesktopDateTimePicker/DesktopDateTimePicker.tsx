@@ -13,7 +13,7 @@ import {
   DateTimePickerViewRenderers,
 } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
@@ -129,7 +129,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
   inProps: DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date time pickers
@@ -272,7 +272,8 @@ DesktopDateTimePicker.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,

@@ -80,7 +80,8 @@ TimePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,

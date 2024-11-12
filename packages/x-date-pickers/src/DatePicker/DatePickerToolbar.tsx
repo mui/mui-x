@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateView, PickerOwnerState, PickerValidDate } from '../models';
@@ -15,8 +15,8 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
-import { usePickersContext } from '../hooks';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { usePickerContext } from '../hooks';
 
 export interface DatePickerToolbarProps
   extends BaseToolbarProps<PickerValidDate | null, DateView>,
@@ -92,9 +92,9 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
   } = props;
 
   const utils = useUtils();
-  const translations = usePickersTranslations();
-  const { ownerState } = usePickersPrivateContext();
-  const { orientation } = usePickersContext();
+  const translations = usePickerTranslations();
+  const { ownerState } = usePickerPrivateContext();
+  const { orientation } = usePickerContext();
   const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
@@ -138,6 +138,11 @@ DatePickerToolbar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
+  /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
@@ -149,6 +154,11 @@ DatePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

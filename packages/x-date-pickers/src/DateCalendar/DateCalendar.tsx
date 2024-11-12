@@ -31,7 +31,7 @@ import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithT
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerOwnerState, PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 const useUtilityClasses = (classes: Partial<DateCalendarClasses> | undefined) => {
   const slots = {
@@ -105,7 +105,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
-  const { ownerState } = usePickersPrivateContext();
+  const { ownerState } = usePickerPrivateContext();
   const id = useId();
   const props = useDateCalendarDefaultizedProps(inProps, 'MuiDateCalendar');
 
@@ -436,7 +436,8 @@ DateCalendar.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -528,7 +529,8 @@ DateCalendar.propTypes = {
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
-   * Make picker read only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
