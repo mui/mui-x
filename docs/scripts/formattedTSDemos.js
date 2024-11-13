@@ -42,7 +42,7 @@ const babelConfig = {
 
 const workspaceRoot = path.join(__dirname, '../../');
 
-async function getFiles(root) {
+async function getFiles(root, excludeRoot = false) {
   const files = [];
 
   try {
@@ -57,7 +57,8 @@ async function getFiles(root) {
           stat.isFile() &&
           /\.tsx?$/.test(filePath) &&
           !filePath.endsWith('.d.ts') &&
-          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
+          !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath))) &&
+          !(excludeRoot && path.dirname(filePath) === root)
         ) {
           files.push(filePath);
         }
@@ -128,10 +129,8 @@ async function main(argv) {
 
   const tsxFiles = [
     ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
-    ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
+    ...(await getFiles(path.join(workspaceRoot, 'docs/data'), true)), // new structure
   ];
-
-  console.log(tsxFiles);
 
   const program = ts.createProgram({
     rootNames: tsxFiles,
