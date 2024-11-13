@@ -11,6 +11,7 @@ import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
 import { SurfacePropsProviderProps } from '../SurfacePropsProvider';
+import { SizeProviderProps } from '../SizeProvider';
 
 export const useChartDataProviderProps = (
   props: ChartDataProviderProps,
@@ -35,6 +36,7 @@ export const useChartDataProviderProps = (
     plugins,
     children,
     skipAnimation,
+    resolveSizeBeforeRender,
     ...other
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
@@ -43,8 +45,6 @@ export const useChartDataProviderProps = (
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
   const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    width,
-    height,
     margin,
     svgRef,
   };
@@ -90,6 +90,12 @@ export const useChartDataProviderProps = (
     disableAxisListener,
   };
 
+  const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
+    width,
+    height,
+    resolveSizeBeforeRender,
+  };
+
   return {
     children,
     drawingProviderProps,
@@ -102,5 +108,6 @@ export const useChartDataProviderProps = (
     animationProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
+    sizeProviderProps,
   };
 };

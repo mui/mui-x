@@ -4,8 +4,9 @@ import useId from '@mui/utils/useId';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
 import { Initializable } from './context.types';
+import { useSize } from './SizeProvider';
 
-export interface DrawingProviderProps extends LayoutConfig {
+export interface DrawingProviderProps extends Pick<LayoutConfig, 'margin'> {
   children: React.ReactNode;
   svgRef: React.RefObject<SVGSVGElement>;
 }
@@ -91,7 +92,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export function DrawingProvider(props: DrawingProviderProps) {
-  const { width, height, margin, svgRef, children } = props;
+  const { margin, svgRef, children } = props;
+  const { width, height } = useSize();
   const drawingArea = useChartDimensions(width, height, margin);
   const chartId = useId();
 

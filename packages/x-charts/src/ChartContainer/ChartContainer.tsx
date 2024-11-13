@@ -6,38 +6,21 @@ import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface } from '../ChartsSurface';
 
-export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width' | 'height'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender?: boolean;
-}
+export interface ChartContainerProps extends ChartDataProviderProps {}
 
 const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps, children } =
-    useChartContainerProps(props, ref);
+  const { chartDataProviderProps, children, resizableContainerProps } = useChartContainerProps(
+    props,
+    ref,
+  );
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ResizableContainer {...resizableChartContainerProps}>
-        {hasIntrinsicSize && <ChartsSurface>{children}</ChartsSurface>}
+      <ResizableContainer {...resizableContainerProps}>
+        <ChartsSurface>{children}</ChartsSurface>
       </ResizableContainer>
     </ChartDataProvider>
   );

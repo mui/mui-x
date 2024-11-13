@@ -1,15 +1,10 @@
 'use client';
 import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { useChartContainerDimensions } from './useChartContainerDimensions';
 
 export type UseChartContainerPropsReturnValue = {
-  hasIntrinsicSize: boolean;
   chartDataProviderProps: ChartDataProviderProps;
-  resizableChartContainerProps: {
-    ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
-    ref: React.Ref<HTMLDivElement>;
-  };
+  resizableContainerProps: any;
   children: React.ReactNode;
 };
 
@@ -40,17 +35,7 @@ export const useChartContainerProps = (
     ...other
   } = props;
 
-  const {
-    containerRef,
-    width: dWidth,
-    height: dHeight,
-  } = useChartContainerDimensions(width, height, resolveSizeBeforeRender);
-
-  const resizableChartContainerProps = {
-    ...other,
-    ownerState: { width, height },
-    ref: containerRef,
-  };
+  const resizableContainerProps = other;
 
   const chartDataProviderProps = {
     margin,
@@ -68,15 +53,14 @@ export const useChartContainerProps = (
     yAxis,
     zAxis,
     skipAnimation,
-    width: dWidth,
-    height: dHeight,
+    width,
+    height,
     ref,
   };
 
   return {
-    hasIntrinsicSize: Boolean(dWidth && dHeight),
     chartDataProviderProps,
-    resizableChartContainerProps,
+    resizableContainerProps,
     children,
   };
 };
