@@ -1,9 +1,8 @@
-import { InferNonNullablePickerValue, InferPickerValue } from '../internals/models/value';
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
 import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import type { Validator } from '../validation';
-import type { InferFieldSection, FieldValueType } from './fields';
+import type { FieldValueType } from './fields';
 
 // TODO: Rename PickerValueManager when the legacyValueManager object will be inlined.
 /**
@@ -62,31 +61,3 @@ interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extend
   extends MuiPickersAdapterContextValue {
   internalProps: TFieldInternalProps;
 }
-
-export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any>;
-
-/**
- * Infer all the usual generic in the picker packages from a `PickerValueManagerV8` interface.
- */
-export type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
-  TManager extends PickerValueManagerV8<
-    infer TIsRange,
-    infer TEnableAccessibleFieldDOMStructure,
-    infer TError,
-    infer TFieldInternalProps,
-    infer TFieldInternalPropsWithDefaults
-  >
-    ? {
-        // Generics
-        isRange: TIsRange;
-        enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
-        error: TError;
-        fieldInternalProps: TFieldInternalProps;
-        fieldInternalPropsWithDefaults: TFieldInternalPropsWithDefaults;
-
-        // Derived properties
-        value: InferPickerValue<TIsRange>;
-        nonNullableValue: InferNonNullablePickerValue<TIsRange>;
-        section: InferFieldSection<TIsRange>;
-      }
-    : never;

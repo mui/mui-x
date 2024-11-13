@@ -19,7 +19,11 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
-import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
+import {
+  PickerAnyValueManagerV8,
+  PickerManagerFieldInternalProps,
+  PickerManagerFieldInternalPropsWithDefaults,
+} from '../../models';
 
 /**
  * Applies the default values to the field internal props.
@@ -30,8 +34,8 @@ export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyValu
   internalProps,
 }: {
   valueManager: TManager;
-  internalProps: PickerManagerProperties<TManager>['fieldInternalProps'];
-}): PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'] => {
+  internalProps: PickerManagerFieldInternalProps<TManager>;
+}): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
   const localizationContext = useLocalizationContext();
   return React.useMemo(() => {
     return valueManager.applyDefaultsToFieldInternalProps({
