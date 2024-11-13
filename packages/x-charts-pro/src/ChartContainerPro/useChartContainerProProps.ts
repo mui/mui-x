@@ -10,10 +10,7 @@ export type UseChartContainerProPropsReturnValue = Omit<
   chartDataProviderProProps: ChartDataProviderProProps;
 };
 
-export const useChartContainerProProps = (
-  props: ChartContainerProProps,
-  ref: React.Ref<SVGSVGElement>,
-) => {
+export const useChartContainerProProps = (props: ChartContainerProProps) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 
   const chartDataProviderProProps: Pick<ChartDataProviderProProps, 'zoom' | 'onZoomChange'> = {
@@ -21,16 +18,16 @@ export const useChartContainerProProps = (
     onZoomChange,
   };
 
-  const { chartDataProviderProps, resizableChartContainerProps, hasIntrinsicSize, children } =
-    useChartContainerProps(baseProps, ref);
+  const { chartDataProviderProps, chartsSurfaceProps, resizableContainerProps, children } =
+    useChartContainerProps(baseProps);
 
   return {
     chartDataProviderProProps: {
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
     },
-    resizableChartContainerProps,
-    hasIntrinsicSize,
+    resizableContainerProps,
+    chartsSurfaceProps,
     children,
   };
 };

@@ -3,10 +3,7 @@ import { useChartDataProviderProps } from '@mui/x-charts/internals';
 import { ZoomProviderProps } from '../ZoomProvider';
 import type { ChartDataProviderProProps } from './ChartDataProviderPro';
 
-export const useChartContainerProProps = (
-  props: ChartDataProviderProProps,
-  ref: React.Ref<SVGSVGElement>,
-) => {
+export const useChartContainerProProps = (props: ChartDataProviderProProps) => {
   const { zoom, onZoomChange, ...baseProps } = props;
 
   const {
@@ -16,12 +13,12 @@ export const useChartContainerProProps = (
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    surfacePropsProviderProps,
+    sizeProviderProps,
     pluginProviderProps,
     animationProviderProps,
     xAxis,
     yAxis,
-  } = useChartDataProviderProps(baseProps, ref);
+  } = useChartDataProviderProps(baseProps);
 
   const zoomProviderProps: Omit<ZoomProviderProps, 'children'> = {
     zoom,
@@ -39,7 +36,7 @@ export const useChartContainerProProps = (
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    surfacePropsProviderProps,
+    sizeProviderProps,
     animationProviderProps,
   };
 };
