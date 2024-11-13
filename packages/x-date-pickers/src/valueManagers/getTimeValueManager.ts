@@ -36,6 +36,8 @@ export interface TimeFieldInternalPropsWithDefaults<
 > extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
     ValidateTimeProps {}
 
+type TimeFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
+
 export const getTimeFieldInternalPropsDefaults = <
   TEnableAccessibleFieldDOMStructure extends boolean,
 >({
@@ -44,23 +46,27 @@ export const getTimeFieldInternalPropsDefaults = <
 }: Pick<MuiPickersAdapterContextValue, 'utils'> & {
   internalProps: Pick<
     TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'ampm' | ValidateTimePropsToDefault
+    TimeFieldPropsToDefault | 'ampm'
   >;
-}) => {
+}): Pick<
+  TimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
+  TimeFieldPropsToDefault
+> => {
   const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
 
   return {
-    ampm,
     disablePast: internalProps.disablePast ?? false,
     disableFuture: internalProps.disableFuture ?? false,
     format: internalProps.format ?? defaultFormat,
   };
 };
 
-export const getTimeValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = false>(
-  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
-): TimeValueManager<TEnableAccessibleFieldDOMStructure> => ({
+export const getTimeValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = true>({
+  enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
+}: {
+  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure | undefined;
+}): TimeValueManager<TEnableAccessibleFieldDOMStructure> => ({
   legacyValueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateTime,

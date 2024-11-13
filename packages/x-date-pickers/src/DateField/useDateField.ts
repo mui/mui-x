@@ -12,7 +12,10 @@ export const useDateField = <
   props: TAllProps,
 ) => {
   const valueManager = React.useMemo(
-    () => getDateValueManager(props.enableAccessibleFieldDOMStructure),
+    () =>
+      getDateValueManager({
+        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+      }),
     [props.enableAccessibleFieldDOMStructure],
   );
 

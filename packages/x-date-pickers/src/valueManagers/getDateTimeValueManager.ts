@@ -37,6 +37,13 @@ export interface DateTimeFieldInternalPropsWithDefaults<
 > extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateTimeValidationError>,
     ValidateDateTimeProps {}
 
+type DateTimeFieldPropsToDefault =
+  | 'format'
+  // minTime and maxTime can still be undefined after applying defaults.
+  | 'minTime'
+  | 'maxTime'
+  | ValidateDateTimePropsToDefault;
+
 export const getDateTimeFieldInternalPropsDefaults = <
   TEnableAccessibleFieldDOMStructure extends boolean,
 >({
@@ -46,22 +53,18 @@ export const getDateTimeFieldInternalPropsDefaults = <
 }: Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> & {
   internalProps: Pick<
     DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    | 'format'
-    | 'ampm'
-    | 'minDateTime'
-    | 'maxDateTime'
-    | 'minTime'
-    | 'maxTime'
-    | ValidateDateTimePropsToDefault
+    DateTimeFieldPropsToDefault | 'minDateTime' | 'maxDateTime' | 'ampm'
   >;
-}) => {
+}): Pick<
+  DateTimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
+  DateTimeFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
+> => {
   const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm
     ? utils.formats.keyboardDateTime12h
     : utils.formats.keyboardDateTime24h;
 
   return {
-    ampm,
     disablePast: internalProps.disablePast ?? false,
     disableFuture: internalProps.disableFuture ?? false,
     format: internalProps.format ?? defaultFormat,
@@ -83,9 +86,11 @@ export const getDateTimeFieldInternalPropsDefaults = <
   };
 };
 
-export const getDateTimeValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = false>(
-  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
-): DateTimeValueManager<TEnableAccessibleFieldDOMStructure> => ({
+export const getDateTimeValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = true>({
+  enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
+}: {
+  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure | undefined;
+}): DateTimeValueManager<TEnableAccessibleFieldDOMStructure> => ({
   legacyValueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDateTime,

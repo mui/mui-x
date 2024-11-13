@@ -22,9 +22,15 @@ export interface PickerValueManagerV8<
     TError
   >,
 > {
-  // The v7 value manager object.
-  // This will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
+  /**
+   * Object containing basic methods to interact with the value of the picker or field.
+   * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
+   */
   legacyValueManager: PickerValueManager<TIsRange, TError>;
+  /**
+   * Object containing all the necessary methods to interact with the value of the field.
+   * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
+   */
   fieldValueManager: FieldValueManager<TIsRange>;
   /**
    * Checks if a value is valid and returns an error code otherwise.
@@ -45,6 +51,10 @@ export interface PickerValueManagerV8<
    * The type of the value (e.g. 'date', 'date-time', 'time').
    */
   valueType: FieldValueType;
+  /**
+   * `true` if the field is using the accessible DOM structure.
+   * `false` if the field is using the non-accessible legacy DOM structure (which will be deprecated and removed in the future).
+   */
   enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -55,10 +65,8 @@ interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extend
 
 export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any>;
 
-export type PickerAnyAccessibleValueManagerV8 = PickerValueManagerV8<any, true, any, any, any>;
-
 /**
- * Infer all the usual generic in the picker packages from a `PickerValueManager` interface.
+ * Infer all the usual generic in the picker packages from a `PickerValueManagerV8` interface.
  */
 export type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
   TManager extends PickerValueManagerV8<

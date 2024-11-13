@@ -35,6 +35,8 @@ export interface DateFieldInternalPropsWithDefaults<
 > extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateValidationError>,
     ValidateDateProps {}
 
+type DateFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
+
 export const getDateFieldInternalPropsDefaults = <
   TEnableAccessibleFieldDOMStructure extends boolean,
 >({
@@ -44,19 +46,24 @@ export const getDateFieldInternalPropsDefaults = <
 }: Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> & {
   internalProps: Pick<
     DateFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | ValidateDatePropsToDefault
+    DateFieldPropsToDefault
   >;
-}) => ({
+}): Pick<
+  DateFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
+  DateFieldPropsToDefault
+> => ({
+  format: internalProps.format ?? utils.formats.keyboardDate,
   disablePast: internalProps.disablePast ?? false,
   disableFuture: internalProps.disableFuture ?? false,
-  format: internalProps.format ?? utils.formats.keyboardDate,
   minDate: applyDefaultDate(utils, internalProps.minDate, defaultDates.minDate),
   maxDate: applyDefaultDate(utils, internalProps.maxDate, defaultDates.maxDate),
 });
 
-export const getDateValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = false>(
-  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
-): DateValueManager<TEnableAccessibleFieldDOMStructure> => ({
+export const getDateValueManager = <TEnableAccessibleFieldDOMStructure extends boolean = true>({
+  enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
+}: {
+  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure | undefined;
+}): DateValueManager<TEnableAccessibleFieldDOMStructure> => ({
   legacyValueManager: singleItemValueManager,
   fieldValueManager: singleItemFieldValueManager,
   validator: validateDate,
