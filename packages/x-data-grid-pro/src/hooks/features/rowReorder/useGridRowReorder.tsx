@@ -10,7 +10,7 @@ import {
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
-  gridExpandedSortedRowEntriesSelector,
+  gridRowIndexLookupSelector,
 } from '@mui/x-data-grid';
 import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
@@ -64,15 +64,7 @@ export const useGridRowReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
-  const rows = gridExpandedSortedRowEntriesSelector(apiRef);
-  const lookup = React.useMemo(
-    () =>
-      rows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
-        acc[id] = index;
-        return acc;
-      }, {}),
-    [rows],
-  );
+  const lookup = useGridSelector(apiRef, gridRowIndexLookupSelector);
   const getRowIndex = React.useCallback((id: GridRowId) => lookup[id], [lookup]);
 
   React.useEffect(() => {

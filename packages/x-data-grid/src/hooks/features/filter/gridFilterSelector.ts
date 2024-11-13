@@ -248,3 +248,13 @@ export const gridFilterActiveItemsLookupSelector = createSelectorMemoized(
     return result;
   },
 );
+
+export const gridRowIndexLookupSelector = createSelectorMemoized(
+  gridExpandedSortedRowEntriesSelector,
+  (visibleSortedRows) => {
+    return visibleSortedRows.reduce<Record<GridRowId, number>>((acc, { id }, index) => {
+      acc[id] = index;
+      return acc;
+    }, {});
+  },
+);
