@@ -16,7 +16,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
 
-  const store = useStore();
+  const store = useStore(disableAxisListener);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];

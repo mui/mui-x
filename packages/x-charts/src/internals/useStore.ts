@@ -1,9 +1,16 @@
 import * as React from 'react';
 import { ChartsContext } from '../context/InteractionProvider';
 
-export function useStore() {
+export function useStore(skip?: boolean) {
   const charts = React.useContext(ChartsContext);
 
+  if (skip === undefined) {
+    // This line is only for `useAxisEvents` which is in the surface of the Gauge.
+    // But the Gauge don't have store yet because it does not need the interaction provider.
+    // Will be fixed when every thing move to the store since every component will have access to it.
+    // @ts-ignore
+    return charts.store;
+  }
   if (!charts) {
     throw new Error(
       [
