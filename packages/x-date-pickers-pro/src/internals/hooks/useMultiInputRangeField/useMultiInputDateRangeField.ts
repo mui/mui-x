@@ -1,3 +1,4 @@
+import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import {
@@ -6,26 +7,24 @@ import {
   PickerRangeValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
-  useDefaultizedDateField,
+  useLocalizationContext,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { DateValidationError } from '@mui/x-date-pickers/models';
-import {
-  UseMultiInputDateRangeFieldParams,
-  UseMultiInputDateRangeFieldProps,
-} from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
+import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { validateDateRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { DateRangeValidationError } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
+import { getDateRangeValueManager } from '../../../valueManagers';
 
 export const useMultiInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
-  sharedProps: inSharedProps,
+  sharedProps,
   startTextFieldProps,
   unstableStartFieldRef,
   endTextFieldProps,
@@ -34,10 +33,24 @@ export const useMultiInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
-  const sharedProps = useDefaultizedDateField<
-    UseMultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    typeof inSharedProps
-  >(inSharedProps);
+  const valueManager = React.useMemo(
+    () =>
+      getDateRangeValueManager({
+        enableAccessibleFieldDOMStructure: sharedProps.enableAccessibleFieldDOMStructure,
+        dateSeparator: sharedProps.dateSeparator,
+      }),
+    [sharedProps.enableAccessibleFieldDOMStructure, sharedProps.dateSeparator],
+  );
+
+  const localizationContext = useLocalizationContext();
+  const sharedPropsWithDefaults = React.useMemo(
+    () =>
+      valueManager.applyDefaultsToFieldInternalProps({
+        ...localizationContext,
+        internalProps: sharedProps,
+      }),
+    [sharedProps, localizationContext, valueManager],
+  );
 
   const {
     value: valueProp,
@@ -53,7 +66,7 @@ export const useMultiInputDateRangeField = <
     timezone: timezoneProp,
     enableAccessibleFieldDOMStructure,
     autoFocus,
-  } = sharedProps;
+  } = sharedPropsWithDefaults;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputDateRangeField',
@@ -65,11 +78,11 @@ export const useMultiInputDateRangeField = <
   });
 
   const { validationError, getValidationErrorForNewValue } = useValidation({
-    props: sharedProps,
+    props: sharedPropsWithDefaults,
     value,
     timezone,
     validator: validateDateRange,
-    onError: sharedProps.onError,
+    onError: sharedPropsWithDefaults.onError,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic

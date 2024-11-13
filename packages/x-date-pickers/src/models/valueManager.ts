@@ -1,4 +1,4 @@
-import { InferPickerValue } from '../internals/models/value';
+import { InferNonNullablePickerValue, InferPickerValue } from '../internals/models/value';
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
 import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
@@ -78,6 +78,7 @@ export type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
 
         // Derived properties
         value: InferPickerValue<TIsRange>;
+        nonNullableValue: InferNonNullablePickerValue<TIsRange>;
         section: InferFieldSection<TIsRange>;
       }
     : never;

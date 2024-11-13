@@ -1,38 +1,38 @@
 'use client';
-import {
-  singleItemFieldValueManager,
-  singleItemValueManager,
-} from '../internals/utils/valueManagers';
-import { useField } from '../internals/hooks/useField';
+import * as React from 'react';
+import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
-import { validateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { getTimeValueManager } from '../valueManagers';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedTimeField<
-    UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
+  const valueManager = React.useMemo(
+    () => getTimeValueManager(props.enableAccessibleFieldDOMStructure),
+    [props.enableAccessibleFieldDOMStructure],
+  );
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    valueManager,
+    internalProps,
+  });
 
   return useField<
     false,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: singleItemValueManager,
-    fieldValueManager: singleItemFieldValueManager,
-    validator: validateTime,
-    valueType: 'time',
+    internalProps: internalPropsWithDefaults,
+    valueManager: valueManager.legacyValueManager,
+    fieldValueManager: valueManager.fieldValueManager,
+    validator: valueManager.validator,
+    valueType: valueManager.valueType,
   });
 };

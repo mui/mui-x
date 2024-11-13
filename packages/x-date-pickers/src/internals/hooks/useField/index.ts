@@ -1,4 +1,4 @@
-export { useField } from './useField';
+export { useField, useFieldInternalPropsWithDefaults } from './useField';
 export type {
   FieldValueManager,
   UseFieldInternalProps,

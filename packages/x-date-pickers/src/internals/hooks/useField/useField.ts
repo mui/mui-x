@@ -21,41 +21,62 @@ import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import { PickerAnyValueManagerV8, PickerManagerProperties } from '../../../models';
 
-export const useField = <
-  TManager extends PickerAnyValueManagerV8,
-  TForwardedProps extends UseFieldCommonForwardedProps &
-    UseFieldForwardedProps<PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure']>,
->(
-  params: UseFieldParams<TManager, TForwardedProps>,
-): UseFieldResponse<
-  PickerManagerProperties<TManager>['enableAccessibleFieldDOMStructure'],
-  TForwardedProps
-> => {
-  type Properties = PickerManagerProperties<TManager>;
-  type TIsRange = Properties['isRange'];
-  type TEnableAccessibleFieldDOMStructure = Properties['enableAccessibleFieldDOMStructure'];
-
-  const utils = useUtils();
+/**
+ * Applies the default values to the field internal props.
+ * This will be moved inside `useField` and is only here to allow the migration to be done in smaller steps.
+ */
+export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyValueManagerV8>({
+  valueManager,
+  internalProps,
+}: {
+  valueManager: TManager;
+  internalProps: PickerManagerProperties<TManager>['fieldInternalProps'];
+}): PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'] => {
   const localizationContext = useLocalizationContext();
+  return React.useMemo(() => {
+    return valueManager.applyDefaultsToFieldInternalProps({
+      ...localizationContext,
+      internalProps,
+    });
+  }, [valueManager, internalProps, localizationContext]);
+};
+
+export const useField = <
+  TIsRange extends boolean,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+  TForwardedProps extends UseFieldCommonForwardedProps &
+    UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
+  TInternalProps extends UseFieldInternalProps<
+    TIsRange,
+    TEnableAccessibleFieldDOMStructure,
+    any
+  > & {
+    minutesStep?: number;
+  },
+>(
+  params: UseFieldParams<
+    TIsRange,
+    TEnableAccessibleFieldDOMStructure,
+    TForwardedProps,
+    TInternalProps
+  >,
+): UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps> => {
+  const utils = useUtils();
 
   const {
     internalProps,
+    internalProps: {
+      unstableFieldRef,
+      minutesStep,
+      enableAccessibleFieldDOMStructure = true,
+      disabled = false,
+      readOnly = false,
+    },
     forwardedProps: { onKeyDown, error, clearable, onClear },
+    fieldValueManager,
     valueManager,
+    validator,
   } = params;
-
-  const internalPropsWithDefaults = React.useMemo(
-    () => valueManager.applyDefaultsToFieldInternalProps({ ...localizationContext, internalProps }),
-    [internalProps, localizationContext, valueManager],
-  );
-
-  const {
-    unstableFieldRef,
-    minutesStep,
-    enableAccessibleFieldDOMStructure = true,
-    disabled = false,
-    readOnly = false,
-  } = internalPropsWithDefaults;
 
   const isRtl = useRtl();
 
@@ -85,10 +106,10 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.legacyValueManager.areValuesEqual(
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
     utils,
     state.value,
-    valueManager.legacyValueManager.emptyValue,
+    valueManager.emptyValue,
   );
 
   const useFieldTextField = (
@@ -188,7 +209,7 @@ export const useField = <
         }
 
         const activeSection = state.sections[activeSectionIndex];
-        const activeDateManager = valueManager.fieldValueManager.getActiveDateManager(
+        const activeDateManager = fieldValueManager.getActiveDateManager(
           utils,
           state,
           activeSection,
@@ -220,8 +241,8 @@ export const useField = <
   });
 
   const { hasValidationError } = useValidation({
-    props: internalPropsWithDefaults,
-    validator: valueManager.validator,
+    props: internalProps,
+    validator,
     timezone,
     value: state.value,
     onError: internalProps.onError,

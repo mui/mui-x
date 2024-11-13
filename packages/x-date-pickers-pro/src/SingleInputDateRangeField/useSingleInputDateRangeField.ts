@@ -1,40 +1,37 @@
 'use client';
 import * as React from 'react';
-import { useField, useDefaultizedDateField } from '@mui/x-date-pickers/internals';
+import { useField, useFieldInternalPropsWithDefaults } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateRange } from '../validation';
+import { getDateRangeValueManager } from '../valueManagers';
 
 export const useSingleInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<
-    UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
+  const valueManager = React.useMemo(
+    () =>
+      getDateRangeValueManager({
+        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
+        dateSeparator: props.dateSeparator,
+      }),
+    [props.enableAccessibleFieldDOMStructure, props.dateSeparator],
   );
 
-  return useField<
-    true,
-    TEnableAccessibleFieldDOMStructure,
-    typeof forwardedProps,
-    typeof internalProps
-  >({
-    forwardedProps,
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    valueManager,
     internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateRange,
-    valueType: 'date',
+  });
+
+  return useField({
+    forwardedProps,
+    internalProps: internalPropsWithDefaults,
+    valueManager: valueManager.legacyValueManager,
+    fieldValueManager: valueManager.fieldValueManager,
+    validator: valueManager.validator,
+    valueType: valueManager.valueType,
   });
 };
