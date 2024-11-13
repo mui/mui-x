@@ -227,6 +227,7 @@ describe('<DataGridPro /> - Row reorder', () => {
                 paginationModel: { pageSize: 2 },
               },
             }}
+            pageSizeOptions={[2]}
           />
         </div>
       );
