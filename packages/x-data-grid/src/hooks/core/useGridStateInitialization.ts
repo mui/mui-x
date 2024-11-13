@@ -9,7 +9,7 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
   apiRef: React.MutableRefObject<PrivateApi>,
 ) => {
   const controlStateMapRef = React.useRef<
-    Record<string, GridControlStateItem<PrivateApi['state'], any>>
+    Record<string, GridControlStateItem<PrivateApi['state'], any, any>>
   >({});
   const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
 

@@ -7,7 +7,6 @@ import {
   GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
-import { useGridSelectorV8 } from '@mui/x-data-grid/internals';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -54,8 +53,8 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;
 
-  const isDataLoading = useGridSelectorV8(apiRef, gridDataSourceLoadingIdSelector, id);
-  const error = useGridSelectorV8(apiRef, gridDataSourceErrorSelector, id);
+  const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
+  const error = useGridSelector(apiRef, gridDataSourceErrorSelector, id);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
