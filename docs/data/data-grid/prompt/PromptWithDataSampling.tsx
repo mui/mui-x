@@ -9,7 +9,9 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 
 const REMOTE_ENDPOINT =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3007' : '';
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost'
+    : 'https://mui.com/x/api/data-grid';
 
 function ToolbarWithPromptInput() {
   return (
