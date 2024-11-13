@@ -7,23 +7,9 @@ import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSurfaceProps } from '../context/SurfacePropsProvider';
+import { useDrawingArea } from '../hooks';
 
-type ViewBox = {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-};
 export interface ChartsSurfaceProps {
-  /**
-   * The width of the chart in px.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px.
-   */
-  height?: number;
-  viewBox?: ViewBox;
   className?: string;
   title?: string;
   desc?: string;
@@ -51,23 +37,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const contextProps = useSurfaceProps();
+  const { width, height } = useDrawingArea();
   const resolvedProps = resolveProps(inProps as any, contextProps) as ChartsSurfaceProps;
 
   const themeProps = useThemeProps({ props: resolvedProps, name: 'MuiChartsSurface' });
   const surfaceRef = useForkRef(ref, contextProps.ref);
 
-  const {
-    children,
-    width,
-    height,
-    viewBox,
-    disableAxisListener = false,
-    className,
-    title,
-    desc,
-    ...other
-  } = themeProps;
-  const svgView = { width, height, x: 0, y: 0, ...viewBox };
+  const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
+  const svgView = { width, height, x: 0, y: 0 };
 
   useAxisEvents(disableAxisListener);
 

@@ -5,10 +5,7 @@ import { SurfacePropsContextState } from './SurfaceProps.types';
 
 export const SurfacePropsContext = React.createContext<Initializable<SurfacePropsContextState>>({
   isInitialized: false,
-  data: {
-    width: 0,
-    height: 0,
-  },
+  data: {},
 });
 
 if (process.env.NODE_ENV !== 'production') {
