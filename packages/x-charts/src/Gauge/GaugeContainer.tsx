@@ -3,11 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import { useChartContainerDimensions } from '../ChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { SurfacePropsProvider } from '../context/SurfacePropsProvider';
+import { SizeProvider, useSize } from '../context/SizeProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
@@ -24,7 +23,7 @@ export interface GaugeContainerProps
   children?: React.ReactNode;
 }
 
-const ResizableContainer = styled('div', {
+const ResizableContainerRoot = styled('div', {
   name: 'MuiGauge',
   slot: 'Container',
 })<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
@@ -46,6 +45,20 @@ const ResizableContainer = styled('div', {
   },
 }));
 
+export function ResizableContainer(props: any) {
+  const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
+
+  return (
+    <ResizableContainerRoot
+      {...props}
+      ownerState={{ width: inWidth, height: inHeight }}
+      ref={containerRef}
+    >
+      {hasIntrinsicSize && props.children}
+    </ResizableContainerRoot>
+  );
+}
+
 const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeContainerProps, ref) {
   const {
     width: inWidth,
@@ -66,53 +79,48 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
     children,
     ...other
   } = props;
-  const { containerRef, width, height } = useChartContainerDimensions(inWidth, inHeight);
 
   const svgRef = React.useRef<SVGSVGElement>(null);
   const chartSurfaceRef = useForkRef(ref, svgRef);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: inWidth, height: inHeight }}
-      role="meter"
-      aria-valuenow={value === null ? undefined : value}
-      aria-valuemin={valueMin}
-      aria-valuemax={valueMax}
-      {...other}
-    >
-      {width && height ? (
-        <DrawingProvider
-          width={width}
-          height={height}
-          margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
-          svgRef={svgRef}
+    <SizeProvider width={inWidth} height={inHeight}>
+      <DrawingProvider
+        margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
+        svgRef={svgRef}
+      >
+        <GaugeProvider
+          value={value}
+          valueMin={valueMin}
+          valueMax={valueMax}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          outerRadius={outerRadius}
+          innerRadius={innerRadius}
+          cornerRadius={cornerRadius}
+          cx={cx}
+          cy={cy}
         >
-          <GaugeProvider
-            value={value}
-            valueMin={valueMin}
-            valueMax={valueMax}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            outerRadius={outerRadius}
-            innerRadius={innerRadius}
-            cornerRadius={cornerRadius}
-            cx={cx}
-            cy={cy}
+          <ResizableContainer
+            role="meter"
+            aria-valuenow={value === null ? undefined : value}
+            aria-valuemin={valueMin}
+            aria-valuemax={valueMax}
+            {...other}
           >
-            <SurfacePropsProvider
+            <ChartsSurface
               title={title}
               desc={desc}
               disableAxisListener
               aria-hidden="true"
               ref={chartSurfaceRef}
             >
-              <ChartsSurface>{children}</ChartsSurface>
-            </SurfacePropsProvider>
-          </GaugeProvider>
-        </DrawingProvider>
-      ) : null}
-    </ResizableContainer>
+              {children}
+            </ChartsSurface>
+          </ResizableContainer>
+        </GaugeProvider>
+      </DrawingProvider>
+    </SizeProvider>
   );
 });
 
