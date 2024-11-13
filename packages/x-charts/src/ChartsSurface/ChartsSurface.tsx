@@ -88,26 +88,12 @@ ChartsSurface.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * The height of the chart in px.
-   */
-  height: PropTypes.number,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
-  /**
-   * The width of the chart in px.
-   */
-  width: PropTypes.number,
 } as any;
 
 export { ChartsSurface };

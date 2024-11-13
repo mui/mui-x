@@ -102,9 +102,6 @@ ChartDataProvider.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * The height of the chart in px.
-   */
   height: PropTypes.number.isRequired,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
@@ -153,15 +150,6 @@ ChartDataProvider.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
-  /**
-   * The width of the chart in px.
-   */
   width: PropTypes.number.isRequired,
   /**
    * The configuration of the x-axes.
