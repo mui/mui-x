@@ -1,0 +1,13 @@
+ARG NODE_VERSION=22
+FROM node:$NODE_VERSION
+
+ARG WORKDIR=/mnt/app
+ENV WORKDIR=$WORKDIR
+WORKDIR $WORKDIR
+
+RUN npm install -g pnpm@9.12.3
+
+RUN printf "export LS_OPTIONS='--color=auto'\n" >> /root/.bashrc
+RUN printf "alias ll='ls \${LS_OPTIONS} -l'\n" >> /root/.bashrc
+RUN printf "export PATH=\${WORKDIR}/node_modules/.bin:\${PATH}\n" >> /root/.bashrc
+RUN printf "PS1='\$PROJECT_NAME:\w\$ '" >> /root/.bashrc
