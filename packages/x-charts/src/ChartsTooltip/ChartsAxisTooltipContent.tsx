@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
   ChartsTooltipMark,
@@ -21,17 +21,16 @@ export type ChartsAxisContentProps = {
   sx?: SxProps<Theme>;
 };
 
-/**
- * @ignore - internal component.
- */
 function ChartsAxisTooltipContent(props: {
   sx?: SxProps<Theme>;
   classes: ChartsAxisContentProps['classes'];
 }) {
-  const { classes, sx } = props;
+  const { classes: propClasses, sx } = props;
   const tootlipData = useAxisTooltip();
   const xAxis = useXAxis();
   const yAxis = useYAxis();
+
+  const classes = useUtilityClasses(propClasses);
 
   if (tootlipData === null) {
     return null;

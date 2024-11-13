@@ -1,6 +1,11 @@
 export * from './ChartsTooltip';
 export * from './ChartsTooltipContainer';
-export * from './chartsTooltipClasses';
+export {
+  ChartsTooltipClasses,
+  ChartsTooltipClassKey,
+  getChartsTooltipUtilityClass,
+  chartsTooltipClasses,
+} from './chartsTooltipClasses';
 
 export * from './ChartsAxisTooltipContent';
 export * from './ChartsItemTooltipContent';

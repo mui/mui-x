@@ -61,6 +61,6 @@
     "line": "The component that renders the line.",
     "lineHighlight": "",
     "mark": "",
-    "popper": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

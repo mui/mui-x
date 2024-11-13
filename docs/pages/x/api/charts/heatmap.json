@@ -73,10 +73,7 @@
       "additionalInfo": { "slotsApi": true }
     },
     "tooltip": {
-      "type": {
-        "name": "shape",
-        "description": "{ classes?: object, slotProps?: object, slots?: object, trigger?: 'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none' }"
-      },
+      "type": { "name": "object" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
     },
     "topAxis": {

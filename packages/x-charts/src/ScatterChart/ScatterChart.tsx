@@ -12,12 +12,7 @@ import {
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -39,14 +34,20 @@ export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
+  tooltip?: React.ElementType<ChartsTooltipProps>;
+}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps {
+  tooltip?: Partial<ChartsTooltipProps>;
+}
 
 export interface ScatterChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins'>,
@@ -59,12 +60,6 @@ export interface ScatterChartProps
    * An array of [[ScatterSeriesType]] objects.
    */
   series: MakeOptional<ScatterSeriesType, 'type'>[];
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip?: ChartsTooltipProps;
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
@@ -127,9 +122,11 @@ const ScatterChart = React.forwardRef(function ScatterChart(
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   } = useScatterChartProps(props);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
   return (
     <ChartContainer ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
@@ -143,7 +140,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         <ChartsOverlay {...overlayProps} />
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
         {children}
       </ZAxisContextProvider>
     </ChartContainer>
@@ -292,17 +289,6 @@ ScatterChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    classes: PropTypes.object,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
   /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.

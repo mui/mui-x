@@ -9,8 +9,9 @@ import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { useDrawingArea, useSvgRef } from '../hooks';
-import { useHighlighted, useStore } from '../context';
+import { useHighlighted } from '../context';
 import { useScatterSeries } from '../hooks/useSeries';
+import { useStore } from '../internals/useStore';
 
 export type ChartsVoronoiHandlerProps = {
   /**

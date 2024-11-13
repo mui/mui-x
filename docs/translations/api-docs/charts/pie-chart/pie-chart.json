@@ -35,10 +35,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -56,6 +52,6 @@
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",
     "pieArcLabel": "",
-    "popper": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

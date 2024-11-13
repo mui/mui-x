@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
-import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -13,20 +13,18 @@ import {
 
 export interface ChartsItemTooltipContentProps {
   sx?: SxProps<Theme>;
-  classes: ChartsTooltipClasses;
+  classes?: ChartsTooltipClasses;
 }
 
-/**
- * @ignore - internal component.
- */
 function ChartsItemTooltipContent(props: ChartsItemTooltipContentProps) {
-  const { classes, sx } = props;
+  const { classes: propClasses, sx } = props;
   const tooltipData = useItemTooltip();
+
+  const classes = useUtilityClasses(propClasses);
 
   if (!tooltipData) {
     return null;
   }
-
   const { color, label, formattedValue } = tooltipData;
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ItemInteractionData, useStore } from '../context/InteractionProvider';
+import { ItemInteractionData } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
@@ -14,6 +14,7 @@ import { getLabel } from '../internals/getLabel';
 import { CommonSeriesType } from '../models/seriesType/common';
 import { useSelector } from '../internals/useSelector';
 import { selectorChartsInteractionItem } from '../context/InteractionSelectors';
+import { useStore } from '../internals/useStore';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
   identifier: ItemInteractionData<T>;

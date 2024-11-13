@@ -56,12 +56,20 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisHighlight',
   },
   {
+    pathname: '/x/api/charts/charts-axis-tooltip-content',
+    title: 'ChartsAxisTooltipContent',
+  },
+  {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },
   {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
+  },
+  {
+    pathname: '/x/api/charts/charts-item-tooltip-content',
+    title: 'ChartsItemTooltipContent',
   },
   {
     pathname: '/x/api/charts/charts-legend',

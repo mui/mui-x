@@ -97,7 +97,7 @@
     { "name": "lineHighlight", "description": "", "class": null },
     { "name": "mark", "description": "", "class": null },
     {
-      "name": "popper",
+      "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null
