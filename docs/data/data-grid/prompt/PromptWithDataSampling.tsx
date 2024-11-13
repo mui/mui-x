@@ -40,7 +40,7 @@ const VISIBLE_FIELDS = [
   'isAdmin',
 ];
 
-export default function PromptWithExamples() {
+export default function PromptWithDataSampling() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,

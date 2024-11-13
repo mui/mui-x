@@ -75,7 +75,7 @@ function createExamples(column) {
   }
 }
 
-export default function PromptWithDataSampling() {
+export default function PromptWithExamples() {
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
