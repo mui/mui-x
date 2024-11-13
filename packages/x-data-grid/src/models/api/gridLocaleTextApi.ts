@@ -51,7 +51,6 @@ export interface GridLocaleText {
   toolbarPromptControlSendActionLabel: string;
   toolbarPromptControlSendActionAriaLabel: string;
   toolbarPromptControlErrorMessage: string;
-  toolbarPromptControlRowsContextIntro: string;
   toolbarPromptControlColumnsContextIntro: string;
 
   // Export selector toolbar button text

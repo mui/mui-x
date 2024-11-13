@@ -10,7 +10,8 @@ title: Data Grid - Prompt
 To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on. Check [licensing page](/x/introduction/licensing/) for more information.
 :::
 
-The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "filter by country" in the prompt input field, and the Data Grid will update accordingly. To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in two ways.
+The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "filter by country" in the prompt input field, and the Data Grid will update accordingly.
+To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in two ways.
 
 ## Custom examples
 

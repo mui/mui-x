@@ -4,23 +4,23 @@ import {
   GridToolbarPromptControl,
   GridToolbar,
   GridToolbarContainer,
+  PromptResponse,
+  GridSlots,
 } from '@mui/x-data-grid-premium';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { useDemoData, useMockServer } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 
-const REMOTE_ENDPOINT =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost'
-    : 'https://mui.com/x/api/data-grid';
+interface ToolbarWithPromptInputProps {
+  mockPromptResolver: (context: string, query: string) => Promise<PromptResponse>;
+}
 
-function ToolbarWithPromptInput() {
+function ToolbarWithPromptInput(props: ToolbarWithPromptInputProps) {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
       <Stack flex={1} gap={1}>
         <GridToolbar />
         <GridToolbarPromptControl
-          promptResolverApiUrl={`${REMOTE_ENDPOINT}/api/datagrid/prompt`}
-          promptContext="List of employees with their company, position, and salary"
+          onPrompt={props.mockPromptResolver}
           allowDataSampling
         />
       </Stack>
@@ -41,6 +41,7 @@ const VISIBLE_FIELDS = [
 ];
 
 export default function PromptWithDataSampling() {
+  const { mockPromptResolver } = useMockServer();
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -52,7 +53,10 @@ export default function PromptWithDataSampling() {
       <DataGridPremium
         {...data}
         slots={{
-          toolbar: ToolbarWithPromptInput,
+          toolbar: ToolbarWithPromptInput as GridSlots['toolbar'],
+        }}
+        slotProps={{
+          toolbar: mockPromptResolver,
         }}
       />
     </div>

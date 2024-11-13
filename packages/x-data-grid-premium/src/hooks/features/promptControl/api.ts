@@ -2,7 +2,7 @@ import { PromptResponse } from './types';
 
 type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 
-export function processPrompt(url: string, context: string, query: string) {
+export function gridDefaultPromptResolver(url: string, context: string, query: string) {
   return fetch(url, {
     mode: 'cors',
     method: 'POST',
@@ -11,7 +11,7 @@ export function processPrompt(url: string, context: string, query: string) {
     },
     credentials: 'include',
     body: JSON.stringify({
-      context: JSON.stringify(context),
+      context,
       query,
     }),
   })

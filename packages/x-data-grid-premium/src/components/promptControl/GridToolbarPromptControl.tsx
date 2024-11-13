@@ -13,11 +13,11 @@ import {
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
 import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
-import { processPrompt } from '../../hooks/features/promptControl/api';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../models/gridApiPremium';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { PromptResponse } from '../../hooks/features/promptControl';
 import { RecordButton } from './RecordButton';
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -68,7 +68,6 @@ function sampleData(
 
 function generateContext(
   apiRef: React.MutableRefObject<GridApiPremium>,
-  promptContext?: string,
   examples?: Record<string, any[]>,
 ) {
   const columns = Object.values(gridColumnLookupSelector(apiRef));
@@ -80,25 +79,18 @@ function generateContext(
     allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
   }));
 
-  let context = '';
-  if (promptContext) {
-    context += `${apiRef.current.getLocaleText('toolbarPromptControlRowsContextIntro')} ${promptContext}\n\n`;
-  }
-  context += `${apiRef.current.getLocaleText('toolbarPromptControlColumnsContextIntro')}\n${JSON.stringify(columnsContext)}`;
-
-  return context;
+  return `${apiRef.current.getLocaleText('toolbarPromptControlColumnsContextIntro')}\n${JSON.stringify(columnsContext)}`;
 }
 
 export type GridToolbarPromptControlProps = {
   /**
-   * The URL of the remote control resolver API.
+   * Called when the new prompt is ready to be processed.
+   * Provides the prompt and the data context and expects the grid state updates to be returned.
+   * @param {string} context The context of the prompt
+   * @param {string} query The query to process
+   * @returns {Promise<PromptResponse>} The grid state updates
    */
-  promptResolverApiUrl: string;
-  /**
-   * Additional context for the prompt resolver.
-   * For example, the short description of what the data in the grid represents.
-   */
-  promptContext?: string;
+  onPrompt: (context: string, query: string) => Promise<PromptResponse>;
   /**
    * Allow taking couple of random cell values from each column to improve the prompt context.
    * If allowed, samples are taken from different rows.
@@ -116,7 +108,7 @@ export type GridToolbarPromptControlProps = {
 function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const { promptResolverApiUrl, promptContext, lang, allowDataSampling = false } = props;
+  const { onPrompt, lang, allowDataSampling = false } = props;
 
   const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -129,15 +121,15 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
     [apiRef, rootProps, allowDataSampling],
   );
 
-  const sendRequest = React.useCallback(() => {
-    const context = generateContext(apiRef, promptContext, examplesFromData);
+  const processPrompt = React.useCallback(() => {
+    const context = generateContext(apiRef, examplesFromData);
     const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
     setError(null);
     apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: true } }));
 
-    processPrompt(promptResolverApiUrl, context, query)
+    onPrompt(context, query)
       .then((result) => {
         const interestColumns = [] as string[];
 
@@ -199,7 +191,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         setLoading(false);
         apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: false } }));
       });
-  }, [apiRef, rootProps, promptResolverApiUrl, promptContext, examplesFromData, query]);
+  }, [apiRef, rootProps, onPrompt, examplesFromData, query]);
 
   const handleChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -207,14 +199,14 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.code === 'Enter') {
-      sendRequest();
+      processPrompt();
     }
   });
 
   const handleDone = useEventCallback((value: string) => {
     setQuery(value);
     if (value) {
-      sendRequest();
+      processPrompt();
     }
   });
 
@@ -260,7 +252,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                     className={classes.sendButton}
                     disabled={isLoading || isRecording || query === ''}
                     color="primary"
-                    onClick={sendRequest}
+                    onClick={processPrompt}
                     size="small"
                     aria-label={apiRef.current.getLocaleText(
                       'toolbarPromptControlSendActionAriaLabel',
@@ -296,14 +288,13 @@ GridToolbarPromptControl.propTypes = {
    */
   lang: PropTypes.string,
   /**
-   * Additional context for the prompt resolver.
-   * For example, the short description of what the data in the grid represents.
+   * Called when the new prompt is ready to be processed.
+   * Provides the prompt and the data context and expects the grid state updates to be returned.
+   * @param {string} context The context of the prompt
+   * @param {string} query The query to process
+   * @returns {Promise<PromptResponse>} The grid state updates
    */
-  promptContext: PropTypes.string,
-  /**
-   * The URL of the remote control resolver API.
-   */
-  promptResolverApiUrl: PropTypes.string.isRequired,
+  onPrompt: PropTypes.func.isRequired,
 } as any;
 
 export { GridToolbarPromptControl };

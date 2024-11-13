@@ -40,7 +40,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlSendActionLabel: 'Send',
   // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
   // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-  // toolbarPromptControlRowsContextIntro: 'The rows represent:',
   // toolbarPromptControlColumnsContextIntro: 'The columns are described by the following JSON:',
 
   // Export selector toolbar button text

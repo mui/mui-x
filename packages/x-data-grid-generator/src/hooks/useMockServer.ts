@@ -27,6 +27,7 @@ import {
 import type { ServerOptions } from './serverUtils';
 import { randomInt } from '../services';
 import { getMovieRows, getMovieColumns } from './useMovieData';
+import { mockPrompts } from '../constants/prompts';
 
 const dataCache = new LRUCache<string, GridDemoData>({
   max: 10,
@@ -42,6 +43,7 @@ type UseMockServerResponse = {
   getChildrenCount?: (row: GridRowModel) => number;
   fetchRows: (url: string) => Promise<GridGetRowsResponse>;
   loadNewData: () => void;
+  mockPromptResolver: (context: string, query: string) => Promise<{}>;
 };
 
 type DataSet = 'Commodity' | 'Employee' | 'Movies';
@@ -351,6 +353,14 @@ export const useMockServer = (
     ],
   );
 
+  const mockPromptResolver = (_: string, query: string) => {
+    const resolved = mockPrompts.get(query);
+    if (resolved) {
+      return Promise.resolve(resolved);
+    }
+    return Promise.reject(new Error('Unknown query'));
+  };
+
   return {
     columns: columnsWithDefaultColDef,
     initialState: options.dataSet === 'Movies' ? {} : initialState,
@@ -360,5 +370,6 @@ export const useMockServer = (
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
+    mockPromptResolver,
   };
 };
