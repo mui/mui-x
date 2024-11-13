@@ -3,6 +3,7 @@ import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import resolveProps from '@mui/utils/resolveProps';
+import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSurfaceProps } from '../context/SurfacePropsProvider';
@@ -47,13 +48,13 @@ const ChartsSurfaceStyles = styled('svg', {
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  // What to do with ref coming from forwardRef and Context?
   ref: React.Ref<SVGSVGElement>,
 ) {
   const contextProps = useSurfaceProps();
   const resolvedProps = resolveProps(inProps as any, contextProps) as ChartsSurfaceProps;
 
   const themeProps = useThemeProps({ props: resolvedProps, name: 'MuiChartsSurface' });
+  const surfaceRef = useForkRef(ref, contextProps.ref);
 
   const {
     children,
@@ -75,9 +76,9 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={ref}
       className={className}
       {...other}
+      ref={surfaceRef}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}

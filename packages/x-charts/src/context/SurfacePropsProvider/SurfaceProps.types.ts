@@ -1,5 +1,9 @@
 import type { ChartsSurfaceProps } from '../../ChartsSurface';
 
-export type SurfacePropsProviderProps = ChartsSurfaceProps;
+export type SurfacePropsProviderProps = ChartsSurfaceProps & {
+  ref: React.Ref<SVGSVGElement>;
+};
 
-export type SurfacePropsContextState = ChartsSurfaceProps;
+export type SurfacePropsContextState = ChartsSurfaceProps & {
+  ref: React.Ref<SVGSVGElement>;
+};
