@@ -1,16 +1,15 @@
 import { SxProps } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
 import { MakeRequired } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { FieldSection } from '@mui/x-date-pickers/models';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
   MultiInputFieldSlotRootProps,
   RangeFieldSeparatorProps,
   RangePosition,
 } from '../../models';
-import { PickersTextField } from '@mui/x-date-pickers';
 
 /**
  * Props the multi input field can receive when used inside a picker.

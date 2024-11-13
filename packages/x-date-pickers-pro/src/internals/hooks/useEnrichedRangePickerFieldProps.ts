@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -22,6 +21,7 @@ import {
   BaseSingleInputFieldProps,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
@@ -68,7 +68,7 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
   textField?: SlotComponentProps<
-    typeof TextField,
+    typeof PickersTextField,
     {},
     UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
   >;
