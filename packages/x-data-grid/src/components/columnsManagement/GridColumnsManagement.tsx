@@ -220,7 +220,6 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
         <rootProps.slots.baseTextField
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
-          aria-label={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
           value={searchValue}
           onChange={handleSearchValueChange}
@@ -255,14 +254,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             ),
             sx: {
               pl: 1.5,
-              [`& input[type="search"]::-webkit-search-decoration,
-              & input[type="search"]::-webkit-search-cancel-button,
-              & input[type="search"]::-webkit-search-results-button,
-              & input[type="search"]::-webkit-search-results-decoration`]: {
-                /* clears the 'X' icon from Chrome */
-                display: 'none',
-              },
             },
+          }}
+          inputProps={{
+            'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
           }}
           autoComplete="off"
           fullWidth
@@ -393,6 +388,13 @@ const GridColumnsManagementHeader = styled('div', {
   overridesResolver: (props, styles) => styles.columnsManagementHeader,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
+  [`& input[type="search"]::-webkit-search-decoration,
+              & input[type="search"]::-webkit-search-cancel-button,
+              & input[type="search"]::-webkit-search-results-button,
+              & input[type="search"]::-webkit-search-results-decoration`]: {
+    /* clears the 'X' icon from Chrome */
+    display: 'none',
+  },
 }));
 
 const GridColumnsManagementFooter = styled('div', {
