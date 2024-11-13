@@ -16,7 +16,7 @@ export {
   getDateTimeValueManager,
   getDateTimeFieldInternalPropsDefaults,
 } from './getDateTimeValueManager';
-export {
+export type {
   DateTimeFieldInternalProps,
   DateTimeFieldInternalPropsWithDefaults,
   DateTimeValueManager,
