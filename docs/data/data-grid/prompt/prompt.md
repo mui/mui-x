@@ -11,7 +11,37 @@ To use this feature, you need to have a prompt processing backend. MUI offers th
 :::
 
 The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "filter by country" in the prompt input field, and the Data Grid will update accordingly.
-To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in two ways.
+
+To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in following ways.
+
+:::info
+Prompt demos use a utility function `mockPromptResolver` to simulate the api that resolves the user prompts.
+It can handle a predefined set of prompts:
+
+- `sort by name`
+- TODO: add more mock prompts
+
+In a real-world scenario, you should replace this with your own api.
+:::
+
+If you are integarting with MUI's API, you can use the `gridDefaultPromptResolver` from `@mui/x-data-grid-premium` package.
+
+```ts
+const REMOTE_ENDPOINT =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://api.mui.com';
+
+function processPrompt(context: string, query: string) {
+  const extendedContext = `The rows represent: List of employees with their company, position and start date\n\n${context}`;
+
+  return gridDefaultPromptResolver(
+    `${REMOTE_ENDPOINT}/api/datagrid/prompt`,
+    extendedContext,
+    query,
+  );
+}
+```
 
 ## Custom examples
 
