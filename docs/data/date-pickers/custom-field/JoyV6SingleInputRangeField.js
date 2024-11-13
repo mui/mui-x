@@ -71,12 +71,12 @@ const JoyField = React.forwardRef((props, ref) => {
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...other } = props;
 
-  const pickersContext = usePickerContext();
+  const pickerContext = usePickerContext();
   const handleTogglePicker = (event) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
     } else {
-      pickersContext.onOpen(event);
+      pickerContext.onOpen(event);
     }
   };
 

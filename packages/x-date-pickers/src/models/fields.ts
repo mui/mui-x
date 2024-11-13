@@ -122,7 +122,7 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 /**
  * Props the prop `slotProps.field` of a picker can receive.
  */
-export type PickersFieldSlotProps<
+export type PickerFieldSlotProps<
   TValue,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,

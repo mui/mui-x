@@ -29,7 +29,7 @@ import {
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
-  PickersRangeFieldSlotProps,
+  PickerRangeFieldSlotProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
 import { BaseMultiInputFieldProps } from '../models/fields';
@@ -57,7 +57,7 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    PickersRangeFieldSlotProps<
+    PickerRangeFieldSlotProps<
       PickerRangeValue,
       RangeFieldSection,
       TEnableAccessibleFieldDOMStructure

@@ -14,7 +14,7 @@ import {
 import { UsePickerParams } from '../usePicker';
 import {
   FieldSection,
-  PickersFieldSlotProps,
+  PickerFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
@@ -47,7 +47,7 @@ export interface ExportedUseMobilePickerSlotProps<
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerValidDate | null, TView> {
   field?: SlotComponentPropsFromProps<
-    PickersFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
+    PickerFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;

@@ -42,7 +42,7 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
 }
 
 /**
- * Props the field can receive when used inside a `DateRangePicker`, `DesktopDateRangePicker` or `MobileDateRangePicker` component.
+ * Props the field can receive when used inside a date range picker (<DateRangePicker />, <DesktopDateRangePicker /> or <MobileDateRangePicker /> component).
  */
 export type DateRangePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   ValidateDateRangeProps &

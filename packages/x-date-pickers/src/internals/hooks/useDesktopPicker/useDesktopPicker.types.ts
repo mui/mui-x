@@ -13,7 +13,7 @@ import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/Pic
 import { UsePickerParams } from '../usePicker';
 import {
   FieldSection,
-  PickersFieldSlotProps,
+  PickerFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
@@ -75,7 +75,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     ExportedPickersLayoutSlotProps<PickerValidDate | null, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    PickersFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
+    PickerFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;

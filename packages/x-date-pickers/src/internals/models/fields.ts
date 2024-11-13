@@ -47,8 +47,7 @@ export type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructur
 
 /**
  * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field,
- * not what users can pass using the `props.slotProps.field`.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
   TValue,

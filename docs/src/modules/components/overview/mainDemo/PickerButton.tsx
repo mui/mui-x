@@ -13,7 +13,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
   const { InputProps, slotProps, slots, ownerState, label, focused, name, ...other } =
     forwardedProps;
 
-  const pickersContext = usePickerContext();
+  const pickerContext = usePickerContext();
 
   const parsedFormat = useParsedFormat(internalProps);
   const { hasValidationError } = useValidation({
@@ -24,10 +24,10 @@ function ButtonDateField(props: DatePickerFieldProps) {
   });
 
   const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickersContext.open) {
-      pickersContext.onClose(event);
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
     } else {
-      pickersContext.onOpen(event);
+      pickerContext.onOpen(event);
     }
   };
 

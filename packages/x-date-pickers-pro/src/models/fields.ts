@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { UseFieldResponse, FormProps } from '@mui/x-date-pickers/internals';
-import { FieldRef, FieldSection, PickersFieldSlotProps } from '@mui/x-date-pickers/models';
+import { FieldRef, FieldSection, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 import { RangePosition } from './range';
 
@@ -50,11 +50,11 @@ export interface RangeFieldSeparatorProps {
 /**
  * Props the `slotProps.field` of a range picker component can receive.
  */
-export type PickersRangeFieldSlotProps<
+export type PickerRangeFieldSlotProps<
   TValue,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = PickersFieldSlotProps<TValue, TSection, TEnableAccessibleFieldDOMStructure> &
+> = PickerFieldSlotProps<TValue, TSection, TEnableAccessibleFieldDOMStructure> &
   RangeFieldSeparatorProps;
 
 /**

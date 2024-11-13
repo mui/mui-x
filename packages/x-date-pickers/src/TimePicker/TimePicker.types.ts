@@ -42,8 +42,7 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 }
 
 /**
- * Props the field can receive when used inside a time picker.
- * (`TimePicker`, `DesktopTimePicker` or `MobileTimePicker` component).
+ * Props the field can receive when used inside a time picker (<TimePicker />, <DesktopTimePicker /> or <MobileTimePicker /> component).
  */
 export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   ValidateTimeProps &
