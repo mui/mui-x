@@ -35,7 +35,7 @@ const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const Style = styled('div', {
+const GridToolbarPromptControlRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarPromptControl',
   overridesResolver: (_props, styles) => styles.toolbarPromptControl,
@@ -219,7 +219,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   });
 
   return (
-    <Style ownerState={rootProps} className={classes.root}>
+    <GridToolbarPromptControlRoot ownerState={rootProps} className={classes.root}>
       <rootProps.slots.baseTextField
         variant="outlined"
         placeholder={
@@ -274,7 +274,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
           ),
         }}
       />
-    </Style>
+    </GridToolbarPromptControlRoot>
   );
 }
 
