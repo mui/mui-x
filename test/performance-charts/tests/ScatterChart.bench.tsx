@@ -24,7 +24,7 @@ describe('ScatterChart', () => {
     async () => {
       const { findByText } = render(
         <ScatterChart
-          xAxis={[{ data: xData }]}
+          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
           series={[
             {
               data,
@@ -35,7 +35,7 @@ describe('ScatterChart', () => {
         />,
       );
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
     },
     options,
   );
