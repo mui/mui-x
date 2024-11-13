@@ -131,7 +131,6 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
 
   const sendRequest = React.useCallback(() => {
     const context = generateContext(apiRef, promptContext, examplesFromData);
-    console.log(context);
     const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
