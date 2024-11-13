@@ -53,7 +53,7 @@ export const gridPinnedColumnPositionLookup = {
   [PinnedPosition.VIRTUAL]: undefined,
 };
 
-export type GridCellProps = {
+export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -71,12 +71,19 @@ export type GridCellProps = {
   gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyUp?: React.KeyboardEventHandler<HTMLDivElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO v7: remove this - it breaks type safety
+  onFocus?: React.FocusEventHandler<Element>;
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+  [x: `data-${string}`]: string;
 };
 
 const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
@@ -157,7 +164,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     width,
     className,
     style: styleProp,
-    gridHasScrollX,
     colSpan,
     disableDragEvents,
     isNotVisible,
@@ -341,10 +347,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       };
     }
 
-    const cellStyle: React.CSSProperties = {
+    const cellStyle = {
       '--width': `${width}px`,
       ...styleProp,
-    };
+    } as React.CSSProperties;
 
     const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
     const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
@@ -513,7 +519,6 @@ GridCell.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
@@ -526,13 +531,6 @@ GridCell.propTypes = {
   }),
   gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
-  onDragEnter: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onKeyDown: PropTypes.func,
-  onMouseDown: PropTypes.func,
-  onMouseUp: PropTypes.func,
   pinnedOffset: PropTypes.number.isRequired,
   pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
