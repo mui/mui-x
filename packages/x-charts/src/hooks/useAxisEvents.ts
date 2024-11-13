@@ -129,23 +129,24 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
       const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
-      store.update((prev) => {
-        const newState = structuredClone(prev);
-
-        if (
-          prev.interaction.axis.x?.index !== newStateX?.index ||
-          prev.interaction.axis.x?.value !== newStateX?.value
-        ) {
-          newState.interaction.axis.x = newStateX;
-        }
-        if (
-          prev.interaction.axis.y?.index !== newStateY?.index ||
-          prev.interaction.axis.y?.value !== newStateY?.value
-        ) {
-          newState.interaction.axis.y = newStateY;
-        }
-        return newState;
-      });
+      store.update((prev) => ({
+        ...prev,
+        interaction: {
+          ...prev.interaction,
+          axis: {
+            // A bit verbose, but prevent losing the x value if only y got modified.
+            ...prev.interaction.axis,
+            ...(prev.interaction.axis.x?.index !== newStateX?.index ||
+            prev.interaction.axis.x?.value !== newStateX?.value
+              ? { x: newStateX }
+              : {}),
+            ...(prev.interaction.axis.y?.index !== newStateY?.index ||
+            prev.interaction.axis.y?.value !== newStateY?.value
+              ? { y: newStateY }
+              : {}),
+          },
+        },
+      }));
     };
 
     const handleDown = (event: PointerEvent) => {
