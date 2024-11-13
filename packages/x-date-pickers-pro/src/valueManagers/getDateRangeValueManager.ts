@@ -1,7 +1,9 @@
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
-import { getDateFieldInternalPropsDefaults } from '@mui/x-date-pickers/valueManagers';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import {
+  UseFieldInternalProps,
+  getDateFieldInternalPropsDefaults,
+} from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError, RangeFieldSeparatorProps } from '../models';
 import { getRangeFieldValueManager, rangeValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../validation';
