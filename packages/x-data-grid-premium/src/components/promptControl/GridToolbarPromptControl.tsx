@@ -3,23 +3,21 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { getValueOptions, getVisibleRows } from '@mui/x-data-grid-pro/internals';
-import MicrophoneIcon from '@mui/icons-material/Mic';
-import SendIcon from '@mui/icons-material/Send';
-import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import { processPrompt } from '../../hooks/features/promptControl/api';
 import {
   getDataGridUtilityClass,
   GRID_CHECKBOX_SELECTION_FIELD,
-  GridLogicOperator,
-  useGridApiContext,
-  useGridRootProps,
   gridColumnLookupSelector,
+  GridLogicOperator,
   GridSingleSelectColDef,
-} from '../..';
+} from '@mui/x-data-grid';
+import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
+import SendIcon from '@mui/icons-material/Send';
+import InputAdornment from '@mui/material/InputAdornment';
+import { processPrompt } from '../../hooks/features/promptControl/api';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../models/gridApiPremium';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { RecordButton } from './RecordButton';
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -184,7 +182,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         setLoading(false);
         apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: false } }));
       });
-  }, [apiRef, rootProps, query]);
+  }, [apiRef, rootProps, promptResolverApiUrl, promptContext, allowDataSampling, query]);
 
   const handleChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -198,7 +196,9 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
 
   const handleDone = useEventCallback((value: string) => {
     setQuery(value);
-    sendRequest();
+    if (value) {
+      sendRequest();
+    }
   });
 
   return (
@@ -222,33 +222,16 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {isRecording ? (
-                <Box
-                  className={classes.recordingIndicator}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 34,
-                    height: 34,
-                    borderRadius: '100%',
-                    background: 'secondary',
-                  }}
-                >
-                  <MicrophoneIcon color="primary" />
-                </Box>
-              ) : (
-                <RecordButton
-                  className={classes.recordButton}
-                  label={isLoading ? 'Loading…' : undefined}
-                  lang={lang}
-                  recording={isRecording}
-                  setRecording={setRecording}
-                  disabled={isLoading}
-                  onUpdate={setQuery}
-                  onDone={handleDone}
-                />
-              )}
+              <RecordButton
+                className={classes.recordButton}
+                label={isLoading ? 'Loading…' : undefined}
+                lang={lang}
+                recording={isRecording}
+                setRecording={setRecording}
+                disabled={isLoading}
+                onUpdate={setQuery}
+                onDone={handleDone}
+              />
             </InputAdornment>
           ),
           endAdornment: (

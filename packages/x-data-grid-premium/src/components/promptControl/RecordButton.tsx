@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
 import MicrophoneIcon from '@mui/icons-material/Mic';
-import { useGridRootProps } from '../..';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition;
 
@@ -27,6 +27,13 @@ function RecordButton(props: RecordButtonProps) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const recognition = useLazyRef(() => {
+    if (!BrowserSpeechRecognition) {
+      return {
+        start: () => {},
+        abort: () => {},
+      };
+    }
+
     const timeout = new Timeout();
     const instance = new BrowserSpeechRecognition();
     instance.continuous = true;
@@ -76,11 +83,20 @@ function RecordButton(props: RecordButtonProps) {
       instance.start();
     }
 
-    return { start };
+    function abort() {
+      instance.abort();
+    }
+
+    return { start, abort };
   }).current;
 
   const handleClick = useEventCallback(() => {
-    recognition.start({ onDone: props.onDone, onUpdate: props.onUpdate });
+    if (!recording) {
+      recognition.start({ onDone: props.onDone, onUpdate: props.onUpdate });
+      return;
+    }
+
+    recognition.abort();
   });
 
   return (
@@ -88,6 +104,7 @@ function RecordButton(props: RecordButtonProps) {
       <rootProps.slots.baseTooltip title={recording ? 'Stop recording' : (props.label ?? 'Record')}>
         <div>
           <rootProps.slots.baseIconButton
+            color={recording ? 'primary' : 'default'}
             className={props.className}
             disabled={props.disabled}
             onClick={handleClick}
