@@ -47,4 +47,4 @@ These libraries are open source, MIT-licensed, and free forever.
 MUI X components are fully compatible with MUI Core.
 MUI X can extend the functionality of UIs built with Material UI or Base UI, but its components can also stand on their own, they can be used with third-parties React component libraries that implement different designs.
 
-You can find [more details](https://mui-org.notion.site/MUI-X-3f8ad249aeca430d81aae5dee947451a#f8e48daaf2fa4902b1415e3708560c0f) about the difference in our handbook.
+You can find [more details](https://mui-org.notion.site/MUI-s-products-a-brief-overview-9c5e8e11eb1247c3a124b446be7451cb) about the difference in our handbook.
