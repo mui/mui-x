@@ -14,12 +14,14 @@ The prompt feature allows users to interact with the Data Grid component using n
 
 ## Custom examples
 
-The user can provide custom examples for the prompt processing through the `examples` prop of the column in the `columns` array. The `examples` prop should be an array of values that are possible values for that column.
+The user can provide custom examples for the prompt processing through the `examples` prop of the column in the `columns` array.
+The `examples` prop should be an array of values that are possible values for that column.
 
 {{"demo": "PromptWithExamples.js", "bg": "inline"}}
 
 ## Use row data for examples
 
-If you pass `allowDataSampling` flag to the `GridToolbarPromptControl`, it will use the row data to generate examples for the prompt processing. This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
+If you pass `allowDataSampling` flag to the `GridToolbarPromptControl`, it will use the row data to generate examples for the prompt processing.
+This is useful if you are dealing with non-sensitive data and want to skip creating custom examples for each column.
 
 {{"demo": "PromptWithDataSampling.js", "bg": "inline"}}

@@ -5,12 +5,11 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 export function processPrompt(url: string, context: string, query: string) {
   return fetch(url, {
     mode: 'cors',
-    method: 'post',
+    method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
     credentials: 'include',
-    redirect: 'follow',
     body: JSON.stringify({
       context: JSON.stringify(context),
       query,

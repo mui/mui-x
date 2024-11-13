@@ -612,7 +612,6 @@ export interface GridClasses {
    * Styles applied to the toolbar prompt control send button element.
    */
   toolbarPromptControlSendButton: string;
-
   /**
    * Styles applied the grid if `showColumnVerticalBorder={true}`.
    */
