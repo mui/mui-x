@@ -80,7 +80,6 @@ ChartDataProvider.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
    * @default blueberryTwilightPalette
@@ -90,13 +89,6 @@ ChartDataProvider.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  desc: PropTypes.string,
-  /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
-   */
-  disableAxisListener: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -152,12 +144,6 @@ ChartDataProvider.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  title: PropTypes.string,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
