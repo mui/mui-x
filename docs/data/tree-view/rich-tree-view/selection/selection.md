@@ -88,12 +88,12 @@ type TreeViewSelectionPropagation = {
 };
 ```
 
-When `selectionPropagation.descendants` is set to `true`.
+When `selectionPropagation.descendants` is set to `true`:
 
 - Selecting a parent selects all its descendants automatically.
 - Deselecting a parent deselects all its descendants automatically.
 
-When `selectionPropagation.parents` is set to `true`.
+When `selectionPropagation.parents` is set to `true`:
 
 - Selecting all the descendants of a parent selects the parent automatically.
 - Deselecting a descendant of a selected parent deselects the parent automatically.
