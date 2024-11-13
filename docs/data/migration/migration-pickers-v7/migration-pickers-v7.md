@@ -288,6 +288,18 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + const pickerContext = usePickerContext();
   ```
 
+  - `FieldValueType`
+
+  ```diff
+  -import { FieldValueType } from '@mui/x-date-pickers/models';
+  -import { FieldValueType } from '@mui/x-date-pickers';
+  -import { FieldValueType } from '@mui/x-date-pickers-pro';
+
+  +import { PickerValueType } from '@mui/x-date-pickers/models';
+  +import { PickerValueType } from '@mui/x-date-pickers';
+  +import { PickerValueType } from '@mui/x-date-pickers-pro';
+  ```
+
 ## Typing breaking changes
 
 ### Remove `TDate` generic
@@ -473,13 +485,4 @@ If you have customized those translation keys, you have to update them following
 +const openTimePickerDialogue = translations.openTimePickerDialogue(
 +  value == null ? null : value.format('hh:mm:ss')
 +);
-```
-
-## `FieldValueType` renaming
-
-If you are using `FieldValueType` in your project you must rename it to its new name. The type value remains the same.
-
-```diff
--import { FieldValueType } from '@mui/x-date-pickers';
-+import { PickerValueType } from '@mui/x-date-pickers';
 ```
