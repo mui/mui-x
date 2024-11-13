@@ -36,7 +36,7 @@ export default function BarGapNoSnap() {
           defaultValue: 20,
           step: 1,
           min: 0,
-          max: 40,
+          max: 100,
         },
       ]}
       renderDemo={(props) => (
