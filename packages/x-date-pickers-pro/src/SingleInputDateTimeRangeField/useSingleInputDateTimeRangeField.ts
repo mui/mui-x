@@ -20,7 +20,7 @@ export const useSingleInputDateTimeRangeField = <
     [props.enableAccessibleFieldDOMStructure, props.dateSeparator],
   );
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     valueManager,
     internalProps,
