@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/material/styles';
