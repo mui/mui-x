@@ -72,6 +72,7 @@ export default function BarGapNoSnap() {
           `      categoryGapRatio: ${props.categoryGapRatio}`,
           `      barGapRatio: ${props.barGapRatio}`,
           `    }`,
+          `  ]}`,
           `  maxBarSize={${props.maxBarSize}}`,
           '/>',
         ].join('\n');
