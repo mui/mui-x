@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingProviderProps } from '../DrawingProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
@@ -10,13 +9,9 @@ import { HighlightedProviderProps } from '../HighlightedProvider';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
-import { SurfacePropsProviderProps } from '../SurfacePropsProvider';
 import { SizeProviderProps } from '../SizeProvider';
 
-export const useChartDataProviderProps = (
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) => {
+export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const {
     width,
     height,
@@ -27,20 +22,14 @@ export const useChartDataProviderProps = (
     zAxis,
     colors,
     dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     plugins,
     children,
     skipAnimation,
     resolveSizeBeforeRender,
-    ...other
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
@@ -79,17 +68,6 @@ export const useChartDataProviderProps = (
     onHighlightChange,
   };
 
-  const surfacePropsProviderProps: Omit<SurfacePropsProviderProps, 'children'> & {
-    ref: any;
-  } = {
-    ...other,
-    ref: chartSurfaceRef,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
-  };
-
   const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
     width,
     height,
@@ -103,7 +81,6 @@ export const useChartDataProviderProps = (
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    surfacePropsProviderProps,
     pluginProviderProps,
     animationProviderProps,
     xAxis: defaultizedXAxis,

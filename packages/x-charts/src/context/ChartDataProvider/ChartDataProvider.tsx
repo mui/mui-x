@@ -10,14 +10,12 @@ import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
-import { SurfacePropsProvider, SurfacePropsProviderProps } from '../SurfacePropsProvider';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
 
 export type ChartDataProviderProps = Omit<
-  SurfacePropsProviderProps &
-    SizeProviderProps &
+  SizeProviderProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Omit<DrawingProviderProps, 'svgRef' | 'height' | 'width'> &
     Pick<CartesianProviderProps, 'dataset'> &
@@ -42,10 +40,7 @@ export type ChartDataProviderProps = Omit<
   children?: React.ReactNode;
 };
 
-const ChartDataProvider = React.forwardRef(function ChartDataProvider(
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
     drawingProviderProps,
@@ -53,11 +48,10 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    surfacePropsProviderProps,
     pluginProviderProps,
     animationProviderProps,
     sizeProviderProps,
-  } = useChartDataProviderProps(props, ref);
+  } = useChartDataProviderProps(props);
 
   return (
     <SizeProvider {...sizeProviderProps}>
@@ -68,11 +62,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>
-                      <SurfacePropsProvider {...surfacePropsProviderProps}>
-                        {children}
-                      </SurfacePropsProvider>
-                    </AnimationProvider>
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </HighlightedProvider>
                 </InteractionProvider>
               </ZAxisContextProvider>
@@ -82,7 +72,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
       </DrawingProvider>
     </SizeProvider>
   );
-});
+}
 
 ChartDataProvider.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -4,23 +4,23 @@ import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 
-export interface ChartContainerProps extends ChartDataProviderProps {}
+export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
 
 const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProps, children, resizableContainerProps } = useChartContainerProps(
-    props,
-    ref,
-  );
+  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
+    useChartContainerProps(props);
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface>{children}</ChartsSurface>
+        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+          {children}
+        </ChartsSurface>
       </ResizableContainer>
     </ChartDataProvider>
   );
