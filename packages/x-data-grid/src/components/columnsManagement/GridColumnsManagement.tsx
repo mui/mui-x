@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
-import { TextFieldProps } from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -218,7 +218,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
   return (
     <React.Fragment>
       <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
-        <rootProps.slots.baseTextField
+        <SearchInput
+          as={rootProps.slots.baseTextField}
+          ownerState={rootProps}
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
           value={searchValue}
@@ -252,9 +254,6 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                 <rootProps.slots.quickFilterClearIcon fontSize="small" />
               </rootProps.slots.baseIconButton>
             ),
-            sx: {
-              pl: 1.5,
-            },
           }}
           inputProps={{
             'aria-label': apiRef.current.getLocaleText('columnsManagementSearchTitle'),
@@ -388,10 +387,16 @@ const GridColumnsManagementHeader = styled('div', {
   overridesResolver: (props, styles) => styles.columnsManagementHeader,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(1.5, 3),
+}));
+
+const SearchInput = styled(TextField)<{ ownerState: OwnerState }>(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    paddingLeft: theme.spacing(1.5),
+  },
   [`& input[type="search"]::-webkit-search-decoration,
-              & input[type="search"]::-webkit-search-cancel-button,
-              & input[type="search"]::-webkit-search-results-button,
-              & input[type="search"]::-webkit-search-results-decoration`]: {
+  & input[type="search"]::-webkit-search-cancel-button,
+  & input[type="search"]::-webkit-search-results-button,
+  & input[type="search"]::-webkit-search-results-decoration`]: {
     /* clears the 'X' icon from Chrome */
     display: 'none',
   },
