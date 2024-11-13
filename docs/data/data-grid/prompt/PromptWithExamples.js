@@ -6,6 +6,7 @@ import {
   GridToolbarContainer,
 } from '@mui/x-data-grid-premium';
 import {
+  mockPromptResolver,
   randomBoolean,
   randomCompanyName,
   randomCountry,
@@ -16,16 +17,15 @@ import {
   randomPhoneNumber,
   randomTraderName,
   useDemoData,
-  useMockServer,
 } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 
-function ToolbarWithPromptInput(props) {
+function ToolbarWithPromptInput() {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
       <Stack flex={1} gap={1}>
         <GridToolbar />
-        <GridToolbarPromptControl onPrompt={props.mockPromptResolver} />
+        <GridToolbarPromptControl onPrompt={mockPromptResolver} />
       </Stack>
     </GridToolbarContainer>
   );
@@ -69,7 +69,6 @@ function createExamples(column) {
 }
 
 export default function PromptWithExamples() {
-  const { mockPromptResolver } = useMockServer();
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -88,9 +87,6 @@ export default function PromptWithExamples() {
         columns={columns}
         slots={{
           toolbar: ToolbarWithPromptInput,
-        }}
-        slotProps={{
-          toolbar: mockPromptResolver,
         }}
       />
     </div>

@@ -1,9 +1,6 @@
 <DataGridPremium
   {...data}
   slots={{
-    toolbar: ToolbarWithPromptInput as GridSlots['toolbar'],
-  }}
-  slotProps={{
-    toolbar: mockPromptResolver,
+    toolbar: ToolbarWithPromptInput,
   }}
 />

@@ -2,9 +2,6 @@
   {...data}
   columns={columns}
   slots={{
-    toolbar: ToolbarWithPromptInput as GridSlots['toolbar'],
-  }}
-  slotProps={{
-    toolbar: mockPromptResolver,
+    toolbar: ToolbarWithPromptInput,
   }}
 />
