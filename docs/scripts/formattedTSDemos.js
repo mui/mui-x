@@ -9,7 +9,7 @@
  * List of demos to ignore when transpiling
  * Example: "app-bar/BottomAppBar.tsx"
  */
-const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx'];
+const ignoreList = ['/pages.ts', 'styling.ts', 'styling.tsx', 'types.ts'];
 
 const fs = require('fs');
 const fse = require('fs-extra');
@@ -56,7 +56,7 @@ async function getFiles(root) {
         } else if (
           stat.isFile() &&
           /\.tsx?$/.test(filePath) &&
-          !filePath.endsWith('types.ts') &&
+          !filePath.endsWith('.d.ts') &&
           !ignoreList.some((ignorePath) => filePath.endsWith(path.normalize(ignorePath)))
         ) {
           files.push(filePath);
@@ -130,6 +130,8 @@ async function main(argv) {
     ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
     ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
   ];
+
+  console.log(tsxFiles);
 
   const program = ts.createProgram({
     rootNames: tsxFiles,
