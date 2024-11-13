@@ -13,7 +13,10 @@ function sleep(timeoutMS) {
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
-const isConsoleWarningIgnored = (msg) => {
+// Tests that need a longer timeout.
+const timeSensitiveSuites = ['ColumnAutosizingAsync'];
+
+const isConsoleWarningIgnored = (msg?: string) => {
   if (
     msg &&
     isMaterialUIv6 &&
@@ -159,6 +162,18 @@ async function main() {
           undefined,
           { timeout: 1000 },
         );
+
+        if (/^\docs-charts-.*/.test(pathURL)) {
+          // Run one tick of the clock to get the final animation state
+          await sleep(10);
+        }
+
+        if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
+          await sleep(100);
+        }
+
+        // Wait for the page to settle after taking the screenshot.
+        await page.waitForLoadState();
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
