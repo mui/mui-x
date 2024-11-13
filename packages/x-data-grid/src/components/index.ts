@@ -8,6 +8,7 @@ export * from './menu';
 export * from './panel';
 export * from './columnsManagement';
 export * from './toolbar';
+export * from './toolbarV8';
 
 export * from './GridApiContext';
 export * from './GridFooter';

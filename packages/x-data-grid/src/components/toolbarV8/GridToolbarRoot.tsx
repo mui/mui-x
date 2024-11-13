@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type GridToolbarRootProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;

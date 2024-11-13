@@ -1,7 +1,3 @@
-// TODO v8: Rename to GridToolbar and collapse the v8 folder
-export * as GridToolbarV8 from './v8/index.parts';
-
-// TODO v8: Remove everything below
 export * from './GridToolbar';
 export * from './GridToolbarColumnsButton';
 export * from './GridToolbarDensitySelector';
