@@ -109,6 +109,7 @@
     "@types/karma": "^6.3.8",
     "@types/lodash": "^4.17.10",
     "@types/mocha": "^10.0.9",
+    "@types/node": "^20.16.11",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-test-renderer": "^18.3.0",
