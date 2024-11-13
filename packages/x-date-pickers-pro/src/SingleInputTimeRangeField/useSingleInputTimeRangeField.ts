@@ -26,7 +26,12 @@ export const useSingleInputTimeRangeField = <
     internalProps,
   });
 
-  return useField({
+  return useField<
+    true,
+    TEnableAccessibleFieldDOMStructure,
+    typeof forwardedProps,
+    typeof internalPropsWithDefaults
+  >({
     forwardedProps,
     internalProps: internalPropsWithDefaults,
     valueManager: valueManager.legacyValueManager,

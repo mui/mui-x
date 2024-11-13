@@ -268,7 +268,6 @@
   { "name": "MultiSectionDigitalClockSlots", "kind": "Interface" },
   { "name": "NonEmptyDateRange", "kind": "TypeAlias" },
   { "name": "OnErrorProps", "kind": "Interface" },
-  { "name": "PickerAnyAccessibleValueManagerV8", "kind": "TypeAlias" },
   { "name": "PickerAnyValueManagerV8", "kind": "TypeAlias" },
   { "name": "PickerChangeHandlerContext", "kind": "Interface" },
   { "name": "PickerDayOwnerState", "kind": "Interface" },
