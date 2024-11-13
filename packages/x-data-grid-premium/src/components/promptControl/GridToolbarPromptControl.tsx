@@ -45,35 +45,46 @@ const Style = styled('div', {
   flexDirection: 'row',
 });
 
-function generateContext(
+function sampleData(
   apiRef: React.MutableRefObject<GridApiPremium>,
   rootProps: DataGridPremiumProcessedProps,
-  allowDataSampling: boolean,
-  promptContext?: string,
 ) {
   const columns = Object.values(gridColumnLookupSelector(apiRef));
   const rows = rootProps.rows;
-  const columnsContext = Object.values(columns).map((c) => ({
-    field: c.field,
-    description: c.description ?? null,
-    examples: allowDataSampling
-      ? rows.slice(0, 5).map(() => {
-          const row = rows[Math.floor(Math.random() * rows.length)];
-          if (c.valueGetter) {
-            return c.valueGetter(row[c.field as any] as never, row, c, apiRef);
-          }
-          return row[c.field as any];
-        })
-      : c.examples || [],
-    type: c.type ?? 'string',
-    allowedOperators: c.filterOperators?.map((o) => o.value) ?? [],
+  const columnExamples: Record<string, any[]> = {};
+
+  columns.forEach((column) => {
+    columnExamples[column.field] = rows.slice(0, 5).map(() => {
+      const row = rows[Math.floor(Math.random() * rows.length)];
+      if (column.valueGetter) {
+        return column.valueGetter(row[column.field] as never, row, column, apiRef);
+      }
+      return row[column.field];
+    });
+  });
+
+  return columnExamples;
+}
+
+function generateContext(
+  apiRef: React.MutableRefObject<GridApiPremium>,
+  promptContext?: string,
+  examples?: Record<string, any[]>,
+) {
+  const columns = Object.values(gridColumnLookupSelector(apiRef));
+  const columnsContext = columns.map((column) => ({
+    field: column.field,
+    description: column.description ?? null,
+    examples: examples?.[column.field] ?? column.examples ?? [],
+    type: column.type ?? 'string',
+    allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
   }));
 
   let context = '';
   if (promptContext) {
-    context += `The rows represent: ${promptContext}\n\n`;
+    context += `${apiRef.current.getLocaleText('toolbarPromptControlRowsContextIntro')} ${promptContext}\n\n`;
   }
-  context += `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`;
+  context += `${apiRef.current.getLocaleText('toolbarPromptControlColumnsContextIntro')}\n${JSON.stringify(columnsContext)}`;
 
   return context;
 }
@@ -110,11 +121,17 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   const [isLoading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isRecording, setRecording] = React.useState(false);
-  const classes = useUtilityClasses(rootProps, isRecording);
   const [query, setQuery] = React.useState('');
 
+  const classes = useUtilityClasses(rootProps, isRecording);
+  const examplesFromData = React.useMemo(
+    () => (allowDataSampling ? sampleData(apiRef, rootProps) : undefined),
+    [apiRef, rootProps, allowDataSampling],
+  );
+
   const sendRequest = React.useCallback(() => {
-    const context = generateContext(apiRef, rootProps, allowDataSampling, promptContext);
+    const context = generateContext(apiRef, promptContext, examplesFromData);
+    console.log(context);
     const columnsByField = gridColumnLookupSelector(apiRef);
 
     setLoading(true);
@@ -137,7 +154,9 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
             const column = columnsByField[filter.column];
             if (column.type === 'singleSelect') {
               const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
-              const found = options.find((o) => typeof o === 'object' && o.label === filter.value);
+              const found = options.find(
+                (option) => typeof option === 'object' && option.label === filter.value,
+              );
               if (found) {
                 item.value = (found as any).value;
               }
@@ -174,15 +193,14 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         interestColumns.push(...result.filters.map((f) => f.column));
         interestColumns.reverse().forEach((c) => apiRef.current.setColumnIndex(c, targetIndex));
       })
-      .catch((err) => {
-        console.error(err);
-        setError('Cannot process this request. Please try again with a different prompt.');
+      .catch((_) => {
+        setError(apiRef.current.getLocaleText('toolbarPromptControlErrorMessage'));
       })
       .finally(() => {
         setLoading(false);
         apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: false } }));
       });
-  }, [apiRef, rootProps, promptResolverApiUrl, promptContext, allowDataSampling, query]);
+  }, [apiRef, rootProps, promptResolverApiUrl, promptContext, examplesFromData, query]);
 
   const handleChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -224,7 +242,6 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
             <InputAdornment position="start">
               <RecordButton
                 className={classes.recordButton}
-                label={isLoading ? 'Loading…' : undefined}
                 lang={lang}
                 recording={isRecording}
                 setRecording={setRecording}
@@ -236,15 +253,19 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <rootProps.slots.baseTooltip title="Send">
+              <rootProps.slots.baseTooltip
+                title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
+              >
                 <div>
                   <rootProps.slots.baseIconButton
                     className={classes.sendButton}
-                    disabled={isLoading || query === ''}
+                    disabled={isLoading || isRecording || query === ''}
                     color="primary"
                     onClick={sendRequest}
                     size="small"
-                    aria-label="Send prompt"
+                    aria-label={apiRef.current.getLocaleText(
+                      'toolbarPromptControlSendActionAriaLabel',
+                    )}
                   >
                     <SendIcon fontSize="small" />
                   </rootProps.slots.baseIconButton>

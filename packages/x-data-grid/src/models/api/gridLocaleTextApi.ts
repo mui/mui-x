@@ -46,6 +46,13 @@ export interface GridLocaleText {
   toolbarPromptControlRecordingPlaceholder: string;
   toolbarPromptControlLabel: string;
   toolbarPromptControlDeleteIconLabel: string;
+  toolbarPromptControlRecordButtonDefaultLabel: string;
+  toolbarPromptControlRecordButtonActiveLabel: string;
+  toolbarPromptControlSendActionLabel: string;
+  toolbarPromptControlSendActionAriaLabel: string;
+  toolbarPromptControlErrorMessage: string;
+  toolbarPromptControlRowsContextIntro: string;
+  toolbarPromptControlColumnsContextIntro: string;
 
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
