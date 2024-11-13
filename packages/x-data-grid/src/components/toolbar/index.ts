@@ -10,6 +10,7 @@ export type {
   GridExportMenuItemProps,
   GridCsvExportMenuItemProps,
   GridPrintExportMenuItemProps,
+  GridToolbarExportProps,
 } from './GridToolbarExport';
 export {
   GridCsvExportMenuItem,

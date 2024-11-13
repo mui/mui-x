@@ -3,12 +3,13 @@ import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/utils';
 import { Theme } from '@mui/material/styles';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
+import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/DateCalendar';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,
@@ -16,9 +17,9 @@ import {
   DayCalendarSlotProps,
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
-  DayCalendarProps,
   ExportedUseViewsOptions,
   PickerRangeValue,
+  FormProps,
 } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -49,33 +50,24 @@ export interface DateRangeCalendarSlotProps
   extends PickersArrowSwitcherSlotProps,
     Omit<DayCalendarSlotProps, 'day'>,
     PickersCalendarHeaderSlotProps {
-  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateRangeCalendarProps>;
-  day?: SlotComponentProps<
-    typeof DateRangePickerDay,
+  calendarHeader?: SlotComponentProps<
+    typeof PickersCalendarHeader,
     {},
-    DayCalendarProps & { day: PickerValidDate; selected: boolean }
+    DateRangeCalendarOwnerState
   >;
+  day?: SlotComponentProps<typeof DateRangePickerDay, {}, PickerDayOwnerState>;
 }
 
 export interface ExportedDateRangeCalendarProps
   extends ExportedDayCalendarProps,
     ExportedValidateDateRangeProps,
-    TimezoneProps {
+    TimezoneProps,
+    FormProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
    */
   disableAutoMonthSwitching?: boolean;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
@@ -151,8 +143,8 @@ export interface DateRangeCalendarProps
   availableRangePositions?: RangePosition[];
 }
 
-export interface DateRangeCalendarOwnerState extends DateRangeCalendarProps {
-  isDragging: boolean;
+export interface DateRangeCalendarOwnerState extends PickerOwnerState {
+  isDraggingDay: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps = DefaultizedProps<

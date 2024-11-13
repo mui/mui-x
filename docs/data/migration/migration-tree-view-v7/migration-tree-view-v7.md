@@ -65,6 +65,53 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+### ✅ Use Simple Tree View instead of Tree View
+
+The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API:
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem itemId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
+
+If you were using theme augmentation, you will also need to migrate it:
+
+```diff
+ const theme = createTheme({
+   components: {
+-    MuiTreeView: {
++    MuiSimpleTreeView: {
+       styleOverrides: {
+         root: {
+           opacity: 0.5,
+         },
+       },
+     },
+   },
+ });
+```
+
+If you were using the `treeViewClasses` object, you can replace it with the new `simpleTreeViewClasses` object:
+
+```diff
+ import { treeViewClasses } from '@mui/x-tree-view/TreeView';
+ import { simpleTreeViewClasses } from '@mui/x-tree-view/SimpleTreeView';
+
+-const rootClass = treeViewClasses.root;
++const rootClass = simpleTreeViewClasses.root;
+```
+
 ## New API to customize the Tree Item
 
 The `ContentComponent` or `ContentProps` props of the `TreeItem` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook.
@@ -85,7 +132,7 @@ This inconsistency has been solved, all the event manager now target the root of
  </SimpleTreeView>
 ```
 
-## Rename the `TreeItem2` (and related utils)
+## ✅ Rename the `TreeItem2` (and related utils)
 
 All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item and are therefore losing their `2` suffix:
 
@@ -177,4 +224,41 @@ All the new Tree Item-related components and utils (introduced in the previous m
 +  TreeItemLabelInputProps,
 - } from '@mui/x-tree-view/TreeItem2LabelInput';
 + } from '@mui/x-tree-view/TreeItemLabelInput';
+```
+
+## Apply the indentation on the item content instead of it's parent's group
+
+The indentation of nested Tree Items is now applied on the content of the element.
+This is required to support features like the drag and drop re-ordering which requires every Tree Item to go to the far left of the Tree View.
+
+### Apply custom indentation
+
+If you used to set custom indentation in your Tree Item, you can use the new `itemChildrenIndentation` prop to do it while supporting the new DOM structure:
+
+```tsx
+<RichTreeView
+  items={MUI_X_PRODUCTS}
+  itemChildrenIndentation={24}
+  defaultExpandedItems={['grid']}
+/>
+```
+
+:::info
+See [Tree Item Customization—Change nested item's indentation](/x/react-tree-view/tree-item-customization/#change-nested-items-indentation) for more details.
+:::
+
+### Fallback to the old behavior
+
+If you used to style your content element (for example to add a border to it) and you don't use the drag and drop re-ordering, you can manually put the padding on the group transition element to restore the previous behavior:
+
+```tsx
+const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
+  // Remove the additional padding of nested elements
+  padding: theme.spacing(0.5, 1),
+}));
+
+const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)({
+  // Add the padding back on the group transition element
+  paddingLeft: 'var(--TreeView-itemChildrenIndentation) !important',
+});
 ```

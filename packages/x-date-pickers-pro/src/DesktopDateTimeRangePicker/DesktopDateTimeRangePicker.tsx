@@ -13,7 +13,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
-import { PickersLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
+import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import {
@@ -193,7 +193,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: PickersLayoutOwnerState) => ({
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
@@ -272,7 +272,8 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   disableAutoMonthSwitching: PropTypes.bool,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -462,6 +463,11 @@ DesktopDateTimeRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.

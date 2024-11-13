@@ -8,7 +8,7 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -17,8 +17,9 @@ import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
+import { FormProps } from '../internals/models/formProps';
 
-export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
+export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
@@ -40,8 +41,6 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode> {
    * The current full date value.
    */
   value: PickerValidDate | null;
-  disabled?: boolean;
-  readOnly?: boolean;
   className?: string;
   classes?: Partial<ClockClasses>;
 }
@@ -224,7 +223,7 @@ export function Clock(inProps: ClockProps) {
   const ownerState = props;
 
   const utils = useUtils();
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
 
