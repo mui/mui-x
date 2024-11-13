@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import type {} from '../typeOverloads';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ResizableContainer } from '@mui/x-charts/internals';
