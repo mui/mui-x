@@ -234,7 +234,7 @@ describe('<DataGridPro /> - Row reorder', () => {
 
     render(<Test />);
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getColumnValues(0)).to.deep.equal(['1']);
+    expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
     const rowReorderCell = getCell(2, 0).firstChild!;
     const targetCell = getCell(3, 0);
