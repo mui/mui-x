@@ -13,6 +13,7 @@ import {
   AnimationProvider,
 } from '@mui/x-charts/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import type {} from '../typeOverloads';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { CartesianProviderPro } from '../context/CartesianProviderPro';
 import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
