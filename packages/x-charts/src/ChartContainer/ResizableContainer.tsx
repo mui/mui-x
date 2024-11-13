@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSize } from '../context/SizeProvider';
 import type { SizeContextState } from '../context/SizeProvider';
@@ -32,7 +33,7 @@ export const ResizableContainerRoot = styled('div', {
  *
  * @ignore - do not document.
  */
-export function ResizableContainer(props: { children: React.ReactNode }) {
+function ResizableContainer(props: { children: React.ReactNode }) {
   const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
 
   return (
@@ -45,3 +46,13 @@ export function ResizableContainer(props: { children: React.ReactNode }) {
     </ResizableContainerRoot>
   );
 }
+
+ResizableContainer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { ResizableContainer };

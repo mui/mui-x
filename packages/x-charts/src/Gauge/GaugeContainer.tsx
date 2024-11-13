@@ -45,7 +45,7 @@ const ResizableContainerRoot = styled('div', {
   },
 }));
 
-export function ResizableContainer(props: any) {
+function ResizableContainer(props: any) {
   const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
 
   return (
