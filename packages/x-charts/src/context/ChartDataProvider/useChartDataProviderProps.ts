@@ -83,8 +83,6 @@ export const useChartDataProviderProps = (
     ref: any;
   } = {
     ...other,
-    width,
-    height,
     ref: chartSurfaceRef,
     sx,
     title,

@@ -101,8 +101,6 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
             cy={cy}
           >
             <SurfacePropsProvider
-              width={width}
-              height={height}
               title={title}
               desc={desc}
               disableAxisListener
