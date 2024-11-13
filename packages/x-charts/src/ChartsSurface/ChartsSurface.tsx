@@ -37,21 +37,30 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const contextProps = useSurfaceProps();
-  const { width, height } = useDrawingArea();
+  const { width, height, left, right, top, bottom } = useDrawingArea();
   const resolvedProps = resolveProps(inProps as any, contextProps) as ChartsSurfaceProps;
 
   const themeProps = useThemeProps({ props: resolvedProps, name: 'MuiChartsSurface' });
   const surfaceRef = useForkRef(ref, contextProps.ref);
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
-  const svgView = { width, height, x: 0, y: 0 };
+
+  const svgWidth = width + left + right;
+  const svgHeight = height + top + bottom;
+
+  const svgView = {
+    width: svgWidth,
+    height: svgHeight,
+    x: 0,
+    y: 0,
+  };
 
   useAxisEvents(disableAxisListener);
 
   return (
     <ChartsSurfaceStyles
-      width={width}
-      height={height}
+      width={svgWidth}
+      height={svgHeight}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
