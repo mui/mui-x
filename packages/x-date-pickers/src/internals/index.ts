@@ -97,7 +97,7 @@ export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { RangePosition } from './models/pickers';
-export type { BaseSingleInputFieldProps } from './models/fields';
+export type { BaseSingleInputFieldProps, FieldRangeSection } from './models/fields';
 export type {
   BasePickerProps,
   BasePickerInputProps,

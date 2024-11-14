@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { UseFieldResponse, FormProps, RangePosition } from '@mui/x-date-pickers/internals';
-import { FieldRef, FieldSection, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
+import { UseFieldResponse, FormProps } from '@mui/x-date-pickers/internals';
+import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 
-export interface RangeFieldSection extends FieldSection {
-  dateName: RangePosition;
-}
+export type { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
 export type FieldType = 'single-input' | 'multi-input';
 
