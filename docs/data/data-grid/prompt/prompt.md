@@ -24,6 +24,7 @@ In a real-world scenario, you should replace this with your own api.
 - `sort by company name and employee name`
 - `show people from the EU`
 - `order companies by amount of people`
+
   :::
 
 If you are integarting with MUI's API, you can use the `gridDefaultPromptResolver` from `@mui/x-data-grid-premium` package.
