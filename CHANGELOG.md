@@ -175,6 +175,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [docs] Fix peer dependency range (#15281) @oliviertassinari
 - [docs] Fix small Tree View typo (#15390) @oliviertassinari
 - [docs] Fix the `AdapterMomentHijri` doc section (#15312) @flaviendelangle
+- [docs] Replace the Tree Item anatomy images (#15066) @noraleonte
 - [docs] Start v8 migration guides (#15096) @MBilalShafi
 - [docs] Subdivide and reorganize navigation bar (#15014) @samuelsycamore
 - [docs] Use `PickersTextField` in the customization playground (#15288) @LukasTy
