@@ -11,7 +11,6 @@ import {
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
-import SendIcon from '@mui/icons-material/Send';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../models/gridApiPremium';
@@ -258,7 +257,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                       'toolbarPromptControlSendActionAriaLabel',
                     )}
                   >
-                    <SendIcon fontSize="small" />
+                    <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
                   </rootProps.slots.baseIconButton>
                 </div>
               </rootProps.slots.baseTooltip>

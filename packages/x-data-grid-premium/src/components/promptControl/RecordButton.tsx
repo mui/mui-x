@@ -2,7 +2,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
-import MicrophoneIcon from '@mui/icons-material/Mic';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -118,7 +117,7 @@ function RecordButton(props: RecordButtonProps) {
             ref={buttonRef}
             size="small"
           >
-            <MicrophoneIcon />
+            <rootProps.slots.toolbarPromptRecordIcon fontSize="small" />
           </rootProps.slots.baseIconButton>
         </div>
       </rootProps.slots.baseTooltip>
