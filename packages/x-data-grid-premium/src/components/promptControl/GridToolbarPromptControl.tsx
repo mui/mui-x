@@ -98,8 +98,8 @@ type GridToolbarPromptControlProps = {
    */
   allowDataSampling?: boolean;
   /**
-   * The language to use for the speech recognition.
-   * @default 'en-US'
+   * The BCP 47 language tag to use for the speech recognition.
+   * @default HTML lang attribute value or the user agent's language setting
    */
   lang?: string;
 };
@@ -269,31 +269,4 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
   );
 }
 
-GridToolbarPromptControl.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * Allow taking couple of random cell values from each column to improve the prompt context.
-   * If allowed, samples are taken from different rows.
-   * If not allowed, the column examples are used.
-   * @default false
-   */
-  allowDataSampling: PropTypes.bool,
-  /**
-   * The language to use for the speech recognition.
-   * @default 'en-US'
-   */
-  lang: PropTypes.string,
-  /**
-   * Called when the new prompt is ready to be processed.
-   * Provides the prompt and the data context and expects the grid state updates to be returned.
-   * @param {string} context The context of the prompt
-   * @param {string} query The query to process
-   * @returns {Promise<PromptResponse>} The grid state updates
-   */
-  onPrompt: PropTypes.func.isRequired,
-} as any;
-
-export { GridToolbarPromptControl as Unstable_GridToolbarPromptControl };
+export { GridToolbarPromptControl };

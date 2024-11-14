@@ -1,1 +1,1 @@
-export * from './GridToolbarPromptControl';
+export { GridToolbarPromptControl as Unstable_GridToolbarPromptControl } from './GridToolbarPromptControl';

@@ -38,7 +38,7 @@ function RecordButton(props: RecordButtonProps) {
     const instance = new BrowserSpeechRecognition();
     instance.continuous = true;
     instance.interimResults = true;
-    instance.lang = lang ?? 'en-US';
+    instance.lang = lang;
 
     let finalResult = '';
     let interimResult = '';
