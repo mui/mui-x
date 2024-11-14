@@ -27,7 +27,7 @@ In a real-world scenario, you should replace this with your own api.
 If you are integarting with MUI's API, you can use the `gridDefaultPromptResolver` from `@mui/x-data-grid-premium` package.
 
 ```ts
-const REMOTE_ENDPOINT =
+const PROMPT_RESOLVER_BASE_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
     : 'https://api.mui.com';
@@ -36,7 +36,7 @@ function processPrompt(context: string, query: string) {
   const extendedContext = `The rows represent: List of employees with their company, position and start date\n\n${context}`;
 
   return gridDefaultPromptResolver(
-    `${REMOTE_ENDPOINT}/api/datagrid/prompt`,
+    `${PROMPT_RESOLVER_BASE_URL}/api/datagrid/prompt`,
     extendedContext,
     query,
   );
