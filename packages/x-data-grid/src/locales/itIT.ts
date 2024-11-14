@@ -31,7 +31,7 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Cerca',
   toolbarQuickFilterDeleteIconLabel: 'Resetta',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

@@ -55,7 +55,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Очистити',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

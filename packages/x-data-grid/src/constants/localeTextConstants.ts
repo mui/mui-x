@@ -29,7 +29,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarQuickFilterLabel: 'Search',
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   toolbarPromptControlLabel: 'Remote prompt',

@@ -31,7 +31,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Limpar',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

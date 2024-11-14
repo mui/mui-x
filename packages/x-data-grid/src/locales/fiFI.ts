@@ -31,7 +31,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hae',
   toolbarQuickFilterDeleteIconLabel: 'Tyhjennä',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

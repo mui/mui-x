@@ -38,7 +38,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

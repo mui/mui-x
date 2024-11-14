@@ -31,7 +31,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Tìm kiếm',
   toolbarQuickFilterDeleteIconLabel: 'Xóa tìm kiếm',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

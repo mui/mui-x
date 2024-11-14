@@ -31,7 +31,7 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Leita',
   toolbarQuickFilterDeleteIconLabel: 'Eyða',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

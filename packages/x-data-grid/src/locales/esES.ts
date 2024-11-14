@@ -31,7 +31,7 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

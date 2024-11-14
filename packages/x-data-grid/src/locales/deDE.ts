@@ -31,7 +31,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

@@ -30,7 +30,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

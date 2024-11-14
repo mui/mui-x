@@ -54,7 +54,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Пошук',
   toolbarQuickFilterDeleteIconLabel: 'Ачысціць',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

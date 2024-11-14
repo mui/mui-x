@@ -30,7 +30,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '검색',
   toolbarQuickFilterDeleteIconLabel: '초기화',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

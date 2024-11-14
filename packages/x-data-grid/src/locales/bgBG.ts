@@ -30,7 +30,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

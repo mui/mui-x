@@ -30,7 +30,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '検索',
   toolbarQuickFilterDeleteIconLabel: 'クリア',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

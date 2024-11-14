@@ -31,7 +31,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Αναζήτηση',
   toolbarQuickFilterDeleteIconLabel: 'Καθαρισμός',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

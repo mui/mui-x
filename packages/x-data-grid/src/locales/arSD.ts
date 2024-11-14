@@ -31,7 +31,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'بحث',
   toolbarQuickFilterDeleteIconLabel: 'أزال',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

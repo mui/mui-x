@@ -31,7 +31,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'تلاش کریں',
   toolbarQuickFilterDeleteIconLabel: 'کلئیر کریں',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

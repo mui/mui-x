@@ -31,7 +31,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',

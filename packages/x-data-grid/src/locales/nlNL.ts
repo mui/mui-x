@@ -31,7 +31,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Zoeken',
   toolbarQuickFilterDeleteIconLabel: 'Wissen',
 
-  // Remote control toolbar field
+  // Prompt toolbar field
   // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Remote prompt',
