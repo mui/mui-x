@@ -41,7 +41,7 @@ export function createXMochaHooks(coreMochaHooks = {}) {
 }
 
 // So we can mock files without having to have a global override in vitest
-// eslint-disable-next-line no-undef
+// This shows an error locally, but pnpm eslint:ci doesn't flag it as an error...
 globalThis.vi = {
   mock: () => {},
 };
