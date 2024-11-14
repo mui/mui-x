@@ -13,11 +13,10 @@ import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider'
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
-import { SvgRefProvider, SvgRefProviderProps } from '../SvgRefProvider';
+import { SvgRefProvider } from '../SvgRefProvider';
 
 export type ChartDataProviderProps = Omit<
   SizeProviderProps &
-    SvgRefProviderProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
     Pick<DrawingAreaProviderProps, 'margin'> &
     Pick<CartesianProviderProps, 'dataset'> &
