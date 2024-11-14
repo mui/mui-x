@@ -80,9 +80,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'İçermez',
   headerFilterOperatorEquals: 'Şuna eşittir',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Eşit değildir',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
   headerFilterOperatorIs: 'Eşittir',
