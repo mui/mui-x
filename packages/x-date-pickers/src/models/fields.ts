@@ -142,10 +142,7 @@ export type PickerFieldSlotProps<
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = UseClearableFieldResponse<
-  UseFieldResponse<
-    TEnableAccessibleFieldDOMStructure,
-    BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
-  >
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
 >;
 
 /**

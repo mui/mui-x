@@ -8,7 +8,7 @@ import type {
 import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
-interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
+export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearableFieldProps {
   className: string | undefined;
   sx: SxProps<any> | undefined;
   label: React.ReactNode | undefined;
@@ -18,6 +18,7 @@ interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableF
   onKeyDown?: React.KeyboardEventHandler;
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -32,18 +33,6 @@ interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableF
   };
   ownerState: PickerOwnerState;
 }
-
-interface BaseForwardedV6SingleInputFieldProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
-interface BaseForwardedV7SingleInputFieldProps {}
-
-export type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  BaseForwardedCommonSingleInputFieldProps &
-    (TEnableAccessibleFieldDOMStructure extends false
-      ? BaseForwardedV6SingleInputFieldProps
-      : BaseForwardedV7SingleInputFieldProps);
 
 /**
  * Props the single input field can receive when used inside a picker.
@@ -72,4 +61,4 @@ export type BaseSingleInputFieldProps<
   >,
   'format' | 'value' | 'onChange' | 'timezone'
 > &
-  BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
+  BaseForwardedSingleInputFieldProps;

@@ -126,7 +126,7 @@ export const useMobileRangePicker = <
       // Forwarded props
       className,
       sx,
-      ...(fieldType === 'single-input' && !enableAccessibleFieldDOMStructure && { inputRef }),
+      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
       ...(fieldType === 'single-input' && { name }),
     },
     ownerState,

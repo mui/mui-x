@@ -138,7 +138,7 @@ export const useDesktopPicker = <
       name,
       focused: open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!enableAccessibleFieldDOMStructure && { inputRef }),
+      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });

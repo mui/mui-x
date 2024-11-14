@@ -404,8 +404,8 @@ const useSingleInputFieldSlotProps = <
   const slotProps = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
+    clearButton: pickerSlotProps?.clearButton,
+    clearIcon: pickerSlotProps?.clearIcon,
   };
 
   const enrichedFieldProps: ReturnType = {
