@@ -31,7 +31,6 @@ export const getFakeContextValue = (
   wrapRoot: ({ children }) => children,
   items: {
     disabledItemsFocusable: false,
-    indentationAtItemLevel: false,
   },
   icons: {
     slots: {},

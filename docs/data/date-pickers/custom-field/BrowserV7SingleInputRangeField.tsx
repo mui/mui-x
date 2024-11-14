@@ -9,25 +9,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRangePicker,
+  DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
-import {
-  unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
-  UseSingleInputDateRangeFieldProps,
-} from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
-import {
-  BasePickersTextFieldProps,
-  DateRangeValidationError,
-  RangeFieldSection,
-  DateRange,
-  FieldType,
-} from '@mui/x-date-pickers-pro/models';
-import {
-  BaseSingleInputFieldProps,
-  PickerValidDate,
-} from '@mui/x-date-pickers/models';
+import { FieldType } from '@mui/x-date-pickers-pro/models';
+import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -48,10 +37,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<true>,
+  extends BaseSingleInputPickersTextFieldProps<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BasePickersTextFieldProps<true>
+      keyof BaseSingleInputPickersTextFieldProps<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
@@ -115,17 +104,7 @@ const BrowserTextField = React.forwardRef(
   },
 );
 
-interface BrowserSingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<true>,
-    BaseSingleInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      DateRange<PickerValidDate>,
-      RangeFieldSection,
-      true,
-      DateRangeValidationError
-    > {
-  onAdornmentClick?: () => void;
-}
+interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProps {}
 
 type BrowserSingleInputDateRangeFieldComponent = ((
   props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -133,7 +112,16 @@ type BrowserSingleInputDateRangeFieldComponent = ((
 
 const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, onAdornmentClick, ...other } = props;
+    const { slots, slotProps, ...other } = props;
+
+    const pickerContext = usePickerContext();
+    const handleTogglePicker = (event: React.UIEvent) => {
+      if (pickerContext.open) {
+        pickerContext.onClose(event);
+      } else {
+        pickerContext.onOpen(event);
+      }
+    };
 
     const textFieldProps: typeof props = useSlotProps({
       elementType: 'input',
@@ -146,7 +134,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ...textFieldProps.InputProps,
       endAdornment: (
         <InputAdornment position="end">
-          <IconButton onClick={onAdornmentClick}>
+          <IconButton onClick={handleTogglePicker}>
             <DateRangeIcon />
           </IconButton>
         </InputAdornment>
@@ -180,29 +168,11 @@ BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
 const BrowserSingleInputDateRangePicker = React.forwardRef(
   (props: DateRangePickerProps, ref: React.Ref<HTMLDivElement>) => {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
-
-    const handleOpen = () => setIsOpen(true);
-
-    const handleClose = () => setIsOpen(false);
-
     return (
       <DateRangePicker
         ref={ref}
         {...props}
-        open={isOpen}
-        onClose={handleClose}
-        onOpen={handleOpen}
         slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
-        slotProps={{
-          ...props.slotProps,
-          field: {
-            onAdornmentClick: toggleOpen,
-            ...props.slotProps?.field,
-          } as any,
-        }}
       />
     );
   },

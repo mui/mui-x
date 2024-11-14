@@ -7,7 +7,7 @@ import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
-import { useChartId } from '../hooks';
+import { useChartId, useDrawingArea } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -92,6 +92,7 @@ const useAggregatedData = (): {
     useBarSeries() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'bar'>);
   const axisData = useCartesianContext();
+  const drawingArea = useDrawingArea();
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
@@ -102,6 +103,12 @@ const useAggregatedData = (): {
   const masks: Record<string, MaskData> = {};
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
+    const xMin = drawingArea.left;
+    const xMax = drawingArea.left + drawingArea.width;
+
+    const yMin = drawingArea.top;
+    const yMax = drawingArea.top + drawingArea.height;
+
     return groupIds.flatMap((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
       const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
@@ -132,54 +139,69 @@ const useAggregatedData = (): {
 
       const { stackedData } = series[seriesId];
 
-      return stackedData.map((values, dataIndex: number) => {
-        const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+      return stackedData
+        .map((values, dataIndex: number) => {
+          const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-        const minValueCoord = Math.round(Math.min(...valueCoordinates));
-        const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+          const minValueCoord = Math.round(Math.min(...valueCoordinates));
+          const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
-        const stackId = series[seriesId].stack;
+          const stackId = series[seriesId].stack;
 
-        const result = {
-          seriesId,
-          dataIndex,
-          layout: series[seriesId].layout,
-          x: verticalLayout ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset : minValueCoord,
-          y: verticalLayout ? minValueCoord : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
-          xOrigin: xScale(0)!,
-          yOrigin: yScale(0)!,
-          height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
-          width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
-          color: colorGetter(dataIndex),
-          value: series[seriesId].data[dataIndex],
-          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-        };
-
-        if (!masks[result.maskId]) {
-          masks[result.maskId] = {
-            id: result.maskId,
-            width: 0,
-            height: 0,
-            hasNegative: false,
-            hasPositive: false,
-            layout: result.layout,
+          const result = {
+            seriesId,
+            dataIndex,
+            layout: series[seriesId].layout,
+            x: verticalLayout
+              ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset
+              : minValueCoord,
+            y: verticalLayout
+              ? minValueCoord
+              : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
             xOrigin: xScale(0)!,
             yOrigin: yScale(0)!,
-            x: 0,
-            y: 0,
+            height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
+            width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
+            color: colorGetter(dataIndex),
+            value: series[seriesId].data[dataIndex],
+            maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
           };
-        }
 
-        const mask = masks[result.maskId];
-        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
-        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-        mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
-        mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+          if (
+            result.x > xMax ||
+            result.x + result.width < xMin ||
+            result.y > yMax ||
+            result.y + result.height < yMin
+          ) {
+            return null;
+          }
 
-        return result;
-      });
+          if (!masks[result.maskId]) {
+            masks[result.maskId] = {
+              id: result.maskId,
+              width: 0,
+              height: 0,
+              hasNegative: false,
+              hasPositive: false,
+              layout: result.layout,
+              xOrigin: xScale(0)!,
+              yOrigin: yScale(0)!,
+              x: 0,
+              y: 0,
+            };
+          }
+
+          const mask = masks[result.maskId];
+          mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
+          mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+          mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
+          mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
+          mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
+          mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+
+          return result;
+        })
+        .filter((rectangle) => rectangle !== null);
     });
   });
 
