@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -12,7 +12,7 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams } from '../usePicker';
-import { BaseSingleInputFieldProps, PickerOwnerState, PickerValidDate } from '../../../models';
+import { PickerFieldSlotProps, PickerOwnerState, PickerValidDate } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -42,7 +42,7 @@ export interface ExportedUseMobilePickerSlotProps<
 > extends PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<false, TView> {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<false, TEnableAccessibleFieldDOMStructure, unknown>,
+    PickerFieldSlotProps<false, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -67,7 +67,7 @@ export interface UseMobilePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends BasePickerProps<false, TView, TError, TExternalProps, {}>,
-    MobileOnlyPickerProps {
+    MakeRequired<MobileOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
    * @default {}
