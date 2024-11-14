@@ -37,21 +37,15 @@ export function useDateValueManager<TEnableAccessibleFieldDOMStructure extends b
   );
 }
 
-export function getDateFieldInternalPropsDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->({
-  defaultDates,
-  utils,
-  internalProps,
-}: Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> & {
-  internalProps: Pick<
-    DateFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateFieldPropsToDefault
-  >;
-}): Pick<
-  DateFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
-  DateFieldPropsToDefault
-> {
+/**
+ * Private utility function to get the default internal props for the fields with date editing.
+ * Is used by the `useDateValueManager` and `useDateRangeValueManager` hooks.
+ */
+export function getDateFieldInternalPropsDefaults(
+  parameters: GetDateFieldInternalPropsDefaultsParameters,
+): GetDateFieldInternalPropsDefaultsReturnValue {
+  const { defaultDates, utils, internalProps } = parameters;
+
   return {
     format: internalProps.format ?? utils.formats.keyboardDate,
     disablePast: internalProps.disablePast ?? false,
@@ -87,3 +81,11 @@ type DateFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
 export interface UseDateValueManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
+
+interface GetDateFieldInternalPropsDefaultsParameters
+  extends Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> {
+  internalProps: Pick<DateFieldInternalProps<true>, DateFieldPropsToDefault>;
+}
+
+interface GetDateFieldInternalPropsDefaultsReturnValue
+  extends Pick<DateFieldInternalPropsWithDefaults<true>, DateFieldPropsToDefault> {}

@@ -37,20 +37,14 @@ export function useTimeValueManager<TEnableAccessibleFieldDOMStructure extends b
   );
 }
 
-export function getTimeFieldInternalPropsDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->({
-  utils,
-  internalProps,
-}: Pick<MuiPickersAdapterContextValue, 'utils'> & {
-  internalProps: Pick<
-    TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeFieldPropsToDefault | 'ampm'
-  >;
-}): Pick<
-  TimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
-  TimeFieldPropsToDefault
-> {
+/**
+ * Private utility function to get the default internal props for the fields with time editing.
+ * Is used by the `useTimeValueManager` and `useTimeRangeValueManager` hooks.
+ */
+export function getTimeFieldInternalPropsDefaults(
+  parameters: GetTimeFieldInternalPropsDefaultsParameters,
+): GetTimeFieldInternalPropsDefaultsReturnValue {
+  const { utils, internalProps } = parameters;
   const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
 
@@ -88,3 +82,11 @@ type TimeFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
 export interface UseTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
+
+interface GetTimeFieldInternalPropsDefaultsParameters
+  extends Pick<MuiPickersAdapterContextValue, 'utils'> {
+  internalProps: Pick<TimeFieldInternalProps<true>, TimeFieldPropsToDefault | 'ampm'>;
+}
+
+interface GetTimeFieldInternalPropsDefaultsReturnValue
+  extends Pick<TimeFieldInternalPropsWithDefaults<true>, TimeFieldPropsToDefault> {}

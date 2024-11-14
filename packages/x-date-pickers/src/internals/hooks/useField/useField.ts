@@ -27,7 +27,8 @@ import {
 
 /**
  * Applies the default values to the field internal props.
- * This will be moved inside `useField` and is only here to allow the migration to be done in smaller steps.
+ * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
+ * It is only here to allow the migration to be done in smaller steps.
  */
 export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyValueManagerV8>({
   valueManager,

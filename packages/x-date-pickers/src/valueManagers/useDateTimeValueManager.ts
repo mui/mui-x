@@ -38,21 +38,14 @@ export function useDateTimeValueManager<TEnableAccessibleFieldDOMStructure exten
   );
 }
 
-export function getDateTimeFieldInternalPropsDefaults<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->({
-  defaultDates,
-  utils,
-  internalProps,
-}: Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> & {
-  internalProps: Pick<
-    DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeFieldPropsToDefault | 'minDateTime' | 'maxDateTime' | 'ampm'
-  >;
-}): Pick<
-  DateTimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>,
-  DateTimeFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
-> {
+/**
+ * Private utility function to get the default internal props for the field with date time editing.
+ * Is used by the `useDateTimeValueManager` and `useDateTimeRangeValueManager` hooks.
+ */
+export function getDateTimeFieldInternalPropsDefaults(
+  parameters: GetDateTimeFieldInternalPropsDefaultsParameters,
+): GetDateTimeFieldInternalPropsDefaultsReturnValue {
+  const { defaultDates, utils, internalProps } = parameters;
   const ampm = internalProps.ampm ?? utils.is12HourCycleInCurrentLocale();
   const defaultFormat = ampm
     ? utils.formats.keyboardDateTime12h
@@ -114,3 +107,17 @@ export interface UseDateTimeValueManagerParameters<
 > {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
+
+interface GetDateTimeFieldInternalPropsDefaultsParameters
+  extends Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> {
+  internalProps: Pick<
+    DateTimeFieldInternalProps<true>,
+    DateTimeFieldPropsToDefault | 'minDateTime' | 'maxDateTime' | 'ampm'
+  >;
+}
+
+interface GetDateTimeFieldInternalPropsDefaultsReturnValue
+  extends Pick<
+    DateTimeFieldInternalPropsWithDefaults<true>,
+    DateTimeFieldPropsToDefault | 'disableIgnoringDatePartForTimeValidation'
+  > {}
