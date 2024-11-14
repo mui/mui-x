@@ -17,9 +17,7 @@ function CustomDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
   const { format, timezone, value, onChange } = internalProps;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -27,12 +25,6 @@ function CustomDateField(props: DatePickerFieldProps) {
     props: internalProps,
     validator: validateDate,
   });
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newInputValue = event.target.value;
@@ -52,6 +44,22 @@ function CustomDateField(props: DatePickerFieldProps) {
       error={hasValidationError}
     />
   );
+}
+
+function useInputValue(valueProp: Dayjs | null, format: string) {
+  const [lastValueProp, setLastValueProp] = React.useState(valueProp);
+  const [inputValue, setInputValue] = React.useState(() =>
+    createInputValue(valueProp, format),
+  );
+
+  if (lastValueProp !== valueProp) {
+    setLastValueProp(valueProp);
+    if (valueProp && valueProp.isValid()) {
+      setInputValue(createInputValue(valueProp, format));
+    }
+  }
+
+  return [inputValue, setInputValue] as const;
 }
 
 function createInputValue(value: Dayjs | null, format: string) {

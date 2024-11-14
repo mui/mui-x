@@ -167,23 +167,32 @@ Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pi
 ```jsx
 function CustomDateField(props) {
   const { format, value, onChange } = props;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const handleChange = (event) => {
     const newInputValue = event.target.value;
+    const newValue = dayjs(newInputValue, format);
     setInputValue(newInputValue);
-    onChange(dayjs(newInputValue, format), { validationError: null });
+    onChange(newValue, { validationError: null });
   };
 
   return <TextField value={inputValue} onChange={handleChange} />;
+}
+
+function useInputValue(valueProp, format) {
+  const [lastValueProp, setLastValueProp] = React.useState(valueProp);
+  const [inputValue, setInputValue] = React.useState(() =>
+    createInputValue(valueProp, format),
+  );
+
+  if (lastValueProp !== valueProp) {
+    setLastValueProp(valueProp);
+    if (valueProp && valueProp.isValid()) {
+      setInputValue(createInputValue(valueProp, format));
+    }
+  }
+
+  return [inputValue, setInputValue];
 }
 
 function createInputValue(value, format) {
@@ -288,9 +297,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 
 function CustomDateField(props) {
   const { format, timezone, value, onChange } = props;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -298,12 +305,6 @@ function CustomDateField(props) {
     props,
     validator: validateDate,
   });
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
 
   const handleChange = (event) => {
     const newInputValue = event.target.value;
@@ -350,9 +351,7 @@ import { useParsedFormat } from '@mui/x-date-pickers/hooks';
 
 function CustomDateField(props) {
   const { format, timezone, value, onChange } = props;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const placeholder = useParsedFormat(props);
 
@@ -362,12 +361,6 @@ function CustomDateField(props) {
     props,
     validator: validateDate,
   });
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
 
   const handleChange = (event) => {
     const newInputValue = event.target.value;
@@ -432,9 +425,7 @@ function CustomDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
   const { format, timezone, value, onChange } = internalProps;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -442,12 +433,6 @@ function CustomDateField(props) {
     props: internalProps,
     validator: validateDate,
   });
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
 
   const handleChange = (event) => {
     const newInputValue = event.target.value;
