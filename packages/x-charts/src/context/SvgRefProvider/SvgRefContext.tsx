@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { Initializable } from '../context.types';
 import { SvgRefState } from './SvgRef.types';
