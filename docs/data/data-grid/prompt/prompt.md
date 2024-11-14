@@ -10,7 +10,7 @@ title: Data Grid - Prompt
 To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on. Check [licensing page](/x/introduction/licensing/) for more information.
 :::
 
-The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "filter by country" in the prompt input field, and the Data Grid will update accordingly.
+The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
 To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in following ways.
 
@@ -48,8 +48,8 @@ function processPrompt(context: string, query: string) {
 
 ## Custom examples
 
-The user can provide custom examples for the prompt processing through the `examples` prop of the column in the `columns` array.
-The `examples` prop should be an array of values that are possible values for that column.
+The user can provide custom examples for the prompt processing through the `unstable_examples` prop of the column in the `columns` array.
+The `unstable_examples` prop should be an array of values that are possible values for that column.
 
 {{"demo": "PromptWithExamples.js", "bg": "inline"}}
 
