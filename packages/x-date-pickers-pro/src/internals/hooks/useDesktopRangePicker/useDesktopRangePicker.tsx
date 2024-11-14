@@ -153,7 +153,7 @@ export const useDesktopRangePicker = <
       className,
       sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && !enableAccessibleFieldDOMStructure && { inputRef }),
+      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
       ...(fieldType === 'single-input' && { name }),
     },
     ownerState,

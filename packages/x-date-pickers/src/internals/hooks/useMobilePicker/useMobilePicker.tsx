@@ -104,7 +104,7 @@ export const useMobilePicker = <
         onClick: actions.onOpen,
         onKeyDown: onSpaceOrEnter(actions.onOpen),
       }),
-      ...(!enableAccessibleFieldDOMStructure && { inputRef }),
+      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
