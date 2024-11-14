@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
+import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { SizeProvider, useSize } from '../context/SizeProvider';
+import { SvgRefProvider } from '../context/SvgRefProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Omit<DrawingProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
+    Omit<DrawingAreaProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
     Omit<GaugeProviderProps, 'children'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
@@ -59,7 +60,10 @@ function ResizableContainer(props: any) {
   );
 }
 
-const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeContainerProps, ref) {
+const GaugeContainer = React.forwardRef(function GaugeContainer(
+  props: GaugeContainerProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     width: inWidth,
     height: inHeight,
@@ -85,41 +89,40 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
 
   return (
     <SizeProvider width={inWidth} height={inHeight}>
-      <DrawingProvider
-        margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
-        svgRef={svgRef}
-      >
-        <GaugeProvider
-          value={value}
-          valueMin={valueMin}
-          valueMax={valueMax}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          outerRadius={outerRadius}
-          innerRadius={innerRadius}
-          cornerRadius={cornerRadius}
-          cx={cx}
-          cy={cy}
-        >
-          <ResizableContainer
-            role="meter"
-            aria-valuenow={value === null ? undefined : value}
-            aria-valuemin={valueMin}
-            aria-valuemax={valueMax}
-            {...other}
+      <SvgRefProvider svgRef={svgRef}>
+        <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
+          <GaugeProvider
+            value={value}
+            valueMin={valueMin}
+            valueMax={valueMax}
+            startAngle={startAngle}
+            endAngle={endAngle}
+            outerRadius={outerRadius}
+            innerRadius={innerRadius}
+            cornerRadius={cornerRadius}
+            cx={cx}
+            cy={cy}
           >
-            <ChartsSurface
-              title={title}
-              desc={desc}
-              disableAxisListener
-              aria-hidden="true"
-              ref={chartSurfaceRef}
+            <ResizableContainer
+              role="meter"
+              aria-valuenow={value === null ? undefined : value}
+              aria-valuemin={valueMin}
+              aria-valuemax={valueMax}
+              {...other}
             >
-              {children}
-            </ChartsSurface>
-          </ResizableContainer>
-        </GaugeProvider>
-      </DrawingProvider>
+              <ChartsSurface
+                title={title}
+                desc={desc}
+                disableAxisListener
+                aria-hidden="true"
+                ref={chartSurfaceRef}
+              >
+                {children}
+              </ChartsSurface>
+            </ResizableContainer>
+          </GaugeProvider>
+        </DrawingAreaProvider>
+      </SvgRefProvider>
     </SizeProvider>
   );
 });

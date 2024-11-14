@@ -8,7 +8,7 @@ export const useChartContainerProProps = (props: ChartDataProviderProProps) => {
 
   const {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
@@ -16,6 +16,7 @@ export const useChartContainerProProps = (props: ChartDataProviderProProps) => {
     sizeProviderProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
     xAxis,
     yAxis,
   } = useChartDataProviderProps(baseProps);
@@ -30,7 +31,7 @@ export const useChartContainerProProps = (props: ChartDataProviderProProps) => {
   return {
     zoomProviderProps,
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     pluginProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
@@ -38,5 +39,6 @@ export const useChartContainerProProps = (props: ChartDataProviderProProps) => {
     highlightedProviderProps,
     sizeProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
   };
 };

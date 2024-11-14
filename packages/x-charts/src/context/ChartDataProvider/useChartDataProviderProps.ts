@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { DrawingProviderProps } from '../DrawingProvider';
+import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
@@ -10,6 +10,7 @@ import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
 import { SizeProviderProps } from '../SizeProvider';
+import { SvgRefProviderProps } from '../SvgRefProvider';
 
 export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const {
@@ -33,9 +34,12 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    margin,
+  const svgRefProviderProps: Omit<SvgRefProviderProps, 'children'> = {
     svgRef,
+  };
+
+  const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
+    margin,
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
@@ -76,13 +80,14 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
 
   return {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
     sizeProviderProps,

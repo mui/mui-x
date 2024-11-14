@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useCartesianContext } from '../../../context/CartesianProvider';
-import { DrawingContext } from '../../../context/DrawingProvider';
+import { DrawingAreaContext } from '../../../context/DrawingAreaProvider';
 import { useDrawingArea } from '../../../hooks';
 import ChartsPiecewiseGradient from './ChartsPiecewiseGradient';
 import ChartsContinuousGradient from './ChartsContinuousGradient';
 import { AxisId } from '../../../models/axis';
 
 export function useChartGradient() {
-  const { chartId } = React.useContext(DrawingContext);
+  const { chartId } = React.useContext(DrawingAreaContext);
   return React.useCallback(
     (axisId: AxisId, direction: 'x' | 'y') => `${chartId}-gradient-${direction}-${axisId}`,
     [chartId],

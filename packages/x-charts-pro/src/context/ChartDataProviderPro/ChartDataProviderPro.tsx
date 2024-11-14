@@ -3,11 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ChartDataProviderProps,
-  DrawingProvider,
+  DrawingAreaProvider,
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
+  SvgRefProvider,
 } from '@mui/x-charts/internals';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
@@ -24,7 +25,7 @@ export interface ChartDataProviderProProps extends ChartDataProviderProps, ZoomP
 function ChartDataProviderPro(props: ChartDataProviderProProps) {
   const {
     zoomProviderProps,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
@@ -32,6 +33,7 @@ function ChartDataProviderPro(props: ChartDataProviderProProps) {
     sizeProviderProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
     children,
   } = useChartContainerProProps(props);
 
@@ -39,25 +41,27 @@ function ChartDataProviderPro(props: ChartDataProviderProProps) {
 
   return (
     <SizeProvider {...sizeProviderProps}>
-      <DrawingProvider {...drawingProviderProps}>
-        <AnimationProvider {...animationProviderProps}>
-          <PluginProvider {...pluginProviderProps}>
-            <ZoomProvider {...zoomProviderProps}>
-              <SeriesProvider {...seriesProviderProps}>
-                <CartesianProviderPro {...cartesianProviderProps}>
-                  <ZAxisContextProvider {...zAxisContextProps}>
-                    <InteractionProvider>
-                      <HighlightedProvider {...highlightedProviderProps}>
-                        {children}
-                      </HighlightedProvider>
-                    </InteractionProvider>
-                  </ZAxisContextProvider>
-                </CartesianProviderPro>
-              </SeriesProvider>
-            </ZoomProvider>
-          </PluginProvider>
-        </AnimationProvider>
-      </DrawingProvider>
+      <DrawingAreaProvider {...drawingAreaProviderProps}>
+        <SvgRefProvider {...svgRefProviderProps}>
+          <AnimationProvider {...animationProviderProps}>
+            <PluginProvider {...pluginProviderProps}>
+              <ZoomProvider {...zoomProviderProps}>
+                <SeriesProvider {...seriesProviderProps}>
+                  <CartesianProviderPro {...cartesianProviderProps}>
+                    <ZAxisContextProvider {...zAxisContextProps}>
+                      <InteractionProvider>
+                        <HighlightedProvider {...highlightedProviderProps}>
+                          {children}
+                        </HighlightedProvider>
+                      </InteractionProvider>
+                    </ZAxisContextProvider>
+                  </CartesianProviderPro>
+                </SeriesProvider>
+              </ZoomProvider>
+            </PluginProvider>
+          </AnimationProvider>
+        </SvgRefProvider>
+      </DrawingAreaProvider>
     </SizeProvider>
   );
 }
