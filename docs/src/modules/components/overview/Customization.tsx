@@ -31,23 +31,23 @@ import {
 } from './themes/themes.types';
 import { getDefaultTheme } from './themes/defaultTheme';
 
-function RectangularCornersIcon() {
+function RectangularCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
   return (
-    <SvgIcon className="rectangular" viewBox="0 0 20 20" fill="currentColor">
+    <SvgIcon fontSize={fontSize} className="rectangular" viewBox="0 0 20 20" fill="currentColor">
       <path d="M15.6812 4.81884H2V2.5H18V18.5H15.6812V4.81884Z" />
     </SvgIcon>
   );
 }
-function MediumCornersIcon() {
+function MediumCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
   return (
-    <SvgIcon className="medium" viewBox="0 0 20 20" fill="currentColor">
+    <SvgIcon fontSize={fontSize} className="medium" viewBox="0 0 20 20" fill="currentColor">
       <path d="M12.2029 4.31884H2V2H12.2029C15.4045 2 18 4.59545 18 7.7971V18H15.6812V7.7971C15.6812 5.87611 14.1239 4.31884 12.2029 4.31884Z" />
     </SvgIcon>
   );
 }
-function RoundedCornersIcon() {
+function RoundedCornersIcon({ fontSize = 'medium' }: { fontSize: 'small' | 'medium' }) {
   return (
-    <SvgIcon className="rounded" viewBox="0 0 20 20" fill="currentColor">
+    <SvgIcon fontSize={fontSize} className="rounded" viewBox="0 0 20 20" fill="currentColor">
       <path d="M15.6812 18C15.6812 10.4441 9.5559 4.31884 2 4.31884V2C10.8366 2 18 9.16344 18 18H15.6812Z" />
     </SvgIcon>
   );
@@ -155,11 +155,13 @@ export default function Customization() {
   const colorScheme = getColorScheme(styleConfig.selectedTheme);
 
   const handleChangeTheme = (_event: React.MouseEvent<HTMLElement>, newTheme: Themes) => {
-    setStyleConfig((prev) => ({
-      ...prev,
-      selectedTheme: newTheme,
-      corner: newTheme === 'custom' ? 'medium' : 'rounded',
-    }));
+    if (newTheme !== null) {
+      setStyleConfig((prev) => ({
+        ...prev,
+        selectedTheme: newTheme,
+        corner: newTheme === 'custom' ? 'medium' : 'rounded',
+      }));
+    }
   };
   const handleChangeColor = (_event: React.MouseEvent<HTMLElement>, newColor: string) => {
     setStyleConfig((prev) => ({ ...prev, color: newColor }));
@@ -185,7 +187,7 @@ export default function Customization() {
     <React.Fragment>
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
-        <Stack spacing={1} sx={{ maxWidth: { xs: '500px', md: '100%' } }}>
+        <Stack gap={1} sx={{ maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}>
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Customization
           </Typography>
@@ -212,6 +214,7 @@ export default function Customization() {
               border: '1px solid',
               borderColor: 'divider',
               borderRadius: 1,
+              mt: 4,
             }}
           >
             <Box
@@ -222,7 +225,6 @@ export default function Customization() {
                   xs: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`,
                   md: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
                 },
-
                 flexBasis: '70%',
                 backgroundImage: `radial-gradient(${theme.palette.divider} 0.8px, ${theme.palette.background.paper} 0.8px)`,
                 backgroundSize: '10px 10px',
@@ -239,12 +241,10 @@ export default function Customization() {
                 />
               </LocalizationProvider>
             </Box>
-            <Box
-              component="div"
+            <Stack
+              direction={{ xs: 'row', md: 'column' }}
+              justifyContent="flex-start"
               sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
                 borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
                 borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
                 flexBasis: '30%',
@@ -256,8 +256,10 @@ export default function Customization() {
                 gap: 1.5,
                 background: theme.palette.gradients.linearSubtle,
                 order: { xs: 1, md: 2 },
+                overflow: 'auto',
               })}
             >
+              {/* Theme */}
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Select Theme
@@ -273,6 +275,7 @@ export default function Customization() {
                 />
               </Stack>
 
+              {/* Color */}
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Color
@@ -286,54 +289,58 @@ export default function Customization() {
                   }))}
                 />
               </Stack>
-              <Stack spacing={{ xs: 3, md: 0 }} direction={{ xs: 'row', md: 'column' }}>
-                {styleConfig.selectedTheme !== 'md3' && (
-                  <Stack spacing={1}>
-                    <Typography variant="caption" color="text.secondary" gutterBottom>
-                      Layout
-                    </Typography>
-                    <ConfigToggleButtons
-                      selectedValue={styleConfig.layout}
-                      handleValueSwitch={handleChangeLayout}
-                      values={[
-                        {
-                          key: 'horizontal',
-                          icon: <AlignHorizontalLeftIcon />,
-                        },
-                        {
-                          key: 'vertical',
-                          icon: <AlignVerticalBottomIcon />,
-                        },
-                      ]}
-                    />
-                  </Stack>
-                )}
-                {styleConfig.selectedTheme !== 'default' && (
-                  <Stack spacing={1}>
-                    <Typography variant="caption" color="text.secondary" gutterBottom>
-                      Corners
-                    </Typography>
-                    <ConfigToggleButtons
-                      selectedValue={styleConfig.corner}
-                      handleValueSwitch={handleChangeCorner}
-                      values={[
-                        {
-                          key: 'rectangular',
-                          icon: <RectangularCornersIcon />,
-                        },
-                        {
-                          key: 'medium',
-                          icon: <MediumCornersIcon />,
-                        },
-                        {
-                          key: 'rounded',
-                          icon: <RoundedCornersIcon />,
-                        },
-                      ]}
-                    />
-                  </Stack>
-                )}
-              </Stack>
+
+              {/* Layout */}
+              {styleConfig.selectedTheme !== 'md3' && (
+                <Stack spacing={1}>
+                  <Typography variant="caption" color="text.secondary" gutterBottom>
+                    Layout
+                  </Typography>
+                  <ConfigToggleButtons
+                    selectedValue={styleConfig.layout}
+                    handleValueSwitch={handleChangeLayout}
+                    values={[
+                      {
+                        key: 'horizontal',
+                        icon: <AlignHorizontalLeftIcon fontSize="small" />,
+                      },
+                      {
+                        key: 'vertical',
+                        icon: <AlignVerticalBottomIcon fontSize="small" />,
+                      },
+                    ]}
+                  />
+                </Stack>
+              )}
+
+              {/* Corners */}
+              {styleConfig.selectedTheme !== 'default' && (
+                <Stack spacing={1}>
+                  <Typography variant="caption" color="text.secondary" gutterBottom>
+                    Corners
+                  </Typography>
+                  <ConfigToggleButtons
+                    selectedValue={styleConfig.corner}
+                    handleValueSwitch={handleChangeCorner}
+                    values={[
+                      {
+                        key: 'rectangular',
+                        icon: <RectangularCornersIcon fontSize="small" />,
+                      },
+                      {
+                        key: 'medium',
+                        icon: <MediumCornersIcon fontSize="small" />,
+                      },
+                      {
+                        key: 'rounded',
+                        icon: <RoundedCornersIcon fontSize="small" />,
+                      },
+                    ]}
+                  />
+                </Stack>
+              )}
+
+              {/* Density */}
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Density
@@ -344,19 +351,20 @@ export default function Customization() {
                   values={[
                     {
                       key: 'compact',
-                      icon: <DensitySmallIcon />,
+                      icon: <DensitySmallIcon fontSize="small" />,
                     },
                     {
                       key: 'medium',
-                      icon: <DensityMediumIcon />,
+                      icon: <DensityMediumIcon fontSize="small" />,
                     },
                     {
                       key: 'spacious',
-                      icon: <DensityLargeIcon />,
+                      icon: <DensityLargeIcon fontSize="small" />,
                     },
                   ]}
                 />
               </Stack>
+              {/* Typography */}
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Typography
@@ -380,7 +388,7 @@ export default function Customization() {
                   ]}
                 />
               </Stack>
-            </Box>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>
