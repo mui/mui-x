@@ -399,10 +399,10 @@ const SearchInput = styled(TextField, {
   [`& .${inputBaseClasses.root}`]: {
     paddingLeft: theme.spacing(1.5),
   },
-  [`& input[type="search"]::-webkit-search-decoration,
-  & input[type="search"]::-webkit-search-cancel-button,
-  & input[type="search"]::-webkit-search-results-button,
-  & input[type="search"]::-webkit-search-results-decoration`]: {
+  [`& .${inputBaseClasses.input}::-webkit-search-decoration,
+  & .${inputBaseClasses.input}::-webkit-search-cancel-button,
+  & .${inputBaseClasses.input}::-webkit-search-results-button,
+  & .${inputBaseClasses.input}::-webkit-search-results-decoration`]: {
     /* clears the 'X' icon from Chrome */
     display: 'none',
   },
