@@ -135,8 +135,6 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
 
-- [charts-pro] Fix missing `typeOverload` (#15400) @alexfauquette
-
 ### Tree View
 
 #### Breaking changes
