@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Headless
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
