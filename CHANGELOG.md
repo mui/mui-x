@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 <img width="100%" alt="MUI X v8 Alpha is live" src="https://github.com/user-attachments/assets/114cf615-b617-435f-8499-76ac3c26c57b">
 
-_Nov 7, 2024_
+_Nov 14, 2024_
 
 We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
 
