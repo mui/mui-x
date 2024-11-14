@@ -49,24 +49,24 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 #### Breaking changes
 
-- The default DOM structure of the field has changed [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#new-dom-structure-for-the-field).
+- The default DOM structure of the field has changed [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#new-dom-structure-for-the-field).
 
   - Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
   - Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
-- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`. [Migration Guide - Stop passing utils and the date object to some translation keys](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#stop-passing-utils-and-the-date-object-to-some-translation-keys)
+- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`. [Migration Guide - Stop passing utils and the date object to some translation keys](https://next.mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys)
 
-- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#removed-types).
+- The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#removed-types).
 
   - `UseDateFieldComponentProps`
   - `UseTimeFieldComponentProps`
   - `UseDateTimeFieldComponentProps`
 
-- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#remove-tdate-generic).
+- The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#remove-tdate-generic).
 
-- The renamed `usePickersTranslation` and `usePickersContext` to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#renamed-variables).
+- The renamed `usePickersTranslation` and `usePickersContext` to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
 
-- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-pickers-v7/migration-pickers-v7.md#stop-using-licenseinfo-from-muix-date-pickers-pro).
+- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.0`
 
@@ -94,17 +94,17 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.[Migration Guide - Legend props propagation](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#legend-props-propagation-)
+- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.[Migration Guide - Legend props propagation](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅)
 
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
-- Removed or renamed multiple props from Series — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#series-properties-renaming).
+- Removed or renamed multiple props from Series — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#series-properties-renaming).
 
   - The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
     The deprecated ones are now removed.
   - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
 
-- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-charts-v7/migration-charts-v7.md#remove-pie-chart-axes).
+- The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-pie-chart-axes).
 
 #### `@mui/x-charts@8.0.0-alpha.0`
 
@@ -125,15 +125,15 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#new-api-to-customize-the-tree-item).
+- The `ContentComponent` or `ContentProps` props of the `<TreeItem />` component have been removed in favor of the new `slots`, `slotProps` props and of the `useTreeItem` hook — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#new-api-to-customize-the-tree-item).
 
-- The `onClick` and `onMouseDown` callbacks of the Tree Item component are now passed to the root element instead of the content — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#behavior-change-on-the-onclick-and-onmousedown-props-of-treeitem).
+- The `onClick` and `onMouseDown` callbacks of the Tree Item component are now passed to the root element instead of the content — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#behavior-change-on-the-onclick-and-onmousedown-props-of-treeitem).
 
-- Remove `2` suffix. All the new Tree Item-related components and utils (introduced in the previous major to improve the DX of the Tree Item component) are becoming the default way of using the Tree Item — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#-rename-the-treeitem2-and-related-utils).
+- Rename the `<TreeItem2 />` component (and related utils) — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#✅-rename-the-treeitem2-and-related-utils).
 
-- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#-use-simple-tree-view-instead-of-tree-view).
+- The `<TreeView />` component has been renamed `<SimpleTreeView />` which has exactly the same API — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#✅-use-simple-tree-view-instead-of-tree-view).
 
-- The indentation of nested Tree Items is now applied on the content of the element — [Learn more](https://github.com/mui/mui-x/blob/master/docs/data/migration/migration-tree-view-v7/migration-tree-view-v7.md#apply-the-indentation-on-the-item-content-instead-of-its-parents-group).
+- The indentation of nested Tree Items is now applied on the content of the element — [Learn more](https://next.mui.com/x/migration/migration-tree-view-v7/#apply-the-indentation-on-the-item-content-instead-of-its-parents-group).
 
 #### `@mui/x-tree-view@8.0.0-alpha.0`
 
