@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
@@ -68,6 +69,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['columnsManagement'],
     header: ['columnsManagementHeader'],
+    searchInput: ['columnsManagementSearchInput'],
     footer: ['columnsManagementFooter'],
     row: ['columnsManagementRow'],
   };
@@ -389,8 +391,12 @@ const GridColumnsManagementHeader = styled('div', {
   padding: theme.spacing(1.5, 3),
 }));
 
-const SearchInput = styled(TextField)<{ ownerState: OwnerState }>(({ theme }) => ({
-  '& .MuiInputBase-root': {
+const SearchInput = styled(TextField, {
+  name: 'MuiDataGrid',
+  slot: 'ColumnsManagementSearchInput',
+  overridesResolver: (props, styles) => styles.columnsManagementSearchInput,
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  [`& .${inputBaseClasses.root}`]: {
     paddingLeft: theme.spacing(1.5),
   },
   [`& input[type="search"]::-webkit-search-decoration,
