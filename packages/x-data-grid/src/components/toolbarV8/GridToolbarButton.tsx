@@ -45,6 +45,7 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
         ownerState={rootProps}
         className={clsx(classes.root, className)}
         size="small"
+        value="button" // TODO: required by the ToggleButton component. figure out what to do about this
         selected={other['aria-expanded'] === 'true'} // adds the "selected" styles when the button has an expanded popup
         aria-pressed={undefined} // removes the aria-pressed attribute that the ToggleButton component adds by default if `selected` is true}
         {...rootProps.slotProps?.baseToggleButton}

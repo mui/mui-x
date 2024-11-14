@@ -1,27 +1,19 @@
 import * as React from 'react';
 import {
   DataGrid,
+  GridPrintTrigger,
   GridToolbarV8 as GridToolbar,
-  useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import PrintIcon from '@mui/icons-material/Print';
 
-function PrintTrigger() {
-  const apiRef = useGridApiContext();
-
-  return (
-    <GridToolbar.Button onClick={() => apiRef.current.exportDataAsPrint()}>
-      <PrintIcon fontSize="small" />
-      Print
-    </GridToolbar.Button>
-  );
-}
-
 function Toolbar() {
   return (
     <GridToolbar.Root>
-      <PrintTrigger />
+      <GridPrintTrigger render={<GridToolbar.Button />}>
+        <PrintIcon fontSize="small" />
+        Print
+      </GridPrintTrigger>
     </GridToolbar.Root>
   );
 }
