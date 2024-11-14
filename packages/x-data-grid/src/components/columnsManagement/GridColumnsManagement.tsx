@@ -225,6 +225,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           ownerState={rootProps}
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
+          className={classes.searchInput}
           value={searchValue}
           onChange={handleSearchValueChange}
           variant="outlined"
