@@ -9,7 +9,7 @@ export type Grouping = {
 
 export type Filter = {
   operator: string;
-  value: string | number | boolean;
+  value: string | number | boolean | string[] | number[];
   column: string;
 };
 
