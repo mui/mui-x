@@ -36,7 +36,6 @@ We'd like to offer a big thanks to the 22 contributors who made this release pos
 - [DataGrid] Set default overlay height in flex parent layout (#15202) @cherniavskii
 - [DataGrid] Refactor `baseMenuList` and `baseMenuItem` (#15049) @romgrk
 - [DataGrid] Remove more material imports (#15063) @romgrk
-
 - [l10n] Improve Polish (pl-PL) locale (#15227) @belkocik
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -75,7 +74,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 - Renamed `usePickersTranslations` and `usePickersContext` hooks to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
 
-- The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
+- The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.0`
 
@@ -121,10 +120,10 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 #### `@mui/x-charts@8.0.0-alpha.0`
 
 - [charts] Introduce `hideLegend` prop (#15277) @alexfauquette
-- [charts] Filter item outside the drawing area for perf (#14281) @alexfauquette
+- [charts] Filter items outside the drawing area for performance (#14281) @alexfauquette
 - [charts] Fix log scale with `null` data (#15337) @alexfauquette
 - [charts] Fix tooltip follow mouse (#15189) @alexfauquette
-- [charts] Remove `xAxisKey`, `yAxisKey`, and `zAxisKey` (#15192) @alexfauquette
+- [charts] Remove `xAxisKey`, `yAxisKey`, and `zAxisKey` series keys (#15192) @alexfauquette
 - [charts] Remove axis from the pie chart (#15187) @alexfauquette
 - [charts] Remove deprecated `legend` props (#15081) @alexfauquette
 - [charts] Remove deprecated highlight properties (#15191) @alexfauquette
