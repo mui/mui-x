@@ -133,7 +133,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### `@mui/x-charts-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
+Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 ### Tree View
 
