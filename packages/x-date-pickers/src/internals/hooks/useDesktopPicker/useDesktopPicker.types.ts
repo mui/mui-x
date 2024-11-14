@@ -3,7 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -11,7 +11,7 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
-import { BaseSingleInputFieldProps, PickerOwnerState, PickerValidDate } from '../../../models';
+import { PickerFieldSlotProps, PickerOwnerState, PickerValidDate } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -70,7 +70,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     ExportedPickersLayoutSlotProps<false, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<false, TEnableAccessibleFieldDOMStructure, unknown>,
+    PickerFieldSlotProps<false, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -98,7 +98,7 @@ export interface UseDesktopPickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<false, TView, any, {}>,
 > extends BasePickerProps<false, TView, TError, TExternalProps, {}>,
-    DesktopOnlyPickerProps {
+    MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
    * @default {}

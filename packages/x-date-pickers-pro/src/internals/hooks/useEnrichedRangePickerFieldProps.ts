@@ -1,18 +1,12 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  BaseSingleInputFieldProps,
-  FieldSelectedSections,
-  FieldRef,
-  PickerOwnerState,
-} from '@mui/x-date-pickers/models';
+import { FieldSelectedSections, FieldRef, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
@@ -24,16 +18,19 @@ import {
   UsePickerResponse,
   WrapperVariant,
   DateOrTimeViewWithMeridiem,
+  BaseSingleInputFieldProps,
 } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
-  BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
+  PickerRangeFieldSlotProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
+import { BaseMultiInputFieldProps } from '../models/fields';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   field: React.ElementType;
@@ -58,14 +55,14 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, unknown>,
+    PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
   textField?: SlotComponentProps<
-    typeof TextField,
+    typeof PickersTextField,
     {},
     UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
   >;
@@ -378,8 +375,8 @@ const useSingleInputFieldSlotProps = <
   const slotProps = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
+    clearButton: pickerSlotProps?.clearButton,
+    clearIcon: pickerSlotProps?.clearIcon,
   };
 
   const enrichedFieldProps: ReturnType = {

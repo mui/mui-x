@@ -21,14 +21,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRangePicker,
+  DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import {
-  BaseMultiInputFieldProps,
-  DateRangeValidationError,
+  MultiInputFieldRefs,
   MultiInputFieldSlotTextFieldProps,
-  UseDateRangeFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
 const joyTheme = extendJoyTheme();
@@ -129,8 +128,11 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 )({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<false>,
-    BaseMultiInputFieldProps<false, DateRangeValidationError> {}
+  extends Omit<
+      DateRangePickerFieldProps<false>,
+      'unstableFieldRef' | 'clearable' | 'onClear'
+    >,
+    MultiInputFieldRefs {}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -141,12 +143,10 @@ const JoyMultiInputDateRangeField = React.forwardRef(
     const {
       slotProps,
       value,
-      defaultValue,
       format,
       onChange,
       readOnly,
       disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
@@ -155,6 +155,8 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       selectedSections,
       onSelectedSectionsChange,
       className,
+      unstableStartFieldRef,
+      unstableEndFieldRef,
     } = props;
 
     const startTextFieldProps = useSlotProps({
@@ -175,12 +177,10 @@ const JoyMultiInputDateRangeField = React.forwardRef(
     >({
       sharedProps: {
         value,
-        defaultValue,
         format,
         onChange,
         readOnly,
         disabled,
-        onError,
         shouldDisableDate,
         minDate,
         maxDate,
@@ -192,6 +192,8 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       },
       startTextFieldProps,
       endTextFieldProps,
+      unstableStartFieldRef,
+      unstableEndFieldRef,
     });
 
     return (
