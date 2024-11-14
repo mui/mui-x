@@ -28,6 +28,15 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    listView: boolean;
+    container: () => HTMLElement;
+    handleDelete: (ids: GridRowId[]) => void;
+    handleUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  }
+}
+
 export default function ListViewAdvanced() {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef<HTMLDivElement>(null);
