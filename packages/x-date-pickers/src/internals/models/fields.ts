@@ -5,8 +5,13 @@ import type {
   UseClearableFieldSlotProps,
   UseClearableFieldSlots,
 } from '../../hooks/useClearableField';
-import type { PickerOwnerState } from '../../models';
+import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
+import { RangePosition } from './pickers';
+
+export interface FieldRangeSection extends FieldSection {
+  dateName: RangePosition;
+}
 
 export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearableFieldProps {
   className: string | undefined;

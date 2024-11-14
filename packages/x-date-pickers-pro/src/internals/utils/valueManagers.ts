@@ -9,8 +9,9 @@ import {
   getDefaultReferenceDate,
   PickerRangeValue,
   PickerNonNullableRangeValue,
+  FieldRangeSection,
 } from '@mui/x-date-pickers/internals';
-import { FieldRangeSection, PickerValidDate } from '@mui/x-date-pickers/models';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type {
   DateRangeValidationError,

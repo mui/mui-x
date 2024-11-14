@@ -7,8 +7,7 @@ import type {
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { RangePosition } from '../internals/models/pickers';
-import { BaseForwardedSingleInputFieldProps } from '../internals/models';
+import { BaseForwardedSingleInputFieldProps, FieldRangeSection } from '../internals/models';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -87,10 +86,6 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
-}
-
-export interface FieldRangeSection extends FieldSection {
-  dateName: RangePosition;
 }
 
 export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
