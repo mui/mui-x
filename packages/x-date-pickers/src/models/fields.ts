@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import { SxProps } from '@mui/material/styles';
-import type { BaseFieldProps } from '../internals/models/fields';
 import type {
   ExportedUseClearableFieldProps,
   UseClearableFieldResponse,
-  UseClearableFieldSlotProps,
-  UseClearableFieldSlots,
 } from '../hooks/useClearableField';
-import { ExportedPickersSectionListProps, PickersSectionListRef } from '../PickersSectionList';
-import type { UseFieldResponse } from '../internals/hooks/useField';
+import { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
+import { BaseForwardedSingleInputFieldProps } from '../internals/models';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -122,55 +119,21 @@ export interface FieldRef<TSection extends FieldSection> {
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
-interface BaseForwardedCommonSingleInputFieldProps extends ExportedUseClearableFieldProps {
-  ref?: React.Ref<HTMLDivElement>;
-  sx?: SxProps<any>;
-  label?: React.ReactNode;
-  id?: string;
-  name?: string;
-  onKeyDown?: React.KeyboardEventHandler;
-  onBlur?: React.FocusEventHandler;
-  focused?: boolean;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  inputProps?: {
-    'aria-label'?: string;
-  };
-  slots?: UseClearableFieldSlots;
-  slotProps?: UseClearableFieldSlotProps & {
-    textField?: {};
-  };
-}
-
-interface BaseForwardedV6SingleInputFieldProps {
-  inputRef?: React.Ref<HTMLInputElement>;
-}
-
-interface BaseForwardedV7SingleInputFieldProps {
-  sectionListRef?: React.Ref<PickersSectionListRef>;
-}
-
-type BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  BaseForwardedCommonSingleInputFieldProps &
-    (TEnableAccessibleFieldDOMStructure extends false
-      ? BaseForwardedV6SingleInputFieldProps
-      : BaseForwardedV7SingleInputFieldProps);
-
 /**
- * Props the single input field can receive when used inside a picker.
- * Only contains what the MUI components are passing to the field,
- * not what users can pass using the `props.slotProps.field`.
+ * Props the prop `slotProps.field` of a picker can receive.
  */
-export type BaseSingleInputFieldProps<
+export type PickerFieldSlotProps<
   TValue,
   TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
-  TError,
-> = BaseFieldProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError> &
-  BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>;
+> = ExportedUseClearableFieldProps &
+  Pick<
+    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, unknown>,
+    'shouldRespectLeadingZeros' | 'readOnly'
+  > &
+  React.HTMLAttributes<HTMLDivElement> & {
+    ref?: React.Ref<HTMLDivElement>;
+  };
 
 /**
  * Props the text field receives when used with a single input picker.
@@ -179,10 +142,7 @@ export type BaseSingleInputFieldProps<
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = UseClearableFieldResponse<
-  UseFieldResponse<
-    TEnableAccessibleFieldDOMStructure,
-    BaseForwardedSingleInputFieldProps<TEnableAccessibleFieldDOMStructure>
-  >
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
 >;
 
 /**
