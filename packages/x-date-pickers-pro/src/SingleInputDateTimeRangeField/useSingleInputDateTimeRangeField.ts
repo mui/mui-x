@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
 import { useField, useFieldInternalPropsWithDefaults } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { getDateTimeRangeValueManager } from '../valueManagers';
+import { useDateTimeRangeValueManager } from '../valueManagers';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -11,15 +10,7 @@ export const useSingleInputDateTimeRangeField = <
 >(
   props: TAllProps,
 ) => {
-  const valueManager = React.useMemo(
-    () =>
-      getDateTimeRangeValueManager({
-        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
-        dateSeparator: props.dateSeparator,
-      }),
-    [props.enableAccessibleFieldDOMStructure, props.dateSeparator],
-  );
-
+  const valueManager = useDateTimeRangeValueManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     valueManager,

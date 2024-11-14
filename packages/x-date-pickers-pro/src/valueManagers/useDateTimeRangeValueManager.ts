@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
 import {
@@ -12,6 +13,32 @@ import {
   ExportedValidateDateTimeRangeProps,
   ValidateDateTimeRangeProps,
 } from '../validation/validateDateTimeRange';
+
+export function useDateTimeRangeValueManager<
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
+>(
+  parameters: UseDateTimeRangeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
+): DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure> {
+  const {
+    enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
+    dateSeparator,
+  } = parameters;
+
+  return React.useMemo(
+    () => ({
+      legacyValueManager: rangeValueManager,
+      fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
+      validator: validateDateTimeRange,
+      valueType: 'date-time',
+      applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
+        ...internalProps,
+        ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
+      }),
+      enableAccessibleFieldDOMStructure,
+    }),
+    [enableAccessibleFieldDOMStructure, dateSeparator],
+  );
+}
 
 export type DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
@@ -41,21 +68,8 @@ export interface DateTimeRangeFieldInternalPropsWithDefaults<
     ValidateDateTimeRangeProps,
     RangeFieldSeparatorProps {}
 
-export const getDateTimeRangeValueManager = <
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->({
-  enableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
-  dateSeparator,
-}: {
+export interface UseDateTimeRangeValueManagerParameters<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends RangeFieldSeparatorProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-} & RangeFieldSeparatorProps): DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure> => ({
-  legacyValueManager: rangeValueManager,
-  fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
-  validator: validateDateTimeRange,
-  valueType: 'date-time',
-  applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
-    ...internalProps,
-    ...getDateTimeFieldInternalPropsDefaults({ internalProps, utils, defaultDates }),
-  }),
-  enableAccessibleFieldDOMStructure,
-});
+}

@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
 import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
 import { useSplitFieldProps } from '../hooks';
-import { getTimeValueManager } from '../valueManagers';
+import { useTimeValueManager } from '../valueManagers';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -11,14 +10,7 @@ export const useTimeField = <
 >(
   props: TAllProps,
 ) => {
-  const valueManager = React.useMemo(
-    () =>
-      getTimeValueManager({
-        enableAccessibleFieldDOMStructure: props.enableAccessibleFieldDOMStructure,
-      }),
-    [props.enableAccessibleFieldDOMStructure],
-  );
-
+  const valueManager = useTimeValueManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     valueManager,

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
 import {
@@ -12,6 +13,30 @@ import {
   ExportedValidateTimeRangeProps,
   ValidateTimeRangeProps,
 } from '../validation/validateTimeRange';
+
+export function useTimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  parameters: UseTimeRangeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
+): TimeRangeValueManager<TEnableAccessibleFieldDOMStructure> {
+  const {
+    enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
+    dateSeparator,
+  } = parameters;
+
+  return React.useMemo(
+    () => ({
+      legacyValueManager: rangeValueManager,
+      fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
+      validator: validateTimeRange,
+      valueType: 'time',
+      applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
+        ...internalProps,
+        ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
+      }),
+      enableAccessibleFieldDOMStructure,
+    }),
+    [enableAccessibleFieldDOMStructure, dateSeparator],
+  );
+}
 
 export type TimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
@@ -36,21 +61,8 @@ export interface TimeRangeFieldInternalPropsWithDefaults<
 > extends UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, TimeRangeValidationError>,
     ValidateTimeRangeProps {}
 
-export const getTimeRangeValueManager = <
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->({
-  enableAccessibleFieldDOMStructure = false as TEnableAccessibleFieldDOMStructure,
-  dateSeparator,
-}: {
+export interface UseTimeRangeValueManagerParameters<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends RangeFieldSeparatorProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-} & RangeFieldSeparatorProps): TimeRangeValueManager<TEnableAccessibleFieldDOMStructure> => ({
-  legacyValueManager: rangeValueManager,
-  fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
-  validator: validateTimeRange,
-  valueType: 'time',
-  applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
-    ...internalProps,
-    ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
-  }),
-  enableAccessibleFieldDOMStructure,
-});
+}

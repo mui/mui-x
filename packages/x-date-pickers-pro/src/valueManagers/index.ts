@@ -1,20 +1,23 @@
-export { getDateRangeValueManager } from './getDateRangeValueManager';
+export { useDateRangeValueManager } from './useDateRangeValueManager';
 export type {
   DateRangeValueManager,
   DateRangeFieldInternalProps,
   DateRangeFieldInternalPropsWithDefaults,
-} from './getDateRangeValueManager';
+  UseDateRangeValueManagerParameters,
+} from './useDateRangeValueManager';
 
-export { getTimeRangeValueManager } from './getTimeRangeValueManager';
+export { useTimeRangeValueManager } from './useTimeRangeValueManager';
 export type {
   TimeRangeValueManager,
   TimeRangeFieldInternalProps,
   TimeRangeFieldInternalPropsWithDefaults,
-} from './getTimeRangeValueManager';
+  UseTimeRangeValueManagerParameters,
+} from './useTimeRangeValueManager';
 
-export { getDateTimeRangeValueManager } from './getDateTimeRangeValueManager';
+export { useDateTimeRangeValueManager } from './useDateTimeRangeValueManager';
 export type {
   DateTimeRangeValueManager,
   DateTimeRangeFieldInternalProps,
   DateTimeRangeFieldInternalPropsWithDefaults,
-} from './getDateTimeRangeValueManager';
+  UseDateTimeRangeValueManagerParameters,
+} from './useDateTimeRangeValueManager';
