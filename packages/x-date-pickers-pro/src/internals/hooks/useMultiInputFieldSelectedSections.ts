@@ -9,14 +9,14 @@ interface UseMultiInputFieldSelectedSectionsParams
     UseFieldInternalProps<true, any, any>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
-  unstableStartFieldRef?: React.Ref<FieldRef<true>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<true>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<false>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<false>>;
 }
 
 export const useMultiInputFieldSelectedSections = (
   params: UseMultiInputFieldSelectedSectionsParams,
 ) => {
-  const unstableEndFieldRef = React.useRef<FieldRef<true>>(null);
+  const unstableEndFieldRef = React.useRef<FieldRef<false>>(null);
   const handleUnstableEndFieldRef = useForkRef(params.unstableEndFieldRef, unstableEndFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
@@ -54,7 +54,7 @@ export const useMultiInputFieldSelectedSections = (
 
   return {
     start: {
-      unstableFieldRef: params.unstableStartFieldRef as React.Ref<FieldRef<false>>,
+      unstableFieldRef: params.unstableStartFieldRef,
       selectedSections:
         activeField === 'start' && params.selectedSections !== undefined
           ? params.selectedSections
@@ -62,7 +62,7 @@ export const useMultiInputFieldSelectedSections = (
       onSelectedSectionsChange: handleStartSelectedSectionChange,
     },
     end: {
-      unstableFieldRef: handleUnstableEndFieldRef as React.Ref<FieldRef<false>>,
+      unstableFieldRef: handleUnstableEndFieldRef,
       selectedSections:
         activeField === 'end' && params.selectedSections !== undefined
           ? params.selectedSections
