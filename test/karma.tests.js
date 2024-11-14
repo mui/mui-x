@@ -18,5 +18,5 @@ afterEach(function beforeEachHook() {
   });
 });
 
-const packagesContext = require.context('../packages', true, /^((?!browser|jsdom).)*\.test\.tsx$/);
+const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
 packagesContext.keys().forEach(packagesContext);
