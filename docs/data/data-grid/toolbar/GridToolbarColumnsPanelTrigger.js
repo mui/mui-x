@@ -48,9 +48,9 @@ function ColumnsPanelTrigger({ buttonRef }) {
   );
 }
 
-function Toolbar({ columnsButtonRef, ...rest }) {
+function Toolbar({ columnsButtonRef, ...other }) {
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <ColumnsPanelTrigger buttonRef={columnsButtonRef} />
     </GridToolbar.Root>
   );

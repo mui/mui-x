@@ -57,9 +57,9 @@ type ToolbarProps = GridSlots['toolbar'] & {
   filterButtonRef: React.RefObject<HTMLButtonElement>;
 };
 
-function Toolbar({ filterButtonRef, ...rest }: ToolbarProps) {
+function Toolbar({ filterButtonRef, ...other }: ToolbarProps) {
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <FilterPanelTrigger buttonRef={filterButtonRef} />
     </GridToolbar.Root>
   );

@@ -48,9 +48,9 @@ function FilterPanelTrigger({ buttonRef }) {
   );
 }
 
-function Toolbar({ filterButtonRef, ...rest }) {
+function Toolbar({ filterButtonRef, ...other }) {
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <FilterPanelTrigger buttonRef={filterButtonRef} />
     </GridToolbar.Root>
   );

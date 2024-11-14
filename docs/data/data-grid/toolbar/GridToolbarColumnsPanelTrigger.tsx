@@ -57,9 +57,9 @@ type ToolbarProps = GridSlots['toolbar'] & {
   columnsButtonRef: React.RefObject<HTMLButtonElement>;
 };
 
-function Toolbar({ columnsButtonRef, ...rest }: ToolbarProps) {
+function Toolbar({ columnsButtonRef, ...other }: ToolbarProps) {
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <ColumnsPanelTrigger buttonRef={columnsButtonRef} />
     </GridToolbar.Root>
   );

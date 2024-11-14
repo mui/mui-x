@@ -52,13 +52,13 @@ function FilterPanelTrigger({ buttonRef }) {
   );
 }
 
-function Toolbar({ filterButtonRef, onRemoveFilter, ...rest }) {
+function Toolbar({ filterButtonRef, onRemoveFilter, ...other }) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <FilterPanelTrigger buttonRef={filterButtonRef} />
       {activeFilters.map((filter) => {
         const column = columns[filter.field];

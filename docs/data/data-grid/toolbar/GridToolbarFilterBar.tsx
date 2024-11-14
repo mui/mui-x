@@ -64,13 +64,13 @@ type ToolbarProps = GridSlots['toolbar'] & {
   onRemoveFilter: (filterId: GridFilterItem['id']) => void;
 };
 
-function Toolbar({ filterButtonRef, onRemoveFilter, ...rest }: ToolbarProps) {
+function Toolbar({ filterButtonRef, onRemoveFilter, ...other }: ToolbarProps) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <GridToolbar.Root {...rest}>
+    <GridToolbar.Root {...other}>
       <FilterPanelTrigger buttonRef={filterButtonRef} />
       {activeFilters.map((filter) => {
         const column = columns[filter.field];
