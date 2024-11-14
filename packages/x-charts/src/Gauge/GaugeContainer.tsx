@@ -85,7 +85,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
       {...other}
     >
       {width && height ? (
-        <SvgRefProvider svgRef={ref}>
+        <SvgRefProvider svgRef={svgRef}>
           <DrawingAreaProvider
             width={width}
             height={height}

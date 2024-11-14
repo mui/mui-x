@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import {
   ChartDataProviderProps,
   ChartsAxesGradients,
-  DrawingProvider,
+  DrawingAreaProvider,
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
+  SvgRefProvider,
 } from '@mui/x-charts/internals';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
@@ -36,34 +37,37 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
     chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
     children,
   } = useChartContainerProProps(props, ref);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <AnimationProvider {...animationProviderProps}>
-        <PluginProvider {...pluginProviderProps}>
-          <ZoomProvider {...zoomProviderProps}>
-            <SeriesProvider {...seriesProviderProps}>
-              <CartesianProviderPro {...cartesianProviderProps}>
-                <ZAxisContextProvider {...zAxisContextProps}>
-                  <InteractionProvider>
-                    <HighlightedProvider {...highlightedProviderProps}>
-                      <ChartsSurface {...chartsSurfaceProps}>
-                        <ChartsAxesGradients />
-                        {children}
-                      </ChartsSurface>
-                    </HighlightedProvider>
-                  </InteractionProvider>
-                </ZAxisContextProvider>
-              </CartesianProviderPro>
-            </SeriesProvider>
-          </ZoomProvider>
-        </PluginProvider>
-      </AnimationProvider>
-    </DrawingProvider>
+    <DrawingAreaProvider {...drawingProviderProps}>
+      <SvgRefProvider {...svgRefProviderProps}>
+        <AnimationProvider {...animationProviderProps}>
+          <PluginProvider {...pluginProviderProps}>
+            <ZoomProvider {...zoomProviderProps}>
+              <SeriesProvider {...seriesProviderProps}>
+                <CartesianProviderPro {...cartesianProviderProps}>
+                  <ZAxisContextProvider {...zAxisContextProps}>
+                    <InteractionProvider>
+                      <HighlightedProvider {...highlightedProviderProps}>
+                        <ChartsSurface {...chartsSurfaceProps}>
+                          <ChartsAxesGradients />
+                          {children}
+                        </ChartsSurface>
+                      </HighlightedProvider>
+                    </InteractionProvider>
+                  </ZAxisContextProvider>
+                </CartesianProviderPro>
+              </SeriesProvider>
+            </ZoomProvider>
+          </PluginProvider>
+        </AnimationProvider>
+      </SvgRefProvider>
+    </DrawingAreaProvider>
   );
 });
 

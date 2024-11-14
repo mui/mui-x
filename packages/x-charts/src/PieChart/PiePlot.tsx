@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingAreaContext } from '../context/DrawingAreaProvider/DrawingAreaProvider';
+import { DrawingAreaContext } from '../context/DrawingAreaProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/getPercentageValue';
