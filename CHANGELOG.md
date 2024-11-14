@@ -14,6 +14,10 @@ _Nov 7, 2024_
 We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
+- 🌍 Improve Greek (el-GR) locale on the Date and Time Pickers components
+- 🌍 Improve Polish (pl-PL) locale on the Data Grid component
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
   Special thanks go out to the community contributors who have helped make this release possible:
   @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger, @fxnoob, @GuillaumeMeheut
