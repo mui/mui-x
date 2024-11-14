@@ -105,15 +105,15 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅).
+- The `legend` prop has been removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅).
 
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
 - Removed or renamed multiple props from Series — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#series-properties-renaming).
 
-  - The `highlighted` and `faded` properties of highlightScope were deprecated in favor of `highlight` and `fade`.
+  - The `highlighted` and `faded` properties of highlightScope have been deprecated in favor of `highlight` and `fade`.
     The deprecated ones are now removed.
-  - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties got deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
+  - The `xAxisKey`, `yAxisKey`, and `zAxisKey` properties have been deprecated in favor of `xAxisId`, `yAxisId`, and `zAxisId`.
 
 - The Pie Chart lost all props and renderer linked to axes because pie chart does not need cartesian axes. If you used it, you can still add them back with composition. Please consider opening an issue to share your use case with us — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-pie-chart-axes).
 
@@ -4310,7 +4310,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
 #### Breaking changes
 
-- The slot interfaces got renamed to match with `@mui/base` naming.
+- The slot interfaces have been renamed to match with `@mui/base` naming.
   The `SlotsComponent` suffix has been replaced with `Slots` and `SlotsComponentsProps` with `SlotProps`.
 
   ```diff
@@ -5352,7 +5352,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.0`.
 
 #### Breaking changes
 
-Types for `slots` and `slotProps` got renamed by removing the "Component" which is meaningless for charts.
+Types for `slots` and `slotProps` have been renamed by removing the "Component" which is meaningless for charts.
 Unless you imported those types, to create a wrapper, you should not be impacted by this breaking change.
 
 Here is an example of the renaming for the `<ChartsTooltip />` component.
