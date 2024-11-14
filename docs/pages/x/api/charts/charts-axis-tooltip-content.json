@@ -1,5 +1,5 @@
 {
-  "props": {},
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
   "name": "ChartsAxisTooltipContent",
   "imports": [
     "import { ChartsAxisTooltipContent } from '@mui/x-charts/ChartsTooltip';",
