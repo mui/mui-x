@@ -3,63 +3,26 @@ import {
   DataGridPro,
   gridColumnLookupSelector,
   gridFilterActiveItemsSelector,
-  gridPreferencePanelStateSelector,
-  GridPreferencePanelsValue,
   GridToolbarV8 as GridToolbar,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import Chip from '@mui/material/Chip';
-import useId from '@mui/utils/useId';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { GridFilterListIcon, GridFilterPanelTrigger } from '@mui/x-data-grid';
 
-function FilterPanelTrigger({ buttonRef }) {
-  const filterButtonId = useId();
-  const filterPanelId = useId();
-  const apiRef = useGridApiContext();
-  const { open, openedPanelValue } = useGridSelector(
-    apiRef,
-    gridPreferencePanelStateSelector,
-  );
-  const isOpen = open && openedPanelValue === GridPreferencePanelsValue.filters;
-
-  const toggleFilterPanel = () => {
-    if (isOpen) {
-      apiRef.current.hidePreferences();
-    } else {
-      apiRef.current.showPreferences(
-        GridPreferencePanelsValue.filters,
-        filterPanelId,
-        filterButtonId,
-      );
-    }
-  };
-
-  return (
-    <GridToolbar.Button
-      ref={buttonRef}
-      id={filterButtonId}
-      aria-label="Filters"
-      aria-haspopup="true"
-      aria-expanded={isOpen ? 'true' : undefined}
-      aria-controls={isOpen ? filterPanelId : undefined}
-      onClick={toggleFilterPanel}
-    >
-      <FilterListIcon fontSize="small" />
-    </GridToolbar.Button>
-  );
-}
-
-function Toolbar({ filterButtonRef, onRemoveFilter, ...other }) {
+function Toolbar({ onRemoveFilter, ...other }) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
     <GridToolbar.Root {...other}>
-      <FilterPanelTrigger buttonRef={filterButtonRef} />
+      <GridFilterPanelTrigger render={<GridToolbar.Button />}>
+        <GridFilterListIcon fontSize="small" />
+      </GridFilterPanelTrigger>
+
       {activeFilters.map((filter) => {
         const column = columns[filter.field];
         const field = column?.headerName ?? filter.field;
@@ -70,6 +33,7 @@ function Toolbar({ filterButtonRef, onRemoveFilter, ...other }) {
         const value = isDate
           ? new Date(filter.value).toLocaleDateString()
           : (filter.value ?? '');
+
         return (
           <Chip
             key={filter.id}
@@ -86,8 +50,6 @@ function Toolbar({ filterButtonRef, onRemoveFilter, ...other }) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'position'];
 
 export default function GridToolbarFilterBar() {
-  const [filterButtonEl, setFilterButtonEl] = React.useState(null);
-
   const { data } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
@@ -124,13 +86,7 @@ export default function GridToolbarFilterBar() {
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
         slots={{ toolbar: Toolbar }}
-        slotProps={{
-          panel: { anchorEl: filterButtonEl },
-          toolbar: {
-            filterButtonRef: setFilterButtonEl,
-            onRemoveFilter,
-          },
-        }}
+        slotProps={{ toolbar: { onRemoveFilter } }}
       />
     </div>
   );
