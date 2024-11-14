@@ -11,12 +11,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 7, 2024_
 
-We'd like to offer a big thanks to the 20 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 22 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
   Special thanks go out to the community contributors who have helped make this release possible:
-  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger.
+  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger, @fxnoob, @GuillaumeMeheut 
   Following are all team members who have contributed to this release:
   @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore, @joserodolfofreitas.
 
@@ -83,6 +83,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 - [pickers] Clean the new `ownerState` object (#15056) @flaviendelangle
 - [pickers] Correctly type the `ownerState` of the `field` and `actionBar` slots when resolved in a picker component (#15162) @flaviendelangle
 - [pickers] Fix `DateCalendar` timezone management (#12321) @LukasTy
+- [pickers] Fix `DateTimeRangePicker` error when using format without time (#14917) @fxnoob
 - [pickers] Fix `DigitalClock` time options on a `DST` switch day (#10793) @LukasTy
 - [pickers] Remove `TDate` generics in favor of `PickerValidDate` direct usage (#15001) @flaviendelangle
 - [pickers] Remove `utils` and `value` params from translations (#14986) @arthurbalduini
@@ -116,6 +117,8 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 #### `@mui/x-charts@8.0.0-alpha.0`
 
 - [charts] Introduce `hideLegend` prop (#15277) @alexfauquette
+- [charts] Filter item outside the drawing area for perf (#14281) @alexfauquette
+- [charts] Fix log scale with `null` data (#15337) @alexfauquette
 - [charts] Fix tooltip follow mouse (#15189) @alexfauquette
 - [charts] Remove `xAxisKey`, `yAxisKey`, and `zAxisKey` (#15192) @alexfauquette
 - [charts] Remove axis from the pie chart (#15187) @alexfauquette
@@ -154,6 +157,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
 
 ### Docs
 
+- [docs] Add docs for rounded symbol (#15324) @GuillaumeMeheut 
 - [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle
 - [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
 - [docs] Add `PickersPopper` component to the Date Picker customization playground (#15305) @LukasTy
@@ -163,6 +167,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
 - [docs] Cleanup the pickers migration guide (#15310) @flaviendelangle
 - [docs] Copyedit the Charts Getting Started sequence (#14962) @samuelsycamore
 - [docs] Create Pickers masked field recipe (#13515) @flaviendelangle
+- [docs] Fix `applyDomain` docs for the charts (#15332) @JCQuintas
 - [docs] Fix link to private notion page (#15396) @michelengelen
 - [docs] Fix missing punctuation on descriptions (#15229) @oliviertassinari
 - [docs] Fix peer dependency range (#15281) @oliviertassinari
@@ -182,6 +187,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
 - [core] Fix Vale error on `master` @oliviertassinari
 - [core] Fix changelog reference to VoiceOver @oliviertassinari
 - [core] Fix `tools-public.mui.com` redirection @oliviertassinari
+- [core] Fix webpack capitalization (#15353) @oliviertassinari
 - [core] Move `helpers` to `@mui/x-internals` package (#15188) @LukasTy
 - [code-infra] Set renovate to automerge devDependencies (#13463) @JCQuintas
 - [infra] Reintroduce the cherry pick workflow (#15293) @michelengelen
