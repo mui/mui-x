@@ -1,4 +1,4 @@
-import { PromptResponse } from '@mui/x-data-grid-premium';
+import { unstable_PromptResponse as PromptResponse } from '@mui/x-data-grid-premium';
 
 export const mockPrompts = new Map<string, PromptResponse>([
   [

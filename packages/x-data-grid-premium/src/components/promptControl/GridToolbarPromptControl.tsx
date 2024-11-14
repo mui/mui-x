@@ -17,7 +17,7 @@ import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps
 import { GridApiPremium } from '../../models/gridApiPremium';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { PromptResponse } from '../../hooks/features/promptControl';
+import { PromptResponse } from '../../hooks/features/promptControl/types';
 import { RecordButton } from './RecordButton';
 
 type OwnerState = DataGridPremiumProcessedProps;
@@ -74,7 +74,7 @@ function generateContext(
   const columnsContext = columns.map((column) => ({
     field: column.field,
     description: column.description ?? null,
-    examples: examples?.[column.field] ?? column.examples ?? [],
+    examples: examples?.[column.field] ?? column.unstable_examples ?? [],
     type: column.type ?? 'string',
     allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
   }));
@@ -82,7 +82,7 @@ function generateContext(
   return `${apiRef.current.getLocaleText('toolbarPromptControlColumnsContextIntro')}\n${JSON.stringify(columnsContext)}`;
 }
 
-export type GridToolbarPromptControlProps = {
+type GridToolbarPromptControlProps = {
   /**
    * Called when the new prompt is ready to be processed.
    * Provides the prompt and the data context and expects the grid state updates to be returned.
@@ -297,4 +297,4 @@ GridToolbarPromptControl.propTypes = {
   onPrompt: PropTypes.func.isRequired,
 } as any;
 
-export { GridToolbarPromptControl };
+export { GridToolbarPromptControl as Unstable_GridToolbarPromptControl };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridToolbarPromptControl,
+  Unstable_GridToolbarPromptControl as GridToolbarPromptControl,
   GridToolbar,
   GridToolbarContainer,
 } from '@mui/x-data-grid-premium';
