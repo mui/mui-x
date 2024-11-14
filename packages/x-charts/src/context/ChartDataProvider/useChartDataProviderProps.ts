@@ -12,7 +12,10 @@ import { AnimationProviderProps } from '../AnimationProvider';
 import { SizeProviderProps } from '../SizeProvider';
 import { SvgRefProviderProps } from '../SvgRefProvider';
 
-export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
+export const useChartDataProviderProps = (
+  props: ChartDataProviderProps,
+  ref: React.Ref<SVGSVGElement>,
+) => {
   const {
     width,
     height,
@@ -30,12 +33,11 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     skipAnimation,
     resolveSizeBeforeRender,
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
   const svgRefProviderProps: Omit<SvgRefProviderProps, 'children'> = {
-    svgRef,
+    svgRef: ref,
   };
 
   const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {

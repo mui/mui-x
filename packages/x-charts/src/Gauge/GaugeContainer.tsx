@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import useForkRef from '@mui/utils/useForkRef';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
@@ -11,7 +10,7 @@ import { SvgRefProvider } from '../context/SvgRefProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Omit<DrawingAreaProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
+    Pick<DrawingAreaProviderProps, 'margin'>,
     Omit<GaugeProviderProps, 'children'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
@@ -84,12 +83,9 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
     ...other
   } = props;
 
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
-
   return (
     <SizeProvider width={inWidth} height={inHeight}>
-      <SvgRefProvider svgRef={svgRef}>
+      <SvgRefProvider svgRef={ref}>
         <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
           <GaugeProvider
             value={value}
@@ -110,13 +106,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
               aria-valuemax={valueMax}
               {...other}
             >
-              <ChartsSurface
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-                ref={chartSurfaceRef}
-              >
+              <ChartsSurface title={title} desc={desc} disableAxisListener aria-hidden="true">
                 {children}
               </ChartsSurface>
             </ResizableContainer>

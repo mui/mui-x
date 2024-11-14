@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { SvgRefContext } from '../context/SvgRefProvider';
+import { SvgRefContext } from './SvgRefContext';
 
-export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
+export function useSurfaceRef(): React.MutableRefObject<SVGSVGElement> {
   const { isInitialized, data } = React.useContext(SvgRefContext);
 
   if (!isInitialized) {
@@ -14,5 +14,5 @@ export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
     );
   }
 
-  return data.svgRef as React.MutableRefObject<SVGSVGElement>;
+  return data.surfaceRef as React.MutableRefObject<SVGSVGElement>;
 }

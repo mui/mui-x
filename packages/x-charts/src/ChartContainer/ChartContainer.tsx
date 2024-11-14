@@ -16,11 +16,9 @@ const ChartContainer = React.forwardRef(function ChartContainer(
     useChartContainerProps(props);
 
   return (
-    <ChartDataProvider {...chartDataProviderProps}>
+    <ChartDataProvider ref={ref} {...chartDataProviderProps}>
       <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
-          {children}
-        </ChartsSurface>
+        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
       </ResizableContainer>
     </ChartDataProvider>
   );

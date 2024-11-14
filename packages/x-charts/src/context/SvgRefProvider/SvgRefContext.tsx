@@ -5,7 +5,10 @@ import { SvgRefState } from './SvgRef.types';
 
 export const SvgRefContext = React.createContext<Initializable<SvgRefState>>({
   isInitialized: false,
-  data: { current: null },
+  data: {
+    svgRef: { current: null },
+    surfaceRef: { current: null },
+  },
 });
 
 if (process.env.NODE_ENV !== 'production') {

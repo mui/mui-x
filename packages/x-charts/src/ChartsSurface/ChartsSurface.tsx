@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks';
+import { useSurfaceRef } from '../context/SvgRefProvider';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -29,11 +30,9 @@ const ChartsSurfaceStyles = styled('svg', {
   touchAction: 'none',
 }));
 
-const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
-  inProps: ChartsSurfaceProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartsSurface(inProps: ChartsSurfaceProps) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
+  const surfaceRef = useSurfaceRef();
 
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
@@ -58,7 +57,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
-      ref={ref}
+      ref={surfaceRef}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
@@ -66,7 +65,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {children}
     </ChartsSurfaceStyles>
   );
-});
+}
 
 ChartsSurface.propTypes = {
   // ----------------------------- Warning --------------------------------
