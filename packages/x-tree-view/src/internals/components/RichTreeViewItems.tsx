@@ -73,6 +73,9 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
 
   return (
     <React.Fragment>
+      {
+        // access isTreeViewLoading through selectors and render loading slot here
+      }
       {itemsToRender.map((item) => (
         <WrappedTreeItem
           slots={slots}

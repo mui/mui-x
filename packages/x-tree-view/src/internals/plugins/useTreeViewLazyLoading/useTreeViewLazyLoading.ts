@@ -31,6 +31,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   setState,
   params,
 }) => {
+  // double check this when selectors are merged
   instance.preventItemUpdates();
 
   const isLazyLoadingEnabled = params.treeViewDataSource !== undefined;

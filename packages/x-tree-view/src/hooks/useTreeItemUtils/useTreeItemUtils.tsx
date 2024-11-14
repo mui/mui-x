@@ -110,6 +110,7 @@ export const useTreeItemUtils = <
     if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
       instance.toggleItemExpansion(event, itemId);
       if (instance?.fetchItems && lazyLoading && !status.expanded) {
+        // return a boolean if fails/succeeds to check for expansion? might work better
         await instance.fetchItems([itemId]);
       }
     }
