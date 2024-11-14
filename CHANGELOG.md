@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 22 contributors who made this release pos
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
   Special thanks go out to the community contributors who have helped make this release possible:
-  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger, @fxnoob, @GuillaumeMeheut 
+  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger, @fxnoob, @GuillaumeMeheut
   Following are all team members who have contributed to this release:
   @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore, @joserodolfofreitas.
 
@@ -157,7 +157,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
 
 ### Docs
 
-- [docs] Add docs for rounded symbol (#15324) @GuillaumeMeheut 
+- [docs] Add docs for rounded symbol (#15324) @GuillaumeMeheut
 - [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle
 - [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
 - [docs] Add `PickersPopper` component to the Date Picker customization playground (#15305) @LukasTy
