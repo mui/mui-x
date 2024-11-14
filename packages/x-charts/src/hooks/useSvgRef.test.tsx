@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
-import { DrawingProvider } from '../context/DrawingProvider';
+import { SvgRefProvider } from '../context/SvgRefProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -45,9 +45,9 @@ describe('useSvgRef', () => {
 
       return (
         <svg ref={ref} id="test-id">
-          <DrawingProvider svgRef={ref} width={1} height={1}>
+          <SvgRefProvider svgRef={ref}>
             <UseSvgRef />
-          </DrawingProvider>
+          </SvgRefProvider>
         </svg>
       );
     }
