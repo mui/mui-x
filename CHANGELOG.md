@@ -106,7 +106,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### Breaking changes
 
-- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object.[Migration Guide - Legend props propagation](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅)
+- The `legend` prop got removed. To pass props to the legend, use `slotProps={{ legend: { ... } }}` instead. This can be automatically done with the codemod as long as the `legend` prop does not come from a destructured object — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#legend-props-propagation-✅).
 
 - The `slots.legend` does not receive the `drawingArea` prop. You can still access your custom legend with the `useDrawingArea()` hook if your custom legend needs it.
 
