@@ -155,7 +155,6 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [TreeView] Automatic parents and children selection (#14899) @flaviendelangle
 - [TreeView] Remove deprecated `TreeView` component (#15093) @flaviendelangle
 - [TreeView] Replace `<TreeItem />` with `<TreeItem2 />` and migrate all the components and utils (#14913) @flaviendelangle
-- [TreeView] Replace the Tree Item anatomy images (#15066) @noraleonte
 
 ### Docs
 
