@@ -67,15 +67,25 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const startFieldRef = React.useRef<FieldRef<true>>(null);
-  const endFieldRef = React.useRef<FieldRef<true>>(null);
+  const startFieldRef = React.useRef<FieldRef<false>>(null);
+  const endFieldRef = React.useRef<FieldRef<false>>(null);
+  const singleInputFieldRef = React.useRef<FieldRef<true>>(null);
   const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const { rangePosition, onRangePositionChange } = useRangePosition(
     props,
-    fieldType === 'single-input' ? startFieldRef : undefined,
+    fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
+
+  let fieldRef: React.Ref<FieldRef<boolean>>;
+  if (fieldType === 'single-input') {
+    fieldRef = singleInputFieldRef;
+  } else if (rangePosition === 'start') {
+    fieldRef = startFieldRef;
+  } else {
+    fieldRef = endFieldRef;
+  }
 
   const {
     open,
@@ -91,7 +101,7 @@ export const useDesktopRangePicker = <
     props,
     wrapperVariant: 'desktop',
     autoFocusView: false,
-    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    fieldRef,
     localeText,
     additionalViewProps: {
       rangePosition,
@@ -173,6 +183,7 @@ export const useDesktopRangePicker = <
     anchorRef,
     startFieldRef,
     endFieldRef,
+    singleInputFieldRef,
     currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
     initialView: initialView.current ?? undefined,
     onViewChange: layoutProps.onViewChange,

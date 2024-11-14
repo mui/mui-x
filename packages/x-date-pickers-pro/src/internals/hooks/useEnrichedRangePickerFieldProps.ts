@@ -106,8 +106,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
-  startFieldRef: React.RefObject<FieldRef<true>>;
-  endFieldRef: React.RefObject<FieldRef<true>>;
+  startFieldRef: React.RefObject<FieldRef<false>>;
+  endFieldRef: React.RefObject<FieldRef<false>>;
+  singleInputFieldRef: React.RefObject<FieldRef<true>>;
 }
 
 const useMultiInputFieldSlotProps = <
@@ -298,8 +299,7 @@ const useSingleInputFieldSlotProps = <
   onBlur,
   rangePosition,
   onRangePositionChange,
-  startFieldRef,
-  endFieldRef,
+  singleInputFieldRef,
   pickerSlots,
   pickerSlotProps,
   fieldProps,
@@ -313,35 +313,35 @@ const useSingleInputFieldSlotProps = <
 >) => {
   type ReturnType = BaseSingleInputFieldProps<true, TEnableAccessibleFieldDOMStructure, TError>;
 
-  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
+  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 
   React.useEffect(() => {
-    if (!open || !startFieldRef.current) {
+    if (!open || !singleInputFieldRef.current) {
       return;
     }
 
-    if (startFieldRef.current.isFieldFocused()) {
+    if (singleInputFieldRef.current.isFieldFocused()) {
       return;
     }
 
     // bring back focus to the field with the current view section selected
     if (currentView) {
-      const sections = startFieldRef.current.getSections().map((section) => section.type);
+      const sections = singleInputFieldRef.current.getSections().map((section) => section.type);
       const newSelectedSection =
         rangePosition === 'start'
           ? sections.indexOf(currentView)
           : sections.lastIndexOf(currentView);
-      startFieldRef.current?.focusField(newSelectedSection);
+      singleInputFieldRef.current?.focusField(newSelectedSection);
     }
-  }, [rangePosition, open, currentView, startFieldRef]);
+  }, [rangePosition, open, currentView, singleInputFieldRef]);
 
   const updateRangePosition = () => {
-    if (!startFieldRef.current?.isFieldFocused()) {
+    if (!singleInputFieldRef.current?.isFieldFocused()) {
       return;
     }
 
-    const sections = startFieldRef.current.getSections();
-    const activeSectionIndex = startFieldRef.current?.getActiveSectionIndex();
+    const sections = singleInputFieldRef.current.getSections();
+    const activeSectionIndex = singleInputFieldRef.current?.getActiveSectionIndex();
     const domRangePosition =
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 
