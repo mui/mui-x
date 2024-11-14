@@ -11,14 +11,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 7, 2024_
 
-We'd like to offer a big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 20 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔁 Support [automatic parents and children selection](https://next.mui.com/x/react-tree-view/rich-tree-view/selection/#automatic-parents-and-children-selection) for the Rich Tree View components.
 
   Special thanks go out to the community contributors who have helped make this release possible:
-  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90.
+  @belkocik, @GeorgiosDrivas, @k-rajat19, @kalyan90, @DungTiger.
   Following are all team members who have contributed to this release:
-  @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore.
+  @alexfauquette, @arminmeh, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @michelengelen, @noraleonte, @oliviertassinari, @romgrk, @samuelsycamore, @joserodolfofreitas.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -26,12 +26,14 @@ We'd like to offer a big thanks to the 18 contributors who made this release pos
 
 #### `@mui/x-data-grid@8.0.0-alpha.0`
 
+- [DataGrid] Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
 - [DataGrid] Fix resizing right pinned column (#15107) @KenanYusuf
+- [DataGrid] Pass the reason to the `onPaginationModelChange` callback (#13959) @DungTiger
 - [DataGrid] Set default overlay height in flex parent layout (#15202) @cherniavskii
-- [DataGrid] refactor: baseMenuList & baseMenuItem (#15049) @romgrk
-- [DataGrid] refactor: remove more material imports (#15063) @romgrk
-- [DataGrid] - Fix grid overlay aligment with scroll for rtl (#15072) @kalyan90
-- [I10n] Improve Polish (pl-PL) locale (#15227) @belkocik
+- [DataGrid] Refactor `baseMenuList` and `baseMenuItem` (#15049) @romgrk
+- [DataGrid] Remove more material imports (#15063) @romgrk
+
+- [l10n] Improve Polish (pl-PL) locale (#15227) @belkocik
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -61,6 +63,9 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
   - `UseDateFieldComponentProps`
   - `UseTimeFieldComponentProps`
   - `UseDateTimeFieldComponentProps`
+  - `BaseSingleInputFieldProps`
+  - `BaseMultiInputFieldProps`
+  - `BasePickersTextFieldProps`
 
 - The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#remove-tdate-generic).
 
@@ -83,6 +88,8 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 - [pickers] Remove `utils` and `value` params from translations (#14986) @arthurbalduini
 - [pickers] Remove plural in "Pickers" on recently introduced APIs (#15297) @flaviendelangle
 - [pickers] Remove the re-export from `@mui/x-license` (#14487) @k-rajat19
+- [pickers] Strictly type the props a picker passes to its field, and migrate all the custom field demos accordingly (#15197) @flaviendelangle
+- [pickers] Unify JSDoc for all the `disabled` and `readOnly` props (#15304) @flaviendelangle
 - [pickers] Use the new `ownerState` in `DateCalendar`, `DateRangeCalendar`, `MonthCalendar` and `YearCalendar` (#15171) @flaviendelangle
 - [pickers] Use the new `ownerState` in `usePickersLayout` and `useXXXPicker` (#14994) @flaviendelangle
 
@@ -119,7 +126,9 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.0`.
 
 #### `@mui/x-charts-pro@8.0.0-alpha.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
+Same changes as in `@mui/x-charts@8.0.0-alpha.0`, plus:
+
+- [charts-pro] Fix missing `typeOverload` (#15400) @alexfauquette
 
 ### Tree View
 
@@ -147,13 +156,17 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 - [docs] Add migration guide for the removal of `LicenseInfo` from `@mui/x-date-pickers-pro` (#15321) @flaviendelangle
 - [docs] Add migration guide for the first breaking changes of charts (#15276) @alexfauquette
+- [docs] Add `PickersPopper` component to the Date Picker customization playground (#15305) @LukasTy
+- [docs] Add v8 to supported releases table (#15384) @joserodolfofreitas
 - [docs] Apply the new DX to the Button Field demos (#14860) @flaviendelangle
 - [docs] Apply the new DX to the `Autocomplete` Field demo (#15165) @flaviendelangle
 - [docs] Cleanup the pickers migration guide (#15310) @flaviendelangle
 - [docs] Copyedit the Charts Getting Started sequence (#14962) @samuelsycamore
 - [docs] Create Pickers masked field recipe (#13515) @flaviendelangle
+- [docs] Fix link to private notion page (#15396) @michelengelen
 - [docs] Fix missing punctuation on descriptions (#15229) @oliviertassinari
 - [docs] Fix peer dependency range (#15281) @oliviertassinari
+- [docs] Fix small Tree View typo (#15390) @oliviertassinari
 - [docs] Fix the `AdapterMomentHijri` doc section (#15312) @flaviendelangle
 - [docs] Start v8 migration guides (#15096) @MBilalShafi
 - [docs] Subdivide and reorganize navigation bar (#15014) @samuelsycamore
@@ -164,6 +177,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 
 - [core] Adjust the `cherry-pick` GitHub actions (#15099) @LukasTy
 - [core] Add `()` at the name of function name in the doc (#15075) @oliviertassinari
+- [core] Clarify release version bump strategy (#15219) @cherniavskii
 - [core] Fix CodeSandbox and StackBlitz for next doc-infra sync @oliviertassinari
 - [core] Fix Vale error on `master` @oliviertassinari
 - [core] Fix changelog reference to VoiceOver @oliviertassinari
@@ -171,6 +185,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [core] Move `helpers` to `@mui/x-internals` package (#15188) @LukasTy
 - [code-infra] Set renovate to automerge devDependencies (#13463) @JCQuintas
 - [infra] Reintroduce the cherry pick workflow (#15293) @michelengelen
+- [core] Remove duplicate title header (#15389) @oliviertassinari
 - [release] v8 preparation (#15054) @michelengelen
 - [test] Fix advanced list view regression test snapshot (#15260) @KenanYusuf
 
