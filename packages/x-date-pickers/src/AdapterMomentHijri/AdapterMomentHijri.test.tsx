@@ -23,6 +23,7 @@ describe('<AdapterMomentHijri />', () => {
 
   describe('Adapter localization', () => {
     it('Formatting', (t = {}) => {
+      // TODO: All Hijri tests are failing on vitest browser (2024-11)
       if (process.env.MUI_BROWSER === 'true') {
         // @ts-expect-error to support mocha and vitest
         t?.skip();

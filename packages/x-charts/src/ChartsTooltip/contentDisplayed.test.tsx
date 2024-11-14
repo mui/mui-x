@@ -28,6 +28,7 @@ describe('ChartsTooltip', () => {
   const { render } = createRenderer();
 
   beforeEach(() => {
+  // TODO: Remove beforeEach/afterEach after vitest becomes our main runner
     if (window?.document?.body?.style) {
       window.document.body.style.margin = '0';
     }

@@ -23,17 +23,8 @@ const jsdomOnlyPackages = [
 
 const allPackages = [...packages, ...jsdomOnlyPackages];
 
-// Ideally we move the configuration to each package.
-// Currently it doesn't work because vitest doesn't detect two different configurations in the same package.
-// We could bypass this limitation by having a folder per configuration. Eg: `packages/x-charts/browser` & `packages/x-charts/jsdom`.
-
 export default defineWorkspace([
   ...allPackages.flatMap((name): WorkspaceProjectConfiguration[] => [
-    // TODO: Decide on
-    // Manually changing the process.env in browser tests doesn't work.
-    // And alternative is to use `const {NODE_ENV} = process.env` in the code instead.
-    // x-license relies on `process.env.NODE_ENV` to determine the environment.
-    // x-internals has a weird chai import issue I couldn't fix
     ...(jsdomOnlyPackages.includes(name)
       ? []
       : [
