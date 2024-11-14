@@ -5,6 +5,11 @@ import { expect } from 'chai';
 import { SvgRefProvider } from '../context/SvgRefProvider';
 
 describe('<ChartsSurface />', () => {
+  // JSDOM doesn't implement SVGElement
+  if (/jsdom/.test(window.navigator.userAgent)) {
+    return;
+  }
+
   const { render } = createRenderer();
 
   it('should pass ref when it is added directly to component', () => {
