@@ -3,23 +3,12 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import {
-  UseMobilePickerParams,
-  UseMobilePickerProps,
-  UseMobilePickerSlotProps,
-} from './useMobilePicker.types';
+import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
-import {
-  FieldSection,
-  BaseSingleInputFieldProps,
-  PickerValidDate,
-  FieldRef,
-  InferError,
-  PickerOwnerState,
-} from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { FieldSection, PickerValidDate, FieldRef, InferError } from '../../../models';
+import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 
 /**
@@ -85,41 +74,37 @@ export const useMobilePicker = <
   });
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseMobilePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
-    Partial<
-      BaseSingleInputFieldProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        InferError<TExternalProps>
-      >
-    >,
-    PickerOwnerState
-  >({
+  const fieldProps: BaseSingleInputFieldProps<
+    PickerValidDate | null,
+    FieldSection,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
-      ...(isToolbarHidden && { id: labelId }),
-      ...(!(disabled || readOnly) && {
-        onClick: actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
-      }),
+      // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       label,
       name,
-      ...(inputRef ? { inputRef } : {}),
+      ...(isToolbarHidden && { id: labelId }),
+      ...(!(disabled || readOnly) && {
+        onClick: actions.onOpen,
+        onKeyDown: onSpaceOrEnter(actions.onOpen),
+      }),
+      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
