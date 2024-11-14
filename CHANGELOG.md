@@ -56,7 +56,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
   - Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
   - Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
 
-- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue`. [Migration Guide - Stop passing utils and the date object to some translation keys](https://next.mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys)
+- Some translation keys no longer require `utils` and the date object as parameters, but only the formatted value as a string. The keys affected by this changes are: `clockLabelText`, `openDatePickerDialogue` and `openTimePickerDialogue` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-passing-utils-and-the-date-object-to-some-translation-keys).
 
 - The following types are no longer exported by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#removed-types).
 
