@@ -73,7 +73,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.0`, plus:
 
 - The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#remove-tdate-generic).
 
-- The renamed `usePickersTranslation` and `usePickersContext` to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
+- Renamed `usePickersTranslations` and `usePickersContext` hooks to have a coherent `Picker` prefix instead of `Pickers` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
 
 - The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#stop-using-licenseinfo-from-mui-x-date-pickers-pro).
 
