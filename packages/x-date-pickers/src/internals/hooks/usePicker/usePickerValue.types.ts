@@ -266,7 +266,7 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  wrapperVariant: PickerVariant;
+  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
