@@ -8,10 +8,10 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-const TEST_FILES = ['community-nested-imports', 'community-root-imports', 'pro-root-imports'];
+const TEST_FILES = ['community-import-root', 'community-import-nested', 'pro-import-root'];
 
-describe('v8.0.0/tree-view', () => {
-  describe('rename-tree-item-2', () => {
+describe('v8.0.0/pickers', () => {
+  describe('rename-and-move-field-value-type', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
       const expectedPath = `./expected-${testFile}.spec.tsx`;
