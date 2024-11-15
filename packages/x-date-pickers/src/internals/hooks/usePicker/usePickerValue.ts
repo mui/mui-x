@@ -241,11 +241,14 @@ export const usePickerValue = <
   });
 
   React.useEffect(() => {
+    if (!inValueWithTimezoneToRender) {
+      return;
+    }
     const newTimezone = valueManager.getTimezone(utils, inValueWithTimezoneToRender);
     if (valueManager.getTimezone(utils, dateState.draft) !== newTimezone) {
       setDateState((prev) => ({
         ...prev,
-        draft: valueManager.setTimezone(utils, newTimezone, prev.draft),
+        draft: valueManager.setTimezone(utils, newTimezone ?? 'default', prev.draft),
       }));
     }
   }, [inValueWithTimezoneToRender]); // eslint-disable-line react-hooks/exhaustive-deps
