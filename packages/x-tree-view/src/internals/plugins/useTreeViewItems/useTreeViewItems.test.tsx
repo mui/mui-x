@@ -233,9 +233,11 @@ describeTreeView<
     });
 
     describe('Memoization (Rich Tree View only)', () => {
-      it('should not re-render any children when the Tree View re-renders (flat tree)', function test() {
+      it('should not re-render any children when the Tree View re-renders (flat tree)', function test(t = {}) {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -252,9 +254,11 @@ describeTreeView<
         expect(renders).to.deep.equal([]);
       });
 
-      it('should not re-render every children when updating the state on an item (flat tree)', function test() {
+      it('should not re-render every children when updating the state on an item (flat tree)', function test(t = {}) {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -275,9 +279,11 @@ describeTreeView<
         expect(renders).to.deep.equal(['0', '0', '1', '1']);
       });
 
-      it('should not re-render any children when the Tree View re-renders (nested tree)', function test() {
+      it('should not re-render any children when the Tree View re-renders (nested tree)', function test(t = {}) {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -297,9 +303,11 @@ describeTreeView<
         expect(renders).to.deep.equal([]);
       });
 
-      it('should not re-render every children when updating the state on an item (nested tree)', function test() {
+      it('should not re-render every children when updating the state on an item (nested tree)', function test(t = {}) {
         if (!treeViewComponentName.startsWith('RichTreeView')) {
-          this.skip();
+          // @ts-expect-error to support mocha and vitest
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          this?.skip?.() || t?.skip();
         }
 
         const spyLabel = spy((props) => <TreeItemLabel {...props} />);
