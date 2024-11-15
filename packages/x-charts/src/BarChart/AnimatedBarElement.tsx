@@ -18,9 +18,10 @@ export interface BarProps
 }
 
 /**
- * @ignore - This component is just here to remove the ownerState from slotProps before rendering.
+ * @ignore - internal component.
  */
 export function AnimatedBarElement(props: BarProps) {
   const { ownerState, ...other } = props;
+
   return <animated.rect {...other} />;
 }
