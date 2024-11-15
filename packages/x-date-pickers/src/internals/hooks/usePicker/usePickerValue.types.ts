@@ -109,9 +109,9 @@ export interface PickerValueManager<TValue, TError> {
    @template TValue
    @param {MuiPickersAdapter} utils The utils to manipulate the date.
    @param {TValue} value The current value.
-   @returns {string | null} The timezone of the current value.
+   @returns {string} The timezone of the current value. `default` if the value is empty.
    */
-  getTimezone: (utils: MuiPickersAdapter, value: TValue) => string | null;
+  getTimezone: (utils: MuiPickersAdapter, value: TValue) => string;
   /**
    * Change the timezone of the dates inside a value.
    @template TValue

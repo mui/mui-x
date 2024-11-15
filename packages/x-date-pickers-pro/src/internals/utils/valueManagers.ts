@@ -57,9 +57,9 @@ export const rangeValueManager: RangePickerValueManager = {
   defaultErrorState: [null, null],
   getTimezone: (utils, value) => {
     const timezoneStart =
-      value[0] == null || !utils.isValid(value[0]) ? null : utils.getTimezone(value[0]);
+      value[0] == null || !utils.isValid(value[0]) ? 'default' : utils.getTimezone(value[0]);
     const timezoneEnd =
-      value[1] == null || !utils.isValid(value[1]) ? null : utils.getTimezone(value[1]);
+      value[1] == null || !utils.isValid(value[1]) ? 'default' : utils.getTimezone(value[1]);
 
     if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
       throw new Error('MUI X: The timezone of the start and the end date should be the same.');

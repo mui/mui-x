@@ -38,7 +38,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   hasError: (error) => error != null,
   defaultErrorState: null,
   getTimezone: (utils, value) =>
-    value == null || !utils.isValid(value) ? null : utils.getTimezone(value),
+    value == null || !utils.isValid(value) ? 'default' : utils.getTimezone(value),
   setTimezone: (utils, timezone, value) =>
     value == null ? null : utils.setTimezone(value, timezone),
 };
