@@ -6,16 +6,16 @@ import { TreeViewEventLookupElement } from './events';
 import type { TreeViewCorePluginSignatures } from '../corePlugins';
 import { TreeViewItemPlugin } from './itemPlugin';
 import { TreeViewItemId } from '../../models';
+import { TreeViewStore } from '../utils/TreeViewStore';
 
 export interface TreeViewPluginOptions<TSignature extends TreeViewAnyPluginSignature> {
   instance: TreeViewUsedInstance<TSignature>;
   params: TreeViewUsedDefaultizedParams<TSignature>;
-  state: TreeViewUsedState<TSignature>;
   slots: TSignature['slots'];
   slotProps: TSignature['slotProps'];
   experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   models: TreeViewUsedModels<TSignature>;
-  setState: React.Dispatch<React.SetStateAction<TreeViewUsedState<TSignature>>>;
+  store: TreeViewUsedStore<TSignature>;
   rootRef: React.RefObject<HTMLUListElement>;
   plugins: TreeViewPlugin<TreeViewAnyPluginSignature>[];
 }
@@ -44,6 +44,7 @@ export type TreeViewPluginSignature<
     publicAPI?: {};
     events?: { [key in keyof T['events']]: TreeViewEventLookupElement };
     state?: {};
+    cache?: {};
     contextValue?: {};
     slots?: { [key in keyof T['slots']]: React.ElementType };
     slotProps?: { [key in keyof T['slotProps']]: {} | (() => {}) };
@@ -59,6 +60,7 @@ export type TreeViewPluginSignature<
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
   events: T extends { events: {} } ? T['events'] : {};
   state: T extends { state: {} } ? T['state'] : {};
+  cache: T extends { cache: {} } ? T['cache'] : {};
   contextValue: T extends { contextValue: {} } ? T['contextValue'] : {};
   slots: T extends { slots: {} } ? T['slots'] : {};
   slotProps: T extends { slotProps: {} } ? T['slotProps'] : {};
@@ -79,6 +81,7 @@ export type TreeViewPluginSignature<
 };
 
 export type TreeViewAnyPluginSignature = {
+  cache: any;
   state: any;
   instance: any;
   params: any;
@@ -120,11 +123,15 @@ export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> 
     $$signature: TSignature;
   };
 
-type TreeViewUsedState<TSignature extends TreeViewAnyPluginSignature> =
-  PluginPropertyWithDependencies<TSignature, 'state'>;
+export type TreeViewUsedStore<TSignature extends TreeViewAnyPluginSignature> = TreeViewStore<
+  [TSignature, ...TSignature['dependencies']]
+>;
 
 type TreeViewUsedExperimentalFeatures<TSignature extends TreeViewAnyPluginSignature> =
-  TreeViewExperimentalFeatures<[TSignature, ...TSignature['dependencies']]>;
+  TreeViewExperimentalFeatures<
+    [TSignature, ...TSignature['dependencies']],
+    TSignature['optionalDependencies']
+  >;
 
 type RemoveSetValue<Models extends Record<string, TreeViewModel<any>>> = {
   [K in keyof Models]: Omit<Models[K], 'setValue'>;
@@ -141,12 +148,10 @@ export type TreeItemWrapper<TSignatures extends readonly TreeViewAnyPluginSignat
   itemId: TreeViewItemId;
   children: React.ReactNode;
   instance: TreeViewInstance<TSignatures>;
+  idAttribute: string;
 }) => React.ReactNode;
 
-export type TreeRootWrapper<TSignatures extends readonly TreeViewAnyPluginSignature[]> = (params: {
-  children: React.ReactNode;
-  instance: TreeViewInstance<TSignatures>;
-}) => React.ReactNode;
+export type TreeRootWrapper = (params: { children: React.ReactNode }) => React.ReactNode;
 
 export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
   (options: TreeViewPluginOptions<TSignature>): TreeViewResponse<TSignature>;
@@ -155,6 +160,7 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
     experimentalFeatures: TreeViewUsedExperimentalFeatures<TSignature>;
   }) => TSignature['defaultizedParams'];
   getInitialState?: (params: TreeViewUsedDefaultizedParams<TSignature>) => TSignature['state'];
+  getInitialCache?: () => TSignature['cache'];
   models?: TreeViewModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
   itemPlugin?: TreeViewItemPlugin;
@@ -169,5 +175,5 @@ export type TreeViewPlugin<TSignature extends TreeViewAnyPluginSignature> = {
    * @param {{ children: React.ReactNode; }} params The params of the root.
    * @returns {React.ReactNode} The wrapped root.
    */
-  wrapRoot?: TreeRootWrapper<[TSignature, ...TSignature['dependencies']]>;
+  wrapRoot?: TreeRootWrapper;
 };
