@@ -97,65 +97,6 @@ function AnimatedBarElement(props: BarProps) {
   return <animated.rect {...other} />;
 }
 
-AnimatedBarElement.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  height: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      '__@$get@39307': PropTypes.any.isRequired,
-      '__@$observers@39309': PropTypes.any.isRequired,
-      get: PropTypes.func,
-      observerAdded: PropTypes.func,
-      observerRemoved: PropTypes.func,
-    }),
-    PropTypes.string,
-  ]),
-  ownerState: PropTypes.shape({
-    classes: PropTypes.object,
-    color: PropTypes.string.isRequired,
-    dataIndex: PropTypes.number.isRequired,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-  }).isRequired,
-  width: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      '__@$get@39307': PropTypes.any.isRequired,
-      '__@$observers@39309': PropTypes.any.isRequired,
-      get: PropTypes.func,
-      observerAdded: PropTypes.func,
-      observerRemoved: PropTypes.func,
-    }),
-    PropTypes.string,
-  ]),
-  x: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      '__@$get@39307': PropTypes.any.isRequired,
-      '__@$observers@39309': PropTypes.any.isRequired,
-      get: PropTypes.func,
-      observerAdded: PropTypes.func,
-      observerRemoved: PropTypes.func,
-    }),
-    PropTypes.string,
-  ]),
-  y: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      '__@$get@39307': PropTypes.any.isRequired,
-      '__@$observers@39309': PropTypes.any.isRequired,
-      get: PropTypes.func,
-      observerAdded: PropTypes.func,
-      observerRemoved: PropTypes.func,
-    }),
-    PropTypes.string,
-  ]),
-} as any;
-
 function BarElement(props: BarElementProps) {
   const {
     id,
