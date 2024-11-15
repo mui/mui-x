@@ -9,6 +9,7 @@ import {
   SeriesProvider,
   AnimationProvider,
   SvgRefProvider,
+  SizeProvider,
 } from '@mui/x-charts/internals';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
@@ -16,7 +17,6 @@ import { getReleaseInfo } from '../../internals/utils/releaseInfo';
 import { CartesianProviderPro } from '../CartesianProviderPro';
 import { ZoomProps, ZoomProvider } from '../ZoomProvider';
 import { useChartContainerProProps } from './useChartDataProviderProProps';
-import { SizeProvider } from '../../../../x-charts/src/context/SizeProvider';
 
 const releaseInfo = getReleaseInfo();
 
