@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { AnimatedProps, animated } from '@react-spring/web';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
+import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -50,20 +50,6 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-interface BarProps
-  extends Omit<
-      React.SVGProps<SVGRectElement>,
-      'id' | 'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
-    >,
-    AnimatedProps<{
-      x?: string | number | undefined;
-      y?: string | number | undefined;
-      height?: string | number | undefined;
-      width?: string | number | undefined;
-    }> {
-  ownerState: BarElementOwnerState;
-}
-
 export interface BarElementSlots {
   /**
    * The component that renders the bar.
@@ -88,14 +74,6 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
      */
     slots?: BarElementSlots;
   };
-
-/**
- * @ignore - This component is just here to remove the ownerState from slotProps before rendering.
- */
-function AnimatedBarElement(props: BarProps) {
-  const { ownerState, ...other } = props;
-  return <animated.rect {...other} />;
-}
 
 function BarElement(props: BarElementProps) {
   const {
