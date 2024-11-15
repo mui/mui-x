@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import type { DrawingProviderProps } from '../DrawingProvider';
+import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
@@ -11,6 +11,7 @@ import { ChartsSurfaceProps } from '../../ChartsSurface';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
+import { SvgRefProviderProps } from '../SvgRefProvider';
 
 export const useChartDataProviderProps = (
   props: ChartDataProviderProps,
@@ -42,11 +43,14 @@ export const useChartDataProviderProps = (
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
+  const svgRefProviderProps: Omit<SvgRefProviderProps, 'children'> = {
+    svgRef,
+  };
+
+  const drawingProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
     width,
     height,
     margin,
-    svgRef,
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
@@ -100,6 +104,7 @@ export const useChartDataProviderProps = (
     chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
   };
