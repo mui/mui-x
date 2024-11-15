@@ -62,7 +62,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
   const surfaceRef = useSurfaceRef();
-  const finalRef = useForkRef(surfaceRef, ref);
+  const handleRef = useForkRef(surfaceRef, ref);
 
   useAxisEvents(disableAxisListener);
 
@@ -71,7 +71,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={finalRef}
+      ref={handleRef}
       className={className}
       {...other}
     >

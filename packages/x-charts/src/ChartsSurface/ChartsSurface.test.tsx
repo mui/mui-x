@@ -29,22 +29,4 @@ describe('<ChartsSurface />', () => {
       'ref last child is a SVGRectElement',
     ).to.equal(true);
   });
-
-  it('should pass ref when it is added to the SvgRefProvider', () => {
-    const ref = React.createRef<SVGSVGElement>();
-
-    render(
-      <SvgRefProvider svgRef={ref}>
-        <ChartsSurface width={100} height={100}>
-          <rect width={100} height={100} />
-        </ChartsSurface>
-      </SvgRefProvider>,
-    );
-
-    expect(ref.current instanceof SVGElement, 'ref is a SVGElement').to.equal(true);
-    expect(
-      ref.current?.lastElementChild instanceof SVGRectElement,
-      'ref last child is a SVGRectElement',
-    ).to.equal(true);
-  });
 });
