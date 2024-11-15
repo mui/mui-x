@@ -52,11 +52,11 @@ export default function BarGapNoSnap() {
               dataKey: 'year',
               categoryGapRatio: props.categoryGapRatio,
               barGapRatio: props.barGapRatio,
+              maxBarSize: props.maxBarSize,
             },
           ]}
           yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
           hideLegend
-          maxBarSize={props.maxBarSize}
         />
       )}
       getCode={({ props }) => {
@@ -71,9 +71,8 @@ export default function BarGapNoSnap() {
           `      data: ['Page 1', 'Page 2', 'Page 3']`,
           `      categoryGapRatio: ${props.categoryGapRatio}`,
           `      barGapRatio: ${props.barGapRatio}`,
+          `      maxBarSize: ${props.maxBarSize}`,
           `    }`,
-          `  ]}`,
-          `  maxBarSize={${props.maxBarSize}}`,
           '/>',
         ].join('\n');
       }}

@@ -71,10 +71,6 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
    */
   borderRadius?: number;
   /**
-   * The maximum size of the bar element.
-   */
-  maxBarSize?: number;
-  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -86,9 +82,7 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   slots?: BarPlotSlots;
 }
 
-const useAggregatedData = (
-  maxBarSize?: number,
-): {
+const useAggregatedData = (): {
   completedData: CompletedBarData[];
   masksData: MaskData[];
 } => {
@@ -138,7 +132,7 @@ const useAggregatedData = (
         bandWidth,
         numberOfGroups: stackingGroups.length,
         gapRatio: baseScaleConfig.barGapRatio,
-        maxBarSize,
+        maxBarSize: baseScaleConfig.maxBarSize,
       });
 
       const barOffset = groupIndex * (barWidth + offset) + centeringOffset;
@@ -252,15 +246,8 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
 function BarPlot(props: BarPlotProps) {
-  const {
-    skipAnimation: inSkipAnimation,
-    onItemClick,
-    borderRadius,
-    barLabel,
-    maxBarSize,
-    ...other
-  } = props;
-  const { completedData, masksData } = useAggregatedData(maxBarSize);
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { completedData, masksData } = useAggregatedData();
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
@@ -350,10 +337,6 @@ BarPlot.propTypes = {
    * Defines the border radius of the bar element.
    */
   borderRadius: PropTypes.number,
-  /**
-   * The maximum size of the bar element.
-   */
-  maxBarSize: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

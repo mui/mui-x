@@ -199,6 +199,10 @@ export interface AxisScaleConfig {
      * @default 0.1
      */
     barGapRatio: number;
+    /**
+     * The maximum size of the bar element.
+     */
+    maxBarSize?: number;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {

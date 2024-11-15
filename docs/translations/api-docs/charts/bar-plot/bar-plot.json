@@ -5,7 +5,6 @@
       "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
     },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
-    "maxBarSize": { "description": "The maximum size of the bar element." },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
       "typeDescriptions": {
