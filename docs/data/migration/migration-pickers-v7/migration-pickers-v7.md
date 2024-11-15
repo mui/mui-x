@@ -288,6 +288,18 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + const pickerContext = usePickerContext();
   ```
 
+  - `FieldValueType`
+
+  ```diff
+  -import { FieldValueType } from '@mui/x-date-pickers/models';
+  -import { FieldValueType } from '@mui/x-date-pickers';
+  -import { FieldValueType } from '@mui/x-date-pickers-pro';
+
+  +import { PickerValueType } from '@mui/x-date-pickers/models';
+  +import { PickerValueType } from '@mui/x-date-pickers';
+  +import { PickerValueType } from '@mui/x-date-pickers-pro';
+  ```
+
 ## Typing breaking changes
 
 ### Remove `TDate` generic
