@@ -6,11 +6,11 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
   PickerValidDate,
   FieldRef,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
@@ -33,7 +33,7 @@ export interface UseFieldParams<
   valueManager: PickerValueManager<TValue, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TSection>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
-  valueType: FieldValueType;
+  valueType: PickerValueType;
 }
 
 export interface UseFieldInternalProps<

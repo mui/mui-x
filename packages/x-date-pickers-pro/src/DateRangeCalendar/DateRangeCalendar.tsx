@@ -264,6 +264,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
+        referenceDate,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);

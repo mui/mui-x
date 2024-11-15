@@ -6,8 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { TreeItem, TreeItemLabel } from '@mui/x-tree-view/TreeItem';
-import { useTreeItem } from '@mui/x-tree-view/useTreeItem';
-import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+
+import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
@@ -69,9 +69,11 @@ function Label({ children, ...other }) {
 }
 
 const LabelInput = React.forwardRef(function LabelInput(
-  { item, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
+  { itemId, handleCancelItemLabelEditing, handleSaveItemLabel, ...props },
   ref,
 ) {
+  const item = useTreeItemModel(itemId);
+
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -141,7 +143,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
     itemId: props.itemId,
     children: props.children,
   });
-  const { publicAPI } = useTreeItem(props);
 
   const handleInputBlur = (event) => {
     event.defaultMuiPrevented = true;
@@ -158,7 +159,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
       slots={{ label: Label, labelInput: LabelInput }}
       slotProps={{
         labelInput: {
-          item: publicAPI.getItem(props.itemId),
+          itemId: props.itemId,
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
           handleCancelItemLabelEditing: interactions.handleCancelItemLabelEditing,

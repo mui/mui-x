@@ -52,7 +52,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
 ) {
   const {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
@@ -64,7 +64,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
   } = useChartDataProviderProps(props, ref);
 
   return (
-    <DrawingAreaProvider {...drawingProviderProps}>
+    <DrawingAreaProvider {...drawingAreaProviderProps}>
       <SvgRefProvider {...svgRefProviderProps}>
         <PluginProvider {...pluginProviderProps}>
           <SeriesProvider {...seriesProviderProps}>
