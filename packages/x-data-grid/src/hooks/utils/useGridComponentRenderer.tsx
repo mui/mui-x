@@ -23,7 +23,7 @@ type GridComponentRendererOptions<Props, State> = {
  */
 export function useGridComponentRenderer<
   Props extends React.HTMLAttributes<any>,
-  State extends Record<string, unknown>,
+  State extends Record<string, any>,
 >({
   defaultElement,
   props,

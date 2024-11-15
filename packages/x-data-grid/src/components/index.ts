@@ -8,7 +8,6 @@ export * from './menu';
 export * from './panel';
 export * from './columnsManagement';
 export * from './toolbar';
-export * from './toolbarV8';
 
 export * from './GridApiContext';
 export * from './GridFooter';
@@ -19,6 +18,5 @@ export { GridPagination } from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
-export * from './GridColumnsPanelTrigger';
-export * from './GridFilterPanelTrigger';
-export * from './GridPrintTrigger';
+
+export * as Grid from './index.parts';
