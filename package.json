@@ -1,5 +1,5 @@
 {
-  "version": "7.21.0",
+  "version": "8.0.0-alpha.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -92,8 +92,8 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
-    "@mui/internal-markdown": "^1.0.19",
-    "@mui/internal-test-utils": "^1.0.19",
+    "@mui/internal-markdown": "^1.0.20",
+    "@mui/internal-test-utils": "^1.0.20",
     "@mui/material": "^5.16.7",
     "@mui/monorepo": "github:mui/material-ui#123f0de85460c82ed1dc9b8015878c3239a56895",
     "@mui/utils": "^5.16.6",
@@ -110,8 +110,8 @@
     "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.9",
     "@types/node": "^20.17.6",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@types/react-test-renderer": "^18.3.0",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^17.0.3",

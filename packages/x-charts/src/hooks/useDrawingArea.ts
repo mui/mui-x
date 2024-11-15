@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
+import { DrawingAreaContext, DrawingAreaState } from '../context/DrawingAreaProvider';
 
-export function useDrawingArea(): DrawingArea {
+export function useDrawingArea(): DrawingAreaState {
   const { left, top, width, height, bottom, right, isPointInside } =
-    React.useContext(DrawingContext);
+    React.useContext(DrawingAreaContext);
   return React.useMemo(
     () => ({ left, top, width, height, bottom, right, isPointInside }),
     [height, left, top, width, bottom, right, isPointInside],

@@ -57,7 +57,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<RichTreeView {...pickerProps} />
+<RichTreeView {...treeViewProps} />
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.

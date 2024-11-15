@@ -9,8 +9,8 @@ import {
   GridRenderEditCellParams,
   GridValueSetter,
   GridPreProcessEditCellProps,
-  GridCellProps,
   GridCellModes,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
@@ -369,7 +369,7 @@ describe('<DataGridPro /> - Cell editing', () => {
     });
 
     describe('stopCellEditMode', () => {
-      function CustomEditComponent({ hasFocus }: GridCellProps) {
+      function CustomEditComponent({ hasFocus }: GridRenderEditCellParams) {
         const ref = React.useRef<HTMLInputElement>(null);
         React.useLayoutEffect(() => {
           if (hasFocus) {
@@ -631,7 +631,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell below when cellToFocusAfter=below', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(<TestCase columnProps={{ renderEditCell: renderEditCellProp }} />);
 
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
@@ -647,7 +649,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the right when cellToFocusAfter=right', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
@@ -673,7 +677,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       });
 
       it('should move focus to the cell on the left when cellToFocusAfter=left', async () => {
-        const renderEditCellProp = (props: GridCellProps) => <CustomEditComponent {...props} />;
+        const renderEditCellProp: GridColDef['renderEditCell'] = (props) => (
+          <CustomEditComponent {...props} />
+        );
         render(
           <TestCase
             {...getBasicGridData(1, 3)}
