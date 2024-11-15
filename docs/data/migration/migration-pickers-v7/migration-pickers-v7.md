@@ -258,19 +258,19 @@ const theme = createTheme({
 
 The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
 
-- `usePickersTranslation`
+- `usePickersTranslations`
 
   ```diff
-  - import { usePickersTranslation } from '@mui/x-date-pickers/hooks';
-  - import { usePickersTranslation } from '@mui/x-date-pickers';
-  - import { usePickersTranslation } from '@mui/x-date-pickers-pro';
+  - import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+  - import { usePickersTranslations } from '@mui/x-date-pickers';
+  - import { usePickersTranslations } from '@mui/x-date-pickers-pro';
 
-  + import { usePickerTranslation } from '@mui/x-date-pickers/hooks';
-  + import { usePickerTranslation } from '@mui/x-date-pickers';
-  + import { usePickerTranslation } from '@mui/x-date-pickers-pro';
+  + import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+  + import { usePickerTranslations } from '@mui/x-date-pickers';
+  + import { usePickerTranslations } from '@mui/x-date-pickers-pro';
 
-  - const translations = usePickersTranslation();
-  + const translations = usePickerTranslation();
+  - const translations = usePickersTranslations();
+  + const translations = usePickerTranslations();
   ```
 
   - `usePickersContext`
@@ -578,7 +578,7 @@ If you were using them, you need to replace them with the following code:
 
 ## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
 
-The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package.
 You can import it from `@mui/x-license` instead:
 
 ```diff
