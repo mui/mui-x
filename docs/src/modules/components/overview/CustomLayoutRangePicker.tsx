@@ -1,8 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   PickersLayoutProps,
   usePickerLayout,
@@ -110,20 +108,18 @@ function CustomLayout(props: CustomLayoutProps) {
 
 export default function CustomLayoutPicker({ layout }: { layout: Layout }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDateRangePicker
-        defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
-        slots={{
-          layout: CustomLayout as any,
-        }}
-        slotProps={{
-          shortcuts: {
-            items: shortcutsItems,
-          },
-          layout: { layout } as CustomLayoutProps,
-          actionBar: { actions: ['accept', 'clear', 'cancel'] },
-        }}
-      />
-    </LocalizationProvider>
+    <StaticDateRangePicker
+      defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
+      slots={{
+        layout: CustomLayout as any,
+      }}
+      slotProps={{
+        shortcuts: {
+          items: shortcutsItems,
+        },
+        layout: { layout } as CustomLayoutProps,
+        actionBar: { actions: ['accept', 'clear', 'cancel'] },
+      }}
+    />
   );
 }

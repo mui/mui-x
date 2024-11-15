@@ -164,16 +164,24 @@ export default function Customization() {
     }
   };
   const handleChangeColor = (_event: React.MouseEvent<HTMLElement>, newColor: string) => {
-    setStyleConfig((prev) => ({ ...prev, color: newColor }));
+    if (newColor !== null) {
+      setStyleConfig((prev) => ({ ...prev, color: newColor }));
+    }
   };
   const handleChangeLayout = (_event: React.MouseEvent<HTMLElement>, newLayout: Layout) => {
-    setStyleConfig((prev) => ({ ...prev, layout: newLayout }));
+    if (newLayout !== null) {
+      setStyleConfig((prev) => ({ ...prev, layout: newLayout }));
+    }
   };
   const handleChangeCorner = (_event: React.MouseEvent<HTMLElement>, newCorner: Corner) => {
-    setStyleConfig((prev) => ({ ...prev, corner: newCorner }));
+    if (newCorner !== null) {
+      setStyleConfig((prev) => ({ ...prev, corner: newCorner }));
+    }
   };
   const handleChangeDensity = (_event: React.MouseEvent<HTMLElement>, newDensity: Density) => {
-    setStyleConfig((prev) => ({ ...prev, density: newDensity }));
+    if (newDensity !== null) {
+      setStyleConfig((prev) => ({ ...prev, density: newDensity }));
+    }
   };
 
   const handleChangeTypography = (
