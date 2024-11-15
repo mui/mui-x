@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.doubleClick(separator);
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
-      const expectedWidth = process.env.MUI_BROWSER === 'true' ? 63.71875 : 114;
+      const expectedWidth = process.env.VITEST === 'true' ? 63.71875 : 114;
       expect(onColumnWidthChange.args.map((arg) => arg[0].width)).to.deep.equal([
         120,
         expectedWidth,
@@ -544,7 +544,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      if (process.env.MUI_BROWSER === 'true') {
+      if (process.env.VITEST === 'true') {
         expect(getWidths()).to.deep.equal([155, 177]);
       } else {
         expect(getWidths()).to.deep.equal([211, 233]);
@@ -558,7 +558,7 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      if (process.env.MUI_BROWSER === 'true') {
+      if (process.env.VITEST === 'true') {
         expect(getWidths()).to.deep.equal([100, 177]);
       } else {
         expect(getWidths()).to.deep.equal([100, 233]);
@@ -569,7 +569,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      if (process.env.MUI_BROWSER === 'true') {
+      if (process.env.VITEST === 'true') {
         expect(getWidths()).to.deep.equal([155, 177]);
       } else {
         expect(getWidths()).to.deep.equal([211, 233]);
@@ -591,7 +591,7 @@ describe('<DataGridPro /> - Columns', () => {
       it('.includeHeaders works', async () => {
         await autosize(
           { includeHeaders: true },
-          process.env.MUI_BROWSER === 'true' ? [155, 177] : [211, 233],
+          process.env.VITEST === 'true' ? [155, 177] : [211, 233],
         );
       });
 

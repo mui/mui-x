@@ -31,13 +31,20 @@ export default defineWorkspace([
           {
             extends: './vitest.config.mts',
             plugins: [react()],
+            optimizeDeps: {
+              include: [
+                'date-fns-jalali-v3/**',
+                'moment/locale/**',
+                'date-fns/**',
+                'dayjs/**',
+                'date-fns-v4/**',
+                'date-fns-jalali/**',
+              ],
+            },
             test: {
               include: [`packages/${name}/src/**/*.test.?(c|m)[jt]s?(x)`],
               exclude: [`packages/${name}/src/**/*.jsdom.test.?(c|m)[jt]s?(x)`],
               name: `browser/${name}`,
-              env: {
-                MUI_BROWSER: 'true',
-              },
               browser: {
                 enabled: true,
                 name: 'chromium',
@@ -64,9 +71,6 @@ export default defineWorkspace([
         exclude: [`packages/${name}/src/**/*.browser.test.?(c|m)[jt]s?(x)`],
         name: `jsdom/${name}`,
         environment: 'jsdom',
-        env: {
-          MUI_JSDOM: 'true',
-        },
       },
     },
   ]),

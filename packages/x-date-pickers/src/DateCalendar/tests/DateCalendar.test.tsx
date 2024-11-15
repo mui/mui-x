@@ -129,7 +129,7 @@ describe('<DateCalendar />', () => {
 
   describe('with fake timers', () => {
     // TODO: remove when migrated to vitest
-    if (process.env.MUI_VITEST !== 'true') {
+    if (process.env.VITEST !== 'true') {
       clock.withFakeTimers();
     }
 
@@ -144,7 +144,7 @@ describe('<DateCalendar />', () => {
       );
       fireEvent.click(screen.getByRole('radio', { name: '2020' }));
 
-      if (process.env.MUI_VITEST !== 'true') {
+      if (process.env.VITEST !== 'true') {
         // Finish the transition to the day view
         clock.runToLast();
       } else {

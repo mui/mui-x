@@ -4,6 +4,10 @@ import { defineConfig } from 'vitest/config';
 const MONOREPO_ROOT = path.resolve(__dirname, './');
 
 export default defineConfig({
+  define: {
+    'process.env.NODE_ENV': '"test"',
+    'process.env.VITEST': '"true"',
+  },
   resolve: {
     alias: [
       ...[
@@ -53,9 +57,6 @@ export default defineConfig({
     },
     sequence: {
       hooks: 'list',
-    },
-    env: {
-      MUI_VITEST: 'true',
     },
     poolOptions: {
       threads: {

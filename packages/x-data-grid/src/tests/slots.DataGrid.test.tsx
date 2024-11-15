@@ -117,7 +117,7 @@ describe('<DataGrid /> - Slots', () => {
 
       let button;
       // I can see the button in the debug, but it's not found by the test...
-      if (process.env.MUI_JSDOM) {
+      if (process.env.VITEST) {
         button = screen.getByTestId('FilterAltIcon');
       } else {
         button = screen.getByRole('button', { name: /show filters/i });

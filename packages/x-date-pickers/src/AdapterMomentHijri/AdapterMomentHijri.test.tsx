@@ -21,10 +21,12 @@ describe('<AdapterMomentHijri />', () => {
     },
   });
 
+  const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
+
   describe('Adapter localization', () => {
     it('Formatting', (t = {}) => {
       // TODO: All Hijri tests are failing on vitest browser (2024-11)
-      if (process.env.MUI_BROWSER === 'true') {
+      if (process.env.VITEST === 'true' && !isJsdom) {
         // @ts-expect-error to support mocha and vitest
         t?.skip();
       }
@@ -87,7 +89,7 @@ describe('<AdapterMomentHijri />', () => {
         });
 
         it('should have well formatted value', (t = {}) => {
-          if (process.env.MUI_BROWSER === 'true') {
+          if (process.env.VITEST === 'true' && !isJsdom) {
             // @ts-expect-error to support mocha and vitest
             t?.skip();
           }
