@@ -3,7 +3,6 @@ import { Validator } from '../../../validation';
 import { WrapperVariant } from '../../models/common';
 import {
   FieldSection,
-  FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
@@ -11,6 +10,7 @@ import {
   PickerValidDate,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -37,13 +37,13 @@ export interface PickerValueManager<TValue, TError> {
    * @template TValue
    * @param {MuiPickersAdapter} utils The adapter.
    * @param {PickersTimezone} timezone The current timezone.
-   * @param {FieldValueType} valueType The type of the value being edited.
+   * @param {PickerValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
     utils: MuiPickersAdapter,
     timezone: PickersTimezone,
-    valueType: FieldValueType,
+    valueType: PickerValueType,
   ) => TValue;
   /**
    * @template TValue
@@ -265,7 +265,7 @@ export interface UsePickerValueParams<
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
-  valueType: FieldValueType;
+  valueType: PickerValueType;
   wrapperVariant: WrapperVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
