@@ -23,8 +23,6 @@ export type FieldSectionType =
 
 export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
 
-export type FieldValueType = 'date' | 'time' | 'date-time';
-
 export interface FieldSection {
   /**
    * Value of the section, as rendered inside the input.

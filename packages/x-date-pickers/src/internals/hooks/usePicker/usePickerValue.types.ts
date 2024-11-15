@@ -2,7 +2,11 @@ import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
 import { WrapperVariant } from '../../models/common';
 import {
+<<<<<<< HEAD
   FieldValueType,
+=======
+  FieldSection,
+>>>>>>> master
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
@@ -10,6 +14,7 @@ import {
   PickerValidDate,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -41,14 +46,24 @@ export interface PickerValueManager<TIsRange extends boolean, TError> {
    * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {MuiPickersAdapter} utils The adapter.
    * @param {PickersTimezone} timezone The current timezone.
+<<<<<<< HEAD
    * @param {FieldValueType} valueType The type of the value being edited.
    * @returns {InferPickerValue<TIsRange>} The value to set when clicking the "Today" button.
+=======
+   * @param {PickerValueType} valueType The type of the value being edited.
+   * @returns {TValue} The value to set when clicking the "Today" button.
+>>>>>>> master
    */
   getTodayValue: (
     utils: MuiPickersAdapter,
     timezone: PickersTimezone,
+<<<<<<< HEAD
     valueType: FieldValueType,
   ) => InferPickerValue<TIsRange>;
+=======
+    valueType: PickerValueType,
+  ) => TValue;
+>>>>>>> master
   /**
    * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * Method returning the reference value to use when mounting the component.
@@ -286,8 +301,13 @@ export interface UsePickerValueParams<
   TExternalProps extends UsePickerValueProps<TIsRange, any>,
 > {
   props: TExternalProps;
+<<<<<<< HEAD
   valueManager: PickerValueManager<TIsRange, InferError<TExternalProps>>;
   valueType: FieldValueType;
+=======
+  valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
+  valueType: PickerValueType;
+>>>>>>> master
   wrapperVariant: WrapperVariant;
   validator: Validator<TIsRange, InferError<TExternalProps>, TExternalProps>;
 }
