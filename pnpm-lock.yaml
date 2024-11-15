@@ -410,7 +410,7 @@ importers:
         version: 0.7.1(vite@5.3.4(@types/node@20.17.6)(terser@5.27.0))(vitest@2.1.4)
       webpack:
         specifier: ^5.96.1
-        version: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+        version: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-bundle-analyzer:
         specifier: ^4.10.2
         version: 4.10.2
@@ -13392,7 +13392,7 @@ snapshots:
     dependencies:
       '@types/node': 20.17.6
       tapable: 2.2.1
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -13720,19 +13720,19 @@ snapshots:
       '@webassemblyjs/ast': 1.12.1
       '@xtuc/long': 4.2.2
 
-  '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.96.1)':
+  '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)':
     dependencies:
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1)
 
-  '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.96.1)':
+  '@webpack-cli/info@2.0.2(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)':
     dependencies:
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1)
 
-  '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack@5.96.1)':
+  '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)':
     dependencies:
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1)
 
   '@xtuc/ieee754@1.2.0': {}
@@ -14092,7 +14092,7 @@ snapshots:
       '@babel/core': 7.26.0
       find-cache-dir: 4.0.0
       schema-utils: 4.2.0
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
 
   babel-plugin-istanbul@7.0.0:
     dependencies:
@@ -14606,7 +14606,7 @@ snapshots:
     dependencies:
       schema-utils: 4.2.0
       serialize-javascript: 6.0.2
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
 
   compression@1.7.4:
     dependencies:
@@ -15457,7 +15457,7 @@ snapshots:
       lodash: 4.17.21
       resolve: 2.0.0-next.5
       semver: 5.7.2
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -16431,7 +16431,7 @@ snapshots:
       pretty-error: 4.0.0
       tapable: 2.2.1
     optionalDependencies:
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
 
   htmlparser2@6.1.0:
     dependencies:
@@ -17134,7 +17134,7 @@ snapshots:
     dependencies:
       glob: 7.2.3
       minimatch: 9.0.4
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-merge: 4.2.2
 
   karma@6.4.4:
@@ -19594,7 +19594,7 @@ snapshots:
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
 
   string-width@4.2.3:
     dependencies:
@@ -19796,7 +19796,7 @@ snapshots:
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.27.0
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
     optionalDependencies:
       '@swc/core': 1.7.35(@swc/helpers@0.5.5)
 
@@ -20310,9 +20310,9 @@ snapshots:
   webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1):
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
-      '@webpack-cli/configtest': 2.1.1(webpack-cli@5.1.4)(webpack@5.96.1)
-      '@webpack-cli/info': 2.0.2(webpack-cli@5.1.4)(webpack@5.96.1)
-      '@webpack-cli/serve': 2.0.5(webpack-cli@5.1.4)(webpack@5.96.1)
+      '@webpack-cli/configtest': 2.1.1(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)
+      '@webpack-cli/info': 2.0.2(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)
+      '@webpack-cli/serve': 2.0.5(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))(webpack@5.96.1)
       colorette: 2.0.20
       commander: 10.0.1
       cross-spawn: 7.0.3
@@ -20321,7 +20321,7 @@ snapshots:
       import-local: 3.1.0
       interpret: 3.1.1
       rechoir: 0.8.0
-      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4)
+      webpack: 5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))
       webpack-merge: 5.10.0
     optionalDependencies:
       webpack-bundle-analyzer: 4.10.2
@@ -20338,7 +20338,7 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack@5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4):
+  webpack@5.96.1(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1)):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
