@@ -73,6 +73,7 @@ export default function AreaChartFillByValue() {
         sx={{
           [`& .${areaElementClasses.root}`]: {
             fill: 'url(#swich-color-id-2)',
+            filter: 'none', // Remove the default filter.
           },
         }}
       >
