@@ -19,7 +19,12 @@ function CustomLabel({ children, className, selectFirstChildren }) {
     >
       <Typography>{children}</Typography>
       {!!selectFirstChildren && (
-        <Button size="small" onClick={selectFirstChildren}>
+        <Button
+          size="small"
+          variant="text"
+          sx={{ position: 'absolute', right: 0, top: 0 }}
+          onClick={selectFirstChildren}
+        >
           Select child
         </Button>
       )}
