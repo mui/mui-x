@@ -213,7 +213,7 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   width,
 });
 
-export const BarPlotRoot = styled('g', {
+const BarPlotRoot = styled('g', {
   name: 'MuiBarPlot',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
