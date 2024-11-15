@@ -16,6 +16,7 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
+import { useTreeViewLazyLoading } from '../useTreeViewLazyLoading';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -131,6 +132,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
+          if (
+            hasPlugin(instance, useTreeViewLazyLoading) &&
+            instance.isLazyLoadingEnabled &&
+            !instance.isItemExpanded(itemId)
+          ) {
+            instance.fetchItems([itemId]);
+          }
           instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
+  AddItemsParams,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -15,15 +17,47 @@ interface UpdateNodesStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
     'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
-  > {}
+  > {
+  // not sure where to put these
+  initialDepth?: number;
+  initialParentId?: string | null;
+  getChildrenCount?: (item: TreeViewBaseItem) => number;
+}
 
 type State = UseTreeViewItemsState<any>['items'];
+
+const checkId = (id: string | null, item: TreeViewBaseItem, itemMetaMap: State['itemMetaMap']) => {
+  if (id == null) {
+    throw new Error(
+      [
+        'MUI X: The Tree View component requires all items to have a unique `id` property.',
+        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+        'An item was provided without id in the `items` prop:',
+        JSON.stringify(item),
+      ].join('\n'),
+    );
+  }
+
+  if (itemMetaMap[id] != null) {
+    throw new Error(
+      [
+        'MUI X: The Tree View component requires all items to have a unique `id` property.',
+        'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
+        `Two items were provided with the same id in the \`items\` prop: "${id}"`,
+      ].join('\n'),
+    );
+  }
+};
+
 const updateItemsState = ({
   items,
   isItemDisabled,
   getItemLabel,
   getItemId,
-}: UpdateNodesStateParameters): State => {
+  initialDepth = 0,
+  initialParentId = null,
+  getChildrenCount,
+}: UpdateNodesStateParameters): Omit<State, 'loading'> => {
   const itemMetaMap: State['itemMetaMap'] = {};
   const itemMap: State['itemMap'] = {};
   const itemOrderedChildrenIds: State['itemOrderedChildrenIds'] = {
@@ -32,28 +66,7 @@ const updateItemsState = ({
 
   const processItem = (item: TreeViewBaseItem, depth: number, parentId: string | null) => {
     const id: string = getItemId ? getItemId(item) : (item as any).id;
-
-    if (id == null) {
-      throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-          'An item was provided without id in the `items` prop:',
-          JSON.stringify(item),
-        ].join('\n'),
-      );
-    }
-
-    if (itemMetaMap[id] != null) {
-      throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-          `Two items were provided with the same id in the \`items\` prop: "${id}"`,
-        ].join('\n'),
-      );
-    }
-
+    checkId(id, item, itemMetaMap);
     const label = getItemLabel ? getItemLabel(item) : (item as { label: string }).label;
     if (label == null) {
       throw new Error(
@@ -66,12 +79,14 @@ const updateItemsState = ({
       );
     }
 
+    const isItemExpandable = getChildrenCount ? getChildrenCount(item) > 0 : false;
+
     itemMetaMap[id] = {
       id,
       label,
       parentId,
       idAttribute: undefined,
-      expandable: !!item.children?.length,
+      expandable: !!item.children?.length || isItemExpandable,
       disabled: isItemDisabled ? isItemDisabled(item) : false,
       depth,
     };
@@ -86,7 +101,7 @@ const updateItemsState = ({
     item.children?.forEach((child) => processItem(child, depth + 1, id));
   };
 
-  items.forEach((item) => processItem(item, 0, null));
+  items?.forEach((item) => processItem(item, initialDepth, initialParentId));
 
   const itemChildrenIndexes: State['itemChildrenIndexes'] = {};
   Object.keys(itemOrderedChildrenIds).forEach((parentId) => {
@@ -116,6 +131,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => state.items.itemMap[itemId],
     [state.items.itemMap],
   );
+
+  const isTreeViewLoading = React.useMemo(
+    () => state.items.loading || false,
+    [state.items.loading],
+  );
+  const setTreeViewLoading = (isLoading) => {
+    setState((prevState) => ({ ...prevState, items: { ...prevState.items, loading: isLoading } }));
+  };
 
   const getItemTree = React.useCallback(() => {
     const getItemFromItemId = (id: TreeViewItemId): TreeViewBaseItem => {
@@ -199,6 +222,95 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
   const areItemUpdatesPrevented = React.useCallback(() => areItemUpdatesPreventedRef.current, []);
 
+  const addItems = ({
+    items,
+    parentId,
+    depth,
+    getChildrenCount,
+  }: AddItemsParams<TreeViewBaseItem>) => {
+    if (items) {
+      const newState = updateItemsState({
+        items,
+        isItemDisabled: params.isItemDisabled,
+        getItemId: params.getItemId,
+        getItemLabel: params.getItemLabel,
+        getChildrenCount,
+        initialDepth: depth,
+        initialParentId: parentId,
+      });
+
+      setState((prevState) => {
+        let newItems;
+        if (parentId) {
+          newItems = {
+            itemMap: prevState.items.itemMap,
+            itemMetaMap: { ...prevState.items.itemMetaMap, ...newState.itemMetaMap },
+            itemOrderedChildrenIds: {
+              ...newState.itemOrderedChildrenIds,
+              ...prevState.items.itemOrderedChildrenIds,
+            },
+            itemChildrenIndexes: {
+              ...newState.itemChildrenIndexes,
+              ...prevState.items.itemChildrenIndexes,
+            },
+          };
+        } else {
+          newItems = {
+            itemMap: items,
+            itemMetaMap: newState.itemMetaMap,
+            itemOrderedChildrenIds: newState.itemOrderedChildrenIds,
+            itemChildrenIndexes: newState.itemChildrenIndexes,
+          };
+        }
+        Object.values(prevState.items.itemMetaMap).forEach((item) => {
+          if (!newState.itemMetaMap[item.id]) {
+            publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+          }
+        });
+
+        return { ...prevState, items: { ...newItems, loading: prevState.items.loading } };
+      });
+    }
+  };
+  const removeChildren = (parentId) => {
+    setState((prevState) => {
+      if (!parentId) {
+        return {
+          ...prevState,
+          items: {
+            ...prevState.items,
+            itemMetaMap: {},
+            itemOrderedChildrenIds: {},
+            itemChildrenIndexes: {},
+          },
+        };
+      }
+      const newMetaMap = Object.keys(prevState.items.itemMetaMap).reduce((acc, key) => {
+        const item = prevState.items.itemMetaMap[key];
+        if (item.parentId === parentId) {
+          publishTreeViewEvent(instance, 'removeItem', { id: item.id });
+          return acc;
+        }
+        return { ...acc, [item.id]: item };
+      }, {});
+
+      const newItemOrderedChildrenIds = prevState.items.itemOrderedChildrenIds;
+      const newItemChildrenIndexes = prevState.items.itemChildrenIndexes;
+      delete newItemChildrenIndexes[parentId];
+      delete newItemOrderedChildrenIds[parentId];
+
+      return {
+        ...prevState,
+        items: {
+          ...prevState.items,
+          itemMetaMap: newMetaMap,
+          itemOrderedChildrenIds: newItemOrderedChildrenIds,
+          itemChildrenIndexes: newItemChildrenIndexes,
+        },
+      };
+    });
+  };
+
   React.useEffect(() => {
     if (instance.areItemUpdatesPrevented()) {
       return;
@@ -218,7 +330,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         }
       });
 
-      return { ...prevState, items: newState };
+      return { ...prevState, items: { ...newState, loading: false } };
     });
   }, [
     instance,
@@ -272,6 +384,10 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       isItemNavigable,
       preventItemUpdates,
       areItemUpdatesPrevented,
+      addItems,
+      isTreeViewLoading,
+      setTreeViewLoading,
+      removeChildren,
     },
     contextValue: {
       items: {
@@ -283,12 +399,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 };
 
 useTreeViewItems.getInitialState = (params) => ({
-  items: updateItemsState({
-    items: params.items,
-    isItemDisabled: params.isItemDisabled,
-    getItemId: params.getItemId,
-    getItemLabel: params.getItemLabel,
-  }),
+  items: {
+    ...updateItemsState({
+      items: params.items,
+      isItemDisabled: params.isItemDisabled,
+      getItemId: params.getItemId,
+      getItemLabel: params.getItemLabel,
+    }),
+    loading: false,
+  },
 });
 
 useTreeViewItems.getDefaultizedParams = ({ params }) => ({
@@ -298,6 +417,9 @@ useTreeViewItems.getDefaultizedParams = ({ params }) => ({
 });
 
 useTreeViewItems.wrapRoot = ({ children, instance }) => {
+  if (instance.isTreeViewLoading) {
+    return <Typography>Loading...</Typography>;
+  }
   return (
     <TreeViewItemDepthContext.Provider value={(itemId) => instance.getItemMeta(itemId)?.depth ?? 0}>
       {children}

@@ -6,6 +6,7 @@ import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeVi
 import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
 import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
 import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
+import { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
 import {
   UseTreeViewLabelSignature,
   useTreeViewLabel,
@@ -37,7 +38,10 @@ type UseTreeItemUtilsMinimalPlugins = readonly [
  * Plugins that `useTreeItemUtils` can use if they are present, but are not required.
  */
 
-export type UseTreeItemUtilsOptionalPlugins = readonly [UseTreeViewLabelSignature];
+export type UseTreeItemUtilsOptionalPlugins = readonly [
+  UseTreeViewLabelSignature,
+  UseTreeViewLazyLoadingSignature,
+];
 
 interface UseTreeItemUtilsReturnValue<
   TSignatures extends UseTreeItemUtilsMinimalPlugins,
@@ -51,9 +55,9 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-const isItemExpandable = (reactChildren: React.ReactNode) => {
+const itemHasChildren = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
-    return reactChildren.length > 0 && reactChildren.some(isItemExpandable);
+    return reactChildren.length > 0 && reactChildren.some(itemHasChildren);
   }
   return Boolean(reactChildren);
 };
@@ -71,20 +75,27 @@ export const useTreeItemUtils = <
   const {
     instance,
     selection: { multiSelect },
+    lazyLoading = false,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
+  const isItemExpandable = () => {
+    return itemHasChildren(children) || instance?.isItemExpandable(itemId);
+  };
+
   const status: UseTreeItemStatus = {
-    expandable: isItemExpandable(children),
+    expandable: isItemExpandable(),
     expanded: instance.isItemExpanded(itemId),
     focused: instance.isItemFocused(itemId),
     selected: instance.isItemSelected(itemId),
     disabled: instance.isItemDisabled(itemId),
-    editing: instance?.isItemBeingEdited ? instance?.isItemBeingEdited(itemId) : false,
+    editing: instance?.isItemBeingEdited ? instance.isItemBeingEdited(itemId) : false,
     editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
+    loading: instance?.isTreeItemLoading ? instance.isTreeItemLoading(itemId) : false,
+    error: instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false,
   };
 
-  const handleExpansion = (event: React.MouseEvent) => {
+  const handleExpansion = async (event: React.MouseEvent) => {
     if (status.disabled) {
       return;
     }
@@ -98,6 +109,9 @@ export const useTreeItemUtils = <
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
       instance.toggleItemExpansion(event, itemId);
+      if (instance?.fetchItems && lazyLoading && !status.expanded) {
+        await instance.fetchItems([itemId]);
+      }
     }
   };
 

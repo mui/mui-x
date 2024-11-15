@@ -171,6 +171,7 @@ RichTreeView.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     labelEditing: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.
@@ -312,6 +313,15 @@ RichTreeView.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  treeViewDataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getTreeItems: PropTypes.func,
+  }).isRequired,
+  treeViewDataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
 } as any;
 
 export { RichTreeView };

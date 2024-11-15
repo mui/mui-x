@@ -25,6 +25,10 @@ import {
   useTreeViewLabel,
   UseTreeViewLabelParameters,
 } from '../internals/plugins/useTreeViewLabel';
+import {
+  useTreeViewLazyLoading,
+  UseTreeViewLazyLoadingParameters,
+} from '../internals/plugins/useTreeViewLazyLoading';
 
 export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewItems,
@@ -34,6 +38,7 @@ export const RICH_TREE_VIEW_PLUGINS = [
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
   useTreeViewLabel,
+  useTreeViewLazyLoading,
 ] as const;
 
 export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
@@ -58,4 +63,5 @@ export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boo
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
     UseTreeViewIconsParameters,
-    UseTreeViewLabelParameters<R> {}
+    UseTreeViewLabelParameters<R>,
+    UseTreeViewLazyLoadingParameters<R> {}
