@@ -8,13 +8,13 @@ import {
 } from './useField.types';
 import {
   FieldSectionType,
-  FieldValueType,
   FieldSection,
   MuiPickersAdapter,
   FieldSectionContentType,
   PickersTimezone,
   PickerValidDate,
   FieldSelectedSections,
+  PickerValueType,
   InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
@@ -617,7 +617,7 @@ let warnedOnceInvalidSection = false;
 
 export const validateSections = <TIsRange extends boolean>(
   sections: InferFieldSection<TIsRange>[],
-  valueType: FieldValueType,
+  valueType: PickerValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {

@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { DrawingContext } from '../context/DrawingProvider';
+import { DrawingAreaContext } from '../context/DrawingAreaProvider';
 
 export function useChartId() {
-  const { chartId } = React.useContext(DrawingContext);
+  const { chartId } = React.useContext(DrawingAreaContext);
 
   return React.useMemo(() => chartId, [chartId]);
 }

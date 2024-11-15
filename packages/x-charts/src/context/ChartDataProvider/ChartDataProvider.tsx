@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
-import { DrawingProvider, DrawingProviderProps } from '../DrawingProvider';
+import { DrawingAreaProvider, DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
 import { InteractionProvider } from '../InteractionProvider';
 import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
@@ -18,11 +18,12 @@ import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
+import { SvgRefProvider } from '../SvgRefProvider';
 
 export type ChartDataProviderProps = Omit<
   ChartsSurfaceProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
-    Omit<DrawingProviderProps, 'svgRef'> &
+    Omit<DrawingAreaProviderProps, 'svgRef'> &
     Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
@@ -59,29 +60,32 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
     chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
+    svgRefProviderProps,
   } = useChartDataProviderProps(props, ref);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <SeriesProvider {...seriesProviderProps}>
-          <CartesianProvider {...cartesianProviderProps}>
-            <ZAxisContextProvider {...zAxisContextProps}>
-              <InteractionProvider>
-                <HighlightedProvider {...highlightedProviderProps}>
-                  <AnimationProvider {...animationProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </AnimationProvider>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </ZAxisContextProvider>
-          </CartesianProvider>
-        </SeriesProvider>
-      </PluginProvider>
-    </DrawingProvider>
+    <DrawingAreaProvider {...drawingProviderProps}>
+      <SvgRefProvider {...svgRefProviderProps}>
+        <PluginProvider {...pluginProviderProps}>
+          <SeriesProvider {...seriesProviderProps}>
+            <CartesianProvider {...cartesianProviderProps}>
+              <ZAxisContextProvider {...zAxisContextProps}>
+                <InteractionProvider>
+                  <HighlightedProvider {...highlightedProviderProps}>
+                    <AnimationProvider {...animationProviderProps}>
+                      <ChartsSurface {...chartsSurfaceProps}>
+                        <ChartsAxesGradients />
+                        {children}
+                      </ChartsSurface>
+                    </AnimationProvider>
+                  </HighlightedProvider>
+                </InteractionProvider>
+              </ZAxisContextProvider>
+            </CartesianProvider>
+          </SeriesProvider>
+        </PluginProvider>
+      </SvgRefProvider>
+    </DrawingAreaProvider>
   );
 });
 

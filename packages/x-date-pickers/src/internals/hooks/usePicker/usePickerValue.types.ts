@@ -2,7 +2,6 @@ import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
 import { WrapperVariant } from '../../models/common';
 import {
-  FieldValueType,
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
@@ -10,6 +9,7 @@ import {
   PickerValidDate,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 import {
@@ -41,13 +41,13 @@ export interface PickerValueManager<TIsRange extends boolean, TError> {
    * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
    * @param {MuiPickersAdapter} utils The adapter.
    * @param {PickersTimezone} timezone The current timezone.
-   * @param {FieldValueType} valueType The type of the value being edited.
+   * @param {PickerValueType} valueType The type of the value being edited.
    * @returns {InferPickerValue<TIsRange>} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
     utils: MuiPickersAdapter,
     timezone: PickersTimezone,
-    valueType: FieldValueType,
+    valueType: PickerValueType,
   ) => InferPickerValue<TIsRange>;
   /**
    * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
@@ -287,7 +287,7 @@ export interface UsePickerValueParams<
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TIsRange, InferError<TExternalProps>>;
-  valueType: FieldValueType;
+  valueType: PickerValueType;
   wrapperVariant: WrapperVariant;
   validator: Validator<TIsRange, InferError<TExternalProps>, TExternalProps>;
 }

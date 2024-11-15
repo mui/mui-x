@@ -75,7 +75,7 @@ Here is an example of how you can transpile these features on webpack 4 using th
 
 #### Types
 
-Some types got renamed for coherence:
+Some types have been renamed for coherence:
 
 | v6                                | v7                       |
 | :-------------------------------- | :----------------------- |

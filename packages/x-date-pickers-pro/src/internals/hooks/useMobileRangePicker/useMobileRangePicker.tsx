@@ -62,16 +62,26 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const startFieldRef = React.useRef<FieldRef<true>>(null);
-  const endFieldRef = React.useRef<FieldRef<true>>(null);
+  const startFieldRef = React.useRef<FieldRef<false>>(null);
+  const endFieldRef = React.useRef<FieldRef<false>>(null);
+  const singleInputFieldRef = React.useRef<FieldRef<true>>(null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const { rangePosition, onRangePositionChange } = useRangePosition(
     props,
-    fieldType === 'single-input' ? startFieldRef : undefined,
+    fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
   const labelId = useId();
   const contextTranslations = usePickerTranslations();
+
+  let fieldRef: React.Ref<FieldRef<boolean>>;
+  if (fieldType === 'single-input') {
+    fieldRef = singleInputFieldRef;
+  } else if (rangePosition === 'start') {
+    fieldRef = startFieldRef;
+  } else {
+    fieldRef = endFieldRef;
+  }
 
   const {
     open,
@@ -86,7 +96,7 @@ export const useMobileRangePicker = <
     props,
     wrapperVariant: 'mobile',
     autoFocusView: true,
-    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    fieldRef,
     localeText,
     additionalViewProps: {
       rangePosition,
@@ -147,6 +157,7 @@ export const useMobileRangePicker = <
     fieldProps,
     startFieldRef,
     endFieldRef,
+    singleInputFieldRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<true, TView> = {
