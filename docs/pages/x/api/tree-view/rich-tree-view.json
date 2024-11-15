@@ -137,12 +137,6 @@
       "class": "MuiRichTreeView-root"
     },
     {
-      "name": "item",
-      "description": "Custom component for the item.",
-      "default": "TreeItem.",
-      "class": null
-    },
-    {
       "name": "collapseIcon",
       "description": "The default icon used to collapse the item.",
       "class": null
@@ -155,6 +149,12 @@
     {
       "name": "endIcon",
       "description": "The default icon displayed next to an end item.\nThis is applied to all Tree Items and can be overridden by the TreeItem `icon` slot prop.",
+      "class": null
+    },
+    {
+      "name": "item",
+      "description": "Custom component to render a Tree Item.",
+      "default": "TreeItem.",
       "class": null
     }
   ],

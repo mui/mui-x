@@ -13,6 +13,7 @@ export type UseTreeViewIdDefaultizedParameters = UseTreeViewIdParameters;
 export interface UseTreeViewIdState {
   id: {
     treeId: string | undefined;
+    providedTreeId: string | undefined;
   };
 }
 
