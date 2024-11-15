@@ -14,6 +14,7 @@ interface CalculateRangeChangeOptions<TDate extends PickerValidDate> {
    */
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
+  referenceDate?: TDate | null;
 }
 
 interface CalculateRangeChangeResponse<TDate extends PickerValidDate> {
@@ -28,6 +29,7 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
   rangePosition,
   allowRangeFlip = false,
   shouldMergeDateAndTime = false,
+  referenceDate,
 }: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
 
@@ -41,21 +43,26 @@ export function calculateRangeChange<TDate extends PickerValidDate>({
     }
   }
 
+  const newSelectedDate =
+    referenceDate && selectedDate && shouldMergeDateAndTime
+      ? mergeDateAndTime(utils, selectedDate, referenceDate)
+      : selectedDate;
+
   if (rangePosition === 'start') {
     const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
-      : { nextSelection: 'end', newRange: [selectedDate, null] };
-    return Boolean(end) && utils.isAfter(selectedDate!, end!)
+      ? { nextSelection: 'start', newRange: [end!, newSelectedDate] }
+      : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+    return Boolean(end) && utils.isAfter(newSelectedDate!, end!)
       ? truthyResult
-      : { nextSelection: 'end', newRange: [selectedDate, end] };
+      : { nextSelection: 'end', newRange: [newSelectedDate, end] };
   }
 
   const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
-    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
-    : { nextSelection: 'end', newRange: [selectedDate, null] };
-  return Boolean(start) && utils.isBeforeDay(selectedDate!, start!)
+    ? { nextSelection: 'end', newRange: [newSelectedDate, start!] }
+    : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+  return Boolean(start) && utils.isBeforeDay(newSelectedDate!, start!)
     ? truthyResult
-    : { nextSelection: 'start', newRange: [start, selectedDate] };
+    : { nextSelection: 'start', newRange: [start, newSelectedDate] };
 }
 
 export function calculateRangePreview<TDate extends PickerValidDate>(
