@@ -85,7 +85,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
 
   return (
     <SizeProvider width={inWidth} height={inHeight}>
-      <SvgRefProvider svgRef={ref}>
+      <SvgRefProvider>
         <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
           <GaugeProvider
             value={value}
@@ -106,7 +106,13 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
               aria-valuemax={valueMax}
               {...other}
             >
-              <ChartsSurface title={title} desc={desc} disableAxisListener aria-hidden="true">
+              <ChartsSurface
+                title={title}
+                desc={desc}
+                disableAxisListener
+                aria-hidden="true"
+                ref={ref}
+              >
                 {children}
               </ChartsSurface>
             </ResizableContainer>
