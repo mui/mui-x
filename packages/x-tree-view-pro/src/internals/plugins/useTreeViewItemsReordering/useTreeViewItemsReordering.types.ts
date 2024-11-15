@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DefaultizedProps,
-  TreeViewPluginSignature,
-  UseTreeViewItemsSignature,
-} from '@mui/x-tree-view/internals';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
 import {
   TreeViewItemId,
   TreeViewItemsReorderingAction,
@@ -123,7 +120,7 @@ export interface UseTreeViewItemsReorderingState {
 interface UseTreeViewItemsReorderingContextValue {
   itemsReordering: {
     enabled: boolean;
-    currentDrag: UseTreeViewItemsReorderingState['itemsReordering'];
+    isItemReorderable: ((itemId: string) => boolean) | undefined;
   };
 }
 

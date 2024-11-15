@@ -300,12 +300,14 @@ export const useGridColumnResize = (
     const prevWidth = refs.columnHeaderElement!.offsetWidth;
     const widthDiff = newWidth - prevWidth;
     const columnWidthDiff = newWidth - refs.initialColWidth;
-    const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
 
-    apiRef.current.rootElementRef?.current?.style.setProperty(
-      '--DataGrid-rowWidth',
-      `${newTotalWidth}px`,
-    );
+    if (columnWidthDiff > 0) {
+      const newTotalWidth = refs.initialTotalWidth + columnWidthDiff;
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        '--DataGrid-rowWidth',
+        `${newTotalWidth}px`,
+      );
+    }
 
     refs.colDef!.computedWidth = newWidth;
     refs.colDef!.width = newWidth;

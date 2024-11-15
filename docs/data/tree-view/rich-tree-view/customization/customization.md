@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Customization
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
@@ -12,7 +11,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 <p class="description">Learn how to customize the Rich Tree View component.</p>
 
 :::success
-See [Common concepts—Custom slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
+See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-components/) to learn how to use slots.
 :::
 
 ## Basics

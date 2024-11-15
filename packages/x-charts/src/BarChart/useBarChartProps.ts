@@ -2,7 +2,7 @@
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { BarPlotProps } from './BarPlot';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsGridProps } from '../ChartsGrid';
@@ -34,7 +34,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     tooltip,
     onAxisClick,
     axisHighlight,
-    legend,
     grid,
     topAxis,
     leftAxis,
@@ -52,6 +51,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     borderRadius,
     barLabel,
     className,
+    hideLegend,
     ...rest
   } = props;
 
@@ -70,7 +70,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps = {
     ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,
@@ -146,7 +146,6 @@ export const useBarChartProps = (props: BarChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
     slots,
     slotProps,
   };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from '@mui/material/styles';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { useDrawingArea, useYScale } from '@mui/x-charts/hooks';
@@ -95,7 +95,7 @@ function ValueHighlight(props) {
 export default function ScaleDemo() {
   const svgRef = React.useRef(null);
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       ref={svgRef}
       margin={{ top: 20, left: 50, right: 50, bottom: 30 }}
       height={300}
@@ -127,6 +127,6 @@ export default function ScaleDemo() {
       <ChartsYAxis position="left" axisId="left_axis_id" />
       <ChartsYAxis position="right" axisId="right_axis_id" />
       <ValueHighlight svgRef={svgRef} />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }

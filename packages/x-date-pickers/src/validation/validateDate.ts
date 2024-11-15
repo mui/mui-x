@@ -9,17 +9,25 @@ import { DateValidationError, PickerValidDate } from '../models';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface ValidateDateProps<TDate extends PickerValidDate>
-  extends DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {}
+/**
+ * Validation props used by the Date Picker, Date Field and Date Calendar components.
+ */
+export interface ExportedValidateDateProps
+  extends DayValidationProps,
+    MonthValidationProps,
+    YearValidationProps,
+    BaseDateValidationProps {}
+
+export interface ValidateDateProps
+  extends DayValidationProps,
+    MonthValidationProps,
+    YearValidationProps,
+    Required<BaseDateValidationProps> {}
 
 export const validateDate: Validator<
-  any | null,
-  any,
+  PickerValidDate | null,
   DateValidationError,
-  ValidateDateProps<any>
+  ValidateDateProps
 > = ({ props, value, timezone, adapter }): DateValidationError => {
   if (value === null) {
     return null;

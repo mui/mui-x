@@ -7,13 +7,13 @@ import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { TimeView } from '@mui/x-date-pickers/models';
 
-const shouldDisableTime = (value: Dayjs, view: TimeView) => {
-  const hour = value.hour();
+const shouldDisableTime = (date: Dayjs, view: TimeView) => {
+  const hour = date.hour();
   if (view === 'hours') {
     return hour < 9 || hour > 13;
   }
   if (view === 'minutes') {
-    const minute = value.minute();
+    const minute = date.minute();
     return minute > 20 && hour === 13;
   }
   return false;

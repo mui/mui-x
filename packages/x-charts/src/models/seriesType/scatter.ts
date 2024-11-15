@@ -1,4 +1,4 @@
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
 
 export type ScatterValueType = {
@@ -24,11 +24,6 @@ export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, C
    * @default false
    */
   disableHover?: boolean;
-  /**
-   * The id of the z-axis used to render the series.
-   * @deprecated Use `zAxisId` instead.
-   */
-  zAxisKey?: string;
   /**
    * The id of the z-axis used to render the series.
    */

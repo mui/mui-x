@@ -2,7 +2,9 @@
 import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
+import { useSurfaceRef } from '../context/SvgRefProvider';
 
 type ViewBox = {
   x?: number;
@@ -44,7 +46,7 @@ const ChartChartsSurfaceStyles = styled('svg', {
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
   const {
@@ -59,6 +61,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
     ...other
   } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
+  const surfaceRef = useSurfaceRef();
+  const handleRef = useForkRef(surfaceRef, ref);
 
   useAxisEvents(disableAxisListener);
 
@@ -67,7 +71,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={ref}
+      ref={handleRef}
       className={className}
       {...other}
     >

@@ -34,6 +34,11 @@ export interface UseTreeItemParameters {
   children?: React.ReactNode;
 }
 
+export interface UseTreeItemContextProviderProps {
+  itemId: string;
+  id: string | undefined;
+}
+
 export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   role: 'treeitem';
   tabIndex: 0 | -1;
@@ -45,10 +50,7 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onKeyDown: TreeViewCancellableEventHandler<React.KeyboardEvent<HTMLElement>>;
   ref: React.RefCallback<HTMLLIElement>;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  style?: React.CSSProperties;
+  style: React.CSSProperties;
 }
 
 export interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromUseTreeItem {}
@@ -61,10 +63,6 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   onMouseDown: TreeViewCancellableEventHandler<React.MouseEvent>;
   ref: React.RefCallback<HTMLDivElement> | null;
   status: UseTreeItemStatus;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  indentationAtItemLevel?: true;
 }
 
 export interface UseTreeItemContentSlotOwnProps
@@ -110,10 +108,6 @@ export interface UseTreeItemGroupTransitionSlotOwnProps {
   component: 'ul';
   role: 'group';
   children: React.ReactNode;
-  /**
-   * Only defined when the `indentationAtItemLevel` experimental feature is enabled.
-   */
-  indentationAtItemLevel?: true;
 }
 
 export type UseTreeItemGroupTransitionSlotProps<ExternalProps = {}> = ExternalProps &
@@ -138,6 +132,11 @@ export interface UseTreeItemReturnValue<
   TSignatures extends UseTreeItemMinimalPlugins,
   TOptionalSignatures extends UseTreeItemOptionalPlugins,
 > {
+  /**
+   * Resolver for the context provider's props.
+   * @returns {UseTreeItemContextProviderProps} Props that should be spread on the context provider slot.
+   */
+  getContextProviderProps: () => UseTreeItemContextProviderProps;
   /**
    * Resolver for the root slot's props.
    * @param {ExternalProps} externalProps Additional props for the root slot.

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from '../useTreeViewLabel';
@@ -15,20 +16,6 @@ export interface UseTreeViewExpansionPublicAPI {
 }
 
 export interface UseTreeViewExpansionInstance extends UseTreeViewExpansionPublicAPI {
-  /**
-   * Check if an item is expanded.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is expanded, `false` otherwise.
-   */
-  isItemExpanded: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Check if an item is expandable.
-   * Currently, an item is expandable if it has children.
-   * In the future, the user should be able to flag an item as expandable even if it has no loaded children to support children lazy loading.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item can be expanded, `false` otherwise.
-   */
-  isItemExpandable: (itemId: TreeViewItemId) => boolean;
   /**
    * Toggle the current expansion of an item.
    * If it is expanded, it will be collapsed, and vice versa.
@@ -85,6 +72,12 @@ export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
   'defaultExpandedItems'
 >;
 
+export interface UseTreeViewExpansionState {
+  expansion: {
+    expandedItemsMap: Map<string, true>;
+  };
+}
+
 interface UseTreeViewExpansionContextValue {
   expansion: Pick<UseTreeViewExpansionParameters, 'expansionTrigger'>;
 }
@@ -95,6 +88,7 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   instance: UseTreeViewExpansionInstance;
   publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';
+  state: UseTreeViewExpansionState;
   contextValue: UseTreeViewExpansionContextValue;
   dependencies: [UseTreeViewItemsSignature];
   optionalDependencies: [UseTreeViewLabelSignature];

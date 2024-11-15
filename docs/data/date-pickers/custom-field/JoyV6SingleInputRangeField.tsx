@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -21,20 +20,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRangePicker,
+  DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
-import {
-  unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
-  UseSingleInputDateRangeFieldProps,
-} from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/models';
-import {
-  RangeFieldSection,
-  DateRange,
-  DateRangeValidationError,
-  FieldType,
-} from '@mui/x-date-pickers-pro/models';
+import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
+import { FieldType } from '@mui/x-date-pickers-pro/models';
 
 const joyTheme = extendJoyTheme();
 
@@ -101,16 +92,7 @@ const JoyField = React.forwardRef(
 ) as JoyFieldComponent;
 
 interface JoySingleInputDateRangeFieldProps
-  extends UseSingleInputDateRangeFieldProps<Dayjs, false>,
-    BaseSingleInputFieldProps<
-      DateRange<Dayjs>,
-      Dayjs,
-      RangeFieldSection,
-      false,
-      DateRangeValidationError
-    > {
-  onAdornmentClick?: () => void;
-}
+  extends DateRangePickerFieldProps<false> {}
 
 type JoySingleInputDateRangeFieldComponent = ((
   props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -118,7 +100,16 @@ type JoySingleInputDateRangeFieldComponent = ((
 
 const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, onAdornmentClick, ...other } = props;
+    const { slots, slotProps, ...other } = props;
+
+    const pickerContext = usePickerContext();
+    const handleTogglePicker = (event: React.UIEvent) => {
+      if (pickerContext.open) {
+        pickerContext.onClose(event);
+      } else {
+        pickerContext.onOpen(event);
+      }
+    };
 
     const textFieldProps: JoySingleInputDateRangeFieldProps = useSlotProps({
       elementType: FormControl,
@@ -128,7 +119,6 @@ const JoySingleInputDateRangeField = React.forwardRef(
     });
 
     const fieldResponse = useSingleInputDateRangeField<
-      Dayjs,
       false,
       JoySingleInputDateRangeFieldProps
     >({ ...textFieldProps, enableAccessibleFieldDOMStructure: false });
@@ -146,7 +136,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
         ref={ref}
         endDecorator={
           <IconButton
-            onClick={onAdornmentClick}
+            onClick={handleTogglePicker}
             variant="plain"
             color="neutral"
             sx={{ marginLeft: 2.5 }}
@@ -162,34 +152,12 @@ const JoySingleInputDateRangeField = React.forwardRef(
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
 const JoySingleInputDateRangePicker = React.forwardRef(
-  (props: DateRangePickerProps<Dayjs, false>, ref: React.Ref<HTMLDivElement>) => {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const toggleOpen = (event: React.PointerEvent) => {
-      // allows toggle behavior
-      event.stopPropagation();
-      setIsOpen((currentOpen) => !currentOpen);
-    };
-
-    const handleOpen = () => setIsOpen(true);
-
-    const handleClose = () => setIsOpen(false);
-
+  (props: DateRangePickerProps<false>, ref: React.Ref<HTMLDivElement>) => {
     return (
       <DateRangePicker
         {...props}
         ref={ref}
-        open={isOpen}
-        onClose={handleClose}
-        onOpen={handleOpen}
         slots={{ ...props.slots, field: JoySingleInputDateRangeField }}
-        slotProps={{
-          ...props.slotProps,
-          field: {
-            ...props.slotProps?.field,
-            onAdornmentClick: toggleOpen,
-          } as any,
-        }}
       />
     );
   },

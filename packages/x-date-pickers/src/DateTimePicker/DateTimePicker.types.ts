@@ -1,50 +1,31 @@
-import { UseDateTimeFieldProps } from '../DateTimeField';
 import {
   DesktopDateTimePickerProps,
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { MakeRequired } from '../internals/models/helpers';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
   MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateTimeValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '../models';
+import { DateTimeValidationError, FieldSection, PickerValidDate } from '../models';
+import { ValidateDateTimeProps } from '../validation';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
-export interface DateTimePickerSlots<TDate extends PickerValidDate>
-  extends DesktopDateTimePickerSlots<TDate>,
-    MobileDateTimePickerSlots<TDate, DateOrTimeViewWithMeridiem> {}
+export interface DateTimePickerSlots
+  extends DesktopDateTimePickerSlots,
+    MobileDateTimePickerSlots<DateOrTimeViewWithMeridiem> {}
 
-export interface DateTimePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DesktopDateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimePickerSlotProps<
-      TDate,
-      DateOrTimeViewWithMeridiem,
-      TEnableAccessibleFieldDOMStructure
-    > {}
+export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileDateTimePickerSlotProps<DateOrTimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure> {}
 
-export interface DateTimePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends DesktopDateTimePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
     ExportedYearCalendarProps,
     Omit<
-      MobileDateTimePickerProps<
-        TDate,
-        DateOrTimeViewWithMeridiem,
-        TEnableAccessibleFieldDOMStructure
-      >,
+      MobileDateTimePickerProps<DateOrTimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure>,
       'views'
     > {
   /**
@@ -57,12 +38,12 @@ export interface DateTimePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: DateTimePickerSlots<TDate>;
+  slots?: DateTimePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DateTimePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile
@@ -71,19 +52,7 @@ export interface DateTimePickerProps<
 }
 
 /**
- * Props the field can receive when used inside a date time picker.
- * (`DateTimePicker`, `DesktopDateTimePicker` or `MobileDateTimePicker` component).
+ * Props the field can receive when used inside a date time picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
  */
-export type DateTimePickerFieldProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
-> = MakeRequired<
-  UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
-  | 'format'
-  | 'timezone'
-  | 'value'
-  | 'ampm'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof BaseTimeValidationProps
-> &
-  BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, false, DateTimeValidationError>;
+export type DateTimePickerFieldProps = ValidateDateTimeProps &
+  BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateTimeValidationError>;

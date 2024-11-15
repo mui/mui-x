@@ -642,7 +642,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (
+    model: GridPaginationModel,
+    details: GridCallbackDetails<'pagination'>,
+  ) => void;
   /**
    * Callback fired when the row count has changed.
    * @param {number} count Updated row count.

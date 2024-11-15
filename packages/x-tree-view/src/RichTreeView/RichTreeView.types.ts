@@ -9,36 +9,24 @@ import {
   RichTreeViewPluginSlots,
   RichTreeViewPluginSignatures,
 } from './RichTreeView.plugins';
-import { TreeItemProps } from '../TreeItem';
-import { TreeViewItemId } from '../models';
+import { TreeViewExperimentalFeatures, TreeViewPublicAPI } from '../internals/models';
 import {
-  SlotComponentPropsFromProps,
-  TreeViewExperimentalFeatures,
-  TreeViewPublicAPI,
-} from '../internals/models';
+  RichTreeViewItemsSlotProps,
+  RichTreeViewItemsSlots,
+} from '../internals/components/RichTreeViewItems';
 
-interface RichTreeViewItemSlotOwnerState {
-  itemId: TreeViewItemId;
-  label: string;
-}
-
-export interface RichTreeViewSlots extends RichTreeViewPluginSlots {
+export interface RichTreeViewSlots extends RichTreeViewPluginSlots, RichTreeViewItemsSlots {
   /**
    * Element rendered at the root.
    * @default RichTreeViewRoot
    */
   root?: React.ElementType;
-  /**
-   * Custom component for the item.
-   * @default TreeItem.
-   */
-  item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewPluginSlotProps {
+  extends RichTreeViewPluginSlotProps,
+    RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
-  item?: SlotComponentPropsFromProps<TreeItemProps, {}, RichTreeViewItemSlotOwnerState>;
 }
 
 export type RichTreeViewApiRef = React.MutableRefObject<
