@@ -19,6 +19,15 @@ describe('date-range-manager', () => {
       expectedNextSelection: 'end' as const,
     },
     {
+      range: [null, null],
+      rangePosition: 'start' as const,
+      newDate: start2018,
+      expectedRange: [start2018At4PM, null],
+      expectedNextSelection: 'end' as const,
+      shouldMergeDateAndTime: true,
+      referenceDate: start2018At4PM,
+    },
+    {
       range: [start2018, null],
       rangePosition: 'start' as const,
       newDate: end2019,
@@ -99,7 +108,16 @@ describe('date-range-manager', () => {
       expectedNextSelection: 'start' as const,
     },
   ].forEach(
-    ({ range, rangePosition, newDate, expectedRange, allowRangeFlip, expectedNextSelection }) => {
+    ({
+      range,
+      rangePosition,
+      newDate,
+      expectedRange,
+      allowRangeFlip,
+      expectedNextSelection,
+      shouldMergeDateAndTime,
+      referenceDate,
+    }) => {
       it(`calculateRangeChange should return ${expectedRange} when selecting ${rangePosition} of ${range} with user input ${newDate}`, () => {
         expect(
           calculateRangeChange({
@@ -108,6 +126,8 @@ describe('date-range-manager', () => {
             newDate,
             rangePosition,
             allowRangeFlip,
+            shouldMergeDateAndTime,
+            referenceDate,
           }),
         ).to.deep.equal({
           nextSelection: expectedNextSelection,

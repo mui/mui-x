@@ -2,6 +2,7 @@
 import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks';
@@ -30,10 +31,13 @@ const ChartsSurfaceStyles = styled('svg', {
   touchAction: 'none',
 }));
 
-function ChartsSurface(inProps: ChartsSurfaceProps) {
+const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
+  inProps: ChartsSurfaceProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
   const surfaceRef = useSurfaceRef();
-
+  const handleRef = useForkRef(surfaceRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
@@ -57,7 +61,7 @@ function ChartsSurface(inProps: ChartsSurfaceProps) {
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
-      ref={surfaceRef}
+      ref={handleRef}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
@@ -65,7 +69,7 @@ function ChartsSurface(inProps: ChartsSurfaceProps) {
       {children}
     </ChartsSurfaceStyles>
   );
-}
+});
 
 ChartsSurface.propTypes = {
   // ----------------------------- Warning --------------------------------

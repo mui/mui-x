@@ -1449,6 +1449,12 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reselect:
+        specifier: ^5.1.1
+        version: 5.1.1
+      use-sync-external-store:
+        specifier: ^1.0.0
+        version: 1.2.2(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.20
@@ -1462,6 +1468,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.13
         version: 15.7.13
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -1508,6 +1517,12 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reselect:
+        specifier: ^5.1.1
+        version: 5.1.1
+      use-sync-external-store:
+        specifier: ^1.0.0
+        version: 1.2.2(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.20
@@ -1521,6 +1536,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.13
         version: 15.7.13
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -4267,6 +4285,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@types/use-sync-external-store@0.0.6':
+    resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
 
   '@types/webpack-bundle-analyzer@4.7.0':
     resolution: {integrity: sha512-c5i2ThslSNSG8W891BRvOd/RoCjI2zwph8maD22b1adtSns20j+0azDDMCK06DiVrzTgnwiDl5Ntmu1YRJw8Sg==}
@@ -9922,6 +9943,11 @@ packages:
   urlpattern-polyfill@8.0.2:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}
 
+  use-sync-external-store@1.2.2:
+    resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -13343,6 +13369,8 @@ snapshots:
   '@types/tough-cookie@4.0.5': {}
 
   '@types/unist@3.0.3': {}
+
+  '@types/use-sync-external-store@0.0.6': {}
 
   '@types/webpack-bundle-analyzer@4.7.0(@swc/core@1.7.35(@swc/helpers@0.5.5))(webpack-cli@5.1.4(webpack-bundle-analyzer@4.10.2)(webpack@5.96.1))':
     dependencies:
@@ -20063,6 +20091,10 @@ snapshots:
   url-template@2.0.8: {}
 
   urlpattern-polyfill@8.0.2: {}
+
+  use-sync-external-store@1.2.2(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   util-deprecate@1.0.2: {}
 
