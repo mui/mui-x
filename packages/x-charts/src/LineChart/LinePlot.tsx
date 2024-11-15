@@ -43,12 +43,6 @@ const LinePlotRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  [`& .${lineElementClasses.highlighted}`]: {
-    filter: 'brightness(120%)',
-  },
-  [`& .${lineElementClasses.faded}`]: {
-    opacity: 0.3,
-  },
   [`& .${lineElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },

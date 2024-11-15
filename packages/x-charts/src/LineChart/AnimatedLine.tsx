@@ -48,6 +48,8 @@ function AnimatedLine(props: AnimatedLineProps) {
           strokeWidth={2}
           strokeLinejoin="round"
           fill="none"
+          filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+          opacity={ownerState.isFaded ? 0.3 : 1}
           {...other}
         />
       ))}

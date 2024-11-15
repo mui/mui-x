@@ -43,12 +43,6 @@ const AreaPlotRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  [`& .${areaElementClasses.highlighted}`]: {
-    filter: 'brightness(140%)',
-  },
-  [`& .${areaElementClasses.faded}`]: {
-    opacity: 0.3,
-  },
   [`& .${areaElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },

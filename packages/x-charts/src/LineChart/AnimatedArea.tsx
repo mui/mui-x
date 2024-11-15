@@ -45,7 +45,15 @@ function AnimatedArea(props: AnimatedAreaProps) {
         <animated.path
           d={style.value.to(interpolator)}
           fill={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
-          filter={ownerState.gradientId ? undefined : 'brightness(120%)'}
+          filter={
+            // eslint-disable-next-line no-nested-ternary
+            ownerState.isHighlighted
+              ? 'brightness(140%)'
+              : ownerState.gradientId
+                ? undefined
+                : 'brightness(120%)'
+          }
+          opacity={ownerState.isFaded ? 0.3 : 1}
           stroke="none"
           {...other}
         />

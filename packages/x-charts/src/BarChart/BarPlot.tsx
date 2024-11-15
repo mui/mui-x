@@ -218,12 +218,6 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  [`& .${barElementClasses.highlighted}`]: {
-    filter: 'brightness(120%)',
-  },
-  [`& .${barElementClasses.faded}`]: {
-    opacity: 0.3,
-  },
   [`& .${barElementClasses.root}`]: {
     transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   },

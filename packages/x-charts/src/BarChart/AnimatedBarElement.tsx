@@ -23,5 +23,11 @@ export interface BarProps
 export function AnimatedBarElement(props: BarProps) {
   const { ownerState, ...other } = props;
 
-  return <animated.rect {...other} />;
+  return (
+    <animated.rect
+      {...other}
+      filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
+      opacity={ownerState.isFaded ? 0.3 : 1}
+    />
+  );
 }
