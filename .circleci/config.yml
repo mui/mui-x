@@ -268,7 +268,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest --project "browser/x-data-grid" --pool=threads
+          command: NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest --project "browser/*" --pool=threads
           environment:
             VITEST_MAX_THREADS: 3
             VITEST_MIN_THREADS: 2
