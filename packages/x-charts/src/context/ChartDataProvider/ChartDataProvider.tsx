@@ -41,10 +41,7 @@ export type ChartDataProviderProps = Omit<
   children?: React.ReactNode;
 };
 
-const ChartDataProvider = React.forwardRef(function ChartDataProvider(
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
     drawingAreaProviderProps,
@@ -55,8 +52,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
     pluginProviderProps,
     animationProviderProps,
     sizeProviderProps,
-    svgRefProviderProps,
-  } = useChartDataProviderProps(props, ref);
+  } = useChartDataProviderProps(props);
 
   return (
     <SizeProvider {...sizeProviderProps}>
@@ -68,7 +64,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
                     <AnimationProvider {...animationProviderProps}>
-                      <SvgRefProvider {...svgRefProviderProps}>{children}</SvgRefProvider>
+                      <SvgRefProvider>{children}</SvgRefProvider>
                     </AnimationProvider>
                   </HighlightedProvider>
                 </InteractionProvider>
@@ -79,7 +75,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
       </DrawingAreaProvider>
     </SizeProvider>
   );
-});
+}
 
 ChartDataProvider.propTypes = {
   // ----------------------------- Warning --------------------------------

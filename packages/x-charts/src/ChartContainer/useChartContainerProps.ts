@@ -1,17 +1,19 @@
 'use client';
+import * as React from 'react';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 
 export type UseChartContainerPropsReturnValue = {
   chartDataProviderProps: ChartDataProviderProps;
-  chartsSurfaceProps: ChartsSurfaceProps;
+  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   resizableContainerProps: any;
   children: React.ReactNode;
 };
 
 export const useChartContainerProps = (
   props: ChartContainerProps,
+  ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerPropsReturnValue => {
   const {
     width,
@@ -38,11 +40,12 @@ export const useChartContainerProps = (
 
   const resizableContainerProps = other;
 
-  const chartsSurfaceProps: ChartsSurfaceProps = {
+  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
     desc,
     sx,
     disableAxisListener,
+    ref,
   };
 
   const chartDataProviderProps: ChartDataProviderProps = {

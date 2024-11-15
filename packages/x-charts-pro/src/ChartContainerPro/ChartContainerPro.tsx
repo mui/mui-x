@@ -20,14 +20,12 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { chartDataProviderProProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProProps(props);
+    useChartContainerProProps(props, ref);
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
       <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
-          {children}
-        </ChartsSurface>
+        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
         <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
       </ResizableContainer>
     </ChartDataProviderPro>

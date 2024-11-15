@@ -13,10 +13,10 @@ const ChartContainer = React.forwardRef(function ChartContainer(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProps(props);
+    useChartContainerProps(props, ref);
 
   return (
-    <ChartDataProvider ref={ref} {...chartDataProviderProps}>
+    <ChartDataProvider {...chartDataProviderProps}>
       <ResizableContainer {...resizableContainerProps}>
         <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
       </ResizableContainer>
