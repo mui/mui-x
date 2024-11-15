@@ -89,7 +89,7 @@
     },
     {
       "groupName": "Vitest",
-      "matchPackageNames": ["vitest", "@vitest/**"]
+      "matchPackageNames": ["vitest", "@vitest/**", "vitest-*"]
     },
     {
       "groupName": "MUI Core",
