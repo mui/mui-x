@@ -240,6 +240,16 @@ export const usePickerValue = <
     };
   });
 
+  React.useEffect(() => {
+    const newTimezone = valueManager.getTimezone(utils, inValueWithTimezoneToRender);
+    if (valueManager.getTimezone(utils, dateState.draft) !== newTimezone) {
+      setDateState((prev) => ({
+        ...prev,
+        draft: valueManager.setTimezone(utils, newTimezone, prev.draft),
+      }));
+    }
+  }, [inValueWithTimezoneToRender]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const { getValidationErrorForNewValue } = useValidation({
     props,
     validator,
