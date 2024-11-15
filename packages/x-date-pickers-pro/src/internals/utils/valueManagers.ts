@@ -25,7 +25,7 @@ type RangePickerValueManager<
     | DateRangeValidationError
     | TimeRangeValidationError
     | DateTimeRangeValidationError = any,
-> = PickerValueManager<true, TError>;
+> = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
@@ -77,7 +77,7 @@ export const getRangeFieldValueManager = ({
   dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
-}): FieldValueManager<true> => ({
+}): FieldValueManager<PickerRangeValue> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);

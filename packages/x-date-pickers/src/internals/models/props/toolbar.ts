@@ -3,16 +3,16 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { FormProps } from '../formProps';
-import { InferPickerValue } from '../value';
+import { PickerValidValue } from '../value';
 
 export interface BaseToolbarProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > extends ExportedBaseToolbarProps,
     FormProps {
   isLandscape: boolean;
-  onChange: (newValue: InferPickerValue<TIsRange>) => void;
-  value: InferPickerValue<TIsRange>;
+  onChange: (newValue: TValue) => void;
+  value: TValue;
   /**
    * Currently visible picker view.
    */

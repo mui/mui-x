@@ -4,6 +4,7 @@ import { ExportedValidateTimeProps, validateTime, ValidateTimeProps } from './va
 import { DateTimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeValidationProps } from '../internals/models/validation';
+import { PickerValue } from '../internals/models';
 
 /**
  * Validation props used by the Date Time Picker and Date Time Field components.
@@ -15,12 +16,11 @@ export interface ExportedValidateDateTimeProps
 
 export interface ValidateDateTimeProps extends ValidateDateProps, ValidateTimeProps {}
 
-export const validateDateTime: Validator<false, DateTimeValidationError, ValidateDateTimeProps> = ({
-  adapter,
-  value,
-  timezone,
-  props,
-}) => {
+export const validateDateTime: Validator<
+  PickerValue,
+  DateTimeValidationError,
+  ValidateDateTimeProps
+> = ({ adapter, value, timezone, props }) => {
   const dateValidationResult = validateDate({
     adapter,
     value,

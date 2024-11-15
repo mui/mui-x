@@ -7,17 +7,18 @@ import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersL
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { UseFieldInternalProps } from '../../hooks/useField';
+import { PickerValidValue } from '../value';
 
 /**
  * Props common to all pickers after applying the default props on each picker.
  */
 export interface BasePickerProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TIsRange, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerBaseProps<TIsRange, TView, TError, TExternalProps, TAdditionalProps> {
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -34,11 +35,11 @@ export interface BasePickerProps<
  * Props common to all pickers before applying the default props on each picker.
  */
 export interface BasePickerInputProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
-    MakeOptional<BasePickerProps<TIsRange, TView, TError, any, any>, 'openTo' | 'views'>,
+    MakeOptional<BasePickerProps<TValue, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 

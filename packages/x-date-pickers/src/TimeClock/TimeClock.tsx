@@ -20,6 +20,7 @@ import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { PickerValue } from '../internals/models';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -129,10 +130,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
   const translations = usePickerTranslations();
   const now = useNow(timezone);
 
-  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews<
-    false,
-    TimeView
-  >({
+  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
@@ -467,9 +465,9 @@ TimeClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
-   * @param {InferPickerValue<TIsRange>} value The new value.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -11,7 +11,7 @@ import {
   getFieldSectionsContainer,
   openPicker,
 } from 'test/utils/pickers';
-import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
+import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 
 describe('<MobileDateTimeRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -48,7 +48,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue<true, 'picker'>(MobileDateTimeRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(MobileDateTimeRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time-range',
@@ -92,7 +92,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
           initialFocus: setEndDate ? 'end' : 'start',
         });
       }
-      let newValue: DateRange<any>;
+      let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {

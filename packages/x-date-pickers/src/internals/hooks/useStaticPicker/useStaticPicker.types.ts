@@ -6,13 +6,13 @@ import {
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
 export interface UseStaticPickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<false, TView> {}
+  extends ExportedPickersLayoutSlots<PickerValue, TView> {}
 
 export interface UseStaticPickerSlotProps<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<false, TView> {}
+  extends ExportedPickersLayoutSlotProps<PickerValue, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -36,8 +36,8 @@ export interface StaticOnlyPickerProps {
 export interface UseStaticPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<false, TView, any, any>,
-> extends BasePickerProps<false, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any, any>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
    * Overridable component slots.
@@ -55,7 +55,7 @@ export interface UseStaticPickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<false, TView, TExternalProps, {}>,
+    UsePickerParams<PickerValue, TView, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;

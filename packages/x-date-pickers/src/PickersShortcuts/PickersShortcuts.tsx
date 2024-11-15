@@ -5,15 +5,15 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { InferPickerValue } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 
-interface PickersShortcutsItemGetValueParams<TIsRange extends boolean> {
-  isValid: (value: InferPickerValue<TIsRange>) => boolean;
+interface PickersShortcutsItemGetValueParams<TValue extends PickerValidValue> {
+  isValid: (value: TValue) => boolean;
 }
 
-export interface PickersShortcutsItem<TIsRange extends boolean> {
+export interface PickersShortcutsItem<TValue extends PickerValidValue> {
   label: string;
-  getValue: (params: PickersShortcutsItemGetValueParams<TIsRange>) => InferPickerValue<TIsRange>;
+  getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
   /**
    * Identifier of the shortcut.
    * If provided, it will be used as the key of the shortcut.
@@ -21,18 +21,18 @@ export interface PickersShortcutsItem<TIsRange extends boolean> {
   id?: string;
 }
 
-export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<boolean>, 'getValue'>;
+export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
 export type PickerShortcutChangeImportance = 'set' | 'accept';
 
-export interface ExportedPickersShortcutProps<TIsRange extends boolean>
+export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
   extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
    * @default []
    */
-  items?: PickersShortcutsItem<TIsRange>[];
+  items?: PickersShortcutsItem<TValue>[];
   /**
    * Importance of the change when picking a shortcut:
    * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
@@ -42,15 +42,15 @@ export interface ExportedPickersShortcutProps<TIsRange extends boolean>
   changeImportance?: PickerShortcutChangeImportance;
 }
 
-export interface PickersShortcutsProps<TIsRange extends boolean>
-  extends ExportedPickersShortcutProps<TIsRange> {
+export interface PickersShortcutsProps<TValue extends PickerValidValue>
+  extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
   onChange: (
-    newValue: InferPickerValue<TIsRange>,
+    newValue: TValue,
     changeImportance: PickerShortcutChangeImportance,
     shortcut: PickersShortcutsItemContext,
   ) => void;
-  isValid: (value: InferPickerValue<TIsRange>) => boolean;
+  isValid: (value: TValue) => boolean;
 }
 
 /**
@@ -62,7 +62,7 @@ export interface PickersShortcutsProps<TIsRange extends boolean>
  *
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
-function PickersShortcuts<TIsRange extends boolean>(props: PickersShortcutsProps<TIsRange>) {
+function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcutsProps<TValue>) {
   const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {

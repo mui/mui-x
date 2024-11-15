@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { DateRange } from '@mui/x-date-pickers-pro/models';
+import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
@@ -46,7 +46,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue<true, 'picker'>(DesktopDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',
@@ -77,7 +77,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
-      let newValue: DateRange<any>;
+      let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {
@@ -102,7 +102,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
   }));
 
   // With single input field
-  describeValue<true, 'picker'>(DesktopDateRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',
@@ -139,7 +139,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
-      let newValue: DateRange<any>;
+      let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {

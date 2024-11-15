@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import { PickerRangeValue, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
@@ -34,7 +34,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
-  const viewRenderers: PickerViewRendererLookup<true, 'day', any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<PickerRangeValue, 'day', any, {}> = {
     day: renderDateRangeViewCalendar,
     ...defaultizedProps.viewRenderers,
   };
@@ -176,17 +176,17 @@ StaticDateRangePicker.propTypes = {
   minDate: PropTypes.object,
   /**
    * Callback fired when the value is accepted.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {InferPickerValue<TIsRange>} value The value that was just accepted.
+   * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @param {InferPickerValue<TIsRange>} value The new value.
+   * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
@@ -201,9 +201,9 @@ StaticDateRangePicker.propTypes = {
    * When a validation error is detected, the `error` parameter contains a non-null value.
    * This can be used to render an appropriate form error.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TError} error The reason why the current value is not valid.
-   * @param {InferPickerValue<TIsRange>} value The value associated with the error.
+   * @param {TValue} value The value associated with the error.
    */
   onError: PropTypes.func,
   /**

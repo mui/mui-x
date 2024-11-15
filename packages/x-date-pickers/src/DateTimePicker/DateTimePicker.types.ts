@@ -3,7 +3,11 @@ import {
   DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem } from '../internals/models';
+import {
+  BaseSingleInputFieldProps,
+  DateOrTimeViewWithMeridiem,
+  PickerValue,
+} from '../internals/models';
 import {
   MobileDateTimePickerProps,
   MobileDateTimePickerSlots,
@@ -55,4 +59,4 @@ export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends 
  * Props the field can receive when used inside a date time picker (<DateTimePicker />, <DesktopDateTimePicker /> or <MobileDateTimePicker /> component).
  */
 export type DateTimePickerFieldProps = ValidateDateTimeProps &
-  BaseSingleInputFieldProps<false, false, DateTimeValidationError>;
+  BaseSingleInputFieldProps<PickerValue, false, DateTimeValidationError>;

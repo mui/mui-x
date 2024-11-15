@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { alpha, styled } from '@mui/material/styles';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -33,6 +33,7 @@ import {
 } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
@@ -175,7 +176,7 @@ interface ComponentFamilySet {
   props: Record<string, any>;
 }
 
-const shortcutsItems: PickersShortcutsItem<true>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
     label: 'This Week',
     getValue: () => {

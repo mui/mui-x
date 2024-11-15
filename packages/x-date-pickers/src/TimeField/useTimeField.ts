@@ -8,6 +8,7 @@ import { UseTimeFieldProps } from './TimeField.types';
 import { validateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
+import { PickerValue } from '../internals/models';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -23,7 +24,7 @@ export const useTimeField = <
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
   return useField<
-    false,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
     typeof internalProps

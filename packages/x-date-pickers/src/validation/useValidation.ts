@@ -5,24 +5,24 @@ import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { OnErrorProps, PickersTimezone } from '../models';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
-import { InferPickerValue } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 
-export type Validator<TIsRange extends boolean, TError, TValidationProps> = {
+export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
     adapter: MuiPickersAdapterContextValue;
-    value: InferPickerValue<TIsRange>;
+    value: TValue;
     timezone: PickersTimezone;
     props: TValidationProps;
   }): TError;
-  valueManager: PickerValueManager<TIsRange, any>;
+  valueManager: PickerValueManager<TValue, any>;
 };
 
-interface UseValidationOptions<TIsRange extends boolean, TError, TValidationProps extends {}>
-  extends OnErrorProps<TIsRange, TError> {
+interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidationProps extends {}>
+  extends OnErrorProps<TValue, TError> {
   /**
    * The value to validate.
    */
-  value: InferPickerValue<TIsRange>;
+  value: TValue;
   /**
    * The timezone to use for the validation.
    */
@@ -33,7 +33,7 @@ interface UseValidationOptions<TIsRange extends boolean, TError, TValidationProp
    * It is recommended to only use the validator exported by the MUI X packages,
    * otherwise you may have inconsistent behaviors between the field and the views.
    */
-  validator: Validator<TIsRange, TError, TValidationProps>;
+  validator: Validator<TValue, TError, TValidationProps>;
   /**
    * The validation props, they differ depending on the component.
    * For example, the `validateTime` function supports `minTime`, `maxTime`, etc.
@@ -41,7 +41,7 @@ interface UseValidationOptions<TIsRange extends boolean, TError, TValidationProp
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TIsRange extends boolean, TError> {
+interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */
@@ -55,27 +55,27 @@ interface UseValidationReturnValue<TIsRange extends boolean, TError> {
   /**
    * Get the validation error for a new value.
    * This can be used to validate the value in a change handler before updating the state.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
-   * @param {InferPickerValue<TIsRange>} newValue The value to validate.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TValue} newValue The value to validate.
    * @returns {TError} The validation error associated to the new value.
    */
-  getValidationErrorForNewValue: (newValue: InferPickerValue<TIsRange>) => TError;
+  getValidationErrorForNewValue: (newValue: TValue) => TError;
 }
 
 /**
  * Utility hook to check if a given value is valid based on the provided validation props.
- * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+ * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
  * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
- * @param {UseValidationOptions<TIsRange, TError, TValidationProps>} options The options to configure the hook.
- * @param {InferPickerValue<TIsRange>} options.value The value to validate.
+ * @param {UseValidationOptions<TValue, TError, TValidationProps>} options The options to configure the hook.
+ * @param {TValue} options.value The value to validate.
  * @param {PickersTimezone} options.timezone The timezone to use for the validation.
- * @param {Validator<TIsRange, TError, TValidationProps>} options.validator The validator function to use.
+ * @param {Validator<TValue, TError, TValidationProps>} options.validator The validator function to use.
  * @param {TValidationProps} options.props The validation props, they differ depending on the component.
- * @param {(error: TError, value: InferPickerValue<TIsRange>) => void} options.onError Callback fired when the error associated with the current value changes.
+ * @param {(error: TError, value: TValue) => void} options.onError Callback fired when the error associated with the current value changes.
  */
-export function useValidation<TIsRange extends boolean, TError, TValidationProps extends {}>(
-  options: UseValidationOptions<TIsRange, TError, TValidationProps>,
-): UseValidationReturnValue<TIsRange, TError> {
+export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
+  options: UseValidationOptions<TValue, TError, TValidationProps>,
+): UseValidationReturnValue<TValue, TError> {
   const { props, validator, value, timezone, onError } = options;
 
   const adapter = useLocalizationContext();
@@ -97,7 +97,7 @@ export function useValidation<TIsRange extends boolean, TError, TValidationProps
     previousValidationErrorRef.current = validationError;
   }, [validator, onError, validationError, value]);
 
-  const getValidationErrorForNewValue = useEventCallback((newValue: InferPickerValue<TIsRange>) => {
+  const getValidationErrorForNewValue = useEventCallback((newValue: TValue) => {
     return validator({ adapter, value: newValue, timezone, props });
   });
 

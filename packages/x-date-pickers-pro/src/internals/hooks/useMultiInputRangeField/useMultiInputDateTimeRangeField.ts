@@ -4,6 +4,7 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedDateTimeField,
@@ -73,7 +74,9 @@ export const useMultiInputDateTimeRangeField = <
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
-  const buildChangeHandler = (index: 0 | 1): FieldChangeHandler<false, DateTimeValidationError> => {
+  const buildChangeHandler = (
+    index: 0 | 1,
+  ): FieldChangeHandler<PickerValue, DateTimeValidationError> => {
     return (newDate, rawContext) => {
       const newDateRange: PickerRangeValue =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];

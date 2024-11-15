@@ -7,7 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -79,8 +79,11 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>(
-  props: PickersLayoutProps<TIsRange, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersLayoutComponent = (<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
+  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -93,9 +96,9 @@ type PickersLayoutComponent = (<TIsRange extends boolean, TView extends DateOrTi
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
 const PickersLayout = React.forwardRef(function PickersLayout<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TIsRange, TView>, ref: React.Ref<HTMLDivElement>) {
+>(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
@@ -191,7 +194,7 @@ PickersLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,

@@ -1,4 +1,4 @@
-import { BaseSingleInputFieldProps } from '@mui/x-date-pickers/internals';
+import { BaseSingleInputFieldProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlots,
@@ -46,4 +46,8 @@ export interface DateRangePickerProps<TEnableAccessibleFieldDOMStructure extends
  */
 export type DateRangePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   ValidateDateRangeProps &
-    BaseSingleInputFieldProps<true, TEnableAccessibleFieldDOMStructure, DateRangeValidationError>;
+    BaseSingleInputFieldProps<
+      PickerRangeValue,
+      TEnableAccessibleFieldDOMStructure,
+      DateRangeValidationError
+    >;

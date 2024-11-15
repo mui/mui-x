@@ -13,10 +13,10 @@ import {
   PickersShortcuts,
 } from '../PickersShortcuts/PickersShortcuts';
 import { PickerOwnerState } from '../models';
-import { InferPickerValue } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 
 export interface ExportedPickersLayoutSlots<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > {
   /**
@@ -28,13 +28,13 @@ export interface ExportedPickersLayoutSlots<
    * Custom component for the shortcuts.
    * @default PickersShortcuts
    */
-  shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<TIsRange>>;
+  shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<TValue>>;
   /**
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, action bar, and shortcuts.
    */
   layout?: React.JSXElementConstructor<
-    PickersLayoutProps<TIsRange, TView> & React.RefAttributes<HTMLDivElement>
+    PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
   >;
 }
 
@@ -44,7 +44,7 @@ export interface PickerLayoutOwnerState extends PickerOwnerState {
 }
 
 export interface ExportedPickersLayoutSlotProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > {
   /**
@@ -58,13 +58,13 @@ export interface ExportedPickersLayoutSlotProps<
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: Partial<PickersLayoutProps<TIsRange, TView>>;
+  layout?: Partial<PickersLayoutProps<TValue, TView>>;
 }
 
 export interface PickersLayoutSlots<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlots<TIsRange, TView> {
+> extends ExportedPickersLayoutSlots<TValue, TView> {
   /**
    * Tabs enabling toggling between views.
    */
@@ -73,13 +73,13 @@ export interface PickersLayoutSlots<
    * Custom component for the toolbar.
    * It is placed above the picker views.
    */
-  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TIsRange, TView>>;
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
 export interface PickersLayoutSlotProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends ExportedPickersLayoutSlotProps<TIsRange, TView> {
+> extends ExportedPickersLayoutSlotProps<TValue, TView> {
   /**
    * Props passed down to the tabs component.
    */
@@ -91,10 +91,9 @@ export interface PickersLayoutSlotProps<
 }
 
 export interface PickersLayoutProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends Omit<UsePickerLayoutPropsResponseLayoutProps<TIsRange, TView>, 'value'> {
-  value?: InferPickerValue<TIsRange>;
+> extends UsePickerLayoutPropsResponseLayoutProps<TValue, TView> {
   className?: string;
   children?: React.ReactNode;
   /**
@@ -109,22 +108,22 @@ export interface PickersLayoutProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: PickersLayoutSlots<TIsRange, TView>;
+  slots?: PickersLayoutSlots<TValue, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersLayoutSlotProps<TIsRange, TView>;
+  slotProps?: PickersLayoutSlotProps<TValue, TView>;
   /**
    * `true` if the application is in right-to-left direction.
    */
   isRtl: boolean;
 }
 
-export interface SubComponents<TIsRange extends boolean> {
+export interface SubComponents<TValue extends PickerValidValue> {
   toolbar: React.ReactElement<ExportedBaseToolbarProps> | null;
   content: React.ReactNode;
   tabs: React.ReactElement<ExportedBaseTabsProps> | null;
   actionBar: React.ReactElement<PickersActionBarProps>;
-  shortcuts: React.ReactElement<ExportedPickersShortcutProps<TIsRange>> | null;
+  shortcuts: React.ReactElement<ExportedPickersShortcutProps<TValue>> | null;
 }

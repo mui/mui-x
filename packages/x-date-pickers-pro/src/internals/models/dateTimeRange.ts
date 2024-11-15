@@ -3,6 +3,7 @@ import {
   UseFieldInternalProps,
   DateOrTimeViewWithMeridiem,
   AmPmProps,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeRangeValidationError, RangeFieldSeparatorProps } from '../../models';
 import { ExportedValidateDateTimeRangeProps } from '../../validation/validateDateTimeRange';
@@ -11,7 +12,7 @@ export interface UseDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure e
   extends MakeOptional<
       Omit<
         UseFieldInternalProps<
-          true,
+          PickerRangeValue,
           TEnableAccessibleFieldDOMStructure,
           DateTimeRangeValidationError
         >,

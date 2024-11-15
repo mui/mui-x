@@ -3,6 +3,7 @@ import { Validator } from './useValidation';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
 import { TimeValidationError } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { PickerValue } from '../internals/models';
 
 /**
  * Validation props used by the Time Picker, Time Field and Clock components.
@@ -11,7 +12,7 @@ export interface ExportedValidateTimeProps extends BaseTimeValidationProps, Time
 
 export interface ValidateTimeProps extends Required<BaseTimeValidationProps>, TimeValidationProps {}
 
-export const validateTime: Validator<false, TimeValidationError, ValidateTimeProps> = ({
+export const validateTime: Validator<PickerValue, TimeValidationError, ValidateTimeProps> = ({
   adapter,
   value,
   timezone,

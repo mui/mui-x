@@ -19,6 +19,8 @@ import {
   WrapperVariant,
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
+  PickerRangeValue,
+  PickerValue,
 } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -74,7 +76,7 @@ export type RangePickerPropsForFieldSlot<
   TError,
 > =
   | (TIsSingleInput extends true
-      ? BaseSingleInputFieldProps<true, TEnableAccessibleFieldDOMStructure, TError>
+      ? BaseSingleInputFieldProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>
       : never)
   | (TIsSingleInput extends false
       ? BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, TError>
@@ -85,7 +87,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<UsePickerResponse<true, TView, any>, 'open' | 'actions'>,
+> extends Pick<UsePickerResponse<PickerRangeValue, TView, any>, 'open' | 'actions'>,
     UseRangePositionResponse {
   wrapperVariant: WrapperVariant;
   fieldType: FieldType;
@@ -106,9 +108,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
-  startFieldRef: React.RefObject<FieldRef<false>>;
-  endFieldRef: React.RefObject<FieldRef<false>>;
-  singleInputFieldRef: React.RefObject<FieldRef<true>>;
+  startFieldRef: React.RefObject<FieldRef<PickerValue>>;
+  endFieldRef: React.RefObject<FieldRef<PickerValue>>;
+  singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue>>;
 }
 
 const useMultiInputFieldSlotProps = <
@@ -311,7 +313,11 @@ const useSingleInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
-  type ReturnType = BaseSingleInputFieldProps<true, TEnableAccessibleFieldDOMStructure, TError>;
+  type ReturnType = BaseSingleInputFieldProps<
+    PickerRangeValue,
+    TEnableAccessibleFieldDOMStructure,
+    TError
+  >;
 
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 

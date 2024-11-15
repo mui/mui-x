@@ -19,22 +19,19 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
+import { PickerValidValue } from '../../models';
 
 export const useField = <
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldCommonForwardedProps &
     UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<
-    TIsRange,
-    TEnableAccessibleFieldDOMStructure,
-    any
-  > & {
+  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any> & {
     minutesStep?: number;
   },
 >(
   params: UseFieldParams<
-    TIsRange,
+    TValue,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
@@ -74,7 +71,7 @@ export const useField = <
     timezone,
   } = stateResponse;
 
-  const characterEditingResponse = useFieldCharacterEditing<TIsRange>({
+  const characterEditingResponse = useFieldCharacterEditing({
     sections: state.sections,
     updateSectionValue,
     sectionsValueBoundaries,

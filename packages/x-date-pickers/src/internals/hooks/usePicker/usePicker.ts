@@ -4,14 +4,14 @@ import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { InferError } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import { usePickerOwnerState } from './usePickerOwnerState';
 import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerProps<TIsRange, TView, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -24,8 +24,8 @@ export const usePicker = <
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<TIsRange, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
-  TIsRange,
+}: UsePickerParams<TValue, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
+  TValue,
   TView,
   InferError<TExternalProps>
 > => {
@@ -38,7 +38,7 @@ export const usePicker = <
       ]);
     }
   }
-  const pickerValueResponse = usePickerValue<TIsRange, TExternalProps>({
+  const pickerValueResponse = usePickerValue<TValue, TExternalProps>({
     props,
     valueManager,
     valueType,
@@ -46,7 +46,7 @@ export const usePicker = <
     validator,
   });
 
-  const pickerViewsResponse = usePickerViews<TIsRange, TView, TExternalProps, TAdditionalProps>({
+  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps, TAdditionalProps>({
     props,
     additionalViewProps,
     autoFocusView,

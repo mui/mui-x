@@ -18,12 +18,12 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { PickerValidDate } from '../models';
 
 export interface TimePickerToolbarProps
-  extends BaseToolbarProps<false, TimeViewWithMeridiem>,
+  extends BaseToolbarProps<PickerValue, TimeViewWithMeridiem>,
     ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
