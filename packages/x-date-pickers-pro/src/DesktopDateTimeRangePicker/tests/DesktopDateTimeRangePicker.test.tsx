@@ -42,7 +42,10 @@ describe('<DesktopDateTimeRangePicker />', () => {
 
     it('should use time from `referenceDate` when selecting the day', () => {
       render(
-        <DesktopDateTimeRangePicker referenceDate={adapterToUse.date('2022-04-14T14:15:00')} />,
+        <DesktopDateTimeRangePicker
+          enableAccessibleFieldDOMStructure
+          referenceDate={adapterToUse.date('2022-04-14T14:15:00')}
+        />,
       );
 
       openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
