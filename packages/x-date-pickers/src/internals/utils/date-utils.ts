@@ -1,9 +1,9 @@
 import {
   DateView,
-  FieldValueType,
   MuiPickersAdapter,
   PickersTimezone,
   PickerValidDate,
+  PickerValueType,
 } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
@@ -136,7 +136,7 @@ export const getMonthsInYear = (
 export const getTodayDate = (
   utils: MuiPickersAdapter,
   timezone: PickersTimezone,
-  valueType?: FieldValueType,
+  valueType?: PickerValueType,
 ): PickerValidDate =>
   valueType === 'date'
     ? utils.startOfDay(utils.date(undefined, timezone))
