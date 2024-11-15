@@ -1,7 +1,7 @@
-import { ChartsState } from '../internals/plugins/models';
+import { ChartState } from '../internals/plugins/models';
 import { createSelector } from '../internals/plugins/utils/selectors';
 
-function selectInteraction(state: ChartsState) {
+function selectInteraction(state: ChartState) {
   return state.interaction;
 }
 
@@ -40,7 +40,7 @@ export const selectorChartsInteractionYAxisIsDefined = createSelector(
   (y) => y !== null,
 );
 
-export const selectorChartsInteractionUseVoronoid = createSelector(
+export const selectorChartsInteractionIsVoronoiEnabled = createSelector(
   selectInteraction,
-  (interaction) => interaction.useVoronoiInteraction,
+  (interaction) => interaction.isVoronoiEnabled,
 );

@@ -1,5 +1,5 @@
 import { lruMemoize, createSelectorCreator, CreateSelectorFunction } from 'reselect';
-import { ChartsState, ChartsStateCacheKey } from '../models';
+import { ChartState, ChartStateCacheKey } from '../models';
 
 const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
@@ -10,20 +10,20 @@ const reselectCreateSelector = createSelectorCreator({
 });
 
 const cache = new WeakMap<
-  ChartsStateCacheKey,
+  ChartStateCacheKey,
   Map<Parameters<typeof reselectCreateSelector>, any>
 >();
 
-export type ChartsRootSelector = (state: ChartsState) => ChartsState[keyof ChartsState];
+export type ChartsRootSelector = (state: ChartState) => ChartState[keyof ChartState];
 
 export type ChartsSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 
 /**
- * Method wrapping reselect's createSelector to provide caching for tree view instances.
+ * Method wrapping reselect's createSelector to provide caching for chart instances.
  *
  */
 export const createSelector = ((...createSelectorArgs: any) => {
-  const selector: ChartsSelector<ChartsState, any, any> = (state, selectorArgs) => {
+  const selector: ChartsSelector<ChartState, any, any> = (state, selectorArgs) => {
     const cacheKey = state.cacheKey;
 
     // If there is no cache for the current chart instance, create one.

@@ -28,12 +28,12 @@ type InteractionState = {
    * Set to `true` when `VoronoiHandler` is active.
    * Used to prevent collision with mouseEnter events.
    */
-  useVoronoiInteraction?: boolean;
+  isVoronoiEnabled?: boolean;
 };
 
-export type ChartsStateCacheKey = { id: number };
+export type ChartStateCacheKey = { id: number };
 
-export type ChartsState = {
+export type ChartState = {
   interaction: InteractionState;
-  cacheKey: ChartsStateCacheKey;
+  cacheKey: ChartStateCacheKey;
 };

@@ -1,17 +1,17 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-import { ChartsState } from './plugins/models';
+import { ChartState } from './plugins/models';
 import { ChartsSelector } from './plugins/utils/selectors';
-import { ChartsStore } from './plugins/utils/ChartsStore';
+import { ChartStore } from './plugins/utils/ChartStore';
 
 const defaultCompare = Object.is;
 
 export const useSelector = <TArgs, TValue>(
-  store: ChartsStore,
-  selector: ChartsSelector<ChartsState, TArgs, TValue>,
+  store: ChartStore,
+  selector: ChartsSelector<ChartState, TArgs, TValue>,
   args: TArgs = undefined as TArgs,
   equals: (a: TValue, b: TValue) => boolean = defaultCompare,
 ): TValue => {
-  const selectorWithArgs = (state: ChartsState) => selector(state, args);
+  const selectorWithArgs = (state: ChartState) => selector(state, args);
 
   return useSyncExternalStoreWithSelector(
     store.subscribe,
