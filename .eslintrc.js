@@ -84,6 +84,10 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
               group: [`${packageName}/*`, `${packageName}/**`],
               message: 'Use relative import instead',
             },
+            {
+              group: ['../../**/src/**'],
+              message: 'Relative imports from another package are not allowed.',
+            },
           ],
         },
       ],
@@ -139,13 +143,22 @@ module.exports = {
     'import/no-restricted-paths': [
       'error',
       {
-        zones: [...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
-          (packageName) => ({
-            target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
-            from: `./packages/${packageName}/src/internals/index.ts`,
-            message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
-          }),
-        ),
+        zones: [
+          ...[...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
+            (packageName) => ({
+              target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+              from: `./packages/${packageName}/src/internals/index.ts`,
+              message: `Use a more specific import instead. E.g. import { MyInternal } from '../internals/MyInternal';`,
+            }),
+          ),
+          // ...[...chartsPackages, ...datePickersPackages, ...treeViewPackages].map(
+          //   (packageName) => ({
+          //     target: `./packages/${packageName}/src/**/!(*.test.*|*.spec.*)`,
+          //     from: `./packages/!(${packageName})/src/**`,
+          //     message: 'Imports from another package should use the package name directly.',
+          //   }),
+          // ),
+        ],
       },
     ],
     // TODO remove rule from here once it's merged in `@mui/monorepo/.eslintrc`
