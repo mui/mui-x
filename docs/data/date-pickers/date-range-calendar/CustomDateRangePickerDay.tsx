@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
@@ -39,7 +39,8 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(({ theme }) => ({
       },
     },
   ],
-})) as React.ComponentType<DateRangePickerDayProps<Dayjs>>;
+})) as React.ComponentType<DateRangePickerDayProps>;
+
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -1,9 +1,6 @@
 import * as React from 'react';
-import {
-  DefaultizedProps,
-  TreeViewPluginSignature,
-  UseTreeViewItemsSignature,
-} from '@mui/x-tree-view/internals';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature, UseTreeViewItemsSignature } from '@mui/x-tree-view/internals';
 import {
   TreeViewItemId,
   TreeViewItemsReorderingAction,

@@ -370,7 +370,7 @@ export default function PickersPlayground() {
   const dateViews = React.useMemo(() => availableViews.filter(isDatePickerView), [availableViews]);
   const timeViews = React.useMemo(() => availableViews.filter(isTimeView), [availableViews]);
 
-  const commonProps = React.useMemo<StaticDateTimePickerProps<Dayjs>>(
+  const commonProps = React.useMemo<StaticDateTimePickerProps>(
     () => ({
       orientation: isLandscape ? 'landscape' : 'portrait',
       showDaysOutsideCurrentMonth,

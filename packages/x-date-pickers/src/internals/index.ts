@@ -4,7 +4,7 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
-export { PickersProvider } from './components/PickersProvider';
+export { PickerProvider } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
   PickersModalDialogSlots,
@@ -84,6 +84,7 @@ export type {
   PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
+export { usePickerPrivateContext } from './hooks/usePickerPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
@@ -95,16 +96,16 @@ export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews'
 export { useViews } from './hooks/useViews';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps } from './models/fields';
+export type { BaseSingleInputFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BasePickerInputProps,
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
-export type { BaseClockProps, DesktopOnlyTimePickerProps } from './models/props/clock';
+export type { BaseClockProps, DesktopOnlyTimePickerProps, AmPmProps } from './models/props/time';
 export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { DefaultizedProps, MakeOptional, SlotComponentPropsFromProps } from './models/helpers';
+export type { FormProps } from './models/formProps';
 export type {
   WrapperVariant,
   TimeViewWithMeridiem,
@@ -119,6 +120,7 @@ export type {
   DayValidationProps,
   DateTimeValidationProps,
 } from './models/validation';
+export type { PickerRangeValue } from './models/value';
 
 export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {

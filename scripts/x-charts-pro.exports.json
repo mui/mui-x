@@ -267,8 +267,6 @@
   { "name": "PopperProps", "kind": "TypeAlias" },
   { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "referenceLineClasses", "kind": "Variable" },
-  { "name": "ResponsiveChartContainerPro", "kind": "Variable" },
-  { "name": "ResponsiveChartContainerProProps", "kind": "Interface" },
   { "name": "ScaleName", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
   { "name": "ScatterChart", "kind": "Variable" },

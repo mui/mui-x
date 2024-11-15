@@ -44,7 +44,7 @@ const ChartChartsSurfaceStyles = styled('svg', {
 
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
-  ref,
+  ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
   const {

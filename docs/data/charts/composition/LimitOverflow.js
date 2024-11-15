@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import useId from '@mui/utils/useId';
 
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
@@ -59,7 +59,7 @@ export default function LimitOverflow() {
         label="Clip the plot"
         labelPlacement="end"
       />
-      <ResponsiveChartContainer
+      <ChartContainer
         xAxis={[
           {
             label: 'x',
@@ -88,7 +88,7 @@ export default function LimitOverflow() {
         <ChartsYAxis />
         <MarkPlot />
         {isLimited && <ChartsClipPath id={clipPathId} />}
-      </ResponsiveChartContainer>
+      </ChartContainer>
 
       <Slider
         value={xLimits}

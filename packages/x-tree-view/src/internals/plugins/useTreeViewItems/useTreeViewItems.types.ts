@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { TreeViewItemMeta, DefaultizedProps, TreeViewPluginSignature } from '../../models';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewItemMeta, TreeViewPluginSignature } from '../../models';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
 
 export interface TreeViewItemToRenderProps {
@@ -164,12 +165,7 @@ export interface UseTreeViewItemsState<R extends {}> {
 }
 
 interface UseTreeViewItemsContextValue {
-  items: Pick<
-    UseTreeViewItemsDefaultizedParameters<any>,
-    'disabledItemsFocusable' | 'onItemClick'
-  > & {
-    indentationAtItemLevel: boolean;
-  };
+  items: Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable' | 'onItemClick'>;
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
@@ -180,7 +176,6 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   events: UseTreeViewItemsEventLookup;
   state: UseTreeViewItemsState<any>;
   contextValue: UseTreeViewItemsContextValue;
-  experimentalFeatures: 'indentationAtItemLevel';
 }>;
 
 export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
