@@ -89,6 +89,14 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     slots?: BarElementSlots;
   };
 
+/**
+ * @ignore - This component is just here to remove the ownerState from slotProps before rendering.
+ */
+function AnimatedBarElement(props: BarProps) {
+  const { ownerState, ...other } = props;
+  return <animated.rect {...other} />;
+}
+
 function BarElement(props: BarElementProps) {
   const {
     id,
@@ -115,9 +123,10 @@ function BarElement(props: BarElementProps) {
     isFaded,
     isHighlighted,
   };
+
   const classes = useUtilityClasses(ownerState);
 
-  const Bar = slots?.bar ?? animated.rect;
+  const Bar = slots?.bar ?? AnimatedBarElement;
 
   const barProps = useSlotProps({
     elementType: Bar,
@@ -129,7 +138,7 @@ function BarElement(props: BarElementProps) {
       onClick,
       cursor: onClick ? 'pointer' : 'unset',
       stroke: 'none',
-      fill: ownerState.color,
+      fill: color,
     },
     className: classes.root,
     ownerState,
