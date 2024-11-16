@@ -18,9 +18,11 @@ export default function BasicSimpleTreeView() {
         </TreeItem>
         <TreeItem itemId="charts" label="Charts">
           <TreeItem itemId="charts-community" label="@mui/x-charts" />
+          <TreeItem itemId="charts-pro" label="@mui/x-charts-pro" />
         </TreeItem>
         <TreeItem itemId="tree-view" label="Tree View">
           <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+          <TreeItem itemId="tree-view-pro" label="@mui/x-tree-view-pro" />
         </TreeItem>
       </SimpleTreeView>
     </Box>

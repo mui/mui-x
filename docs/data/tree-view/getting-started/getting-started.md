@@ -109,8 +109,3 @@ const theme = createTheme({
   },
 });
 ```
-
-## Using this documentation
-
-Although the Simple and Rich Tree View share many of the same features, each version's implementation of those features differs enough that they warrant their own separate docs in most cases.
-Other features, such as accessibility, work the same in both versions and are documented in the main features section of the navigation bar.
