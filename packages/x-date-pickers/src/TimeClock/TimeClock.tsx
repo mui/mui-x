@@ -80,7 +80,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
   const {
     ampm = utils.is12HourCycleInCurrentLocale(),
-    ampmInClock = false,
     autoFocus,
     slots,
     slotProps,
@@ -206,12 +205,12 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
       switch (viewType) {
         case 'hours': {
-          const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+          // const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+          const dateWithNewHours = utils.setHours(valueOrReferenceDate, rawValue);
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
-          return !containsValidTime({ start, end }) || !isValidValue(valueWithMeridiem);
+          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
         }
 
         case 'minutes': {
@@ -257,9 +256,9 @@ export const TimeClock = React.forwardRef(function TimeClock(
     switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
-          const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
+          // const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
           setValueAndGoToNextView(
-            utils.setHours(valueOrReferenceDate, valueWithMeridiem),
+            utils.setHours(valueOrReferenceDate, hourValue),
             isFinish,
             'hours',
           );
@@ -272,7 +271,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
             value,
             utils,
             ampm,
-            onChange: handleHoursChange,
             getClockNumberText: translations.hoursClockNumberText,
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
@@ -296,7 +294,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
           children: getMinutesNumbers({
             utils,
             value: minutesValue,
-            onChange: handleMinutesChange,
             getClockNumberText: translations.minutesClockNumberText,
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
@@ -320,7 +317,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
           children: getMinutesNumbers({
             utils,
             value: secondsValue,
-            onChange: handleSecondsChange,
             getClockNumberText: translations.secondsClockNumberText,
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
@@ -359,7 +355,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
     >
       <Clock
         autoFocus={autoFocus ?? !!focusedView}
-        ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
         ampm={ampm}
@@ -400,11 +395,6 @@ TimeClock.propTypes = {
    * @default utils.is12HourCycleInCurrentLocale()
    */
   ampm: PropTypes.bool,
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock: PropTypes.bool,
   /**
    * If `true`, the main element is focused during the first mount.
    * This main element is:

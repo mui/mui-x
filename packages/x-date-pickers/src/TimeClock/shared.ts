@@ -1,6 +1,9 @@
 export const CLOCK_WIDTH = 220;
 export const CLOCK_HOUR_WIDTH = 36;
 
+export const HOURS_STEPS = 24;
+export const MINUTES_STEPS = 60;
+
 const clockCenter = {
   x: CLOCK_WIDTH / 2,
   y: CLOCK_WIDTH / 2,
@@ -27,32 +30,13 @@ const getAngleValue = (step: number, offsetX: number, offsetY: number) => {
   deg %= 360;
 
   const value = Math.floor(deg / step) || 0;
-  const delta = x ** 2 + y ** 2;
-  const distance = Math.sqrt(delta);
 
-  return { value, distance };
+  return { value };
 };
 
-export const getMinutes = (offsetX: number, offsetY: number, step = 1) => {
-  const angleStep = step * 6;
-  let { value } = getAngleValue(angleStep, offsetX, offsetY);
-  value = (value * step) % 60;
-
-  return value;
-};
-
-export const getHours = (offsetX: number, offsetY: number, ampm: boolean) => {
-  const { value, distance } = getAngleValue(30, offsetX, offsetY);
-  let hour = value || 12;
-
-  if (!ampm) {
-    if (distance < CLOCK_WIDTH / 2 - CLOCK_HOUR_WIDTH) {
-      hour += 12;
-      hour %= 24;
-    }
-  } else {
-    hour %= 12;
-  }
-
-  return hour;
+export const getDialValue = (offsetX: number, offsetY: number, steps: number) => {
+  // 6 degrees for 60 minutes, 15 degrees for 24 hour dials, 30 degrees for 12 h dials
+  const degreesPerStep = 360 / steps;
+  let { value } = getAngleValue(degreesPerStep, offsetX, offsetY);
+  return value % steps;
 };

@@ -2,13 +2,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
+import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH, HOURS_STEPS, MINUTES_STEPS } from './shared';
 import { TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;
-  isInner: boolean;
   type: TimeView;
   viewValue: number;
   classes?: Partial<ClockPointerClasses>;
@@ -82,7 +81,7 @@ const ClockPointerThumb = styled('div', {
  */
 export function ClockPointer(inProps: ClockPointerProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
-  const { className, hasSelected, isInner, type, viewValue, ...other } = props;
+  const { className, hasSelected, type, viewValue, ...other } = props;
   const previousType = React.useRef<TimeView | null>(type);
   React.useEffect(() => {
     previousType.current = type;
@@ -92,15 +91,11 @@ export function ClockPointer(inProps: ClockPointerProps) {
   const classes = useUtilityClasses(ownerState);
 
   const getAngleStyle = () => {
-    const max = type === 'hours' ? 12 : 60;
-    let angle = (360 / max) * viewValue;
-
-    if (type === 'hours' && viewValue > 12) {
-      angle -= 360; // round up angle to max 360 degrees
-    }
+    const steps = type === 'hours' ? HOURS_STEPS : MINUTES_STEPS;
+    let angle = (360 / steps) * viewValue;
 
     return {
-      height: Math.round((isInner ? 0.26 : 0.4) * CLOCK_WIDTH),
+      height: Math.round(0.4 * CLOCK_WIDTH),
       transform: `rotateZ(${angle}deg)`,
     };
   };

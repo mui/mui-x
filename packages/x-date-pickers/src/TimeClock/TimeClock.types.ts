@@ -7,20 +7,12 @@ import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/prop
 import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface ExportedTimeClockProps extends ExportedBaseClockProps {
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock?: boolean;
-}
-
 export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 
 export interface TimeClockSlotProps extends PickersArrowSwitcherSlotProps {}
 
 export interface TimeClockProps<TView extends TimeViewWithMeridiem = TimeView>
-  extends ExportedTimeClockProps,
+  extends ExportedBaseClockProps,
     BaseClockProps<TView> {
   /**
    * Available views.

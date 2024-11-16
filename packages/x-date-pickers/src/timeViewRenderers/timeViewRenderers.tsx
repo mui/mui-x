@@ -39,7 +39,6 @@ export const renderTimeViewClock = ({
   shouldDisableTime,
   minutesStep,
   ampm,
-  ampmInClock,
   slots,
   slotProps,
   readOnly,
@@ -69,7 +68,6 @@ export const renderTimeViewClock = ({
     shouldDisableTime={shouldDisableTime}
     minutesStep={minutesStep}
     ampm={ampm}
-    ampmInClock={ampmInClock}
     slots={slots}
     slotProps={slotProps}
     readOnly={readOnly}

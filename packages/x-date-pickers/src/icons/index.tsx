@@ -67,3 +67,22 @@ export const ClearIcon = createSvgIcon(
   <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />,
   'Clear',
 );
+
+/**
+ * @ignore - internal component.
+ * copy of "@mui/icons-material/Bedtime";
+ */
+export const MoonIcon = createSvgIcon(
+    <path d="M12.34 2.02C6.59 1.82 2 6.42 2 12c0 5.52 4.48 10 10 10 3.71 0 6.93-2.02 8.66-5.02-7.51-.25-12.09-8.43-8.32-14.96" />,
+    'Moon',
+);
+
+/**
+ * @ignore - internal component.
+ *
+ * copy of '@mui/icons-material/WbSunny';
+ */
+export const SunIcon = createSvgIcon(
+    <path d="m6.76 4.84-1.8-1.79-1.41 1.41 1.79 1.79zM4 10.5H1v2h3zm9-9.95h-2V3.5h2zm7.45 3.91-1.41-1.41-1.79 1.79 1.41 1.41zm-3.21 13.7 1.79 1.8 1.41-1.41-1.8-1.79zM20 10.5v2h3v-2zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6m-1 16.95h2V19.5h-2zm-7.45-3.91 1.41 1.41 1.79-1.8-1.41-1.41z" />,
+    'Sun',
+);

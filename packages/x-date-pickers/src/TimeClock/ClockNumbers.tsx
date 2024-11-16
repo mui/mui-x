@@ -8,7 +8,6 @@ interface GetHourNumbersOptions {
   value: PickerValidDate | null;
   getClockNumberText: (hour: string) => string;
   isDisabled: (value: number) => boolean;
-  onChange: (value: number, isFinish?: PickerSelectionState) => void;
   /**
    * DOM id that the selected option should have
    * Should only be `undefined` on the server
@@ -31,33 +30,29 @@ export const getHourNumbers = ({
   const currentHours = value ? utils.getHours(value) : null;
 
   const hourNumbers: React.JSX.Element[] = [];
-  const startHour = ampm ? 1 : 0;
-  const endHour = ampm ? 12 : 23;
+  const startHour = 0;
+  const endHour = 23;
 
   const isSelected = (hour: number) => {
     if (currentHours === null) {
       return false;
     }
-
-    if (ampm) {
-      if (hour === 12) {
-        return currentHours === 12 || currentHours === 0;
-      }
-
-      return currentHours === hour || currentHours - 12 === hour;
-    }
-
     return currentHours === hour;
   };
 
   for (let hour = startHour; hour <= endHour; hour += 1) {
-    let label = hour.toString();
+    let label:string
 
-    if (hour === 0) {
-      label = '00';
+    if (ampm && hour > 12) {
+      label = (hour - 12).toString();
+    } else {
+      label = hour.toString()
     }
 
-    const inner = !ampm && (hour === 0 || hour > 12);
+    if (ampm && hour === 0) {
+      label = '12';
+    }
+
     label = utils.formatNumber(label);
 
     const selected = isSelected(hour);
@@ -67,7 +62,7 @@ export const getHourNumbers = ({
         key={hour}
         id={selected ? selectedId : undefined}
         index={hour}
-        inner={inner}
+        indexRange={24}
         selected={selected}
         disabled={isDisabled(hour)}
         label={label}
@@ -79,13 +74,27 @@ export const getHourNumbers = ({
   return hourNumbers;
 };
 
+
+interface GetMinutesNumbersOptions {
+  value: number;
+  getClockNumberText: (value: string) => string;
+  isDisabled: (value: number) => boolean;
+  /**
+   * DOM id that the selected option should have
+   * Should only be `undefined` on the server
+   */
+  selectedId: string | undefined;
+  utils: MuiPickersAdapter;
+}
+
+
 export const getMinutesNumbers = ({
   utils,
   value,
   isDisabled,
   getClockNumberText,
   selectedId,
-}: Omit<GetHourNumbersOptions, 'ampm' | 'value'> & { value: number }) => {
+}: GetMinutesNumbersOptions) => {
   const f = utils.formatNumber;
 
   return (
@@ -111,7 +120,7 @@ export const getMinutesNumbers = ({
         label={label}
         id={selected ? selectedId : undefined}
         index={index + 1}
-        inner={false}
+        indexRange={12}
         disabled={isDisabled(numberValue)}
         selected={selected}
         aria-label={getClockNumberText(label)}

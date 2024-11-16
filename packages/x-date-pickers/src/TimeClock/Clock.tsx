@@ -12,16 +12,15 @@ import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { CLOCK_HOUR_WIDTH, getHours, getMinutes } from './shared';
+import {CLOCK_WIDTH, CLOCK_HOUR_WIDTH, getDialValue, HOURS_STEPS, MINUTES_STEPS} from './shared';
 import { PickerValidDate, TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
-import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 import { FormProps } from '../internals/models/formProps';
+import { MoonIcon, SunIcon } from '../icons';
 
 export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
-  ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
   isTimeDisabled: (timeValue: number, type: TimeView) => boolean;
@@ -79,8 +78,8 @@ const ClockClock = styled('div', {
 })({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
-  height: 220,
-  width: 220,
+  height: CLOCK_WIDTH,
+  width: CLOCK_WIDTH,
   flexShrink: 0,
   position: 'relative',
   pointerEvents: 'none',
@@ -196,6 +195,99 @@ const ClockMeridiemText = styled(Typography, {
   textOverflow: 'ellipsis',
 });
 
+
+
+
+
+function getHourComplications(ampm:boolean) {
+
+  const innerSize = Math.round(CLOCK_WIDTH * 0.70)
+
+  return (
+      <>
+        {ampm && (<>
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%) rotate(-97.5deg)',
+            height: innerSize,
+            width: innerSize,
+          }}>
+            <div style={{
+              width: '100%',
+              height: '50%',
+              borderTopLeftRadius: innerSize/2,
+              borderTopRightRadius: innerSize/2,
+              backgroundColor: '#C2C2C266'
+            }}/>
+          </div>
+          <div
+              style={{
+                position: 'absolute',
+                top: '52%',
+                left: '30%',
+                transform: 'translate(-50%, -50%)',
+                fontWeight: 700.
+              }}
+          >PM</div>
+          <div
+            style={{
+            position: 'absolute',
+            top: '48%',
+            left: '70%',
+            transform: 'translate(-50%, -50%)',
+            fontWeight: 700.
+          }}>AM</div>
+        </>)}
+        <div
+            style={{
+              position: 'absolute',
+              top: '25%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+        }}>
+          <MoonIcon
+            fontSize='large'
+            sx={{
+              color:"#0288d1"
+            }}
+          />
+        </div>
+        <div
+            style={{
+              position: 'absolute',
+              top: '75%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}>
+          <SunIcon
+              fontSize="large"
+              sx={{
+                color:"#f57c00"
+              }}
+          />
+        </div>
+      </>
+  )
+}
+
+function getMinuteComplications() {
+  return (
+    <div style={{
+      border: "3px dotted lightgray",
+      borderRadius: '50%',
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '72%',
+      height: '72%',
+    }}/>
+  )
+}
+
+
 /**
  * @ignore - internal component.
  */
@@ -203,13 +295,10 @@ export function Clock(inProps: ClockProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,
-    ampmInClock,
     autoFocus,
     children,
     value,
-    handleMeridiemChange,
     isTimeDisabled,
-    meridiemMode,
     minutesStep = 1,
     onChange,
     selectedId,
@@ -228,7 +317,6 @@ export function Clock(inProps: ClockProps) {
   const classes = useUtilityClasses(ownerState);
 
   const isSelectedTimeDisabled = isTimeDisabled(viewValue, type);
-  const isPointerInner = !ampm && type === 'hours' && (viewValue < 1 || viewValue > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
     if (disabled || readOnly) {
@@ -251,10 +339,11 @@ export function Clock(inProps: ClockProps) {
       offsetY = (event as React.TouchEvent).changedTouches[0].clientY - rect.top;
     }
 
-    const newSelectedValue =
-      type === 'seconds' || type === 'minutes'
-        ? getMinutes(offsetX, offsetY, minutesStep)
-        : getHours(offsetX, offsetY, Boolean(ampm));
+    const newSelectedValue = getDialValue(
+        offsetX,
+        offsetY,
+        type === 'hours' ? HOURS_STEPS : MINUTES_STEPS
+    );
 
     handleValueChange(newSelectedValue, isFinish);
   };
@@ -291,9 +380,17 @@ export function Clock(inProps: ClockProps) {
     if (type === 'hours') {
       return true;
     }
-
+    // showing minutes and only every 5th minute is shown on the dial.
     return viewValue % 5 === 0;
   }, [type, viewValue]);
+
+  const hourComplications = React.useMemo(()=> {
+    return getHourComplications(ampm)
+  }, [ampm])
+
+  const minuteComplications = React.useMemo(()=>{
+    return getMinuteComplications()
+  }, [])
 
   const keyboardControlStep = type === 'minutes' ? minutesStep : 1;
 
@@ -362,6 +459,8 @@ export function Clock(inProps: ClockProps) {
           ownerState={{ disabled }}
           className={classes.squareMask}
         />
+        {type === 'hours' && hourComplications}
+        {type === 'minutes' && minuteComplications}
         {!isSelectedTimeDisabled && (
           <React.Fragment>
             <ClockPin className={classes.pin} />
@@ -369,7 +468,6 @@ export function Clock(inProps: ClockProps) {
               <ClockPointer
                 type={type}
                 viewValue={viewValue}
-                isInner={isPointerInner}
                 hasSelected={hasSelected}
               />
             )}
@@ -390,34 +488,6 @@ export function Clock(inProps: ClockProps) {
           {children}
         </ClockWrapper>
       </ClockClock>
-      {ampm && ampmInClock && (
-        <React.Fragment>
-          <ClockAmButton
-            data-testid="in-clock-am-btn"
-            onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
-            disabled={disabled || meridiemMode === null}
-            ownerState={ownerState}
-            className={classes.amButton}
-            title={formatMeridiem(utils, 'am')}
-          >
-            <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'am')}
-            </ClockMeridiemText>
-          </ClockAmButton>
-          <ClockPmButton
-            disabled={disabled || meridiemMode === null}
-            data-testid="in-clock-pm-btn"
-            onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
-            ownerState={ownerState}
-            className={classes.pmButton}
-            title={formatMeridiem(utils, 'pm')}
-          >
-            <ClockMeridiemText variant="caption" className={classes.meridiemText}>
-              {formatMeridiem(utils, 'pm')}
-            </ClockMeridiemText>
-          </ClockPmButton>
-        </React.Fragment>
-      )}
     </ClockRoot>
   );
 }

@@ -17,7 +17,7 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
    */
   id: string | undefined;
   index: number;
-  inner: boolean;
+  indexRange: number;
   label: string;
   selected: boolean;
   classes?: Partial<ClockNumberClasses>;
@@ -77,12 +77,12 @@ const ClockNumberRoot = styled('span', {
  */
 export function ClockNumber(inProps: ClockNumberProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockNumber' });
-  const { className, disabled, index, inner, label, selected, ...other } = props;
+  const { className, disabled, index, indexRange, label, selected, ...other } = props;
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const angle = ((index % 12) / 12) * Math.PI * 2 - Math.PI / 2;
-  const length = ((CLOCK_WIDTH - CLOCK_HOUR_WIDTH - 2) / 2) * (inner ? 0.65 : 1);
+  const angle = ((index % indexRange) / indexRange) * Math.PI * 2 - Math.PI / 2;
+  const length = ((CLOCK_WIDTH - CLOCK_HOUR_WIDTH - 2) / 2);
   const x = Math.round(Math.cos(angle) * length);
   const y = Math.round(Math.sin(angle) * length);
 
