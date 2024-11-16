@@ -28,8 +28,11 @@ export default function ResponsiveTimePickers() {
         <DemoItem label="Responsive variant">
           <TimePicker defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant">
-          <StaticTimePicker defaultValue={dayjs('2022-04-17T15:30')} />
+        <DemoItem label="Static variant with AM/PM">
+          <StaticTimePicker ampm={true} defaultValue={dayjs('2022-04-17T15:30')} />
+        </DemoItem>
+        <DemoItem label="Static variant with 24h format">
+          <StaticTimePicker ampm={false} defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>
