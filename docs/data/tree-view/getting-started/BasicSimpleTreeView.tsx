@@ -17,7 +17,7 @@ export default function BasicSimpleTreeView() {
           <TreeItem itemId="pickers-pro" label="@mui/x-date-pickers-pro" />
         </TreeItem>
         <TreeItem itemId="charts" label="Charts">
-        <TreeItem itemId="charts-community" label="@mui/x-charts" />
+          <TreeItem itemId="charts-community" label="@mui/x-charts" />
           <TreeItem itemId="charts-pro" label="@mui/x-charts-pro" />
         </TreeItem>
         <TreeItem itemId="tree-view" label="Tree View">
