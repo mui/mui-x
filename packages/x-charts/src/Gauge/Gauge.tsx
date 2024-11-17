@@ -27,7 +27,7 @@ const useUtilityClasses = (props: GaugeProps) => {
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
 
-const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref) {
+const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<SVGSVGElement>) {
   const { text, children, classes: propsClasses, className, ...other } = props;
   const classes = useUtilityClasses(props);
   return (

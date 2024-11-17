@@ -61,7 +61,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<PieChart {...pickerProps} /> // The codemod will not modify the content of `pickerProps`.
+<PieChart {...chartProps} /> // The codemod will not modify the content of `chartProps`.
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.
@@ -71,17 +71,17 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## Series properties renaming
 
-Some properties got deprecated in v7 in favor of a more consistent naming convention.
-Those deprecated properties got removed in v8.
+Some properties were deprecated in v7 in favor of a more consistent naming convention.
+Those deprecated properties have been removed in v8.
 
 The impacted properties are:
 
-- The `xAxisKey`, `yAxisKey`, and `zAxisKey` are renamed `xAxisId`, `yAxisId`, and `zAxisId`.
-- The `highlighted` and `faded` properties of `series.highlightScope` are renamed `highlight` and `fade`.
+- The `xAxisKey`, `yAxisKey`, and `zAxisKey` have been renamed `xAxisId`, `yAxisId`, and `zAxisId`.
+- The `highlighted` and `faded` properties of `series.highlightScope` have been renamed `highlight` and `fade`.
 
 ## Legend props propagation ✅
 
-The `legend` props of charts single components got removed.
+The `legend` prop of charts single components has been removed.
 To pass props to the legend, use the `slotProps.legend`.
 
 ```diff
@@ -91,7 +91,7 @@ To pass props to the legend, use the `slotProps.legend`.
 
 ## Removing ResponsiveChartContainer ✅
 
-The `ResponsiveChartContainer` got removed.
+The `ResponsiveChartContainer` has been removed.
 You can now use `ChartContainer` as a responsive container which works now exactly the same way.
 
 ```diff
@@ -109,14 +109,14 @@ You can now use `ChartContainer` as a responsive container which works now exact
 
 ## New DOM structure for ChartContainer
 
-The `<ChartContainer />` now wrap the `svg` component into a `div`.
+The `<ChartContainer />` now wraps the `svg` component into a `div`.
 
 This change should not impact your codebase except for some CSS selector edge cases.
 
 ## Remove Pie Chart axes
 
-The `<PieChart />` got by error the code to render axes.
-This code is removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
+The `<PieChart />` by error had the code to render axes.
+This code has been removed in v8, which implies removing the following props: `axisHighlight`, `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis`.
 
 This should not impact your code.
 If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.

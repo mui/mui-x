@@ -1,7 +1,9 @@
 // TODO: Add support for number
 export type TreeViewItemId = string;
 
-export type TreeViewBaseItem<R extends {} = { id: string; label: string }> = R & {
+export type TreeViewDefaultItemModelProperties = { id: string; label: string };
+
+export type TreeViewBaseItem<R extends {} = TreeViewDefaultItemModelProperties> = R & {
   children?: TreeViewBaseItem<R>[];
 };
 
