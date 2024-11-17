@@ -410,12 +410,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowIndexLookupSelector",
-    "returnType": "Record<GridRowId, number>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridRowMaximumTreeDepthSelector",
     "returnType": "number",
     "description": "",
