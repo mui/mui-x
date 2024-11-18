@@ -53,7 +53,7 @@
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5",
     "reselect": "^5.1.1",
-    "use-sync-external-store": "^1.0.0"
+    "use-sync-external-store": "^1.2.2"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
