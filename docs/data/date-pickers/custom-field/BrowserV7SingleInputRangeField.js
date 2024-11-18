@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -84,7 +84,16 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 });
 
 const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, onAdornmentClick, ...other } = props;
+  const { slots, slotProps, ...other } = props;
+
+  const pickerContext = usePickerContext();
+  const handleTogglePicker = (event) => {
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
+    } else {
+      pickerContext.onOpen(event);
+    }
+  };
 
   const textFieldProps = useSlotProps({
     elementType: 'input',
@@ -97,7 +106,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ...textFieldProps.InputProps,
     endAdornment: (
       <InputAdornment position="end">
-        <IconButton onClick={onAdornmentClick}>
+        <IconButton onClick={handleTogglePicker}>
           <DateRangeIcon />
         </IconButton>
       </InputAdornment>
@@ -127,29 +136,11 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
 const BrowserSingleInputDateRangePicker = React.forwardRef((props, ref) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
-
-  const handleOpen = () => setIsOpen(true);
-
-  const handleClose = () => setIsOpen(false);
-
   return (
     <DateRangePicker
       ref={ref}
       {...props}
-      open={isOpen}
-      onClose={handleClose}
-      onOpen={handleOpen}
       slots={{ ...props.slots, field: BrowserSingleInputDateRangeField }}
-      slotProps={{
-        ...props.slotProps,
-        field: {
-          onAdornmentClick: toggleOpen,
-          ...props.slotProps?.field,
-        },
-      }}
     />
   );
 });

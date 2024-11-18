@@ -13,12 +13,11 @@ import {
   PickerProvider,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
-  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
@@ -129,24 +128,18 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseDesktopRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
-    RangePickerPropsForFieldSlot<
-      boolean,
-      TEnableAccessibleFieldDOMStructure,
-      InferError<TExternalProps>
-    >,
-    PickerOwnerState
-  >({
+
+  const fieldProps: RangePickerPropsForFieldSlot<
+    boolean,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
+      // Internal props
       readOnly,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
@@ -154,8 +147,14 @@ export const useDesktopRangePicker = <
       onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
+      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
+      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
