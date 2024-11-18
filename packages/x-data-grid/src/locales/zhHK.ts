@@ -39,10 +39,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: '下載為 Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
+  columnsManagementSearchTitle: '搜尋',
+  columnsManagementNoColumns: '沒有列',
+  columnsManagementShowHideAllText: '顯示/隱藏所有',
+  columnsManagementReset: '重置',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',
@@ -58,9 +58,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等於',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '不等於',
   filterOperatorStartsWith: '以。。開始',
   filterOperatorEndsWith: '以。。結束',
   filterOperatorIs: '是',
@@ -81,9 +81,9 @@ const zhHKGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等於',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等於',
   headerFilterOperatorStartsWith: '以。。開始',
   headerFilterOperatorEndsWith: '以。。結束',
   headerFilterOperatorIs: '是',
@@ -97,7 +97,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   headerFilterOperatorIsAnyOf: '是以下任一個',
   'headerFilterOperator=': '等於',
   'headerFilterOperator!=': '不等於',
-  'headerFilterOperator>': '比...更棒',
+  'headerFilterOperator>': '大於',
   'headerFilterOperator>=': '大於或等於',
   'headerFilterOperator<': '少於',
   'headerFilterOperator<=': '小於或等於',
