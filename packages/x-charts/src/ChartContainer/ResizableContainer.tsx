@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { useSize } from '../context/SizeProvider';
 import type { SizeContextState } from '../context/SizeProvider';
+import { useDrawingArea } from '../hooks';
 
 /**
  * Wrapping div that take the shape of its parent.
@@ -22,11 +23,28 @@ export const ResizableContainerRoot = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
 }));
+
+/**
+ * This svg will fill the parent container. And prevent an SVG rendered with size 0.
+ *
+ * @ignore - internal component.
+ */
+function SvgSize() {
+  const { width, height, left, right, top, bottom } = useDrawingArea();
+
+  const svgWidth = width + left + right;
+  const svgHeight = height + top + bottom;
+
+  const svgView = {
+    width: svgWidth,
+    height: svgHeight,
+    x: 0,
+    y: 0,
+  };
+
+  return <svg viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`} />;
+}
 
 /**
  * Wrapping div that take the shape of its parent.
@@ -42,7 +60,7 @@ function ResizableContainer(props: { children: React.ReactNode }) {
       ownerState={{ width: inWidth, height: inHeight }}
       ref={containerRef}
     >
-      {hasIntrinsicSize && props.children}
+      {hasIntrinsicSize ? props.children : <SvgSize />}
     </ResizableContainerRoot>
   );
 }
