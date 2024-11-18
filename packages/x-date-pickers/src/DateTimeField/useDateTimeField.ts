@@ -13,7 +13,7 @@ export const useDateTimeField = <
 ) => {
   const valueManager = useDateTimeValueManager(props);
 
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     valueManager,
     internalProps,

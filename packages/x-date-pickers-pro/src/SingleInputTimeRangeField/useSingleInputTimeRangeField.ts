@@ -15,7 +15,7 @@ export const useSingleInputTimeRangeField = <
   props: TAllProps,
 ) => {
   const valueManager = useTimeRangeValueManager(props);
-  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
+  const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
     valueManager,
     internalProps,
