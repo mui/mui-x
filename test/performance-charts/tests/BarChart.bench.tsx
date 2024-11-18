@@ -2,7 +2,7 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { options } from '../utils/options';
 
 describe('BarChart', () => {
@@ -16,31 +16,32 @@ describe('BarChart', () => {
     y: 50 + Math.sin(i / 5) * 25,
   }));
 
-  const xData = data.map((d) => d.x);
+  const xData = data.map((d) => `n${d.x}`);
   const yData = data.map((d) => d.y);
+
+  const props: BarChartProps = {
+    xAxis: [
+      {
+        id: 'x',
+        scaleType: 'band',
+        data: xData,
+      },
+    ],
+    series: [
+      {
+        data: yData,
+      },
+    ],
+    width: 500,
+    height: 300,
+  };
 
   bench(
     'BarChart with big data amount',
     async () => {
-      const { findByText } = render(
-        <BarChart
-          xAxis={[
-            {
-              scaleType: 'band',
-              data: xData,
-            },
-          ]}
-          series={[
-            {
-              data: yData,
-            },
-          ]}
-          width={500}
-          height={300}
-        />,
-      );
+      const { findByText } = render(<BarChart {...props} />);
 
-      await findByText(dataLength.toLocaleString(), { ignore: 'span' });
+      await findByText('60', { ignore: 'span' });
     },
     options,
   );

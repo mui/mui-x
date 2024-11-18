@@ -2,7 +2,7 @@ import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
 import { afterEach, bench, describe } from 'vitest';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChart, ScatterChartProps } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
 
 describe('ScatterChart', () => {
@@ -19,23 +19,24 @@ describe('ScatterChart', () => {
 
   const xData = data.map((d) => d.x);
 
+  const props: ScatterChartProps = {
+    xAxis: [
+      {
+        data: xData,
+        valueFormatter: (v) => `n${v}`,
+      },
+    ],
+    series: [{ data }],
+    width: 500,
+    height: 300,
+  };
+
   bench(
     'ScatterChart with big data amount',
     async () => {
-      const { findByText } = render(
-        <ScatterChart
-          xAxis={[{ data: xData, valueFormatter: (v) => v.toLocaleString('en-US') }]}
-          series={[
-            {
-              data,
-            },
-          ]}
-          width={500}
-          height={300}
-        />,
-      );
+      const { findByText } = render(<ScatterChart {...props} />);
 
-      await findByText(dataLength.toLocaleString('en-US'), { ignore: 'span' });
+      await findByText('60', { ignore: 'span' });
     },
     options,
   );
