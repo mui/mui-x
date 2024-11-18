@@ -23,16 +23,22 @@ describe('useHighlighted', () => {
 
     const errorRef = React.createRef<any>();
 
+    const errorMessage1 = 'MUI X: Could not find the highlighted ref context.';
+    const errorMessage2 =
+      'It looks like you rendered your component outside of a ChartsContainer parent component.';
+    const errorMessage3 = 'The above error occurred in the <UseHighlighted> component:';
+    const expextedError =
+      reactMajor < 19
+        ? [errorMessage1, errorMessage2, errorMessage3]
+        : `${errorMessage1}\n${errorMessage2}`;
+
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
           <UseHighlighted />
         </ErrorBoundary>,
       ),
-    ).toErrorDev([
-      'MUI X: Could not find the highlighted ref context.\nIt looks like you rendered your component outside of a ChartsContainer parent component.',
-      reactMajor < 19 && 'The above error occurred in the <UseHighlighted> component:',
-    ]);
+    ).toErrorDev(expextedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(

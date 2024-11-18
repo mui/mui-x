@@ -32,6 +32,7 @@ describeTreeView<
           reactMajor < 19 &&
             'MUI X: The Tree View component requires all items to have a unique `id` property.',
           reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem)> component`,
         ]);
       } else {
         expect(() =>
