@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
@@ -38,16 +37,14 @@ export const useChartDataProviderProps = (
     skipAnimation,
     ...other
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
   const svgRefProviderProps: Omit<SvgRefProviderProps, 'children'> = {
-    svgRef,
+    svgRef: ref,
   };
 
-  const drawingProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
+  const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
     width,
     height,
     margin,
@@ -83,11 +80,10 @@ export const useChartDataProviderProps = (
     onHighlightChange,
   };
 
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
+  const chartsSurfaceProps: ChartsSurfaceProps = {
     ...other,
     width,
     height,
-    ref: chartSurfaceRef,
     sx,
     title,
     desc,
@@ -96,7 +92,7 @@ export const useChartDataProviderProps = (
 
   return {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,

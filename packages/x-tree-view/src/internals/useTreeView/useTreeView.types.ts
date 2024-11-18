@@ -5,7 +5,6 @@ import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
-  TreeViewInstance,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
@@ -40,5 +39,4 @@ export interface UseTreeViewReturnValue<TSignatures extends readonly TreeViewAny
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
   contextValue: TreeViewContextValue<TSignatures>;
-  instance: TreeViewInstance<TSignatures>;
 }

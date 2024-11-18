@@ -14,5 +14,5 @@ export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
     );
   }
 
-  return data as React.MutableRefObject<SVGSVGElement>;
+  return data.svgRef as React.MutableRefObject<SVGSVGElement>;
 }
