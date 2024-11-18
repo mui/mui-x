@@ -13,6 +13,14 @@ parameters:
     description: The name of the workflow to run
     type: string
     default: pipeline
+  with-material-ui-6:
+    description: The name of the workflow to run
+    type: boolean
+    default: false
+  with-react-version:
+    description: The name of the workflow to run
+    type: string
+    default: ''
   e2e-base-url:
     description: The base url for running end-to-end test
     type: string
@@ -376,4 +384,4 @@ workflows:
           <<: *default-context
           name: test_types_additional
           when:
-            condition: << pipeline.parameters.with-material-ui-6 >>         
+            condition: << pipeline.parameters.with-material-ui-6 >>
