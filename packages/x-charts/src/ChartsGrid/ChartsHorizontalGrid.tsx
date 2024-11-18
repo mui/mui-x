@@ -23,9 +23,9 @@ export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
 
   return (
     <React.Fragment>
-      {yTicks.map(({ formattedValue, offset }) => (
+      {yTicks.map(({ value, offset }) => (
         <GridLine
-          key={`horizontal-${formattedValue}`}
+          key={`horizontal-${value}`}
           y1={offset}
           y2={offset}
           x1={drawingArea.left}
