@@ -210,6 +210,17 @@ jobs:
               pnpm --filter @mui/x-charts-vendor build
               git add -A && git diff --exit-code --staged
             fi
+      - run:
+          name: 'No dynamic date library import in the Pickers built types?'
+          command: |
+            pnpm --filter @mui/x-date-pickers* prebuild
+            pnpm --filter @mui/x-date-pickers* build:types
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            then
+                exit 1
+            else
+                exit 0
+            fi
 
   test_browser:
     <<: *default-job

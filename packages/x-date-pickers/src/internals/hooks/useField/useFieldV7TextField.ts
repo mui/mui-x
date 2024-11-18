@@ -11,7 +11,7 @@ import {
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils } from '../useUtils';
 
 export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
@@ -44,7 +44,7 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
 
   const sectionListRef = React.useRef<PickersSectionListRef>(null);
   const handleSectionListRef = useForkRef(inSectionListRef, sectionListRef);
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const utils = useUtils();
   const id = useId();
 

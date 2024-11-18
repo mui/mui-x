@@ -567,6 +567,7 @@ export const GridRootStyles = styled('div', {
       lineHeight: 'inherit',
     },
     [`& .${c.cellEmpty}`]: {
+      flex: 1,
       padding: 0,
       height: 'unset',
     },

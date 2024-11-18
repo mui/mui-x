@@ -3,13 +3,12 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
-import { usePickersPrivateContext } from '../internals/hooks/usePickersPrivateContext';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -19,7 +18,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
-  ownerState: PickersLayoutOwnerState,
+  ownerState: PickerLayoutOwnerState,
 ) => {
   const { isLandscape } = ownerState;
   const slots = {
@@ -35,23 +34,16 @@ const useUtilityClasses = (
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersLayoutProps<TValue, TDate, TView> {
+interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersLayoutProps<TValue, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
-const usePickerLayout = <
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView>,
+const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState: pickersOwnerState } = usePickersPrivateContext();
+  const { ownerState: pickersOwnerState } = usePickerPrivateContext();
 
   const {
     wrapperVariant,
@@ -75,11 +67,11 @@ const usePickerLayout = <
     classes: classesProp,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
-    // - For pickers value: TDate | null
-    // - For range pickers value: [TDate | null, TDate | null]
-  } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
+    // - For pickers value: PickerValidDate | null
+    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
+  } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
 
-  const ownerState: PickersLayoutOwnerState = {
+  const ownerState: PickerLayoutOwnerState = {
     ...pickersOwnerState,
     wrapperVariant,
     isLandscape,

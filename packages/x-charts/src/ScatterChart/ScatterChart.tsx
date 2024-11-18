@@ -9,10 +9,7 @@ import {
   ScatterPlotSlotProps,
   ScatterPlotSlots,
 } from './ScatterPlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import {
@@ -52,7 +49,7 @@ export interface ScatterChartSlotProps
     ChartsOverlaySlotProps {}
 
 export interface ScatterChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins'>,
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -70,7 +67,7 @@ export interface ScatterChartProps
   tooltip?: ChartsTooltipProps<'scatter'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -83,6 +80,10 @@ export interface ScatterChartProps
    * @default false
    */
   disableVoronoi?: boolean;
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -111,7 +112,10 @@ export interface ScatterChartProps
  *
  * - [ScatterChart API](https://mui.com/x/api/charts/scatter-chart/)
  */
-const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChartProps, ref) {
+const ScatterChart = React.forwardRef(function ScatterChart(
+  inProps: ScatterChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChart' });
   const {
     chartContainerProps,
@@ -127,7 +131,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
     children,
   } = useScatterChartProps(props);
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
@@ -137,12 +141,12 @@ const ScatterChart = React.forwardRef(function ScatterChart(inProps: ScatterChar
           <ScatterPlot {...scatterPlotProps} />
         </g>
         <ChartsOverlay {...overlayProps} />
-        <ChartsLegend {...legendProps} />
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <ChartsTooltip {...tooltipProps} />}
         {children}
       </ZAxisContextProvider>
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
@@ -153,7 +157,7 @@ ScatterChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -200,6 +204,10 @@ ScatterChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -357,6 +365,7 @@ ScatterChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -432,6 +441,7 @@ ScatterChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

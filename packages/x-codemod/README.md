@@ -62,7 +62,7 @@ npx @mui/x-codemod@next <transform> <path> --jscodeshift="--printOptions='{\"quo
 
 A combination of all important transformers for migrating v7 to v8.
 ⚠️ This codemod should be run only once.
-It runs codemods for both Data Grid and Date and Time Pickers packages.
+It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
 ```bash
@@ -72,6 +72,7 @@ npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
 The corresponding sub-sections are listed below
 
 - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v800)
+- [`preset-safe-for-charts`](#preset-safe-for-charts-v800)
 
 ### Tree View codemods
 
@@ -85,7 +86,28 @@ npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
 - [`rename-tree-item-2`](#rename-tree-item-2)
+
+#### `rename-tree-view-simple-tree-view`
+
+Renames the Tree View component to Simple Tree View
+
+```diff
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
+
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+
+   return (
+-    <TreeView>
++    <SimpleTreeView>
+       <TreeItem itemId="1" label="First item" />
+-    </TreeView>
++    </SimpleTreeView>
+   );
+```
 
 #### `rename-tree-item-2`
 
@@ -98,6 +120,59 @@ Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or u
 -import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
 +import { TreeItem } from '@mui/x-tree-view/TreeItem';
 ```
+
+### Charts codemods
+
+#### `preset-safe` for charts v8.0.0
+
+The `preset-safe` codemods for charts.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
+- [`rename-responsive-chart-container`](#rename-responsive-chart-container)
+
+#### `rename-legend-to-slots-legend`
+
+Renames legend props to the corresponding slotProps.
+
+```diff
+  <LineChart
+-   legend={{ hiden: true}}
++   slotProps={{ legend: { hiden: true} }}
+  />
+```
+
+#### `rename-responsive-chart-container`
+
+Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
+
+```diff
+- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+
+- <ResponsiveChartContainer>
++ <ChartContainer>
+   <BarPlot />
+- </ResponsiveChartContainer>
++ </ChartContainer>
+```
+
+:::warning
+If you imported both `ResponsiveChartContainer` and `ChartContainer` in the same file, you might end up with duplicated import.
+Verify the git diff to remove the duplicate.
+
+```diff
+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+```
+
+:::
 
 ## v7.0.0
 
@@ -280,7 +355,7 @@ npx @mui/x-codemod@latest v7.0.0/tree-view/preset-safe <path|folder>
 
 The list includes these transformers
 
-- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view)
+- [`rename-tree-view-simple-tree-view`](#rename-tree-view-simple-tree-view-1)
 - [`rename-use-tree-item`](#rename-use-tree-item)
 - [`rename-expansion-props`](#rename-expansion-props)
 - [`rename-selection-props`](#rename-selection-props)

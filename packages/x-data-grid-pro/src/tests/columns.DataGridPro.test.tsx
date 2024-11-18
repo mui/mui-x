@@ -13,7 +13,7 @@ import {
   GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
-import { getColumnHeaderCell, getCell, microtasks } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell, microtasks, getRow } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -235,6 +235,79 @@ describe('<DataGridPro /> - Columns', () => {
       expect(nonPinnedCell.getBoundingClientRect().width).to.equal(150);
       expect(topPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
       expect(bottomPinnedRowCell?.getBoundingClientRect().width).to.equal(150);
+    });
+
+    // https://github.com/mui/mui-x/issues/12852
+    it('should work with right pinned column', () => {
+      render(
+        <Test
+          columns={[
+            { field: 'id', width: 100 },
+            { field: 'brand', width: 100 },
+          ]}
+          initialState={{ pinnedColumns: { right: ['brand'] } }}
+        />,
+      );
+
+      const pinnedHeaderCell = getColumnHeaderCell(1);
+      const pinnedCell = getCell(1, 1);
+      const pinnedSeparator = pinnedHeaderCell.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      )!;
+      const pinnedRightPosition = pinnedHeaderCell.getBoundingClientRect().right;
+
+      // resize right pinned column to the right
+      fireEvent.mouseDown(pinnedSeparator, { clientX: 100 });
+      fireEvent.mouseMove(pinnedSeparator, { clientX: 150, buttons: 1 });
+
+      // check that the right pinned column has shrunk and is in the same position
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // release the mouse and check that the right pinned column is still in the same position
+      fireEvent.mouseUp(pinnedSeparator);
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(50);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // resize the right pinned column to the left
+      fireEvent.mouseDown(pinnedSeparator, { clientX: 150 });
+      fireEvent.mouseMove(pinnedSeparator, { clientX: 50, buttons: 1 });
+
+      // check that the right pinned column has grown and is in the same position
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+
+      // release the mouse and check that the right pinned column is still in the same position
+      fireEvent.mouseUp(pinnedSeparator);
+      expect(pinnedHeaderCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedCell.getBoundingClientRect().width).to.equal(150);
+      expect(pinnedHeaderCell.getBoundingClientRect().right).to.equal(pinnedRightPosition);
+    });
+
+    // https://github.com/mui/mui-x/issues/13548
+    it('should fill remaining horizontal space in a row with an empty cell', () => {
+      render(<Test columns={[{ field: 'id', width: 100 }]} />);
+
+      const row = getRow(0);
+      const rowWidth = row.getBoundingClientRect().width;
+      const headerCell = getColumnHeaderCell(0);
+      const separator = headerCell.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const emptyCell = row.querySelector(`.${gridClasses.cellEmpty}`)!;
+
+      // check that empty cell takes up the remaining width in a row
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 100);
+
+      // check that empty cell takes up the remaining width when the column is resized
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
+
+      // release the mouse and check that the empty cell still takes up the remaining width
+      fireEvent.mouseUp(separator);
+      expect(emptyCell.getBoundingClientRect().width).to.equal(rowWidth - 50);
     });
 
     describe('flex resizing', () => {

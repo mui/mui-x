@@ -17,19 +17,23 @@ export type PickerValidDate = keyof PickerValidDateLookup extends never
 
 export interface PickerOwnerState {
   /**
-   * `true` if the value is currently empty.
+   * `true` if the value of the picker is currently empty.
+   * Is always `false` if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   isPickerValueEmpty: boolean;
   /**
    * `true` if the picker is open, `false` otherwise.
+   * Is always `false` if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   isPickerOpen: boolean;
   /**
    * `true` if the picker is disabled, `false` otherwise.
+   * Is always `false` if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   isPickerDisabled: boolean;
   /**
    * `true` if the picker is read-only, `false` otherwise.
+   * Is always `false` if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   isPickerReadOnly: boolean;
 }
