@@ -358,12 +358,12 @@ workflows:
 
   additional-tests:
     when:
-      all:
-        equal: [additional, << pipeline.parameters.workflow >>]
-        or:
-          equal: [true, << pipeline.parameters.with-material-ui-6 >>]
-          not:
-            equal: ['', << pipeline.parameters.with-react-version >>]
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - or:
+            - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+            - not:
+                equal: ['', << pipeline.parameters.with-react-version >>]
     jobs:
       - test_unit:
           <<: *default-context
@@ -384,7 +384,7 @@ workflows:
 
   additional-checks:
     when:
-      all:
+      and:
         - equal: [additional, << pipeline.parameters.workflow >>]
         - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
     jobs:
