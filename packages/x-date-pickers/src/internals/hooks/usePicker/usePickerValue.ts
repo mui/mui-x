@@ -172,6 +172,7 @@ export const usePickerValue = <
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
   const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
+  const [previousTimezone, setPreviousTimezone] = React.useState(timezoneProp);
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
@@ -240,18 +241,22 @@ export const usePickerValue = <
     };
   });
 
-  React.useEffect(() => {
-    if (!inValueWithTimezoneToRender) {
-      return;
-    }
-    const newTimezone = valueManager.getTimezone(utils, inValueWithTimezoneToRender);
-    if (valueManager.getTimezone(utils, dateState.draft) !== newTimezone) {
-      setDateState((prev) => ({
-        ...prev,
-        draft: valueManager.setTimezone(utils, newTimezone ?? 'default', prev.draft),
-      }));
-    }
-  }, [inValueWithTimezoneToRender]); // eslint-disable-line react-hooks/exhaustive-deps
+  const draftTimezone = valueManager.getTimezone(utils, dateState.draft);
+  if (
+    timezoneProp &&
+    dateState.draft &&
+    draftTimezone !== timezoneProp &&
+    previousTimezone !== timezoneProp
+  ) {
+    setDateState((prev) => ({
+      ...prev,
+      draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
+    }));
+  }
+
+  if (previousTimezone !== timezoneProp) {
+    setPreviousTimezone(timezoneProp);
+  }
 
   const { getValidationErrorForNewValue } = useValidation({
     props,
