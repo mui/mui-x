@@ -64,7 +64,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
-  [x: string]: any; // Allow custom attributes like data-* and aria-*
+  [x: `data-${string}`]: string;
 }
 
 function EmptyCell({ width }: { width: number }) {
@@ -109,7 +109,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isLastVisible,
     isNotVisible,
     showBottomBorder,
-    focusedCell,
     tabbableCell,
     onClick,
     onDoubleClick,

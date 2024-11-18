@@ -212,6 +212,10 @@ function AppWrapper(props) {
       name: 'MUI X',
       versions: [
         {
+          text: `next`,
+          href: `https://next.mui.com${languagePrefix}/x/introduction/`,
+        },
+        {
           text: `v${process.env.LIB_VERSION}`,
           current: true,
         },
@@ -227,6 +231,10 @@ function AppWrapper(props) {
         name: 'Data Grid',
         versions: [
           {
+            text: `next`,
+            href: `https://next.mui.com${languagePrefix}/x/react-data-grid/`,
+          },
+          {
             text: `v${process.env.DATA_GRID_VERSION}`,
             current: true,
           },
@@ -240,6 +248,10 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
+          {
+            text: `next`,
+            href: `https://next.mui.com${languagePrefix}/x/react-date-pickers/`,
+          },
           {
             text: `v${process.env.DATE_PICKERS_VERSION}`,
             current: true,
@@ -260,6 +272,10 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [
           {
+            text: `next`,
+            href: `https://next.mui.com${languagePrefix}/x/react-charts/`,
+          },
+          {
             text: `v${process.env.CHARTS_VERSION}`,
             current: true,
           },
@@ -271,6 +287,10 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
+          {
+            text: `next`,
+            href: `https://next.mui.com${languagePrefix}/x/react-tree-view/`,
+          },
           {
             text: `v${process.env.TREE_VIEW_VERSION}`,
             current: true,
