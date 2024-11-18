@@ -1266,6 +1266,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGrid-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGrid-container--bottom",
       "description": "Styles applied to the bottom container.",
