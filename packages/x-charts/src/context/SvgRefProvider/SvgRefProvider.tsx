@@ -5,9 +5,9 @@ import { SvgRefProviderProps } from './SvgRef.types';
 import { SvgRefContext } from './SvgRefContext';
 
 export function SvgRefProvider(props: SvgRefProviderProps) {
-  const { svgRef: inRef, children } = props;
+  const { children } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
-  const surfaceRef = useForkRef(inRef, svgRef);
+  const surfaceRef = useForkRef(svgRef);
 
   const refValue = React.useMemo(
     () => ({ isInitialized: true, data: { svgRef, surfaceRef } }),

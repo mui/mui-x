@@ -112,5 +112,15 @@ export const useChartContainerDimensions = (
     }
   }
 
-  return { containerRef: rootRef, width: inWidth ?? width, height: inHeight ?? height };
+  const finalWidth = inWidth ?? width;
+  const finalHeight = inHeight ?? height;
+
+  return {
+    containerRef: rootRef,
+    width: finalWidth,
+    height: finalHeight,
+    hasIntrinsicSize: Boolean(finalWidth && finalHeight),
+    inWidth,
+    inHeight,
+  };
 };

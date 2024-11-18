@@ -1,9 +1,5 @@
 {
-  "props": {
-    "height": { "type": { "name": "number" }, "required": true },
-    "width": { "type": { "name": "number" }, "required": true },
-    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" }
-  },
+  "props": { "disableAxisListener": { "type": { "name": "bool" }, "default": "false" } },
   "name": "ChartsSurface",
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",

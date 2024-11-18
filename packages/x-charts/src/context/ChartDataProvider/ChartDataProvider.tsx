@@ -5,25 +5,20 @@ import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
 import { InteractionProvider } from '../InteractionProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../../ChartsSurface';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
-import { ChartsAxesGradients } from '../../internals/components/ChartsAxesGradients';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '..';
 import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
+import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
+import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
+import { SizeProvider, SizeProviderProps } from '../SizeProvider';
 import { SvgRefProvider } from '../SvgRefProvider';
 
 export type ChartDataProviderProps = Omit<
-  ChartsSurfaceProps &
+  SizeProviderProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
-    Omit<DrawingAreaProviderProps, 'svgRef'> &
+    Pick<DrawingAreaProviderProps, 'margin'> &
     Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
@@ -46,10 +41,7 @@ export type ChartDataProviderProps = Omit<
   children?: React.ReactNode;
 };
 
-const ChartDataProvider = React.forwardRef(function ChartDataProvider(
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
     drawingAreaProviderProps,
@@ -57,15 +49,14 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
-    svgRefProviderProps,
-  } = useChartDataProviderProps(props, ref);
+    sizeProviderProps,
+  } = useChartDataProviderProps(props);
 
   return (
-    <DrawingAreaProvider {...drawingAreaProviderProps}>
-      <SvgRefProvider {...svgRefProviderProps}>
+    <SizeProvider {...sizeProviderProps}>
+      <DrawingAreaProvider {...drawingAreaProviderProps}>
         <PluginProvider {...pluginProviderProps}>
           <SeriesProvider {...seriesProviderProps}>
             <CartesianProvider {...cartesianProviderProps}>
@@ -73,10 +64,7 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
                     <AnimationProvider {...animationProviderProps}>
-                      <ChartsSurface {...chartsSurfaceProps}>
-                        <ChartsAxesGradients />
-                        {children}
-                      </ChartsSurface>
+                      <SvgRefProvider>{children}</SvgRefProvider>
                     </AnimationProvider>
                   </HighlightedProvider>
                 </InteractionProvider>
@@ -84,10 +72,10 @@ const ChartDataProvider = React.forwardRef(function ChartDataProvider(
             </CartesianProvider>
           </SeriesProvider>
         </PluginProvider>
-      </SvgRefProvider>
-    </DrawingAreaProvider>
+      </DrawingAreaProvider>
+    </SizeProvider>
   );
-});
+}
 
 ChartDataProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -95,7 +83,6 @@ ChartDataProvider.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
    * @default blueberryTwilightPalette
@@ -105,17 +92,10 @@ ChartDataProvider.propTypes = {
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
-  desc: PropTypes.string,
   /**
-   * If `true`, the charts will not listen to the mouse move event.
-   * It might break interactive features, but will improve performance.
-   * @default false
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
-  disableAxisListener: PropTypes.bool,
-  /**
-   * The height of the chart in px.
-   */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -147,6 +127,16 @@ ChartDataProvider.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -157,22 +147,10 @@ ChartDataProvider.propTypes = {
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
    */
   skipAnimation: PropTypes.bool,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-  title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
-   * The width of the chart in px.
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.

@@ -1,15 +1,14 @@
 'use client';
+import * as React from 'react';
+import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { useChartContainerDimensions } from './useChartContainerDimensions';
 
 export type UseChartContainerPropsReturnValue = {
-  hasIntrinsicSize: boolean;
   chartDataProviderProps: ChartDataProviderProps;
-  resizableChartContainerProps: {
-    ownerState: { width: ChartContainerProps['width']; height: ChartContainerProps['height'] };
-    ref: React.Ref<HTMLDivElement>;
-  };
+  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
+  resizableContainerProps: any;
+  children: React.ReactNode;
 };
 
 export const useChartContainerProps = (
@@ -19,7 +18,6 @@ export const useChartContainerProps = (
   const {
     width,
     height,
-    resolveSizeBeforeRender,
     margin,
     children,
     series,
@@ -32,7 +30,6 @@ export const useChartContainerProps = (
     plugins,
     sx,
     title,
-    viewBox,
     xAxis,
     yAxis,
     zAxis,
@@ -40,44 +37,36 @@ export const useChartContainerProps = (
     ...other
   } = props;
 
-  const {
-    containerRef,
-    width: dWidth,
-    height: dHeight,
-  } = useChartContainerDimensions(width, height, resolveSizeBeforeRender);
+  const resizableContainerProps = other;
 
-  const resizableChartContainerProps = {
-    ...other,
-    ownerState: { width, height },
-    ref: containerRef,
+  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
+    title,
+    desc,
+    sx,
+    disableAxisListener,
+    ref,
   };
 
-  const chartDataProviderProps = {
+  const chartDataProviderProps: ChartDataProviderProps = {
     margin,
-    children,
     series,
     colors,
     dataset,
-    desc,
-    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     plugins,
-    sx,
-    title,
-    viewBox,
     xAxis,
     yAxis,
     zAxis,
     skipAnimation,
-    width: dWidth,
-    height: dHeight,
-    ref,
+    width,
+    height,
   };
 
   return {
-    hasIntrinsicSize: Boolean(dWidth && dHeight),
     chartDataProviderProps,
-    resizableChartContainerProps,
+    resizableContainerProps,
+    chartsSurfaceProps,
+    children,
   };
 };

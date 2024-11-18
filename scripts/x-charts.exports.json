@@ -53,6 +53,8 @@
   { "name": "CartesianSeriesType", "kind": "TypeAlias" },
   { "name": "ChartContainer", "kind": "Variable" },
   { "name": "ChartContainerProps", "kind": "Interface" },
+  { "name": "ChartDataProvider", "kind": "Function" },
+  { "name": "ChartDataProviderProps", "kind": "TypeAlias" },
   { "name": "ChartsAxis", "kind": "Function" },
   { "name": "ChartsAxisClasses", "kind": "Interface" },
   { "name": "ChartsAxisClassKey", "kind": "TypeAlias" },
