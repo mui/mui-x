@@ -76,21 +76,21 @@ export const useMultiInputDateTimeRangeField = <
   const buildChangeHandler = (
     index: 0 | 1,
   ): FieldChangeHandler<PickerValue, DateTimeValidationError> => {
-    return (newDateTime, rawContext) => {
-      const newDateTimeRange: PickerRangeValue =
-        index === 0 ? [newDateTime, value[1]] : [value[0], newDateTime];
+    return (newDate, rawContext) => {
+      const newDateRange: PickerRangeValue =
+        index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<DateTimeRangeValidationError> = {
         ...rawContext,
-        validationError: getValidationErrorForNewValue(newDateTimeRange),
+        validationError: getValidationErrorForNewValue(newDateRange),
       };
 
-      handleValueChange(newDateTimeRange, context);
+      handleValueChange(newDateRange, context);
     };
   };
 
-  const handleStartDateTimeChange = useEventCallback(buildChangeHandler(0));
-  const handleEndDateTimeChange = useEventCallback(buildChangeHandler(1));
+  const handleStartDateChange = useEventCallback(buildChangeHandler(0));
+  const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
   const selectedSectionsResponse = useMultiInputFieldSelectedSections({
     selectedSections,
@@ -111,7 +111,7 @@ export const useMultiInputDateTimeRangeField = <
     timezone,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
-    onChange: handleStartDateTimeChange,
+    onChange: handleStartDateChange,
     enableAccessibleFieldDOMStructure,
     autoFocus, // Do not add on end field.
   };
@@ -128,23 +128,23 @@ export const useMultiInputDateTimeRangeField = <
     timezone,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
-    onChange: handleEndDateTimeChange,
+    onChange: handleEndDateChange,
     enableAccessibleFieldDOMStructure,
   };
 
-  const startDateTimeResponse = useDateTimeField<
+  const startDateResponse = useDateTimeField<
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
   >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  const endDateTimeResponse = useDateTimeField<
+  const endDateResponse = useDateTimeField<
     TEnableAccessibleFieldDOMStructure,
     typeof endFieldProps
   >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeProps(startDateTimeResponse, ['clearable', 'onClear']),
-    endDate: excludeProps(endDateTimeResponse, ['clearable', 'onClear']),
+    startDate: excludeProps(startDateResponse, ['clearable', 'onClear']),
+    endDate: excludeProps(endDateResponse, ['clearable', 'onClear']),
   };
 };
