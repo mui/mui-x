@@ -18,7 +18,6 @@ export const useChartContainerProps = (
   const {
     width,
     height,
-    resolveSizeBeforeRender,
     margin,
     children,
     series,
