@@ -226,6 +226,46 @@ All the new Tree Item-related components and utils (introduced in the previous m
 + } from '@mui/x-tree-view/TreeItemLabelInput';
 ```
 
+## Stop using `publicAPI` methods in the render
+
+The Tree Items are now memoized to improve the performances of the Tree View components.
+If you call a `publicAPI` method in the render of an item, it might not re-render and you might not have the new value.
+
+```ts
+function CustomTreeItem(props) {
+  const { publicAPI } = useTreeItemUtils();
+
+  // Invalid
+  console.log(publicAPI.getItem(props.itemId));
+
+  // Valid
+  React.useEffect(() => {
+    console.log(publicAPI.getItem(props.itemId));
+  });
+
+  // Valid
+  function handleItemClick() {
+    console.log(publicAPI.getItem(props.itemId));
+  }
+}
+```
+
+If you need to access the tree item model inside the render, you can use the new `useTreeItemModel` hook:
+
+```diff
++import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+
+ function CustomTreeItem(props) {
+-  const { publicAPI } = useTreeItemUtils();
+-  const item = publicAPI.getItem(props.itemId);
++  const item = useTreeItemModel(props.itemId);
+ }
+```
+
+:::success
+If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
+:::
+
 ## Apply the indentation on the item content instead of it's parent's group
 
 The indentation of nested Tree Items is now applied on the content of the element.

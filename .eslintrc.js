@@ -136,6 +136,7 @@ module.exports = {
     ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo, codebase is moving away from default exports https://github.com/mui/material-ui/issues/21862
     'import/prefer-default-export': 'off',
+    'import/no-relative-packages': 'error',
     'import/no-restricted-paths': [
       'error',
       {

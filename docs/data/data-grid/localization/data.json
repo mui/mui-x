@@ -35,8 +35,8 @@
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
-    "missingKeysCount": 5,
-    "totalKeysCount": 123,
+    "missingKeysCount": 0,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/zhCN.ts"
   },
   {
@@ -235,16 +235,16 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 5,
-    "totalKeysCount": 123,
+    "missingKeysCount": 0,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/esES.ts"
   },
   {
     "languageTag": "sv-SE",
     "importName": "svSE",
     "localeName": "Swedish",
-    "missingKeysCount": 6,
-    "totalKeysCount": 123,
+    "missingKeysCount": 0,
+    "totalKeysCount": 122,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/svSE.ts"
   },
   {
