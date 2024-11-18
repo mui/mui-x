@@ -368,6 +368,10 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     if (rowSpan > 1) {
       cellStyle.height = `calc(var(--height) * ${rowSpan})`;
       cellStyle.zIndex = 5;
+
+      if (isLeftPinned || isRightPinned) {
+        cellStyle.zIndex = 6;
+      }
     }
 
     return cellStyle;
