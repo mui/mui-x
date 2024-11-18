@@ -8,7 +8,20 @@ import type { PickerValueType } from './common';
 /**
  * Object that contains all the necessary methods and properties to adapter a picker or a field for a given value type.
  * You should never create your own manager.
- * Instead, use the ones provided exported from '@mui/x-date-pickers/managers' and '@mui/x-date-pickers-pro/managers'.
+ * Instead, use the hooks exported from '@mui/x-date-pickers/managers' and '@mui/x-date-pickers-pro/managers'.
+ *
+ * ```tsx
+ * import { useDateManager } from '@mui/x-date-pickers/managers';
+ * import { useValidation } from '@mui/x-date-pickers/validation';
+ *
+ * const manager = useDateManager();
+ * const { hasValidationError } = useValidation({
+ *   validator: manager.validator,
+ *   value,
+ *   timezone,
+ *   props,
+ * });
+ * ```
  */
 export interface PickerManager<
   TValue extends PickerValidValue,
