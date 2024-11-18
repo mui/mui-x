@@ -6,6 +6,7 @@ import { SizeContextState } from './Size.types';
 export const SizeContext = React.createContext<Initializable<SizeContextState>>({
   isInitialized: false,
   data: {
+    hasIntrinsicSize: false,
     containerRef: null as any,
     height: 0,
     width: 0,
