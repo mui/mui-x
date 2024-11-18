@@ -398,8 +398,7 @@ const SearchInput = styled(TextField, {
   overridesResolver: (props, styles) => styles.columnsManagementSearchInput,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${inputBaseClasses.root}`]: {
-    paddingLeft: theme.spacing(1.5),
-    paddingRight: 0,
+    padding: theme.spacing(0, 1.5, 0, 1.5),
   },
   [`& .${inputBaseClasses.input}::-webkit-search-decoration,
   & .${inputBaseClasses.input}::-webkit-search-cancel-button,
