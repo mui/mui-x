@@ -29,4 +29,4 @@ export * from './dateRangeViewRenderers';
 
 export * from './models';
 export * from './validation';
-export * from './valueManagers';
+export * from './managers';

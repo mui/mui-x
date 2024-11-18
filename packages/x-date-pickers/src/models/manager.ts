@@ -5,13 +5,12 @@ import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/Loca
 import type { Validator } from '../validation';
 import type { PickerValueType } from './common';
 
-// TODO: Rename PickerValueManager when the legacyValueManager object will be inlined.
 /**
- * Object that contains all the necessary methods and properties to control the value of a picker.
- * You should never create your own value manager.
- * Instead, use the ones provided exported from '@mui/x-date-pickers/valueManagers' and '@mui/x-date-pickers-pro/valueManagers'.
+ * Object that contains all the necessary methods and properties to adapter a picker or a field for a given value type.
+ * You should never create your own manager.
+ * Instead, use the ones provided exported from '@mui/x-date-pickers/managers' and '@mui/x-date-pickers-pro/managers'.
  */
-export interface PickerValueManagerV8<
+export interface PickerManager<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
@@ -24,12 +23,10 @@ export interface PickerValueManagerV8<
 > {
   /**
    * Object containing basic methods to interact with the value of the picker or field.
-   * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
    */
-  legacyValueManager: PickerValueManager<TValue, TError>;
+  valueManager: PickerValueManager<TValue, TError>;
   /**
    * Object containing all the necessary methods to interact with the value of the field.
-   * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
    */
   fieldValueManager: FieldValueManager<TValue>;
   /**

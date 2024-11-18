@@ -2,7 +2,7 @@
 import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseTimeFieldProps } from './TimeField.types';
 import { useSplitFieldProps } from '../hooks';
-import { useTimeValueManager } from '../valueManagers';
+import { useTimeManager } from '../managers';
 import { PickerValue } from '../internals/models';
 
 export const useTimeField = <
@@ -11,10 +11,10 @@ export const useTimeField = <
 >(
   props: TAllProps,
 ) => {
-  const valueManager = useTimeValueManager(props);
+  const manager = useTimeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    valueManager,
+    manager,
     internalProps,
   });
 
@@ -26,9 +26,9 @@ export const useTimeField = <
   >({
     forwardedProps,
     internalProps: internalPropsWithDefaults,
-    valueManager: valueManager.legacyValueManager,
-    fieldValueManager: valueManager.fieldValueManager,
-    validator: valueManager.validator,
-    valueType: valueManager.valueType,
+    valueManager: manager.valueManager,
+    fieldValueManager: manager.fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

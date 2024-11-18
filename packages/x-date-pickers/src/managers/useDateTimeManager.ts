@@ -6,7 +6,7 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerValueManagerV8, DateTimeValidationError } from '../models';
+import { PickerManager, DateTimeValidationError } from '../models';
 import { validateDateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
@@ -18,15 +18,15 @@ import {
 } from '../validation/validateDateTime';
 import { PickerValue } from '../internals/models';
 
-export function useDateTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  parameters: UseDateTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): DateTimeValueManager<TEnableAccessibleFieldDOMStructure> {
+export function useDateTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  parameters: UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
+): DateTimeManager<TEnableAccessibleFieldDOMStructure> {
   const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
     parameters;
 
   return React.useMemo(
     () => ({
-      legacyValueManager: singleItemValueManager,
+      valueManager: singleItemValueManager,
       fieldValueManager: singleItemFieldValueManager,
       validator: validateDateTime,
       valueType: 'date-time',
@@ -42,7 +42,7 @@ export function useDateTimeValueManager<TEnableAccessibleFieldDOMStructure exten
 
 /**
  * Private utility function to get the default internal props for the field with date time editing.
- * Is used by the `useDateTimeValueManager` and `useDateTimeRangeValueManager` hooks.
+ * Is used by the `useDateTimeManager` and `useDateTimeRangeManager` hooks.
  */
 export function getDateTimeFieldInternalPropsDefaults(
   parameters: GetDateTimeFieldInternalPropsDefaultsParameters,
@@ -75,14 +75,13 @@ export function getDateTimeFieldInternalPropsDefaults(
   };
 }
 
-export type DateTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerValueManagerV8<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    DateTimeValidationError,
-    DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    DateTimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
-  >;
+export type DateTimeManager<TEnableAccessibleFieldDOMStructure extends boolean> = PickerManager<
+  PickerValue,
+  TEnableAccessibleFieldDOMStructure,
+  DateTimeValidationError,
+  DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+  DateTimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+>;
 
 export interface DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -112,9 +111,7 @@ type DateTimeFieldPropsToDefault =
   | 'maxTime'
   | ValidateDateTimePropsToDefault;
 
-export interface UseDateTimeValueManagerParameters<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> {
+export interface UseDateTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 

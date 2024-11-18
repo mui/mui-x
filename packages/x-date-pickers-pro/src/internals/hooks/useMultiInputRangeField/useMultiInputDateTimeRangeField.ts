@@ -18,7 +18,7 @@ import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.
 import { DateTimeRangeValidationError } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
-import { useDateTimeRangeValueManager } from '../../../valueManagers';
+import { useDateTimeRangeManager } from '../../../managers';
 
 export const useMultiInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -33,9 +33,9 @@ export const useMultiInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
-  const valueManager = useDateTimeRangeValueManager(sharedProps);
+  const manager = useDateTimeRangeManager(sharedProps);
   const sharedPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    valueManager,
+    manager,
     internalProps: sharedProps,
   });
 

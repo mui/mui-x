@@ -6,7 +6,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
-import { useDateTimeRangeValueManager } from '../valueManagers';
+import { useDateTimeRangeManager } from '../managers';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -14,10 +14,10 @@ export const useSingleInputDateTimeRangeField = <
 >(
   props: TAllProps,
 ) => {
-  const valueManager = useDateTimeRangeValueManager(props);
+  const manager = useDateTimeRangeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    valueManager,
+    manager,
     internalProps,
   });
 
@@ -29,9 +29,9 @@ export const useSingleInputDateTimeRangeField = <
   >({
     forwardedProps,
     internalProps: internalPropsWithDefaults,
-    valueManager: valueManager.legacyValueManager,
-    fieldValueManager: valueManager.fieldValueManager,
-    validator: valueManager.validator,
-    valueType: valueManager.valueType,
+    valueManager: manager.valueManager,
+    fieldValueManager: manager.fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

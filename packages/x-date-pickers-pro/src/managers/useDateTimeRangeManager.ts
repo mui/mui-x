@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
-import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
+import { PickerManager } from '@mui/x-date-pickers/models';
 import {
   AmPmProps,
   PickerRangeValue,
@@ -16,11 +16,9 @@ import {
   ValidateDateTimeRangeProps,
 } from '../validation/validateDateTimeRange';
 
-export function useDateTimeRangeValueManager<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  parameters: UseDateTimeRangeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure> {
+export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  parameters: UseDateTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
+): DateTimeRangeManager<TEnableAccessibleFieldDOMStructure> {
   const {
     enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
     dateSeparator,
@@ -28,7 +26,7 @@ export function useDateTimeRangeValueManager<
 
   return React.useMemo(
     () => ({
-      legacyValueManager: rangeValueManager,
+      valueManager: rangeValueManager,
       fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       validator: validateDateTimeRange,
       valueType: 'date-time',
@@ -42,8 +40,8 @@ export function useDateTimeRangeValueManager<
   );
 }
 
-export type DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerValueManagerV8<
+export type DateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerManager<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError,
@@ -74,7 +72,7 @@ export interface DateTimeRangeFieldInternalPropsWithDefaults<
     ValidateDateTimeRangeProps,
     RangeFieldSeparatorProps {}
 
-export interface UseDateTimeRangeValueManagerParameters<
+export interface UseDateTimeRangeManagerParameters<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends RangeFieldSeparatorProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;

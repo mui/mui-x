@@ -164,6 +164,6 @@ export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { isInternalTimeView, isTimeView } from './utils/time-utils';
 
-export { getDateFieldInternalPropsDefaults } from '../valueManagers/useDateValueManager';
-export { getTimeFieldInternalPropsDefaults } from '../valueManagers/useTimeValueManager';
-export { getDateTimeFieldInternalPropsDefaults } from '../valueManagers/useDateTimeValueManager';
+export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
+export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
+export { getDateTimeFieldInternalPropsDefaults } from '../managers/useDateTimeManager';

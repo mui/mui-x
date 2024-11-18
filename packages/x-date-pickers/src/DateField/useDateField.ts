@@ -2,7 +2,7 @@
 import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
 import { useSplitFieldProps } from '../hooks';
-import { useDateValueManager } from '../valueManagers';
+import { useDateManager } from '../managers';
 import { PickerValue } from '../internals/models';
 
 export const useDateField = <
@@ -11,10 +11,10 @@ export const useDateField = <
 >(
   props: TAllProps,
 ) => {
-  const valueManager = useDateValueManager(props);
+  const manager = useDateManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
   const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    valueManager,
+    manager,
     internalProps,
   });
 
@@ -26,9 +26,9 @@ export const useDateField = <
   >({
     forwardedProps,
     internalProps: internalPropsWithDefaults,
-    valueManager: valueManager.legacyValueManager,
-    fieldValueManager: valueManager.fieldValueManager,
-    validator: valueManager.validator,
-    valueType: valueManager.valueType,
+    valueManager: manager.valueManager,
+    fieldValueManager: manager.fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };

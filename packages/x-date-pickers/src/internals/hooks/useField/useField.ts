@@ -21,7 +21,7 @@ import { useFieldV7TextField } from './useFieldV7TextField';
 import { useFieldV6TextField } from './useFieldV6TextField';
 import {
   PickerValidValue,
-  PickerAnyValueManagerV8,
+  PickerAnyManager,
   PickerManagerFieldInternalProps,
   PickerManagerFieldInternalPropsWithDefaults,
 } from '../../models';
@@ -31,20 +31,20 @@ import {
  * This is a temporary hook that will be removed during a follow up when `useField` will receive the internal props without the defaults.
  * It is only here to allow the migration to be done in smaller steps.
  */
-export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyValueManagerV8>({
-  valueManager,
+export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyManager>({
+  manager,
   internalProps,
 }: {
-  valueManager: TManager;
+  manager: TManager;
   internalProps: PickerManagerFieldInternalProps<TManager>;
 }): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
   const localizationContext = useLocalizationContext();
   return React.useMemo(() => {
-    return valueManager.applyDefaultsToFieldInternalProps({
+    return manager.applyDefaultsToFieldInternalProps({
       ...localizationContext,
       internalProps,
     });
-  }, [valueManager, internalProps, localizationContext]);
+  }, [manager, internalProps, localizationContext]);
 };
 
 export const useField = <

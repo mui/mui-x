@@ -1,9 +1,9 @@
-import type { PickerValueManagerV8 } from '../../models';
+import type { PickerManager } from '../../models';
 
-export type PickerAnyValueManagerV8 = PickerValueManagerV8<any, any, any, any, any>;
+export type PickerAnyManager = PickerManager<any, any, any, any, any>;
 
-type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
-  TManager extends PickerValueManagerV8<
+type PickerManagerProperties<TManager extends PickerAnyManager> =
+  TManager extends PickerManager<
     infer TValue,
     infer TEnableAccessibleFieldDOMStructure,
     infer TError,
@@ -19,8 +19,8 @@ type PickerManagerProperties<TManager extends PickerAnyValueManagerV8> =
       }
     : never;
 
-export type PickerManagerFieldInternalProps<TManager extends PickerAnyValueManagerV8> =
+export type PickerManagerFieldInternalProps<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['fieldInternalProps'];
 
-export type PickerManagerFieldInternalPropsWithDefaults<TManager extends PickerAnyValueManagerV8> =
+export type PickerManagerFieldInternalPropsWithDefaults<TManager extends PickerAnyManager> =
   PickerManagerProperties<TManager>['fieldInternalPropsWithDefaults'];

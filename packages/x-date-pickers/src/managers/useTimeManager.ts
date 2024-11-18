@@ -5,7 +5,7 @@ import {
   singleItemFieldValueManager,
   singleItemValueManager,
 } from '../internals/utils/valueManagers';
-import { PickerValueManagerV8, TimeValidationError } from '../models';
+import { PickerManager, TimeValidationError } from '../models';
 import { validateTime } from '../validation';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
@@ -17,15 +17,15 @@ import {
 } from '../validation/validateTime';
 import { PickerValue } from '../internals/models';
 
-export function useTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  parameters: UseTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): TimeValueManager<TEnableAccessibleFieldDOMStructure> {
+export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
+): TimeManager<TEnableAccessibleFieldDOMStructure> {
   const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
     parameters;
 
   return React.useMemo(
     () => ({
-      legacyValueManager: singleItemValueManager,
+      valueManager: singleItemValueManager,
       fieldValueManager: singleItemFieldValueManager,
       validator: validateTime,
       valueType: 'time',
@@ -41,7 +41,7 @@ export function useTimeValueManager<TEnableAccessibleFieldDOMStructure extends b
 
 /**
  * Private utility function to get the default internal props for the fields with time editing.
- * Is used by the `useTimeValueManager` and `useTimeRangeValueManager` hooks.
+ * Is used by the `useTimeManager` and `useTimeRangeManager` hooks.
  */
 export function getTimeFieldInternalPropsDefaults(
   parameters: GetTimeFieldInternalPropsDefaultsParameters,
@@ -57,14 +57,13 @@ export function getTimeFieldInternalPropsDefaults(
   };
 }
 
-export type TimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerValueManagerV8<
-    PickerValue,
-    TEnableAccessibleFieldDOMStructure,
-    TimeValidationError,
-    TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-    TimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
-  >;
+export type TimeManager<TEnableAccessibleFieldDOMStructure extends boolean> = PickerManager<
+  PickerValue,
+  TEnableAccessibleFieldDOMStructure,
+  TimeValidationError,
+  TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+  TimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+>;
 
 export interface TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -85,7 +84,7 @@ export interface TimeFieldInternalPropsWithDefaults<
 
 type TimeFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
 
-export interface UseTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
+export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 

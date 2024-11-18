@@ -56,4 +56,4 @@ export * from './models';
 export * from './icons';
 export * from './hooks';
 export * from './validation';
-export * from './valueManagers';
+export * from './managers';
