@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { warnOnce } from '@mui/x-internals/warning';
 import { animated, useSpring } from '@react-spring/web';
-import { InteractionContext } from '../context/InteractionProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../context';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { useSelector } from '../internals/useSelector';
+import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
+import { useStore } from '../internals/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
@@ -66,13 +68,14 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
-  const { axis } = React.useContext(InteractionContext);
+  const store = useStore();
+  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
   const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
     isFaded,
     color,
   };

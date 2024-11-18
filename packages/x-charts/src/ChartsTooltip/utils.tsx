@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
+import { AxisInteractionData, ItemInteractionData } from '../internals/plugins/models';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 

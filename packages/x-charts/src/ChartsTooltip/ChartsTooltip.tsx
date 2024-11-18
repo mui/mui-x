@@ -7,17 +7,19 @@ import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  AxisInteractionData,
-  InteractionContext,
-  ItemInteractionData,
-} from '../context/InteractionProvider';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { getTooltipHasData, TriggerOptions, usePointerType } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
+import {
+  selectorChartsInteractionItem,
+  selectorChartsInteractionAxis,
+} from '../context/InteractionSelectors';
+import { ItemInteractionData, AxisInteractionData } from '../internals/plugins/models';
+import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 
 export type PopperProps = BasePopperProps & {
   /**
@@ -137,7 +139,9 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
 
   const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
 
-  const { item, axis } = React.useContext(InteractionContext);
+  const store = useStore();
+  const item = useSelector(store, selectorChartsInteractionItem);
+  const axis = useSelector(store, selectorChartsInteractionAxis);
 
   const displayedData = trigger === 'item' ? item : axis;
 

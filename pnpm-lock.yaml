@@ -769,6 +769,12 @@ importers:
       react-dom:
         specifier: ^17.0.0 || ^18.0.0
         version: 18.3.1(react@18.3.1)
+      reselect:
+        specifier: ^5.1.1
+        version: 5.1.1
+      use-sync-external-store:
+        specifier: ^1.0.0
+        version: 1.2.2(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.20
@@ -788,6 +794,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.13
         version: 15.7.13
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
