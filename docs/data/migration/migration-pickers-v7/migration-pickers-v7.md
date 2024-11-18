@@ -302,7 +302,7 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
 
 ## Typing breaking changes
 
-### Remove `TDate` generic
+### Remove `TDate` and `TSection` generics
 
 The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
@@ -319,7 +319,17 @@ If you were passing your date object type as a generic to any element of one of 
 +type Props = DatePickerToolbarProps;
 ```
 
-A follow-up release will add the full list of the impacted elements to the migration guide.
+If you were passing `FieldSection` or `RangeFieldSection` as a generic to any element of one of those packages, you can remove it:
+
+:::success
+In the `FieldRef` type, `TSection` was the only generic and has been replaced by `TValue` instead of being removed:
+
+```diff
+-const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
++const fieldRef = React.useRef<Dayjs | null>(null);
+```
+
+:::
 
 ### Removed types
 
