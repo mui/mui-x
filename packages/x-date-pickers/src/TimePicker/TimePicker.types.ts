@@ -1,23 +1,16 @@
-import { MakeRequired } from '@mui/x-internals/types';
 import {
   DesktopTimePickerProps,
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
-import { TimeViewWithMeridiem } from '../internals/models';
-import { BaseTimeValidationProps } from '../internals/models/validation';
+import { BaseSingleInputFieldProps, TimeViewWithMeridiem } from '../internals/models';
 import {
   MobileTimePickerProps,
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  PickerValidDate,
-  TimeValidationError,
-} from '../models';
-import { UseTimeFieldProps } from '../TimeField';
+import { FieldSection, PickerValidDate, TimeValidationError } from '../models';
+import { ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots
   extends DesktopTimePickerSlots,
@@ -49,12 +42,13 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 }
 
 /**
- * Props the field can receive when used inside a time picker.
- * (`TimePicker`, `DesktopTimePicker` or `MobileTimePicker` component).
+ * Props the field can receive when used inside a time picker (<TimePicker />, <DesktopTimePicker /> or <MobileTimePicker /> component).
  */
 export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  MakeRequired<
-    UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'timezone' | 'value' | 'ampm' | keyof BaseTimeValidationProps
-  > &
-    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, TimeValidationError>;
+  ValidateTimeProps &
+    BaseSingleInputFieldProps<
+      PickerValidDate | null,
+      FieldSection,
+      TEnableAccessibleFieldDOMStructure,
+      TimeValidationError
+    >;

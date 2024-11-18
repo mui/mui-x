@@ -5,12 +5,13 @@ import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import { useChartContainerDimensions } from '../ChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
+import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
+import { SvgRefProvider } from '../context/SvgRefProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Omit<DrawingProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
+    Omit<DrawingAreaProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
     Omit<GaugeProviderProps, 'children'> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
@@ -45,7 +46,10 @@ const ResizableContainer = styled('div', {
   },
 }));
 
-const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeContainerProps, ref) {
+const GaugeContainer = React.forwardRef(function GaugeContainer(
+  props: GaugeContainerProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const {
     width: inWidth,
     height: inHeight,
@@ -81,37 +85,38 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(props: GaugeCont
       {...other}
     >
       {width && height ? (
-        <DrawingProvider
-          width={width}
-          height={height}
-          margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
-          svgRef={svgRef}
-        >
-          <GaugeProvider
-            value={value}
-            valueMin={valueMin}
-            valueMax={valueMax}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            outerRadius={outerRadius}
-            innerRadius={innerRadius}
-            cornerRadius={cornerRadius}
-            cx={cx}
-            cy={cy}
+        <SvgRefProvider svgRef={svgRef}>
+          <DrawingAreaProvider
+            width={width}
+            height={height}
+            margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
           >
-            <ChartsSurface
-              width={width}
-              height={height}
-              ref={chartSurfaceRef}
-              title={title}
-              desc={desc}
-              disableAxisListener
-              aria-hidden="true"
+            <GaugeProvider
+              value={value}
+              valueMin={valueMin}
+              valueMax={valueMax}
+              startAngle={startAngle}
+              endAngle={endAngle}
+              outerRadius={outerRadius}
+              innerRadius={innerRadius}
+              cornerRadius={cornerRadius}
+              cx={cx}
+              cy={cy}
             >
-              {children}
-            </ChartsSurface>
-          </GaugeProvider>
-        </DrawingProvider>
+              <ChartsSurface
+                width={width}
+                height={height}
+                ref={chartSurfaceRef}
+                title={title}
+                desc={desc}
+                disableAxisListener
+                aria-hidden="true"
+              >
+                {children}
+              </ChartsSurface>
+            </GaugeProvider>
+          </DrawingAreaProvider>
+        </SvgRefProvider>
       ) : null}
     </ResizableContainer>
   );
