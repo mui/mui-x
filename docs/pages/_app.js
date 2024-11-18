@@ -222,6 +222,13 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
+        if (version === 'v7') {
+          // #default-branch-switch
+          return {
+            text: version,
+            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
+          };
+        }
         return {
           text: version,
           href: `https://${version}.mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
