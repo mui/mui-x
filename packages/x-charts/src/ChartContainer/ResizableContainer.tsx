@@ -23,7 +23,7 @@ export const ResizableContainerRoot = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  '& svg': {
+  '&>svg': {
     width: '100%',
     height: '100%',
   },
