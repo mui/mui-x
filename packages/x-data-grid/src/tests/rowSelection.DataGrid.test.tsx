@@ -18,6 +18,7 @@ import {
   useGridApiRef,
   GridApi,
   GridPreferencePanelsValue,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -64,6 +65,29 @@ describe('<DataGrid /> - Row selection', () => {
       </div>
     );
   }
+
+  // Context: https://github.com/mui/mui-x/issues/15079
+  it('should not call `onRowSelectionModelChange` twice when using filterMode="server"', () => {
+    const onRowSelectionModelChange = spy();
+    function TestDataGrid() {
+      const [, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      const handleRowSelectionModelChange = React.useCallback((model: GridRowSelectionModel) => {
+        setRowSelectionModel(model);
+        onRowSelectionModelChange(model);
+      }, []);
+      return (
+        <TestDataGridSelection
+          getRowId={(row) => row.id}
+          checkboxSelection
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          filterMode="server"
+        />
+      );
+    }
+    render(<TestDataGrid />);
+    fireEvent.click(getCell(0, 0).querySelector('input')!);
+    expect(onRowSelectionModelChange.callCount).to.equal(1);
+  });
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
