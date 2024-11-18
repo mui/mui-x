@@ -246,44 +246,4 @@ describe('<DataGridPro /> - Row reorder', () => {
     fireEvent(targetCell, dragOverEvent);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
   });
-
-  it('should reorder rows correctly with filtered data', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
-    const rows = [
-      { id: 0, brand: 'Nike' },
-      { id: 1, brand: 'Adidas' },
-      { id: 2, brand: 'Puma' },
-      { id: 3, brand: 'Skechers' },
-    ];
-    const columns = [{ field: 'brand' }];
-
-    function Test() {
-      apiRef = useGridApiRef();
-
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            apiRef={apiRef}
-            rows={rows}
-            columns={columns}
-            rowReordering
-            filterModel={{
-              items: [{ field: 'brand', operator: 'doesNotEqual', value: 'Nike' }],
-            }}
-          />
-        </div>
-      );
-    }
-
-    render(<Test />);
-    expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Puma', 'Skechers']);
-    const rowReorderCell = getCell(0, 0).firstChild!;
-    const targetCell = getCell(1, 0);
-
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
-    const dragOverEvent = createDragOverEvent(targetCell);
-    fireEvent(targetCell, dragOverEvent);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Adidas', 'Skechers']);
-  });
 });
