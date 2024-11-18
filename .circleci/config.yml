@@ -356,9 +356,9 @@ workflows:
           requires:
             - checkout
 
-  additional-checks:
+  additional-tests:
     when:
-      and:
+      all:
         equal: [additional, << pipeline.parameters.workflow >>]
         or:
           equal: [true, << pipeline.parameters.with-material-ui-6 >>]
@@ -381,8 +381,13 @@ workflows:
           <<: *default-context
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
+
+  additional-checks:
+    when:
+      all:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+    jobs:
       - test_types:
           <<: *default-context
           name: test_types_additional
-          when:
-            equal: [true, << pipeline.parameters.with-material-ui-6 >>]
