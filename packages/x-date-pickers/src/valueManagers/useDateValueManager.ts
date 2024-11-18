@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { applyDefaultDate } from '../internals/utils/date-utils';

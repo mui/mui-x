@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
