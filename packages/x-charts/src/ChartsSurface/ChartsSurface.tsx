@@ -44,6 +44,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   const svgWidth = width + left + right;
   const svgHeight = height + top + bottom;
+  const hasIntrinsicSize = width !== 0 && height !== 0;
 
   const svgView = {
     width: svgWidth,
@@ -64,7 +65,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
       <ChartsAxesGradients />
-      {children}
+      {hasIntrinsicSize && children}
     </ChartsSurfaceStyles>
   );
 });

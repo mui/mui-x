@@ -28,10 +28,6 @@ export interface SizeContextState extends Required<Pick<SizeProviderProps, 'heig
    */
   containerRef: React.RefObject<HTMLDivElement>;
   /**
-   * If the chart has a defined size.
-   */
-  hasIntrinsicSize: boolean;
-  /**
    * The input height of the chart in px.
    */
   inHeight?: number;
