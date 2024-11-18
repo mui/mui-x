@@ -23,6 +23,10 @@ export const ResizableContainerRoot = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
+  '& svg': {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 /**
@@ -33,12 +37,9 @@ export const ResizableContainerRoot = styled('div', {
 function SvgSize() {
   const { width, height, left, right, top, bottom } = useDrawingArea();
 
-  const svgWidth = width + left + right;
-  const svgHeight = height + top + bottom;
-
   const svgView = {
-    width: svgWidth,
-    height: svgHeight,
+    width: width + left + right,
+    height: height + top + bottom,
     x: 0,
     y: 0,
   };
