@@ -50,6 +50,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žiadne stĺpce',
   columnsManagementShowHideAllText: 'Zobraziť/Skryť všetko',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
