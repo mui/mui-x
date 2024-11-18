@@ -373,7 +373,7 @@ workflows:
           name: test_e2e_additional
           react-version: << pipeline.parameters.with-react-version >>
       - test_types:
-        when:
-          condition: << pipeline.parameters.with-material-ui-6 >>
-            <<: *default-context
-            name: test_types_additional
+          <<: *default-context
+          name: test_types_additional
+          when:
+            condition: << pipeline.parameters.with-material-ui-6 >>         
