@@ -50,7 +50,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const drawingArea = useDrawingArea();
-  
+
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
