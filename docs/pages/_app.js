@@ -232,7 +232,7 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        ...getVersionOptions('introduction', ['next', process.env.LIB_VERSION, 'v6', 'v5']),
+        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -242,7 +242,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          ...getVersionOptions('x-data-grid', ['next', process.env.DATA_GRID_VERSION, 'v6', 'v5']),
+          ...getVersionOptions('x-data-grid', [process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -251,7 +251,7 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          ...getVersionOptions('x-date-pickers', ['next', process.env.DATE_PICKERS_VERSION, 'v6']),
+          ...getVersionOptions('x-date-pickers', [process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -262,14 +262,14 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: getVersionOptions('x-charts', ['next', process.env.CHARTS_VERSION, 'v6']),
+        versions: getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v7', 'v6']),
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          ...getVersionOptions('x-tree-view', ['next', process.env.TREE_VIEW_VERSION]),
+          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v7']),
           {
             text: 'v6',
             href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
