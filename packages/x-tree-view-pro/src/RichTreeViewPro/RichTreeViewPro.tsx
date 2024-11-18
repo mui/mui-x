@@ -75,14 +75,13 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView<
-    RichTreeViewProPluginSignatures,
-    typeof props
-  >({
-    plugins: RICH_TREE_VIEW_PRO_PLUGINS,
-    rootRef: ref,
-    props,
-  });
+  const { getRootProps, contextValue } = useTreeView<RichTreeViewProPluginSignatures, typeof props>(
+    {
+      plugins: RICH_TREE_VIEW_PRO_PLUGINS,
+      rootRef: ref,
+      props,
+    },
+  );
 
   const { slots, slotProps } = props;
   const classes = useUtilityClasses(props);
@@ -99,11 +98,7 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          itemsToRender={instance.getItemsToRender()}
-        />
+        <RichTreeViewItems slots={slots} slotProps={slotProps} />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </Root>
     </TreeViewProvider>
