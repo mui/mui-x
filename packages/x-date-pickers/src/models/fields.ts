@@ -7,7 +7,12 @@ import type {
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { BaseForwardedSingleInputFieldProps, FieldRangeSection } from '../internals/models';
+import {
+  BaseForwardedSingleInputFieldProps,
+  FieldRangeSection,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../internals/models';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -86,18 +91,22 @@ export interface FieldSection {
   endSeparator: string;
 }
 
-export type InferFieldSection<TIsRange extends boolean> = TIsRange extends true
-  ? TIsRange extends false
-    ? FieldSection | FieldRangeSection
-    : FieldRangeSection
-  : FieldSection;
+// If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
+type IsAny<T> = boolean extends (T extends never ? true : false) ? true : false;
 
-export interface FieldRef<TIsRange extends boolean> {
+export type InferFieldSection<TValue extends PickerValidValue> =
+  IsAny<TValue> extends true
+    ? FieldSection
+    : TValue extends PickerRangeValue
+      ? FieldRangeSection
+      : FieldSection;
+
+export interface FieldRef<TValue extends PickerValidValue> {
   /**
    * Returns the sections of the current value.
-   * @returns {InferFieldSection<TIsRange>[]} The sections of the current value.
+   * @returns {InferFieldSection<TValue>[]} The sections of the current value.
    */
-  getSections: () => InferFieldSection<TIsRange>[];
+  getSections: () => InferFieldSection<TValue>[];
   /**
    * Returns the index of the active section (the first focused section).
    * If no section is active, returns `null`.
@@ -127,11 +136,11 @@ export type FieldSelectedSections = number | FieldSectionType | null | 'all';
  * Props the prop `slotProps.field` of a picker can receive.
  */
 export type PickerFieldSlotProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = ExportedUseClearableFieldProps &
   Pick<
-    UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, unknown>,
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'
   > &
   React.HTMLAttributes<HTMLDivElement> & {

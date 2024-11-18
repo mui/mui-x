@@ -1,6 +1,10 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
+import {
+  BasePickerInputProps,
+  PickerValidValue,
+  UsePickerValueNonStaticProps,
+} from '@mui/x-date-pickers/internals';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
@@ -16,15 +20,15 @@ const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testShortcuts,
 ];
 
-function innerDescribeValue<TIsRange extends boolean, C extends PickerComponentFamily>(
+function innerDescribeValue<TValue extends PickerValidValue, C extends PickerComponentFamily>(
   ElementToTest: React.FunctionComponent<any>,
-  getOptions: () => DescribeValueOptions<C, TIsRange>,
+  getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const options = getOptions();
   const { defaultProps, render, clock, componentFamily } = options;
 
   function WrappedElementToTest(
-    props: BasePickerInputProps<TIsRange, any, any> & UsePickerValueNonStaticProps & { hook?: any },
+    props: BasePickerInputProps<TValue, any, any> & UsePickerValueNonStaticProps & { hook?: any },
   ) {
     const { hook, ...other } = props;
     const hookResult = hook?.(props);
@@ -68,23 +72,23 @@ function innerDescribeValue<TIsRange extends boolean, C extends PickerComponentF
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    const typedTestSuite = testSuite as DescribeValueTestSuite<TIsRange, any>;
+    const typedTestSuite = testSuite as DescribeValueTestSuite<TValue, any>;
     typedTestSuite(WrappedElementToTest, { ...options, renderWithProps });
   });
 }
 
-type P<TIsRange extends boolean, C extends PickerComponentFamily> = [
+type P<TValue extends PickerValidValue, C extends PickerComponentFamily> = [
   React.FunctionComponent,
-  () => DescribeValueOptions<C, TIsRange>,
+  () => DescribeValueOptions<C, TValue>,
 ];
 
 type DescribeValue = {
-  <TIsRange extends boolean, C extends PickerComponentFamily>(...args: P<TIsRange, C>): void;
-  skip: <TIsRange extends boolean, C extends PickerComponentFamily>(
-    ...args: P<TIsRange, C>
+  <TValue extends PickerValidValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
+  skip: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
   ) => void;
-  only: <TIsRange extends boolean, C extends PickerComponentFamily>(
-    ...args: P<TIsRange, C>
+  only: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
   ) => void;
 };
 

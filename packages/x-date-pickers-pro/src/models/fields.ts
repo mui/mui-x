@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { UseFieldResponse, FormProps } from '@mui/x-date-pickers/internals';
+import {
+  UseFieldResponse,
+  FormProps,
+  PickerValue,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import { UseClearableFieldResponse } from '@mui/x-date-pickers/hooks';
 
@@ -32,8 +37,8 @@ export interface MultiInputFieldSlotRootProps {
 }
 
 export interface MultiInputFieldRefs {
-  unstableStartFieldRef?: React.Ref<FieldRef<false>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<false>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
 }
 
 export interface RangeFieldSeparatorProps {
@@ -48,7 +53,8 @@ export interface RangeFieldSeparatorProps {
  * Props the `slotProps.field` of a range picker component can receive.
  */
 export type PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerFieldSlotProps<true, TEnableAccessibleFieldDOMStructure> & RangeFieldSeparatorProps;
+  PickerFieldSlotProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure> &
+    RangeFieldSeparatorProps;
 
 /**
  * Props the text field receives when used with a multi input picker.

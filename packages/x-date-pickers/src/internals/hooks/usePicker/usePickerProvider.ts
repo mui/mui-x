@@ -6,17 +6,18 @@ import {
   PickerContextValue,
   PickerPrivateContextValue,
 } from '../../components/PickerProvider';
+import { PickerValidValue } from '../../models';
 
-export interface UsePickerProviderParameters<TIsRange extends boolean>
+export interface UsePickerProviderParameters<TValue extends PickerValidValue>
   extends Pick<PickerProviderProps, 'localeText'> {
-  pickerValueResponse: UsePickerValueResponse<TIsRange, any>;
+  pickerValueResponse: UsePickerValueResponse<TValue, any>;
   ownerState: PickerOwnerState;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
 
-export function usePickerProvider<TIsRange extends boolean>(
-  parameters: UsePickerProviderParameters<TIsRange>,
+export function usePickerProvider<TValue extends PickerValidValue>(
+  parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
   const { pickerValueResponse, ownerState, localeText } = parameters;
 

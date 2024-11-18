@@ -20,6 +20,7 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { ValidateDatePropsToDefault } from '../validation/validateDate';
+import { PickerValue } from '../internals/models';
 
 export interface BaseDatePickerSlots extends DateCalendarSlots {
   /**
@@ -36,10 +37,10 @@ export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
 export type DatePickerViewRenderers<
   TView extends DateView,
   TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<false, TView, DateViewRendererProps<TView>, TAdditionalProps>;
+> = PickerViewRendererLookup<PickerValue, TView, DateViewRendererProps<TView>, TAdditionalProps>;
 
 export interface BaseDatePickerProps
-  extends BasePickerInputProps<false, DateView, DateValidationError>,
+  extends BasePickerInputProps<PickerValue, DateView, DateValidationError>,
     ExportedDateCalendarProps {
   /**
    * Overridable component slots.

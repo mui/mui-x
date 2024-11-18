@@ -3,6 +3,7 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
 import {
   AmPmProps,
+  PickerRangeValue,
   UseFieldInternalProps,
   getTimeFieldInternalPropsDefaults,
 } from '@mui/x-date-pickers/internals';
@@ -40,7 +41,7 @@ export function useTimeRangeValueManager<TEnableAccessibleFieldDOMStructure exte
 
 export type TimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    true,
+    PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     TimeRangeValidationError,
     TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -49,7 +50,11 @@ export type TimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boo
 
 export interface TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, TimeRangeValidationError>,
+      UseFieldInternalProps<
+        PickerRangeValue,
+        TEnableAccessibleFieldDOMStructure,
+        TimeRangeValidationError
+      >,
       'format'
     >,
     ExportedValidateTimeRangeProps,
@@ -58,7 +63,11 @@ export interface TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure 
 
 export interface TimeRangeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, TimeRangeValidationError>,
+> extends UseFieldInternalProps<
+      PickerRangeValue,
+      TEnableAccessibleFieldDOMStructure,
+      TimeRangeValidationError
+    >,
     ValidateTimeRangeProps {}
 
 export interface UseTimeRangeValueManagerParameters<

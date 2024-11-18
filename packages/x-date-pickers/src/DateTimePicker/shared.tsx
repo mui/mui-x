@@ -28,7 +28,7 @@ import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { ValidateDateTimePropsToDefault } from '../validation/validateDateTime';
 
 export interface BaseDateTimePickerSlots extends DateCalendarSlots, TimeClockSlots {
@@ -59,7 +59,7 @@ export type DateTimePickerViewRenderers<
   TView extends DateOrTimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  false,
+  PickerValue,
   TView,
   Omit<DateViewRendererProps<TView>, 'slots' | 'slotProps'> &
     Omit<
@@ -70,7 +70,7 @@ export type DateTimePickerViewRenderers<
 >;
 
 export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridiem>
-  extends BasePickerInputProps<false, TView, DateTimeValidationError>,
+  extends BasePickerInputProps<PickerValue, TView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps, 'onViewChange'>,
     ExportedBaseClockProps,
     DateTimeValidationProps {

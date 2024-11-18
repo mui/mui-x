@@ -3,6 +3,7 @@ import { useField, useFieldInternalPropsWithDefaults } from '../internals/hooks/
 import { UseDateTimeFieldProps } from './DateTimeField.types';
 import { useSplitFieldProps } from '../hooks';
 import { useDateTimeValueManager } from '../valueManagers';
+import { PickerValue } from '../internals/models';
 
 export const useDateTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -19,7 +20,7 @@ export const useDateTimeField = <
   });
 
   return useField<
-    false,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
     typeof internalPropsWithDefaults

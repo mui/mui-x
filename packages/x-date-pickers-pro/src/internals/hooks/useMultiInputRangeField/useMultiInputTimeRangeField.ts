@@ -1,13 +1,13 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useTimeField as useTimeField } from '@mui/x-date-pickers/TimeField';
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
-  useLocalizationContext,
+  useFieldInternalPropsWithDefaults,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { TimeValidationError } from '@mui/x-date-pickers/models';
@@ -18,7 +18,7 @@ import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.
 import { TimeRangeValidationError } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
-import { getTimeRangeValueManager } from '../../../valueManagers';
+import { useTimeRangeValueManager } from '../../../valueManagers';
 
 export const useMultiInputTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -33,24 +33,11 @@ export const useMultiInputTimeRangeField = <
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
-  const valueManager = React.useMemo(
-    () =>
-      getTimeRangeValueManager({
-        enableAccessibleFieldDOMStructure: sharedProps.enableAccessibleFieldDOMStructure,
-        dateSeparator: sharedProps.dateSeparator,
-      }),
-    [sharedProps.enableAccessibleFieldDOMStructure, sharedProps.dateSeparator],
-  );
-
-  const localizationContext = useLocalizationContext();
-  const sharedPropsWithDefaults = React.useMemo(
-    () =>
-      valueManager.applyDefaultsToFieldInternalProps({
-        ...localizationContext,
-        internalProps: sharedProps,
-      }),
-    [sharedProps, localizationContext, valueManager],
-  );
+  const valueManager = useTimeRangeValueManager(sharedProps);
+  const sharedPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    valueManager,
+    internalProps: sharedProps,
+  });
 
   const {
     value: valueProp,
@@ -86,7 +73,9 @@ export const useMultiInputTimeRangeField = <
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
-  const buildChangeHandler = (index: 0 | 1): FieldChangeHandler<false, TimeValidationError> => {
+  const buildChangeHandler = (
+    index: 0 | 1,
+  ): FieldChangeHandler<PickerValue, TimeValidationError> => {
     return (newTime, rawContext) => {
       const newTimeRange: PickerRangeValue =
         index === 0 ? [newTime, value[1]] : [value[0], newTime];

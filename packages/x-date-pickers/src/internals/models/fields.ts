@@ -8,6 +8,7 @@ import type {
 import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
 import { RangePosition } from './pickers';
+import { PickerValidValue } from './value';
 
 export interface FieldRangeSection extends FieldSection {
   dateName: RangePosition;
@@ -44,12 +45,12 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearable
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export type BaseSingleInputFieldProps<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > = MakeRequired<
   Pick<
-    UseFieldInternalProps<TIsRange, TEnableAccessibleFieldDOMStructure, TError>,
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, TError>,
     | 'readOnly'
     | 'disabled'
     | 'format'

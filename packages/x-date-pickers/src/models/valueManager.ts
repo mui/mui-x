@@ -1,8 +1,9 @@
 import type { FieldValueManager, UseFieldInternalProps } from '../internals/hooks/useField';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
+import type { PickerValidValue } from '../internals/models';
 import type { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import type { Validator } from '../validation';
-import type { FieldValueType } from './fields';
+import type { PickerValueType } from './common';
 
 // TODO: Rename PickerValueManager when the legacyValueManager object will be inlined.
 /**
@@ -11,12 +12,12 @@ import type { FieldValueType } from './fields';
  * Instead, use the ones provided exported from '@mui/x-date-pickers/valueManagers' and '@mui/x-date-pickers-pro/valueManagers'.
  */
 export interface PickerValueManagerV8<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TFieldInternalProps extends {},
   TFieldInternalPropsWithDefaults extends UseFieldInternalProps<
-    TIsRange,
+    TValue,
     TEnableAccessibleFieldDOMStructure,
     TError
   >,
@@ -25,16 +26,16 @@ export interface PickerValueManagerV8<
    * Object containing basic methods to interact with the value of the picker or field.
    * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
    */
-  legacyValueManager: PickerValueManager<TIsRange, TError>;
+  legacyValueManager: PickerValueManager<TValue, TError>;
   /**
    * Object containing all the necessary methods to interact with the value of the field.
    * The properties of this object will be inlined inside the main `PickerValueManagerV8` object once every object using it is compatible with the new API.
    */
-  fieldValueManager: FieldValueManager<TIsRange>;
+  fieldValueManager: FieldValueManager<TValue>;
   /**
    * Checks if a value is valid and returns an error code otherwise.
    */
-  validator: Validator<TIsRange, TError, TFieldInternalPropsWithDefaults>;
+  validator: Validator<TValue, TError, TFieldInternalPropsWithDefaults>;
   /**
    * Applies the default values to the field internal props.
    * This usually includes:
@@ -49,7 +50,7 @@ export interface PickerValueManagerV8<
   /**
    * The type of the value (e.g. 'date', 'date-time', 'time').
    */
-  valueType: FieldValueType;
+  valueType: PickerValueType;
   /**
    * `true` if the field is using the accessible DOM structure.
    * `false` if the field is using the non-accessible legacy DOM structure (which will be deprecated and removed in the future).

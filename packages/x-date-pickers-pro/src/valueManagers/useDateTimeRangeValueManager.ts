@@ -3,6 +3,7 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
 import {
   AmPmProps,
+  PickerRangeValue,
   UseFieldInternalProps,
   getDateTimeFieldInternalPropsDefaults,
 } from '@mui/x-date-pickers/internals';
@@ -42,7 +43,7 @@ export function useDateTimeRangeValueManager<
 
 export type DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    true,
+    PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError,
     DateTimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -51,7 +52,11 @@ export type DateTimeRangeValueManager<TEnableAccessibleFieldDOMStructure extends
 
 export interface DateTimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, DateTimeRangeValidationError>,
+      UseFieldInternalProps<
+        PickerRangeValue,
+        TEnableAccessibleFieldDOMStructure,
+        DateTimeRangeValidationError
+      >,
       'format'
     >,
     ExportedValidateDateTimeRangeProps,
@@ -61,7 +66,7 @@ export interface DateTimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStruct
 export interface DateTimeRangeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseFieldInternalProps<
-      true,
+      PickerRangeValue,
       TEnableAccessibleFieldDOMStructure,
       DateTimeRangeValidationError
     >,

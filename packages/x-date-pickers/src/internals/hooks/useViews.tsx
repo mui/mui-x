@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeViewWithMeridiem, InferPickerValue } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 import { PickerValidDate } from '../../models';
 
 export type PickerOnChangeFn = (
@@ -12,22 +12,18 @@ export type PickerOnChangeFn = (
 ) => void;
 
 export interface UseViewsOptions<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > {
   /**
    * Callback fired when the value changes.
-   * @template TIsRange `true` if the value comes from a range picker, `false` otherwise.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TView The view type. Will be one of date or time views.
-   * @param {InferPickerValue<TIsRange>} value The new value.
+   * @param {TValue} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
-  onChange: (
-    value: InferPickerValue<TIsRange>,
-    selectionState?: PickerSelectionState,
-    selectedView?: TView,
-  ) => void;
+  onChange: (value: TValue, selectionState?: PickerSelectionState, selectedView?: TView) => void;
   /**
    * Callback fired on view change.
    * @template TView
@@ -71,13 +67,16 @@ export interface UseViewsOptions<
 }
 
 export interface ExportedUseViewsOptions<
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends MakeOptional<UseViewsOptions<TIsRange, TView>, 'onChange' | 'openTo' | 'views'> {}
+> extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
-interface UseViewsResponse<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem> {
+interface UseViewsResponse<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
   view: TView;
   setView: (view: TView) => void;
   focusedView: TView | null;
@@ -87,13 +86,16 @@ interface UseViewsResponse<TIsRange extends boolean, TView extends DateOrTimeVie
   defaultView: TView;
   goToNextView: () => void;
   setValueAndGoToNextView: (
-    value: InferPickerValue<TIsRange>,
+    value: TValue,
     currentViewSelectionState?: PickerSelectionState,
     selectedView?: TView,
   ) => void;
 }
 
-export function useViews<TIsRange extends boolean, TView extends DateOrTimeViewWithMeridiem>({
+export function useViews<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>({
   onChange,
   onViewChange,
   openTo,
@@ -102,7 +104,7 @@ export function useViews<TIsRange extends boolean, TView extends DateOrTimeViewW
   autoFocus,
   focusedView: inFocusedView,
   onFocusedViewChange,
-}: UseViewsOptions<TIsRange, TView>): UseViewsResponse<TIsRange, TView> {
+}: UseViewsOptions<TValue, TView>): UseViewsResponse<TValue, TView> {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidView) {
       if (inView != null && !views.includes(inView)) {
@@ -191,11 +193,7 @@ export function useViews<TIsRange extends boolean, TView extends DateOrTimeViewW
   });
 
   const setValueAndGoToNextView = useEventCallback(
-    (
-      value: InferPickerValue<TIsRange>,
-      currentViewSelectionState?: PickerSelectionState,
-      selectedView?: TView,
-    ) => {
+    (value: TValue, currentViewSelectionState?: PickerSelectionState, selectedView?: TView) => {
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const hasMoreViews = selectedView
         ? // handles case like `DateTimePicker`, where a view might return a `finish` selection state

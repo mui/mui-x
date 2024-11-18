@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { PickerValueManagerV8 } from '@mui/x-date-pickers/models';
 import {
+  PickerRangeValue,
   UseFieldInternalProps,
   getDateFieldInternalPropsDefaults,
 } from '@mui/x-date-pickers/internals';
@@ -39,7 +40,7 @@ export function useDateRangeValueManager<TEnableAccessibleFieldDOMStructure exte
 
 export type DateRangeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    true,
+    PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     DateRangeValidationError,
     DateRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -48,7 +49,11 @@ export type DateRangeValueManager<TEnableAccessibleFieldDOMStructure extends boo
 
 export interface DateRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, DateRangeValidationError>,
+      UseFieldInternalProps<
+        PickerRangeValue,
+        TEnableAccessibleFieldDOMStructure,
+        DateRangeValidationError
+      >,
       'format'
     >,
     RangeFieldSeparatorProps,
@@ -56,7 +61,11 @@ export interface DateRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure 
 
 export interface DateRangeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<true, TEnableAccessibleFieldDOMStructure, DateRangeValidationError>,
+> extends UseFieldInternalProps<
+      PickerRangeValue,
+      TEnableAccessibleFieldDOMStructure,
+      DateRangeValidationError
+    >,
     ValidateDateRangeProps,
     RangeFieldSeparatorProps {}
 

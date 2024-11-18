@@ -11,10 +11,15 @@ import {
 } from '../hooks/useClearableField';
 import { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
 import { AmPmProps } from '../internals/models/props/time';
+import { PickerValue } from '../internals/models';
 
 export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateTimeValidationError>,
+      UseFieldInternalProps<
+        PickerValue,
+        TEnableAccessibleFieldDOMStructure,
+        DateTimeValidationError
+      >,
       'format'
     >,
     ExportedValidateDateTimeProps,

@@ -8,6 +8,7 @@ import {
   UsePickerViewsNonStaticProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlots,
@@ -21,13 +22,13 @@ import {
 } from '../useEnrichedRangePickerFieldProps';
 
 export interface UseRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<true, TView>,
+  extends ExportedPickersLayoutSlots<PickerRangeValue, TView>,
     RangePickerFieldSlots {}
 
 export interface UseRangePickerSlotProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedPickersLayoutSlotProps<true, TView>,
+> extends ExportedPickersLayoutSlotProps<PickerRangeValue, TView>,
     RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure> {
   tabs?: ExportedBaseTabsProps;
   toolbar?: ExportedBaseToolbarProps;
@@ -46,7 +47,7 @@ export interface UseRangePickerProps<
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
   TAdditionalViewProps extends {},
 > extends RangeOnlyPickerProps,
-    BasePickerProps<true, TView, TError, TExternalProps, TAdditionalViewProps> {}
+    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps, TAdditionalViewProps> {}
 
 export interface RangePickerAdditionalViewProps
   extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
@@ -56,7 +57,7 @@ export interface UseRangePickerParams<
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps, TAdditionalViewProps>,
   TAdditionalViewProps extends {},
 > extends Pick<
-    UsePickerParams<true, TView, TExternalProps, TAdditionalViewProps>,
+    UsePickerParams<PickerRangeValue, TView, TExternalProps, TAdditionalViewProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

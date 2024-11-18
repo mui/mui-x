@@ -6,8 +6,9 @@ import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.typ
 import { InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
+import { PickerValidValue } from '../../models';
 
-type FieldSectionWithPositions<TIsRange extends boolean> = InferFieldSection<TIsRange> & {
+type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
   /**
    * Start index of the section in the format
    */
@@ -30,14 +31,14 @@ type FieldSectionWithPositions<TIsRange extends boolean> = InferFieldSection<TIs
 
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
-export const addPositionPropertiesToSections = <TIsRange extends boolean>(
-  sections: InferFieldSection<TIsRange>[],
+export const addPositionPropertiesToSections = <TValue extends PickerValidValue>(
+  sections: InferFieldSection<TValue>[],
   localizedDigits: string[],
   isRtl: boolean,
-): FieldSectionWithPositions<TIsRange>[] => {
+): FieldSectionWithPositions<TValue>[] => {
   let position = 0;
   let positionInInput = isRtl ? 1 : 0;
-  const newSections: FieldSectionWithPositions<TIsRange>[] = [];
+  const newSections: FieldSectionWithPositions<TValue>[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];

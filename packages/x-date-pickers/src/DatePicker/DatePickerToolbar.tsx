@@ -15,9 +15,10 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { PickerValue } from '../internals/models';
 
 export interface DatePickerToolbarProps
-  extends BaseToolbarProps<false, DateView>,
+  extends BaseToolbarProps<PickerValue, DateView>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {

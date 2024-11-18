@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
-import { InferPickerValue, InferNonNullablePickerValue } from '@mui/x-date-pickers/internals';
+import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   BuildFieldInteractionsResponse,
   FieldPressCharacter,
@@ -9,12 +9,15 @@ import {
 } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 
-interface DescribeValueBaseOptions<TIsRange extends boolean, C extends PickerComponentFamily> {
+interface DescribeValueBaseOptions<
+  TValue extends PickerValidValue,
+  C extends PickerComponentFamily,
+> {
   componentFamily: C;
   render: (node: React.ReactElement) => MuiRenderResult;
-  assertRenderedValue: (expectedValue: InferPickerValue<TIsRange>) => void;
-  values: [InferNonNullablePickerValue<TIsRange>, InferNonNullablePickerValue<TIsRange>];
-  emptyValue: InferPickerValue<TIsRange>;
+  assertRenderedValue: (expectedValue: TValue) => void;
+  values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
+  emptyValue: TValue;
   defaultProps?: object;
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
@@ -22,12 +25,12 @@ interface DescribeValueBaseOptions<TIsRange extends boolean, C extends PickerCom
 
 export type DescribeValueOptions<
   C extends PickerComponentFamily,
-  TIsRange extends boolean,
-> = DescribeValueBaseOptions<TIsRange, C> &
+  TValue extends PickerValidValue,
+> = DescribeValueBaseOptions<TValue, C> &
   (C extends 'picker'
     ? OpenPickerParams & {
         setNewValue: (
-          value: InferNonNullablePickerValue<TIsRange>,
+          value: InferNonNullablePickerValue<TValue>,
           options: {
             selectSection: FieldSectionSelector;
             pressKey: FieldPressCharacter;
@@ -35,18 +38,21 @@ export type DescribeValueOptions<
             applySameValue?: boolean;
             setEndDate?: boolean;
           },
-        ) => InferNonNullablePickerValue<TIsRange>;
+        ) => InferNonNullablePickerValue<TValue>;
       }
     : {
         setNewValue: (
-          value: InferPickerValue<TIsRange>,
+          value: TValue,
           options: { selectSection: FieldSectionSelector; pressKey: FieldPressCharacter },
-        ) => InferPickerValue<TIsRange>;
+        ) => TValue;
       });
 
-export type DescribeValueTestSuite<TIsRange extends boolean, C extends PickerComponentFamily> = (
+export type DescribeValueTestSuite<
+  TValue extends PickerValidValue,
+  C extends PickerComponentFamily,
+> = (
   ElementToTest: React.FunctionComponent<any>,
-  options: DescribeValueOptions<C, TIsRange> & {
+  options: DescribeValueOptions<C, TValue> & {
     renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   },
 ) => void;

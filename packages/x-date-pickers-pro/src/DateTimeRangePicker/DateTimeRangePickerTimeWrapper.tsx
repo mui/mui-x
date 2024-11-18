@@ -35,7 +35,7 @@ export type DateTimeRangePickerTimeWrapperProps<
       selectionState: PickerSelectionState,
       selectedView: TView,
     ) => void;
-    viewRenderer?: PickerViewRenderer<true, TView, TComponentProps, any> | null;
+    viewRenderer?: PickerViewRenderer<PickerRangeValue, TView, TComponentProps, any> | null;
     openTo?: TView;
   };
 

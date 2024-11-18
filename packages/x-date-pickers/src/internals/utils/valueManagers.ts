@@ -7,10 +7,11 @@ import {
   createDateStrForV7HiddenInputFromSections,
   createDateStrForV6InputFromSections,
 } from '../hooks/useField/useField.utils';
+import { PickerValue } from '../models';
 
 export type SingleItemPickerValueManager<
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
-> = PickerValueManager<false, TError>;
+> = PickerValueManager<PickerValue, TError>;
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
@@ -37,7 +38,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<false> = {
+export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {

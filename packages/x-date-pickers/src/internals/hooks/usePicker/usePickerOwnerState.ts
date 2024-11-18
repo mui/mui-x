@@ -3,15 +3,16 @@ import { PickerOwnerState } from '../../../models';
 import type { UsePickerProps } from './usePicker.types';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import { useUtils } from '../useUtils';
+import { PickerValidValue } from '../../models';
 
-interface UsePickerOwnerStateParameters<TIsRange extends boolean> {
-  props: UsePickerProps<TIsRange, any, any, any, any>;
-  pickerValueResponse: UsePickerValueResponse<TIsRange, any>;
-  valueManager: PickerValueManager<TIsRange, any>;
+interface UsePickerOwnerStateParameters<TValue extends PickerValidValue> {
+  props: UsePickerProps<TValue, any, any, any, any>;
+  pickerValueResponse: UsePickerValueResponse<TValue, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }
 
-export function usePickerOwnerState<TIsRange extends boolean>(
-  parameters: UsePickerOwnerStateParameters<TIsRange>,
+export function usePickerOwnerState<TValue extends PickerValidValue>(
+  parameters: UsePickerOwnerStateParameters<TValue>,
 ): PickerOwnerState {
   const { props, pickerValueResponse, valueManager } = parameters;
 

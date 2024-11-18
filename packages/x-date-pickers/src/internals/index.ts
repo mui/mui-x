@@ -123,10 +123,11 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 export type {
+  PickerValue,
   PickerRangeValue,
   PickerNonNullableRangeValue,
-  InferPickerValue,
   InferNonNullablePickerValue,
+  PickerValidValue,
 } from './models/value';
 
 export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';

@@ -15,6 +15,7 @@ import {
   ValidateDateTimeProps,
   ValidateDateTimePropsToDefault,
 } from '../validation/validateDateTime';
+import { PickerValue } from '../internals/models';
 
 export function useDateTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -75,7 +76,7 @@ export function getDateTimeFieldInternalPropsDefaults(
 
 export type DateTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    false,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateTimeValidationError,
     DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -84,7 +85,11 @@ export type DateTimeValueManager<TEnableAccessibleFieldDOMStructure extends bool
 
 export interface DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateTimeValidationError>,
+      UseFieldInternalProps<
+        PickerValue,
+        TEnableAccessibleFieldDOMStructure,
+        DateTimeValidationError
+      >,
       'format'
     >,
     ExportedValidateDateTimeProps,
@@ -92,7 +97,11 @@ export interface DateTimeFieldInternalProps<TEnableAccessibleFieldDOMStructure e
 
 export interface DateTimeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateTimeValidationError>,
+> extends UseFieldInternalProps<
+      PickerValue,
+      TEnableAccessibleFieldDOMStructure,
+      DateTimeValidationError
+    >,
     ValidateDateTimeProps {}
 
 type DateTimeFieldPropsToDefault =

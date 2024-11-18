@@ -1,4 +1,4 @@
-import { DateTimeValidationProps } from '@mui/x-date-pickers/internals';
+import { DateTimeValidationProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { validateDateTime, Validator } from '@mui/x-date-pickers/validation';
 import { isRangeValid } from '../internals/utils/date-utils';
 import { DateTimeRangeValidationError } from '../models';
@@ -34,7 +34,7 @@ export type ValidateDateTimeRangePropsToDefault =
   | ValidateTimeRangePropsToDefault;
 
 export const validateDateTimeRange: Validator<
-  true,
+  PickerRangeValue,
   DateTimeRangeValidationError,
   ValidateDateTimeRangeProps
 > = ({ adapter, value, timezone, props }) => {

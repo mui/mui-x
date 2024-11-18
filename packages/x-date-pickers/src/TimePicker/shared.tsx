@@ -15,7 +15,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import { ValidateTimePropsToDefault } from '../validation/validateTime';
 
 export interface BaseTimePickerSlots extends TimeClockSlots {
@@ -34,14 +34,14 @@ export type TimePickerViewRenderers<
   TView extends TimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  false,
+  PickerValue,
   TView,
   TimeViewRendererProps<TView, BaseClockProps<TView>>,
   TAdditionalProps
 >;
 
 export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>
-  extends BasePickerInputProps<false, TView, TimeValidationError>,
+  extends BasePickerInputProps<PickerValue, TView, TimeValidationError>,
     ExportedBaseClockProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).

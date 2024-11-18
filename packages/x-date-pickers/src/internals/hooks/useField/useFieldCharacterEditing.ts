@@ -20,6 +20,7 @@ import {
   isStringNumber,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
+import { PickerValidValue } from '../../models';
 
 interface CharacterEditingQuery {
   value: string;
@@ -32,9 +33,9 @@ export interface ApplyCharacterEditingParams {
   sectionIndex: number;
 }
 
-interface UseFieldCharacterEditingParams<TIsRange extends boolean> {
-  sections: InferFieldSection<TIsRange>[];
-  updateSectionValue: (params: UpdateSectionValueParams<TIsRange>) => void;
+interface UseFieldCharacterEditingParams<TValue extends PickerValidValue> {
+  sections: InferFieldSection<TValue>[];
+  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries;
   localizedDigits: string[];
   setTempAndroidValueStr: (newValue: string | null) => void;
@@ -70,15 +71,15 @@ type CharacterEditingApplier = (
  * If it returns `{ saveQuery: false },
  * Then we do nothing.
  */
-type QueryApplier<TIsRange extends boolean> = (
+type QueryApplier<TValue extends PickerValidValue> = (
   queryValue: string,
-  activeSection: InferFieldSection<TIsRange>,
+  activeSection: InferFieldSection<TValue>,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };
 
 const QUERY_LIFE_DURATION_MS = 5000;
 
-const isQueryResponseWithoutValue = <TIsRange extends boolean>(
-  response: ReturnType<QueryApplier<TIsRange>>,
+const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
+  response: ReturnType<QueryApplier<TValue>>,
 ): response is { saveQuery: boolean } => (response as { saveQuery: boolean }).saveQuery != null;
 
 /**
@@ -88,14 +89,14 @@ const isQueryResponseWithoutValue = <TIsRange extends boolean>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <TIsRange extends boolean>({
+export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   sections,
   updateSectionValue,
   sectionsValueBoundaries,
   localizedDigits,
   setTempAndroidValueStr,
   timezone,
-}: UseFieldCharacterEditingParams<TIsRange>): UseFieldCharacterEditingResponse => {
+}: UseFieldCharacterEditingParams<TValue>): UseFieldCharacterEditingResponse => {
   const utils = useUtils();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
@@ -122,7 +123,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
-    getFirstSectionValueMatchingWithQuery: QueryApplier<TIsRange>,
+    getFirstSectionValueMatchingWithQuery: QueryApplier<TValue>,
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
@@ -175,7 +176,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
       format: string,
       options: string[],
       queryValue: string,
-    ): ReturnType<QueryApplier<TIsRange>> => {
+    ): ReturnType<QueryApplier<TValue>> => {
       const matchingValues = options.filter((option) =>
         option.toLowerCase().startsWith(queryValue),
       );
@@ -192,7 +193,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
 
     const testQueryOnFormatAndFallbackFormat = (
       queryValue: string,
-      activeSection: InferFieldSection<TIsRange>,
+      activeSection: InferFieldSection<TValue>,
       fallbackFormat?: string,
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
@@ -230,7 +231,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
       return { saveQuery: false };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TIsRange> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {
@@ -289,7 +290,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
         | 'hasLeadingZerosInInput'
         | 'maxLength'
       >,
-    ): ReturnType<QueryApplier<TIsRange>> => {
+    ): ReturnType<QueryApplier<TValue>> => {
       const cleanQueryValue = removeLocalizedDigits(queryValue, localizedDigits);
       const queryValueNumber = Number(cleanQueryValue);
       const sectionBoundaries = sectionsValueBoundaries[section.type]({
@@ -324,7 +325,7 @@ export const useFieldCharacterEditing = <TIsRange extends boolean>({
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TIsRange> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {

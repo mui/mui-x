@@ -4,7 +4,7 @@ import useControlled from '@mui/utils/useControlled';
 import { useUtils } from './useUtils';
 import type { PickerValueManager } from './usePicker';
 import { PickersTimezone } from '../../models';
-import { InferPickerValue } from '../models';
+import { PickerValidValue } from '../models';
 
 /**
  * Hooks making sure that:
@@ -12,7 +12,7 @@ import { InferPickerValue } from '../models';
  * - The value rendered is always the one from `props.timezone` if defined
  */
 export const useValueWithTimezone = <
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TChange extends (...params: any[]) => void,
 >({
   timezone: timezoneProp,
@@ -22,10 +22,10 @@ export const useValueWithTimezone = <
   valueManager,
 }: {
   timezone: PickersTimezone | undefined;
-  value: InferPickerValue<TIsRange> | undefined;
-  defaultValue: InferPickerValue<TIsRange> | undefined;
+  value: TValue | undefined;
+  defaultValue: TValue | undefined;
   onChange: TChange | undefined;
-  valueManager: PickerValueManager<TIsRange, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }) => {
   const utils = useUtils();
 
@@ -37,7 +37,7 @@ export const useValueWithTimezone = <
     [utils, valueManager, inputValue],
   );
 
-  const setInputTimezone = useEventCallback((newValue: InferPickerValue<TIsRange>) => {
+  const setInputTimezone = useEventCallback((newValue: TValue) => {
     if (inputTimezone == null) {
       return newValue;
     }
@@ -52,12 +52,10 @@ export const useValueWithTimezone = <
     [valueManager, utils, timezoneToRender, inputValue],
   );
 
-  const handleValueChange = useEventCallback(
-    (newValue: InferPickerValue<TIsRange>, ...otherParams: any[]) => {
-      const newValueWithInputTimezone = setInputTimezone(newValue);
-      onChange?.(newValueWithInputTimezone, ...otherParams);
-    },
-  ) as TChange;
+  const handleValueChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
+    const newValueWithInputTimezone = setInputTimezone(newValue);
+    onChange?.(newValueWithInputTimezone, ...otherParams);
+  }) as TChange;
 
   return { value: valueWithTimezoneToRender, handleValueChange, timezone: timezoneToRender };
 };
@@ -66,7 +64,7 @@ export const useValueWithTimezone = <
  * Wrapper around `useControlled` and `useValueWithTimezone`
  */
 export const useControlledValueWithTimezone = <
-  TIsRange extends boolean,
+  TValue extends PickerValidValue,
   TChange extends (...params: any[]) => void,
 >({
   name,
@@ -78,10 +76,10 @@ export const useControlledValueWithTimezone = <
 }: {
   name: string;
   timezone: PickersTimezone | undefined;
-  value: InferPickerValue<TIsRange> | undefined;
-  defaultValue: InferPickerValue<TIsRange> | undefined;
+  value: TValue | undefined;
+  defaultValue: TValue | undefined;
   onChange: TChange | undefined;
-  valueManager: PickerValueManager<TIsRange, any>;
+  valueManager: PickerValueManager<TValue, any>;
 }) => {
   const [valueWithInputTimezone, setValue] = useControlled({
     name,
@@ -90,12 +88,10 @@ export const useControlledValueWithTimezone = <
     default: defaultValue ?? valueManager.emptyValue,
   });
 
-  const onChange = useEventCallback(
-    (newValue: InferPickerValue<TIsRange>, ...otherParams: any[]) => {
-      setValue(newValue);
-      onChangeProp?.(newValue, ...otherParams);
-    },
-  ) as TChange;
+  const onChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
+    setValue(newValue);
+    onChangeProp?.(newValue, ...otherParams);
+  }) as TChange;
 
   return useValueWithTimezone({
     timezone: timezoneProp,

@@ -14,6 +14,7 @@ import {
   ValidateDatePropsToDefault,
   ValidateDateProps,
 } from '../validation/validateDate';
+import { PickerValue } from '../internals/models';
 
 export function useDateValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -57,7 +58,7 @@ export function getDateFieldInternalPropsDefaults(
 
 export type DateValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    false,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     DateValidationError,
     DateFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -66,14 +67,18 @@ export type DateValueManager<TEnableAccessibleFieldDOMStructure extends boolean>
 
 export interface DateFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateValidationError>,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,
     ExportedValidateDateProps {}
 
 export interface DateFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, DateValidationError>,
+> extends UseFieldInternalProps<
+      PickerValue,
+      TEnableAccessibleFieldDOMStructure,
+      DateValidationError
+    >,
     ValidateDateProps {}
 
 type DateFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;

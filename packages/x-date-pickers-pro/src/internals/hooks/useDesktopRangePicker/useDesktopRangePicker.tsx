@@ -11,6 +11,8 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickerProvider,
+  PickerValue,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
@@ -67,9 +69,9 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const startFieldRef = React.useRef<FieldRef<false>>(null);
-  const endFieldRef = React.useRef<FieldRef<false>>(null);
-  const singleInputFieldRef = React.useRef<FieldRef<true>>(null);
+  const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const singleInputFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
   const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
@@ -78,7 +80,7 @@ export const useDesktopRangePicker = <
     fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
 
-  let fieldRef: React.Ref<FieldRef<boolean>>;
+  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
   if (fieldType === 'single-input') {
     fieldRef = singleInputFieldRef;
   } else if (rangePosition === 'start') {
@@ -96,7 +98,7 @@ export const useDesktopRangePicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<true, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
+  } = usePicker<PickerRangeValue, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
     wrapperVariant: 'desktop',
@@ -189,7 +191,7 @@ export const useDesktopRangePicker = <
     onViewChange: layoutProps.onViewChange,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<true, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
     ...slotProps,
     tabs: {
       ...slotProps?.tabs,

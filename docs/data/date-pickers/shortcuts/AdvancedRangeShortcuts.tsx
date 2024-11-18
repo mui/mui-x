@@ -4,8 +4,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import { DateRange } from '@mui/x-date-pickers-pro/models';
 
-const shortcutsItems: PickersShortcutsItem<true>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
     label: 'Next Available Weekend',
     getValue: ({ isValid }) => {

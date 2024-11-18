@@ -14,6 +14,7 @@ import {
   ValidateTimeProps,
   ValidateTimePropsToDefault,
 } from '../validation/validateTime';
+import { PickerValue } from '../internals/models';
 
 export function useTimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeValueManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
@@ -57,7 +58,7 @@ export function getTimeFieldInternalPropsDefaults(
 
 export type TimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean> =
   PickerValueManagerV8<
-    false,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     TimeValidationError,
     TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
@@ -66,7 +67,7 @@ export type TimeValueManager<TEnableAccessibleFieldDOMStructure extends boolean>
 
 export interface TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
     >,
     ExportedValidateTimeProps,
@@ -74,7 +75,11 @@ export interface TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure exten
 
 export interface TimeFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseFieldInternalProps<false, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
+> extends UseFieldInternalProps<
+      PickerValue,
+      TEnableAccessibleFieldDOMStructure,
+      TimeValidationError
+    >,
     ValidateTimeProps {}
 
 type TimeFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
@@ -23,7 +24,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<false, TimeView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
   const { actionBar, content } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={props}>

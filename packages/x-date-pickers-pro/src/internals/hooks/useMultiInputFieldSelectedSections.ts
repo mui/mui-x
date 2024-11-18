@@ -1,22 +1,26 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import {
+  PickerRangeValue,
+  PickerValue,
+  UseFieldInternalProps,
+} from '@mui/x-date-pickers/internals';
 import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
 
 interface UseMultiInputFieldSelectedSectionsParams
   extends Pick<
-    UseFieldInternalProps<true, any, any>,
+    UseFieldInternalProps<PickerRangeValue, any, any>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
-  unstableStartFieldRef?: React.Ref<FieldRef<false>>;
-  unstableEndFieldRef?: React.Ref<FieldRef<false>>;
+  unstableStartFieldRef?: React.Ref<FieldRef<PickerValue>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<PickerValue>>;
 }
 
 export const useMultiInputFieldSelectedSections = (
   params: UseMultiInputFieldSelectedSectionsParams,
 ) => {
-  const unstableEndFieldRef = React.useRef<FieldRef<false>>(null);
+  const unstableEndFieldRef = React.useRef<FieldRef<PickerValue>>(null);
   const handleUnstableEndFieldRef = useForkRef(params.unstableEndFieldRef, unstableEndFieldRef);
 
   const [startSelectedSection, setStartSelectedSection] = React.useState<FieldSelectedSections>(
