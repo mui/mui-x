@@ -154,7 +154,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       fireEvent.click(screen.getByText('Columns'));
 
-      const searchInput = document.querySelector('input[type="text"]')!;
+      const searchInput = document.querySelector('input[type="search"]')!;
       fireEvent.change(searchInput, { target: { value: 'test' } });
 
       expect(document.querySelector('[role="tooltip"] [name="id"]')).not.to.equal(null);

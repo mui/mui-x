@@ -5,13 +5,13 @@ import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { useStore } from '../internals/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
 import { useDrawingArea, useSvgRef } from '../hooks';
 import { useHighlighted } from '../context';
 import { useScatterSeries } from '../hooks/useSeries';
-import { useStore } from '../internals/useStore';
 
 export type ChartsVoronoiHandlerProps = {
   /**

@@ -13,7 +13,7 @@ import { useSelector } from '../internals/useSelector';
 import { D3Scale } from '../models/axis';
 import { useHighlighted } from '../context';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { selectorChartsInteractionUseVoronoid } from '../context/InteractionSelectors';
+import { selectorChartsInteractionIsVoronoiEnabled } from '../context/InteractionSelectors';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -49,9 +49,9 @@ function Scatter(props: ScatterProps) {
   const drawingArea = useDrawingArea();
 
   const store = useStore();
-  const usesVoronoiInteraction = useSelector(store, selectorChartsInteractionUseVoronoid);
+  const isVoronoiEnabled = useSelector(store, selectorChartsInteractionIsVoronoiEnabled);
 
-  const skipInteractionHandlers = usesVoronoiInteraction || series.disableHover;
+  const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const getInteractionItemProps = useInteractionItemProps(skipInteractionHandlers);
   const { isFaded, isHighlighted } = useHighlighted();
 

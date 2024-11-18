@@ -27,7 +27,6 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
 
   const svgRef = useSvgRef();
   const series = useSeries();
-
   const store = useStore();
 
   const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();

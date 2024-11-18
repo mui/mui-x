@@ -50,10 +50,8 @@ describe('useSvgRef', () => {
 
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
-      const ref = React.useRef<SVGSVGElement | null>(null);
-
       return (
-        <SvgRefProvider svgRef={ref}>
+        <SvgRefProvider>
           <UseSurfaceRef>
             <UseSvgRef />
           </UseSurfaceRef>

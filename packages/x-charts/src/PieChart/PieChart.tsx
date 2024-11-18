@@ -238,11 +238,18 @@ PieChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
+  /**
+   * The configuration of the tooltip.
+   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
+   * @default { trigger: 'item' }
+   */
+  tooltip: PropTypes.shape({
+    axisContent: PropTypes.elementType,
+    classes: PropTypes.object,
+    itemContent: PropTypes.elementType,
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
+    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

@@ -4,24 +4,11 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
+import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
+import { useDrawingArea } from '../hooks';
 import { useSurfaceRef } from '../context/SvgRefProvider';
 
-type ViewBox = {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-};
 export interface ChartsSurfaceProps {
-  /**
-   * The width of the chart in px.
-   */
-  width: number;
-  /**
-   * The height of the chart in px.
-   */
-  height: number;
-  viewBox?: ViewBox;
   className?: string;
   title?: string;
   desc?: string;
@@ -35,7 +22,7 @@ export interface ChartsSurfaceProps {
   disableAxisListener?: boolean;
 }
 
-const ChartChartsSurfaceStyles = styled('svg', {
+const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
 })(() => ({
@@ -48,37 +35,39 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
-  const {
-    children,
-    width,
-    height,
-    viewBox,
-    disableAxisListener = false,
-    className,
-    title,
-    desc,
-    ...other
-  } = props;
-  const svgView = { width, height, x: 0, y: 0, ...viewBox };
+  const { width, height, left, right, top, bottom } = useDrawingArea();
   const surfaceRef = useSurfaceRef();
   const handleRef = useForkRef(surfaceRef, ref);
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
+
+  const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
+
+  const svgWidth = width + left + right;
+  const svgHeight = height + top + bottom;
+
+  const svgView = {
+    width: svgWidth,
+    height: svgHeight,
+    x: 0,
+    y: 0,
+  };
 
   useAxisEvents(disableAxisListener);
 
   return (
-    <ChartChartsSurfaceStyles
-      width={width}
-      height={height}
+    <ChartsSurfaceStyles
+      width={svgWidth}
+      height={svgHeight}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={handleRef}
       className={className}
       {...other}
+      ref={handleRef}
     >
-      <title>{title}</title>
-      <desc>{desc}</desc>
+      {title && <title>{title}</title>}
+      {desc && <desc>{desc}</desc>}
+      <ChartsAxesGradients />
       {children}
-    </ChartChartsSurfaceStyles>
+    </ChartsSurfaceStyles>
   );
 });
 
@@ -96,26 +85,12 @@ ChartsSurface.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
-  /**
-   * The height of the chart in px.
-   */
-  height: PropTypes.number.isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
-  /**
-   * The width of the chart in px.
-   */
-  width: PropTypes.number.isRequired,
 } as any;
 
 export { ChartsSurface };

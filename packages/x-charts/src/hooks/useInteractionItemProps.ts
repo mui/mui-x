@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '../internals/useStore';
 import { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
+import { useStore } from '../internals/useStore';
 
 export const useInteractionItemProps = (skip?: boolean) => {
   const store = useStore();
