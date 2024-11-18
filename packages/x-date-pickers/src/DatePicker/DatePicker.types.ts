@@ -1,22 +1,16 @@
-import { MakeRequired } from '@mui/x-internals/types';
-import { UseDateFieldProps } from '../DateField';
 import {
   DesktopDatePickerProps,
   DesktopDatePickerSlots,
   DesktopDatePickerSlotProps,
 } from '../DesktopDatePicker';
-import { BaseDateValidationProps } from '../internals/models/validation';
+import { BaseSingleInputFieldProps } from '../internals/models';
 import {
   MobileDatePickerProps,
   MobileDatePickerSlots,
   MobileDatePickerSlotProps,
 } from '../MobileDatePicker';
-import {
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '../models';
+import { DateValidationError, FieldSection, PickerValidDate } from '../models';
+import { ValidateDateProps } from '../validation/validateDate';
 
 export interface DatePickerSlots extends DesktopDatePickerSlots, MobileDatePickerSlots {}
 
@@ -51,11 +45,13 @@ export interface DatePickerProps<TEnableAccessibleFieldDOMStructure extends bool
 }
 
 /**
- * Props the field can receive when used inside a `DatePicker`, `DesktopDatePicker` or `MobileDatePicker` component.
+ * Props the field can receive when used inside a date picker (<DatePicker />, <DesktopDatePicker /> or <MobileDatePicker /> component).
  */
 export type DatePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
-  MakeRequired<
-    UseDateFieldProps<TEnableAccessibleFieldDOMStructure>,
-    'format' | 'timezone' | 'value' | keyof BaseDateValidationProps
-  > &
-    BaseSingleInputFieldProps<PickerValidDate | null, FieldSection, false, DateValidationError>;
+  ValidateDateProps &
+    BaseSingleInputFieldProps<
+      PickerValidDate | null,
+      FieldSection,
+      TEnableAccessibleFieldDOMStructure,
+      DateValidationError
+    >;

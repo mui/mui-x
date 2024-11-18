@@ -3,7 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -12,8 +12,8 @@ import {
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
 import {
-  BaseSingleInputFieldProps,
   FieldSection,
+  PickerFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
 } from '../../../models';
@@ -75,12 +75,7 @@ export interface ExportedUseDesktopPickerSlotProps<
     ExportedPickersLayoutSlotProps<PickerValidDate | null, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseSingleInputFieldProps<
-      PickerValidDate | null,
-      FieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
-    >,
+    PickerFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -108,7 +103,7 @@ export interface UseDesktopPickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<PickerValidDate | null, TView, any, {}>,
 > extends BasePickerProps<PickerValidDate | null, TView, TError, TExternalProps, {}>,
-    DesktopOnlyPickerProps {
+    MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
    * @default {}

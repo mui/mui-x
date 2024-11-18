@@ -62,7 +62,7 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
@@ -154,7 +154,7 @@ ScatterChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({

@@ -109,7 +109,10 @@ export interface DescribeTreeViewRendererReturnValue<
    * Passes new props to the Tree View.
    * @param {Partial<TreeViewUsedParams<TSignatures>>} props A subset of the props accepted by the Tree View.
    */
-  setProps: (props: Partial<MergeSignaturesProperty<TSignatures, 'params'>>) => void;
+  setProps: (
+    props: Partial<MergeSignaturesProperty<TSignatures, 'params'>> &
+      React.HTMLAttributes<HTMLUListElement>,
+  ) => void;
   /**
    * Passes new items to the Tree View.
    * @param {readyonly DescribeTreeViewItem[]} items The new items.

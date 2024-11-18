@@ -11,6 +11,8 @@
     "import { ChartsSurface } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsSurface",
   "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,
