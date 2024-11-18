@@ -243,6 +243,10 @@ export interface GridClasses {
    */
   columnsManagementHeader: string;
   /**
+   * Styles applied to the columns management search input element.
+   */
+  columnsManagementSearchInput: string;
+  /**
    * Styles applied to the columns management footer element.
    */
   columnsManagementFooter: string;
@@ -720,6 +724,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnsManagement',
   'columnsManagementRow',
   'columnsManagementHeader',
+  'columnsManagementSearchInput',
   'columnsManagementFooter',
   'container--top',
   'container--bottom',

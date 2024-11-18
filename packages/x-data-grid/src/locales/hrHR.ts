@@ -50,6 +50,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nema stupaca',
   columnsManagementShowHideAllText: 'Prikaži/Sakrij sve',
   columnsManagementReset: 'Ponovno namjesti',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filter',

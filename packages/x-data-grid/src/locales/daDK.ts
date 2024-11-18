@@ -43,6 +43,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen søjler',
   columnsManagementShowHideAllText: 'Vis/Skjul Alle',
   columnsManagementReset: 'Nulstil',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',

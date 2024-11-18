@@ -43,6 +43,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sem colunas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Repor',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',

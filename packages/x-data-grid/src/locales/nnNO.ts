@@ -43,6 +43,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',

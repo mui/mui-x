@@ -66,6 +66,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',

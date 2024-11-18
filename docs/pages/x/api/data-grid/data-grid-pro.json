@@ -1391,6 +1391,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGridPro-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGridPro-container--bottom",
       "description": "Styles applied to the bottom container.",

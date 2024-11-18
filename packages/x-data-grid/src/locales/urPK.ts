@@ -43,6 +43,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',

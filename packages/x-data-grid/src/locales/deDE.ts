@@ -43,6 +43,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',

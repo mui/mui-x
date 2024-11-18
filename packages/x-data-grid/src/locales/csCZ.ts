@@ -50,6 +50,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Žádné sloupce',
   columnsManagementShowHideAllText: 'Zobrazit/skrýt vše',
   columnsManagementReset: 'Resetovat',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',

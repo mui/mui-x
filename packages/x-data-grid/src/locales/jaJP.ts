@@ -42,6 +42,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'カラムなし',
   columnsManagementShowHideAllText: 'すべて表示/非表示',
   columnsManagementReset: 'リセット',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',

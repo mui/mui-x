@@ -43,6 +43,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ei sarakkeita näytettäväksi',
   columnsManagementShowHideAllText: 'Näytä/Piilota kaikki',
   columnsManagementReset: 'Palauta',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',

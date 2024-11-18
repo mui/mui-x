@@ -43,6 +43,7 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: '新增過濾器',

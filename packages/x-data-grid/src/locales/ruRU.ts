@@ -67,6 +67,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Нет столбцов',
   columnsManagementShowHideAllText: 'Показать/Скрыть Всё',
   columnsManagementReset: 'Сбросить',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',

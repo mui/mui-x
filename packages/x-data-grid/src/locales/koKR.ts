@@ -42,6 +42,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // columnsManagementNoColumns: 'No columns',
   // columnsManagementShowHideAllText: 'Show/Hide All',
   // columnsManagementReset: 'Reset',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: '필터 추가',

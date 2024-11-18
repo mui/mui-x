@@ -741,6 +741,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the columns management row element"
     },
+    "columnsManagementSearchInput": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the columns management search input element"
+    },
     "container--bottom": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the bottom container"

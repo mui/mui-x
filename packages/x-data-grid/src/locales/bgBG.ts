@@ -42,6 +42,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Няма колони',
   columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
   columnsManagementReset: 'Нулирай',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
