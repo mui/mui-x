@@ -26,6 +26,7 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     plugins,
     children,
     skipAnimation,
+    resolveSizeBeforeRender,
   } = props;
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
@@ -67,6 +68,7 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
     width,
     height,
+    resolveSizeBeforeRender,
   };
 
   return {
