@@ -361,8 +361,9 @@ workflows:
       and:
         equal: [additional, << pipeline.parameters.workflow >>]
         or:
-          condition: << pipeline.parameters.with-material-ui-6 >>
-          condition: << pipeline.parameters.with-react-version >>
+          equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+          not:
+            equal: ['', << pipeline.parameters.with-react-version >>]
     jobs:
       - test_unit:
           <<: *default-context
@@ -384,4 +385,4 @@ workflows:
           <<: *default-context
           name: test_types_additional
           when:
-            condition: << pipeline.parameters.with-material-ui-6 >>
+            equal: [true, << pipeline.parameters.with-material-ui-6 >>]
