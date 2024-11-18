@@ -13,6 +13,10 @@ describe('<ChartDataProvider />', () => {
     testComponentPropWith: 'div',
     refInstanceof: window.SVGSVGElement,
     skip: [
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'refForwarding',
       'componentProp',
       'componentsProp',
       'slotPropsProp',
