@@ -19,13 +19,13 @@ import { PickerValue } from '../internals/models';
 
 export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseDateManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): DateManager<TEnableAccessibleFieldDOMStructure> {
+): UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
   const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
     parameters;
 
   return React.useMemo(
     () => ({
-      valueManager: singleItemValueManager,
+      internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
       validator: validateDate,
       valueType: 'date',
@@ -57,22 +57,27 @@ export function getDateFieldInternalPropsDefaults(
   };
 }
 
-export type DateManager<TEnableAccessibleFieldDOMStructure extends boolean> = PickerManager<
-  PickerValue,
-  TEnableAccessibleFieldDOMStructure,
-  DateValidationError,
-  DateFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-  DateFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
->;
+export interface UseDateManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+}
 
-export interface DateFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export type UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerManager<
+    PickerValue,
+    TEnableAccessibleFieldDOMStructure,
+    DateValidationError,
+    DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+    DateManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+  >;
+
+interface DateManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,
     ExportedValidateDateProps {}
 
-export interface DateFieldInternalPropsWithDefaults<
+interface DateManagerFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseFieldInternalProps<
       PickerValue,
@@ -81,16 +86,12 @@ export interface DateFieldInternalPropsWithDefaults<
     >,
     ValidateDateProps {}
 
-type DateFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
-
-export interface UseDateManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}
+type DateManagerFieldPropsToDefault = 'format' | ValidateDatePropsToDefault;
 
 interface GetDateFieldInternalPropsDefaultsParameters
   extends Pick<MuiPickersAdapterContextValue, 'defaultDates' | 'utils'> {
-  internalProps: Pick<DateFieldInternalProps<true>, DateFieldPropsToDefault>;
+  internalProps: Pick<DateManagerFieldInternalProps<true>, DateManagerFieldPropsToDefault>;
 }
 
 interface GetDateFieldInternalPropsDefaultsReturnValue
-  extends Pick<DateFieldInternalPropsWithDefaults<true>, DateFieldPropsToDefault> {}
+  extends Pick<DateManagerFieldInternalPropsWithDefaults<true>, DateManagerFieldPropsToDefault> {}

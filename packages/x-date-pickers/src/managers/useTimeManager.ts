@@ -19,13 +19,13 @@ import { PickerValue } from '../internals/models';
 
 export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): TimeManager<TEnableAccessibleFieldDOMStructure> {
+): UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
   const { enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure } =
     parameters;
 
   return React.useMemo(
     () => ({
-      valueManager: singleItemValueManager,
+      internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
       validator: validateTime,
       valueType: 'time',
@@ -57,15 +57,20 @@ export function getTimeFieldInternalPropsDefaults(
   };
 }
 
-export type TimeManager<TEnableAccessibleFieldDOMStructure extends boolean> = PickerManager<
-  PickerValue,
-  TEnableAccessibleFieldDOMStructure,
-  TimeValidationError,
-  TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-  TimeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
->;
+export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+}
 
-export interface TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export type UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerManager<
+    PickerValue,
+    TEnableAccessibleFieldDOMStructure,
+    TimeValidationError,
+    TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+    TimeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+  >;
+
+interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
@@ -73,7 +78,7 @@ export interface TimeFieldInternalProps<TEnableAccessibleFieldDOMStructure exten
     ExportedValidateTimeProps,
     AmPmProps {}
 
-export interface TimeFieldInternalPropsWithDefaults<
+interface TimeManagerFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseFieldInternalProps<
       PickerValue,
@@ -82,16 +87,12 @@ export interface TimeFieldInternalPropsWithDefaults<
     >,
     ValidateTimeProps {}
 
-type TimeFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
-
-export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean> {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}
+type TimeManagerFieldPropsToDefault = 'format' | ValidateTimePropsToDefault;
 
 interface GetTimeFieldInternalPropsDefaultsParameters
   extends Pick<MuiPickersAdapterContextValue, 'utils'> {
-  internalProps: Pick<TimeFieldInternalProps<true>, TimeFieldPropsToDefault | 'ampm'>;
+  internalProps: Pick<TimeManagerFieldInternalProps<true>, TimeManagerFieldPropsToDefault | 'ampm'>;
 }
 
 interface GetTimeFieldInternalPropsDefaultsReturnValue
-  extends Pick<TimeFieldInternalPropsWithDefaults<true>, TimeFieldPropsToDefault> {}
+  extends Pick<TimeManagerFieldInternalPropsWithDefaults<true>, TimeManagerFieldPropsToDefault> {}

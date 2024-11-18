@@ -18,7 +18,7 @@ import {
 
 export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   parameters: UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): TimeRangeManager<TEnableAccessibleFieldDOMStructure> {
+): UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
   const {
     enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
     dateSeparator,
@@ -26,7 +26,7 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
 
   return React.useMemo(
     () => ({
-      valueManager: rangeValueManager,
+      internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       validator: validateTimeRange,
       valueType: 'time',
@@ -40,15 +40,21 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
   );
 }
 
-export type TimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean> = PickerManager<
-  PickerRangeValue,
-  TEnableAccessibleFieldDOMStructure,
-  TimeRangeValidationError,
-  TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-  TimeRangeFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
->;
+export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends RangeFieldSeparatorProps {
+  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
+}
 
-export interface TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
+  PickerManager<
+    PickerRangeValue,
+    TEnableAccessibleFieldDOMStructure,
+    TimeRangeValidationError,
+    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+    TimeRangeManagerFieldInternalPropsWithDefaults<TEnableAccessibleFieldDOMStructure>
+  >;
+
+interface TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
@@ -61,7 +67,7 @@ export interface TimeRangeFieldInternalProps<TEnableAccessibleFieldDOMStructure 
     AmPmProps,
     RangeFieldSeparatorProps {}
 
-export interface TimeRangeFieldInternalPropsWithDefaults<
+interface TimeRangeManagerFieldInternalPropsWithDefaults<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseFieldInternalProps<
       PickerRangeValue,
@@ -69,8 +75,3 @@ export interface TimeRangeFieldInternalPropsWithDefaults<
       TimeRangeValidationError
     >,
     ValidateTimeRangeProps {}
-
-export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}

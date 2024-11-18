@@ -1,23 +1,17 @@
 export { useDateRangeManager } from './useDateRangeManager';
 export type {
-  DateRangeManager,
-  DateRangeFieldInternalProps,
-  DateRangeFieldInternalPropsWithDefaults,
+  UseDateRangeManagerReturnValue,
   UseDateRangeManagerParameters,
 } from './useDateRangeManager';
 
 export { useTimeRangeManager } from './useTimeRangeManager';
 export type {
-  TimeRangeManager,
-  TimeRangeFieldInternalProps,
-  TimeRangeFieldInternalPropsWithDefaults,
+  UseTimeRangeManagerReturnValue,
   UseTimeRangeManagerParameters,
 } from './useTimeRangeManager';
 
 export { useDateTimeRangeManager } from './useDateTimeRangeManager';
 export type {
-  DateTimeRangeManager,
-  DateTimeRangeFieldInternalProps,
-  DateTimeRangeFieldInternalPropsWithDefaults,
+  UseDateTimeRangeManagerReturnValue,
   UseDateTimeRangeManagerParameters,
 } from './useDateTimeRangeManager';
