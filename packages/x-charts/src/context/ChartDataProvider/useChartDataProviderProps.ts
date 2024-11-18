@@ -1,21 +1,16 @@
 'use client';
-import * as React from 'react';
 import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { HighlightedProviderProps } from '..';
-import { ChartsSurfaceProps } from '../../ChartsSurface';
+import { HighlightedProviderProps } from '../HighlightedProvider';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
-import { SvgRefProviderProps } from '../SvgRefProvider';
+import { SizeProviderProps } from '../SizeProvider';
 
-export const useChartDataProviderProps = (
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) => {
+export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const {
     width,
     height,
@@ -26,27 +21,17 @@ export const useChartDataProviderProps = (
     zAxis,
     colors,
     dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     plugins,
     children,
     skipAnimation,
-    ...other
+    resolveSizeBeforeRender,
   } = props;
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const svgRefProviderProps: Omit<SvgRefProviderProps, 'children'> = {
-    svgRef: ref,
-  };
-
   const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
-    width,
-    height,
     margin,
   };
 
@@ -80,14 +65,10 @@ export const useChartDataProviderProps = (
     onHighlightChange,
   };
 
-  const chartsSurfaceProps: ChartsSurfaceProps = {
-    ...other,
+  const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
     width,
     height,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
+    resolveSizeBeforeRender,
   };
 
   return {
@@ -97,11 +78,10 @@ export const useChartDataProviderProps = (
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
-    svgRefProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
+    sizeProviderProps,
   };
 };
