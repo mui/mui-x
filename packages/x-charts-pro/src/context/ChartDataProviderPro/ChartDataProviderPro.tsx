@@ -29,7 +29,7 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
 ) {
   const {
     zoomProviderProps,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
@@ -44,7 +44,7 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <DrawingAreaProvider {...drawingProviderProps}>
+    <DrawingAreaProvider {...drawingAreaProviderProps}>
       <SvgRefProvider {...svgRefProviderProps}>
         <AnimationProvider {...animationProviderProps}>
           <PluginProvider {...pluginProviderProps}>

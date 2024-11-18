@@ -11,7 +11,7 @@ export const useChartContainerProProps = (
 
   const {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
@@ -34,7 +34,7 @@ export const useChartContainerProProps = (
   return {
     zoomProviderProps,
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     pluginProviderProps,
     seriesProviderProps,
     cartesianProviderProps,

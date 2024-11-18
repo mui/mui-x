@@ -1,25 +1,26 @@
 import {
-  TreeViewInstance,
-  UseTreeViewItemsSignature,
+  TreeViewUsedStore,
   UseTreeViewItemsState,
   buildSiblingIndexes,
   TREE_VIEW_ROOT_PARENT_ID,
+  selectorItemMeta,
 } from '@mui/x-tree-view/internals';
 import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
   TreeViewItemItemReorderingValidActions,
   TreeViewItemReorderPosition,
+  UseTreeViewItemsReorderingSignature,
 } from './useTreeViewItemsReordering.types';
 
 /**
  * Checks if the item with the id itemIdB is an ancestor of the item with the id itemIdA.
  */
 export const isAncestor = (
-  instance: TreeViewInstance<[UseTreeViewItemsSignature]>,
+  store: TreeViewUsedStore<UseTreeViewItemsReorderingSignature>,
   itemIdA: string,
   itemIdB: string,
 ): boolean => {
-  const itemMetaA = instance.getItemMeta(itemIdA);
+  const itemMetaA = selectorItemMeta(store.value, itemIdA)!;
   if (itemMetaA.parentId === itemIdB) {
     return true;
   }
@@ -28,7 +29,7 @@ export const isAncestor = (
     return false;
   }
 
-  return isAncestor(instance, itemMetaA.parentId, itemIdB);
+  return isAncestor(store, itemMetaA.parentId, itemIdB);
 };
 
 /**
@@ -121,7 +122,7 @@ export const chooseActionToApply = ({
   return action;
 };
 
-export const moveItemInTree = <R extends { children?: R[] }>({
+export const moveItemInTree = <R extends {}>({
   itemToMoveId,
   oldPosition,
   newPosition,
@@ -132,13 +133,13 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   newPosition: TreeViewItemReorderPosition;
   prevState: UseTreeViewItemsState<R>['items'];
 }): UseTreeViewItemsState<R>['items'] => {
-  const itemToMoveMeta = prevState.itemMetaMap[itemToMoveId];
+  const itemToMoveMeta = prevState.itemMetaLookup[itemToMoveId];
 
   const oldParentId = oldPosition.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
   const newParentId = newPosition.parentId ?? TREE_VIEW_ROOT_PARENT_ID;
 
   // 1. Update the `itemOrderedChildrenIds`.
-  const itemOrderedChildrenIds = { ...prevState.itemOrderedChildrenIds };
+  const itemOrderedChildrenIds = { ...prevState.itemOrderedChildrenIdsLookup };
   if (oldParentId === newParentId) {
     const updatedChildren = [...itemOrderedChildrenIds[oldParentId]];
     updatedChildren.splice(oldPosition.index, 1);
@@ -155,27 +156,27 @@ export const moveItemInTree = <R extends { children?: R[] }>({
   }
 
   // 2. Update the `itemChildrenIndexes`
-  const itemChildrenIndexes = { ...prevState.itemChildrenIndexes };
+  const itemChildrenIndexes = { ...prevState.itemChildrenIndexesLookup };
   itemChildrenIndexes[oldParentId] = buildSiblingIndexes(itemOrderedChildrenIds[oldParentId]);
   if (newParentId !== oldParentId) {
     itemChildrenIndexes[newParentId] = buildSiblingIndexes(itemOrderedChildrenIds[newParentId]);
   }
 
-  // 3. Update the `itemMetaMap`
-  const itemMetaMap = { ...prevState.itemMetaMap };
+  // 3. Update the `itemMetaLookup`
+  const itemMetaLookup = { ...prevState.itemMetaLookup };
 
   // 3.1 Update the `expandable` property of the old and the new parent
   if (oldParentId !== TREE_VIEW_ROOT_PARENT_ID && oldParentId !== newParentId) {
-    itemMetaMap[oldParentId].expandable = itemOrderedChildrenIds[oldParentId].length > 0;
+    itemMetaLookup[oldParentId].expandable = itemOrderedChildrenIds[oldParentId].length > 0;
   }
   if (newParentId !== TREE_VIEW_ROOT_PARENT_ID && newParentId !== oldParentId) {
-    itemMetaMap[newParentId].expandable = itemOrderedChildrenIds[newParentId].length > 0;
+    itemMetaLookup[newParentId].expandable = itemOrderedChildrenIds[newParentId].length > 0;
   }
 
   // 3.2 Update the `parentId` and `depth` properties of the item to move
   // The depth is always defined because drag&drop is only usable with Rich Tree View components.
-  const itemToMoveDepth = newPosition.parentId == null ? 0 : itemMetaMap[newParentId].depth! + 1;
-  itemMetaMap[itemToMoveId] = {
+  const itemToMoveDepth = newPosition.parentId == null ? 0 : itemMetaLookup[newParentId].depth! + 1;
+  itemMetaLookup[itemToMoveId] = {
     ...itemToMoveMeta,
     parentId: newPosition.parentId,
     depth: itemToMoveDepth,
@@ -183,7 +184,7 @@ export const moveItemInTree = <R extends { children?: R[] }>({
 
   // 3.3 Update the depth of all the children of the item to move
   const updateItemDepth = (itemId: string, depth: number) => {
-    itemMetaMap[itemId] = { ...itemMetaMap[itemId], depth };
+    itemMetaLookup[itemId] = { ...itemMetaLookup[itemId], depth };
     itemOrderedChildrenIds[itemId]?.forEach((childId) => updateItemDepth(childId, depth + 1));
   };
   itemOrderedChildrenIds[itemToMoveId]?.forEach((childId) =>
@@ -192,8 +193,8 @@ export const moveItemInTree = <R extends { children?: R[] }>({
 
   return {
     ...prevState,
-    itemOrderedChildrenIds,
-    itemChildrenIndexes,
-    itemMetaMap,
+    itemOrderedChildrenIdsLookup: itemOrderedChildrenIds,
+    itemChildrenIndexesLookup: itemChildrenIndexes,
+    itemMetaLookup,
   };
 };
