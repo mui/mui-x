@@ -399,6 +399,7 @@ const SearchInput = styled(TextField, {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   [`& .${inputBaseClasses.root}`]: {
     paddingLeft: theme.spacing(1.5),
+    paddingRight: 0,
   },
   [`& .${inputBaseClasses.input}::-webkit-search-decoration,
   & .${inputBaseClasses.input}::-webkit-search-cancel-button,
