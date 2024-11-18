@@ -558,11 +558,11 @@ describe('<DataGridPro /> - Columns', () => {
       const separators = document.querySelectorAll(`.${gridClasses['columnSeparator--resizable']}`);
       fireEvent.doubleClick(separators[0]);
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 233]);
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 233]);
 
       fireEvent.doubleClick(separators[1]);
       await microtasks();
-      expect(getWidths()).to.deep.equal([50, 63]);
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 64]);
     });
 
     describe('options', () => {
