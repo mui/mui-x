@@ -29,8 +29,8 @@ export const useSingleInputTimeRangeField = <
   >({
     forwardedProps,
     internalProps: internalPropsWithDefaults,
-    valueManager: manager.valueManager,
-    fieldValueManager: manager.fieldValueManager,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
   });

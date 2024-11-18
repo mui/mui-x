@@ -2,4 +2,4 @@ export * from './fields';
 export * from './common';
 export * from './value';
 export * from './formProps';
-export * from './valueManager';
+export * from './manager';

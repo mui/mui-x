@@ -26,10 +26,10 @@ export function useDateManager<TEnableAccessibleFieldDOMStructure extends boolea
   return React.useMemo(
     () => ({
       valueManager: singleItemValueManager,
-      fieldValueManager: singleItemFieldValueManager,
+      internal_fieldValueManager: singleItemFieldValueManager,
       validator: validateDate,
       valueType: 'date',
-      applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
+      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils, defaultDates }) => ({
         ...internalProps,
         ...getDateFieldInternalPropsDefaults({ defaultDates, utils, internalProps }),
       }),

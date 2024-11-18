@@ -40,7 +40,7 @@ export const useFieldInternalPropsWithDefaults = <TManager extends PickerAnyMana
 }): PickerManagerFieldInternalPropsWithDefaults<TManager> => {
   const localizationContext = useLocalizationContext();
   return React.useMemo(() => {
-    return manager.applyDefaultsToFieldInternalProps({
+    return manager.internal_applyDefaultsToFieldInternalProps({
       ...localizationContext,
       internalProps,
     });

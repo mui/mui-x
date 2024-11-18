@@ -23,14 +23,30 @@ export interface PickerManager<
 > {
   /**
    * Object containing basic methods to interact with the value of the picker or field.
+   * This object is not part of the public API and should not be used directly.
    */
-  valueManager: PickerValueManager<TValue, TError>;
+  internal_valueManager: PickerValueManager<TValue, TError>;
   /**
    * Object containing all the necessary methods to interact with the value of the field.
+   * This object is not part of the public API and should not be used directly.
    */
-  fieldValueManager: FieldValueManager<TValue>;
+  internal_fieldValueManager: FieldValueManager<TValue>;
   /**
    * Checks if a value is valid and returns an error code otherwise.
+   * It can be passed to the `useValidation` hook to validate a value:
+   *
+   * ```tsx
+   * import { useDateManager } from '@mui/x-date-pickers/managers';
+   * import { useValidation } from '@mui/x-date-pickers/validation';
+   *
+   * const manager = useDateManager();
+   * const { hasValidationError } = useValidation({
+   *   validator: manager.validator,
+   *   value,
+   *   timezone,
+   *   props,
+   * });
+   * ```
    */
   validator: Validator<TValue, TError, TFieldInternalPropsWithDefaults>;
   /**
@@ -38,10 +54,11 @@ export interface PickerManager<
    * This usually includes:
    * - a default format to display the value in the field
    * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
+   * This object is not part of the public API and should not be used directly.
    * @param {ApplyDefaultsToFieldInternalPropsParameters} parameters The parameters to apply the defaults.
    * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
    */
-  applyDefaultsToFieldInternalProps: (
+  internal_applyDefaultsToFieldInternalProps: (
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => TFieldInternalPropsWithDefaults;
   /**

@@ -27,10 +27,10 @@ export function useTimeRangeManager<TEnableAccessibleFieldDOMStructure extends b
   return React.useMemo(
     () => ({
       valueManager: rangeValueManager,
-      fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
+      internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
       validator: validateTimeRange,
       valueType: 'time',
-      applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
+      internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
         ...internalProps,
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
