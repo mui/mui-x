@@ -101,7 +101,7 @@
     "@next/eslint-plugin-next": "15.0.3",
     "@octokit/plugin-retry": "^7.1.2",
     "@octokit/rest": "^21.0.2",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.44.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
     "@types/babel__core": "^7.20.5",
@@ -207,8 +207,8 @@
   "resolutions": {
     "react-is": "^18.3.1",
     "@types/node": "^20.17.6",
-    "@playwright/test": "^1.49.0",
-    "playwright": "^1.49.0",
+    "@playwright/test": "^1.44.1",
+    "playwright": "^1.44.1",
     "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/c4437e0a/@mui/internal-test-utils"
   },
   "packageManager": "pnpm@9.13.2",
