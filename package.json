@@ -207,8 +207,10 @@
   "resolutions": {
     "react-is": "^18.3.1",
     "@types/node": "^20.17.6",
-    "@playwright/test": "^1.44.1",
-    "playwright": "^1.44.1",
+    "@playwright/test": "1.44.1",
+    "playwright": "1.44.1",
+    "@vitest/browser>playwright": "1.44.1",
+    "@mui/internal-test-utils>playwright": "1.44.1",
     "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/c4437e0a/@mui/internal-test-utils"
   },
   "packageManager": "pnpm@9.13.2",
