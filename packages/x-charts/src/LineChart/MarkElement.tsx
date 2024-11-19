@@ -9,8 +9,8 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../context';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 
 const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',

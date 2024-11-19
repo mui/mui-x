@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { getValueToPositionMapper, useYScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 import { selectorChartsInteractionYAxis } from '../context/InteractionSelectors';
 import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';

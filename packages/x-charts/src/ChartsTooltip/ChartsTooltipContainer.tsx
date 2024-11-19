@@ -8,8 +8,8 @@ import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 import { useXAxis } from '../hooks';
 import {
   selectorChartsInteractionItemIsDefined,

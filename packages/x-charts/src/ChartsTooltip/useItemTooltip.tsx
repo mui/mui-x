@@ -12,8 +12,8 @@ import {
 import { getLabel } from '../internals/getLabel';
 import { CommonSeriesType } from '../models/seriesType/common';
 import { selectorChartsInteractionItem } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 import { ItemInteractionData } from '../internals/plugins/models';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {

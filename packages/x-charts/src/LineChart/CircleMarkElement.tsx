@@ -7,9 +7,9 @@ import { animated, useSpring } from '@react-spring/web';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../context';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
-import { useSelector } from '../internals/useSelector';
+import { useSelector } from '../internals/store/useSelector';
 import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {

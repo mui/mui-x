@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ChartStore } from './plugins/utils/ChartStore';
-import { ChartState } from './plugins/models';
+import { ChartStore } from '../plugins/utils/ChartStore';
+import { ChartState } from '../plugins/models';
 
 let globalId = 0;
 

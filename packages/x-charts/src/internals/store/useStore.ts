@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ChartsContext } from '../context/InteractionProvider';
-import { ChartStore } from './plugins/utils/ChartStore';
+import { ChartsContext } from '../../context/InteractionProvider';
+import { ChartStore } from '../plugins/utils/ChartStore';
 
 export function useStore(skipError?: boolean): ChartStore {
   const charts = React.useContext(ChartsContext);

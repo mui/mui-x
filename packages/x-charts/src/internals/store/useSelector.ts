@@ -1,7 +1,7 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-import { ChartState } from './plugins/models';
-import { ChartsSelector } from './plugins/utils/selectors';
-import { ChartStore } from './plugins/utils/ChartStore';
+import { ChartState } from '../plugins/models';
+import { ChartsSelector } from '../plugins/utils/selectors';
+import { ChartStore } from '../plugins/utils/ChartStore';
 
 const defaultCompare = Object.is;
 

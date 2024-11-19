@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useCharts } from '../internals/useCharts';
+import { useCharts } from '../internals/store/useCharts';
 import { ChartStore } from '../internals/plugins/utils/ChartStore';
 
 export const ChartsContext = React.createContext<{ store: ChartStore } | null>(null);
