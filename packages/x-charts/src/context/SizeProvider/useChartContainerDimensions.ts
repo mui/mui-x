@@ -115,7 +115,7 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
     containerRef: rootRef,
     width: finalWidth,
     height: finalHeight,
-    hasIntrinsicSize: Boolean(finalWidth > 0 && finalHeight > 0),
+    hasIntrinsicSize: finalWidth > 0 && finalHeight > 0,
     inWidth,
     inHeight,
   };
