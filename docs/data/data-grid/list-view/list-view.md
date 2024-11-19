@@ -87,10 +87,6 @@ The list view feature can be combined with [custom subcomponents](/x/react-data-
 
 {{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 360, "height": 600}}
 
-:::info
-See the code for this demo in [CodeSandbox](https://codesandbox.io/p/sandbox/x-react-data-grid-list-view-zmkzhz).
-:::
-
 ## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "List View"}}
