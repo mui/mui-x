@@ -14,5 +14,4 @@ jobs:
     uses: mui/mui-public/.github/workflows/prs_create-cherry-pick-pr.yml@master
     permissions:
       contents: write
-      issues: write
       pull-requests: write
