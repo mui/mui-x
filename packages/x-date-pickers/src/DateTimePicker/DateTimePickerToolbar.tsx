@@ -24,6 +24,7 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -243,8 +244,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    disabled,
-    readOnly,
     toolbarVariant = 'mobile',
     toolbarTitle: inToolbarTitle,
     className,
@@ -252,6 +251,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   } = props;
 
   const isRtl = useRtl();
+  const { disabled, readOnly } = usePickerContext();
   const ownerState: DateTimePickerToolbarOwnerState = { ...props, isRtl };
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -413,12 +413,6 @@ DateTimePickerToolbar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * If `true`, the component is disabled.
-   * When disabled, the value cannot be changed and no interaction is possible.
-   * @default false
-   */
-  disabled: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
@@ -431,12 +425,6 @@ DateTimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  /**
-   * If `true`, the component is read-only.
-   * When read-only, the value cannot be changed but the user can interact with the interface.
-   * @default false
-   */
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
