@@ -2,25 +2,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps, SxProps, Theme } from '@mui/material/styles';
 import Popper, { PopperProps as BasePopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  AxisInteractionData,
-  InteractionContext,
-  ItemInteractionData,
-} from '../context/InteractionProvider';
-import {
-  generateVirtualElement,
-  useMouseTracker,
-  getTooltipHasData,
-  TriggerOptions,
-} from './utils';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { getTooltipHasData, TriggerOptions, usePointerType } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 import { ChartsTooltipClasses, getChartsTooltipUtilityClass } from './chartsTooltipClasses';
+import {
+  selectorChartsInteractionItem,
+  selectorChartsInteractionAxis,
+} from '../context/InteractionSelectors';
+import { ItemInteractionData, AxisInteractionData } from '../internals/plugins/models';
+import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 
 export type PopperProps = BasePopperProps & {
   /**
@@ -133,14 +132,21 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
   });
   const { trigger = 'axis', itemContent, axisContent, slots, slotProps } = props;
 
-  const mousePosition = useMouseTracker();
+  const svgRef = useSvgRef();
+  const pointerType = usePointerType();
 
-  const { item, axis } = React.useContext(InteractionContext);
+  const popperRef: PopperProps['popperRef'] = React.useRef(null);
+
+  const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
+
+  const store = useStore();
+  const item = useSelector(store, selectorChartsInteractionItem);
+  const axis = useSelector(store, selectorChartsInteractionAxis);
 
   const displayedData = trigger === 'item' ? item : axis;
 
   const tooltipHasData = getTooltipHasData(trigger, displayedData);
-  const popperOpen = mousePosition !== null && tooltipHasData;
+  const popperOpen = pointerType !== null && tooltipHasData;
 
   const classes = useUtilityClasses({ classes: props.classes });
 
@@ -150,20 +156,53 @@ function ChartsTooltip<T extends ChartSeriesType>(inProps: ChartsTooltipProps<T>
     externalSlotProps: slotProps?.popper,
     additionalProps: {
       open: popperOpen,
-      placement:
-        mousePosition?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
-      anchorEl: generateVirtualElement(mousePosition),
+      placement: pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const),
+      popperRef,
+      anchorEl: {
+        getBoundingClientRect: () => ({
+          x: positionRef.current.x,
+          y: positionRef.current.y,
+          top: positionRef.current.y,
+          left: positionRef.current.x,
+          right: positionRef.current.x,
+          bottom: positionRef.current.y,
+          width: 0,
+          height: 0,
+          toJSON: () => '',
+        }),
+      },
       modifiers: [
         {
           name: 'offset',
           options: {
-            offset: [0, mousePosition?.pointerType === 'touch' ? 40 - mousePosition.height : 0],
+            offset: [0, pointerType?.pointerType === 'touch' ? 40 - pointerType.height : 0],
           },
         },
       ],
     },
     ownerState: {},
   });
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleMove = (event: PointerEvent) => {
+      // eslint-disable-next-line react-compiler/react-compiler
+      positionRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      popperRef.current?.update();
+    };
+    element.addEventListener('pointermove', handleMove);
+
+    return () => {
+      element.removeEventListener('pointermove', handleMove);
+    };
+  }, [svgRef, positionRef]);
 
   if (trigger === 'none') {
     return null;

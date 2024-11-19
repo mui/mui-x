@@ -2,12 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
+import { styled } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
-import { useChartId } from '../hooks';
+import { useChartId, useDrawingArea } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -15,6 +16,7 @@ import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
 import { SeriesFormatterResult } from '../context/PluginProvider';
+import { useSkipAnimation } from '../context/AnimationProvider';
 
 /**
  * Solution of the equations
@@ -55,7 +57,7 @@ export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps
 export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation?: boolean;
   /**
@@ -91,6 +93,7 @@ const useAggregatedData = (): {
     useBarSeries() ??
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'bar'>);
   const axisData = useCartesianContext();
+  const drawingArea = useDrawingArea();
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
@@ -101,9 +104,15 @@ const useAggregatedData = (): {
   const masks: Record<string, MaskData> = {};
 
   const data = stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
+    const xMin = drawingArea.left;
+    const xMax = drawingArea.left + drawingArea.width;
+
+    const yMin = drawingArea.top;
+    const yMax = drawingArea.top + drawingArea.height;
+
     return groupIds.flatMap((seriesId) => {
-      const xAxisId = series[seriesId].xAxisId ?? series[seriesId].xAxisKey ?? defaultXAxisId;
-      const yAxisId = series[seriesId].yAxisId ?? series[seriesId].yAxisKey ?? defaultYAxisId;
+      const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
+      const yAxisId = series[seriesId].yAxisId ?? defaultYAxisId;
 
       const xAxisConfig = xAxis[xAxisId];
       const yAxisConfig = yAxis[yAxisId];
@@ -131,54 +140,69 @@ const useAggregatedData = (): {
 
       const { stackedData } = series[seriesId];
 
-      return stackedData.map((values, dataIndex: number) => {
-        const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+      return stackedData
+        .map((values, dataIndex: number) => {
+          const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-        const minValueCoord = Math.round(Math.min(...valueCoordinates));
-        const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+          const minValueCoord = Math.round(Math.min(...valueCoordinates));
+          const maxValueCoord = Math.round(Math.max(...valueCoordinates));
 
-        const stackId = series[seriesId].stack;
+          const stackId = series[seriesId].stack;
 
-        const result = {
-          seriesId,
-          dataIndex,
-          layout: series[seriesId].layout,
-          x: verticalLayout ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset : minValueCoord,
-          y: verticalLayout ? minValueCoord : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
-          xOrigin: xScale(0)!,
-          yOrigin: yScale(0)!,
-          height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
-          width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
-          color: colorGetter(dataIndex),
-          value: series[seriesId].data[dataIndex],
-          maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
-        };
-
-        if (!masks[result.maskId]) {
-          masks[result.maskId] = {
-            id: result.maskId,
-            width: 0,
-            height: 0,
-            hasNegative: false,
-            hasPositive: false,
-            layout: result.layout,
+          const result = {
+            seriesId,
+            dataIndex,
+            layout: series[seriesId].layout,
+            x: verticalLayout
+              ? xScale(xAxis[xAxisId].data?.[dataIndex])! + barOffset
+              : minValueCoord,
+            y: verticalLayout
+              ? minValueCoord
+              : yScale(yAxis[yAxisId].data?.[dataIndex])! + barOffset,
             xOrigin: xScale(0)!,
             yOrigin: yScale(0)!,
-            x: 0,
-            y: 0,
+            height: verticalLayout ? maxValueCoord - minValueCoord : barWidth,
+            width: verticalLayout ? barWidth : maxValueCoord - minValueCoord,
+            color: colorGetter(dataIndex),
+            value: series[seriesId].data[dataIndex],
+            maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
           };
-        }
 
-        const mask = masks[result.maskId];
-        mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
-        mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
-        mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
-        mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
-        mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
-        mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+          if (
+            result.x > xMax ||
+            result.x + result.width < xMin ||
+            result.y > yMax ||
+            result.y + result.height < yMin
+          ) {
+            return null;
+          }
 
-        return result;
-      });
+          if (!masks[result.maskId]) {
+            masks[result.maskId] = {
+              id: result.maskId,
+              width: 0,
+              height: 0,
+              hasNegative: false,
+              hasPositive: false,
+              layout: result.layout,
+              xOrigin: xScale(0)!,
+              yOrigin: yScale(0)!,
+              x: 0,
+              y: 0,
+            };
+          }
+
+          const mask = masks[result.maskId];
+          mask.width = result.layout === 'vertical' ? result.width : mask.width + result.width;
+          mask.height = result.layout === 'vertical' ? mask.height + result.height : result.height;
+          mask.x = Math.min(mask.x === 0 ? Infinity : mask.x, result.x);
+          mask.y = Math.min(mask.y === 0 ? Infinity : mask.y, result.y);
+          mask.hasNegative = mask.hasNegative || (result.value ?? 0) < 0;
+          mask.hasPositive = mask.hasPositive || (result.value ?? 0) > 0;
+
+          return result;
+        })
+        .filter((rectangle) => rectangle !== null);
     });
   });
 
@@ -211,6 +235,16 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   width,
 });
 
+const BarPlotRoot = styled('g', {
+  name: 'MuiBarPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${barElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 /**
  * Demos:
  *
@@ -224,7 +258,8 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
  */
 function BarPlot(props: BarPlotProps) {
   const { completedData, masksData } = useAggregatedData();
-  const { skipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+  const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
 
@@ -247,7 +282,7 @@ function BarPlot(props: BarPlotProps) {
   });
 
   return (
-    <React.Fragment>
+    <BarPlotRoot>
       {!withoutBorderRadius &&
         maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
           return (
@@ -292,7 +327,7 @@ function BarPlot(props: BarPlotProps) {
           {...other}
         />
       )}
-    </React.Fragment>
+    </BarPlotRoot>
   );
 }
 
@@ -321,7 +356,7 @@ BarPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * If `true`, animations are skipped.
-   * @default false
+   * @default undefined
    */
   skipAnimation: PropTypes.bool,
   /**

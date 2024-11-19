@@ -6,11 +6,16 @@ import {
   GridRowSelectionApi,
   GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
-import { GridRowId } from '../../../models/gridRows';
+import { GridGroupNode, GridRowId } from '../../../models/gridRows';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { useGridSelector } from '../../utils/useGridSelector';
+import {
+  gridRowsLookupSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowTreeSelector,
+} from '../rows/gridRowsSelector';
 import {
   gridRowSelectionStateSelector,
   selectedGridRowsSelector,
@@ -20,7 +25,7 @@ import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   gridExpandedSortedRowIdsSelector,
-  gridFilterModelSelector,
+  gridFilteredRowsLookupSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -28,10 +33,10 @@ import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
-import { isMultipleRowSelectionEnabled } from './utils';
+import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
@@ -80,21 +85,29 @@ export const useGridRowSelection = (
     | 'checkboxSelectionVisibleOnly'
     | 'pagination'
     | 'paginationMode'
+    | 'filterMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
     | 'rowSelection'
+    | 'rowSelectionPropagation'
     | 'signature'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
 
-  const runIfRowSelectionIsEnabled =
+  const runIfRowSelectionIsEnabled = React.useCallback(
     <Args extends any[]>(callback: (...args: Args) => void) =>
-    (...args: Args) => {
-      if (props.rowSelection) {
-        callback(...args);
-      }
-    };
+      (...args: Args) => {
+        if (props.rowSelection) {
+          callback(...args);
+        }
+      },
+    [props.rowSelection],
+  );
+
+  const applyAutoSelection =
+    props.signature !== GridSignature.DataGrid &&
+    (props.rowSelectionPropagation?.parents || props.rowSelectionPropagation?.descendants);
 
   const propRowSelectionModel = React.useMemo(() => {
     return getSelectionModelPropValue(
@@ -121,6 +134,8 @@ export const useGridRowSelection = (
 
   const canHaveMultipleSelection = isMultipleRowSelectionEnabled(props);
   const visibleRows = useGridVisibleRows(apiRef, props);
+  const tree = useGridSelector(apiRef, gridRowTreeSelector);
+  const isNestedData = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 1;
 
   const expandMouseRowRangeSelection = React.useCallback(
     (id: GridRowId) => {
@@ -148,7 +163,7 @@ export const useGridRowSelection = (
     [apiRef],
   );
 
-  /**
+  /*
    * API METHODS
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
@@ -220,24 +235,78 @@ export const useGridRowSelection = (
       if (resetSelection) {
         logger.debug(`Setting selection for row ${id}`);
 
-        apiRef.current.setRowSelectionModel(isSelected ? [id] : []);
+        const newSelection: GridRowId[] = [];
+        const addRow = (rowId: GridRowId) => {
+          newSelection.push(rowId);
+        };
+        if (isSelected) {
+          addRow(id);
+          if (applyAutoSelection) {
+            findRowsToSelect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation?.descendants ?? false,
+              props.rowSelectionPropagation?.parents ?? false,
+              addRow,
+            );
+          }
+        }
+
+        apiRef.current.setRowSelectionModel(newSelection);
       } else {
         logger.debug(`Toggling selection for row ${id}`);
 
         const selection = gridRowSelectionStateSelector(apiRef.current.state);
-        const newSelection: GridRowId[] = selection.filter((el) => el !== id);
+
+        const newSelection: Set<GridRowId> = new Set(selection);
+        newSelection.delete(id);
+
+        const addRow = (rowId: GridRowId) => {
+          newSelection.add(rowId);
+        };
+        const removeRow = (rowId: GridRowId) => {
+          newSelection.delete(rowId);
+        };
 
         if (isSelected) {
-          newSelection.push(id);
+          addRow(id);
+          if (applyAutoSelection) {
+            findRowsToSelect(
+              apiRef,
+              tree,
+              id,
+              props.rowSelectionPropagation?.descendants ?? false,
+              props.rowSelectionPropagation?.parents ?? false,
+              addRow,
+            );
+          }
+        } else if (applyAutoSelection) {
+          findRowsToDeselect(
+            apiRef,
+            tree,
+            id,
+            props.rowSelectionPropagation?.descendants ?? false,
+            props.rowSelectionPropagation?.parents ?? false,
+            removeRow,
+          );
         }
 
-        const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+        const isSelectionValid = newSelection.size < 2 || canHaveMultipleSelection;
         if (isSelectionValid) {
-          apiRef.current.setRowSelectionModel(newSelection);
+          apiRef.current.setRowSelectionModel(Array.from(newSelection));
         }
       }
     },
-    [apiRef, logger, canHaveMultipleSelection],
+    [
+      apiRef,
+      logger,
+      applyAutoSelection,
+      tree,
+      props.rowSelectionPropagation?.descendants,
+      props.rowSelectionPropagation?.parents,
+      canHaveMultipleSelection,
+    ],
   );
 
   const selectRows = React.useCallback<GridRowMultiSelectionApi['selectRows']>(
@@ -246,32 +315,87 @@ export const useGridRowSelection = (
 
       const selectableIds = ids.filter((id) => apiRef.current.isRowSelectable(id));
 
-      let newSelection: GridRowId[];
+      let newSelection: Set<GridRowId>;
       if (resetSelection) {
-        newSelection = isSelected ? selectableIds : [];
+        if (isSelected) {
+          newSelection = new Set(selectableIds);
+          if (applyAutoSelection) {
+            const addRow = (rowId: GridRowId) => {
+              newSelection.add(rowId);
+            };
+            selectableIds.forEach((id) => {
+              findRowsToSelect(
+                apiRef,
+                tree,
+                id,
+                props.rowSelectionPropagation?.descendants ?? false,
+                props.rowSelectionPropagation?.parents ?? false,
+                addRow,
+              );
+            });
+          }
+        } else {
+          newSelection = new Set();
+        }
+        const currentLookup = selectedIdsLookupSelector(apiRef);
+        if (
+          newSelection.size === Object.keys(currentLookup).length &&
+          Array.from(newSelection).every((id) => currentLookup[id] === id)
+        ) {
+          return;
+        }
       } else {
-        // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-        const selectionLookup = {
-          ...selectedIdsLookupSelector(apiRef),
+        newSelection = new Set(Object.values(selectedIdsLookupSelector(apiRef)));
+        const addRow = (rowId: GridRowId) => {
+          newSelection.add(rowId);
+        };
+        const removeRow = (rowId: GridRowId) => {
+          newSelection.delete(rowId);
         };
 
         selectableIds.forEach((id) => {
           if (isSelected) {
-            selectionLookup[id] = id;
+            newSelection.add(id);
+            if (applyAutoSelection) {
+              findRowsToSelect(
+                apiRef,
+                tree,
+                id,
+                props.rowSelectionPropagation?.descendants ?? false,
+                props.rowSelectionPropagation?.parents ?? false,
+                addRow,
+              );
+            }
           } else {
-            delete selectionLookup[id];
+            removeRow(id);
+            if (applyAutoSelection) {
+              findRowsToDeselect(
+                apiRef,
+                tree,
+                id,
+                props.rowSelectionPropagation?.descendants ?? false,
+                props.rowSelectionPropagation?.parents ?? false,
+                removeRow,
+              );
+            }
           }
         });
-
-        newSelection = Object.values(selectionLookup);
       }
 
-      const isSelectionValid = newSelection.length < 2 || canHaveMultipleSelection;
+      const isSelectionValid = newSelection.size < 2 || canHaveMultipleSelection;
       if (isSelectionValid) {
-        apiRef.current.setRowSelectionModel(newSelection);
+        apiRef.current.setRowSelectionModel(Array.from(newSelection));
       }
     },
-    [apiRef, logger, canHaveMultipleSelection],
+    [
+      logger,
+      applyAutoSelection,
+      canHaveMultipleSelection,
+      apiRef,
+      tree,
+      props.rowSelectionPropagation?.descendants,
+      props.rowSelectionPropagation?.parents,
+    ],
   );
 
   const selectRowRange = React.useCallback<GridRowMultiSelectionApi['selectRowRange']>(
@@ -323,31 +447,84 @@ export const useGridRowSelection = (
     props.signature === GridSignature.DataGrid ? 'private' : 'public',
   );
 
-  /**
+  /*
    * EVENTS
    */
-  const removeOutdatedSelection = React.useCallback(() => {
-    if (props.keepNonExistentRowsSelected) {
-      return;
-    }
-    const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-    const rowsLookup = gridRowsLookupSelector(apiRef);
-
-    // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
-    const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
-
-    let hasChanged = false;
-    currentSelection.forEach((id: GridRowId) => {
-      if (!rowsLookup[id]) {
-        delete selectionLookup[id];
-        hasChanged = true;
+  const isFirstRender = React.useRef(true);
+  const removeOutdatedSelection = React.useCallback(
+    (sortModelUpdated = false) => {
+      if (isFirstRender.current) {
+        return;
       }
-    });
+      const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
+      const rowsLookup = gridRowsLookupSelector(apiRef);
+      const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
-    if (hasChanged) {
-      apiRef.current.setRowSelectionModel(Object.values(selectionLookup));
-    }
-  }, [apiRef, props.keepNonExistentRowsSelected]);
+      // We clone the existing object to avoid mutating the same object returned by the selector to others part of the project
+      const selectionLookup = { ...selectedIdsLookupSelector(apiRef) };
+
+      const isNonExistent = (id: GridRowId) => {
+        if (props.filterMode === 'server') {
+          return !rowsLookup[id];
+        }
+        return filteredRowsLookup[id] !== true;
+      };
+
+      let hasChanged = false;
+      currentSelection.forEach((id: GridRowId) => {
+        if (isNonExistent(id)) {
+          if (props.keepNonExistentRowsSelected) {
+            return;
+          }
+          delete selectionLookup[id];
+          hasChanged = true;
+          return;
+        }
+        if (!props.rowSelectionPropagation?.parents) {
+          return;
+        }
+        const node = tree[id];
+        if (node.type === 'group') {
+          const isAutoGenerated = (node as GridGroupNode).isAutoGenerated;
+          if (isAutoGenerated) {
+            delete selectionLookup[id];
+            hasChanged = true;
+            return;
+          }
+          // Keep previously selected tree data parents selected if all their children are filtered out
+          if (!node.children.every((childId) => filteredRowsLookup[childId] === false)) {
+            delete selectionLookup[id];
+            hasChanged = true;
+          }
+        }
+      });
+
+      // For nested data, on row tree updation (filtering, adding rows, etc.) when the selection is
+      // not empty, we need to re-run scanning of the tree to propagate the selection changes
+      // Example: A parent whose de-selected children are filtered out should now be selected
+      const shouldReapplyPropagation =
+        isNestedData &&
+        props.rowSelectionPropagation?.parents &&
+        Object.keys(selectionLookup).length > 0;
+
+      if (hasChanged || (shouldReapplyPropagation && !sortModelUpdated)) {
+        const newSelection = Object.values(selectionLookup);
+        if (shouldReapplyPropagation) {
+          apiRef.current.selectRows(newSelection, true, true);
+        } else {
+          apiRef.current.setRowSelectionModel(newSelection);
+        }
+      }
+    },
+    [
+      apiRef,
+      isNestedData,
+      props.rowSelectionPropagation?.parents,
+      props.keepNonExistentRowsSelected,
+      props.filterMode,
+      tree,
+    ],
+  );
 
   const handleSingleRowSelection = React.useCallback(
     (id: GridRowId, event: React.MouseEvent | React.KeyboardEvent) => {
@@ -452,8 +629,7 @@ export const useGridRowSelection = (
           ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
           : gridExpandedSortedRowIdsSelector(apiRef);
 
-      const filterModel = gridFilterModelSelector(apiRef);
-      apiRef.current.selectRows(rowsToBeSelected, params.value, filterModel?.items.length > 0);
+      apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination, props.paginationMode],
   );
@@ -526,7 +702,7 @@ export const useGridRowSelection = (
         return;
       }
 
-      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         selectRows(apiRef.current.getAllRowIds(), true);
       }
@@ -537,6 +713,11 @@ export const useGridRowSelection = (
   useGridApiEventHandler(
     apiRef,
     'sortedRowsSet',
+    runIfRowSelectionIsEnabled(() => removeOutdatedSelection(true)),
+  );
+  useGridApiEventHandler(
+    apiRef,
+    'filteredRowsSet',
     runIfRowSelectionIsEnabled(removeOutdatedSelection),
   );
   useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
@@ -557,7 +738,7 @@ export const useGridRowSelection = (
   );
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
-  /**
+  /*
    * EFFECTS
    */
   React.useEffect(() => {
@@ -601,4 +782,14 @@ export const useGridRowSelection = (
       apiRef.current.setRowSelectionModel([]);
     }
   }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
+
+  React.useEffect(() => {
+    runIfRowSelectionIsEnabled(removeOutdatedSelection);
+  }, [removeOutdatedSelection, runIfRowSelectionIsEnabled]);
+
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+  }, []);
 };

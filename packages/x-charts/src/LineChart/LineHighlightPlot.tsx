@@ -1,15 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '../internals/SlotComponentPropsFromProps';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { InteractionContext } from '../context/InteractionProvider';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useDrawingArea } from '../hooks/useDrawingArea';
+import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
+import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -48,9 +50,11 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
   const drawingArea = useDrawingArea();
-  const { axis } = React.useContext(InteractionContext);
+  const store = useStore();
+  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
-  const highlightedIndex = axis.x?.index;
+  const highlightedIndex = xAxisIdentifier?.index;
+
   if (highlightedIndex === undefined) {
     return null;
   }
@@ -70,17 +74,12 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             disableHighlight,
           } = series[seriesId];
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           if (disableHighlight || data[highlightedIndex] == null) {
             return null;

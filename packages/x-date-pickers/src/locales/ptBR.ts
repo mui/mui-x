@@ -9,14 +9,14 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'meridiano',
 };
 
-const ptBRPickers: Partial<PickersLocaleText<any>> = {
+const ptBRPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mês anterior',
   nextMonth: 'Próximo mês',
 
   // View navigation
-  openPreviousView: 'Abrir próxima seleção',
-  openNextView: 'Abrir seleção anterior',
+  openPreviousView: 'Abrir seleção anterior',
+  openNextView: 'Abrir próxima seleção',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
@@ -48,8 +48,8 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Selecione ${timeViews[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Selecione ${timeViews[view]}. ${!formattedTime ? 'Hora não selecionada' : `Selecionado a hora ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -64,15 +64,14 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Escolha uma data, data selecionada ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Escolha uma data',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Escolha uma hora, hora selecionada ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Escolha uma hora',
-  // fieldClearLabel: 'Clear value',
+  openDatePickerDialogue: (formattedDate) => {
+    return formattedDate
+      ? `Escolha uma data, data selecionada ${formattedDate}`
+      : 'Escolha uma data';
+  },
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Escolha uma hora, hora selecionada ${formattedTime}` : 'Escolha uma hora',
+  fieldClearLabel: 'Limpar valor',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',

@@ -10,15 +10,10 @@ import {
   pickersLayoutClasses,
   usePickerLayout,
 } from '../PickersLayout';
-import { PickerValidDate } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 
-type DesktopDateTimePickerLayoutComponent = (<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -26,9 +21,8 @@ type DesktopDateTimePickerLayoutComponent = (<
  */
 const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
   TValue,
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
->(props: PickersLayoutProps<TValue, TDate, TView>, ref: React.Ref<HTMLDivElement>) {
+>(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const isRtl = useRtl();
   const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape, classes } = props;
@@ -38,7 +32,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
   return (
     <PickersLayoutRoot
       ref={ref}
-      className={clsx(className, pickersLayoutClasses.root, classes?.root)}
+      className={clsx(pickersLayoutClasses.root, classes?.root, className)}
       sx={[
         {
           [`& .${pickersLayoutClasses.tabs}`]: { gridRow: 4, gridColumn: '1 / 4' },
@@ -74,6 +68,11 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
   /**
@@ -95,6 +94,11 @@ DesktopDateTimePickerLayout.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.

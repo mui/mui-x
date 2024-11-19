@@ -1,20 +1,20 @@
 'use client';
 import useId from '@mui/utils/useId';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
-import type { LineChartProps } from './LineChart';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
-import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { AreaPlotProps } from './AreaPlot';
-import { LinePlotProps } from './LinePlot';
-import { MarkPlotProps } from './MarkPlot';
-import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { LineHighlightPlotProps } from './LineHighlightPlot';
+import { ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
+import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsTooltipProps } from '../ChartsTooltip';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { ChartContainerProps } from '../ChartContainer';
+import { AreaPlotProps } from './AreaPlot';
+import type { LineChartProps } from './LineChart';
+import { LineHighlightPlotProps } from './LineHighlightPlot';
+import { LinePlotProps } from './LinePlot';
+import { MarkPlotProps } from './MarkPlot';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -41,7 +41,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     onMarkClick,
     axisHighlight,
     disableLineItemHighlight,
-    legend,
+    hideLegend,
     grid,
     topAxis,
     leftAxis,
@@ -55,13 +55,14 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
+    experimentalMarkRendering,
     ...other
   } = props;
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -93,6 +94,7 @@ export const useLineChartProps = (props: LineChartProps) => {
       axisHighlight?.y === 'none' &&
       !onAxisClick,
     className,
+    skipAnimation,
   };
 
   const axisClickHandlerProps: ChartsOnAxisClickHandlerProps = {
@@ -116,14 +118,12 @@ export const useLineChartProps = (props: LineChartProps) => {
     slots,
     slotProps,
     onItemClick: onAreaClick,
-    skipAnimation,
   };
 
   const linePlotProps: LinePlotProps = {
     slots,
     slotProps,
     onItemClick: onLineClick,
-    skipAnimation,
   };
 
   const markPlotProps: MarkPlotProps = {
@@ -131,6 +131,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
     onItemClick: onMarkClick,
     skipAnimation,
+    experimentalRendering: experimentalMarkRendering,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -159,7 +160,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
     slots,
     slotProps,
   };

@@ -5,14 +5,14 @@ import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalenda
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
-function WrappedDateCalendar<TDate extends PickerValidDate>(
-  props: Omit<DateCalendarProps<TDate>, 'value' | 'onChange'> & { initialValue: TDate },
+function WrappedDateCalendar(
+  props: Omit<DateCalendarProps, 'value' | 'onChange'> & { initialValue: PickerValidDate },
 ) {
   const { initialValue, ...other } = props;
 
-  const [value, setValue] = React.useState<TDate | null>(initialValue);
+  const [value, setValue] = React.useState<PickerValidDate | null>(initialValue);
 
-  const handleChange = React.useCallback((newValue: TDate | null) => {
+  const handleChange = React.useCallback((newValue: PickerValidDate | null) => {
     setValue(newValue);
   }, []);
 
@@ -35,7 +35,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -43,7 +43,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
 
@@ -51,7 +51,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // No date should be disabled in the month after the disabled month
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
     });
@@ -70,7 +70,7 @@ describe('<DateCalendar /> - Validation', () => {
       );
 
       // No date should be disabled in the month before the disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).not.to.have.attribute('disabled');
       });
 
@@ -78,7 +78,7 @@ describe('<DateCalendar /> - Validation', () => {
       clock.runToLast();
 
       // All dates should be disabled in disabled year
-      screen.getAllByMuiTest('day').forEach((day) => {
+      screen.getAllByTestId('day').forEach((day) => {
         expect(day).to.have.attribute('disabled');
       });
     });

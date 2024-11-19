@@ -9,11 +9,11 @@ export interface TreeViewItemMeta {
   expandable: boolean;
   disabled: boolean;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */
   depth?: number;
   /**
-   * Only defined for `RichTreeView` and `RichTreeViewPro`.
+   * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */
   label?: string;
 }
@@ -40,3 +40,13 @@ export type TreeViewExperimentalFeatures<
   TSignatures extends readonly TreeViewAnyPluginSignature[],
   TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...TSignatures, ...TOptionalSignatures], 'experimentalFeatures'>;
+
+export type TreeViewStateCacheKey = { id: number };
+
+export type TreeViewState<
+  TSignatures extends readonly TreeViewAnyPluginSignature[],
+  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
+> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
+  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
+    cacheKey: TreeViewStateCacheKey;
+  };

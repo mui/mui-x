@@ -1,65 +1,34 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import type {} from '../typeOverloads';
+import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
-import {
-  ChartsAxesGradients,
-  DrawingProvider,
-  InteractionProvider,
-  PluginProvider,
-  SeriesProvider,
-} from '@mui/x-charts/internals';
-import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import { ResizableContainer } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
-import { CartesianProviderPro } from '../context/CartesianProviderPro';
-import { ZoomProps, ZoomProvider } from '../context/ZoomProvider';
+import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
+import { ZoomProps } from '../context/ZoomProvider';
 import { useChartContainerProProps } from './useChartContainerProProps';
-
-const releaseInfo = getReleaseInfo();
 
 export interface ChartContainerProProps extends ChartContainerProps, ZoomProps {}
 
-const ChartContainerPro = React.forwardRef(function ChartContainer(
-  props: ChartContainerProProps,
-  ref,
-) {
-  const {
-    zoomProviderProps,
-    drawingProviderProps,
-    seriesProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    cartesianProviderProps,
-    chartsSurfaceProps,
-    pluginProviderProps,
-    children,
-  } = useChartContainerProProps(props, ref);
+const releaseInfo = getReleaseInfo();
 
-  useLicenseVerifier('x-charts-pro', releaseInfo);
+const ChartContainerPro = React.forwardRef(function ChartContainerPro(
+  props: ChartContainerProProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const { chartDataProviderProProps, children, resizableContainerProps, chartsSurfaceProps } =
+    useChartContainerProProps(props, ref);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <ZoomProvider {...zoomProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProviderPro {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <ChartsSurface {...chartsSurfaceProps}>
-                      <ChartsAxesGradients />
-                      {children}
-                    </ChartsSurface>
-                  </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProviderPro>
-          </SeriesProvider>
-        </ZoomProvider>
-      </PluginProvider>
-    </DrawingProvider>
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ResizableContainer {...resizableContainerProps}>
+        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+        <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
+      </ResizableContainer>
+    </ChartDataProviderPro>
   );
 });
 
@@ -87,9 +56,9 @@ ChartContainerPro.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px.
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -127,27 +96,36 @@ ChartContainerPro.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
-   * The width of the chart in px.
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -187,6 +165,7 @@ ChartContainerPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -274,6 +253,7 @@ ChartContainerPro.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

@@ -39,10 +39,6 @@ const defaultAlias = {
   packages: resolveAliasPath('./packages'),
 };
 
-const productionPlugins = [
-  ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
-];
-
 /** @type {babel.ConfigFunction} */
 module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['modern', 'stable', 'rollup']);
@@ -104,14 +100,14 @@ module.exports = function getBabelConfig(api) {
 
   if (process.env.NODE_ENV === 'test') {
     plugins.push(['@babel/plugin-transform-export-namespace-from']);
-    // We replace `date-fns` imports with an aliased `date-fns@v3` version installed as `date-fns-v3` for tests.
+    // We replace `date-fns` imports with an aliased `date-fns@v4` version installed as `date-fns-v4` for tests.
     // The plugin is patched to only run on `AdapterDateFnsV3.ts`.
-    // TODO: remove when we upgrade to date-fns v3 by default.
+    // TODO: remove when we upgrade to date-fns v4 by default.
     plugins.push([
       'babel-plugin-replace-imports',
       {
         test: /date-fns/i,
-        replacer: 'date-fns-v3',
+        replacer: 'date-fns-v4',
         // This option is provided by the `patches/babel-plugin-replace-imports@1.0.2.patch` patch
         filenameIncludes: 'src/AdapterDateFnsV3/',
       },
@@ -129,7 +125,9 @@ module.exports = function getBabelConfig(api) {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    plugins.push(...productionPlugins);
+    if (!process.env.E2E_BUILD) {
+      plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
+    }
 
     if (process.env.BABEL_ENV) {
       plugins.push([

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { dataset } from '../dataset/weather';
+import { dataset, valueFormatter } from '../dataset/weather';
 
 const chartSetting = {
   yAxis: [
@@ -17,8 +17,6 @@ const chartSetting = {
     },
   },
 };
-
-const valueFormatter = (value) => `${value}mm`;
 
 export default function BarsDataset() {
   return (

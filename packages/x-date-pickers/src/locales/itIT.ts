@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'il meridiano',
 };
 
-const itITPickers: Partial<PickersLocaleText<any>> = {
+const itITPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mese precedente',
   nextMonth: 'Mese successivo',
@@ -48,8 +48,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // timeRangePickerToolbarTitle: 'Select time range',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Seleziona ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Seleziona ${views[view]}. ${!formattedTime ? 'Nessun orario selezionato' : `L'ora selezionata è ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
@@ -64,14 +64,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Scegli la data, la data selezionata è ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Scegli la data',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Scegli l'ora, l'ora selezionata è ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : "Scegli l'ora",
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Scegli la data, la data selezionata è ${formattedDate}` : 'Scegli la data',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Scegli l'ora, l'ora selezionata è ${formattedTime}` : "Scegli l'ora",
   fieldClearLabel: 'Cancella valore',
 
   // Table labels

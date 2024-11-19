@@ -20,7 +20,7 @@ Charts dimensions are defined by a few props:
 The term **drawing area** refers to the space available to plot data (scatter points, lines, or pie arcs).
 The `margin` is used to leave some space for extra elements, such as the axes, the legend, or the title.
 
-You can use the `useDrawingArea` hook in the charts subcomponents to get the coordinates of the **drawing area**.
+You can use the `useDrawingArea()` hook in the charts subcomponents to get the coordinates of the **drawing area**.
 
 ```jsx
 import { useDrawingArea } from '@mui/x-charts';

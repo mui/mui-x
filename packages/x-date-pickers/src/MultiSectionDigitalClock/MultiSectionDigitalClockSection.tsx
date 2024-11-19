@@ -18,6 +18,8 @@ import {
   DIGITAL_CLOCK_VIEW_HEIGHT,
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
+import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { FormProps } from '../internals/models/formProps';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -27,10 +29,9 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
 }
 
 export interface MultiSectionDigitalClockSectionProps<TValue>
-  extends ExportedMultiSectionDigitalClockSectionProps {
+  extends FormProps,
+    ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
   items: MultiSectionDigitalClockOption<TValue>[];
   onChange: (value: TValue) => void;
   active?: boolean;
@@ -187,6 +188,36 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));
 
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      switch (event.key) {
+        case 'PageUp': {
+          const newIndex = getFocusedListItemIndex(containerRef.current!) - 5;
+          const children = containerRef.current!.children;
+          const newFocusedIndex = Math.max(0, newIndex);
+
+          const childToFocus = children[newFocusedIndex];
+          if (childToFocus) {
+            (childToFocus as HTMLElement).focus();
+          }
+          event.preventDefault();
+          break;
+        }
+        case 'PageDown': {
+          const newIndex = getFocusedListItemIndex(containerRef.current!) + 5;
+          const children = containerRef.current!.children;
+          const newFocusedIndex = Math.min(children.length - 1, newIndex);
+
+          const childToFocus = children[newFocusedIndex];
+          if (childToFocus) {
+            (childToFocus as HTMLElement).focus();
+          }
+          event.preventDefault();
+          break;
+        }
+        default:
+      }
+    };
+
     return (
       <MultiSectionDigitalClockSectionRoot
         ref={handleRef}
@@ -194,6 +225,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         ownerState={ownerState}
         autoFocusItem={autoFocus && active}
         role="listbox"
+        onKeyDown={handleKeyDown}
         {...other}
       >
         {items.map((option, index) => {

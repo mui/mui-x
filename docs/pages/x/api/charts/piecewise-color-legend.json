@@ -35,6 +35,13 @@
     },
     "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
     "markGap": { "type": { "name": "number" }, "default": "5" },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
+        "describedArgs": ["event", "legendItem", "index"]
+      }
+    },
     "padding": {
       "type": {
         "name": "union",
@@ -54,6 +61,12 @@
       "key": "column",
       "className": "MuiPiecewiseColorLegend-column",
       "description": "Styles applied to the legend with column layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "itemBackground",
+      "className": "MuiPiecewiseColorLegend-itemBackground",
+      "description": "Styles applied to the item background.",
       "isGlobal": false
     },
     {

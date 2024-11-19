@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { ItemInteractionData } from '../context/InteractionProvider';
+import { ItemInteractionData } from '../internals/plugins/models';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
 import { DefaultChartsItemTooltipContent } from './DefaultChartsItemTooltipContent';
@@ -54,9 +54,9 @@ function ChartsItemTooltipContent<T extends ChartSeriesType>(
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 
-  const xAxisId = (series as any).xAxisId ?? (series as any).xAxisKey ?? xAxisIds[0];
-  const yAxisId = (series as any).yAxisId ?? (series as any).yAxisKey ?? yAxisIds[0];
-  const zAxisId = (series as any).zAxisId ?? (series as any).zAxisKey ?? zAxisIds[0];
+  const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
+  const yAxisId = (series as any).yAxisId ?? yAxisIds[0];
+  const zAxisId = (series as any).zAxisId ?? zAxisIds[0];
 
   const getColor =
     colorProcessors[series.type]?.(

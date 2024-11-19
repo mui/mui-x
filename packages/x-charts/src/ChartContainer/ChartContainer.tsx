@@ -1,79 +1,26 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
-import { SeriesProvider, SeriesProviderProps } from '../context/SeriesProvider';
-import { InteractionProvider } from '../context/InteractionProvider';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { CartesianProvider, CartesianProviderProps } from '../context/CartesianProvider';
-import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import {
-  HighlightedProvider,
-  HighlightedProviderProps,
-  ZAxisContextProvider,
-  ZAxisContextProviderProps,
-} from '../context';
-import { PluginProvider, PluginProviderProps } from '../context/PluginProvider';
+import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
+import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
-import { MakeOptional } from '../models/helpers';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 
-export type ChartContainerProps = Omit<
-  ChartsSurfaceProps &
-    Omit<SeriesProviderProps, 'seriesFormatters'> &
-    Omit<DrawingProviderProps, 'svgRef'> &
-    Pick<CartesianProviderProps, 'dataset'> &
-    ZAxisContextProviderProps &
-    HighlightedProviderProps &
-    PluginProviderProps,
-  'children'
-> & {
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
-  children?: React.ReactNode;
-};
+export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
 
-const ChartContainer = React.forwardRef(function ChartContainer(props: ChartContainerProps, ref) {
-  const {
-    children,
-    drawingProviderProps,
-    seriesProviderProps,
-    cartesianProviderProps,
-    zAxisContextProps,
-    highlightedProviderProps,
-    chartsSurfaceProps,
-    pluginProviderProps,
-  } = useChartContainerProps(props, ref);
+const ChartContainer = React.forwardRef(function ChartContainer(
+  props: ChartContainerProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
+    useChartContainerProps(props, ref);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <SeriesProvider {...seriesProviderProps}>
-          <CartesianProvider {...cartesianProviderProps}>
-            <ZAxisContextProvider {...zAxisContextProps}>
-              <InteractionProvider>
-                <HighlightedProvider {...highlightedProviderProps}>
-                  <ChartsSurface {...chartsSurfaceProps}>
-                    <ChartsAxesGradients />
-                    {children}
-                  </ChartsSurface>
-                </HighlightedProvider>
-              </InteractionProvider>
-            </ZAxisContextProvider>
-          </CartesianProvider>
-        </SeriesProvider>
-      </PluginProvider>
-    </DrawingProvider>
+    <ChartDataProvider {...chartDataProviderProps}>
+      <ResizableContainer {...resizableContainerProps}>
+        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      </ResizableContainer>
+    </ChartDataProvider>
   );
 });
 
@@ -101,9 +48,9 @@ ChartContainer.propTypes = {
    */
   disableAxisListener: PropTypes.bool,
   /**
-   * The height of the chart in px.
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -135,27 +82,36 @@ ChartContainer.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
-   * The width of the chart in px.
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -195,6 +151,7 @@ ChartContainer.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -270,6 +227,7 @@ ChartContainer.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

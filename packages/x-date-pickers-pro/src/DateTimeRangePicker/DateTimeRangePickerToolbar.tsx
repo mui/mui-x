@@ -10,14 +10,14 @@ import {
   useUtils,
   DateOrTimeViewWithMeridiem,
   WrapperVariant,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
   DateTimePickerToolbar,
 } from '@mui/x-date-pickers/DateTimePicker';
-import { DateRange } from '../models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateTimeRangePickerToolbarClasses,
@@ -26,7 +26,7 @@ import {
 import { calculateRangeChange } from '../internals/utils/date-range-manager';
 import { DateTimeRangePickerView } from '../internals/models';
 
-const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -37,8 +37,8 @@ const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => 
   return composeClasses(slots, getDateTimeRangePickerToolbarUtilityClass, classes);
 };
 
-export interface DateTimeRangePickerToolbarProps<TDate extends PickerValidDate>
-  extends BaseToolbarProps<DateRange<TDate>, DateTimeRangePickerView>,
+export interface DateTimeRangePickerToolbarProps
+  extends BaseToolbarProps<PickerRangeValue, DateTimeRangePickerView>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
@@ -57,30 +57,29 @@ const DateTimeRangePickerToolbarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateTimeRangePickerToolbarProps<any>;
+  ownerState: DateTimeRangePickerToolbarProps;
 }>({
   display: 'flex',
   flexDirection: 'column',
 });
 
-type DateTimeRangePickerStartOrEndToolbarProps<TDate extends PickerValidDate> =
-  DateTimePickerToolbarProps<TDate> & {
-    ownerState?: DateTimeRangePickerToolbarProps<TDate>;
-  };
+type DateTimeRangePickerStartOrEndToolbarProps = DateTimePickerToolbarProps & {
+  ownerState?: DateTimeRangePickerToolbarProps;
+};
 
-type DateTimeRangePickerStartOrEndToolbarComponent = <TDate extends PickerValidDate>(
-  props: DateTimeRangePickerStartOrEndToolbarProps<TDate>,
+type DateTimeRangePickerStartOrEndToolbarComponent = (
+  props: DateTimeRangePickerStartOrEndToolbarProps,
 ) => React.JSX.Element;
 
 const DateTimeRangePickerToolbarStart = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'StartToolbar',
   overridesResolver: (_, styles) => styles.startToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+})<DateTimeRangePickerStartOrEndToolbarProps>({
   borderBottom: 'none',
   variants: [
     {
-      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps) =>
         toolbarVariant !== 'desktop',
       style: {
         padding: '12px 8px 0 12px',
@@ -99,10 +98,10 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   name: 'MuiDateTimeRangePickerToolbar',
   slot: 'EndToolbar',
   overridesResolver: (_, styles) => styles.endToolbar,
-})<DateTimeRangePickerStartOrEndToolbarProps<any>>({
+})<DateTimeRangePickerStartOrEndToolbarProps>({
   variants: [
     {
-      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps<any>) =>
+      props: ({ toolbarVariant }: DateTimeRangePickerStartOrEndToolbarProps) =>
         toolbarVariant !== 'desktop',
       style: {
         padding: '12px 8px 12px 12px',
@@ -111,11 +110,16 @@ const DateTimeRangePickerToolbarEnd = styled(DateTimePickerToolbar, {
   ],
 }) as DateTimeRangePickerStartOrEndToolbarComponent;
 
-const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: DateTimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
+type DateTimeRangePickerToolbarComponent = ((
+  props: DateTimeRangePickerToolbarProps & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
+
+const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePickerToolbar(
+  inProps: DateTimeRangePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerToolbar' });
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const {
     value: [start, end],
@@ -151,7 +155,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     toolbarPlaceholder,
   };
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickerTranslations();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -183,7 +187,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   );
 
   const handleOnChange = React.useCallback(
-    (newDate: TDate | null) => {
+    (newDate: PickerValidDate | null) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
@@ -203,13 +207,13 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
 
   return (
     <DateTimeRangePickerToolbarRoot
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
       sx={sx}
       {...other}
     >
-      <DateTimeRangePickerToolbarStart<TDate>
+      <DateTimeRangePickerToolbarStart
         value={start}
         onViewChange={handleStartRangeViewChange}
         toolbarTitle={translations.start}
@@ -221,7 +225,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         titleId={titleId ? `${titleId}-start-toolbar` : undefined}
         {...commonToolbarProps}
       />
-      <DateTimeRangePickerToolbarEnd<TDate>
+      <DateTimeRangePickerToolbarEnd
         value={end}
         onViewChange={handleEndRangeViewChange}
         toolbarTitle={translations.end}
@@ -235,7 +239,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       />
     </DateTimeRangePickerToolbarRoot>
   );
-});
+}) as DateTimeRangePickerToolbarComponent;
 
 DateTimeRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -248,6 +252,11 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
   disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -264,6 +273,11 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

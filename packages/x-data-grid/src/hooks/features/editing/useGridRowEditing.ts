@@ -46,6 +46,7 @@ import {
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
+import { getDefaultCellValue } from './utils';
 
 export const useGridRowEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
@@ -185,7 +186,7 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is deprecated but this is a temporary workaround
+        // TODO: to replace at one point. See https://github.com/mui/material-ui/pull/39713#discussion_r1381678957.
         if (event.which === 229) {
           return;
         }
@@ -431,15 +432,20 @@ export const useGridRowEditing = (
           return acc;
         }
 
+        const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
-          newValue = deleteValue ? '' : initialValue;
+          if (deleteValue) {
+            newValue = getDefaultCellValue(column);
+          } else if (initialValue) {
+            newValue = initialValue;
+          }
         }
 
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: false,
+          isProcessingProps: !!column.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -450,8 +456,35 @@ export const useGridRowEditing = (
       if (fieldToFocus) {
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
+
+      columnFields
+        .filter((field) => !!apiRef.current.getColumn(field).preProcessEditCellProps && deleteValue)
+        .forEach((field) => {
+          const column = apiRef.current.getColumn(field);
+          const value = apiRef.current.getCellValue(id, field);
+          const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
+
+          Promise.resolve(
+            column.preProcessEditCellProps!({
+              id,
+              row: apiRef.current.getRow(id),
+              props: newProps[field],
+              hasChanged: newValue !== value,
+            }),
+          ).then((processedProps) => {
+            // Check if still in edit mode before updating
+            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
+              const editingState = gridEditRowsStateSelector(apiRef.current.state);
+              updateOrDeleteFieldState(id, field, {
+                ...processedProps,
+                value: editingState[id][field].value,
+                isProcessingProps: false,
+              });
+            }
+          });
+        });
     },
-  ) as GridRowEditingApi['stopRowEditMode'];
+  ) as GridRowEditingApi['startRowEditMode'];
 
   const stopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
     (params) => {
@@ -525,7 +558,7 @@ export const useGridRowEditing = (
         };
 
         try {
-          Promise.resolve(processRowUpdate(rowUpdate, row))
+          Promise.resolve(processRowUpdate(rowUpdate, row, { rowId: id }))
             .then((finalRowUpdate) => {
               apiRef.current.updateRows([finalRowUpdate]);
               finishRowEditMode();

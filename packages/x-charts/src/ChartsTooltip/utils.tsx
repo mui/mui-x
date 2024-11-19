@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
+import { AxisInteractionData, ItemInteractionData } from '../internals/plugins/models';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { useSvgRef } from '../hooks';
 
@@ -10,42 +10,12 @@ type MousePosition = {
   height: number;
 };
 
-export function generateVirtualElement(mousePosition: MousePosition | null) {
-  if (mousePosition === null) {
-    return {
-      getBoundingClientRect: () => ({
-        width: 0,
-        height: 0,
-        x: 0,
-        y: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        toJSON: () => '',
-      }),
-    };
-  }
-  const { x, y } = mousePosition;
-  const boundingBox = {
-    width: 0,
-    height: 0,
-    x,
-    y,
-    top: y,
-    right: x,
-    bottom: y,
-    left: x,
-  };
-  return {
-    getBoundingClientRect: () => ({
-      ...boundingBox,
-      toJSON: () => JSON.stringify(boundingBox),
-    }),
-  };
-}
+export type UseMouseTrackerReturnValue = null | MousePosition;
 
-export function useMouseTracker() {
+/**
+ * @deprecated We recommend using vanilla JS to let popper track mouse position.
+ */
+export function useMouseTracker(): UseMouseTrackerReturnValue {
   const svgRef = useSvgRef();
 
   // Use a ref to avoid rerendering on every mousemove event.
@@ -56,6 +26,8 @@ export function useMouseTracker() {
     if (element === null) {
       return () => {};
     }
+
+    const controller = new AbortController();
 
     const handleOut = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') {
@@ -72,18 +44,57 @@ export function useMouseTracker() {
       });
     };
 
-    element.addEventListener('pointerdown', handleMove);
-    element.addEventListener('pointermove', handleMove);
-    element.addEventListener('pointerup', handleOut);
+    element.addEventListener('pointerdown', handleMove, { signal: controller.signal });
+    element.addEventListener('pointermove', handleMove, { signal: controller.signal });
+    element.addEventListener('pointerup', handleOut, { signal: controller.signal });
 
     return () => {
-      element.removeEventListener('pointerdown', handleMove);
-      element.removeEventListener('pointermove', handleMove);
-      element.removeEventListener('pointerup', handleOut);
+      // Calling `.abort()` removes ALL event listeners
+      // For more info, see https://kettanaito.com/blog/dont-sleep-on-abort-controller
+      controller.abort();
     };
   }, [svgRef]);
 
   return mousePosition;
+}
+
+type PointerType = Pick<MousePosition, 'height' | 'pointerType'>;
+
+export function usePointerType(): null | PointerType {
+  const svgRef = useSvgRef();
+
+  // Use a ref to avoid rerendering on every mousemove event.
+  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleOut = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') {
+        setPointerType(null);
+      }
+    };
+
+    const handleEnter = (event: PointerEvent) => {
+      setPointerType({
+        height: event.height,
+        pointerType: event.pointerType as PointerType['pointerType'],
+      });
+    };
+
+    element.addEventListener('pointerenter', handleEnter);
+    element.addEventListener('pointerup', handleOut);
+
+    return () => {
+      element.removeEventListener('pointerenter', handleEnter);
+      element.removeEventListener('pointerup', handleOut);
+    };
+  }, [svgRef]);
+
+  return pointerType;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';

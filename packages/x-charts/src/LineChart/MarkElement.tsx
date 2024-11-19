@@ -1,55 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-vendor/d3-shape';
 import { animated, to, useSpring } from '@react-spring/web';
 import { getSymbol } from '../internals/getSymbol';
-import { InteractionContext } from '../context/InteractionProvider';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../context';
-
-export interface MarkElementClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element when highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element when faded. */
-  faded: string;
-}
-
-export type MarkElementClassKey = keyof MarkElementClasses;
-
-interface MarkElementOwnerState {
-  id: SeriesId;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<MarkElementClasses>;
-}
-
-export function getMarkElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiMarkElement', slot);
-}
-
-export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
-  'root',
-  'highlighted',
-  'faded',
-]);
-
-const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
-  const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-  };
-
-  return composeClasses(slots, getMarkElementUtilityClass, classes);
-};
+import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
+import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
 
 const MarkElementPath = styled(animated.path, {
   name: 'MuiMarkElement',
@@ -106,13 +67,15 @@ function MarkElement(props: MarkElementProps) {
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
-  const { axis } = React.useContext(InteractionContext);
+
+  const store = useStore();
+  const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 
   const position = useSpring({ to: { x, y }, immediate: skipAnimation });
   const ownerState = {
     id,
     classes: innerClasses,
-    isHighlighted: axis.x?.index === dataIndex || isHighlighted,
+    isHighlighted: xAxisIdentifier?.index === dataIndex || isHighlighted,
     isFaded,
     color,
   };

@@ -11,17 +11,16 @@ import {
   useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
-import { DateRange } from '../models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
 
-const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: DateRangePickerToolbarProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -31,9 +30,9 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
 
-export interface DateRangePickerToolbarProps<TDate extends PickerValidDate>
+export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<DateRange<TDate>, 'day'>, 'onChange' | 'isLandscape'>,
+    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -48,7 +47,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateRangePickerToolbarProps<any>;
+  ownerState: DateRangePickerToolbarProps;
 }>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
@@ -58,6 +57,10 @@ const DateRangePickerToolbarContainer = styled('div', {
 })({
   display: 'flex',
 });
+
+type DateRangePickerToolbarComponent = ((
+  props: DateRangePickerToolbarProps & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
  * Demos:
@@ -69,10 +72,11 @@ const DateRangePickerToolbarContainer = styled('div', {
  *
  * - [DateRangePickerToolbar API](https://mui.com/x/api/date-pickers/date-range-picker-toolbar/)
  */
-const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
+const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
+  inProps: DateRangePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
   const {
@@ -87,7 +91,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     ...other
   } = props;
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickerTranslations();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -105,7 +109,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       {...other}
       toolbarTitle={translations.dateRangePickerToolbarTitle}
       isLandscape={false}
-      className={clsx(className, classes.root)}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       ref={ref}
     >
@@ -126,7 +130,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>
   );
-});
+}) as DateRangePickerToolbarComponent;
 
 DateRangePickerToolbar.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -138,6 +142,11 @@ DateRangePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
   disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -152,6 +161,11 @@ DateRangePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

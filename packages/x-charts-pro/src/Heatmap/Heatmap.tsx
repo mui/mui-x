@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
+import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import {
@@ -12,7 +13,6 @@ import {
   ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
 import {
-  MakeOptional,
   ChartsAxisSlots,
   ChartsAxisSlotProps,
   ChartsXAxisProps,
@@ -30,10 +30,7 @@ import {
   ChartsOverlaySlotProps,
   ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import {
-  ResponsiveChartContainerPro,
-  ResponsiveChartContainerProProps,
-} from '../ResponsiveChartContainerPro';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
@@ -53,8 +50,8 @@ export interface HeatmapSlotProps
 
 export interface HeatmapProps
   extends Omit<
-      ResponsiveChartContainerProProps,
-      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange'
+      ChartContainerProProps,
+      'series' | 'plugins' | 'xAxis' | 'yAxis' | 'zoom' | 'onZoomChange' | 'skipAnimation'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -106,7 +103,10 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
+const Heatmap = React.forwardRef(function Heatmap(
+  inProps: HeatmapProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
   const {
     xAxis,
@@ -162,7 +162,7 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
   );
 
   return (
-    <ResponsiveChartContainerPro
+    <ChartContainerPro
       ref={ref}
       plugins={[heatmapPlugin]}
       series={series.map((s) => ({
@@ -206,7 +206,7 @@ const Heatmap = React.forwardRef(function Heatmap(inProps: HeatmapProps, ref) {
 
       <ChartsClipPath id={clipPathId} />
       {children}
-    </ResponsiveChartContainerPro>
+    </ChartContainerPro>
   );
 });
 
@@ -287,6 +287,16 @@ Heatmap.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The chart will try to wait for the parent container to resolve its size
+   * before it renders for the first time.
+   *
+   * This can be useful in some scenarios where the chart appear to grow after
+   * the first render, like when used inside a grid.
+   *
+   * @default false
+   */
+  resolveSizeBeforeRender: PropTypes.bool,
+  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -331,12 +341,6 @@ Heatmap.propTypes = {
    * @default null
    */
   topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -382,6 +386,7 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -471,6 +476,7 @@ Heatmap.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

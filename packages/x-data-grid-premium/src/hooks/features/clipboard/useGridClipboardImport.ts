@@ -180,7 +180,7 @@ class CellValueUpdater {
 
         try {
           const oldRow = apiRef.current.getRow(rowId);
-          const finalRowUpdate = await processRowUpdate(newRow, oldRow);
+          const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);

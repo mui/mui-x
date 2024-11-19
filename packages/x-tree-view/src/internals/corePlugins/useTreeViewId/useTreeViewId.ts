@@ -1,26 +1,38 @@
 import * as React from 'react';
-import useId from '@mui/utils/useId';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewIdSignature } from './useTreeViewId.types';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorTreeViewId } from './useTreeViewId.selectors';
+import { createTreeViewDefaultId } from './useTreeViewId.utils';
 
-export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params }) => {
-  const treeId = useId(params.id);
+export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, store }) => {
+  React.useEffect(() => {
+    store.update((prevState) => {
+      if (params.id === prevState.id.providedTreeId && prevState.id.treeId !== undefined) {
+        return prevState;
+      }
 
-  const getTreeItemIdAttribute = React.useCallback(
-    (itemId: string, idAttribute: string | undefined) => idAttribute ?? `${treeId}-${itemId}`,
-    [treeId],
-  );
+      return {
+        ...prevState,
+        id: { ...prevState.id, treeId: params.id ?? createTreeViewDefaultId() },
+      };
+    });
+  }, [store, params.id]);
+
+  const treeId = useSelector(store, selectorTreeViewId);
+
+  const pluginContextValue = React.useMemo(() => ({ treeId }), [treeId]);
 
   return {
     getRootProps: () => ({
       id: treeId,
     }),
-    instance: {
-      getTreeItemIdAttribute,
-    },
+    contextValue: pluginContextValue,
   };
 };
 
 useTreeViewId.params = {
   id: true,
 };
+
+useTreeViewId.getInitialState = ({ id }) => ({ id: { treeId: undefined, providedTreeId: id } });

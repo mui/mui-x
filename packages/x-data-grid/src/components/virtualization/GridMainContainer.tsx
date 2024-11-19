@@ -8,6 +8,7 @@ const GridPanelAnchor = styled('div')({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,
   left: 0,
+  width: 'calc(100% - (var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
 });
 
 type OwnerState = DataGridProcessedProps;
@@ -20,6 +21,8 @@ const Element = styled('div', {
   flexGrow: 1,
   position: 'relative',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 export const GridMainContainer = React.forwardRef<

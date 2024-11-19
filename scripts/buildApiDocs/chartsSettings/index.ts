@@ -9,7 +9,7 @@ type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 
 
 export const projectChartsSettings: ProjectSettings = {
   output: {
-    apiManifestPath: path.join(process.cwd(), 'docs/data/charts-component-api-pages.ts'),
+    apiManifestPath: path.join(process.cwd(), 'docs/data/chartsApiPages.ts'),
   },
   onWritingManifestFile: (
     builds: PromiseSettledResult<ComponentReactApi | HookReactApi | null | never[]>[],
@@ -33,8 +33,8 @@ export const projectChartsSettings: ProjectSettings = {
 
     return `import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
-export default apiPages;
+const chartsApiPages: MuiPage[] = ${JSON.stringify(pages, null, 2)};
+export default chartsApiPages;
 `;
   },
   typeScriptProjects: [
@@ -66,6 +66,8 @@ export default apiPages;
       'x-charts/src/ChartsOverlay/ChartsNoDataOverlay.tsx',
       'x-charts/src/ChartsOverlay/ChartsLoadingOverlay.tsx',
       'x-charts/src/ChartsLegend/LegendPerItem.tsx',
+      'x-charts/src/LineChart/CircleMarkElement.tsx',
+      'x-charts/src/BarChart/AnimatedBarElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

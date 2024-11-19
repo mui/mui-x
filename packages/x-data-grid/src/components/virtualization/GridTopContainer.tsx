@@ -17,13 +17,13 @@ const Element = styled('div')({
   top: 0,
 });
 
-export function GridTopContainer(props: React.HTMLAttributes<HTMLDivElement>) {
+export function GridTopContainer(props: React.PropsWithChildren) {
   const classes = useUtilityClasses();
 
   return (
     <Element
       {...props}
-      className={clsx(classes.root, props.className, gridClasses['container--top'])}
+      className={clsx(classes.root, gridClasses['container--top'])}
       role="presentation"
     />
   );

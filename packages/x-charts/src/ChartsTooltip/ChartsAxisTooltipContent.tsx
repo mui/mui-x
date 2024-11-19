@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { AxisInteractionData } from '../context/InteractionProvider';
+import { AxisInteractionData } from '../internals/plugins/models';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
@@ -77,8 +77,8 @@ function ChartsAxisTooltipContent(props: {
         series[seriesType]!.seriesOrder.forEach((seriesId) => {
           const item = series[seriesType]!.series[seriesId];
 
-          const providedXAxisId = item.xAxisId ?? item.xAxisKey;
-          const providedYAxisId = item.yAxisId ?? item.yAxisKey;
+          const providedXAxisId = item.xAxisId;
+          const providedYAxisId = item.yAxisId;
 
           const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
 
@@ -87,8 +87,7 @@ function ChartsAxisTooltipContent(props: {
 
             const xAxisId = providedXAxisId ?? xAxisIds[0];
             const yAxisId = providedYAxisId ?? yAxisIds[0];
-            const zAxisId =
-              (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+            const zAxisId = (seriesToAdd as any).zAxisId ?? zAxisIds[0];
 
             const getColor =
               colorProcessors[seriesType]?.(

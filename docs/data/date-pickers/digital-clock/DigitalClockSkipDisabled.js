@@ -6,13 +6,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
-const shouldDisableTime = (value, view) => {
-  const hour = value.hour();
+const shouldDisableTime = (date, view) => {
+  const hour = date.hour();
   if (view === 'hours') {
     return hour < 9 || hour > 13;
   }
   if (view === 'minutes') {
-    const minute = value.minute();
+    const minute = date.minute();
     return minute > 20 && hour === 13;
   }
   return false;

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { lruMemoize, createSelectorCreator, Selector, SelectorResultArray } from 'reselect';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridCoreApi } from '../models/api/gridCoreApi';
+import { argsEqual } from '../hooks/utils/useGridSelector';
 
 type CacheKey = { id: number };
 
@@ -12,6 +13,10 @@ const reselectCreateSelector = createSelectorCreator({
     equalityCheck: Object.is,
   },
 });
+
+type GridCreateSelectorFunction = ReturnType<typeof reselectCreateSelector> & {
+  selectorArgs?: any;
+};
 
 // TODO v8: Remove this type
 export interface OutputSelector<State, Result> {
@@ -24,7 +29,7 @@ export interface OutputSelector<State, Result> {
 export interface OutputSelectorV8<State, Args, Result> {
   (
     apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
-    args: Args,
+    args?: Args,
   ): Result;
   (state: State, instanceId: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
@@ -91,6 +96,7 @@ export const createSelector = ((
   b: Function,
   c?: Function,
   d?: Function,
+  // eslint-disable-next-line id-denylist
   e?: Function,
   f?: Function,
   ...other: any[]
@@ -101,6 +107,7 @@ export const createSelector = ((
 
   let selector: any;
 
+  // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -114,6 +121,7 @@ export const createSelector = ((
       const ve = e(state, instanceId);
       return f(va, vb, vc, vd, ve);
     };
+    // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -173,6 +181,7 @@ export const createSelectorV8 = ((
   b: Function,
   c?: Function,
   d?: Function,
+  // eslint-disable-next-line id-denylist
   e?: Function,
   f?: Function,
   ...other: any[]
@@ -183,6 +192,7 @@ export const createSelectorV8 = ((
 
   let selector: any;
 
+  // eslint-disable-next-line id-denylist
   if (a && b && c && d && e && f) {
     selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -196,6 +206,7 @@ export const createSelectorV8 = ((
       const ve = e(state, args, instanceId);
       return f(va, vb, vc, vd, ve, args);
     };
+    // eslint-disable-next-line id-denylist
   } else if (a && b && c && d && e) {
     selector = (stateOrApiRef: any, args: any, instanceIdParam: any) => {
       const isAPIRef = checkIsAPIRef(stateOrApiRef);
@@ -317,12 +328,28 @@ export const createSelectorMemoizedV8: CreateSelectorFunctionV8 = (...args: any)
     const cacheFn = cacheArgs?.get(args);
 
     if (cacheArgs && cacheFn) {
+      if (!argsEqual(cacheFn.selectorArgs, selectorArgs)) {
+        const reselectArgs =
+          selectorArgs !== undefined
+            ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]
+            : args;
+        const fn: GridCreateSelectorFunction = reselectCreateSelector(...reselectArgs);
+        fn.selectorArgs = selectorArgs;
+        cacheArgs.set(args, fn);
+        return fn(state, selectorArgs, cacheKey);
+      }
       // We pass the cache key because the called selector might have as
       // dependency another selector created with this `createSelector`.
       return cacheFn(state, selectorArgs, cacheKey);
     }
 
-    const fn = reselectCreateSelector(...args);
+    const reselectArgs =
+      selectorArgs !== undefined
+        ? [...args.slice(0, args.length - 1), () => selectorArgs, args[args.length - 1]]
+        : args;
+
+    const fn: GridCreateSelectorFunction = reselectCreateSelector(...reselectArgs);
+    fn.selectorArgs = selectorArgs;
 
     if (!cacheArgsInit) {
       cache.set(cacheKey, cacheArgs);
