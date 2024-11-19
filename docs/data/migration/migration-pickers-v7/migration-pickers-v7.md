@@ -271,6 +271,26 @@ const theme = createTheme({
    );
   ```
 
+- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.disabled);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickersContext();
+  +console.log(disabled);
+  ```
+
+- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.readOnly);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickersContext();
+  +console.log(readOnly);
+  ```
+
 - The component passed to the `layout` slot no longer receives a `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
@@ -307,47 +327,7 @@ const theme = createTheme({
   +console.log(variant);
   ```
 
-- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
-
-  ```diff
-  -console.log(props.disabled);
-
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled } = usePickersContext();
-  +console.log(disabled);
-  ```
-
-- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickersContext` hook:
-
-  ```diff
-  -console.log(props.readOnly);
-
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickersContext();
-  +console.log(readOnly);
-  ```
-
 ### Slot: `toolbar`
-
-- The component passed to the `toolbar` slot no longer receives a `isLandscape` prop. There is currently no way to access this information, if you need it, please [open an issue](https://github.com/mui/mui-x/issues/new/choose).
-
-  ```diff
-  -console.log(props.isLandscape);
-
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { orientation } = usePickersContext();
-  +console.log(orientation === 'landscape');
-  ```
-
-- The component passed to the `toolbar` slot no longer receives a `toolbarVariant` prop, instead you can use the `usePickersContext` hook:
-
-  ```diff
-  -console.log(props.wrapperVariant);
-
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { variant } = usePickersContext();
-  +console.log(variant);
-  ```
 
 - The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
 
@@ -367,6 +347,26 @@ const theme = createTheme({
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { readOnly } = usePickersContext();
   +console.log(readOnly);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `isLandscape` prop. There is currently no way to access this information, if you need it, please [open an issue](https://github.com/mui/mui-x/issues/new/choose).
+
+  ```diff
+  -console.log(props.isLandscape);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickersContext();
+  +console.log(orientation === 'landscape');
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `toolbarVariant` prop, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.wrapperVariant);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { variant } = usePickersContext();
+  +console.log(variant);
   ```
 
 ## Renamed variables
