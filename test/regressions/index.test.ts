@@ -177,7 +177,13 @@ async function main() {
         // Wait for the page to settle after taking the screenshot.
         await page.waitForLoadState();
 
-        await testcase.screenshot({ path: screenshotPath, type: 'png' });
+        await testcase.screenshot({
+          animations: 'disabled',
+          scale: 'css',
+          caret: 'hide',
+          path: screenshotPath,
+          type: 'png',
+        });
       });
 
       it(`should have no errors rendering ${pathURL}`, () => {
