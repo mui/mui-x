@@ -34,9 +34,9 @@ async function main() {
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
-    args: ['--font-render-hinting=none'],
-    // otherwise the loaded google Roboto font isn't applied
-    headless: false,
+    // args: ['--font-render-hinting=none'],
+    // // otherwise the loaded google Roboto font isn't applied
+    // headless: false,
   });
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44

@@ -117,7 +117,6 @@ function TestViewer(props) {
       <GlobalStyles
         styles={{
           html: {
-            WebkitFontSmoothing: 'antialiased', // Antialiasing.
             MozOsxFontSmoothing: 'grayscale', // Antialiasing.
             // Do the opposite of the docs in order to help catching issues.
             boxSizing: 'content-box',
