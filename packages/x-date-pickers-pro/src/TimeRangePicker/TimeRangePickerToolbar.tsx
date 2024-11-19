@@ -180,6 +180,38 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
   );
 }
 
+TimeRangePickerToolbarTimeElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  ampm: PropTypes.bool.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
+  separatorClasses: PropTypes.string.isRequired,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
+  utils: PropTypes.object.isRequired,
+  value: PropTypes.object,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
+  /**
+   * Available views.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
+    .isRequired,
+} as any;
+
 const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
   inProps: TimeRangePickerToolbarProps,
   ref: React.Ref<HTMLDivElement>,
@@ -273,6 +305,11 @@ TimeRangePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
+   */
   disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
@@ -289,6 +326,11 @@ TimeRangePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

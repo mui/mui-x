@@ -130,7 +130,8 @@ DesktopTimeRangePicker.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.object),
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -155,7 +156,7 @@ DesktopTimeRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * @default false
+   * @default true
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
@@ -277,6 +278,11 @@ DesktopTimeRangePicker.propTypes = {
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
+   */
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
@@ -314,8 +320,7 @@ DesktopTimeRangePicker.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
