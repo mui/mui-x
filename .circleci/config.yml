@@ -145,10 +145,10 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
+          command: pnpm vitest --project "jsdom/*" --coverage
           environment:
-            VITEST_MAX_THREADS: 6
-            VITEST_MIN_THREADS: 2
+            VITEST_MAX_FORKS: 6
+            VITEST_MIN_FORKS: 2
       - run:
           name: Check coverage generated
           command: |
@@ -275,10 +275,10 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest --project "browser/*" --pool=threads
+          command: NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest --project "browser/*"
           environment:
-            VITEST_MAX_THREADS: 3
-            VITEST_MIN_THREADS: 2
+            VITEST_MAX_FORKS: 3
+            VITEST_MIN_FORKS: 2
 
   test_types:
     <<: *default-job
