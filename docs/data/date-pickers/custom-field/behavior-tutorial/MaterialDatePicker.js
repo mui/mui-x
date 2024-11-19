@@ -13,9 +13,7 @@ function CustomDateField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
 
   const { format, timezone, value, onChange } = internalProps;
-  const [inputValue, setInputValue] = React.useState(() =>
-    createInputValue(value, format),
-  );
+  const [inputValue, setInputValue] = useInputValue(value, format);
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -23,12 +21,6 @@ function CustomDateField(props) {
     props: internalProps,
     validator: validateDate,
   });
-
-  React.useEffect(() => {
-    if (value && value.isValid()) {
-      setInputValue(createInputValue(value, format));
-    }
-  }, [format, value]);
 
   const handleChange = (event) => {
     const newInputValue = event.target.value;
@@ -48,6 +40,22 @@ function CustomDateField(props) {
       error={hasValidationError}
     />
   );
+}
+
+function useInputValue(valueProp, format) {
+  const [lastValueProp, setLastValueProp] = React.useState(valueProp);
+  const [inputValue, setInputValue] = React.useState(() =>
+    createInputValue(valueProp, format),
+  );
+
+  if (lastValueProp !== valueProp) {
+    setLastValueProp(valueProp);
+    if (valueProp && valueProp.isValid()) {
+      setInputValue(createInputValue(valueProp, format));
+    }
+  }
+
+  return [inputValue, setInputValue];
 }
 
 function createInputValue(value, format) {
