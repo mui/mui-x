@@ -67,7 +67,6 @@
     },
     "onLineClick": { "type": { "name": "func" } },
     "onMarkClick": { "type": { "name": "func" } },
-    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "rightAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"

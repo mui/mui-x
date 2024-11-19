@@ -211,16 +211,6 @@ PieChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
    */
