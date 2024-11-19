@@ -251,7 +251,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', () => {
+    it('should call onClose and onAccept with the live value when pressing Escape', function test() {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
@@ -273,7 +273,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const newValue = setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
       // Dismiss the picker
-      // FIXME: document.activeElement is not modal with React 19 for MobileDateRangePicker
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
