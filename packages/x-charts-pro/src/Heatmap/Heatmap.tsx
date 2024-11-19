@@ -6,12 +6,7 @@ import useId from '@mui/utils/useId';
 import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import {
   ChartsAxisSlots,
   ChartsAxisSlotProps,
@@ -34,19 +29,22 @@ import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro'
 import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { plugin as heatmapPlugin } from './plugin';
-import { DefaultHeatmapTooltip } from './DefaultHeatmapTooltip';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
 import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
 
-export interface HeatmapSlots
-  extends ChartsAxisSlots,
-    Omit<ChartsTooltipSlots<'heatmap'>, 'axisContent'>,
-    ChartsOverlaySlots,
-    HeatmapItemSlots {}
+export interface HeatmapSlots extends ChartsAxisSlots, ChartsOverlaySlots, HeatmapItemSlots {
+  /**
+   * Custom component for the tooltip popper.
+   * @default ChartsTooltipRoot
+   */
+  tooltip?: React.ElementType<HeatmapTooltipProps>;
+}
 export interface HeatmapSlotProps
   extends ChartsAxisSlotProps,
-    Omit<ChartsTooltipSlotProps<'heatmap'>, 'axisContent'>,
     ChartsOverlaySlotProps,
-    HeatmapItemSlotProps {}
+    HeatmapItemSlotProps {
+  tooltip?: Partial<HeatmapTooltipProps>;
+}
 
 export interface HeatmapProps
   extends Omit<
@@ -77,7 +75,7 @@ export interface HeatmapProps
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip?: ChartsTooltipProps<'heatmap'>;
+  tooltip?: ChartsTooltipProps;
   /**
    * Overridable component slots.
    * @default {}
@@ -119,7 +117,6 @@ const Heatmap = React.forwardRef(function Heatmap(
     colors,
     dataset,
     sx,
-    tooltip,
     topAxis,
     leftAxis,
     rightAxis,
@@ -161,6 +158,8 @@ const Heatmap = React.forwardRef(function Heatmap(
     [zAxis],
   );
 
+  const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
+
   return (
     <ChartContainerPro
       ref={ref}
@@ -195,14 +194,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         slots={slots}
         slotProps={slotProps}
       />
-      {!loading && (
-        <ChartsTooltip
-          trigger="item"
-          {...tooltip}
-          slots={{ itemContent: DefaultHeatmapTooltip, ...slots }}
-          slotProps={slotProps}
-        />
-      )}
+      {!loading && <Tooltip {...slotProps?.tooltip} />}
 
       <ChartsClipPath id={clipPathId} />
       {children}
@@ -317,14 +309,7 @@ Heatmap.propTypes = {
    * The configuration of the tooltip.
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
+  tooltip: PropTypes.object,
   /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.

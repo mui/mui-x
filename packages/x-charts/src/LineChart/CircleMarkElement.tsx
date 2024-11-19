@@ -68,6 +68,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   const { isFaded, isHighlighted } = useItemHighlighted({
     seriesId: id,
   });
+
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
 

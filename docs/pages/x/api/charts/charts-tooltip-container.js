@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './default-heatmap-tooltip.json';
+import jsonPageContent from './charts-tooltip-container.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/charts/default-heatmap-tooltip',
+    'docsx/translations/api-docs/charts/charts-tooltip-container',
     false,
-    /\.\/default-heatmap-tooltip.*.json$/,
+    /\.\/charts-tooltip-container.*.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

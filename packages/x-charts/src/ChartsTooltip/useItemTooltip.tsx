@@ -25,8 +25,9 @@ export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
 }
 
 export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemTooltipReturnValue<T> {
-  const stroe = useStore();
-  const item = useSelector(stroe, selectorChartsInteractionItem);
+  const store = useStore();
+  const item = useSelector(store, selectorChartsInteractionItem);
+
   const series = useSeries();
 
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();

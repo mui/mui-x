@@ -55,10 +55,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },
@@ -78,16 +74,14 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
-    "popper": "Custom component for the tooltip popper.",
-    "scatter": ""
+    "scatter": "",
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

@@ -6,12 +6,8 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -25,14 +21,14 @@ import {
 export interface PieChartSlots
   extends PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'pie'>,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 
 export interface PieChartSlotProps
   extends PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'pie'>,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,
@@ -43,12 +39,6 @@ export interface PieChartProps
    * An array of [[PieSeriesType]] objects.
    */
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -96,7 +86,6 @@ const PieChart = React.forwardRef(function PieChart(
     margin: marginProps,
     colors,
     sx,
-    tooltip = { trigger: 'item' },
     skipAnimation,
     hideLegend,
     children,
@@ -113,6 +102,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
 
+  const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
     <ChartContainer
       {...other}
@@ -139,7 +129,7 @@ const PieChart = React.forwardRef(function PieChart(
           slotProps={slotProps}
         />
       )}
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
+      {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       {children}
     </ChartContainer>
   );
@@ -236,19 +226,6 @@ PieChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

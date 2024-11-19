@@ -6,6 +6,7 @@ import { useStore } from '../internals/useStore';
 
 export const useInteractionItemProps = (skip?: boolean) => {
   const store = useStore();
+
   const { setHighlighted, clearHighlighted } = useHighlighted();
 
   if (skip) {

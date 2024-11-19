@@ -1,16 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "classes": { "description": "Override or extend the styles applied to the component." },
-    "getColor": {
-      "description": "Get the color of the item with index <code>dataIndex</code>.",
-      "typeDescriptions": {
-        "dataIndex": "The data index of the item.",
-        "string": "The color to display."
-      }
-    },
-    "itemData": { "description": "The data used to identify the triggered item." },
-    "series": { "description": "The series linked to the triggered item." }
+    "classes": { "description": "Override or extend the styles applied to the component." }
   },
   "classDescriptions": {
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },

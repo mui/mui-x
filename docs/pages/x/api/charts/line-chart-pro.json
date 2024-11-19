@@ -85,14 +85,6 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "tooltip": {
-      "type": {
-        "name": "shape",
-        "description": "{ axisContent?: elementType, classes?: object, itemContent?: elementType, slotProps?: object, slots?: object, trigger?: 'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none' }"
-      },
-      "default": "{ trigger: 'item' }",
-      "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
-    },
     "topAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"

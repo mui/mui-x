@@ -85,13 +85,6 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "tooltip": {
-      "type": {
-        "name": "shape",
-        "description": "{ axisContent?: elementType, classes?: object, itemContent?: elementType, slotProps?: object, slots?: object, trigger?: 'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none' }"
-      },
-      "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
-    },
     "topAxis": {
       "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" },
       "default": "null"
@@ -117,12 +110,6 @@
     "import { BarChart } from '@mui/x-charts-pro';"
   ],
   "slots": [
-    {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
     {
       "name": "axisLabel",
       "description": "Custom component for axis label.",
@@ -160,12 +147,6 @@
       "class": null
     },
     {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
-      "class": null
-    },
-    {
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "DefaultChartsLegend",
@@ -184,7 +165,7 @@
       "class": null
     },
     {
-      "name": "popper",
+      "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null
