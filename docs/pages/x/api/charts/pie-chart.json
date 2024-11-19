@@ -34,7 +34,6 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
-    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
