@@ -1,0 +1,70 @@
+{
+  "props": { "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } } },
+  "name": "ChartsItemTooltipContent",
+  "imports": [
+    "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiChartsItemTooltipContent-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiChartsItemTooltipContent-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiChartsItemTooltipContent-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiChartsItemTooltipContent-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsItemTooltipContent-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsItemTooltipContent-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiChartsItemTooltipContent-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiChartsItemTooltipContent-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiChartsItemTooltipContent-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsItemTooltipContent",
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsItemTooltipContent.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
+  "cssComponent": false
+}

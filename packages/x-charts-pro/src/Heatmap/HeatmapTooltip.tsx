@@ -1,39 +1,129 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
-import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
-import { useUtilityClasses } from './chartsTooltipClasses';
+import clsx from 'clsx';
+import composeClasses from '@mui/utils/composeClasses';
+import {
+  ChartsTooltipPaper,
+  ChartsTooltipTable,
+  ChartsTooltipRow,
+  ChartsTooltipCell,
+  ChartsTooltipMark,
+  useItemTooltip,
+  ChartsTooltipContainerProps,
+  getChartsTooltipUtilityClass,
+  ChartsTooltipContainer,
+} from '@mui/x-charts/ChartsTooltip';
+import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
+import { getLabel } from '@mui/x-charts/internals';
+import { useHeatmapSeries } from '../hooks/useSeries';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface HeatmapTooltipProps
+  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {}
+
+const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes'] }) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['root'],
+    paper: ['paper'],
+    table: ['table'],
+    row: ['row'],
+    cell: ['cell'],
+    mark: ['mark'],
+    markCell: ['markCell'],
+    labelCell: ['labelCell'],
+    valueCell: ['valueCell'],
+  };
+
+  return composeClasses(slots, getChartsTooltipUtilityClass, classes);
+};
 
 /**
- * Demos:
- *
- * - [ChartsTooltip](https://mui.com/x/react-charts/tooltip/)
- *
- * API:
- *
- * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
+ * @ignore - internal component.
  */
-function ChartsTooltip(props: ChartsTooltipProps) {
-  const { classes: propClasses, trigger = 'axis' } = props;
+function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'>) {
+  const { classes } = props;
 
-  const classes = useUtilityClasses(propClasses);
+  const xAxis = useXAxis();
+  const yAxis = useYAxis();
+  const heatmapSeries = useHeatmapSeries();
+
+  const tooltipData = useItemTooltip<'heatmap'>();
+
+  if (!tooltipData || !heatmapSeries || heatmapSeries.seriesOrder.length === 0) {
+    return null;
+  }
+
+  const { series, seriesOrder } = heatmapSeries;
+  const seriesId = seriesOrder[0];
+
+  const { color, value, identifier } = tooltipData;
+
+  const [xIndex, yIndex] = value;
+
+  const formattedX =
+    xAxis.valueFormatter?.(xAxis.data![xIndex], { location: 'tooltip' }) ??
+    xAxis.data![xIndex].toLocaleString();
+  const formattedY =
+    yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip' }) ??
+    yAxis.data![yIndex].toLocaleString();
+  const formattedValue = series[seriesId].valueFormatter(value, {
+    dataIndex: identifier.dataIndex,
+  });
+
+  const seriesLabel = getLabel(series[seriesId].label, 'tooltip');
 
   return (
-    <ChartsTooltipContainer {...props} classes={classes}>
-      {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} />
-      ) : (
-        <ChartsItemTooltipContent classes={classes} />
-      )}
+    <ChartsTooltipPaper className={classes?.paper}>
+      <ChartsTooltipTable className={classes?.table}>
+        <thead>
+          <ChartsTooltipRow className={classes?.row}>
+            <ChartsTooltipCell className={classes?.cell}>{formattedX}</ChartsTooltipCell>
+            {formattedX && formattedY && <ChartsTooltipCell />}
+            <ChartsTooltipCell className={classes?.cell}>{formattedY}</ChartsTooltipCell>
+          </ChartsTooltipRow>
+        </thead>
+        <tbody>
+          <ChartsTooltipRow className={classes?.row}>
+            <ChartsTooltipCell className={clsx(classes?.markCell, classes?.cell)}>
+              <ChartsTooltipMark color={color} className={classes?.mark} />
+            </ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes?.labelCell, classes?.cell)}>
+              {seriesLabel}
+            </ChartsTooltipCell>
+            <ChartsTooltipCell className={clsx(classes?.valueCell, classes?.cell)}>
+              {formattedValue}
+            </ChartsTooltipCell>
+          </ChartsTooltipRow>
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
+  );
+}
+
+DefaultHeatmapTooltipContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+} as any;
+
+function HeatmapTooltip(props: HeatmapTooltipProps) {
+  const classes = useUtilityClasses({ classes: props.classes });
+
+  return (
+    <ChartsTooltipContainer {...props} classes={classes} trigger="item">
+      <DefaultHeatmapTooltipContent classes={classes} />
     </ChartsTooltipContainer>
   );
 }
 
-ChartsTooltip.propTypes = {
+HeatmapTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -276,14 +366,6 @@ ChartsTooltip.propTypes = {
    * @default false
    */
   transition: PropTypes.bool,
-  /**
-   * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
-   * @default 'axis'
-   */
-  trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;
 
-export { ChartsTooltip };
+export { HeatmapTooltip };

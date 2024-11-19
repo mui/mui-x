@@ -6,6 +6,7 @@
         "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func<br>&#124;&nbsp;{ contextElement?: (props, propName) => {\n  if (props[propName] == null) {\n    return null;\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}, getBoundingClientRect: func }"
       }
     },
+    "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "component": { "type": { "name": "elementType" } },
     "components": {
@@ -73,70 +74,70 @@
       "default": "'axis'"
     }
   },
-  "name": "ChartsTooltip",
+  "name": "ChartsTooltipContainer",
   "imports": [
-    "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
-    "import { ChartsTooltip } from '@mui/x-charts';",
-    "import { ChartsTooltip } from '@mui/x-charts-pro';"
+    "import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsTooltipContainer } from '@mui/x-charts';",
+    "import { ChartsTooltipContainer } from '@mui/x-charts-pro';"
   ],
   "classes": [
     {
       "key": "cell",
-      "className": "MuiChartsTooltip-cell",
+      "className": "MuiChartsTooltipContainer-cell",
       "description": "Styles applied to the cell element.",
       "isGlobal": false
     },
     {
       "key": "labelCell",
-      "className": "MuiChartsTooltip-labelCell",
+      "className": "MuiChartsTooltipContainer-labelCell",
       "description": "Styles applied to the labelCell element.",
       "isGlobal": false
     },
     {
       "key": "mark",
-      "className": "MuiChartsTooltip-mark",
+      "className": "MuiChartsTooltipContainer-mark",
       "description": "Styles applied to the mark element.",
       "isGlobal": false
     },
     {
       "key": "markCell",
-      "className": "MuiChartsTooltip-markCell",
+      "className": "MuiChartsTooltipContainer-markCell",
       "description": "Styles applied to the markCell element.",
       "isGlobal": false
     },
     {
       "key": "paper",
-      "className": "MuiChartsTooltip-paper",
+      "className": "MuiChartsTooltipContainer-paper",
       "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiChartsTooltip-root",
+      "className": "MuiChartsTooltipContainer-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "row",
-      "className": "MuiChartsTooltip-row",
+      "className": "MuiChartsTooltipContainer-row",
       "description": "Styles applied to the row element.",
       "isGlobal": false
     },
     {
       "key": "table",
-      "className": "MuiChartsTooltip-table",
+      "className": "MuiChartsTooltipContainer-table",
       "description": "Styles applied to the table element.",
       "isGlobal": false
     },
     {
       "key": "valueCell",
-      "className": "MuiChartsTooltip-valueCell",
+      "className": "MuiChartsTooltipContainer-valueCell",
       "description": "Styles applied to the valueCell element.",
       "isGlobal": false
     }
   ],
-  "muiName": "MuiChartsTooltip",
-  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
+  "muiName": "MuiChartsTooltipContainer",
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltipContainer.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/tooltip/\">Charts - Tooltip</a></li></ul>",
   "cssComponent": false

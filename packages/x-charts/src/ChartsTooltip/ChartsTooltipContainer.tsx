@@ -1,12 +1,46 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
-import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
-import { useUtilityClasses } from './chartsTooltipClasses';
+import useLazyRef from '@mui/utils/useLazyRef';
+import { styled, useThemeProps } from '@mui/material/styles';
+import Popper, { PopperProps } from '@mui/material/Popper';
+import NoSsr from '@mui/material/NoSsr';
+import { useSvgRef } from '../hooks/useSvgRef';
+import { TriggerOptions, usePointerType } from './utils';
+import { ChartsTooltipClasses } from './chartsTooltipClasses';
+import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/useStore';
+import { useXAxis } from '../hooks';
+import {
+  selectorChartsInteractionItemIsDefined,
+  selectorChartsInteractionXAxisIsDefined,
+  selectorChartsInteractionYAxisIsDefined,
+} from '../context/InteractionSelectors';
 
-export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'children'> {}
+export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'axis': Shows values associated with the hovered x value
+   * - 'none': Does not display tooltip
+   * @default 'axis'
+   */
+  trigger?: TriggerOptions;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipClasses>;
+  children?: React.ReactNode;
+}
+
+const ChartsTooltipRoot = styled(Popper, {
+  name: 'MuiChartsTooltip',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})(({ theme }) => ({
+  pointerEvents: 'none',
+  zIndex: theme.zIndex.modal,
+}));
 
 /**
  * Demos:
@@ -17,23 +51,98 @@ export interface ChartsTooltipProps extends Omit<ChartsTooltipContainerProps, 'c
  *
  * - [ChartsTooltip API](https://mui.com/x/api/charts/charts-tool-tip/)
  */
-function ChartsTooltip(props: ChartsTooltipProps) {
-  const { classes: propClasses, trigger = 'axis' } = props;
+function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiChartsTooltipContainer',
+  });
+  const { trigger = 'axis', classes, children, ...other } = props;
 
-  const classes = useUtilityClasses(propClasses);
+  const svgRef = useSvgRef();
+  const pointerType = usePointerType();
+  const xAxis = useXAxis();
+
+  const xAxisHasData = xAxis.data !== undefined && xAxis.data.length !== 0;
+
+  const popperRef: PopperProps['popperRef'] = React.useRef(null);
+  const positionRef = useLazyRef(() => ({ x: 0, y: 0 }));
+
+  const store = useStore();
+  const isOpen = useSelector(
+    store,
+    // eslint-disable-next-line no-nested-ternary
+    trigger === 'axis'
+      ? xAxisHasData
+        ? selectorChartsInteractionXAxisIsDefined
+        : selectorChartsInteractionYAxisIsDefined
+      : selectorChartsInteractionItemIsDefined,
+  );
+
+  const popperOpen = pointerType !== null && isOpen; // tooltipHasData;
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    const handleMove = (event: PointerEvent) => {
+      // eslint-disable-next-line react-compiler/react-compiler
+      positionRef.current = { x: event.clientX, y: event.clientY };
+      popperRef.current?.update();
+    };
+    element.addEventListener('pointermove', handleMove);
+
+    return () => {
+      element.removeEventListener('pointermove', handleMove);
+    };
+  }, [svgRef, positionRef]);
+
+  if (trigger === 'none') {
+    return null;
+  }
 
   return (
-    <ChartsTooltipContainer {...props} classes={classes}>
-      {trigger === 'axis' ? (
-        <ChartsAxisTooltipContent classes={classes} />
-      ) : (
-        <ChartsItemTooltipContent classes={classes} />
+    <NoSsr>
+      {popperOpen && (
+        <ChartsTooltipRoot
+          className={classes?.root}
+          open={popperOpen}
+          placement={
+            pointerType?.pointerType === 'mouse' ? ('right-start' as const) : ('top' as const)
+          }
+          popperRef={popperRef}
+          anchorEl={{
+            getBoundingClientRect: () => ({
+              x: positionRef.current.x,
+              y: positionRef.current.y,
+              top: positionRef.current.y,
+              left: positionRef.current.x,
+              right: positionRef.current.x,
+              bottom: positionRef.current.y,
+              width: 0,
+              height: 0,
+              toJSON: () => '',
+            }),
+          }}
+          modifiers={[
+            {
+              name: 'offset',
+              options: {
+                offset: [0, pointerType?.pointerType === 'touch' ? 40 - pointerType.height : 0],
+              },
+            },
+          ]}
+          {...other}
+        >
+          {children}
+        </ChartsTooltipRoot>
       )}
-    </ChartsTooltipContainer>
+    </NoSsr>
   );
 }
 
-ChartsTooltip.propTypes = {
+ChartsTooltipContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -68,6 +177,10 @@ ChartsTooltip.propTypes = {
       getBoundingClientRect: PropTypes.func.isRequired,
     }),
   ]),
+  /**
+   * Popper render function or node.
+   */
+  children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -286,4 +399,4 @@ ChartsTooltip.propTypes = {
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;
 
-export { ChartsTooltip };
+export { ChartsTooltipContainer };

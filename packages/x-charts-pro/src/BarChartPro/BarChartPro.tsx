@@ -94,9 +94,10 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     chartsAxisProps,
     axisHighlightProps,
     legendProps,
-    tooltipProps,
     children,
   } = useBarChartProps(other);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
@@ -109,7 +110,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
       </g>
       <ChartsAxis {...chartsAxisProps} />
       {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       <ChartsClipPath {...clipPathProps} />
       <ZoomSetup />
       {children}
@@ -275,18 +276,6 @@ BarChartPro.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
   /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.

@@ -7,7 +7,6 @@ export function useStore(skipError?: boolean): ChartStore {
 
   if (skipError) {
     // TODO: Remove once store is used by all charts.
-    // TODO: Remove once store is used by all charts.
     // This line is only for `useAxisEvents` which is in the surface of the Gauge.
     // But the Gauge don't have store yet because it does not need the interaction provider.
     // Will be fixed when every thing move to the store since every component will have access to it.
