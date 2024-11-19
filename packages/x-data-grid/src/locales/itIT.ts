@@ -43,6 +43,7 @@ const itITGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nessuna colonna',
   columnsManagementShowHideAllText: 'Mostra/Nascondi Tutto',
   columnsManagementReset: 'Resetta',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',

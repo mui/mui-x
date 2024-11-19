@@ -259,12 +259,6 @@ PieChart.propTypes = {
     slots: PropTypes.object,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

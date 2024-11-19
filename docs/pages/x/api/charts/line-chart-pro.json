@@ -11,7 +11,7 @@
       },
       "default": "{ x: 'line' }",
       "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/highlighting",
+        "url": "https://mui.com/x/react-charts/highlighting/",
         "text": "highlighting docs"
       }
     },

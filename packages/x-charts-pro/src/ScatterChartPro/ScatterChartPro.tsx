@@ -76,7 +76,7 @@ ScatterChartPro.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -236,12 +236,6 @@ ScatterChartPro.propTypes = {
    * @default null
    */
   topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.

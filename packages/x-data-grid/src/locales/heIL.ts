@@ -43,6 +43,7 @@ const heILGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'אין עמודות',
   columnsManagementShowHideAllText: 'הצג/הסתר הכל',
   columnsManagementReset: 'אתחול',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
