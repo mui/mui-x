@@ -123,7 +123,7 @@ describeTreeView<
       fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
 
       expect(view.getItemIdTree()).to.deep.equal([
-        { id: '1', children: [] },
+        { id: '1' },
         { id: '2', children: [{ id: '1.1' }] },
       ]);
     });

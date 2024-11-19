@@ -42,6 +42,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nincsenek oszlopok',
   columnsManagementShowHideAllText: 'Összes',
   columnsManagementReset: 'Visszavon',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
