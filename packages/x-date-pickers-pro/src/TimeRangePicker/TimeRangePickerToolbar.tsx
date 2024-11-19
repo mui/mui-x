@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { MakeOptional } from '@mui/x-internals/types';
 import { MuiPickersAdapter, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   PickersToolbar,
@@ -16,19 +17,18 @@ import {
   PickersToolbarText,
   getMeridiem,
   formatMeridiem,
-  MakeOptional,
   pickersToolbarClasses,
   pickersToolbarTextClasses,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   TimeRangePickerToolbarClasses,
   getTimeRangePickerToolbarUtilityClass,
 } from './timeRangePickerToolbarClasses';
-import { DateRange } from '../models';
 
-const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -40,8 +40,8 @@ const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps<any>) => {
   return composeClasses(slots, getTimeRangePickerToolbarUtilityClass, classes);
 };
 
-export interface TimeRangePickerToolbarProps<TDate extends PickerValidDate>
-  extends Omit<BaseToolbarProps<DateRange<TDate>, TimeViewWithMeridiem>, 'toolbarFormat'>,
+export interface TimeRangePickerToolbarProps
+  extends Omit<BaseToolbarProps<PickerRangeValue, TimeViewWithMeridiem>, 'toolbarFormat'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
@@ -60,7 +60,7 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: TimeRangePickerToolbarProps<any> }>(({ theme }) => ({
+})<{ ownerState: TimeRangePickerToolbarProps }>(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   padding: '12px 0px 8px 0px',
   [`& .${pickersToolbarClasses.content} .${pickersToolbarTextClasses.selected}`]: {
@@ -101,21 +101,19 @@ const TimeRangePickerToolbarSeparator = styled(PickersToolbarText, {
   cursor: 'default',
 });
 
-type TimeRangePickerToolbarTimeElementProps<TDate extends PickerValidDate> = MakeOptional<
+type TimeRangePickerToolbarTimeElementProps = MakeOptional<
   Pick<
-    TimeRangePickerToolbarProps<TDate>,
+    TimeRangePickerToolbarProps,
     'ampm' | 'views' | 'onViewChange' | 'view' | 'toolbarPlaceholder' | 'toolbarVariant'
   >,
   'view'
 > & {
-  value: TDate | null;
-  utils: MuiPickersAdapter<TDate, any>;
+  value: PickerValidDate | null;
+  utils: MuiPickersAdapter<any>;
   separatorClasses: string;
 };
 
-function TimeRangePickerToolbarTimeElement<TDate extends PickerValidDate>(
-  props: TimeRangePickerToolbarTimeElementProps<TDate>,
-) {
+function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElementProps) {
   const {
     value,
     ampm,
@@ -128,7 +126,7 @@ function TimeRangePickerToolbarTimeElement<TDate extends PickerValidDate>(
     toolbarVariant,
   } = props;
 
-  const formatHours = (time: TDate) =>
+  const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
   const meridiemMode = getMeridiem(value, utils);
   const sectionWidth = toolbarVariant === 'desktop' ? 48 : '100%';
@@ -182,10 +180,11 @@ function TimeRangePickerToolbarTimeElement<TDate extends PickerValidDate>(
   );
 }
 
-const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
-  TDate extends PickerValidDate,
->(inProps: TimeRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const utils = useUtils<TDate>();
+const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
+  inProps: TimeRangePickerToolbarProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const utils = useUtils();
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePickerToolbar' });
 
   const {
@@ -202,7 +201,7 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar<
     ...other
   } = props;
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickerTranslations();
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);

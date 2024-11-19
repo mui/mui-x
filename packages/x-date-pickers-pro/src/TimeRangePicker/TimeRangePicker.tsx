@@ -4,16 +4,12 @@ import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { DesktopTimeRangePicker } from '../DesktopTimeRangePicker';
 import { MobileTimeRangePicker } from '../MobileTimeRangePicker';
 import { TimeRangePickerProps } from './TimeRangePicker.types';
 
-type TimePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: TimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type TimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -28,10 +24,9 @@ type TimePickerComponent = (<
  * - [TimeRangePicker API](https://mui.com/x/api/date-pickers/time-range-picker/)
  */
 const TimeRangePicker = React.forwardRef(function TimeRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: TimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: TimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimeRangePicker' });

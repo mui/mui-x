@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimeViewWithMeridiem, useUtils, resolveTimeFormat } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -19,34 +18,29 @@ import {
   renderMultiSectionDigitalClockTimeRangeView,
 } from '../timeRangeViewRenderers';
 
-type DesktopTimeRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: DesktopTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type DesktopTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: DesktopTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    TDate,
-    DesktopTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiDesktopTimeRangePicker');
 
   const renderTimeRangeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeRangeView
     : renderMultiSectionDigitalClockTimeRangeView;
 
-  const viewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any> = {
     hours: renderTimeRangeView,
     minutes: renderTimeRangeView,
     seconds: renderTimeRangeView,
@@ -87,7 +81,6 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   };
 
   const { renderPicker } = useDesktopRangePicker<
-    TDate,
     TimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props

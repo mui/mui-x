@@ -1,4 +1,3 @@
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DesktopTimeRangePickerProps,
   DesktopTimeRangePickerSlots,
@@ -10,21 +9,17 @@ import {
   MobileTimeRangePickerSlotProps,
 } from '../MobileTimeRangePicker';
 
-export interface TimeRangePickerSlots<TDate extends PickerValidDate>
-  extends DesktopTimeRangePickerSlots<TDate>,
-    MobileTimeRangePickerSlots<TDate> {}
+export interface TimeRangePickerSlots
+  extends DesktopTimeRangePickerSlots,
+    MobileTimeRangePickerSlots {}
 
-export interface TimeRangePickerSlotProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DesktopTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    MobileTimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure> {}
+export interface TimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends DesktopTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+    MobileTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
-export interface TimeRangePickerProps<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
-> extends DesktopTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
-    Omit<MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>, 'views'> {
+export interface TimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
+  extends DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+    Omit<MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -35,10 +30,10 @@ export interface TimeRangePickerProps<
    * Overridable component slots.
    * @default {}
    */
-  slots?: TimeRangePickerSlots<TDate>;
+  slots?: TimeRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeRangePickerSlotProps<TDate, TEnableAccessibleFieldDOMStructure>;
+  slotProps?: TimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
 }

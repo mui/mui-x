@@ -4,6 +4,7 @@ import {
   TimeViewWithMeridiem,
   isTimeView,
   PickerSelectionState,
+  PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { DigitalClock, DigitalClockProps } from '@mui/x-date-pickers/DigitalClock';
 import {
@@ -13,23 +14,21 @@ import {
 import { TimeClock, TimeClockProps } from '@mui/x-date-pickers/TimeClock';
 import { PickerValidDate, TimeView } from '@mui/x-date-pickers/models';
 import type { TimeRangePickerProps } from '../TimeRangePicker/TimeRangePicker.types';
-import { DateRange } from '../models';
 import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type TimeRangeViewRendererProps<
-  TDate extends PickerValidDate,
   TView extends TimeViewWithMeridiem,
-  TComponentProps extends Omit<BaseClockProps<any, any>, 'value' | 'onChange'>,
+  TComponentProps extends Omit<BaseClockProps<any>, 'value' | 'onChange'>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> &
   UseRangePositionProps & {
-    value: DateRange<TDate>;
-    onChange: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+    value: PickerRangeValue;
+    onChange: (value: PickerRangeValue, selectionState?: PickerSelectionState) => void;
     view: TView;
     onViewChange?: (view: TView) => void;
     views: readonly TView[];
   };
 
-export const renderTimeRangeViewClock = <TDate extends PickerValidDate>({
+export const renderTimeRangeViewClock = ({
   view,
   onViewChange,
   focusedView,
@@ -60,14 +59,16 @@ export const renderTimeRangeViewClock = <TDate extends PickerValidDate>({
   rangePosition,
   onRangePositionChange,
 }: TimeRangeViewRendererProps<
-  TDate,
   TimeView,
-  Omit<TimeClockProps<TDate>, 'value' | 'defaultValue' | 'onChange'> &
-    Pick<TimeRangePickerProps<TDate>, 'timeSteps'>
+  Omit<TimeClockProps<TimeView>, 'value' | 'defaultValue' | 'onChange'> &
+    Pick<TimeRangePickerProps, 'timeSteps'>
 >) => {
   const valueForCurrentView = rangePosition === 'start' ? value[0] : value[1];
 
-  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+  const handleChange = (
+    newValue: PickerValidDate | null,
+    selectionState?: PickerSelectionState,
+  ) => {
     if (selectionState === 'finish' && rangePosition === 'start') {
       onRangePositionChange?.('end');
       onViewChange?.(views[0]);
@@ -80,7 +81,7 @@ export const renderTimeRangeViewClock = <TDate extends PickerValidDate>({
   };
 
   return (
-    <TimeClock<TDate>
+    <TimeClock
       view={view}
       onViewChange={onViewChange}
       focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
@@ -112,7 +113,7 @@ export const renderTimeRangeViewClock = <TDate extends PickerValidDate>({
   );
 };
 
-export const renderDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
+export const renderDigitalClockTimeRangeView = ({
   view,
   onViewChange,
   focusedView,
@@ -143,14 +144,16 @@ export const renderDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
   rangePosition,
   onRangePositionChange,
 }: TimeRangeViewRendererProps<
-  TDate,
   Extract<TimeView, 'hours'>,
-  Omit<DigitalClockProps<TDate>, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
-    Pick<TimeRangePickerProps<TDate>, 'timeSteps'>
+  Omit<DigitalClockProps, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
+    Pick<TimeRangePickerProps, 'timeSteps'>
 >) => {
   const valueForCurrentView = rangePosition === 'start' ? value[0] : value[1];
 
-  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+  const handleChange = (
+    newValue: PickerValidDate | null,
+    selectionState?: PickerSelectionState,
+  ) => {
     if (selectionState === 'finish' && rangePosition === 'start') {
       onRangePositionChange?.('end');
       onViewChange?.(views[0]);
@@ -163,7 +166,7 @@ export const renderDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
   };
 
   return (
-    <DigitalClock<TDate>
+    <DigitalClock
       view={view}
       onViewChange={onViewChange}
       focusedView={focusedView}
@@ -195,7 +198,7 @@ export const renderDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
   );
 };
 
-export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends PickerValidDate>({
+export const renderMultiSectionDigitalClockTimeRangeView = ({
   view,
   onViewChange,
   focusedView,
@@ -226,14 +229,16 @@ export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends Picker
   rangePosition,
   onRangePositionChange,
 }: TimeRangeViewRendererProps<
-  TDate,
   TimeViewWithMeridiem,
-  Omit<MultiSectionDigitalClockProps<TDate>, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
-    Pick<TimeRangePickerProps<TDate>, 'timeSteps'>
+  Omit<MultiSectionDigitalClockProps, 'timeStep' | 'value' | 'defaultValue' | 'onChange'> &
+    Pick<TimeRangePickerProps, 'timeSteps'>
 >) => {
   const valueForCurrentView = rangePosition === 'start' ? value[0] : value[1];
 
-  const handleChange = (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+  const handleChange = (
+    newValue: PickerValidDate | null,
+    selectionState?: PickerSelectionState,
+  ) => {
     if (selectionState === 'finish' && rangePosition === 'start') {
       onRangePositionChange?.('end');
       onViewChange?.(views[0]);
@@ -246,7 +251,7 @@ export const renderMultiSectionDigitalClockTimeRangeView = <TDate extends Picker
   };
 
   return (
-    <MultiSectionDigitalClock<TDate>
+    <MultiSectionDigitalClock
       view={view}
       onViewChange={onViewChange}
       focusedView={focusedView}

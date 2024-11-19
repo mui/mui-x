@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
-  DefaultizedProps,
   DIALOG_WIDTH,
   isInternalTimeView,
+  PickerRangeValue,
   PickerViewRenderer,
   PickerViewsRendererProps,
   resolveTimeFormat,
@@ -37,27 +37,19 @@ import {
   UseMobileRangePickerProps,
 } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
-import { DateRange } from '../models';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 
 const rendererInterceptor = function rendererInterceptor<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any>,
+  inViewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any>,
   popperView: TimeViewWithMeridiem,
   rendererProps: PickerViewsRendererProps<
-    DateRange<TDate>,
+    PickerRangeValue,
     TimeViewWithMeridiem,
     DefaultizedProps<
-      UseMobileRangePickerProps<
-        TDate,
-        TimeViewWithMeridiem,
-        TEnableAccessibleFieldDOMStructure,
-        any,
-        any
-      >,
+      UseMobileRangePickerProps<TimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure, any, any>,
       'rangePosition' | 'onRangePositionChange' | 'openTo'
     >,
     {}
@@ -100,7 +92,7 @@ const rendererInterceptor = function rendererInterceptor<
     <DateTimeRangePickerTimeWrapper
       {...finalProps}
       viewRenderer={
-        viewRenderer as PickerViewRenderer<DateRange<TDate>, TimeViewWithMeridiem, any, {}>
+        viewRenderer as PickerViewRenderer<PickerRangeValue, TimeViewWithMeridiem, any, {}>
       }
       view={view && isInternalTimeView(view) ? view : 'hours'}
       views={finalProps.views as TimeViewWithMeridiem[]}
@@ -109,34 +101,29 @@ const rendererInterceptor = function rendererInterceptor<
   );
 };
 
-type MobileTimeRangePickerComponent = (<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
->(
-  props: MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure> &
+type MobileTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
+  props: MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
-  TDate extends PickerValidDate,
-  TEnableAccessibleFieldDOMStructure extends boolean = false,
+  TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useTimeRangePickerDefaultizedProps<
-    TDate,
-    MobileTimeRangePickerProps<TDate, TEnableAccessibleFieldDOMStructure>
+    MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
   >(inProps, 'MuiMobileTimeRangePicker');
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: TimeRangePickerRenderers<TDate, TimeViewWithMeridiem, any> = {
+  const viewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
@@ -170,7 +157,6 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
   };
 
   const { renderPicker } = useMobileRangePicker<
-    TDate,
     TimeViewWithMeridiem,
     TEnableAccessibleFieldDOMStructure,
     typeof props
