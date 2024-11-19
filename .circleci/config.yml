@@ -330,7 +330,7 @@ jobs:
           browsers: true
       - run:
           name: Install ffmpeg
-          command: sudo apt update && sudo apt install ffmpeg
+          command: apt update && apt install ffmpeg
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
