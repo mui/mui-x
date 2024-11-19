@@ -123,6 +123,5 @@ If you used axes in a pie chart please open an issue, we would be curious to get
 
 ## Remove `resolveSizeBeforeRender` prop
 
-The `resolveSizeBeforeRender` prop has been removed from the `ChartContainer` component and all related charts.
-
+The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
