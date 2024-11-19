@@ -6,7 +6,7 @@ import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
+import { DateOrTimeViewWithMeridiem, PickerVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 import {
   ExportedPickersShortcutProps,
@@ -35,7 +35,7 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
-  wrapperVariant: WrapperVariant;
+  wrapperVariant: PickerVariant;
   isLandscape: boolean;
 }
 

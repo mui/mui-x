@@ -1,6 +1,6 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { WrapperVariant } from '../../models/common';
+import { PickerVariant } from '../../models/common';
 import {
   FieldSection,
   TimezoneProps,
@@ -266,7 +266,7 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  wrapperVariant: WrapperVariant;
+  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
