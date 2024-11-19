@@ -14,11 +14,11 @@ parameters:
     type: string
     default: pipeline
   with-material-ui-6:
-    description: The name of the workflow to run
+    description: Use material-ui v6 for additional checks and tests
     type: boolean
     default: false
   with-react-version:
-    description: The name of the workflow to run
+    description: The version of react to be used for the additional tests
     type: string
     default: stable
   e2e-base-url:
