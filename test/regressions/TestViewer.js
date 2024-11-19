@@ -120,7 +120,7 @@ function TestViewer(props) {
             WebkitFontSmoothing: 'antialiased', // Antialiasing.
             MozOsxFontSmoothing: 'grayscale', // Antialiasing.
             // Do the opposite of the docs in order to help catching issues.
-            boxSizing: 'border-box',
+            boxSizing: 'content-box',
           },
           '*, *::before, *::after': {
             boxSizing: 'inherit',
