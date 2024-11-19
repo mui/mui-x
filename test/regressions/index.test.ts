@@ -123,6 +123,7 @@ async function main() {
       it(`creates screenshots of ${pathURL}`, async function test() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         await page.mouse.move(0, 0);
+        await page.evaluate(() => document.fonts.ready);
 
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
