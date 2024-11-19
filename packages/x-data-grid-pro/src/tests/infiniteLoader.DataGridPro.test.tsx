@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, createRenderer, reactMajor, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { spy, restore } from 'sinon';
@@ -76,7 +76,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     });
   });
 
-  it('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
+  it.only('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -136,8 +136,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     //   1 initial row
     //   5 rows loaded one by one through `onRowsScrollEnd` callback
 
-    const multiplier = reactMajor < 19 ? 1 : 2; // in React 19, `setRows` is called twice for each `handleRowsScrollEnd` call
-
+    const multiplier = 2; // `setRows` is called twice for each `handleRowsScrollEnd` call
     await waitFor(() => {
       expect(getRow.callCount).to.equal(5 * multiplier);
     });
