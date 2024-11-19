@@ -70,7 +70,7 @@ export const useMobilePicker = <
     localeText,
     autoFocusView: true,
     additionalViewProps: {},
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
   });
 
   const Field = slots.field;
