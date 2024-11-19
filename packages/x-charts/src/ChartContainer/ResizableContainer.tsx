@@ -34,7 +34,7 @@ export const ResizableContainerRoot = styled('div', {
  * @ignore - do not document.
  */
 function ResizableContainer(props: { children: React.ReactNode }) {
-  const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
+  const { inHeight, inWidth, containerRef } = useSize();
 
   return (
     <ResizableContainerRoot
@@ -42,7 +42,7 @@ function ResizableContainer(props: { children: React.ReactNode }) {
       ownerState={{ width: inWidth, height: inHeight }}
       ref={containerRef}
     >
-      {hasIntrinsicSize && props.children}
+      {props.children}
     </ResizableContainerRoot>
   );
 }

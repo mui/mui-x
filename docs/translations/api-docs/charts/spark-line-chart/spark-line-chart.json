@@ -26,9 +26,6 @@
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "plotType": { "description": "Type of plot used." },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
     },

@@ -318,16 +318,6 @@ SparkLineChart.propTypes = {
    */
   plotType: PropTypes.oneOf(['bar', 'line']),
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * Set to `true` to highlight the value.
    * With line, it shows a point.
    * With bar, it shows a highlight band.

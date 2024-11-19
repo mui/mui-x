@@ -12,11 +12,7 @@ import { useChartContainerDimensions } from './useChartContainerDimensions';
  * This provider is also responsible for resolving the size of the container before rendering and if the parent size changes.
  */
 function SizeProvider(props: SizeProviderProps) {
-  const dimensions = useChartContainerDimensions(
-    props.width,
-    props.height,
-    props.resolveSizeBeforeRender,
-  );
+  const dimensions = useChartContainerDimensions(props.width, props.height);
 
   const value = React.useMemo(
     () => ({

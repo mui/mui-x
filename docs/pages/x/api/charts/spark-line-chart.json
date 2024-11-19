@@ -36,7 +36,6 @@
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
     },
-    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },

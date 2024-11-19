@@ -7,6 +7,7 @@ import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks';
 import { useSurfaceRef } from '../context/SvgRefProvider';
+import { useSize } from '../context/SizeProvider';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -36,6 +37,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
+  const { hasIntrinsicSize } = useSize();
   const surfaceRef = useSurfaceRef();
   const handleRef = useForkRef(surfaceRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -56,8 +58,6 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
-      width={svgWidth}
-      height={svgHeight}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
@@ -66,7 +66,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
       <ChartsAxesGradients />
-      {children}
+      {hasIntrinsicSize && children}
     </ChartsSurfaceStyles>
   );
 });
