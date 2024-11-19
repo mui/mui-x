@@ -9,7 +9,12 @@ import {
   PickerPrivateContextValue,
 } from '../../components/PickerProvider';
 import type { UsePickerProps } from './usePicker.types';
-import { DateOrTimeViewWithMeridiem, PickerOrientation, PickerVariant } from '../../models';
+import {
+  DateOrTimeViewWithMeridiem,
+  FormProps,
+  PickerOrientation,
+  PickerVariant,
+} from '../../models';
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
 
@@ -142,11 +147,9 @@ export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 
  * Props used to create the private context.
  * Those props are exposed on all the pickers.
  */
-export interface UsePickerProviderProps {
+export interface UsePickerProviderProps extends FormProps {
   /**
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
-  disabled?: boolean;
-  readOnly?: boolean;
 }
