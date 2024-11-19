@@ -129,6 +129,7 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem
    * Indicates if the the picker has at least one view that should be rendered in UI.
    */
   hasUIView: boolean;
+  views: readonly TView[];
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
@@ -272,6 +273,7 @@ export const usePickerViews = <
 
   return {
     hasUIView,
+    views,
     shouldRestoreFocus,
     layoutProps,
     renderCurrentView: () => {

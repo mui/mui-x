@@ -2,14 +2,13 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
+import { DateOrTimeViewWithMeridiem, PickerVariant } from '../../models/common';
 import { FormProps } from '../../models';
 
 /**
  * Props used to create the layout of the views.
- * Those props are exposed on all the pickers.
  */
-export interface UsePickerLayoutProps extends FormProps {
+interface UsePickerLayoutProps extends FormProps {
   /**
    * Force rendering in particular orientation.
    */
@@ -24,7 +23,7 @@ export interface UsePickerLayoutPropsResponseLayoutProps<
     UsePickerLayoutProps {
   isLandscape: boolean;
   isRtl: boolean;
-  wrapperVariant: WrapperVariant;
+  wrapperVariant: PickerVariant;
   isValid: (value: TValue) => boolean;
 }
 
@@ -36,7 +35,7 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
   props: UsePickerLayoutProps;
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
-  wrapperVariant: WrapperVariant;
+  variant: PickerVariant;
 }
 
 /**
@@ -46,7 +45,7 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
   props,
   propsFromPickerValue,
   propsFromPickerViews,
-  wrapperVariant,
+  variant,
 }: UsePickerLayoutPropsParams<TValue, TView>): UsePickerLayoutPropsResponse<TValue, TView> => {
   const { orientation } = props;
   const isLandscape = useIsLandscape(propsFromPickerViews.views, orientation);
@@ -57,7 +56,7 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
     ...propsFromPickerValue,
     isLandscape,
     isRtl,
-    wrapperVariant,
+    wrapperVariant: variant,
     disabled: props.disabled,
     readOnly: props.readOnly,
   };

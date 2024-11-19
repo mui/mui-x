@@ -107,7 +107,7 @@ export type { BaseTabsProps, ExportedBaseTabsProps } from './models/props/tabs';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { FormProps } from './models/formProps';
 export type {
-  WrapperVariant,
+  PickerVariant,
   TimeViewWithMeridiem,
   DateOrTimeViewWithMeridiem,
 } from './models/common';

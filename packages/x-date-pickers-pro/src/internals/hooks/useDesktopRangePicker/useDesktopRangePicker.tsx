@@ -97,7 +97,7 @@ export const useDesktopRangePicker = <
   >({
     ...pickerParams,
     props,
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     autoFocusView: false,
     fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
     localeText,
@@ -164,7 +164,7 @@ export const useDesktopRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     fieldType,
     open,
     actions,
