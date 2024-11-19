@@ -165,6 +165,7 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.doubleClick(separator);
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
+      // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
       const expectedWidth = process.env.VITEST === 'true' ? 63.71875 : 114;
       expect(onColumnWidthChange.args.map((arg) => arg[0].width)).to.deep.equal([
         120,
@@ -604,6 +605,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.expand works', async () => {
+        // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
         await autosize({ expand: true }, [134, 148]);
       });
     });
