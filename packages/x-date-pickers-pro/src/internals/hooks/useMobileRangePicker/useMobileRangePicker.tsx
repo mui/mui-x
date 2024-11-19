@@ -96,7 +96,7 @@ export const useMobileRangePicker = <
   } = usePicker<PickerRangeValue, TView, TExternalProps, MobileRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     autoFocusView: true,
     fieldRef,
     localeText,
@@ -143,7 +143,7 @@ export const useMobileRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     fieldType,
     open,
     actions,

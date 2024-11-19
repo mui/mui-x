@@ -4,7 +4,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 type PointerState = {
   isActive: boolean;
@@ -57,7 +56,7 @@ function usePointer(): PointerState {
   return pointer;
 }
 
-export function ItemTooltipTopElement() {
+export function ItemTooltipTopElement({ children }: React.PropsWithChildren) {
   const tooltipData = useItemTooltip<'bar'>();
   const { isActive } = usePointer();
   // Get xAxis config to access its data array.
@@ -123,7 +122,7 @@ export function ItemTooltipTopElement() {
           }),
         }}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

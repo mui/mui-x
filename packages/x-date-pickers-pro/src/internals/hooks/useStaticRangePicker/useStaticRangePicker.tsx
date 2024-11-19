@@ -53,7 +53,7 @@ export const useStaticRangePicker = <
       rangePosition,
       onRangePositionChange,
     },
-    wrapperVariant: displayStaticWrapperAs,
+    variant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
