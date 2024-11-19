@@ -117,12 +117,8 @@ export function usePickerProvider<TValue>(
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({
-      ownerState,
-      variant,
-      orientation,
-    }),
-    [ownerState, variant, orientation],
+    () => ({ ownerState }),
+    [ownerState],
   );
 
   return {
