@@ -42,6 +42,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Brak kolumn',
   columnsManagementShowHideAllText: 'Wyświetl/Ukryj wszystkie',
   columnsManagementReset: 'Resetuj',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',

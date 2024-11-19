@@ -3,14 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ChartDataProviderProps,
-  ChartsAxesGradients,
-  DrawingProvider,
+  DrawingAreaProvider,
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
+  SvgRefProvider,
+  SizeProvider,
 } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../../internals/utils/releaseInfo';
@@ -22,50 +22,46 @@ const releaseInfo = getReleaseInfo();
 
 export interface ChartDataProviderProProps extends ChartDataProviderProps, ZoomProps {}
 
-const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
-  props: ChartDataProviderProProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartDataProviderPro(props: ChartDataProviderProProps) {
   const {
     zoomProviderProps,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     cartesianProviderProps,
-    chartsSurfaceProps,
+    sizeProviderProps,
     pluginProviderProps,
     animationProviderProps,
     children,
-  } = useChartContainerProProps(props, ref);
+  } = useChartContainerProProps(props);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <DrawingProvider {...drawingProviderProps}>
-      <AnimationProvider {...animationProviderProps}>
-        <PluginProvider {...pluginProviderProps}>
-          <ZoomProvider {...zoomProviderProps}>
-            <SeriesProvider {...seriesProviderProps}>
-              <CartesianProviderPro {...cartesianProviderProps}>
-                <ZAxisContextProvider {...zAxisContextProps}>
-                  <InteractionProvider>
-                    <HighlightedProvider {...highlightedProviderProps}>
-                      <ChartsSurface {...chartsSurfaceProps}>
-                        <ChartsAxesGradients />
-                        {children}
-                      </ChartsSurface>
-                    </HighlightedProvider>
-                  </InteractionProvider>
-                </ZAxisContextProvider>
-              </CartesianProviderPro>
-            </SeriesProvider>
-          </ZoomProvider>
-        </PluginProvider>
-      </AnimationProvider>
-    </DrawingProvider>
+    <SizeProvider {...sizeProviderProps}>
+      <DrawingAreaProvider {...drawingAreaProviderProps}>
+        <AnimationProvider {...animationProviderProps}>
+          <PluginProvider {...pluginProviderProps}>
+            <ZoomProvider {...zoomProviderProps}>
+              <SeriesProvider {...seriesProviderProps}>
+                <CartesianProviderPro {...cartesianProviderProps}>
+                  <ZAxisContextProvider {...zAxisContextProps}>
+                    <InteractionProvider>
+                      <HighlightedProvider {...highlightedProviderProps}>
+                        <SvgRefProvider>{children}</SvgRefProvider>
+                      </HighlightedProvider>
+                    </InteractionProvider>
+                  </ZAxisContextProvider>
+                </CartesianProviderPro>
+              </SeriesProvider>
+            </ZoomProvider>
+          </PluginProvider>
+        </AnimationProvider>
+      </DrawingAreaProvider>
+    </SizeProvider>
   );
-});
+}
 
 ChartDataProviderPro.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -319,7 +319,9 @@ MonthCalendar.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true` picker is disabled
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
+   * @default false
    */
   disabled: PropTypes.bool,
   /**
@@ -362,7 +364,9 @@ MonthCalendar.propTypes = {
   onFocusedViewChange: PropTypes.func,
   onMonthFocus: PropTypes.func,
   /**
-   * If `true` picker is readonly
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
+   * @default false
    */
   readOnly: PropTypes.bool,
   /**

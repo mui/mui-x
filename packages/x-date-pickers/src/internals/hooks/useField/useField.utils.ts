@@ -8,13 +8,13 @@ import {
 } from './useField.types';
 import {
   FieldSectionType,
-  FieldValueType,
   FieldSection,
   MuiPickersAdapter,
   FieldSectionContentType,
   PickersTimezone,
   PickerValidDate,
   FieldSelectedSections,
+  PickerValueType,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 
@@ -616,7 +616,7 @@ let warnedOnceInvalidSection = false;
 
 export const validateSections = <TSection extends FieldSection>(
   sections: TSection[],
-  valueType: FieldValueType,
+  valueType: PickerValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
@@ -805,7 +805,8 @@ export const parseSelectedSections = (
   }
 
   if (typeof selectedSections === 'string') {
-    return sections.findIndex((section) => section.type === selectedSections);
+    const index = sections.findIndex((section) => section.type === selectedSections);
+    return index === -1 ? null : index;
   }
 
   return selectedSections;
