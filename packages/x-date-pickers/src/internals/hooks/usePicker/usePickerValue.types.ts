@@ -142,7 +142,7 @@ export interface UsePickerValueState<TValue> {
    */
   lastCommittedValue: TValue;
   /**
-   * Last value passed with `props.value`.
+   * Last value passed to `props.value`.
    * Used to update the `draft` value whenever the `value` prop changes.
    */
   lastControlledValue: TValue | undefined;

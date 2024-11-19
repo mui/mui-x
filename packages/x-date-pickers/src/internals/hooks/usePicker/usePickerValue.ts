@@ -235,7 +235,7 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       hasBeenModifiedSinceMount: false,
     };
   });
@@ -302,15 +302,7 @@ export const usePickerValue = <
     }
   });
 
-  if (
-    inValueWithTimezoneToRender !== undefined &&
-    (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(
-        utils,
-        dateState.lastControlledValue,
-        inValueWithTimezoneToRender,
-      ))
-  ) {
+  if (dateState.lastControlledValue !== inValueWithoutRenderTimezone) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(
       utils,
       dateState.draft,
@@ -319,7 +311,7 @@ export const usePickerValue = <
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       ...(isUpdateComingFromPicker
         ? {}
         : {
