@@ -68,6 +68,7 @@
   { "name": "ChartsAxisHighlightClassKey", "kind": "TypeAlias" },
   { "name": "ChartsAxisHighlightPath", "kind": "Variable" },
   { "name": "ChartsAxisHighlightProps", "kind": "TypeAlias" },
+  { "name": "ChartsAxisHighlightType", "kind": "TypeAlias" },
   { "name": "ChartsAxisProps", "kind": "Interface" },
   { "name": "ChartsAxisTooltipContent", "kind": "Function" },
   { "name": "ChartsClipPath", "kind": "Function" },

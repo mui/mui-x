@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
 import { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
+import { useStore } from '../internals/useStore';
 
 export const useInteractionItemProps = (skip?: boolean) => {
-  const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
+  const store = useStore();
   const { setHighlighted, clearHighlighted } = useHighlighted();
 
   if (skip) {
@@ -18,10 +18,13 @@ export const useInteractionItemProps = (skip?: boolean) => {
       }
     };
     const onPointerEnter = () => {
-      dispatchInteraction({
-        type: 'enterItem',
-        data,
-      });
+      store.update((prev) => ({
+        ...prev,
+        interaction: {
+          ...prev.interaction,
+          item: data,
+        },
+      }));
       setHighlighted({
         seriesId: data.seriesId,
         dataIndex: data.dataIndex,
@@ -29,7 +32,26 @@ export const useInteractionItemProps = (skip?: boolean) => {
     };
     const onPointerLeave = (event: React.PointerEvent) => {
       event.currentTarget.releasePointerCapture(event.pointerId);
-      dispatchInteraction({ type: 'leaveItem', data });
+
+      store.update((prev) => {
+        const prevItem = prev.interaction.item;
+        if (
+          prevItem === null ||
+          Object.keys(data).some(
+            (key) => data[key as keyof typeof data] !== prevItem[key as keyof typeof prevItem],
+          )
+        ) {
+          // The item is already something else, no need to clean it.
+          return prev;
+        }
+        return {
+          ...prev,
+          interaction: {
+            ...prev.interaction,
+            item: null,
+          },
+        };
+      });
       clearHighlighted();
     };
     return {

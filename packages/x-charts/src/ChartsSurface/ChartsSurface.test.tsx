@@ -19,7 +19,10 @@ describe('<ChartsSurface />', () => {
     render(
       <SizeProvider width={100} height={100}>
         <SvgRefProvider>
-          <ChartsSurface ref={ref}>
+          <ChartsSurface
+            ref={ref}
+            disableAxisListener // TODO: remove during v8 when charts store is always available
+          >
             <rect width={100} height={100} />
           </ChartsSurface>
         </SvgRefProvider>
