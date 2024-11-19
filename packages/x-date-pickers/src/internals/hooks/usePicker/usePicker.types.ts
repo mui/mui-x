@@ -10,10 +10,14 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
+import { UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
-import { UsePickerProviderParameters, UsePickerProviderReturnValue } from './usePickerProvider';
+import {
+  UsePickerProviderParameters,
+  UsePickerProviderProps,
+  UsePickerProviderReturnValue,
+} from './usePickerProvider';
 
 /**
  * Props common to all picker headless implementations.
@@ -26,7 +30,7 @@ export interface UsePickerBaseProps<
   TAdditionalProps extends {},
 > extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerProviderProps {}
 
 export interface UsePickerProps<
   TValue extends PickerValidValue,
@@ -36,7 +40,7 @@ export interface UsePickerProps<
   TAdditionalProps extends {},
 > extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerProviderProps {}
 
 export interface UsePickerParams<
   TValue extends PickerValidValue,
@@ -45,7 +49,7 @@ export interface UsePickerParams<
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TExternalProps>,
-      'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
+      'valueManager' | 'valueType' | 'variant' | 'validator'
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
@@ -60,7 +64,7 @@ export interface UsePickerResponse<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'>,
     UsePickerLayoutPropsResponse<TValue, TView> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;

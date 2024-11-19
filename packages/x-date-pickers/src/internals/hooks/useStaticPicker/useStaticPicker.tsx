@@ -42,7 +42,7 @@ export const useStaticPicker = <
     fieldRef: undefined,
     localeText,
     additionalViewProps: {},
-    wrapperVariant: displayStaticWrapperAs,
+    variant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;

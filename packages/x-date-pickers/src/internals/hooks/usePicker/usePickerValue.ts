@@ -152,7 +152,7 @@ export const usePickerValue = <
   props,
   valueManager,
   valueType,
-  wrapperVariant,
+  variant,
   validator,
 }: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
@@ -165,12 +165,13 @@ export const usePickerValue = <
     onChange,
     value: inValueWithoutRenderTimezone,
     defaultValue: inDefaultValue,
-    closeOnSelect = wrapperVariant === 'desktop',
+    closeOnSelect = variant === 'desktop',
     timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
   const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
+  const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
@@ -238,6 +239,18 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: false,
     };
   });
+
+  const timezoneFromDraftValue = valueManager.getTimezone(utils, dateState.draft);
+  if (previousTimezoneProp !== timezoneProp) {
+    setPreviousTimezoneProp(timezoneProp);
+
+    if (timezoneProp && timezoneFromDraftValue && timezoneProp !== timezoneFromDraftValue) {
+      setDateState((prev) => ({
+        ...prev,
+        draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
+      }));
+    }
+  }
 
   const { getValidationErrorForNewValue } = useValidation({
     props,

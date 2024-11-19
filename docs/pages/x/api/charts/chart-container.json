@@ -32,7 +32,6 @@
       }
     },
     "plugins": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
-    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {

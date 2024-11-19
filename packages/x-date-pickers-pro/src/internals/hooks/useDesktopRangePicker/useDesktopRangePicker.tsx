@@ -101,7 +101,7 @@ export const useDesktopRangePicker = <
   } = usePicker<PickerRangeValue, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     autoFocusView: false,
     fieldRef,
     localeText,
@@ -168,7 +168,7 @@ export const useDesktopRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     fieldType,
     open,
     actions,
