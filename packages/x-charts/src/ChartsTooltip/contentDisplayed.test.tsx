@@ -200,7 +200,7 @@ describe('ChartsTooltip', () => {
               { dataKey: 'v2', id: 's2', label: 'S2' },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );
@@ -246,7 +246,7 @@ describe('ChartsTooltip', () => {
             ]}
             layout="horizontal"
             yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );

@@ -44,9 +44,10 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   } = useScatterChartProps(other);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
@@ -61,7 +62,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         <ChartsOverlay {...overlayProps} />
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} />}
         <ZoomSetup />
         {children}
       </ZAxisContextProvider>
@@ -207,19 +208,6 @@ ScatterChartPro.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
   /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.

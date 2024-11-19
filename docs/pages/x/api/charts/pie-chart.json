@@ -41,14 +41,6 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
-    "tooltip": {
-      "type": {
-        "name": "shape",
-        "description": "{ axisContent?: elementType, classes?: object, itemContent?: elementType, slotProps?: object, slots?: object, trigger?: 'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none' }"
-      },
-      "default": "{ trigger: 'item' }",
-      "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
-    },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {
@@ -71,18 +63,6 @@
   ],
   "slots": [
     {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
-      "class": null
-    },
-    {
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "DefaultChartsLegend",
@@ -103,7 +83,7 @@
     { "name": "pieArc", "description": "", "class": null },
     { "name": "pieArcLabel", "description": "", "class": null },
     {
-      "name": "popper",
+      "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null
