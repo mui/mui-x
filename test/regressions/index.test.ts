@@ -34,7 +34,13 @@ async function main() {
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
-    args: ['--font-render-hinting=none'],
+    args: [
+      '--font-render-hinting=none',
+      '--disable-skia-runtime-opts',
+      '--disable-font-subpixel-positioning',
+      '--disable-lcd-text',
+    ],
+    ignoreDefaultArgs: ['--hide-scrollbars'],
     headless: true,
   });
   // reuse viewport from `vrtest`
