@@ -225,7 +225,7 @@ jobs:
   test_browser:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
+      - image: mcr.microsoft.com/playwright:v1.49.0-noble
     steps:
       - checkout
       - install_js:
@@ -256,7 +256,7 @@ jobs:
   test_e2e:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
+      - image: mcr.microsoft.com/playwright:v1.49.0-noble
     steps:
       - checkout
       - install_js:
@@ -267,7 +267,7 @@ jobs:
   test_e2e_website:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
+      - image: mcr.microsoft.com/playwright:v1.49.0-noble
     steps:
       - checkout
       - install_js:
@@ -280,7 +280,7 @@ jobs:
   test_regressions:
     <<: *default-job
     docker:
-      - image: mcr.microsoft.com/playwright:v1.44.1-focal
+      - image: mcr.microsoft.com/playwright:v1.49.0-noble
     steps:
       - checkout
       - install_js:
