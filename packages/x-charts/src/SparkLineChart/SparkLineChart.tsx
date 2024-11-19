@@ -6,7 +6,8 @@ import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
@@ -22,21 +23,15 @@ export interface SparkLineChartSlots
     LinePlotSlots,
     MarkPlotSlots,
     LineHighlightPlotSlots,
-    Omit<BarPlotSlots, 'barLabel'> {
-  /**
-   * Custom component for the tooltip popper.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<ChartsTooltipProps>;
-}
+    Omit<BarPlotSlots, 'barLabel'>,
+    ChartsTooltipSlots {}
 export interface SparkLineChartSlotProps
   extends AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
-    BarPlotSlotProps {
-  tooltip?: Partial<ChartsTooltipProps>;
-}
+    BarPlotSlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
   extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {

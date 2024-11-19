@@ -7,7 +7,8 @@ import { BarPlot, BarPlotProps, BarPlotSlotProps, BarPlotSlots } from './BarPlot
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
@@ -29,20 +30,14 @@ export interface BarChartSlots
   extends ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
-    ChartsOverlaySlots {
-  /**
-   * Custom component for the tooltip popper.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<ChartsTooltipProps>;
-}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 export interface BarChartSlotProps
   extends ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsOverlaySlotProps {
-  tooltip?: Partial<ChartsTooltipProps>;
-}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface BarChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,

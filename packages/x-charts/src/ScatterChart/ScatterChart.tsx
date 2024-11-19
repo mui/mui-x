@@ -12,7 +12,8 @@ import {
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -34,20 +35,14 @@ export interface ScatterChartSlots
   extends ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
-    ChartsOverlaySlots {
-  /**
-   * Custom component for the tooltip popper.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<ChartsTooltipProps>;
-}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 export interface ScatterChartSlotProps
   extends ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsOverlaySlotProps {
-  tooltip?: Partial<ChartsTooltipProps>;
-}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface ScatterChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins'>,

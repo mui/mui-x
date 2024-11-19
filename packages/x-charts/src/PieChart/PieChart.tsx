@@ -6,7 +6,8 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -17,20 +18,17 @@ import {
   ChartsOverlaySlots,
 } from '../ChartsOverlay';
 
-export interface PieChartSlots extends PiePlotSlots, ChartsLegendSlots, ChartsOverlaySlots {
-  /**
-   * Custom component for the tooltip popper.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<ChartsTooltipProps>;
-}
+export interface PieChartSlots
+  extends PiePlotSlots,
+    ChartsLegendSlots,
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 
 export interface PieChartSlotProps
   extends PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsOverlaySlotProps {
-  tooltip?: Partial<ChartsTooltipProps>;
-}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,

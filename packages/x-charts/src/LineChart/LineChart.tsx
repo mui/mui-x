@@ -9,7 +9,8 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
@@ -39,13 +40,8 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsOverlaySlots {
-  /**
-   * Custom component for the tooltip popper.
-   * @default ChartsTooltipRoot
-   */
-  tooltip?: React.ElementType<ChartsTooltipProps>;
-}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -53,9 +49,8 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsOverlaySlotProps {
-  tooltip?: Partial<ChartsTooltipProps>;
-}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface LineChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
