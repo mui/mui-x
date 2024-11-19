@@ -96,6 +96,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltip',
   },
   {
+    pathname: '/x/api/charts/charts-tooltip-container',
+    title: 'ChartsTooltipContainer',
+  },
+  {
     pathname: '/x/api/charts/charts-voronoi-handler',
     title: 'ChartsVoronoiHandler',
   },
