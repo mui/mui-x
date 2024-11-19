@@ -4,39 +4,23 @@ import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
 import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 
-export interface ChartContainerProps extends Omit<ChartDataProviderProps, 'width' | 'height'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender?: boolean;
-}
+export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
 
 const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { hasIntrinsicSize, chartDataProviderProps, resizableChartContainerProps } =
+  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
     useChartContainerProps(props, ref);
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartDataProvider {...chartDataProviderProps} /> : null}
-    </ResizableContainer>
+    <ChartDataProvider {...chartDataProviderProps}>
+      <ResizableContainer {...resizableContainerProps}>
+        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      </ResizableContainer>
+    </ChartDataProvider>
   );
 });
 
@@ -124,12 +108,6 @@ ChartContainer.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

@@ -43,7 +43,7 @@ module.exports = {
             // - 'node_modules/d3-interpolate/src/rgb.js'
             // - 'lib-vendor/d3-interpolate/src/rgb.js'
             // and have an import transform like:
-            // - `d3-color`
+            // - `d3-color` (d3 color is imported by d3-interpolate)
             // - `../../d3-color`
             const currentFileVendor = currentFile.replace(/^node_modules/, 'lib-vendor');
             const relPathToPkg = path
