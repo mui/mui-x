@@ -76,7 +76,7 @@ describe('<DataGridPro /> - Infnite loader', () => {
     });
   });
 
-  it.only('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
+  it('should call `onRowsScrollEnd` when there is not enough rows to cover the viewport height', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
