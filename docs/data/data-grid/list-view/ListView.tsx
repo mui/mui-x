@@ -16,8 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import MessageIcon from '@mui/icons-material/Message';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import ViewWeekIcon from '@mui/icons-material/ViewWeek';
-import ViewStreamIcon from '@mui/icons-material/ViewStream';
+import GridIcon from '@mui/icons-material/GridOn';
+import ListIcon from '@mui/icons-material/TableRowsOutlined';
 
 function MessageAction(params: Pick<GridRowParams, 'row'>) {
   const handleMessage = () => {
@@ -89,7 +89,7 @@ function Toolbar({ view, onChangeView }: ToolbarProps) {
           value="grid"
           selected={view === 'grid'}
         >
-          <ViewWeekIcon fontSize="small" /> Grid
+          <GridIcon fontSize="small" /> Grid
         </ToggleButton>
         <ToggleButton
           size="small"
@@ -98,7 +98,7 @@ function Toolbar({ view, onChangeView }: ToolbarProps) {
           value="list"
           selected={view === 'list'}
         >
-          <ViewStreamIcon fontSize="small" /> List
+          <ListIcon fontSize="small" /> List
         </ToggleButton>
       </ToggleButtonGroup>
     </GridToolbarContainer>
@@ -146,6 +146,7 @@ export default function ListView() {
             onChangeView: setView,
           },
         }}
+        sx={{ backgroundColor: 'background.paper' }}
       />
     </div>
   );

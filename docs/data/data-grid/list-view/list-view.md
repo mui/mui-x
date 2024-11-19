@@ -29,7 +29,7 @@ const listColDef: GridListColDef = {
 };
 ```
 
-{{"demo": "ListView.js"}}
+{{"demo": "ListView.js", "bg": true}}
 
 ## Field visibility
 
