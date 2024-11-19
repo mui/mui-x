@@ -80,8 +80,13 @@ describe('<DesktopTimePicker />', () => {
       fireEvent.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 9, 0));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -113,8 +118,13 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(3);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 15));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -151,8 +161,13 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(4);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 14, 25));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -174,8 +189,13 @@ describe('<DesktopTimePicker />', () => {
 
       fireEvent.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);
+      // closeOnSelect false by default
+      expect(onAccept.callCount).to.equal(0);
+      expect(onClose.callCount).to.equal(0);
+
+      // Click on 'accept' action to close the picker
+      fireEvent.click(screen.getByText(/ok/i));
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1, 12, 0));
       expect(onClose.callCount).to.equal(1);
     });
   });

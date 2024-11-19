@@ -73,6 +73,10 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: (ownerState: any) => ({
+        actions: [],
+        ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
+      }),
     },
   };
 
@@ -109,8 +113,8 @@ DesktopDateRangePicker.propTypes = {
   calendars: PropTypes.oneOf([1, 2, 3]),
   className: PropTypes.string,
   /**
-   * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the Picker will close after submitting the full date.
+   * @default true
    */
   closeOnSelect: PropTypes.bool,
   /**
