@@ -8,13 +8,23 @@ const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature
   state.items;
 
 /**
+ * Get the loading state for the Tree View.
+ * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
+ * @returns {boolean} The loading state for the Tree View.
+ */
+export const selectorItemsLoading = createSelector(
+  selectorTreeViewItemsState,
+  (items) => items.itemMetaLookup,
+);
+
+/**
  * Get the meta-information of all items.
  * @param {TreeViewState<[UseTreeViewItemsSignature]>} state The state of the tree view.
  * @returns {TreeViewItemMetaLookup} The meta-information of all items.
  */
 export const selectorItemMetaLookup = createSelector(
   selectorTreeViewItemsState,
-  (items) => items.itemMetaLookup,
+  (items) => items.loading,
 );
 
 const EMPTY_CHILDREN: TreeViewItemId[] = [];
