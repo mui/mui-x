@@ -326,7 +326,7 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + import { usePickerContext } from '@mui/x-date-pickers';
   + import { usePickerContext } from '@mui/x-date-pickers-pro';
 
-  - const pickersContext = usePickerContext();
+  - const pickersContext = usePickersContext();
   + const pickerContext = usePickerContext();
   ```
 
