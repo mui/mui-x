@@ -3,7 +3,6 @@ import {
   DataGridPremium,
   Unstable_GridToolbarPromptControl as GridToolbarPromptControl,
   GridToolbar,
-  GridToolbarContainer,
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';

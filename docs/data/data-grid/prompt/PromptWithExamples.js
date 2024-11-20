@@ -81,7 +81,7 @@ export default function PromptWithExamples() {
         ...column,
         unstable_examples: createExamples(column.field),
       })),
-    [],
+    [data.columns],
   );
 
   return (
