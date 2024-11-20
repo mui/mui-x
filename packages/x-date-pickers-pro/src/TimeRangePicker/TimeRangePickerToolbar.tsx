@@ -20,6 +20,7 @@ import {
   pickersToolbarClasses,
   pickersToolbarTextClasses,
   PickerRangeValue,
+  MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -29,10 +30,10 @@ import {
 } from './timeRangePickerToolbarClasses';
 
 const useUtilityClasses = (ownerState: TimeRangePickerToolbarProps) => {
-  const { classes } = ownerState;
+  const { classes, toolbarVariant } = ownerState;
   const slots = {
     root: ['root'],
-    container: ['container'],
+    container: ['container', toolbarVariant],
     separator: ['separator'],
     timeContainer: ['timeContainer'],
   };
@@ -67,7 +68,7 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
     color: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightBold,
   },
-  '& > :first-child': {
+  [`& .${pickersToolbarClasses.title}`]: {
     paddingLeft: 12,
   },
 }));
@@ -75,12 +76,26 @@ const TimeRangePickerToolbarRoot = styled(PickersToolbar, {
 const TimeRangePickerToolbarContainer = styled('div', {
   name: 'MuiTimeRangePickerToolbar',
   slot: 'Container',
+  shouldForwardProp: (prop) => prop !== 'toolbarVariant',
   overridesResolver: (_, styles) => styles.container,
-})({
+})<{ toolbarVariant: WrapperVariant }>({
   display: 'flex',
-  flexDirection: 'column',
   flex: 1,
   rowGap: 8,
+  variants: [
+    {
+      props: { toolbarVariant: 'mobile' },
+      style: {
+        flexDirection: 'column',
+      },
+    },
+    {
+      props: { toolbarVariant: 'desktop' },
+      style: {
+        flexDirection: 'row',
+      },
+    },
+  ],
 });
 
 const TimeRangePickerToolbarTimeContainer = styled('div', {
@@ -129,7 +144,7 @@ function TimeRangePickerToolbarTimeElement(props: TimeRangePickerToolbarTimeElem
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
   const meridiemMode = getMeridiem(value, utils);
-  const sectionWidth = toolbarVariant === 'desktop' ? 48 : '100%';
+  const sectionWidth = toolbarVariant === 'desktop' ? MULTI_SECTION_CLOCK_SECTION_WIDTH : '100%';
 
   return (
     <TimeRangePickerToolbarTimeContainer>
@@ -266,7 +281,10 @@ const TimeRangePickerToolbar = React.forwardRef(function TimeRangePickerToolbar(
       ownerState={ownerState}
       ref={ref}
     >
-      <TimeRangePickerToolbarContainer className={classes.container}>
+      <TimeRangePickerToolbarContainer
+        className={classes.container}
+        toolbarVariant={toolbarVariant}
+      >
         <TimeRangePickerToolbarTimeElement
           view={rangePosition === 'start' ? view : undefined}
           views={views}

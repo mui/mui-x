@@ -2,8 +2,22 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import { TimeViewWithMeridiem, useUtils, resolveTimeFormat } from '@mui/x-date-pickers/internals';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import {
+  TimeViewWithMeridiem,
+  useUtils,
+  resolveTimeFormat,
+  PickerViewsRendererProps,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
+import Divider from '@mui/material/Divider';
+import {
+  multiSectionDigitalClockClasses,
+  multiSectionDigitalClockSectionClasses,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
+import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import {
@@ -11,12 +25,76 @@ import {
   useTimeRangePickerDefaultizedProps,
 } from '../TimeRangePicker/shared';
 import { MultiInputTimeRangeField } from '../MultiInputTimeRangeField';
-import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
+import {
+  useDesktopRangePicker,
+  UseDesktopRangePickerProps,
+} from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import {
   renderDigitalClockTimeRangeView,
   renderMultiSectionDigitalClockTimeRangeView,
 } from '../timeRangeViewRenderers';
+import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+
+const rendererInterceptor = function rendererInterceptor<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+>(
+  inViewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any>,
+  popperView: TimeViewWithMeridiem,
+  rendererProps: PickerViewsRendererProps<
+    PickerRangeValue,
+    TimeViewWithMeridiem,
+    DefaultizedProps<
+      Omit<
+        UseDesktopRangePickerProps<
+          TimeViewWithMeridiem,
+          TEnableAccessibleFieldDOMStructure,
+          any,
+          any
+        >,
+        'onChange' | 'sx' | 'className'
+      >,
+      'rangePosition' | 'onRangePositionChange' | 'openTo'
+    >,
+    {}
+  >,
+) {
+  const { openTo, rangePosition, focusedView, ...otherProps } = rendererProps;
+  const finalProps = {
+    ...otherProps,
+    focusedView: null,
+    rangePosition,
+    sx: [
+      {
+        [`&.${multiSectionDigitalClockClasses.root}`]: {
+          borderBottom: 0,
+        },
+        [`&.${multiSectionDigitalClockClasses.root}, .${multiSectionDigitalClockSectionClasses.root}, &.${digitalClockClasses.root}`]:
+          {
+            maxHeight: RANGE_VIEW_HEIGHT,
+          },
+      },
+    ],
+  };
+  const viewRenderer = inViewRenderers[popperView];
+  return (
+    <React.Fragment>
+      {viewRenderer?.({
+        ...finalProps,
+        view: popperView,
+        rangePosition: 'start',
+        sx: [{ gridColumn: 1 }, ...finalProps.sx],
+      })}
+      <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
+      {viewRenderer?.({
+        ...finalProps,
+        view: popperView,
+        rangePosition: 'end',
+        sx: [{ gridColumn: 3 }, ...finalProps.sx],
+      })}
+    </React.Fragment>
+  );
+};
 
 type DesktopTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -62,6 +140,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
       field: MultiInputTimeRangeField,
+      layout: DesktopDateTimePickerLayout,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -93,7 +172,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
     valueManager: rangeValueManager,
     valueType: 'time',
     validator: validateTimeRange,
-    shouldMovePopperToFocusedInput: true,
+    rendererInterceptor,
   });
 
   return renderPicker();

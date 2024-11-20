@@ -40,7 +40,6 @@ export const useDesktopRangePicker = <
   >,
 >({
   props,
-  shouldMovePopperToFocusedInput,
   ...pickerParams
 }: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -211,11 +210,7 @@ export const useDesktopRangePicker = <
         role="tooltip"
         placement="bottom-start"
         containerRef={popperRef}
-        anchorEl={
-          shouldMovePopperToFocusedInput && rangePosition === 'end'
-            ? anchorRefEndDate.current
-            : anchorRef.current
-        }
+        anchorEl={anchorRef.current}
         onBlur={handleBlur}
         {...actions}
         open={open}

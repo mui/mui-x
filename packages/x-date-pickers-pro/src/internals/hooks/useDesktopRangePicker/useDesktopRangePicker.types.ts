@@ -64,11 +64,4 @@ export interface UseDesktopRangePickerParams<
     any,
     TExternalProps
   >,
-> extends UseRangePickerParams<TView, TExternalProps, DesktopRangePickerAdditionalViewProps> {
-  /**
-   * If `true`, the popper will always be aligned on the currently focused input.
-   * This is helpful when the view only renders information about one of the dates.
-   * @default false
-   */
-  shouldMovePopperToFocusedInput?: boolean;
-}
+> extends UseRangePickerParams<TView, TExternalProps, DesktopRangePickerAdditionalViewProps> {}

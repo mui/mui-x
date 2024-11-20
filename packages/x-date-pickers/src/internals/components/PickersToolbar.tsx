@@ -19,6 +19,7 @@ const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
+    title: ['title'],
     content: ['content'],
     penIconButton: ['penIconButton', isLandscape && 'penIconButtonLandscape'],
   };
@@ -129,6 +130,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         color="text.secondary"
         variant="overline"
         id={titleId}
+        className={classes.title}
       >
         {toolbarTitle}
       </Typography>
