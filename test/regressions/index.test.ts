@@ -31,10 +31,11 @@ async function navigateToTest(page: Page, testName: string) {
 const isConsoleWarningIgnored = (msg?: string) => {
   if (
     msg &&
-    isMaterialUIv6 &&
-    msg.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    )
+    ((isMaterialUIv6 &&
+      msg.startsWith(
+        'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
+      )) ||
+      msg?.includes('React Router Future Flag Warning'))
   ) {
     return true;
   }

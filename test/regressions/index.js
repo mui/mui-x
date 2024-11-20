@@ -142,12 +142,7 @@ function App() {
   }
 
   return (
-    <Router
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
+    <Router>
       <Routes>
         {tests.map((test) => {
           const path = computePath(test);
@@ -174,7 +169,6 @@ function App() {
             />
           );
         })}
-        <Route path="/" element={<div>Home</div>} />
       </Routes>
       <div hidden={!isDev}>
         <p>
