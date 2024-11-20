@@ -16,16 +16,15 @@ const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 // Tests that need a longer timeout.
 const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
 
-async function navigateToTest(page: Page, testIndex: number) {
-  const css = `#tests li:nth-of-type(${testIndex}) a`;
+async function navigateToTest(page: Page, testName: string) {
   try {
-    await page.locator(css).dispatchEvent('click');
+    await page.getByText(new RegExp(`^${testName}$`)).dispatchEvent('click');
   } catch (error) {
     // When one demo crashes, the page becomes empty and there are no links to demos,
     // so navigation to the next demo throws an error.
     // Reloading the page fixes this.
     await page.reload();
-    await page.locator(css).dispatchEvent('click');
+    await page.getByText(new RegExp(`^${testName}$`)).dispatchEvent('click');
   }
 }
 
@@ -43,7 +42,7 @@ const isConsoleWarningIgnored = (msg?: string) => {
 };
 
 async function main() {
-  const baseUrl = 'http://localhost:5001';
+  const baseURL = 'http://localhost:5001';
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
@@ -53,7 +52,10 @@ async function main() {
   });
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
-  const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
+  const page = await browser.newPage({
+    baseURL,
+    viewport: { width: 1000, height: 700 },
+  });
 
   // Block images since they slow down tests (need download).
   // They're also most likely decorative for documentation demos
@@ -69,7 +71,7 @@ async function main() {
 
   let errorConsole: string | undefined;
 
-  page.on('console', (msg) => {
+  page.on('console', async (msg) => {
     // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
     if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
       errorConsole = msg.text();
@@ -78,7 +80,7 @@ async function main() {
 
   // Wait for all requests to finish.
   // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle' });
+  await page.goto(`/#no-dev`, { waitUntil: 'networkidle' });
 
   // Simulate portrait mode for date pickers.
   // See `useIsLandscape`.
@@ -113,8 +115,8 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    routes.forEach((route, index) => {
-      const pathURL = route.replace(baseUrl, '');
+    routes.forEach((route) => {
+      const pathURL = route.replace(baseURL, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
@@ -126,12 +128,12 @@ async function main() {
           this.timeout(6000);
         }
 
-        await navigateToTest(page, index);
+        await navigateToTest(page, pathURL);
 
         // Move cursor offscreen to not trigger unwanted hover effects.
         await page.mouse.move(0, 0);
 
-        const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
+        const screenshotPath = path.resolve(screenshotDir, path.join('.', `${pathURL}.png`));
         await fse.ensureDir(path.dirname(screenshotPath));
 
         const testcase = await page.waitForSelector(
@@ -180,15 +182,14 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async () => {
-      const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
+      const pathURL = `/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,
-        `${route.replace(baseUrl, '.')}ScrollLeft400px.png`,
+        path.join('.', `${pathURL}ScrollLeft400px.png`),
       );
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await navigateToTest(page, testcaseIndex);
+      await navigateToTest(page, pathURL);
 
       const testcase = await page.waitForSelector(
         '[data-testid="testcase"]:not([aria-busy="true"])',
@@ -210,13 +211,12 @@ async function main() {
 
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
+      const pathURL = `/docs-data-grid-export/ExportDefaultToolbar`;
 
-      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
-      const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
+      const screenshotPath = path.resolve(screenshotDir, path.join('.', `${pathURL}Print.png`));
       await fse.ensureDir(path.dirname(screenshotPath));
 
-      const testcaseIndex = routes.indexOf(route);
-      await navigateToTest(page, testcaseIndex);
+      await navigateToTest(page, pathURL);
 
       // Click the export button in the toolbar.
       await page.getByLabel('Export').click({ force: true });
