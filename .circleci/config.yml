@@ -145,7 +145,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
+          command: pnpm vitest --reporter dot --project "jsdom/*" --coverage --pool threads
           environment:
             VITEST_MAX_THREADS: 6
             VITEST_MIN_THREADS: 2
@@ -275,9 +275,10 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: NODE_OPTIONS='--max-old-space-size=1024' pnpm vitest --project "browser/*" --pool=threads
+          command: pnpm vitest --reporter dot --project "browser/*" --pool threads
           environment:
-            VITEST_MAX_THREADS: 2
+            NODE_OPTIONS: --max-old-space-size=1024
+            VITEST_MAX_THREADS: 3
             VITEST_MIN_THREADS: 2
 
   test_types:
