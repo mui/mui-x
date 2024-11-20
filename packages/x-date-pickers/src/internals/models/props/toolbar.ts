@@ -5,7 +5,6 @@ import { DateOrTimeViewWithMeridiem } from '../common';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedBaseToolbarProps {
-  isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;
   /**

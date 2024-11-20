@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useRtl } from '@mui/system/RtlProvider';
 import { FieldSection, PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import {
@@ -63,6 +64,7 @@ export function usePickerProvider<TValue>(
 ): UsePickerProviderReturnValue {
   const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
 
+  const isRtl = useRtl();
   const utils = useUtils();
   const orientation = usePickerOrientation(views, props.orientation);
 
@@ -78,6 +80,7 @@ export function usePickerProvider<TValue>(
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
       pickerVariant: variant,
+      isRtl,
     }),
     [
       utils,
@@ -88,6 +91,7 @@ export function usePickerProvider<TValue>(
       variant,
       props.disabled,
       props.readOnly,
+      isRtl,
     ],
   );
 

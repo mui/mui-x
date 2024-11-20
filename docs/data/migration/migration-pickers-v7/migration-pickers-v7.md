@@ -196,7 +196,6 @@ If you are using the theme to customize `MuiInput`, `MuiOutlinedInput` or `MuiFi
 you need to pass the same config to `MuiPickersInput`, `MuiPickersOutlinedInput` or `MuiPickersFilledInput`:
 
 ```js
-const theme = createTheme({
   components: {
     // Replace with `MuiOutlinedInput` or `MuiFilledInput` if needed
     MuiInput: {
@@ -258,10 +257,24 @@ const theme = createTheme({
 
 ### Slot: `layout`
 
+- The `PickersLayoutRoot` must now receive the `ownerState` returned by `usePickerLayout` instead of its props:
+
+  ```diff
+  -const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  +const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
+   return (
+  -  <PickersLayoutRoot ownerState={props}>
+  +  <PickersLayoutRoot ownerState={ownerState}>
+       Layout content
+     </PickersLayoutRoot>
+   );
+  ```
+
 - The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
 
   ```diff
   -console.log(props.disabled);
+
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { disabled } = usePickersContext();
   +console.log(disabled);
@@ -271,9 +284,43 @@ const theme = createTheme({
 
   ```diff
   -console.log(props.readOnly);
+
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { readOnly } = usePickersContext();
   +console.log(readOnly);
+  ```
+
+- The component passed to the `layout` slot no longer receives a `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
+
+  ```diff
+  +import { useRtl } from '@mui/system/RtlProvider';
+   function CustomLayout(props) {
+  -  console.log(props.isRtl);
+  +  const isRtl = useRtl();
+  +  console.log(isRtl);
+   }
+  ```
+
+- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.orientation);
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickersContext();
+  +console.log(orientation);
+  -console.log(props.isLandscape);
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickersContext();
+  +console.log(orientation === 'landscape');
+  ```
+
+- The component passed to the `layout` slot no longer receives a `wrapperVariant` prop, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.wrapperVariant);
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { variant } = usePickersContext();
+  +console.log(variant);
   ```
 
 ### Slot: `toolbar`
@@ -282,6 +329,7 @@ const theme = createTheme({
 
   ```diff
   -console.log(props.disabled);
+
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { disabled } = usePickersContext();
   +console.log(disabled);
@@ -291,9 +339,30 @@ const theme = createTheme({
 
   ```diff
   -console.log(props.readOnly);
+
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { readOnly } = usePickersContext();
   +console.log(readOnly);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `isLandscape` prop. There is currently no way to access this information, if you need it, please [open an issue](https://github.com/mui/mui-x/issues/new/choose).
+
+  ```diff
+  -console.log(props.isLandscape);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickersContext();
+  +console.log(orientation === 'landscape');
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `toolbarVariant` prop, instead you can use the `usePickersContext` hook:
+
+  ```diff
+  -console.log(props.wrapperVariant);
+
+  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  +const { variant } = usePickersContext();
+  +console.log(variant);
   ```
 
 ## Renamed variables

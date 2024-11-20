@@ -42,7 +42,6 @@ import { UsePickerViewsProps } from '../internals/hooks/usePicker/usePickerViews
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
 import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
-import { PickerLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function rendererInterceptor<
   TView extends DateOrTimeViewWithMeridiem,
@@ -198,14 +197,13 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       toolbar: {
         hidden: true,
         ampmInClock,
-        toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
-      actionBar: (ownerState: PickerLayoutOwnerState) => ({
+      actionBar: (ownerState: PickerOwnerState) => ({
         actions: actionBarActions,
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),

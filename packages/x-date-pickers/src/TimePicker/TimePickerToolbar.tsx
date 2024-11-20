@@ -20,7 +20,8 @@ import {
 } from './timePickerToolbarClasses';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { PickerValidDate } from '../models';
+import { PickerOwnerState, PickerValidDate } from '../models';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 
 export interface TimePickerToolbarProps
@@ -30,7 +31,7 @@ export interface TimePickerToolbarProps
   ampmInClock?: boolean;
 }
 
-interface TimePickerToolbarOwnerState extends TimePickerToolbarProps {
+interface TimePickerToolbarOwnerState extends PickerOwnerState {
   isRtl: boolean;
 }
 
@@ -41,18 +42,21 @@ export interface ExportedTimePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<TimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: TimePickerToolbarOwnerState) => {
-  const { isLandscape, classes, isRtl } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<TimePickerToolbarClasses> | undefined,
+  ownerState: TimePickerToolbarOwnerState,
+) => {
+  const { pickerOrientation, isRtl } = ownerState;
 
   const slots = {
     root: ['root'],
     separator: ['separator'],
     hourMinuteLabel: [
       'hourMinuteLabel',
-      isLandscape && 'hourMinuteLabelLandscape',
+      pickerOrientation === 'landscape' && 'hourMinuteLabelLandscape',
       isRtl && 'hourMinuteLabelReverse',
     ],
-    ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
+    ampmSelection: ['ampmSelection', pickerOrientation === 'landscape' && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
   };
 
@@ -64,7 +68,7 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{
-  ownerState: TimePickerToolbarProps;
+  ownerState: TimePickerToolbarOwnerState;
 }>({});
 
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
@@ -101,7 +105,7 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
       },
     },
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         marginTop: 'auto',
       },
@@ -118,7 +122,7 @@ const TimePickerToolbarAmPmSelection = styled('div', {
     styles.ampmSelection,
   ],
 })<{
-  ownerState: TimePickerToolbarProps;
+  ownerState: TimePickerToolbarOwnerState;
 }>({
   display: 'flex',
   flexDirection: 'column',
@@ -129,7 +133,7 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: '4px 0 auto',
         flexDirection: 'row',
@@ -156,17 +160,18 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     ampm,
     ampmInClock,
     value,
-    isLandscape,
     onChange,
     view,
     onViewChange,
     views,
     className,
+    classes: classesProp,
     ...other
   } = props;
   const utils = useUtils();
   const translations = usePickerTranslations();
   const isRtl = useRtl();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const { disabled, readOnly } = usePickerContext();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
@@ -175,8 +180,8 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
-  const ownerState: TimePickerToolbarOwnerState = { ...props, isRtl };
-  const classes = useUtilityClasses(ownerState);
+  const ownerState: TimePickerToolbarOwnerState = { ...pickerOwnerState, isRtl };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   const separator = (
     <TimePickerToolbarSeparator
@@ -192,7 +197,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
@@ -277,7 +281,6 @@ TimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked

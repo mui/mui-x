@@ -58,11 +58,11 @@ function RestaurantHeader() {
 }
 
 function CustomLayout(props) {
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   return (
     <PickersLayoutRoot
-      ownerState={props}
+      ownerState={ownerState}
       sx={{
         overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
