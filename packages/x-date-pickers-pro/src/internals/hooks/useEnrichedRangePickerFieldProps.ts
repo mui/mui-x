@@ -28,7 +28,6 @@ import {
   MultiInputFieldSlotTextFieldProps,
   RangePosition,
   FieldType,
-  UseDateRangeFieldProps,
   PickerRangeFieldSlotProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
@@ -66,7 +65,7 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
   textField?: SlotComponentProps<
     typeof PickersTextField,
     {},
-    UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
+    PickerOwnerState & { position?: RangePosition }
   >;
 }
 
