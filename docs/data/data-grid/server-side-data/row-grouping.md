@@ -2,7 +2,7 @@
 title: React Server-side row grouping
 ---
 
-# Data Grid - Server-side row grouping [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
 
 <p class="description">Lazy-loaded row grouping with server-side data source.</p>
 
@@ -20,14 +20,14 @@ Similar to the [tree data](/x/react-data-grid/server-side-data/tree-data/), you 
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
-    // Fetch the data from the server
+    // Fetch the data from the server.
   },
   getGroupKey: (row) => {
-    // Return the group key for the row, e.g. `name`
+    // Return the group key for the row, e.g. `name`.
     return row.name;
   },
   getChildrenCount: (row) => {
-    // Return the number of children for the row
+    // Return the number of children for the row.
     return row.childrenCount;
   },
 };
@@ -45,7 +45,7 @@ const getRows: async (params) => {
   });
   const getRowsResponse = await fetchRows(
     // Server should group the data based on `groupFields` and
-    // extract the rows for the nested level based on `groupKeys`
+    // extract the rows for the nested level based on `groupKeys`.
     `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
   );
   return {
@@ -74,7 +74,7 @@ This example shows error handling with toast notifications and default error mes
 ## Group expansion
 
 The group expansion works similar to the [data source tree data](/x/react-data-grid/server-side-data/tree-data/#group-expansion).
-The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all the groups.
+The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all the groups.
 
 {{"demo": "ServerSideRowGroupingGroupExpansion.js", "bg": "inline"}}
 

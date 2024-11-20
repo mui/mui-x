@@ -2,9 +2,15 @@
 title: React Data Grid - Server-side data
 ---
 
-# Data Grid - Server-side data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - Server-side data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
 
 <p class="description">The Data Grid server-side data.</p>
+
+:::warning
+This feature is under development and is marked as **unstable**.
+While you can use this feature in production, the API could change in the future.
+Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
+:::
 
 ## Introduction
 
@@ -72,14 +78,6 @@ The idea for a centralized data source is to simplify server-side data fetching.
 It's an abstraction layer between the Data Grid and the server, providing a simple interface for interacting with the server.
 Think of it like an intermediary handling the communication between the Data Grid (client) and the actual data source (server).
 
-:::warning
-
-This feature is under development and is marked as **unstable**.
-The information shared on this page could change in the future.
-Feel free to subscribe or comment on the official GitHub [umbrella issue](https://github.com/mui/mui-x/issues/8179).
-
-:::
-
 It has an initial set of required methods that you need to implement. The Data Grid will use these methods internally to fetch a subset of data when needed.
 
 Let's take a look at the minimal `GridDataSource` interface configuration.
@@ -88,8 +86,9 @@ Let's take a look at the minimal `GridDataSource` interface configuration.
 interface GridDataSource {
   /**
    * This method will be called when the grid needs to fetch some rows.
-   * @param {GridGetRowsParams} params The parameters required to fetch the rows
-   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of type [GridGetRowsResponse]
+   * @param {GridGetRowsParams} params The parameters required to fetch the rows.
+   * @returns {Promise<GridGetRowsResponse>} A promise that resolves to the data of
+   * type [GridGetRowsResponse].
    */
   getRows(params: GridGetRowsParams): Promise<GridGetRowsResponse>;
 }
@@ -133,7 +132,7 @@ The code has been significantly reduced, the need for managing the controlled st
 
 The data source changes how the existing server-side features like `filtering`, `sorting`, and `pagination` work.
 
-**Without data source**
+### Without data source
 
 When there's no data source, the features `filtering`, `sorting`, `pagination` work on `client` by default.
 In order for them to work with server-side data, you need to set them to `server` explicitly and provide the [`onFilterModelChange`](/x/react-data-grid/filtering/server-side/), [`onSortModelChange`](/x/react-data-grid/sorting/#server-side-sorting), [`onPaginationModelChange`](/x/react-data-grid/pagination/#server-side-pagination) event handlers to fetch the data from the server based on the updated variables.
@@ -158,7 +157,7 @@ In order for them to work with server-side data, you need to set them to `server
 />
 ```
 
-**With data source**
+### With data source
 
 With the data source, the features `filtering`, `sorting`, `pagination` are automatically set to `server`.
 
@@ -167,7 +166,8 @@ When the corresponding models update, the Data Grid calls the `getRows` method w
 ```tsx
 <DataGridPro
   columns={columns}
-  unstable_dataSource={customDataSource} // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
+  // automatically sets `sortingMode="server"`, `filterMode="server"`, `paginationMode="server"`
+  unstable_dataSource={customDataSource}
 />
 ```
 
@@ -187,9 +187,7 @@ Open info section of the browser console to see the requests being made and the 
 The data source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
-The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the demo below.
-
-{{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
+The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
 
 ### Customize the cache lifetime
 
