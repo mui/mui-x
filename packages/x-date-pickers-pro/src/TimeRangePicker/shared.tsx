@@ -17,6 +17,11 @@ import {
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { TimeClockSlots, TimeClockSlotProps } from '@mui/x-date-pickers/TimeClock';
+import { DigitalClockSlots, DigitalClockSlotProps } from '@mui/x-date-pickers/DigitalClock';
+import {
+  MultiSectionDigitalClockSlots,
+  MultiSectionDigitalClockSlotProps,
+} from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { TimeViewRendererProps } from '@mui/x-date-pickers/timeViewRenderers';
 import {
   TimeRangePickerToolbar,
@@ -24,16 +29,39 @@ import {
   ExportedTimeRangePickerToolbarProps,
 } from './TimeRangePickerToolbar';
 import { TimeRangeValidationError } from '../models';
+import {
+  ExportedTimeRangePickerTabsProps,
+  TimeRangePickerTabs,
+  TimeRangePickerTabsProps,
+} from './TimeRangePickerTabs';
 
-export interface BaseTimeRangePickerSlots extends TimeClockSlots {
+export interface BaseTimeRangePickerSlots
+  extends TimeClockSlots,
+    DigitalClockSlots,
+    MultiSectionDigitalClockSlots {
+  /**
+   * Tabs enabling toggling between start and end time.
+   * @default TimeRangePickerTabs
+   */
+  tabs?: React.ElementType<TimeRangePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
-   * @default DateTimePickerToolbar
+   * @default TimeRangePickerToolbar
    */
   Toolbar?: React.JSXElementConstructor<TimeRangePickerToolbarProps>;
 }
 
-export interface BaseTimeRangePickerSlotProps extends TimeClockSlotProps {
+export interface BaseTimeRangePickerSlotProps
+  extends TimeClockSlotProps,
+    DigitalClockSlotProps,
+    MultiSectionDigitalClockSlotProps {
+  /**
+   * Props passed down to the tabs component.
+   */
+  tabs?: ExportedTimeRangePickerTabsProps;
+  /**
+   * Props passed down to the toolbar component.
+   */
   toolbar?: ExportedTimeRangePickerToolbarProps;
 }
 
@@ -151,6 +179,7 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     slots: {
+      tabs: TimeRangePickerTabs,
       toolbar: TimeRangePickerToolbar,
       ...themeProps.slots,
     },

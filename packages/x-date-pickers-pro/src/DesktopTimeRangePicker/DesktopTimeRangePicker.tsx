@@ -71,6 +71,10 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
         ...extractValidationProps(defaultizedProps),
         ref,
       }),
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.tabs,
+      },
       toolbar: {
         hidden: true,
         toolbarVariant: 'desktop',

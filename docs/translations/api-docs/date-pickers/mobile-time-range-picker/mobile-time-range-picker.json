@@ -146,6 +146,8 @@
     "clearButton": "Button to clear the value.",
     "clearIcon": "Icon to display inside the clear button.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "digitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "digitalClockSectionItem": "Component responsible for rendering a single multi section digital clock section item.",
     "field": "",
     "fieldRoot": "Element rendered at the root. Ignored if the field has only one input.",
     "fieldSeparator": "Element rendered between the two inputs. Ignored if the field has only one input.",
@@ -157,6 +159,7 @@
     "previousIconButton": "Button allowing to switch to the left view.",
     "rightArrowIcon": "Icon displayed in the right view switch button.",
     "shortcuts": "Custom component for the shortcuts.",
+    "tabs": "Tabs enabling toggling between start and end time.",
     "textField": "Form control with an input to render a date or time inside the default field. It is rendered twice: once for the start element and once for the end element.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }

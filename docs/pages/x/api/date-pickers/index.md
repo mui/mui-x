@@ -34,6 +34,12 @@
 - [MobileDateRangePicker](/x/api/date-pickers/mobile-date-range-picker/)
 - [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker/)
 
+#### Time Range Pickers
+
+- [TimeRangePicker](/x/api/date-pickers/time-range-picker/)
+- [DesktopTimeRangePicker](/x/api/date-pickers/desktop-time-range-picker/)
+- [MobileTimeRangePicker](/x/api/date-pickers/mobile-time-range-picker/)
+
 #### Date Time Range Pickers
 
 - [DateTimeRangePicker](/x/api/date-pickers/date-time-range-picker/)
@@ -77,6 +83,7 @@
 
 - [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/)
 - [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
+- [TimeRangePickerTabs](/x/api/date-pickers/time-range-picker-tabs/)
 - [DateTimeRangePickerTabs](/x/api/date-pickers/date-time-range-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)

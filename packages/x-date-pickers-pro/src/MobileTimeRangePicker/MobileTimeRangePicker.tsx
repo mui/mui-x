@@ -148,6 +148,10 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
         ...extractValidationProps(defaultizedProps),
         ref,
       }),
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.tabs,
+      },
       toolbar: {
         hidden: false,
         toolbarVariant: 'mobile',

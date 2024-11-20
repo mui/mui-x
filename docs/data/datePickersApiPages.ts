@@ -244,6 +244,11 @@ const datePickersApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/date-pickers/time-range-picker-tabs',
+    title: 'TimeRangePickerTabs',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/date-pickers/time-range-picker-toolbar',
     title: 'TimeRangePickerToolbar',
     plan: 'pro',
