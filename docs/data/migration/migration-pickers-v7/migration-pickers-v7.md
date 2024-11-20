@@ -258,41 +258,41 @@ const theme = createTheme({
 
 ### Slot: `layout`
 
-- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
+- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.disabled);
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled } = usePickersContext();
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
   +console.log(disabled);
   ```
 
-- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickersContext` hook:
+- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.readOnly);
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickersContext();
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
   +console.log(readOnly);
   ```
 
 ### Slot: `toolbar`
 
-- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickersContext` hook:
+- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.disabled);
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled } = usePickersContext();
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
   +console.log(disabled);
   ```
 
-- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickersContext` hook:
+- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.readOnly);
-  +import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickersContext();
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
   +console.log(readOnly);
   ```
 
@@ -315,18 +315,18 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + const translations = usePickerTranslations();
   ```
 
-  - `usePickersContext`
+  - `usePickerContext`
 
   ```diff
-  - import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  - import { usePickersContext } from '@mui/x-date-pickers';
-  - import { usePickersContext } from '@mui/x-date-pickers-pro';
+  - import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  - import { usePickerContext } from '@mui/x-date-pickers';
+  - import { usePickerContext } from '@mui/x-date-pickers-pro';
 
   + import { usePickerContext } from '@mui/x-date-pickers/hooks';
   + import { usePickerContext } from '@mui/x-date-pickers';
   + import { usePickerContext } from '@mui/x-date-pickers-pro';
 
-  - const pickersContext = usePickersContext();
+  - const pickersContext = usePickerContext();
   + const pickerContext = usePickerContext();
   ```
 
