@@ -262,7 +262,6 @@ const theme = createTheme({
   ```diff
   -const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
   +const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
-
    return (
   -  <PickersLayoutRoot ownerState={props}>
   +  <PickersLayoutRoot ownerState={ownerState}>
@@ -295,7 +294,6 @@ const theme = createTheme({
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
-
    function CustomLayout(props) {
   -  console.log(props.isRtl);
   +  const isRtl = useRtl();
@@ -310,7 +308,6 @@ const theme = createTheme({
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { orientation } = usePickersContext();
   +console.log(orientation);
-
   -console.log(props.isLandscape);
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { orientation } = usePickersContext();
@@ -321,7 +318,6 @@ const theme = createTheme({
 
   ```diff
   -console.log(props.wrapperVariant);
-
   +import { usePickersContext } from '@mui/x-date-pickers/hooks';
   +const { variant } = usePickersContext();
   +console.log(variant);

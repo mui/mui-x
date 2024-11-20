@@ -2,15 +2,14 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { PickerPrivateContextValue } from '../internals/components/PickerProvider';
-import { PickerOwnerState } from '../models/pickers';
 import { usePickerContext } from '../hooks';
 
 function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
@@ -21,7 +20,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
-  ownerState: PickerOwnerState,
+  ownerState: PickerLayoutOwnerState,
 ) => {
   const { pickerOrientation } = ownerState;
   const slots = {
@@ -41,15 +40,17 @@ interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeVi
   extends PickersLayoutProps<TValue, TView> {
   value: TValue;
 }
-interface UsePickerLayoutResponse<TValue>
-  extends SubComponents<TValue>,
-    Pick<PickerPrivateContextValue, 'ownerState'> {}
+
+interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {
+  ownerState: PickerLayoutOwnerState;
+}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
-  const { ownerState } = usePickerPrivateContext();
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
   const { variant } = usePickerContext();
+  const isRtl = useRtl();
 
   const {
     onAccept,
@@ -73,6 +74,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
 
+  const ownerState: PickerLayoutOwnerState = { ...pickerOwnerState, isRtl };
   const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar

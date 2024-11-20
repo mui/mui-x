@@ -82,7 +82,10 @@ export const usePicker = <
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    layoutProps: { ...pickerValueResponse.layoutProps, ...pickerViewsResponse.layoutProps },
+    layoutProps: {
+      ...pickerViewsResponse.layoutProps,
+      ...pickerValueResponse.layoutProps,
+    },
 
     // Picker provider
     providerProps,

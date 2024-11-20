@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickersLayoutProps } from './PickersLayout.types';
+import { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout.types';
 import {
   pickersLayoutClasses,
   getPickersLayoutUtilityClass,
@@ -12,12 +12,11 @@ import {
 } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerOwnerState } from '../models/pickers';
 import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (
   classes: Partial<PickersLayoutClasses> | undefined,
-  ownerState: PickerOwnerState,
+  ownerState: PickerLayoutOwnerState,
 ) => {
   const { pickerOrientation } = ownerState;
   const slots = {
@@ -32,7 +31,7 @@ export const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickerOwnerState }>({
+})<{ ownerState: PickerLayoutOwnerState }>({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',

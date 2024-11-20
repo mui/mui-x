@@ -36,6 +36,10 @@ export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
+  // isRTL cannot be part of PickerOwnerState because we need to have the correct isRTL value even when there is not picker above for some components.
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
   isRtl: boolean;
 }
 
