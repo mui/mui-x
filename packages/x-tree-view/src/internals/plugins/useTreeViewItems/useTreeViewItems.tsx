@@ -70,7 +70,7 @@ const updateItemsState = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-}: UpdateItemsStateParameters): State => {
+}: UpdateItemsStateParameters): Omit<State, 'loading' | 'disabledItemsFocusable'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -168,7 +168,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return selectorItemOrderedChildrenIds(store.value, null).map(getItemFromItemId);
   }, [store]);
 
-  const getItemOrderedChildrenIds = React.useCallback(
+  const getItemOrderedChildrenIdsLookup = React.useCallback(
     (itemId: string | null) => selectorItemOrderedChildrenIds(store.value, itemId),
     [store],
   );
@@ -215,23 +215,23 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         let newItems;
         if (parentId) {
           newItems = {
-            itemMap: prevState.items.itemMap,
+            itemModelLookup: prevState.items.itemModelLookup,
             itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
-            itemOrderedChildrenIds: {
-              ...newState.itemOrderedChildrenIds,
-              ...prevState.items.itemOrderedChildrenIds,
+            itemOrderedChildrenIdsLookup: {
+              ...newState.itemOrderedChildrenIdsLookup,
+              ...prevState.items.itemOrderedChildrenIdsLookup,
             },
-            itemChildrenIndexes: {
-              ...newState.itemChildrenIndexes,
-              ...prevState.items.itemChildrenIndexes,
+            itemChildrenIndexesLookup: {
+              ...newState.itemChildrenIndexesLookup,
+              ...prevState.items.itemChildrenIndexesLookup,
             },
           };
         } else {
           newItems = {
-            itemMap: items,
+            itemModelLookup: items,
             itemMetaLookup: newState.itemMetaLookup,
-            itemOrderedChildrenIds: newState.itemOrderedChildrenIds,
-            itemChildrenIndexes: newState.itemChildrenIndexes,
+            itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
+            itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
           };
         }
         Object.values(prevState.items.itemMetaLookup).forEach((item) => {
@@ -252,8 +252,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           items: {
             ...prevState.items,
             itemMetaLookup: {},
-            itemOrderedChildrenIds: {},
-            itemChildrenIndexes: {},
+            itemOrderedChildrenIdsLookup: {},
+            itemChildrenIndexesLookup: {},
           },
         };
       }
@@ -266,18 +266,18 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         return { ...acc, [item.id]: item };
       }, {});
 
-      const newItemOrderedChildrenIds = prevState.items.itemOrderedChildrenIds;
-      const newItemChildrenIndexes = prevState.items.itemChildrenIndexes;
-      delete newItemChildrenIndexes[parentId];
-      delete newItemOrderedChildrenIds[parentId];
+      const newItemOrderedChildrenIdsLookup = prevState.items.itemOrderedChildrenIdsLookup;
+      const newItemChildrenIndexesLookup = prevState.items.itemChildrenIndexesLookup;
+      delete newItemChildrenIndexesLookup[parentId];
+      delete newItemOrderedChildrenIdsLookup[parentId];
 
       return {
         ...prevState,
         items: {
           ...prevState.items,
           itemMetaLookup: newMetaMap,
-          itemOrderedChildrenIds: newItemOrderedChildrenIds,
-          itemChildrenIndexes: newItemChildrenIndexes,
+          itemOrderedChildrenIdsLookup: newItemOrderedChildrenIdsLookup,
+          itemChildrenIndexesLookup: newItemChildrenIndexesLookup,
         },
       };
     });
@@ -335,7 +335,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItem,
       getItemDOMElement,
       getItemTree,
-      getItemOrderedChildrenIds,
+      getItemOrderedChildrenIdsLookup,
     },
     instance: {
       getItemDOMElement,

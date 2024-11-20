@@ -6,6 +6,11 @@ import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types'
 import { NestedDataManager } from './utils';
 import { TreeViewItemId } from '../../../models';
 import { TreeViewDataSourceCache, TreeViewDataSourceCacheDefault } from '../../../utils';
+import {
+  selectorGetTreeItemError,
+  selectorTreeViewDataSourceState,
+} from './useTreeViewLazyLoading.selectors';
+import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 
 const INITIAL_STATE = {
   loading: {},
@@ -27,12 +32,11 @@ function getCache(cacheProp?: TreeViewDataSourceCache | null) {
 
 export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignature> = ({
   instance,
-  state,
-  setState,
   params,
+  store,
 }) => {
   // double check this when selectors are merged
-  instance.preventItemUpdates();
+  // instance.preventItemUpdates();
 
   const isLazyLoadingEnabled = params.treeViewDataSource !== undefined;
 
@@ -45,7 +49,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   const setDataSourceLoading = React.useCallback(
     (itemId, isLoading) => {
-      setState((prevState) => {
+      store.update((prevState) => {
         if (!prevState.dataSource.loading[itemId] && isLoading === false) {
           return prevState;
         }
@@ -60,11 +64,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         return { ...prevState, dataSource: { ...prevState.dataSource, loading } };
       });
     },
-    [setState],
+    [store],
   );
 
   const setDataSourceError = (itemId, error) => {
-    setState((prevState) => {
+    store.update((prevState) => {
       const errors = { ...prevState.dataSource.errors };
       if (error === null && errors[itemId] !== undefined) {
         delete errors[itemId];
@@ -77,24 +81,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     });
   };
 
-  const getTreeItemError = React.useCallback(
-    (itemId) => state.dataSource.errors[itemId] || null,
-    [state.dataSource.errors],
-  );
-
-  const isTreeItemLoading = React.useCallback(
-    (itemId) => state.dataSource.loading[itemId] || false,
-    [state.dataSource.loading],
-  );
-
   const resetDataSourceState = React.useCallback(() => {
-    setState((prevState) => {
+    store.update((prevState) => {
       return {
         ...prevState,
         dataSource: INITIAL_STATE,
       };
     });
-  }, [setState]);
+  }, [store]);
 
   const fetchItems = React.useCallback(
     async (parentIds?: TreeViewItemId[]) => {
@@ -114,7 +108,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       nestedDataManager.clear();
 
       // reset the state if we are refetching the first visible items
-      if (state.dataSource !== INITIAL_STATE) {
+      if (selectorTreeViewDataSourceState(store.value) !== INITIAL_STATE) {
         resetDataSourceState();
       }
       // handle caching here
@@ -142,7 +136,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.setTreeViewLoading(false);
       }
     },
-    [nestedDataManager, params.treeViewDataSource, instance, cache, resetDataSourceState, state],
+    [nestedDataManager, params.treeViewDataSource, cache, resetDataSourceState, store, instance],
   );
 
   const fetchItemChildren = React.useCallback(
@@ -155,7 +149,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         return;
       }
 
-      const parent = instance.getItemMeta(id);
+      const parent = selectorItemMeta(store.value, id);
       if (!parent) {
         nestedDataManager.clearPendingRequest(id);
         return;
@@ -179,7 +173,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.removeChildren(id);
       }
 
-      const existingError = instance.getTreeItemError(id) ?? null;
+      const existingError = selectorGetTreeItemError(store.value, id) ?? null;
       if (existingError) {
         instance.setDataSourceError(id, null);
       }
@@ -205,25 +199,27 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         nestedDataManager.setRequestSettled(id);
       }
     },
-    [nestedDataManager, params.treeViewDataSource, instance, cache],
+    [nestedDataManager, params.treeViewDataSource, instance, cache, store],
   );
 
   React.useEffect(() => {
     instance.fetchItems();
   }, [instance]);
 
+  const pluginContextValue = React.useMemo(
+    () => ({ lazyLoading: params.treeViewDataSource !== undefined }),
+    [params.treeViewDataSource],
+  );
   return {
     instance: {
       fetchItemChildren,
       fetchItems,
       isLazyLoadingEnabled,
-      isTreeItemLoading,
       setDataSourceLoading,
       setDataSourceError,
-      getTreeItemError,
     },
     publicAPI: {},
-    contextValue: { lazyLoading: params.treeViewDataSource !== undefined },
+    contextValue: pluginContextValue,
   };
 };
 

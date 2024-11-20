@@ -16,7 +16,7 @@ import {
 } from '../useTreeViewItems/useTreeViewItems.utils';
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
-import { isItemExpandable } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
+import { itemHasChildren } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -128,7 +128,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
   }
   const { registerChild, unregisterChild, parentId } = parentContext;
 
-  const expandable = isItemExpandable(children);
+  const expandable = itemHasChildren(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
 

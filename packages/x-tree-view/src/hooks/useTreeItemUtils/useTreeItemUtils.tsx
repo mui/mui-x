@@ -23,6 +23,10 @@ import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/
 import { selectorIsItemDisabled } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 import {
+  selectorGetTreeItemError,
+  selectorIsItemLoading,
+} from '../../internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
+import {
   selectorIsItemBeingEdited,
   selectorIsItemEditable,
 } from '../../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
@@ -67,7 +71,7 @@ interface UseTreeItemUtilsReturnValue<
   publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
 }
 
-const itemHasChildren = (reactChildren: React.ReactNode) => {
+export const itemHasChildren = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
     return reactChildren.length > 0 && reactChildren.some(itemHasChildren);
   }
@@ -89,15 +93,18 @@ export const useTreeItemUtils = <
     label,
     store,
     selection: { multiSelect },
-    lazyLoading = false,
+    lazyLoading,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
   const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
-  // TO DO: implement these selectors
 
-  const loading = instance?.isTreeItemLoading ? instance.isTreeItemLoading(itemId) : false;
-  const error = instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false;
+  const loading = useSelector(store, (state) =>
+    lazyLoading == null ? false : selectorIsItemLoading(state, itemId),
+  );
+  const error = useSelector(store, (state) =>
+    lazyLoading == null ? false : Boolean(selectorGetTreeItemError(state, itemId)),
+  );
   const isExpandable = itemHasChildren(children) || isItemExpandable;
   const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
   const isFocused = useSelector(store, selectorIsItemFocused, itemId);

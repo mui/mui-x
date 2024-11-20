@@ -1,7 +1,8 @@
-import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
-import { UseTreeViewItemsSignature } from '../useTreeViewItems';
-import { TreeViewDataSourceCache } from './cache';
+import { DefaultizedProps } from '@mui/x-internals/types';
+import { TreeViewPluginSignature } from '../../models';
+import { TreeViewDataSourceCache } from '../../../utils';
 import { TreeViewItemId } from '../../../models';
+import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 type TreeViewDataSource<R extends {}> = {
@@ -32,10 +33,8 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
   fetchItems: (parentIds?: TreeViewItemId[]) => void;
   fetchItemChildren: (id: TreeViewItemId) => void;
   isLazyLoadingEnabled: boolean;
-  isTreeItemLoading: (itemId: TreeViewItemId) => boolean;
   setDataSourceLoading: (itemId: TreeViewItemId, isLoading: boolean) => void;
   setDataSourceError: (itemId: TreeViewItemId, error: Error | null) => void;
-  getTreeItemError: (itemId: TreeViewItemId) => Error | null;
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {
