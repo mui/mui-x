@@ -278,8 +278,10 @@ jobs:
           command: pnpm vitest --reporter dot --project "browser/x-data-grid*" --pool threads
           environment:
             NODE_OPTIONS: --max-old-space-size=1024
-            VITEST_MAX_THREADS: 3
-            VITEST_MIN_THREADS: 2
+            VITEST_MAX_THREADS: 4
+            VITEST_MIN_THREADS: 1
+            VITEST_MAX_FORKS: 4
+            VITEST_MIN_FORKS: 1
 
   test_types:
     <<: *default-job

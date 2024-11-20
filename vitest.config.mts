@@ -58,10 +58,5 @@ export default defineConfig({
     sequence: {
       hooks: 'list',
     },
-    poolOptions: {
-      threads: {
-        useAtomics: true,
-      },
-    },
   },
 });
