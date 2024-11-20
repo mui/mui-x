@@ -156,7 +156,7 @@ async function main() {
           { timeout: 1000 },
         );
 
-        await sleep(10);
+        await sleep(100);
 
         if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
           await sleep(100);
