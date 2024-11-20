@@ -315,7 +315,7 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   + const translations = usePickerTranslations();
   ```
 
-  - `usePickerContext`
+  - `usePickersContext`
 
   ```diff
   - import { usePickerContext } from '@mui/x-date-pickers/hooks';
