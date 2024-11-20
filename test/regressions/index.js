@@ -174,6 +174,7 @@ function App() {
             />
           );
         })}
+        <Route path="/" element={<div>Home</div>} />
       </Routes>
       <div hidden={!isDev}>
         <p>
