@@ -1,6 +1,10 @@
-# Data Grid - Row spanning
+# Data Grid - Row spanning 🧪
 
 <p class="description">Span cells across several rows.</p>
+
+:::warning
+This feature is marked as **unstable**. While you can use this feature in production, the API could change in the future.
+:::
 
 By default, each cell in a Data Grid takes up the height of one row.
 The row spanning feature makes it possible for a cell to fill multiple rows in a single column.
