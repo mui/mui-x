@@ -1,8 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
 
-export * from '../ChartContainer/ResizableContainer';
-
 // hooks
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';

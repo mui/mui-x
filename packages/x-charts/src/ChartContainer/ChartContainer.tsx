@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
-import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 
@@ -12,14 +11,14 @@ const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProps(props, ref);
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
+    props,
+    ref,
+  );
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-      </ResizableContainer>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
 });

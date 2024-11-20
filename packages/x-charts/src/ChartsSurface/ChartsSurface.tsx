@@ -6,8 +6,8 @@ import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks';
-import { useSurfaceRef } from '../context/SvgRefProvider';
 import { useSize } from '../context/SizeProvider';
+import type { SizeContextState } from '../context/SizeProvider';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -26,7 +26,17 @@ export interface ChartsSurfaceProps {
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})(() => ({
+})<{ ownerState: Partial<Pick<SizeContextState, 'width' | 'height'>> }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexGrow: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
   touchAction: 'none',
@@ -37,9 +47,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize } = useSize();
-  const surfaceRef = useSurfaceRef();
-  const handleRef = useForkRef(surfaceRef, ref);
+  const { hasIntrinsicSize, containerRef, inHeight, inWidth } = useSize();
+  const handleRef = useForkRef(containerRef as any, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
@@ -58,6 +67,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
+      ownerState={{ width: inWidth, height: inHeight }}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
