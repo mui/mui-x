@@ -28,10 +28,6 @@ const zhCNPickers: Partial<PickersLocaleText> = {
   endDate: '结束日期',
   endTime: '结束时间',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: '取消',
   clearButtonLabel: '清除',

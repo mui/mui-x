@@ -30,10 +30,6 @@ const caESPickers: Partial<PickersLocaleText> = {
   endDate: 'Data final',
   endTime: 'Hora final',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Cancel·lar',
   clearButtonLabel: 'Netejar',

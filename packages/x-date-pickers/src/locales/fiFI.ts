@@ -30,10 +30,6 @@ const fiFIPickers: Partial<PickersLocaleText> = {
   endDate: 'Päättymispäivämäärä',
   endTime: 'Päättymisaika',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Peruuta',
   clearButtonLabel: 'Tyhjennä',

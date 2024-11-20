@@ -30,10 +30,6 @@ const heILPickers: Partial<PickersLocaleText> = {
   endDate: 'תאריך סיום',
   endTime: 'שעת סיום',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'ביטול',
   clearButtonLabel: 'ניקוי',

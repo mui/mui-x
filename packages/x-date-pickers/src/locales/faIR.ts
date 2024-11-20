@@ -30,10 +30,6 @@ const faIRPickers: Partial<PickersLocaleText> = {
   endDate: 'تاریخ پایان',
   endTime: 'ساعت پایان',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'لغو',
   clearButtonLabel: 'پاک کردن',

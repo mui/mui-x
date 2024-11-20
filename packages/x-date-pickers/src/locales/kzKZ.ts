@@ -31,10 +31,6 @@ const kzKZPickers: Partial<PickersLocaleText> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Бас тарту',
   clearButtonLabel: 'Тазарту',

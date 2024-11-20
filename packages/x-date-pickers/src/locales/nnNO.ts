@@ -30,10 +30,6 @@ const nnNOPickers: Partial<PickersLocaleText> = {
   endDate: 'Sluttdato',
   endTime: 'Slutttid',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Fjern',

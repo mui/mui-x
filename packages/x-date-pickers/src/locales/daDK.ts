@@ -31,10 +31,6 @@ const daDKPickers: Partial<PickersLocaleText> = {
   endDate: 'Slut date',
   endTime: 'Slut tid',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Annuller',
   clearButtonLabel: 'Ryd',

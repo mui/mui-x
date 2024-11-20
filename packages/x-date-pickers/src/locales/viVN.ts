@@ -30,10 +30,6 @@ const viVNPickers: Partial<PickersLocaleText> = {
   endDate: 'Ngày kết thúc',
   endTime: 'Thời gian kết thúc',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Hủy',
   clearButtonLabel: 'Xóa',

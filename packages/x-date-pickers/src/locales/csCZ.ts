@@ -31,10 +31,6 @@ const csCZPickers: Partial<PickersLocaleText> = {
   endDate: 'Datum konce',
   endTime: 'Čas konce',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Zrušit',
   clearButtonLabel: 'Vymazat',

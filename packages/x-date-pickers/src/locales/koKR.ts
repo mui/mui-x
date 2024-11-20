@@ -30,10 +30,6 @@ const koKRPickers: Partial<PickersLocaleText> = {
   endDate: '종료 날짜',
   endTime: '종료 시간',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: '취소',
   clearButtonLabel: '초기화',

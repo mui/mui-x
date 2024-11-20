@@ -30,10 +30,6 @@ const ptPTPickers: Partial<PickersLocaleText> = {
   endDate: 'Data de fim',
   endTime: 'Hora de fim',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpar',

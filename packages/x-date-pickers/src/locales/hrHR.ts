@@ -31,10 +31,6 @@ const hrHRPickers: Partial<PickersLocaleText> = {
   endDate: 'Krajnji datum',
   endTime: 'Krajnje vrijeme',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Otkaži',
   clearButtonLabel: 'Izbriši',

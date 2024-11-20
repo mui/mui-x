@@ -31,10 +31,6 @@ const beBYPickers: Partial<PickersLocaleText> = {
   // endDate: 'End date',
   // endTime: 'End time',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Адмена',
   clearButtonLabel: 'Ачысціць',

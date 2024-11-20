@@ -31,10 +31,6 @@ const ruRUPickers: Partial<PickersLocaleText> = {
   endDate: 'Конечная дата',
   endTime: 'Конечное время',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Отмена',
   clearButtonLabel: 'Очистить',

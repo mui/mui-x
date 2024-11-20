@@ -30,10 +30,6 @@ const svSEPickers: Partial<PickersLocaleText> = {
   endDate: 'Slutdatum',
   endTime: 'Sluttid',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Avbryt',
   clearButtonLabel: 'Rensa',

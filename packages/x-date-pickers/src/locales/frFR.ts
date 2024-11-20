@@ -30,10 +30,6 @@ const frFRPickers: Partial<PickersLocaleText> = {
   endDate: 'Date de fin',
   endTime: 'Heure de fin',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Annuler',
   clearButtonLabel: 'Vider',

@@ -30,10 +30,6 @@ const esESPickers: Partial<PickersLocaleText> = {
   endDate: 'Fecha final',
   endTime: 'Hora final',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Cancelar',
   clearButtonLabel: 'Limpiar',

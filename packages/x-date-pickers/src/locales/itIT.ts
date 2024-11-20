@@ -30,10 +30,6 @@ const itITPickers: Partial<PickersLocaleText> = {
   endDate: 'Data di fine',
   endTime: 'Ora di fine',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Cancellare',
   clearButtonLabel: 'Sgomberare',

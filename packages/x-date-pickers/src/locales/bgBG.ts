@@ -30,10 +30,6 @@ const bgBGPickers: Partial<PickersLocaleText> = {
   endDate: 'Крайна дата',
   endTime: 'Краен час',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Отказ',
   clearButtonLabel: 'Изчисти',

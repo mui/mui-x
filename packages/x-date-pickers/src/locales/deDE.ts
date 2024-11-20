@@ -31,10 +31,6 @@ const deDEPickers: Partial<PickersLocaleText> = {
   endDate: 'Enddatum',
   endTime: 'Endzeit',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Abbrechen',
   clearButtonLabel: 'Löschen',

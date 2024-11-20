@@ -30,10 +30,6 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   endDate: 'Eind datum',
   endTime: 'Eind tijd',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Annuleren',
   clearButtonLabel: 'Resetten',

@@ -30,10 +30,6 @@ const ukUAPickers: Partial<PickersLocaleText> = {
   endDate: 'День закінчення',
   endTime: 'Час закінчення',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Відміна',
   clearButtonLabel: 'Очистити',

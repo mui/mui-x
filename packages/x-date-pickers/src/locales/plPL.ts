@@ -30,10 +30,6 @@ const plPLPickers: Partial<PickersLocaleText> = {
   endDate: 'Data zakończenia',
   endTime: 'Czas zakończenia',
 
-  // Generic range placeholders
-  // from: 'From',
-  // to: 'To',
-
   // Action bar
   cancelButtonLabel: 'Anuluj',
   clearButtonLabel: 'Wyczyść',
