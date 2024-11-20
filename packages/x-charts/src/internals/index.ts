@@ -1,7 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
 
-export * from '../ChartContainer/useChartContainerDimensions';
 export * from '../ChartContainer/ResizableContainer';
 
 // hooks
@@ -27,7 +26,7 @@ export * from './computeAxisValue';
 // contexts
 
 export * from '../context/CartesianProvider';
-export * from '../context/DrawingProvider';
+export * from '../context/DrawingAreaProvider';
 export * from '../context/InteractionProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
@@ -36,6 +35,8 @@ export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
 export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 export * from '../context/ChartDataProvider';
+export * from '../context/SizeProvider';
+export * from '../context/SvgRefProvider';
 
 // series configuration
 export * from '../models/seriesType/config';

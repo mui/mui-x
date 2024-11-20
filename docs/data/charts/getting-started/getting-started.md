@@ -49,7 +49,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 ### Usage with D3
 
 To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
-You can import D3 functions from `@mui/x-charts-vendor/d3-color`.
+You can import D3 functions from `@mui/x-charts-vendor/d3-scale`.
 
 ## Rendering Charts
 

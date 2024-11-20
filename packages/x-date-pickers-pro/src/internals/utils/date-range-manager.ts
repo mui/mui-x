@@ -15,12 +15,13 @@ interface CalculateRangeChangeOptions {
   allowRangeFlip?: boolean;
   shouldMergeDateAndTime?: boolean;
   disableNonContiguousDateRange?: boolean;
-  maxDate?: TDate;
-  minDate?: TDate;
+  maxDate?: PickerValidDate;
+  minDate?: PickerValidDate;
   contiguousRangeBoundaries?: {
-    maxDate: TDate | null;
-    minDate: TDate | null;
+    maxDate: PickerValidDate | null;
+    minDate: PickerValidDate | null;
   } | null;
+  referenceDate?: PickerValidDate;
 }
 
 interface CalculateRangeChangeResponse {
@@ -37,6 +38,7 @@ export function calculateRangeChange({
   shouldMergeDateAndTime = false,
   disableNonContiguousDateRange,
   contiguousRangeBoundaries,
+  referenceDate,
 }: CalculateRangeChangeOptions): CalculateRangeChangeResponse {
   const [start, end] = range;
 
@@ -69,21 +71,26 @@ export function calculateRangeChange({
     }
   }
 
+  const newSelectedDate =
+    referenceDate && selectedDate && shouldMergeDateAndTime
+      ? mergeDateAndTime(utils, selectedDate, referenceDate)
+      : selectedDate;
+
   if (rangePosition === 'start') {
     const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
-      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
-      : { nextSelection: 'end', newRange: [selectedDate, null] };
-    return Boolean(end) && utils.isAfter(selectedDate!, end!)
+      ? { nextSelection: 'start', newRange: [end!, newSelectedDate] }
+      : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+    return Boolean(end) && utils.isAfter(newSelectedDate!, end!)
       ? truthyResult
-      : { nextSelection: 'end', newRange: [selectedDate, end] };
+      : { nextSelection: 'end', newRange: [newSelectedDate, end] };
   }
 
   const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
-    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
-    : { nextSelection: 'end', newRange: [selectedDate, null] };
-  return Boolean(start) && utils.isBeforeDay(selectedDate!, start!)
+    ? { nextSelection: 'end', newRange: [newSelectedDate, start!] }
+    : { nextSelection: 'end', newRange: [newSelectedDate, null] };
+  return Boolean(start) && utils.isBeforeDay(newSelectedDate!, start!)
     ? truthyResult
-    : { nextSelection: 'start', newRange: [start, selectedDate] };
+    : { nextSelection: 'start', newRange: [start, newSelectedDate] };
 }
 
 export function calculateRangePreview(options: CalculateRangeChangeOptions): PickerRangeValue {
@@ -93,7 +100,7 @@ export function calculateRangePreview(options: CalculateRangeChangeOptions): Pic
 
   const [start, end] = options.range;
   const { utils, rangePosition, contiguousRangeBoundaries } = options;
-  const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions<TDate>);
+  const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions);
 
   if (!start || !end) {
     return newRange;

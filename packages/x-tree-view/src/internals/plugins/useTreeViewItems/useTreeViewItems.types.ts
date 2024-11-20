@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { TreeViewItemMeta, TreeViewPluginSignature } from '../../models';
-import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
-
-export interface TreeViewItemToRenderProps {
-  label: string;
-  itemId: string;
-  id: string | undefined;
-  children?: TreeViewItemToRenderProps[];
-}
+import {
+  TreeViewBaseItem,
+  TreeViewDefaultItemModelProperties,
+  TreeViewItemId,
+} from '../../../models';
 
 export interface UseTreeViewItemsPublicAPI<R extends {}> {
   /**
@@ -34,46 +31,13 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getItemOrderedChildrenIds: (itemId: TreeViewItemId | null) => TreeViewItemId[];
   /**
    * Get all the items in the same format as provided by `props.items`.
-   * @returns {TreeViewItemToRenderProps[]} The items in the tree.
+   * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
 }
 
-export interface UseTreeViewItemsInstance<R extends {}> extends UseTreeViewItemsPublicAPI<R> {
-  /**
-   * Get the meta-information of an item.
-   * Check the `TreeViewItemMeta` type for more information.
-   * @param {TreeViewItemId} itemId The id of the item to get the meta-information of.
-   * @returns {TreeViewItemMeta} The meta-information of the item.
-   */
-  getItemMeta: (itemId: TreeViewItemId) => TreeViewItemMeta;
-  /**
-   * Get the item that should be rendered.
-   * This method is only used on Rich Tree View components.
-   * Check the `TreeViewItemToRenderProps` type for more information.
-   * @returns {TreeViewItemToRenderProps[]} The items to render.
-   */
-  getItemsToRender: () => TreeViewItemToRenderProps[];
-  /**
-   * Check if a given item is disabled.
-   * An item is disabled if it was marked as disabled or if one of its ancestors is disabled.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is disabled, `false` otherwise.
-   */
-  isItemDisabled: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Check if a given item is navigable (i.e.: if it can be accessed through keyboard navigation).
-   * An item is navigable if it is not disabled or if the `disabledItemsFocusable` prop is `true`.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is navigable, `false` otherwise.
-   */
-  isItemNavigable: (itemId: TreeViewItemId) => boolean;
-  /**
-   * Get the index of a given item in its parent's children list.
-   * @param {TreeViewItemId} itemId The id of the item to get the index of.
-   * @returns {number} The index of the item in its parent's children list.
-   */
-  getItemIndex: (itemId: TreeViewItemId) => number;
+export interface UseTreeViewItemsInstance<R extends {}>
+  extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
@@ -146,15 +110,18 @@ interface UseTreeViewItemsEventLookup {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
-    itemMetaMap: TreeViewItemMetaMap;
-    itemMap: TreeViewItemMap<R>;
-    itemOrderedChildrenIds: { [parentItemId: string]: string[] };
-    itemChildrenIndexes: { [parentItemId: string]: { [itemId: string]: number } };
+    disabledItemsFocusable: boolean;
+    itemModelLookup: TreeViewItemModelLookup<R>;
+    itemMetaLookup: TreeViewItemMetaLookup;
+    itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
   };
 }
 
 interface UseTreeViewItemsContextValue {
-  items: Pick<UseTreeViewItemsDefaultizedParameters<any>, 'disabledItemsFocusable' | 'onItemClick'>;
+  items: {
+    onItemClick: (event: React.MouseEvent, itemId: string) => void;
+  };
 }
 
 export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
@@ -163,10 +130,10 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   instance: UseTreeViewItemsInstance<any>;
   publicAPI: UseTreeViewItemsPublicAPI<any>;
   events: UseTreeViewItemsEventLookup;
-  state: UseTreeViewItemsState<any>;
+  state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
   contextValue: UseTreeViewItemsContextValue;
 }>;
 
-export type TreeViewItemMetaMap = { [itemId: string]: TreeViewItemMeta };
+export type TreeViewItemMetaLookup = { [itemId: string]: TreeViewItemMeta };
 
-export type TreeViewItemMap<R extends {}> = { [itemId: string]: R };
+export type TreeViewItemModelLookup<R extends {}> = { [itemId: string]: TreeViewBaseItem<R> };

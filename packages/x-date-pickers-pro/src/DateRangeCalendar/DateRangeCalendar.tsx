@@ -255,8 +255,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
   });
 
   const [contiguousRangeBoundaries, setContiguousRangeBoundaries] = React.useState<{
-    maxDate: TDate | null;
-    minDate: TDate | null;
+    maxDate: PickerValidDate | null;
+    minDate: PickerValidDate | null;
   } | null>(null);
 
   const handleSelectedDayChange = useEventCallback(
@@ -276,6 +276,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         maxDate,
         minDate,
         contiguousRangeBoundaries,
+        referenceDate,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);

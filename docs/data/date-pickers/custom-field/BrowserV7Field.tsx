@@ -3,19 +3,14 @@ import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
-  unstable_useDateField as useDateField,
-  UseDateFieldProps,
-} from '@mui/x-date-pickers/DateField';
+  DatePicker,
+  DatePickerFieldProps,
+  DatePickerProps,
+} from '@mui/x-date-pickers/DatePicker';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  BaseSingleInputPickersTextFieldProps,
-  BaseSingleInputFieldProps,
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -104,18 +99,8 @@ const BrowserTextField = React.forwardRef(
   },
 );
 
-interface BrowserDateFieldProps
-  extends UseDateFieldProps<true>,
-    BaseSingleInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      PickerValidDate | null,
-      FieldSection,
-      true,
-      DateValidationError
-    > {}
-
 const BrowserDateField = React.forwardRef(
-  (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
+  (props: DatePickerFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, ...textFieldProps } = props;
 
     const fieldResponse = useDateField<true, typeof textFieldProps>(textFieldProps);

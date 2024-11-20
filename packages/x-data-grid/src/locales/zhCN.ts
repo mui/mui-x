@@ -42,6 +42,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '没有列',
   columnsManagementShowHideAllText: '显示/隐藏所有',
   columnsManagementReset: '重置',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
@@ -57,9 +58,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等于',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '不等于',
   filterOperatorStartsWith: '开始于',
   filterOperatorEndsWith: '结束于',
   filterOperatorIs: '是',
@@ -80,9 +81,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等于',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等于',
   headerFilterOperatorStartsWith: '开始于',
   headerFilterOperatorEndsWith: '结束于',
   headerFilterOperatorIs: '是',
