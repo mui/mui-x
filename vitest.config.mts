@@ -58,5 +58,10 @@ export default defineConfig({
     sequence: {
       hooks: 'list',
     },
+    poolOptions: {
+      threads: {
+        execArgv: ['--max-old-space-size=1024'],
+      },
+    },
   },
 });
