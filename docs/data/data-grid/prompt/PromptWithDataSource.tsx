@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 
 function ToolbarWithPromptInput() {
   return (
-    <Stack flex={1} gap={0.5} sx={{ px: 0.5 }}>
+    <Stack gap={0.5} sx={{ px: 0.5 }}>
       <GridToolbar />
       <Box sx={{ px: 0.5 }}>
         <GridToolbarPromptControl onPrompt={mockPromptResolver} allowDataSampling />
