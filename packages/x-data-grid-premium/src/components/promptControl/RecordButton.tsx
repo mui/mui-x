@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { Timeout } from '@mui/utils/useTimeout';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -90,14 +89,14 @@ function RecordButton(props: RecordButtonProps) {
     return { start, abort };
   }).current;
 
-  const handleClick = useEventCallback(() => {
+  const handleClick = () => {
     if (!recording) {
       recognition.start({ onDone, onUpdate });
       return;
     }
 
     recognition.abort();
-  });
+  };
 
   return (
     BrowserSpeechRecognition && (
@@ -116,6 +115,7 @@ function RecordButton(props: RecordButtonProps) {
             onClick={handleClick}
             ref={buttonRef}
             size="small"
+            edge="start"
           >
             <rootProps.slots.toolbarPromptRecordIcon fontSize="small" />
           </rootProps.slots.baseIconButton>

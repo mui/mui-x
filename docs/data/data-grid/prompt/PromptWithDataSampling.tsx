@@ -7,15 +7,16 @@ import {
 } from '@mui/x-data-grid-premium';
 import { mockPromptResolver, useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 function ToolbarWithPromptInput() {
   return (
-    <GridToolbarContainer sx={{ p: 1 }}>
-      <Stack flex={1} gap={1}>
-        <GridToolbar />
+    <Stack flex={1} gap={0.5} sx={{ px: 0.5 }}>
+      <GridToolbar />
+      <Box sx={{ px: 0.5 }}>
         <GridToolbarPromptControl onPrompt={mockPromptResolver} allowDataSampling />
-      </Stack>
-    </GridToolbarContainer>
+      </Box>
+    </Stack>
   );
 }
 

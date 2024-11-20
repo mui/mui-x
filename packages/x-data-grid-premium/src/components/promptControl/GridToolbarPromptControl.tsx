@@ -255,6 +255,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                     aria-label={apiRef.current.getLocaleText(
                       'toolbarPromptControlSendActionAriaLabel',
                     )}
+                    edge="end"
                   >
                     <rootProps.slots.toolbarPromptSendIcon fontSize="small" />
                   </rootProps.slots.baseIconButton>

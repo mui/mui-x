@@ -19,15 +19,16 @@ import {
   useDemoData,
 } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 function ToolbarWithPromptInput() {
   return (
-    <GridToolbarContainer sx={{ p: 1 }}>
-      <Stack flex={1} gap={1}>
-        <GridToolbar />
+    <Stack flex={1} gap={0.5} sx={{ px: 0.5 }}>
+      <GridToolbar />
+      <Box sx={{ px: 0.5 }}>
         <GridToolbarPromptControl onPrompt={mockPromptResolver} />
-      </Stack>
-    </GridToolbarContainer>
+      </Box>
+    </Stack>
   );
 }
 
@@ -75,10 +76,14 @@ export default function PromptWithExamples() {
     rowLength: 10000,
   });
 
-  const columns = data.columns.map((column) => ({
-    ...column,
-    unstable_examples: createExamples(column.field),
-  }));
+  const columns = React.useMemo(
+    () =>
+      data.columns.map((column) => ({
+        ...column,
+        unstable_examples: createExamples(column.field),
+      })),
+    [],
+  );
 
   return (
     <div style={{ height: 500, width: '100%' }}>
