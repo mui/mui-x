@@ -19,13 +19,13 @@ const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
 async function navigateToTest(page: Page, testIndex: number) {
   const css = `#tests li:nth-of-type(${testIndex}) a`;
   try {
-    await page.locator(css).click();
+    await page.locator(css).dispatchEvent('click');
   } catch (error) {
     // When one demo crashes, the page becomes empty and there are no links to demos,
     // so navigation to the next demo throws an error.
     // Reloading the page fixes this.
     await page.reload();
-    await page.locator(css).click();
+    await page.locator(css).dispatchEvent('click');
   }
 }
 
@@ -126,15 +126,8 @@ async function main() {
           this.timeout(6000);
         }
 
-        try {
-          await navigateToTest(page, index);
-        } catch (error) {
-          // When one demo crashes, the page becomes empty and there are no links to demos,
-          // so navigation to the next demo throws an error.
-          // Reloading the page fixes this.
-          await page.reload();
-          await navigateToTest(page, index);
-        }
+        await navigateToTest(page, index);
+
         // Move cursor offscreen to not trigger unwanted hover effects.
         await page.mouse.move(0, 0);
 
@@ -226,7 +219,7 @@ async function main() {
       await navigateToTest(page, testcaseIndex);
 
       // Click the export button in the toolbar.
-      await page.getByAltText('Export').click();
+      await page.getByLabel('Export').click({ force: true });
 
       // Click the print export option from the export menu in the toolbar.
       await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
@@ -248,7 +241,7 @@ async function main() {
           if (code === 0) {
             resolve();
           } else {
-            reject(code);
+            reject(new Error(`ffmpeg exited with code ${code}`));
           }
         });
       });
@@ -285,5 +278,5 @@ main().catch((error) => {
   // error during setup.
   // Throwing lets mocha hang.
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });
