@@ -32,7 +32,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: '清除',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
   // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
   // toolbarPromptControlLabel: 'Prompt input',
   // toolbarPromptControlDeleteIconLabel: 'Clear',
@@ -41,7 +42,6 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // toolbarPromptControlSendActionLabel: 'Send',
   // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
   // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
-  // toolbarPromptControlColumnsContextIntro: 'The columns are described by the following JSON:',
 
   // Export selector toolbar button text
   toolbarExport: '出口',
