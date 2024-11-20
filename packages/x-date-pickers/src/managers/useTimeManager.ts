@@ -25,15 +25,15 @@ export function useTimeManager<TEnableAccessibleFieldDOMStructure extends boolea
 
   return React.useMemo(
     () => ({
+      valueType: 'time',
+      validator: validateTime,
       internal_valueManager: singleItemValueManager,
       internal_fieldValueManager: singleItemFieldValueManager,
-      validator: validateTime,
-      valueType: 'time',
+      internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
       internal_applyDefaultsToFieldInternalProps: ({ internalProps, utils }) => ({
         ...internalProps,
         ...getTimeFieldInternalPropsDefaults({ utils, internalProps }),
       }),
-      enableAccessibleFieldDOMStructure,
     }),
     [enableAccessibleFieldDOMStructure],
   );

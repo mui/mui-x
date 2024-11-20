@@ -35,15 +35,9 @@ export interface PickerManager<
   >,
 > {
   /**
-   * Object containing basic methods to interact with the value of the picker or field.
-   * This object is not part of the public API and should not be used directly.
+   * The type of the value (e.g. 'date', 'date-time', 'time').
    */
-  internal_valueManager: PickerValueManager<TValue, TError>;
-  /**
-   * Object containing all the necessary methods to interact with the value of the field.
-   * This object is not part of the public API and should not be used directly.
-   */
-  internal_fieldValueManager: FieldValueManager<TValue>;
+  valueType: PickerValueType;
   /**
    * Checks if a value is valid and returns an error code otherwise.
    * It can be passed to the `useValidation` hook to validate a value:
@@ -63,26 +57,33 @@ export interface PickerManager<
    */
   validator: Validator<TValue, TError, TFieldInternalPropsWithDefaults>;
   /**
+   * Object containing basic methods to interact with the value of the picker or field.
+   * This property is not part of the public API and should not be used directly.
+   */
+  internal_valueManager: PickerValueManager<TValue, TError>;
+  /**
+   * Object containing all the necessary methods to interact with the value of the field.
+   * This property is not part of the public API and should not be used directly.
+   */
+  internal_fieldValueManager: FieldValueManager<TValue>;
+  /**
+   * `true` if the field is using the accessible DOM structure.
+   * `false` if the field is using the non-accessible DOM structure.
+   * This property is not part of the public API and should not be used directly.
+   */
+  internal_enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
+  /**
    * Applies the default values to the field internal props.
    * This usually includes:
    * - a default format to display the value in the field
    * - some default validation props that are needed to validate the value (e.g: minDate, maxDate)
-   * This object is not part of the public API and should not be used directly.
+   * This property is not part of the public API and should not be used directly.
    * @param {ApplyDefaultsToFieldInternalPropsParameters} parameters The parameters to apply the defaults.
    * @returns {TFieldInternalPropsWithDefaults} The field internal props with the defaults applied.
    */
   internal_applyDefaultsToFieldInternalProps: (
     parameters: ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps>,
   ) => TFieldInternalPropsWithDefaults;
-  /**
-   * The type of the value (e.g. 'date', 'date-time', 'time').
-   */
-  valueType: PickerValueType;
-  /**
-   * `true` if the field is using the accessible DOM structure.
-   * `false` if the field is using the non-accessible legacy DOM structure (which will be deprecated and removed in the future).
-   */
-  enableAccessibleFieldDOMStructure: TEnableAccessibleFieldDOMStructure;
 }
 
 interface ApplyDefaultsToFieldInternalPropsParameters<TFieldInternalProps extends {}>
