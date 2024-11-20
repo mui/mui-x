@@ -5,7 +5,6 @@
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },
-    "classes": { "description": "Override or extend the styles applied to the component." },
     "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
@@ -76,7 +75,7 @@
       "description": "If <code>true</code>, the format will respect the leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library."
     },
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable slots." },
+    "slots": { "description": "Overridable component slots." },
     "spacing": { "description": "Defines the space between immediate children." },
     "sx": {
       "description": "The system prop, which allows defining system overrides as well as additional CSS styles."
@@ -90,11 +89,5 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "separator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the separator element"
-    }
-  }
+  "classDescriptions": {}
 }

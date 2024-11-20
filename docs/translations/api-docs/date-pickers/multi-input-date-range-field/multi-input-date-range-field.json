@@ -4,7 +4,6 @@
     "autoFocus": {
       "description": "If <code>true</code>, the <code>input</code> element is focused during the first mount."
     },
-    "classes": { "description": "Override or extend the styles applied to the component." },
     "dateSeparator": { "description": "String displayed between the start and the end dates." },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
@@ -81,11 +80,5 @@
     },
     "value": { "description": "The selected value. Used when the component is controlled." }
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "separator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the separator element"
-    }
-  }
+  "classDescriptions": {}
 }
