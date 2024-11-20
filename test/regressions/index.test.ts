@@ -23,7 +23,7 @@ async function navigateToTest(page: Page, testName: string) {
     // When one demo crashes, the page becomes empty and there are no links to demos,
     // so navigation to the next demo throws an error.
     // Reloading the page fixes this.
-    await page.reload();
+    await page.reload({ waitUntil: 'networkidle' });
     await page.getByText(new RegExp(`^${testName}$`)).dispatchEvent('click');
   }
 }
@@ -156,10 +156,7 @@ async function main() {
           { timeout: 1000 },
         );
 
-        if (/^\docs-charts-.*/.test(pathURL)) {
-          // Run one tick of the clock to get the final animation state
-          await sleep(10);
-        }
+        await sleep(10);
 
         if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
           await sleep(100);
