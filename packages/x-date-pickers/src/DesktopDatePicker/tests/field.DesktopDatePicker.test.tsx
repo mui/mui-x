@@ -1,5 +1,6 @@
 import { fireEvent } from '@mui/internal-test-utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
+import { fireUserEvent } from 'test/utils/fireUserEvent';
 import {
   createPickerRenderer,
   buildFieldInteractions,
@@ -97,6 +98,47 @@ describe('<DesktopDatePicker /> - Field', () => {
       testFormat({ views: ['year', 'month'] }, 'MMMM YYYY');
       testFormat({ views: ['year', 'month', 'day'] }, 'MM/DD/YYYY');
       testFormat({ views: ['year', 'day'] }, 'MM/DD/YYYY');
+    });
+
+    it('should allow to set the value to its previous valid value using props.value', () => {
+      // Test with accessible DOM structure
+      let view = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: true as const,
+          value: adapterToUse.date('2022-10-31'),
+        },
+        { componentFamily: 'picker' },
+      );
+
+      view.selectSection('month');
+      expectFieldValueV7(view.getSectionsContainer(), '10/31/2022');
+
+      view.pressKey(0, 'ArrowUp');
+      expectFieldValueV7(view.getSectionsContainer(), '11/31/2022');
+
+      view.setProps({ value: adapterToUse.date('2022-10-31') });
+      expectFieldValueV7(view.getSectionsContainer(), '10/31/2022');
+
+      view.unmount();
+
+      // Test with non-accessible DOM structure
+      view = renderWithProps(
+        {
+          enableAccessibleFieldDOMStructure: false as const,
+          value: adapterToUse.date('2022-10-31'),
+        },
+        { componentFamily: 'picker' },
+      );
+
+      const input = getTextbox();
+      view.selectSection('month');
+      expectFieldValueV6(input, '10/31/2022');
+
+      fireUserEvent.keyPress(input, { key: 'ArrowUp' });
+      expectFieldValueV6(input, '11/31/2022');
+
+      view.setProps({ value: adapterToUse.date('2022-10-31') });
+      expectFieldValueV6(input, '10/31/2022');
     });
   });
 
