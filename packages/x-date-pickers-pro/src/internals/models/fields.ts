@@ -2,7 +2,7 @@ import { SxProps } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
 import { MakeRequired } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
+import { FieldOwnerState, FieldSection } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
@@ -47,15 +47,11 @@ export interface BaseMultiInputFieldProps<
     textField?: React.ElementType;
   };
   slotProps?: {
-    root?: SlotComponentProps<
-      React.ElementType<MultiInputFieldSlotRootProps>,
-      {},
-      Record<string, any>
-    >;
+    root?: SlotComponentProps<React.ElementType<MultiInputFieldSlotRootProps>, {}, FieldOwnerState>;
     textField?: SlotComponentProps<
       typeof PickersTextField,
       {},
-      { position?: RangePosition } & Record<string, any>
+      FieldOwnerState & { position?: RangePosition }
     >;
   };
 }

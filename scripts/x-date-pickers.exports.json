@@ -105,6 +105,7 @@
   { "name": "ExportedUseClearableFieldProps", "kind": "Interface" },
   { "name": "extractValidationProps", "kind": "Variable" },
   { "name": "FieldFormatTokenMap", "kind": "TypeAlias" },
+  { "name": "FieldOwnerState", "kind": "Interface" },
   { "name": "FieldRef", "kind": "Interface" },
   { "name": "FieldSection", "kind": "Interface" },
   { "name": "FieldSectionContentType", "kind": "TypeAlias" },

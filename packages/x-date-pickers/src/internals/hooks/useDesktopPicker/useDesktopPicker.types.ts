@@ -1,8 +1,7 @@
 import * as React from 'react';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import { InputAdornmentProps } from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { SlotComponentProps } from '@mui/utils';
+import type { IconButtonProps } from '@mui/material/IconButton';
+import type { InputAdornmentProps } from '@mui/material/InputAdornment';
+import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
@@ -12,6 +11,7 @@ import {
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
 import {
+  FieldOwnerState,
   FieldSection,
   PickerFieldSlotProps,
   PickerOwnerState,
@@ -29,6 +29,7 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
+import { PickersTextFieldProps } from '../../../PickersTextField';
 
 export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
@@ -79,9 +80,13 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     PickerOwnerState
   >;
-  textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
+    {},
+    FieldOwnerState
+  >;
   inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
-  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState>;
+  openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, PickerOwnerState>;
   openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
