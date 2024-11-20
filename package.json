@@ -94,7 +94,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
     "@mui/internal-markdown": "^1.0.20",
-    "@mui/internal-test-utils": "^1.0.20",
+    "@mui/internal-test-utils": "^1.0.21",
     "@mui/material": "^5.16.7",
     "@mui/monorepo": "github:mui/material-ui#a0ffee42815b110e14107249f193b7505d1761e5",
     "@mui/utils": "^5.16.6",
@@ -210,8 +210,7 @@
     "@playwright/test": "1.44.1",
     "playwright": "1.44.1",
     "@vitest/browser>playwright": "1.44.1",
-    "@mui/internal-test-utils>playwright": "1.44.1",
-    "@mui/internal-test-utils": "https://pkg.csb.dev/mui/material-ui/commit/c4437e0a/@mui/internal-test-utils"
+    "@mui/internal-test-utils>playwright": "1.44.1"
   },
   "packageManager": "pnpm@9.13.2",
   "engines": {
