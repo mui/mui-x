@@ -318,9 +318,9 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   - `usePickersContext`
 
   ```diff
-  - import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  - import { usePickerContext } from '@mui/x-date-pickers';
-  - import { usePickerContext } from '@mui/x-date-pickers-pro';
+  - import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  - import { usePickersContext } from '@mui/x-date-pickers';
+  - import { usePickersContext } from '@mui/x-date-pickers-pro';
 
   + import { usePickerContext } from '@mui/x-date-pickers/hooks';
   + import { usePickerContext } from '@mui/x-date-pickers';
