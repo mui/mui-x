@@ -5,8 +5,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   getDataGridUtilityClass,
   GRID_CHECKBOX_SELECTION_FIELD,
+  gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   GridLogicOperator,
+  gridRowsLookupSelector,
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
@@ -43,16 +45,13 @@ const GridToolbarPromptControlRoot = styled('div', {
   flexDirection: 'row',
 });
 
-function sampleData(
-  apiRef: React.MutableRefObject<GridApiPremium>,
-  rootProps: DataGridPremiumProcessedProps,
-) {
-  const columns = Object.values(gridColumnLookupSelector(apiRef));
-  const rows = rootProps.rows;
+function sampleData(apiRef: React.MutableRefObject<GridApiPremium>) {
+  const columns = gridColumnDefinitionsSelector(apiRef);
+  const rows = Object.values(gridRowsLookupSelector(apiRef));
   const columnExamples: Record<string, any[]> = {};
 
   columns.forEach((column) => {
-    columnExamples[column.field] = rows.slice(0, 5).map(() => {
+    columnExamples[column.field] = Array.from({ length: Math.min(5, rows.length) }).map(() => {
       const row = rows[Math.floor(Math.random() * rows.length)];
       if (column.valueGetter) {
         return column.valueGetter(row[column.field] as never, row, column, apiRef);
@@ -68,7 +67,7 @@ function generateContext(
   apiRef: React.MutableRefObject<GridApiPremium>,
   examples?: Record<string, any[]>,
 ) {
-  const columns = Object.values(gridColumnLookupSelector(apiRef));
+  const columns = gridColumnDefinitionsSelector(apiRef);
   const columnsContext = columns.map((column) => ({
     field: column.field,
     description: column.description ?? null,
@@ -115,8 +114,8 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
 
   const classes = useUtilityClasses(rootProps, isRecording);
   const examplesFromData = React.useMemo(
-    () => (allowDataSampling ? sampleData(apiRef, rootProps) : undefined),
-    [apiRef, rootProps, allowDataSampling],
+    () => (allowDataSampling ? sampleData(apiRef) : undefined),
+    [apiRef, allowDataSampling],
   );
 
   const processPrompt = React.useCallback(() => {

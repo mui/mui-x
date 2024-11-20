@@ -103,8 +103,8 @@ function RecordButton(props: RecordButtonProps) {
       <rootProps.slots.baseTooltip
         title={
           recording
-            ? apiRef.current.getLocaleText('toolbarPromptControlRecordButtonDefaultLabel')
-            : apiRef.current.getLocaleText('toolbarPromptControlRecordButtonActiveLabel')
+            ? apiRef.current.getLocaleText('toolbarPromptControlRecordButtonActiveLabel')
+            : apiRef.current.getLocaleText('toolbarPromptControlRecordButtonDefaultLabel')
         }
       >
         <div>
