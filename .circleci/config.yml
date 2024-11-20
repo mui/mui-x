@@ -145,7 +145,10 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --project "jsdom/*" --coverage
+          command: pnpm vitest --project "jsdom/*" --coverage --pool=threads
+          environment:
+            VITEST_MAX_THREADS: 6
+            VITEST_MIN_THREADS: 2
       - run:
           name: Check coverage generated
           command: |
@@ -265,14 +268,14 @@ jobs:
     <<: *default-job
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-focal
-    resource_class: large
+    resource_class: medium+
     steps:
       - checkout
       - install_js:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: NODE_OPTIONS=--max-old-space-size=1536 pnpm vitest --project "browser/*" --pool=threads
+          command: NODE_OPTIONS='--max-old-space-size=1024' pnpm vitest --project "browser/*" --pool=threads
           environment:
             VITEST_MAX_THREADS: 3
             VITEST_MIN_THREADS: 2
