@@ -4,11 +4,13 @@ import useLazyRef from '@mui/utils/useLazyRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const BrowserSpeechRecognition = (globalThis as any).webkitSpeechRecognition;
+export const BrowserSpeechRecognition =
+  (globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition;
 
 type SpeechRecognitionOptions = {
   onUpdate: (value: string) => void;
   onDone: (value: string) => void;
+  onError: (error: string) => void;
 };
 
 interface RecordButtonProps extends SpeechRecognitionOptions {
@@ -22,7 +24,7 @@ interface RecordButtonProps extends SpeechRecognitionOptions {
 function RecordButton(props: RecordButtonProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const { lang, recording, setRecording, disabled, className, onDone, onUpdate } = props;
+  const { lang, recording, setRecording, disabled, className, onDone, onUpdate, onError } = props;
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const recognition = useLazyRef(() => {
@@ -79,6 +81,12 @@ function RecordButton(props: RecordButtonProps) {
         setRecording(false);
       };
 
+      instance.onerror = (error: { error: string; message: string }) => {
+        options.onError(error.message);
+        instance.stop();
+        setRecording(false);
+      };
+
       instance.start();
     }
 
@@ -91,7 +99,7 @@ function RecordButton(props: RecordButtonProps) {
 
   const handleClick = () => {
     if (!recording) {
-      recognition.start({ onDone, onUpdate });
+      recognition.start({ onDone, onUpdate, onError });
       return;
     }
 

@@ -18,7 +18,7 @@ import { GridApiPremium } from '../../models/gridApiPremium';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { PromptResponse } from '../../hooks/features/promptControl/types';
-import { RecordButton } from './RecordButton';
+import { RecordButton, BrowserSpeechRecognition } from './RecordButton';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -76,7 +76,7 @@ function generateContext(
     allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
   }));
 
-  return `${apiRef.current.getLocaleText('toolbarPromptControlColumnsContextIntro')}\n${JSON.stringify(columnsContext)}`;
+  return `The columns are described by the following JSON:\n${JSON.stringify(columnsContext)}`;
 }
 
 type GridToolbarPromptControlProps = {
@@ -207,6 +207,10 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
     }
   });
 
+  const placeholder = BrowserSpeechRecognition
+    ? apiRef.current.getLocaleText('toolbarPromptControlWithRecordingPlaceholder')
+    : apiRef.current.getLocaleText('toolbarPromptControlPlaceholder');
+
   return (
     <GridToolbarPromptControlRoot ownerState={rootProps} className={classes.root}>
       <rootProps.slots.baseTextField
@@ -214,7 +218,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         placeholder={
           isRecording
             ? apiRef.current.getLocaleText('toolbarPromptControlRecordingPlaceholder')
-            : apiRef.current.getLocaleText('toolbarPromptControlPlaceholder')
+            : placeholder
         }
         aria-label={apiRef.current.getLocaleText('toolbarPromptControlLabel')}
         disabled={isLoading}
@@ -236,6 +240,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                 disabled={isLoading}
                 onUpdate={setQuery}
                 onDone={handleDone}
+                onError={setError}
               />
             </InputAdornment>
           ),
