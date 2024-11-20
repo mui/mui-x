@@ -4,7 +4,7 @@ import { DescribeHijriAdapterTestSuite } from './describeHijriAdapter.types';
 const isJsdom = typeof window !== 'undefined' && window.navigator.userAgent.includes('jsdom');
 
 export const testFormat: DescribeHijriAdapterTestSuite = ({ adapter }) => {
-  it('should format the seconds without leading zeroes for format "s"', (t) => {
+  it('should format the seconds without leading zeroes for format "s"', (t = {}) => {
     if (process.env.VITEST === 'true' && !isJsdom) {
       // @ts-expect-error to support mocha and vitest
       t?.skip();
