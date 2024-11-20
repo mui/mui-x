@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
-export default function LoadingOverlaySkeleton() {
+export default function DataGridPinnedColumnsSkeletonLoading() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -12,13 +12,19 @@ export default function LoadingOverlaySkeleton() {
 
   return (
     <Box sx={{ width: '100%', height: 400 }}>
-      <DataGrid
+      <DataGridPro
         {...data}
         loading
         slotProps={{
           loadingOverlay: {
             variant: 'skeleton',
             noRowsVariant: 'skeleton',
+          },
+        }}
+        initialState={{
+          pinnedColumns: {
+            left: ['desk'],
+            right: ['status'],
           },
         }}
       />
