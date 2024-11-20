@@ -275,7 +275,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: NODE_OPTIONS='--max-old-space-size=2048' pnpm vitest --project "browser/*" --pool=threads
+          command: NODE_OPTIONS='--max-old-space-size=1024' pnpm vitest --project "browser/*" --pool=threads
           environment:
             VITEST_MAX_THREADS: 2
             VITEST_MIN_THREADS: 2
