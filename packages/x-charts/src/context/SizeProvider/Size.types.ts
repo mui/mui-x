@@ -16,7 +16,7 @@ export interface SizeContextState extends Required<Pick<SizeProviderProps, 'heig
   /**
    * The ref of the container element that the chart is rendered in.
    */
-  containerRef: React.RefObject<SVGSVGElement>;
+  containerRef: React.RefObject<HTMLDivElement>;
   /**
    * If the chart has a defined size.
    */
