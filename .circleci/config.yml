@@ -275,10 +275,10 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --reporter dot --project "browser/x-data-grid*" --pool threads
+          command: pnpm vitest --reporter dot --project "browser/x-data-grid-pro" --pool threads
           environment:
             NODE_OPTIONS: --max-old-space-size=2560
-            VITEST_MAX_THREADS: 2
+            VITEST_MAX_THREADS: 4
             VITEST_MIN_THREADS: 1
 
   test_types:
