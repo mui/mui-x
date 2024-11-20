@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LayoutConfig } from '../../models';
 
-export interface DrawingAreaProviderProps extends LayoutConfig {
+export interface DrawingAreaProviderProps extends Pick<LayoutConfig, 'margin'> {
   children: React.ReactNode;
 }
 

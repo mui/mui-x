@@ -42,7 +42,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',
   columnsManagementShowHideAllText: 'Visa/Dölj alla',
-  // columnsManagementReset: 'Reset',
+  columnsManagementReset: 'Återställ',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
@@ -58,9 +59,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'innehåller',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'innehåller inte',
   filterOperatorEquals: 'lika med',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'inte lika med',
   filterOperatorStartsWith: 'börjar med',
   filterOperatorEndsWith: 'slutar med',
   filterOperatorIs: 'är',
@@ -81,9 +82,9 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Innehåller',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Innehåller inte',
   headerFilterOperatorEquals: 'Lika med',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Inte lika med',
   headerFilterOperatorStartsWith: 'Börjar med',
   headerFilterOperatorEndsWith: 'Slutar med',
   headerFilterOperatorIs: 'Är',

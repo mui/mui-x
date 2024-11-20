@@ -120,3 +120,8 @@ This code has been removed in v8, which implies removing the following props: `a
 
 This should not impact your code.
 If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+
+## Remove `resolveSizeBeforeRender` prop
+
+The `resolveSizeBeforeRender` prop has been removed from all components.
+If you were using this prop, you can safely remove it.

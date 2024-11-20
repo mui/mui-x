@@ -236,6 +236,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -355,7 +356,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   });
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
@@ -385,7 +386,7 @@ TreeItem.propTypes = {
   /**
    * The content of the component.
    */
-  children: PropTypes.node,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.any,
   /**
    * Override or extend the styles applied to the component.
    */

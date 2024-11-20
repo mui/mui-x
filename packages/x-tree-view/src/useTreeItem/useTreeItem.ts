@@ -26,7 +26,10 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
+import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -36,14 +39,28 @@ export const useTreeItem = <
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
-    items: { onItemClick, disabledItemsFocusable },
+    items: { onItemClick },
     selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
+    label: labelContext,
     treeId,
     instance,
     publicAPI,
+    store,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
+
+  const depth = useSelector(
+    store,
+    (...params) => {
+      if (typeof depthContext === 'function') {
+        return depthContext(...params);
+      }
+
+      return depthContext;
+    },
+    parameters.itemId,
+  );
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -56,7 +73,11 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const shouldBeAccessibleWithTab = useSelector(
+    store,
+    selectorIsItemTheDefaultFocusableItem,
+    itemId,
+  );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -71,8 +92,11 @@ export const useTreeItem = <
         return;
       }
 
-      const canBeFocused = !status.disabled || disabledItemsFocusable;
-      if (!status.focused && canBeFocused && event.currentTarget === event.target) {
+      if (
+        !status.focused &&
+        selectorCanItemBeFocused(store.value, itemId) &&
+        event.currentTarget === event.target
+      ) {
         instance.focusItem(event, itemId);
       }
     };
@@ -133,7 +157,7 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      onItemClick?.(event, itemId);
+      onItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
@@ -171,6 +195,8 @@ export const useTreeItem = <
       }
     };
 
+  const getContextProviderProps = () => ({ itemId, id });
+
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemRootSlotProps<ExternalProps> => {
@@ -196,7 +222,7 @@ export const useTreeItem = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: rootTabIndex,
+      tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
@@ -204,8 +230,7 @@ export const useTreeItem = <
       ...externalProps,
       style: {
         ...(externalProps.style ?? {}),
-        '--TreeView-itemDepth':
-          typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
+        '--TreeView-itemDepth': depth,
       } as React.CSSProperties,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
@@ -281,7 +306,7 @@ export const useTreeItem = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (instance.isTreeViewEditable) {
+    if (labelContext?.isItemEditable) {
       props.editable = status.editable;
     }
 
@@ -364,6 +389,7 @@ export const useTreeItem = <
   };
 
   return {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getGroupTransitionProps,

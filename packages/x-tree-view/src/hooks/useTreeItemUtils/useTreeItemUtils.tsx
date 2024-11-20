@@ -14,6 +14,18 @@ import {
 import type { UseTreeItemStatus } from '../../useTreeItem';
 import { hasPlugin } from '../../internals/utils/plugins';
 import { TreeViewPublicAPI } from '../../internals/models';
+import { useSelector } from '../../internals/hooks/useSelector';
+import {
+  selectorIsItemExpandable,
+  selectorIsItemExpanded,
+} from '../../internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemFocused } from '../../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
+import { selectorIsItemDisabled } from '../../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { selectorIsItemSelected } from '../../internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import {
+  selectorIsItemBeingEdited,
+  selectorIsItemEditable,
+} from '../../internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 
 export interface UseTreeItemInteractions {
   handleExpansion: (event: React.MouseEvent) => void;
@@ -70,29 +82,46 @@ export const useTreeItemUtils = <
   children,
 }: {
   itemId: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }): UseTreeItemUtilsReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     instance,
+    label,
+    store,
     selection: { multiSelect },
     lazyLoading = false,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
 
-  const isItemExpandable = () => {
-    return itemHasChildren(children) || instance?.isItemExpandable(itemId);
-  };
+  const isItemExpandable = useSelector(store, selectorIsItemExpandable, itemId);
+  // TO DO: implement these selectors
+
+  const loading = instance?.isTreeItemLoading ? instance.isTreeItemLoading(itemId) : false;
+  const error = instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false;
+  const isExpandable = itemHasChildren(children) || isItemExpandable;
+  const isExpanded = useSelector(store, selectorIsItemExpanded, itemId);
+  const isFocused = useSelector(store, selectorIsItemFocused, itemId);
+  const isSelected = useSelector(store, selectorIsItemSelected, itemId);
+  const isDisabled = useSelector(store, selectorIsItemDisabled, itemId);
+  const isEditing = useSelector(store, (state) =>
+    label == null ? false : selectorIsItemBeingEdited(state, itemId),
+  );
+  const isEditable = useSelector(store, (state) =>
+    label == null
+      ? false
+      : selectorIsItemEditable(state, { itemId, isItemEditable: label.isItemEditable }),
+  );
 
   const status: UseTreeItemStatus = {
-    expandable: isItemExpandable(),
-    expanded: instance.isItemExpanded(itemId),
-    focused: instance.isItemFocused(itemId),
-    selected: instance.isItemSelected(itemId),
-    disabled: instance.isItemDisabled(itemId),
-    editing: instance?.isItemBeingEdited ? instance.isItemBeingEdited(itemId) : false,
-    editable: instance.isItemEditable ? instance.isItemEditable(itemId) : false,
-    loading: instance?.isTreeItemLoading ? instance.isTreeItemLoading(itemId) : false,
-    error: instance?.getTreeItemError ? Boolean(instance.getTreeItemError(itemId)) : false,
+    expandable: isExpandable,
+    expanded: isExpanded,
+    focused: isFocused,
+    selected: isSelected,
+    disabled: isDisabled,
+    editing: isEditing,
+    editable: isEditable,
+    loading,
+    error,
   };
 
   const handleExpansion = async (event: React.MouseEvent) => {
@@ -107,7 +136,7 @@ export const useTreeItemUtils = <
     const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
     // If already expanded and trying to toggle selection don't close
-    if (status.expandable && !(multiple && instance.isItemExpanded(itemId))) {
+    if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
       instance.toggleItemExpansion(event, itemId);
       if (instance?.fetchItems && lazyLoading && !status.expanded) {
         // return a boolean if fails/succeeds to check for expansion? might work better
@@ -156,8 +185,8 @@ export const useTreeItemUtils = <
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
     }
-    if (instance.isItemEditable(itemId)) {
-      if (instance.isItemBeingEdited(itemId)) {
+    if (isEditable) {
+      if (isEditing) {
         instance.setEditedItemId(null);
       } else {
         instance.setEditedItemId(itemId);
@@ -167,7 +196,7 @@ export const useTreeItemUtils = <
 
   const handleSaveItemLabel = (
     event: React.SyntheticEvent & TreeViewCancellableEvent,
-    label: string,
+    newLabel: string,
   ) => {
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
@@ -176,9 +205,8 @@ export const useTreeItemUtils = <
     // As a side effect of `instance.focusItem` called here and in `handleCancelItemLabelEditing` the `labelInput` is blurred
     // The `onBlur` event is triggered, which calls `handleSaveItemLabel` again.
     // To avoid creating an unwanted behavior we need to check if the item is being edited before calling `updateItemLabel`
-    // using `instance.isItemBeingEditedRef` instead of `instance.isItemBeingEdited` since the state is not yet updated in this point
-    if (instance.isItemBeingEditedRef(itemId)) {
-      instance.updateItemLabel(itemId, label);
+    if (selectorIsItemBeingEdited(store.value, itemId)) {
+      instance.updateItemLabel(itemId, newLabel);
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }
@@ -189,7 +217,7 @@ export const useTreeItemUtils = <
       return;
     }
 
-    if (instance.isItemBeingEditedRef(itemId)) {
+    if (selectorIsItemBeingEdited(store.value, itemId)) {
       toggleItemEditing();
       instance.focusItem(event, itemId);
     }
