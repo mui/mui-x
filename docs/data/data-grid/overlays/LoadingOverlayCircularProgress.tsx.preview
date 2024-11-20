@@ -3,8 +3,8 @@
   loading
   slotProps={{
     loadingOverlay: {
-      variant: 'skeleton',
-      noRowsVariant: 'skeleton',
+      variant: 'circular-progress',
+      noRowsVariant: 'circular-progress',
     },
   }}
 />

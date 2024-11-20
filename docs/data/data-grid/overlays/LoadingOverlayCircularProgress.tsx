@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function LoadingOverlay() {
+export default function LoadingOverlayCircularProgress() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 6,
@@ -12,7 +12,16 @@ export default function LoadingOverlay() {
 
   return (
     <Box sx={{ width: '100%', height: 400 }}>
-      <DataGrid {...data} loading />
+      <DataGrid
+        {...data}
+        loading
+        slotProps={{
+          loadingOverlay: {
+            variant: 'circular-progress',
+            noRowsVariant: 'circular-progress',
+          },
+        }}
+      />
     </Box>
   );
 }
