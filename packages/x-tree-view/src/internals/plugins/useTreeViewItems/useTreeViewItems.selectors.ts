@@ -14,7 +14,7 @@ const selectorTreeViewItemsState: TreeViewRootSelector<UseTreeViewItemsSignature
  */
 export const selectorItemsLoading = createSelector(
   selectorTreeViewItemsState,
-  (items) => items.itemMetaLookup,
+  (items) => items.loading,
 );
 
 /**
@@ -24,7 +24,7 @@ export const selectorItemsLoading = createSelector(
  */
 export const selectorItemMetaLookup = createSelector(
   selectorTreeViewItemsState,
-  (items) => items.loading,
+  (items) => items.itemMetaLookup,
 );
 
 const EMPTY_CHILDREN: TreeViewItemId[] = [];

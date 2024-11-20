@@ -63,8 +63,6 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
     [itemSlot, itemSlotProps],
   );
 
-  console.log('items', items);
-
   return (
     <RichTreeViewItemsContext.Provider value={renderItem}>
       {items.map(renderItem)}

@@ -25,9 +25,8 @@ import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/use
 interface UpdateItemsStateParameters
   extends Pick<
     UseTreeViewItemsDefaultizedParameters<TreeViewBaseItem>,
-    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId'
+    'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemId' | 'disabledItemsFocusable'
   > {
-  // not sure where to put these
   initialDepth?: number;
   initialParentId?: string | null;
   getChildrenCount?: (item: TreeViewBaseItem) => number;
@@ -63,6 +62,7 @@ const checkId = (
 };
 
 const updateItemsState = ({
+  disabledItemsFocusable,
   items,
   isItemDisabled,
   getItemLabel,
@@ -70,7 +70,7 @@ const updateItemsState = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-}: UpdateItemsStateParameters): Omit<State, 'loading' | 'disabledItemsFocusable'> => {
+}: UpdateItemsStateParameters): Omit<State, 'loading'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -124,6 +124,7 @@ const updateItemsState = ({
   });
 
   return {
+    disabledItemsFocusable,
     itemMetaLookup,
     itemModelLookup,
     itemOrderedChildrenIdsLookup,
@@ -168,7 +169,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     return selectorItemOrderedChildrenIds(store.value, null).map(getItemFromItemId);
   }, [store]);
 
-  const getItemOrderedChildrenIdsLookup = React.useCallback(
+  const getItemOrderedChildrenIds = React.useCallback(
     (itemId: string | null) => selectorItemOrderedChildrenIds(store.value, itemId),
     [store],
   );
@@ -202,6 +203,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   }: AddItemsParams<TreeViewBaseItem>) => {
     if (items) {
       const newState = updateItemsState({
+        disabledItemsFocusable: params.disabledItemsFocusable,
         items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
@@ -290,6 +292,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
     store.update((prevState) => {
       const newState = updateItemsState({
+        disabledItemsFocusable: params.disabledItemsFocusable,
         items: params.items,
         isItemDisabled: params.isItemDisabled,
         getItemId: params.getItemId,
@@ -304,7 +307,15 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 
       return { ...prevState, items: { ...newState, loading: false } };
     });
-  }, [instance, store, params.items, params.isItemDisabled, params.getItemId, params.getItemLabel]);
+  }, [
+    instance,
+    store,
+    params.items,
+    params.disabledItemsFocusable,
+    params.isItemDisabled,
+    params.getItemId,
+    params.getItemLabel,
+  ]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: string) => {
@@ -335,7 +346,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItem,
       getItemDOMElement,
       getItemTree,
-      getItemOrderedChildrenIdsLookup,
+      getItemOrderedChildrenIds,
     },
     instance: {
       getItemDOMElement,
@@ -353,6 +364,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 useTreeViewItems.getInitialState = (params) => ({
   items: {
     ...updateItemsState({
+      disabledItemsFocusable: params.disabledItemsFocusable,
       items: params.items,
       isItemDisabled: params.isItemDisabled,
       getItemId: params.getItemId,
