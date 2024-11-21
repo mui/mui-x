@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 21, 2024_
 
-We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Charts Pro get stable. The zoom and Heatmap are now stable.
 - 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 Special thanks go out to the community contributors who have helped make this release possible:
 @CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger.
 Following are all team members who have contributed to this release:
-@alexfauquette, @LukasTy, @MBilalShafi.
+@alexfauquette, @LukasTy, @MBilalShafi, @flaviendelangle.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -67,7 +67,7 @@ Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
 - [docs] Add `next` version links (#15423) @LukasTy
 
 - [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
-- [docs-infra] Transpile .ts demo files (#15421) @KenanYusuf
+- [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
 
 ## 7.22.2
 
