@@ -27,12 +27,11 @@ export type ConvertPluginsIntoSignatures<
     : never
   : [];
 
-export type ConvertSignaturesIntoPlugins<
-  TSignatures extends readonly ChartAnyPluginSignature[],
-> = TSignatures extends readonly [signature: infer TSignature, ...otherSignatures: infer R]
-  ? R extends readonly ChartAnyPluginSignature[]
-    ? TSignature extends ChartAnyPluginSignature
-      ? readonly [ChartPlugin<TSignature>, ...ConvertSignaturesIntoPlugins<R>]
+export type ConvertSignaturesIntoPlugins<TSignatures extends readonly ChartAnyPluginSignature[]> =
+  TSignatures extends readonly [signature: infer TSignature, ...otherSignatures: infer R]
+    ? R extends readonly ChartAnyPluginSignature[]
+      ? TSignature extends ChartAnyPluginSignature
+        ? readonly [ChartPlugin<TSignature>, ...ConvertSignaturesIntoPlugins<R>]
+        : never
       : never
-    : never
-  : [];
+    : [];
