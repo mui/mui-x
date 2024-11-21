@@ -292,7 +292,7 @@ const theme = createTheme({
   +console.log(readOnly);
   ```
 
-- The component passed to the `layout` slot no longer receives a `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
+- The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
