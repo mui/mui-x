@@ -6,7 +6,11 @@ import { SizeProvider } from '../context/SizeProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
-  return <div>{ref.current?.id}</div>;
+  return (
+    <svg ref={ref} id="test-id">
+      {ref.current?.id}
+    </svg>
+  );
 }
 
 describe('useSvgRef', () => {
