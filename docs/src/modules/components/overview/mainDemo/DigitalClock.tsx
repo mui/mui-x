@@ -28,7 +28,10 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
   const { actionBar, content, ownerState } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={ownerState}>
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {content}
         {actionBar}
       </PickersLayoutContentWrapper>

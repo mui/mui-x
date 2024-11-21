@@ -258,15 +258,18 @@ const theme = createTheme({
 
 ### Slot: `layout`
 
-- The `PickersLayoutRoot` must now receive the `ownerState` returned by `usePickerLayout` instead of its props:
+- The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:
 
   ```diff
   -const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
   +const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
+
    return (
   -  <PickersLayoutRoot ownerState={props}>
   +  <PickersLayoutRoot ownerState={ownerState}>
-       Layout content
+  -    <PickersLayoutContentWrapper>
+  +    <PickersLayoutContentWrapper ownerState={ownerState}>
+       </PickersLayoutContentWrapper>
      </PickersLayoutRoot>
    );
   ```

@@ -79,7 +79,10 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

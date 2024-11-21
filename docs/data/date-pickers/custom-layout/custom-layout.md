@@ -93,7 +93,10 @@ function MyCustomLayout(props) {
     <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={ownerState}>
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

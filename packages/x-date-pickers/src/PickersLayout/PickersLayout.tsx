@@ -80,7 +80,7 @@ export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
   slot: 'ContentWrapper',
   overridesResolver: (props, styles) => styles.contentWrapper,
-})({
+})<{ ownerState: PickerLayoutOwnerState }>({
   gridColumn: 2,
   gridRow: 2,
   display: 'flex',
@@ -121,7 +121,7 @@ const PickersLayout = React.forwardRef(function PickersLayout<
     >
       {orientation === 'landscape' ? shortcuts : toolbar}
       {orientation === 'landscape' ? toolbar : shortcuts}
-      <PickersLayoutContentWrapper className={classes.contentWrapper}>
+      <PickersLayoutContentWrapper className={classes.contentWrapper} ownerState={ownerState}>
         {variant === 'desktop' ? (
           <React.Fragment>
             {content}
