@@ -30,7 +30,6 @@ export type ExportedMultiInputRangeFieldProps<TManager extends PickerAnyRangeMan
        * @default {}
        */
       slotProps?: MultiInputRangeFieldSlotProps;
-      manager: TManager;
     };
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =

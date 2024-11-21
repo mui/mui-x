@@ -113,7 +113,6 @@ MultiInputTimeRangeField.propTypes = {
    * @default "dense"
    */
   formatDensity: PropTypes.oneOf(['dense', 'spacious']),
-  manager: PropTypes.object.isRequired,
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.

@@ -406,7 +406,6 @@
   { "name": "useDateManager", "kind": "Function" },
   { "name": "UseDateManagerParameters", "kind": "Interface" },
   { "name": "UseDateManagerReturnValue", "kind": "TypeAlias" },
-  { "name": "UseDateRangeFieldProps", "kind": "Interface" },
   { "name": "useDateRangeManager", "kind": "Function" },
   { "name": "UseDateRangeManagerParameters", "kind": "Interface" },
   { "name": "UseDateRangeManagerReturnValue", "kind": "TypeAlias" },
