@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { TransitionProps } from '@mui/material/transitions';
 import { SlotComponentProps } from '@mui/utils';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
@@ -53,7 +55,7 @@ export interface TreeItemSlots extends TreeItemIconSlots {
 export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   root?: SlotComponentProps<'li', {}, {}>;
   content?: SlotComponentProps<'div', {}, {}>;
-  groupTransition?: SlotComponentProps<'div', {}, {}>;
+  groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
   checkbox?: SlotComponentProps<'button', {}, {}>;
   label?: SlotComponentProps<'div', {}, {}>;
