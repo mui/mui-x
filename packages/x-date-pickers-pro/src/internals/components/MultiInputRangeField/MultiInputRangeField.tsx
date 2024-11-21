@@ -253,4 +253,4 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
       <TextField fullWidth {...endDateProps} />
     </Root>
   );
-}) as MultiInputRangeFieldComponent;
+} as any) as MultiInputRangeFieldComponent;

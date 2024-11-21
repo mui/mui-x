@@ -34,6 +34,9 @@ export type ExportedMultiInputRangeFieldProps<TManager extends PickerAnyRangeMan
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   ExportedMultiInputRangeFieldProps<TManager> & {
+    /**
+     * The manager for the used value type.
+     */
     manager: TManager;
   };
 
