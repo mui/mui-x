@@ -251,7 +251,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
     });
 
-    it('should call onClose and onAccept with the live value when pressing Escape', function test() {
+    it('should call onClose and onAccept with the live value when pressing Escape', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
