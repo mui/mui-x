@@ -6,7 +6,6 @@ import {
   GridColDef,
   GridRowParams,
   GridToolbarContainer,
-  GridSlots,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
@@ -18,6 +17,13 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import GridIcon from '@mui/icons-material/GridOn';
 import ListIcon from '@mui/icons-material/TableRowsOutlined';
+
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    view: 'grid' | 'list';
+    onChangeView: (view: 'grid' | 'list') => void;
+  }
+}
 
 function MessageAction(params: Pick<GridRowParams, 'row'>) {
   const handleMessage = () => {
@@ -138,7 +144,7 @@ export default function ListView() {
         unstable_listView={isListView}
         unstable_listColumn={listColDef}
         slots={{
-          toolbar: Toolbar as GridSlots['toolbar'],
+          toolbar: Toolbar,
         }}
         slotProps={{
           toolbar: {
