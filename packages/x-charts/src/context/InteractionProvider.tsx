@@ -1,19 +1,19 @@
 'use client';
 import * as React from 'react';
 import { useCharts } from '../internals/store/useCharts';
-import { ChartStore } from '../internals/plugins/utils/ChartStore';
+import { ChartContextValue } from './ChartProvider.types';
 
-export const ChartsContext = React.createContext<{ store: ChartStore } | null>(null);
+export const ChartsContext = React.createContext<ChartContextValue<any> | null>(null);
 
 if (process.env.NODE_ENV !== 'production') {
   ChartsContext.displayName = 'ChartsContext';
 }
 
-function InteractionProvider(props: React.PropsWithChildren) {
+function ChartProvider(props: React.PropsWithChildren) {
   const { children } = props;
 
-  const { contextValue } = useCharts();
+  const { contextValue } = useCharts([], {});
   return <ChartsContext.Provider value={contextValue}>{children}</ChartsContext.Provider>;
 }
 
-export { InteractionProvider };
+export { ChartProvider };

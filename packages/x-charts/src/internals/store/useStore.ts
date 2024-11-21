@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { ChartsContext } from '../../context/InteractionProvider';
+import { ChartContext } from '../../context/ChartProvider';
 import { ChartStore } from '../plugins/utils/ChartStore';
+import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
-export function useStore(skipError?: boolean): ChartStore {
-  const charts = React.useContext(ChartsContext);
+// This hook should be removed because user and us should not interact with the store directly, but with public/private APIs
+export function useStore(skipError?: boolean): ChartStore<[UseChartInteractionSignature]> {
+  const charts = React.useContext(ChartContext);
 
   if (skipError) {
     // TODO: Remove once store is used by all charts.
