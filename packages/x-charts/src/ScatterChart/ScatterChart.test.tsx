@@ -55,10 +55,12 @@ describe('<ScatterChart />', () => {
     height: 100,
   };
 
-  it('should show the tooltip without errors in default config', function test() {
+  it('should show the tooltip without errors in default config', function test(t = {}) {
     if (isJSDOM) {
       // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-      this.skip();
+      // @ts-expect-error to support mocha and vitest
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      this?.skip?.() || t?.skip();
     }
     render(
       <div
