@@ -9,7 +9,7 @@ _Nov 21, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 Charts Pro get stable. The zoom and Heatmap are now stable.
+- 📊 Charts Pro get stable. The [zoom](https://mui.com/x/react-charts/zoom-and-pan/) and [Heatmap](https://mui.com/x/react-charts/heatmap/) are now stable.
 - 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
 - 🐞 Bugfixes
 
