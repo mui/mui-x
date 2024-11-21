@@ -419,7 +419,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-charts-group',
     title: 'Charts',
-    newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/getting-started' },
@@ -469,7 +468,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
             plan: 'pro',
-            unstable: true,
           },
           {
             pathname: '/x/react-charts/main-features',
@@ -488,7 +486,6 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom and pan',
                 plan: 'pro',
-                unstable: true,
               },
             ],
           },
@@ -534,7 +531,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-tree-view-group',
     title: 'Tree View',
-    newFeature: true,
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       { pathname: '/x/react-tree-view/getting-started' },
