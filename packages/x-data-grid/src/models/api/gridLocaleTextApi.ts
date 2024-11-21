@@ -53,6 +53,7 @@ export interface GridLocaleText {
   columnsManagementNoColumns: string;
   columnsManagementShowHideAllText: string;
   columnsManagementReset: string;
+  columnsManagementDeleteIconLabel: string;
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;

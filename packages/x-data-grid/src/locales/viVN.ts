@@ -43,6 +43,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Không có cột',
   columnsManagementShowHideAllText: 'Hiện/Ẩn Tất cả',
   columnsManagementReset: 'Đặt lại',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
