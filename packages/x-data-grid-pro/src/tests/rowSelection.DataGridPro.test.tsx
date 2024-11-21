@@ -807,38 +807,13 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
     });
 
-    describe("prop: indeterminateCheckboxAction = 'select'", () => {
-      it('should select all the children when selecting an indeterminate parent', () => {
-        render(
-          <SelectionPropagationGrid
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="select"
-          />,
-        );
+    it('should select all the children when selecting an indeterminate parent', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
-      });
-    });
-
-    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
-      it('should deselect all the children when selecting an indeterminate parent', () => {
-        render(
-          <SelectionPropagationGrid
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="deselect"
-          />,
-        );
-
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows().size).to.equal(0);
-      });
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     describe('prop: keepNonExistentRowsSelected = true', () => {
