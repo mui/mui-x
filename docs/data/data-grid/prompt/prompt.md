@@ -4,7 +4,7 @@ title: Data Grid - Prompt
 
 # Data Grid - Prompt [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Translates natural language into a set of grid state updates and applies those to the Data Grid component.</p>
+<p class="description">Translate natural language into a set of grid state updates and apply them to the Data Grid component.</p>
 
 :::warning
 To use this feature, you need to have a prompt processing backend. MUI offers this service as a part of a premium package add-on. Check [licensing page](/x/introduction/licensing/) for more information.
@@ -12,7 +12,8 @@ To use this feature, you need to have a prompt processing backend. MUI offers th
 
 The prompt feature allows users to interact with the Data Grid component using natural language. The user can type commands like "sort by name" or "show amounts larger than 1000" in the prompt input field, and the Data Grid will update accordingly.
 
-To increase the accuracy of the prompt processing, the user should provide example values for the available columns. This can be done in following ways.
+To increase the accuracy of the prompt processing, the user should provide example values for the available columns.
+This can be done in following ways.
 
 :::info
 Prompt demos use a utility function `mockPromptResolver` to simulate the api that resolves the user prompts.
@@ -49,8 +50,8 @@ An example of combining prompt toolbar with the [Server-side data](/x/react-data
 
 ## Integration with MUI's API
 
-To integrate with MUI's API, you will need an API key.
-As the key cannot be exposed to the client, you need a small proxy server that will receive prompt processing reuqests, add the `x-api-key` header and pass the request further to the MUI's API.
+To integrate with MUI's API, an API key would be needed.
+As the key cannot be exposed to the client, a small proxy server could be used that would receive prompt processing requests, add the `x-api-key` header, and pass the request further to the MUI's API.
 
 This is an example of a Fastify proxy for the prompt requests
 
