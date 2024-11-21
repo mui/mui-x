@@ -67,7 +67,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.20",
+    "@mui/internal-test-utils": "^1.0.21",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
     "@react-spring/core": "^9.7.5",
