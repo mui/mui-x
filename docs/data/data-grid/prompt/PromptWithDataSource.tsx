@@ -9,6 +9,18 @@ import { mockPromptResolver, useMockServer } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 
+const VISIBLE_FIELDS = [
+  'name',
+  'email',
+  'position',
+  'company',
+  'salary',
+  'phone',
+  'country',
+  'dateCreated',
+  'isAdmin',
+];
+
 function ToolbarWithPromptInput() {
   return (
     <Stack gap={0.5} sx={{ px: 0.5 }}>
@@ -22,7 +34,7 @@ function ToolbarWithPromptInput() {
 
 export default function PromptWithDataSource() {
   const { columns, initialState, fetchRows } = useMockServer(
-    {},
+    { dataSet: 'Employee', visibleFields: VISIBLE_FIELDS, maxColumns: 16 },
     { useCursorPagination: false },
   );
 
