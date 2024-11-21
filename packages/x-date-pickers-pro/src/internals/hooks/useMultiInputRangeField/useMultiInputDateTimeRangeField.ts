@@ -47,6 +47,7 @@ export const useMultiInputDateTimeRangeField = <
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     format,
     formatDensity,
     shouldRespectLeadingZeros,
@@ -65,6 +66,7 @@ export const useMultiInputDateTimeRangeField = <
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager: rangeValueManager,
   });

@@ -175,6 +175,7 @@ export const usePickerValue = <
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
+    referenceDate,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -225,6 +226,7 @@ export const usePickerValue = <
     timezone: timezoneProp,
     value: inValueWithoutRenderTimezone,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager,
   });
