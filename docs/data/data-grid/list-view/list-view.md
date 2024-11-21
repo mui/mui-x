@@ -55,7 +55,7 @@ The [editing](/x/react-data-grid/editing/) feature is not supported in list view
 
 Similar to the default grid view, field visibilty can be toggled in list view.
 
-In the list view column’s `renderCell` function, data can be conditionally rendered based on [column visibility](/x/react-data-grid/column-visibility/).
+In the list view column's `renderCell` function, data can be conditionally rendered based on [column visibility](/x/react-data-grid/column-visibility/).
 
 ```tsx
 import {
