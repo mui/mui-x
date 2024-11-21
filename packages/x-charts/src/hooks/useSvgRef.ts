@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { SizeContext } from '../context/SizeProvider';
 
-export function useSvgRef(): React.RefObject<SVGSVGElement> {
+export function useSvgRef(): React.MutableRefObject<SVGSVGElement> {
   const { isInitialized, data } = React.useContext(SizeContext);
 
   if (!isInitialized) {
@@ -14,5 +14,5 @@ export function useSvgRef(): React.RefObject<SVGSVGElement> {
     );
   }
 
-  return data.svgRef;
+  return data.svgRef as React.MutableRefObject<SVGSVGElement>;
 }
