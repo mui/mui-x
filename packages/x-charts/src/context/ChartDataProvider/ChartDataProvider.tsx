@@ -13,7 +13,6 @@ import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider'
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
-import { SvgRefProvider } from '../SvgRefProvider';
 
 export type ChartDataProviderProps = Omit<
   SizeProviderProps &
@@ -63,9 +62,7 @@ function ChartDataProvider(props: ChartDataProviderProps) {
               <ZAxisContextProvider {...zAxisContextProps}>
                 <InteractionProvider>
                   <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>
-                      <SvgRefProvider>{children}</SvgRefProvider>
-                    </AnimationProvider>
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </HighlightedProvider>
                 </InteractionProvider>
               </ZAxisContextProvider>

@@ -34,7 +34,6 @@ export type * from '../context/context.types';
 export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 export * from '../context/ChartDataProvider';
 export * from '../context/SizeProvider';
-export * from '../context/SvgRefProvider';
 
 // series configuration
 export * from '../models/seriesType/config';

@@ -47,7 +47,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize, containerRef, inHeight, inWidth } = useSize();
+  const { hasIntrinsicSize, svgRef: containerRef, inHeight, inWidth } = useSize();
   const handleRef = useForkRef(containerRef as any, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 

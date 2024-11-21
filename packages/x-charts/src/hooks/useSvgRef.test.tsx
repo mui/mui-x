@@ -2,20 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
-import { SvgRefProvider, useSurfaceRef } from '../context/SvgRefProvider';
+import { SizeProvider } from '../context/SizeProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
   return <div>{ref.current?.id}</div>;
-}
-
-function UseSurfaceRef({ children }: any) {
-  const ref = useSurfaceRef();
-  return (
-    <svg ref={ref} id="test-id">
-      {children}
-    </svg>
-  );
 }
 
 describe('useSvgRef', () => {
@@ -51,11 +42,9 @@ describe('useSvgRef', () => {
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <SvgRefProvider>
-          <UseSurfaceRef>
-            <UseSvgRef />
-          </UseSurfaceRef>
-        </SvgRefProvider>
+        <SizeProvider>
+          <UseSvgRef />
+        </SizeProvider>
       );
     }
 
