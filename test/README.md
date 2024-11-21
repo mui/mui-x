@@ -22,7 +22,7 @@ You can run the tests against `@mui/material` v6 by running the following comman
 
 ## CI
 
-To execute additional jobs for custom versions of React/Material UI, you can use `additional` workflow. In combination with `with-react-version` and/or `with-material-ui-6` parameters, it executes those jobs with dependency versions different from the main `pipeline` workflow.
+To execute additional jobs for custom versions of React/Material UI, you can use an `additional` workflow. In combination with `with-react-version` and/or `with-material-ui-6` parameters, it executes those jobs with dependency versions different from the main `pipeline` workflow.
 
 | Parameter type | Name                 | Value                |
 | :------------- | :------------------- | :------------------- |
