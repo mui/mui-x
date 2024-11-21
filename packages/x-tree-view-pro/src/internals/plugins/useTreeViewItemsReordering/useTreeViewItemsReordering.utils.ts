@@ -166,11 +166,18 @@ export const moveItemInTree = <R extends {}>({
   const itemMetaLookup = { ...prevState.itemMetaLookup };
 
   // 3.1 Update the `expandable` property of the old and the new parent
+  function updateExpandable(itemId: string) {
+    const isExpandable = itemOrderedChildrenIds[itemId].length > 0;
+    if (itemMetaLookup[itemId].expandable !== isExpandable) {
+      itemMetaLookup[itemId] = { ...itemMetaLookup[itemId], expandable: isExpandable };
+    }
+  }
+
   if (oldParentId !== TREE_VIEW_ROOT_PARENT_ID && oldParentId !== newParentId) {
-    itemMetaLookup[oldParentId].expandable = itemOrderedChildrenIds[oldParentId].length > 0;
+    updateExpandable(oldParentId);
   }
   if (newParentId !== TREE_VIEW_ROOT_PARENT_ID && newParentId !== oldParentId) {
-    itemMetaLookup[newParentId].expandable = itemOrderedChildrenIds[newParentId].length > 0;
+    updateExpandable(newParentId);
   }
 
   // 3.2 Update the `parentId` and `depth` properties of the item to move
