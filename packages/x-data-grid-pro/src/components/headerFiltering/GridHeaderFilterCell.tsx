@@ -167,7 +167,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
-        if (item.value && updatedItem.value===undefined) {
+        if (item.value && updatedItem.value === undefined) {
           apiRef.current.deleteFilterItem(updatedItem);
           return;
         }
@@ -314,7 +314,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isNoInputOperator = currentOperator.requiresFilterValue === false;
 
-    const isApplied = (item?.value !==undefined) || isNoInputOperator;
+    const isApplied = item?.value !== undefined || isNoInputOperator;
 
     const label =
       currentOperator.headerLabel ??
