@@ -60,6 +60,10 @@ Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
 
 ### Charts
 
+#### `@mui/x-charts@7.22.3`
+
+No changes since `@mui/x-charts@7.22.2`.
+
 #### `@mui/x-charts-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 - [charts-pro] Fix missing typeOverload (#15400) @alexfauquette
