@@ -42,6 +42,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '没有列',
   columnsManagementShowHideAllText: '显示/隐藏所有',
   columnsManagementReset: '重置',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
