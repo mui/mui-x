@@ -7,6 +7,7 @@ import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/Drawin
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { SizeProvider, useSize } from '../context/SizeProvider';
 import { SvgRefProvider } from '../context/SvgRefProvider';
+import { ChartProvider } from '../context/ChartProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
@@ -84,42 +85,44 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <SizeProvider width={inWidth} height={inHeight}>
-      <SvgRefProvider>
-        <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
-          <GaugeProvider
-            value={value}
-            valueMin={valueMin}
-            valueMax={valueMax}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            outerRadius={outerRadius}
-            innerRadius={innerRadius}
-            cornerRadius={cornerRadius}
-            cx={cx}
-            cy={cy}
-          >
-            <ResizableContainer
-              role="meter"
-              aria-valuenow={value === null ? undefined : value}
-              aria-valuemin={valueMin}
-              aria-valuemax={valueMax}
-              {...other}
+    <ChartProvider>
+      <SizeProvider width={inWidth} height={inHeight}>
+        <SvgRefProvider>
+          <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
+            <GaugeProvider
+              value={value}
+              valueMin={valueMin}
+              valueMax={valueMax}
+              startAngle={startAngle}
+              endAngle={endAngle}
+              outerRadius={outerRadius}
+              innerRadius={innerRadius}
+              cornerRadius={cornerRadius}
+              cx={cx}
+              cy={cy}
             >
-              <ChartsSurface
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-                ref={ref}
+              <ResizableContainer
+                role="meter"
+                aria-valuenow={value === null ? undefined : value}
+                aria-valuemin={valueMin}
+                aria-valuemax={valueMax}
+                {...other}
               >
-                {children}
-              </ChartsSurface>
-            </ResizableContainer>
-          </GaugeProvider>
-        </DrawingAreaProvider>
-      </SvgRefProvider>
-    </SizeProvider>
+                <ChartsSurface
+                  title={title}
+                  desc={desc}
+                  disableAxisListener
+                  aria-hidden="true"
+                  ref={ref}
+                >
+                  {children}
+                </ChartsSurface>
+              </ResizableContainer>
+            </GaugeProvider>
+          </DrawingAreaProvider>
+        </SvgRefProvider>
+      </SizeProvider>
+    </ChartProvider>
   );
 });
 
