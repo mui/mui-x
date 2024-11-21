@@ -7,14 +7,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 21, 2024_
 
-We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Charts Pro get stable. The zoom and Heatmap are now stable.
 - 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger.
+@CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger, @hendrikpeilke, @k-rajat19.
 Following are all team members who have contributed to this release:
 @alexfauquette, @LukasTy, @MBilalShafi, @flaviendelangle.
 
@@ -24,9 +24,12 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.22.3`
 
+- [DataGrid] Add prop to override search input props in `GridColumnsManagement` (#15476) @k-rajat19
 - [DataGrid] Add test coverage for issues fixed in #15184 @MBilalShafi
 - [DataGrid] Fix memoized selectors with arguments (#15336) @MBilalShafi
+- [DataGrid] Fix right column group header border with virtualization (#15503) @hendrikpeilke
 - [DataGrid] Pass reason to `onPaginationModelChange` (#15402) @DungTiger
+- [DataGrid] Set default overlay height in flex parent layout (#15535) @cherniavskii
 - [l10n] Improve Chinese (zh-CN) locale (#15365) @headironc
 - [l10n] Improve Spanish (es-ES) locale (#15369) @CarlosLopezLg
 - [l10n] Improve Swedish (sv-SE) locale (#15371) @viktormelin
@@ -65,9 +68,11 @@ Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
 
 - [docs] Add `PickersPopper` component to customization playground (#15397) @LukasTy
 - [docs] Add `next` version links (#15423) @LukasTy
+- [docs] Use the `loading` state in the demos (#15538) @cherniavskii
 
 - [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
 - [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
+- [core] Clarify release version bump strategy (#15536) @cherniavskii
 
 ## 7.22.2
 
