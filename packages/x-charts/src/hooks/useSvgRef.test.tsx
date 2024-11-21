@@ -9,16 +9,7 @@ function UseSvgRef() {
   return <div>{ref.current?.id}</div>;
 }
 
-function UseSurfaceRef({ children }: any) {
-  const ref = useSvgRef();
-  return (
-    <svg ref={ref} id="test-id">
-      {children}
-    </svg>
-  );
-}
-
-describe.only('useSvgRef', () => {
+describe('useSvgRef', () => {
   const { render } = createRenderer();
 
   it('should throw an error when parent context not present', function test() {
@@ -37,14 +28,14 @@ describe.only('useSvgRef', () => {
         </ErrorBoundary>,
       ),
     ).toErrorDev([
-      'MUI X: Could not find the svg ref context.',
-      'It looks like you rendered your component outside of a ChartsContainer parent component.',
-      'The above error occurred in the <UseSvgRef> component:',
+      'MUI X: Could not find the Chart context.',
+      'It looks like you rendered your component outside of a ChartDataProvider.',
+      'The above error occurred in the <UseSvgRef> component',
     ]);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X: Could not find the svg ref context.',
+      'MUI X: Could not find the Chart context.',
     );
   });
 
@@ -52,9 +43,7 @@ describe.only('useSvgRef', () => {
     function RenderDrawingProvider() {
       return (
         <ChartProvider>
-          <UseSurfaceRef>
-            <UseSvgRef />
-          </UseSurfaceRef>
+          <UseSvgRef />
         </ChartProvider>
       );
     }

@@ -14,9 +14,9 @@ export const useChartContext = <
   if (context == null) {
     throw new Error(
       [
-        'MUI X: Could not find the Tree View context.',
-        'It looks like you rendered your component outside of a SimpleChart or RichChart parent component.',
-        'This can also happen if you are bundling multiple versions of the Tree View.',
+        'MUI X: Could not find the Chart context.',
+        'It looks like you rendered your component outside of a ChartDataProvider.',
+        'This can also happen if you are bundling multiple versions of the library.',
       ].join('\n'),
     );
   }

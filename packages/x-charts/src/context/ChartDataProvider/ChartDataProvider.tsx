@@ -14,7 +14,6 @@ import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedPro
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
 import { ChartProvider } from '../ChartProvider';
 
-
 export type ChartDataProviderProps = Omit<
   SizeProviderProps &
     Omit<SeriesProviderProps, 'seriesFormatters'> &
@@ -63,9 +62,7 @@ function ChartDataProvider(props: ChartDataProviderProps) {
               <CartesianProvider {...cartesianProviderProps}>
                 <ZAxisContextProvider {...zAxisContextProps}>
                   <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>
-                      {children}
-                    </AnimationProvider>
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </HighlightedProvider>
                 </ZAxisContextProvider>
               </CartesianProvider>
