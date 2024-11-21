@@ -12,7 +12,6 @@ import {
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
 import { getValueOptions, getVisibleRows } from '@mui/x-data-grid/internals';
-import InputAdornment from '@mui/material/InputAdornment';
 import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../models/gridApiPremium';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -38,7 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
 const GridToolbarPromptControlRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarPromptControl',
-  overridesResolver: (_props, styles) => styles.toolbarPromptControl,
+  overridesResolver: (_, styles) => styles.toolbarPromptControl,
 })<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
@@ -231,7 +230,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         helperText={error}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <rootProps.slots.baseInputAdornment position="start">
               <RecordButton
                 className={classes.recordButton}
                 lang={lang}
@@ -242,10 +241,10 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                 onDone={handleDone}
                 onError={setError}
               />
-            </InputAdornment>
+            </rootProps.slots.baseInputAdornment>
           ),
           endAdornment: (
-            <InputAdornment position="end">
+            <rootProps.slots.baseInputAdornment position="end">
               <rootProps.slots.baseTooltip
                 title={apiRef.current.getLocaleText('toolbarPromptControlSendActionLabel')}
               >
@@ -265,7 +264,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
                   </rootProps.slots.baseIconButton>
                 </div>
               </rootProps.slots.baseTooltip>
-            </InputAdornment>
+            </rootProps.slots.baseInputAdornment>
           ),
         }}
       />
