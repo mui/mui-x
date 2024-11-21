@@ -9,8 +9,9 @@ _Nov 21, 2024_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🐞 Bugfixes
+- 📊 Charts Pro get stable. The zoom and Heatmap are now stable.
 - 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
+- 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger.
@@ -56,7 +57,7 @@ Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
 
 ### Charts
 
-#### `@mui/x-charts-pro@7.0.0-beta.8` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 - [charts-pro] Fix missing typeOverload (#15400) @alexfauquette
 
