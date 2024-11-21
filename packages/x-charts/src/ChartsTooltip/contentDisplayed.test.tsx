@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
   dataset: [
@@ -69,7 +68,7 @@ describe('ChartsTooltip', () => {
       const svg = document.querySelector<HTMLElement>('svg')!;
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 198,
         clientY: 60,
       });
@@ -88,7 +87,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 201,
         clientY: 60,
       });
@@ -137,7 +136,7 @@ describe('ChartsTooltip', () => {
       const svg = document.querySelector<HTMLElement>('svg')!;
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       });
@@ -156,7 +155,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 220,
       });
@@ -210,7 +209,7 @@ describe('ChartsTooltip', () => {
       fireEvent.pointerEnter(rectangles[0]);
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position
@@ -256,7 +255,7 @@ describe('ChartsTooltip', () => {
       fireEvent.pointerEnter(rectangles[0]);
 
       fireEvent.pointerEnter(svg); // Trigger the tooltip
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position

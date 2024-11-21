@@ -57,7 +57,7 @@ const usePersistedFilterModel = () => {
 };
 
 export default function FilteringLocalStorage() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -76,6 +76,7 @@ export default function FilteringLocalStorage() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         slots={{ toolbar: GridToolbar }}
         filterModel={filterModel}
         onFilterModelChange={onFilterModelChange}
