@@ -38,7 +38,7 @@ export const mockPrompts = new Map<string, PromptResponse>([
     },
   ],
   [
-    'show people from the EU',
+    'show people from the eu',
     {
       select: -1,
       filters: [
