@@ -257,7 +257,9 @@ export interface UsePickerValueNonStaticProps {
 export interface UsePickerValueProps<TValue, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerValueNonStaticProps,
-    TimezoneProps {}
+    TimezoneProps {
+  referenceDate?: PickerValidDate;
+}
 
 export interface UsePickerValueParams<
   TValue,

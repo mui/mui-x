@@ -113,6 +113,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
