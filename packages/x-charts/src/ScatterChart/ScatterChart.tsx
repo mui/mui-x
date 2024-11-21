@@ -135,7 +135,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
         <ChartsOverlay {...overlayProps} />
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+        {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
         {children}
       </ZAxisContextProvider>
     </ChartContainer>
