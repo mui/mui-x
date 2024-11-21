@@ -10,7 +10,7 @@ export default function AutoHeightGrid() {
   const removeRow = () => setNbRows((x) => Math.max(0, x - 1));
   const addRow = () => setNbRows((x) => Math.min(100, x + 1));
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -26,7 +26,12 @@ export default function AutoHeightGrid() {
           Add a row
         </Button>
       </Stack>
-      <DataGrid autoHeight {...data} rows={data.rows.slice(0, nbRows)} />
+      <DataGrid
+        autoHeight
+        {...data}
+        loading={loading}
+        rows={data.rows.slice(0, nbRows)}
+      />
     </Box>
   );
 }
