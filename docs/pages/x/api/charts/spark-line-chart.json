@@ -36,7 +36,6 @@
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
     },
-    "resolveSizeBeforeRender": { "type": { "name": "bool" }, "default": "false" },
     "showHighlight": { "type": { "name": "bool" }, "default": "false" },
     "showTooltip": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
@@ -83,21 +82,9 @@
       "class": null
     },
     {
-      "name": "axisContent",
-      "description": "Custom component for displaying tooltip content when triggered by axis event.",
-      "default": "DefaultChartsAxisTooltipContent",
-      "class": null
-    },
-    {
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",
-      "class": null
-    },
-    {
-      "name": "itemContent",
-      "description": "Custom component for displaying tooltip content when triggered by item event.",
-      "default": "DefaultChartsItemTooltipContent",
       "class": null
     },
     {
@@ -109,7 +96,7 @@
     { "name": "lineHighlight", "description": "", "class": null },
     { "name": "mark", "description": "", "class": null },
     {
-      "name": "popper",
+      "name": "tooltip",
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null

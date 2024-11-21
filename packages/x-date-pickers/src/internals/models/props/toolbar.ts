@@ -2,11 +2,9 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { DateOrTimeViewWithMeridiem } from '../common';
-import { FormProps } from '../formProps';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedBaseToolbarProps,
-    FormProps {
+  extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;

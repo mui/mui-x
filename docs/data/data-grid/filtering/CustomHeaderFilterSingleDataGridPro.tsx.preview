@@ -1,1 +1,7 @@
-<DataGridPro {...data} columns={columns} disableColumnFilter headerFilters />
+<DataGridPro
+  {...data}
+  loading={loading}
+  columns={columns}
+  disableColumnFilter
+  headerFilters
+/>
