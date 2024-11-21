@@ -1,5 +1,6 @@
 <DataGrid
   {...data}
+  loading={loading}
   slots={{ toolbar: CustomToolbar }}
   slotProps={{
     panel: {
