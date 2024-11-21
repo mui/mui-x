@@ -46,7 +46,7 @@ describe('useSvgRef', () => {
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <SizeProvider>
+        <SizeProvider width={500} height={500}>
           <UseSvgRef />
         </SizeProvider>
       );
