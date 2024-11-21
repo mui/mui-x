@@ -114,6 +114,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
