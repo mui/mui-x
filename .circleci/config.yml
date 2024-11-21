@@ -275,7 +275,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --reporter dot --project "browser/*" --pool threads --fileParallelism=false --browser.fileParallelism=false --no-file-parallelism --maxWorkers 4 --minWorkers 1 --maxConcurrency 3 --sequence.concurrent=false
+          command: pnpm vitest --reporter dot --project "browser/*" --fileParallelism=false --browser.fileParallelism=false --no-file-parallelism --maxWorkers 4 --minWorkers 1 --maxConcurrency 3 --sequence.concurrent=false --poolOptions.forks.singleFork
 
   test_types:
     <<: *default-job
