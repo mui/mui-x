@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
-import { SvgRefProvider, useSurfaceRef } from '../context/SvgRefProvider';
+import { ChartProvider } from '../context/ChartProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -10,7 +10,7 @@ function UseSvgRef() {
 }
 
 function UseSurfaceRef({ children }: any) {
-  const ref = useSurfaceRef();
+  const ref = useSvgRef();
   return (
     <svg ref={ref} id="test-id">
       {children}
@@ -18,7 +18,7 @@ function UseSurfaceRef({ children }: any) {
   );
 }
 
-describe('useSvgRef', () => {
+describe.only('useSvgRef', () => {
   const { render } = createRenderer();
 
   it('should throw an error when parent context not present', function test() {
@@ -51,11 +51,11 @@ describe('useSvgRef', () => {
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <SvgRefProvider>
+        <ChartProvider>
           <UseSurfaceRef>
             <UseSvgRef />
           </UseSurfaceRef>
-        </SvgRefProvider>
+        </ChartProvider>
       );
     }
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ChartContext } from '../../context/ChartProvider';
+import { useChartContext } from '../../context/ChartProvider';
 import { ChartStore } from '../plugins/utils/ChartStore';
 import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 // This hook should be removed because user and us should not interact with the store directly, but with public/private APIs
 export function useStore(skipError?: boolean): ChartStore<[UseChartInteractionSignature]> {
-  const charts = React.useContext(ChartContext);
+  const context = useChartContext();
 
   if (skipError) {
     // TODO: Remove once store is used by all charts.
@@ -13,9 +13,9 @@ export function useStore(skipError?: boolean): ChartStore<[UseChartInteractionSi
     // But the Gauge don't have store yet because it does not need the interaction provider.
     // Will be fixed when every thing move to the store since every component will have access to it.
     // @ts-ignore
-    return charts?.store;
+    return context?.store;
   }
-  if (!charts) {
+  if (!context) {
     throw new Error(
       [
         'MUI X: Could not find the charts context.',
@@ -24,5 +24,5 @@ export function useStore(skipError?: boolean): ChartStore<[UseChartInteractionSi
     );
   }
 
-  return charts.store;
+  return context.store;
 }

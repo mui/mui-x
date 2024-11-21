@@ -107,10 +107,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return undefined;
+    if (svgRef.current === null) {
+      return;
     }
+    const element = svgRef.current;
 
     function getClosestPoint(
       event: MouseEvent,

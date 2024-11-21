@@ -7,7 +7,6 @@ import {
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
-  SvgRefProvider,
   SizeProvider,
   ChartProvider,
 } from '@mui/x-charts/internals';
@@ -49,7 +48,7 @@ function ChartDataProviderPro(props: ChartDataProviderProProps) {
                   <CartesianProviderPro {...cartesianProviderProps}>
                     <ZAxisContextProvider {...zAxisContextProps}>
                       <HighlightedProvider {...highlightedProviderProps}>
-                        <SvgRefProvider>{children}</SvgRefProvider>
+                        {children}
                       </HighlightedProvider>
                     </ZAxisContextProvider>
                   </CartesianProviderPro>
