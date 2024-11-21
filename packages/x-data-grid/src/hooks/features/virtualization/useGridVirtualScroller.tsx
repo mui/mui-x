@@ -36,7 +36,6 @@ import type {
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
-import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
@@ -47,6 +46,7 @@ import {
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { minimalContentHeight } from '../rows/gridRowsUtils';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -538,19 +538,12 @@ export const useGridVirtualScroller = () => {
       flexShrink: 0,
     };
 
-    if (rootProps.autoHeight && currentPage.rows.length === 0) {
-      size.flexBasis = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    if (size.flexBasis === 0) {
+      size.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
     }
 
     return size;
-  }, [
-    apiRef,
-    columnsTotalWidth,
-    contentHeight,
-    needsHorizontalScrollbar,
-    rootProps.autoHeight,
-    currentPage.rows.length,
-  ]);
+  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar]);
 
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
