@@ -7,7 +7,7 @@ const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 // This demo is used in visual regression tests to spot regressions in the filter panel
 export default function MultiFilteringPanelSnap() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -23,6 +23,7 @@ export default function MultiFilteringPanelSnap() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         apiRef={apiRef}
         initialState={{
           ...data.initialState,
