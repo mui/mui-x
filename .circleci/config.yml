@@ -275,7 +275,7 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --reporter dot --project "browser/x-data-grid-pro" --pool threads
+          command: pnpm vitest --reporter dot --project "browser/*" --pool threads --browser.fileParallelism=false --no-file-parallelism --maxWorkers 4 --minWorkers 1 --maxConcurrency 3
           environment:
             NODE_OPTIONS: --max-old-space-size=2560
             VITEST_MAX_THREADS: 4
