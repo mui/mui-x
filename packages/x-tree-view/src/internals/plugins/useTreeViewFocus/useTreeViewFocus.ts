@@ -59,13 +59,17 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   }, [store, models.selectedItems.value]);
 
   const setFocusedItemId = useEventCallback((itemId: string | null) => {
-    const focusedItemId = selectorFocusedItemId(store.value);
-    if (focusedItemId !== itemId) {
-      store.update((prevState) => ({
+    store.update((prevState) => {
+      const focusedItemId = selectorFocusedItemId(prevState);
+      if (focusedItemId === itemId) {
+        return prevState;
+      }
+
+      return {
         ...prevState,
         focus: { ...prevState.focus, focusedItemId: itemId },
-      }));
-    }
+      };
+    });
   });
 
   const isItemVisible = (itemId: string) => {
