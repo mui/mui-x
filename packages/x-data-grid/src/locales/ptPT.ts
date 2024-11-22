@@ -41,7 +41,8 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
   toolbarPromptControlSendActionLabel: 'Enviar',
   toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
-  toolbarPromptControlErrorMessage: 'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
