@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function DisableMultiFiltersDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -37,6 +37,7 @@ export default function DisableMultiFiltersDataGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         slots={{ toolbar: GridToolbar }}
         slotProps={{
           filterPanel: {
