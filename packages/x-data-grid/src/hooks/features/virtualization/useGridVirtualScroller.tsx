@@ -7,6 +7,7 @@ import {
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
+import { reactMajor } from '@mui/internal-test-utils';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -171,9 +172,13 @@ export const useGridVirtualScroller = () => {
 
       observer.observe(node);
 
-      return () => {
-        observer.disconnect();
-      };
+      if (reactMajor >= 19) {
+        return () => {
+          mainRef.current = null;
+          observer.disconnect();
+        };
+      }
+      return undefined;
     },
     [apiRef, mainRef],
   );
