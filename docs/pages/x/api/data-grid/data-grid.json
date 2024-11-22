@@ -1686,6 +1686,36 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGrid-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGrid-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGrid-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGrid-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGrid-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
       "key": "treeDataGroupingCell",
       "className": "MuiDataGrid-treeDataGroupingCell",
       "description": "Styles applied to the root of the grouping column of the tree data.",

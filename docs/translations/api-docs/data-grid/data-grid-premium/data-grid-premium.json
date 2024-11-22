@@ -1199,6 +1199,27 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
+    "toolbarPromptControl": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control element"
+    },
+    "toolbarPromptControl--recording": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the toolbar prompt control element",
+      "conditions": "recording"
+    },
+    "toolbarPromptControlRecordButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control record button element"
+    },
+    "toolbarPromptControlRecordingIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control recording indicator element"
+    },
+    "toolbarPromptControlSendButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control send button element"
+    },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the grouping column of the tree data"
@@ -1309,6 +1330,8 @@
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered inside the Header component.",
+    "toolbarPromptRecordIcon": "Icon used for the button that starts/stops recording the prompt",
+    "toolbarPromptSendIcon": "Icon used for the button that sends a prompt",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
     "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
   }
