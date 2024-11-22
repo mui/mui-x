@@ -136,7 +136,6 @@ export const useGridVirtualScroller = () => {
 
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
-      // @ts-ignore
       mainRef.current = node;
 
       if (!node) {
