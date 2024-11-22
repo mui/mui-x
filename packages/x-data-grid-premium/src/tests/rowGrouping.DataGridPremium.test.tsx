@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -666,7 +673,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           isGroupExpandedByDefault={isGroupExpandedByDefault}
         />,
       );
-      expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
       const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()

@@ -1125,6 +1125,18 @@
       "description": "Icon displayed in column menu for aggregation",
       "default": "GridFunctionsIcon",
       "class": null
+    },
+    {
+      "name": "toolbarPromptSendIcon",
+      "description": "Icon used for the button that sends a prompt",
+      "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "toolbarPromptRecordIcon",
+      "description": "Icon used for the button that starts/stops recording the prompt",
+      "default": "GridFunctionsIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -1894,6 +1906,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGridPremium-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGridPremium-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGridPremium-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

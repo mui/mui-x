@@ -124,6 +124,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
