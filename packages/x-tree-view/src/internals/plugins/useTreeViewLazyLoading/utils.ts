@@ -61,13 +61,15 @@ export class NestedDataManager {
       return;
     }
     const fetchQueue = Array.from(this.queuedRequests);
-
+    const fetchPromises: Promise<void>[] = [];
     for (let i = 0; i < loopLength; i += 1) {
       const id = fetchQueue[i];
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
-      this.instance.fetchItemChildren(id);
+
+      fetchPromises.push(this.instance.fetchItemChildren(id));
     }
+    await Promise.all(fetchPromises);
   };
 
   public queue = async (ids: TreeViewItemId[]) => {
@@ -77,13 +79,13 @@ export class NestedDataManager {
       loadingIds[id] = true;
     });
 
-    this.processQueue();
+    await this.processQueue();
   };
 
-  public setRequestSettled = (id: TreeViewItemId) => {
+  public setRequestSettled = async (id: TreeViewItemId) => {
     this.pendingRequests.delete(id);
     this.settledRequests.add(id);
-    this.processQueue();
+    await this.processQueue();
   };
 
   public clear = () => {
@@ -91,9 +93,9 @@ export class NestedDataManager {
     Array.from(this.pendingRequests).forEach((id) => this.clearPendingRequest(id));
   };
 
-  public clearPendingRequest = (id: TreeViewItemId) => {
+  public clearPendingRequest = async (id: TreeViewItemId) => {
     this.pendingRequests.delete(id);
-    this.processQueue();
+    await this.processQueue();
   };
 
   public getRequestStatus = (id: TreeViewItemId) => {

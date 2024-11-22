@@ -144,10 +144,15 @@ export const useTreeItemUtils = <
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
-      instance.toggleItemExpansion(event, itemId);
+      let fetchErrors = false;
       if (instance?.fetchItems && lazyLoading && !status.expanded) {
         // return a boolean if fails/succeeds to check for expansion? might work better
         await instance.fetchItems([itemId]);
+        fetchErrors = Boolean(selectorGetTreeItemError(store.value, itemId));
+      }
+
+      if (!fetchErrors) {
+        instance.toggleItemExpansion(event, itemId);
       }
     }
   };

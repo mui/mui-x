@@ -35,8 +35,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  // double check this when selectors are merged
-  // instance.preventItemUpdates();
+  instance.preventItemUpdates();
 
   const isLazyLoadingEnabled = params.treeViewDataSource !== undefined;
 
@@ -100,11 +99,11 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       if (parentIds) {
-        nestedDataManager.queue(parentIds);
+        await nestedDataManager.queue(parentIds);
 
         return;
       }
-      // this should be the first
+
       nestedDataManager.clear();
 
       // reset the state if we are refetching the first visible items
@@ -123,6 +122,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
       try {
         const getTreeItemsResponse = await getTreeItems();
+
         // set caching
         cache.set('root', getTreeItemsResponse);
 
@@ -188,10 +188,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.addItems({ items: getTreeItemsResponse, depth, parentId: id, getChildrenCount });
       } catch (error) {
         const childrenFetchError = error as Error;
-        instance.removeChildren(id);
-        instance.setItemExpansion(null, id, false);
         // handle errors here
         instance.setDataSourceError(id, childrenFetchError);
+        instance.removeChildren(id);
       } finally {
         // unset loading
         instance.setDataSourceLoading(id, false);
@@ -203,8 +202,13 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   React.useEffect(() => {
-    instance.fetchItems();
-  }, [instance]);
+    if (params.items.length) {
+      const getChildrenCount = params.treeViewDataSource?.getChildrenCount || (() => 0);
+      instance.addItems({ items: params.items, depth: 0, getChildrenCount });
+    } else {
+      instance.fetchItems();
+    }
+  }, [instance, params.items, params.treeViewDataSource]);
 
   const pluginContextValue = React.useMemo(
     () => ({ lazyLoading: params.treeViewDataSource !== undefined }),

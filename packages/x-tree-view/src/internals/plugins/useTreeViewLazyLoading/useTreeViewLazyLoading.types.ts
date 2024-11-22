@@ -30,8 +30,8 @@ type TreeViewDataSource<R extends {}> = {
 export interface UseTreeViewLazyLoadingPublicAPI {}
 
 export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPublicAPI {
-  fetchItems: (parentIds?: TreeViewItemId[]) => void;
-  fetchItemChildren: (id: TreeViewItemId) => void;
+  fetchItems: (parentIds?: TreeViewItemId[]) => Promise<void>;
+  fetchItemChildren: (id: TreeViewItemId) => Promise<void>;
   isLazyLoadingEnabled: boolean;
   setDataSourceLoading: (itemId: TreeViewItemId, isLoading: boolean) => void;
   setDataSourceError: (itemId: TreeViewItemId, error: Error | null) => void;

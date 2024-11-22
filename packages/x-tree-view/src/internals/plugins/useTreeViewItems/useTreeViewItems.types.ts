@@ -8,7 +8,7 @@ import {
 } from '../../../models';
 
 export type AddItemsParams<R> = {
-  items: R[];
+  items: readonly R[];
   parentId?: TreeViewItemId;
   depth: number;
   getChildrenCount?: (item: R) => number;
