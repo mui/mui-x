@@ -349,7 +349,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-time-range-picker',
                 title: 'Date Time Range Picker',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
@@ -554,8 +553,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing' },
-          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
+          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
         ],
       },
       {
