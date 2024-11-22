@@ -154,7 +154,7 @@ export const usePickerValue = <
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TExternalProps extends UsePickerValueProps<TValue, TDate, any>,
 >({
   props,
   valueManager,

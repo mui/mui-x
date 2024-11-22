@@ -208,8 +208,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<
   } = props;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone<
-    TDate,
     DateRange<TDate>,
+    TDate,
     NonNullable<typeof onChange>
   >({
     name: 'DateRangeCalendar',
