@@ -1,1 +1,1 @@
-export * as GridFilterPanel from './index.parts';
+export * from './GridFilterPanelTrigger';

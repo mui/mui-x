@@ -1,1 +1,1 @@
-export * as GridColumnsPanel from './index.parts';
+export * from './GridColumnsPanelTrigger';

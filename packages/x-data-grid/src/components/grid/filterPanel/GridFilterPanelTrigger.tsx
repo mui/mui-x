@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -66,5 +67,13 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
     return renderElement();
   },
 );
+
+GridFilterPanelTrigger.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
 
 export { GridFilterPanelTrigger };
