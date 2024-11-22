@@ -82,7 +82,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 #### Breaking change
 
 - The DX of the Tooltip customization has been refactored
-  - The `tooltip` prop is removed in favor of `slotProps.tooltip` for consistency.
+  - The `tooltip` prop has been removed in favor of `slotProps.tooltip` for consistency.
   - The `popper`, `axisContent`,  and `itemContent` slots have been removed in favor of the `tooltip` slot which overrides the entire tooltip.
     - To override the tooltip content, use the `useItemTooltip` or `useAxisTooltip` hook to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
     - To override the tooltip placement, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get default data and place them in your custom tooltip.
@@ -93,7 +93,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
   - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
     You can still target those elements by using the `MuiLinePlot`, `MuiAreaPlot`, and `MuiBarPlot` and target the appropriate classes `lineElementClasses.root`, `areaElementClasses.root`, `barElementClasses.root`
 
-- Removed the `resolveSizeBeforeRender` prop from all chart components — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop)
+- Removed the `resolveSizeBeforeRender` prop from all chart components — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop).
 - Removed `width` and `height` props from the `ChartsSurface` component.
 - Removed the `viewport` prop from all charts.
 
