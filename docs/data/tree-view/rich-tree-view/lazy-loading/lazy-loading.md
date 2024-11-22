@@ -17,7 +17,13 @@ To dynamically load data from the server, including lazy-loading of children, yo
 
 The data source also requires the `getChildrenCount()` attribute to handle tree data:
 
-getChildrenCount(): Returns the number of children for the item. If the children count is not available for some reason, but there are some children, returns -1.
+`getChildrenCount()`: Returns the number of children for the item. If the children count is not available for some reason, but there are some children, returns -1.
+
+The `items` prop serves as an initial state.
+
+{{"demo": "LazyLoadingInitialState.js"}}
+
+If you want to dynamically load all items of the Tree View, you can pass and empty array to the `items` prop, and the `getTreeItems` method will be called on the first render.
 
 {{"demo": "BasicLazyLoading.js"}}
 

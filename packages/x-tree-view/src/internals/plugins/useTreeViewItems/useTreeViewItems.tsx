@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import {
@@ -17,7 +16,8 @@ import {
   selectorItemOrderedChildrenIds,
   selectorItemModel,
   selectorItemDepth,
-  selectorItemsLoading,
+  selectorIsTreeViewLoading,
+  selectorGetTreeViewError,
 } from './useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
@@ -70,7 +70,7 @@ const updateItemsState = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
-}: UpdateItemsStateParameters): Omit<State, 'loading'> => {
+}: UpdateItemsStateParameters): Omit<State, 'loading' | 'error'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
   const itemOrderedChildrenIdsLookup: State['itemOrderedChildrenIdsLookup'] = {
@@ -143,13 +143,21 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
 
   const isTreeViewLoading = React.useMemo(
-    () => selectorItemsLoading(store.value) || false,
+    () => selectorIsTreeViewLoading(store.value) || false,
     [store],
   );
+  const getTreeViewError = React.useMemo(() => selectorGetTreeViewError(store.value), [store]);
+
   const setTreeViewLoading = (isLoading) => {
     store.update((prevState) => ({
       ...prevState,
       items: { ...prevState.items, loading: isLoading },
+    }));
+  };
+  const setTreeViewError = (error) => {
+    store.update((prevState) => ({
+      ...prevState,
+      items: { ...prevState.items, error },
     }));
   };
 
@@ -242,7 +250,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           }
         });
 
-        return { ...prevState, items: { ...newItems, loading: prevState.items.loading } };
+        return { ...prevState, items: { ...prevState.items, ...newItems } };
       });
     }
   };
@@ -305,7 +313,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         }
       });
 
-      return { ...prevState, items: { ...newState, loading: false } };
+      return { ...prevState, items: { ...prevState.items, ...newState } };
     });
   }, [
     instance,
@@ -355,6 +363,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       addItems,
       isTreeViewLoading,
       setTreeViewLoading,
+      setTreeViewError,
+      getTreeViewError,
       removeChildren,
     },
     contextValue: pluginContextValue,
@@ -371,6 +381,7 @@ useTreeViewItems.getInitialState = (params) => ({
       getItemLabel: params.getItemLabel,
     }),
     loading: false,
+    error: null,
   },
 });
 

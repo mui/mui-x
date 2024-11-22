@@ -1,0 +1,8 @@
+<RichTreeView
+  items={initialItems}
+  experimentalFeatures={{ lazyLoading: true }}
+  treeViewDataSource={{
+    getChildrenCount: (item) => item?.childrenCount as number,
+    getTreeItems: fetchData,
+  }}
+/>

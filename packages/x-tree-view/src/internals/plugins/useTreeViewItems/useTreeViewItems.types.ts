@@ -59,6 +59,8 @@ export interface UseTreeViewItemsInstance<R extends {}>
   removeChildren: (parentId?: TreeViewItemId) => void;
   isTreeViewLoading: boolean;
   setTreeViewLoading: (loading: boolean) => void;
+  setTreeViewError: (error: Error | null) => void;
+  getTreeViewError: Error | null;
 }
 
 export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
@@ -126,6 +128,7 @@ export interface UseTreeViewItemsState<R extends {}> {
     itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
     loading: boolean;
+    error: Error | null;
   };
 }
 

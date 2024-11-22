@@ -1,20 +1,26 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
+import {
+  randomInt,
+  randomName,
+  randomId,
+  randomBoolean,
+} from '@mui/x-data-grid-generator';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
-const fetchData = async (): Promise<
-  TreeViewBaseItem<{
-    id: string;
-    label: string;
-    childrenCount?: number;
-  }>[]
-> => {
-  const rows = Array.from({ length: 10 }, () => ({
+type ItemType = TreeViewBaseItem<{
+  id: string;
+  label: string;
+  childrenCount?: number;
+}>;
+
+const fetchData = async (): Promise<ItemType[]> => {
+  const length: number = randomInt(2, 10);
+  const rows = Array.from({ length }, () => ({
     id: randomId(),
     label: randomName({}, {}),
-    ...(randomInt(0, 1) ? { childrenCount: 10 } : {}),
+    ...(randomBoolean() ? { childrenCount: length } : {}),
   }));
 
   return new Promise((resolve) => {

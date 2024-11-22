@@ -131,6 +131,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       } catch (error) {
         // set the items to empty
         instance.addItems({ items: [], depth: 0, getChildrenCount });
+        // set error state
+        instance.setTreeViewError(error as Error);
       } finally {
         // set loading state
         instance.setTreeViewLoading(false);
