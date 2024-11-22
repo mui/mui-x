@@ -22,6 +22,11 @@ There are two main classes of components, which are used to create a chart.
 
 These are used to define the chart's structure and data.
 
+:::info
+Most of the demos here will be using the `ChartContainer` component.
+To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
+:::
+
 #### The `ChartDataProvider` and `ChartsSurface` components
 
 As the name suggests, the `ChartDataProvider` provides the data to the children components.
@@ -36,7 +41,7 @@ While the `ChartsSurface` renders the SVG elements.
 #### The `ChartContainer` helper
 
 This component is a composition of the two previous components.
-It can be used instead of them when you don't need to customize anything outside the chart's graphical elements.
+It can be used instead of them when there is no need to customize anything outside the chart's graphical elements.
 
 ```jsx
 <ChartContainer>{children}</ChartContainer>
@@ -54,17 +59,6 @@ Some examples of graphical components are:
 - `ChartsXAxis`
 - `ChartsLegend`
 - `ChartsTooltip`
-
-The `ChartDataProvider` component allows you to access the internal data and render your own components, especially `HTML` components.
-
-The main idea is very simple, the `ChartDataProvider` component provides a context with all the data needed to render a chart.
-While the `ChartsSurface` component is responsible for rendering the SVG elements.
-
-This allows you to create your own components and use the data provided by the `ChartDataProvider` to render them.
-Allowing for a much simpler way to create custom components, like legends, by using `HTML` elements.
-
-Based on the data provided by the container, you can render some graphical elements with provided subcomponents, such as `<LinePlot />` or `<ChartsYAxis />`.
-Or you can [create your own components](/x/react-charts/components/).
 
 ## Container options
 
