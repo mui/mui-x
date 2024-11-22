@@ -12,6 +12,7 @@ _Nov 22, 2024_
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔧 Refactor Tooltip customisation for charts — [Learn more](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
+- ⚛️ React 19 support
 - 🌍 Improve Chinese, Spanish, and Swedish locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -19,7 +20,7 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 ### Breaking change
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@arminmeh, @CarlosLopezLg, @headironc, @hendrikpeilke, @k-rajat19, @KenanYusuf, @lhilgert9, @viktormelin.
+@CarlosLopezLg, @headironc, @hendrikpeilke, @k-rajat19, @lhilgert9, @viktormelin.
 Following are all team members who have contributed to this release:
 @alexfauquette, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari, @KenanYusuf, @arminmeh.
 
@@ -29,6 +30,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@v8.0.0-alpha.1`
 
+- [DataGrid] React 19 support (#15342) @arminmeh
 - [DataGrid] Add prop to override search input props in `GridColumnsManagement` (#15347) @k-rajat19
 - [DataGrid] Add test coverage for issues fixed in #15184 (#15282) @MBilalShafi
 - [DataGrid] Change default loading overlay variants (#15504) @KenanYusuf
@@ -53,12 +55,13 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 
 #### Breaking change
 
-- The `FieldValueType` type was renamed `PickerValueType` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
+- The `FieldValueType` type has been renamed to `PickerValueType` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
 - The `toolbar` and `layout` slots no longer receive the  `disabled` and `readOnly` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.1`
 
 - [fields] Fix focus management with new DOM structure (#15475) @flaviendelangle
+- [pickers] React 19 support (#15342) @arminmeh
 - [pickers] Add new properties to `PickerOwnerState` and `PickerContextValue` (#15415) @flaviendelangle
 - [pickers] Always use `props.value` when it changes (#15490) @flaviendelangle
 - [pickers] Ensure internal value timezone is updated  (#15435) @LukasTy
@@ -80,17 +83,17 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 
 - The DX of the Tooltip customization has been refactored
   - The `tooltip` prop is removed in favor of `slotProps.tooltip` for consistency.
-  - The previous slots `popper`, `axisContent`, `itemContent` are removed in favor of a `tooltip` slots which override the entire tooltip.
-    - To override the tooltip content, use the `useItemTooltip` or `useAxisTooltip` to get the data, and wrapp your component in `ChartsTooltipContainer` to follow the pointer position.
+  - The `popper`, `axisContent`,  and `itemContent` slots have been removed in favor of the `tooltip` slot which overrides the entire tooltip.
+    - To override the tooltip content, use the `useItemTooltip` or `useAxisTooltip` hook to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
     - To override the tooltip placement, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get default data and place them in your custom tooltip.
 
 - The library now uses the SVG `filter` attribute instead of `d3-color` for color manipulation.
   - This modification impacts the `LinePlot`, `AreaPlot`, and `BarPlot`.
     If you've customized the `fill` of those elements, you might need to override it by using the CSS `filter`.
-  - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performances.
+  - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
     You can still target those elements by using the `MuiLinePlot`, `MuiAreaPlot`, and `MuiBarPlot` and target the appropriate classes `lineElementClasses.root`, `areaElementClasses.root`, `barElementClasses.root`
 
-- Removed the `resolveSizeBeforeRender` prop from all charts component — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop)
+- Removed the `resolveSizeBeforeRender` prop from all chart components — [Learn more](https://next.mui.com/x/migration/migration-charts-v7/#remove-resolvesizebeforerender-prop)
 - Removed `width` and `height` props from the `ChartsSurface` component.
 - Removed the `viewport` prop from all charts.
 
@@ -118,6 +121,7 @@ Same changes as in `@mui/x-charts@v8.0.0-alpha.1`.
 
 #### `@mui/x-tree-view@v8.0.0-alpha.1`
 
+- [TreeView] React 19 support (#15342) @arminmeh
 - [TreeView] Do not re-render every Tree Item when the Rich Tree View re-renders (introduce selectors) (#14210) @flaviendelangle
 - [TreeView] Remove `treeId` from the item context (#15542) @flaviendelangle
 - [TreeView] Remove state mutation in `moveItemInTree()` (#15539) @flaviendelangle
