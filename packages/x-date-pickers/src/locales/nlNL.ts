@@ -90,7 +90,7 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   meridiem: 'Middag',
 
   // Common
-  empty: 'Legen',
+  empty: 'Leeg',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);
