@@ -141,7 +141,6 @@ PickersLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
   /**
    * `true` if the application is in right-to-left direction.
@@ -162,7 +161,6 @@ PickersLayout.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

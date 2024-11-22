@@ -14,7 +14,9 @@
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled."
     },
-    "disabled": { "description": "If <code>true</code>, the component is disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components."
     },
@@ -86,7 +88,7 @@
       "typeDescriptions": { "newValue": "The new selected sections." }
     },
     "readOnly": {
-      "description": "It prevents the user from changing the value of the field (not from interacting with the field)."
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },
     "referenceDate": {
       "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set."

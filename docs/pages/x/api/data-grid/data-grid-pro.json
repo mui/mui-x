@@ -1391,6 +1391,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGridPro-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGridPro-container--bottom",
       "description": "Styles applied to the bottom container.",
@@ -1802,6 +1808,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGridPro-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGridPro-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGridPro-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGridPro-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGridPro-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGridPro-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

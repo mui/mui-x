@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DrawingArea } from '../context/DrawingProvider';
+import { DrawingAreaState } from '../context/DrawingAreaProvider';
 import { useTicks } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps, ScaleName } from '../models/axis';
-import { GridLine } from './styledCommonents';
+import { GridLine } from './styledComponents';
 import { ChartsGridClasses } from './chartsGridClasses';
 
 interface ChartsGridVerticalProps {
   axis: AxisDefaultized<ScaleName, any, ChartsXAxisProps>;
-  drawingArea: DrawingArea;
+  drawingArea: DrawingAreaState;
   classes: Partial<ChartsGridClasses>;
 }
 
@@ -23,9 +23,9 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
 
   return (
     <React.Fragment>
-      {xTicks.map(({ formattedValue, offset }) => (
+      {xTicks.map(({ value, offset }) => (
         <GridLine
-          key={`vertical-${formattedValue}`}
+          key={`vertical-${value}`}
           y1={drawingArea.top}
           y2={drawingArea.top + drawingArea.height}
           x1={offset}

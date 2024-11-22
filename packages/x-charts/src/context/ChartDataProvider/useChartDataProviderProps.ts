@@ -1,21 +1,16 @@
 'use client';
-import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
-import type { DrawingProviderProps } from '../DrawingProvider';
+import type { DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import type { CartesianProviderProps } from '../CartesianProvider';
 import type { SeriesProviderProps } from '../SeriesProvider';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { HighlightedProviderProps } from '..';
-import { ChartsSurfaceProps } from '../../ChartsSurface';
+import { HighlightedProviderProps } from '../HighlightedProvider';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
+import { SizeProviderProps } from '../SizeProvider';
 
-export const useChartDataProviderProps = (
-  props: ChartDataProviderProps,
-  ref: React.Ref<SVGSVGElement>,
-) => {
+export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const {
     width,
     height,
@@ -26,27 +21,17 @@ export const useChartDataProviderProps = (
     zAxis,
     colors,
     dataset,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
     highlightedItem,
     onHighlightChange,
     plugins,
     children,
     skipAnimation,
-    ...other
   } = props;
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const drawingProviderProps: Omit<DrawingProviderProps, 'children'> = {
-    width,
-    height,
+  const drawingAreaProviderProps: Omit<DrawingAreaProviderProps, 'children'> = {
     margin,
-    svgRef,
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
@@ -79,28 +64,22 @@ export const useChartDataProviderProps = (
     onHighlightChange,
   };
 
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: any } = {
-    ...other,
+  const sizeProviderProps: Omit<SizeProviderProps, 'children'> = {
     width,
     height,
-    ref: chartSurfaceRef,
-    sx,
-    title,
-    desc,
-    disableAxisListener,
   };
 
   return {
     children,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    chartsSurfaceProps,
     pluginProviderProps,
     animationProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,
+    sizeProviderProps,
   };
 };

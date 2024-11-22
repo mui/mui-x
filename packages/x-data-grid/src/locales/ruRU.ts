@@ -55,6 +55,18 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlDeleteIconLabel: 'Clear',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Экспорт',
   toolbarExportLabel: 'Экспорт',
@@ -67,6 +79,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Нет столбцов',
   columnsManagementShowHideAllText: 'Показать/Скрыть Всё',
   columnsManagementReset: 'Сбросить',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',

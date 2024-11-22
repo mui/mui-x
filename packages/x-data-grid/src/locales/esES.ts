@@ -31,6 +31,18 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Buscar',
   toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlDeleteIconLabel: 'Clear',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
@@ -43,6 +55,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
   columnsManagementReset: 'Restablecer',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
@@ -58,9 +71,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'contiene',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'no contiene',
   filterOperatorEquals: 'es igual',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'es diferente a',
   filterOperatorStartsWith: 'comienza con',
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
@@ -81,9 +94,9 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'No contiene',
   headerFilterOperatorEquals: 'Es igual a',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Es diferente a',
   headerFilterOperatorStartsWith: 'Comienza con',
   headerFilterOperatorEndsWith: 'Termina con',
   headerFilterOperatorIs: 'Es',

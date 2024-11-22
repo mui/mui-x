@@ -6,11 +6,11 @@ import {
   MuiPickersAdapter,
   TimezoneProps,
   FieldSectionContentType,
-  FieldValueType,
   PickerValidDate,
   FieldRef,
   OnErrorProps,
   InferError,
+  PickerValueType,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import type { Validator } from '../../../validation';
@@ -18,6 +18,7 @@ import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
 import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
+import { FormProps } from '../../models';
 
 export interface UseFieldParams<
   TValue,
@@ -32,7 +33,7 @@ export interface UseFieldParams<
   valueManager: PickerValueManager<TValue, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TSection>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
-  valueType: FieldValueType;
+  valueType: PickerValueType;
 }
 
 export interface UseFieldInternalProps<
@@ -41,6 +42,7 @@ export interface UseFieldInternalProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends TimezoneProps,
+    FormProps,
     OnErrorProps<TValue, TError> {
   /**
    * The selected value.
@@ -91,12 +93,6 @@ export interface UseFieldInternalProps<
    */
   shouldRespectLeadingZeros?: boolean;
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
    * The currently selected sections.
    * This prop accepts four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -124,11 +120,6 @@ export interface UseFieldInternalProps<
    * @default false
    */
   autoFocus?: boolean;
-  /**
-   * If `true`, the component is disabled.
-   * @default false
-   */
-  disabled?: boolean;
 }
 
 export interface UseFieldCommonAdditionalProps

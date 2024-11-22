@@ -22,8 +22,6 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridi
    * Available views.
    */
   views: readonly TView[];
-  disabled?: boolean;
-  readOnly?: boolean;
   titleId?: string;
 }
 

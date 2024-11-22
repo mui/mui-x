@@ -254,23 +254,65 @@ const theme = createTheme({
 });
 ```
 
+## Slots breaking changes
+
+### Slot: `layout`
+
+- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.disabled);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
+  +console.log(disabled);
+  ```
+
+- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.readOnly);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
+  +console.log(readOnly);
+  ```
+
+### Slot: `toolbar`
+
+- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.disabled);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
+  +console.log(disabled);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.readOnly);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
+  +console.log(readOnly);
+  ```
+
 ## Renamed variables
 
 The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
 
-- `usePickersTranslation`
+- `usePickersTranslations`
 
   ```diff
-  - import { usePickersTranslation } from '@mui/x-date-pickers/hooks';
-  - import { usePickersTranslation } from '@mui/x-date-pickers';
-  - import { usePickersTranslation } from '@mui/x-date-pickers-pro';
+  - import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+  - import { usePickersTranslations } from '@mui/x-date-pickers';
+  - import { usePickersTranslations } from '@mui/x-date-pickers-pro';
 
-  + import { usePickerTranslation } from '@mui/x-date-pickers/hooks';
-  + import { usePickerTranslation } from '@mui/x-date-pickers';
-  + import { usePickerTranslation } from '@mui/x-date-pickers-pro';
+  + import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+  + import { usePickerTranslations } from '@mui/x-date-pickers';
+  + import { usePickerTranslations } from '@mui/x-date-pickers-pro';
 
-  - const translations = usePickersTranslation();
-  + const translations = usePickerTranslation();
+  - const translations = usePickersTranslations();
+  + const translations = usePickerTranslations();
   ```
 
   - `usePickersContext`
@@ -286,6 +328,18 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
 
   - const pickersContext = usePickersContext();
   + const pickerContext = usePickerContext();
+  ```
+
+  - `FieldValueType`
+
+  ```diff
+  -import { FieldValueType } from '@mui/x-date-pickers/models';
+  -import { FieldValueType } from '@mui/x-date-pickers';
+  -import { FieldValueType } from '@mui/x-date-pickers-pro';
+
+  +import { PickerValueType } from '@mui/x-date-pickers/models';
+  +import { PickerValueType } from '@mui/x-date-pickers';
+  +import { PickerValueType } from '@mui/x-date-pickers-pro';
   ```
 
 ## Typing breaking changes
@@ -365,9 +419,220 @@ If you were using them, you need to replace them with the following code:
     UseDateTimeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>;
   ```
 
+- `BaseSingleInputFieldProps`
+
+  - If you are building a custom field for a Date Picker:
+
+    ```diff
+    -import {
+    -  BaseSingleInputFieldProps,
+    -  DateValidationError,
+    -  FieldSection,
+    -} from '@mui/x-date-pickers/models';
+    -import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
+    +import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
+
+    -interface CustomDateFieldProps
+    -  extends UseDateFieldProps<Dayjs, true>,
+    -    BaseSingleInputFieldProps<
+    -      Dayjs | null,
+    -      Dayjs,
+    -      FieldSection,
+    -      true,
+    -      DateValidationError
+    -    > {}
+    +interface CustomDateFieldProps extends DatePickerFieldProps {}
+    ```
+
+  - If you are building a custom field for a Time Picker:
+
+    ```diff
+    -import {
+    -  BaseSingleInputFieldProps,
+    -  TimeValidationError,
+    -  FieldSection,
+    -} from '@mui/x-date-pickers/models';
+    -import { UseTimeFieldProps } from '@mui/x-date-pickers/TimeField';
+    +import { TimePickerFieldProps } from '@mui/x-date-pickers/TimePicker';
+
+    -interface CustomTimeFieldProps
+    - extends UseTimeFieldProps<Dayjs, true>,
+    - BaseSingleInputFieldProps<
+    -      Dayjs | null,
+    -      Dayjs,
+    -      FieldSection,
+    -      true,
+    -      TimeValidationError
+    - > {}
+    +interface CustomTimeFieldProps extends TimePickerFieldProps {}
+    ```
+
+  - If you are building a custom field for a Date Time Picker:
+
+    ```diff
+    -import {
+    -  BaseSingleInputFieldProps,
+    -  DateTimeValidationError,
+    -  FieldSection,
+    -} from '@mui/x-date-pickers/models';
+    -import { UseDateTimeFieldProps } from '@mui/x-date-pickers/DateTimeField';
+    +import { DateTimePickerFieldProps } from '@mui/x-date-pickers/DateTimePicker';
+
+    -interface CustomDateTimeFieldProps
+    -  extends UseDateTimeFieldProps<Dayjs, true>,
+    -    BaseSingleInputFieldProps<
+    -      Dayjs | null,
+    -      Dayjs,
+    -      FieldSection,
+    -      true,
+    -      DateTimeValidationError
+    -    > {}
+    +interface CustomDateTimeFieldProps extends DateTimePickerFieldProps {}
+    ```
+
+  - If you are building a custom single input field for a Date Range Picker:
+
+    ```diff
+    -import {
+    -  DateRangeValidationError,
+    -  RangeFieldSection,
+    -  DateRange,
+    -} from '@mui/x-date-pickers-pro/models';
+    -import {
+    -  UseSingleInputDateRangeFieldProps
+    -} from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+    +import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+    -interface CustomDateRangeFieldProps
+    -  extends UseSingleInputDateRangeFieldProps<Dayjs, true>,
+    -    BaseSingleInputFieldProps<
+    -      DateRange<Dayjs>,
+    -      Dayjs,
+    -      RangeFieldSection,
+    -      true,
+    -      DateRangeValidationError
+    -    >
+    +interface CustomDateRangeFieldProps extends DateRangePickerFieldProps {}
+    ```
+
+  - If you are building a custom single input field for a Date Time Range Picker:
+
+    ```diff
+    -import {
+    -  DateTimeRangeValidationError,
+    -  RangeFieldSection,
+    -  DateRange,
+    -} from '@mui/x-date-pickers-pro/models';
+    -import {
+    -  UseSingleInputDateTimeRangeFieldProps
+    -} from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
+    +import {
+    +  DateTimeRangePickerFieldProps
+    +} from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+
+    -interface CustomDateTimeRangeFieldProps
+    -  extends UseSingleInputDateTimeRangeFieldProps<Dayjs, true>,
+    -    BaseSingleInputFieldProps<
+    -      DateRange<Dayjs>,
+    -      Dayjs,
+    -      RangeFieldSection,
+    -      true,
+    -      DateTimeRangeValidationError
+    -    >
+    +interface CustomDateTimeRangeFieldProps extends DateTimeRangePickerFieldProps {}
+    ```
+
+- `BaseMultiInputFieldProps`
+
+  - If you are building a custom multi input field for a Date Range Picker:
+
+    ```diff
+    -import {
+    -  DateRangeValidationError,
+    -  RangeFieldSection,
+    -  DateRange,
+    -} from '@mui/x-date-pickers-pro/models';
+    -import {
+    -  UseMultiInputDateRangeFieldProps
+    -} from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+    +import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+    -interface CustomDateRangeFieldProps
+    -  extends UseMultiInputDateRangeFieldProps<Dayjs, true>,
+    -    BaseMultiInputFieldProps<
+    -      DateRange<Dayjs>,
+    -      Dayjs,
+    -      RangeFieldSection,
+    -      true,
+    -      DateRangeValidationError
+    -    > {}
+    +interface CustomDateRangeFieldProps
+    +  extends Omit<
+    +     DateRangePickerFieldProps<true>,
+    +    'unstableFieldRef' | 'clearable' | 'onClear'
+    +  >,
+    +  MultiInputFieldRefs {}
+    ```
+
+  - If you are building a custom multi input field for a Date Time Range Picker:
+
+    ```diff
+    -import {
+    -  DateTimeRangeValidationError,
+    -  RangeFieldSection,
+    -  DateRange,
+    -} from '@mui/x-date-pickers-pro/models';
+    -import {
+    -  UseMultiInputDateTimeRangeFieldProps
+    -} from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
+    +import {
+    +  DateTimeRangePickerFieldProps
+    +} from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+
+    -interface CustomDateTimeRangeFieldProps
+    -  extends UseMultiInputDateTimeRangeFieldProps<Dayjs, false>,
+    -    BaseMultiInputFieldProps<
+    -      DateRange<Dayjs>,
+    -      Dayjs,
+    -      RangeFieldSection,
+    -      false,
+    -      DateTimeRangeValidationError
+    -    > {}
+    +interface JoyMultiInputDateRangeFieldProps
+    +  extends Omit<
+    +     DateTimeRangePickerFieldProps<false>,
+    +    'unstableFieldRef' | 'clearable' | 'onClear'
+    +  >,
+    +  MultiInputFieldRefs {}
+    ```
+
+- `BasePickersTextFieldProps`
+
+  - If your Text Field is used inside a non-range picker or in a range-picker with a single input field:
+
+    ```diff
+    -import { BasePickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
+    +import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+
+     interface CustomTextFieldProps
+    -  extends BasePickersTextFieldProps<true> {}
+    +  extends BaseSingleInputPickersTextFieldProps<true> {}
+    ```
+
+  - If your Text Field is used inside a range-picker with a multi input field:
+
+    ```diff
+    -import { BasePickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
+    +import { BaseMultiInputPickersTextFieldProps } from '@mui/x-date-pickers-pro/models';
+
+     interface CustomTextFieldProps
+    -  extends BasePickersTextFieldProps<true> {}
+    +  extends BaseMultiInputPickersTextFieldProps<true> {}
+    ```
+
 ## Stop using `LicenseInfo` from `@mui/x-date-pickers-pro`
 
-The `LicenseInfo` object is not exported from the `@mui/x-date-pickers-pro` package anymore.
+The `LicenseInfo` object is no longer exported from the `@mui/x-date-pickers-pro` package.
 You can import it from `@mui/x-license` instead:
 
 ```diff

@@ -57,11 +57,6 @@ export interface UsePickerViewsBaseProps<
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
     TimezoneProps {
   /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
    */
@@ -134,6 +129,7 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem
    * Indicates if the the picker has at least one view that should be rendered in UI.
    */
   hasUIView: boolean;
+  views: readonly TView[];
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
@@ -277,6 +273,7 @@ export const usePickerViews = <
 
   return {
     hasUIView,
+    views,
     shouldRestoreFocus,
     layoutProps,
     renderCurrentView: () => {

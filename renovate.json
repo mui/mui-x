@@ -112,7 +112,8 @@
     },
     {
       "matchDepTypes": ["action"],
-      "pinDigests": true
+      "pinDigests": true,
+      "automerge": true
     },
     {
       "groupName": "GitHub Actions",

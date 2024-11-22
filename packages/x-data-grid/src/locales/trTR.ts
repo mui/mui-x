@@ -30,6 +30,18 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlDeleteIconLabel: 'Clear',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
@@ -42,6 +54,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Kolon yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -80,9 +93,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'İçermez',
   headerFilterOperatorEquals: 'Şuna eşittir',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Eşit değildir',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
   headerFilterOperatorIs: 'Eşittir',

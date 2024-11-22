@@ -136,7 +136,6 @@ DatePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -150,7 +149,6 @@ DatePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
