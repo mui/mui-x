@@ -4,11 +4,9 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 
-export const useChartContainerDimensions = (
-  inWidth?: number,
-  inHeight?: number,
-  resolveSizeBeforeRender?: boolean,
-) => {
+const MAX_COMPUTE_RUN = 10;
+
+export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
   const hasInSize = inWidth !== undefined && inHeight !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -48,9 +46,8 @@ export const useChartContainerDimensions = (
     // computeRun is used to avoid infinite loops.
     if (
       hasInSize ||
-      !resolveSizeBeforeRender ||
       !stateRef.current.initialCompute ||
-      stateRef.current.computeRun > 20
+      stateRef.current.computeRun > MAX_COMPUTE_RUN
     ) {
       return;
     }
@@ -61,7 +58,7 @@ export const useChartContainerDimensions = (
     } else if (stateRef.current.initialCompute) {
       stateRef.current.initialCompute = false;
     }
-  }, [width, height, computeSize, resolveSizeBeforeRender, hasInSize]);
+  }, [width, height, computeSize, hasInSize]);
 
   useEnhancedEffect(() => {
     if (hasInSize) {
@@ -111,7 +108,6 @@ export const useChartContainerDimensions = (
       stateRef.current.displayError = false;
     }
   }
-
   const finalWidth = inWidth ?? width;
   const finalHeight = inHeight ?? height;
 
@@ -119,7 +115,7 @@ export const useChartContainerDimensions = (
     containerRef: rootRef,
     width: finalWidth,
     height: finalHeight,
-    hasIntrinsicSize: Boolean(finalWidth && finalHeight),
+    hasIntrinsicSize: finalWidth > 0 && finalHeight > 0,
     inWidth,
     inHeight,
   };

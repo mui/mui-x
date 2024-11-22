@@ -1,6 +1,9 @@
-<DataGridPro
-  columns={columns}
-  rows={rows}
-  getDetailPanelHeight={getDetailPanelHeight}
-  getDetailPanelContent={getDetailPanelContent}
-/>
+<DetailPanelDataCache.Provider value={detailPanelDataCache}>
+  <DataGridPro
+    columns={columns}
+    rows={rows}
+    getDetailPanelHeight={getDetailPanelHeight}
+    getDetailPanelContent={getDetailPanelContent}
+    onDetailPanelExpandedRowIdsChange={handleDetailPanelExpansionChange}
+  />
+</DetailPanelDataCache.Provider>

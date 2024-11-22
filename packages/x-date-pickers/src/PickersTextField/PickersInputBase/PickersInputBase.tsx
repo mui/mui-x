@@ -221,6 +221,8 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     inputProps,
     inputRef,
     sectionListRef,
+    onFocus,
+    onBlur,
     ...other
   } = props;
 
@@ -236,14 +238,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
   }
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    // Fix a bug with IE11 where the focus/blur events are triggered
-    // while the component is disabled.
-    if (muiFormControl.disabled) {
-      event.stopPropagation();
-      return;
-    }
-
     muiFormControl.onFocus?.(event);
+    onFocus?.(event);
+  };
+
+  const handleInputBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    muiFormControl.onBlur?.(event);
+    onBlur?.(event);
   };
 
   React.useEffect(() => {
@@ -297,7 +298,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         tabIndex={tabIndex}
         className={classes.sectionsContainer}
         onFocus={handleInputFocus}
-        onBlur={muiFormControl.onBlur}
+        onBlur={handleInputBlur}
         onInput={onInput}
         onPaste={onPaste}
         onKeyDown={onKeyDown}

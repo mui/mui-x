@@ -260,10 +260,12 @@ export const useFieldV7TextField: UseFieldTextField<true> = (params) => {
       return;
     }
 
+    const activeElement = getActiveElement(document);
+
     setFocused(true);
 
     const isFocusInsideASection =
-      sectionListRef.current.getSectionIndexFromDOMElement(getActiveElement(document)) != null;
+      sectionListRef.current.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
       setSelectedSections(sectionOrder.startIndex);
     }

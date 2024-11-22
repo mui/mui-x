@@ -9,10 +9,10 @@ import {
   ExportedBaseToolbarProps,
   useUtils,
   DateOrTimeViewWithMeridiem,
-  WrapperVariant,
+  PickerVariant,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateTimePickerToolbarProps,
@@ -42,7 +42,7 @@ export interface DateTimeRangePickerToolbarProps
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
-  toolbarVariant?: WrapperVariant;
+  toolbarVariant?: PickerVariant;
 }
 
 export interface ExportedDateTimeRangePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -134,8 +134,6 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     isLandscape,
     views,
     ampm,
-    disabled,
-    readOnly,
     hidden,
     toolbarFormat,
     toolbarPlaceholder,
@@ -143,6 +141,8 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     sx,
     ...other
   } = props;
+
+  const { disabled, readOnly } = usePickerContext();
 
   const commonToolbarProps = {
     isLandscape,
@@ -253,12 +253,6 @@ DateTimeRangePickerToolbar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * If `true`, the component is disabled.
-   * When disabled, the value cannot be changed and no interaction is possible.
-   * @default false
-   */
-  disabled: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
@@ -273,12 +267,6 @@ DateTimeRangePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
-  /**
-   * If `true`, the component is read-only.
-   * When read-only, the value cannot be changed but the user can interact with the interface.
-   * @default false
-   */
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   initialState={{
     ...data.initialState,
     columns: {

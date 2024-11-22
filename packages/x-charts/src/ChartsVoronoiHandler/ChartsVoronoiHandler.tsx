@@ -34,6 +34,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+
   const store = useStore();
 
   const { series, seriesOrder } = useScatterSeries() ?? {};

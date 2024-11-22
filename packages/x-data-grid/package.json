@@ -59,8 +59,8 @@
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.15.14 || ^6.0.0",
     "@mui/system": "^5.15.14 || ^6.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -71,7 +71,7 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.20",
+    "@mui/internal-test-utils": "^1.0.21",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
