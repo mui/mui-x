@@ -1,47 +1,48 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
-
-const fetchData = async (
-  parentId?: TreeViewItemId,
-): Promise<
-  TreeViewBaseItem<{
-    id: string;
-    label: string;
-    childrenCount?: number;
-  }>[]
-> => {
-  const rows = Array.from({ length: 10 }, () => ({
-    id: randomId(),
-    label: randomName({}, {}),
-    childrenCount: 10,
-  }));
-
-  // make the promise fail if the item has a parent
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (parentId) {
-        reject(new Error('Error fetching data'));
-      } else {
-        resolve(rows);
-      }
-    }, 1000);
-  });
-};
+import { initialItems, ItemType } from './items';
 
 export default function ErrorManagement() {
+  const [failRequests, setFailRequests] = React.useState(false);
+  const fetchData = async (): Promise<ItemType[]> => {
+    const rows = Array.from({ length: 10 }, () => ({
+      id: randomId(),
+      label: randomName({}, {}),
+      childrenCount: 10,
+    }));
+
+    // make the promise fail conditionally
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (failRequests) {
+          reject(new Error('Error fetching data'));
+        } else {
+          resolve(rows);
+        }
+      }, 1000);
+    });
+  };
+
   return (
-    <Box sx={{ width: '300px' }}>
+    <Stack spacing={2} sx={{ width: '300px' }}>
+      <Button
+        onClick={() => setFailRequests((prev) => !prev)}
+        variant="outlined"
+        fullWidth
+      >
+        {failRequests ? 'Resolve requests' : 'Fail Requests'}
+      </Button>
       <RichTreeView
-        items={[]}
+        items={initialItems}
         experimentalFeatures={{ lazyLoading: true }}
         treeViewDataSource={{
           getChildrenCount: (item) => item?.childrenCount as number,
           getTreeItems: fetchData,
         }}
       />
-    </Box>
+    </Stack>
   );
 }

@@ -1,5 +1,12 @@
+<Button
+  onClick={() => setFailRequests((prev) => !prev)}
+  variant="outlined"
+  fullWidth
+>
+  {failRequests ? 'Resolve requests' : 'Fail Requests'}
+</Button>
 <RichTreeView
-  items={[]}
+  items={initialItems}
   experimentalFeatures={{ lazyLoading: true }}
   treeViewDataSource={{
     getChildrenCount: (item) => item?.childrenCount as number,

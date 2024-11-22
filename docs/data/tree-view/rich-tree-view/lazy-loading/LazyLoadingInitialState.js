@@ -7,13 +7,7 @@ import {
   randomBoolean,
 } from '@mui/x-data-grid-generator';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-
-const initialItems = [
-  { id: '1', label: 'Amy Harris', childrenCount: randomInt(1, 5) },
-  { id: '2', label: 'Sam Smith', childrenCount: randomInt(1, 5) },
-  { id: '3', label: 'Jordan Miles', childrenCount: randomInt(1, 5) },
-  { id: '4', label: 'Amalia Brown', childrenCount: randomInt(1, 5) },
-];
+import { initialItems } from './items';
 
 const fetchData = async () => {
   const length = randomInt(2, 10);
