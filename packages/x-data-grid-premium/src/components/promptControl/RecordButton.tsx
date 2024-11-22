@@ -107,29 +107,27 @@ function RecordButton(props: RecordButtonProps) {
   };
 
   return (
-    BrowserSpeechRecognition && (
-      <rootProps.slots.baseTooltip
-        title={
-          recording
-            ? apiRef.current.getLocaleText('toolbarPromptControlRecordButtonActiveLabel')
-            : apiRef.current.getLocaleText('toolbarPromptControlRecordButtonDefaultLabel')
-        }
-      >
-        <div>
-          <rootProps.slots.baseIconButton
-            color={recording ? 'primary' : 'default'}
-            className={className}
-            disabled={disabled}
-            onClick={handleClick}
-            ref={buttonRef}
-            size="small"
-            edge="start"
-          >
-            <rootProps.slots.toolbarPromptRecordIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
-        </div>
-      </rootProps.slots.baseTooltip>
-    )
+    <rootProps.slots.baseTooltip
+      title={
+        recording
+          ? apiRef.current.getLocaleText('toolbarPromptControlRecordButtonActiveLabel')
+          : apiRef.current.getLocaleText('toolbarPromptControlRecordButtonDefaultLabel')
+      }
+    >
+      <div>
+        <rootProps.slots.baseIconButton
+          color={recording ? 'primary' : 'default'}
+          className={className}
+          disabled={disabled}
+          onClick={handleClick}
+          ref={buttonRef}
+          size="small"
+          edge="start"
+        >
+          <rootProps.slots.toolbarPromptRecordIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </div>
+    </rootProps.slots.baseTooltip>
   );
 }
 

@@ -21,6 +21,8 @@ import { RecordButton, BrowserSpeechRecognition } from './RecordButton';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
+const supportsSpeechRecognition = !!BrowserSpeechRecognition;
+
 const useUtilityClasses = (ownerState: OwnerState, recording: boolean) => {
   const { classes } = ownerState;
 
@@ -206,7 +208,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
     }
   });
 
-  const placeholder = BrowserSpeechRecognition
+  const placeholder = supportsSpeechRecognition
     ? apiRef.current.getLocaleText('toolbarPromptControlWithRecordingPlaceholder')
     : apiRef.current.getLocaleText('toolbarPromptControlPlaceholder');
 
@@ -229,7 +231,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         error={!!error}
         helperText={error}
         InputProps={{
-          startAdornment: (
+          startAdornment: supportsSpeechRecognition && (
             <rootProps.slots.baseInputAdornment position="start">
               <RecordButton
                 className={classes.recordButton}
