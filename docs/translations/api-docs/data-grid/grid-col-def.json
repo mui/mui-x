@@ -80,6 +80,9 @@
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
     "type": { "description": "The type of the column." },
+    "unstable_examples": {
+      "description": "Example values that can be used by the grid to get more context about the column."
+    },
     "valueFormatter": {
       "description": "Function that allows to apply a formatter before rendering its value."
     },
