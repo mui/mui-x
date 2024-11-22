@@ -139,7 +139,7 @@ export const useGridVirtualScroller = () => {
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
 
-      if (!node) {
+      if (!node || typeof ResizeObserver === 'undefined') {
         return undefined;
       }
 
