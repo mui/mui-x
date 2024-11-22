@@ -41,6 +41,20 @@ const ChartsSurfaceStyles = styled('svg', {
   touchAction: 'none',
 }));
 
+/**
+ * It provides the drawing area for the chart elements.
+ * It is the root `<svg>` of all the chart elements.
+ *
+ * It also provides the `title` and `desc` elements for the chart.
+ *
+ * Demos:
+ *
+ * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
+ */
 const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
