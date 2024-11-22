@@ -87,9 +87,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       fireEvent.click(
-        screen.getAllByRole('gridcell', {
+        screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
-        })[0],
+        }),
       );
 
       // Close the picker

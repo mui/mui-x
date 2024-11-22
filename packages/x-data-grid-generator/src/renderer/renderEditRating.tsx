@@ -18,7 +18,7 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
     changedThroughKeyboard.current = false;
   };
 
-  const handleRef = (element: HTMLElement | undefined) => {
+  const handleRef = (element: HTMLElement | null) => {
     if (element) {
       if (value !== 0) {
         element.querySelector<HTMLElement>(`input[value="${value}"]`)!.focus();
