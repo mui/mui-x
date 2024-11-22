@@ -133,7 +133,6 @@ const MobileTimeRangePicker = React.forwardRef(function MobileTimeRangePicker<
 
   const props = {
     ...defaultizedProps,
-    // TODO: Do we want the toolbar to support AM/PM switch on mobile?
     ampmInClock: true,
     viewRenderers,
     format: resolveTimeFormat(utils, defaultizedProps),

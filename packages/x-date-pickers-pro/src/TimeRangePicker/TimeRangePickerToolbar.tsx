@@ -81,18 +81,19 @@ const TimeRangePickerToolbarContainer = styled('div', {
 })<{ toolbarVariant: WrapperVariant }>({
   display: 'flex',
   flex: 1,
-  rowGap: 8,
   variants: [
     {
       props: { toolbarVariant: 'mobile' },
       style: {
         flexDirection: 'column',
+        rowGap: 8,
       },
     },
     {
       props: { toolbarVariant: 'desktop' },
       style: {
         flexDirection: 'row',
+        gap: 1,
       },
     },
   ],
@@ -104,8 +105,8 @@ const TimeRangePickerToolbarTimeContainer = styled('div', {
   overridesResolver: (_, styles) => styles.timeContainer,
 })({
   display: 'flex',
-  justifyContent: 'space-between',
-  width: '100%',
+  justifyContent: 'space-around',
+  flex: 1,
 });
 
 const TimeRangePickerToolbarSeparator = styled(PickersToolbarText, {
