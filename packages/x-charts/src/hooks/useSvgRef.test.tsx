@@ -6,7 +6,11 @@ import { ChartProvider } from '../context/ChartProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
-  return <div>{ref.current?.id}</div>;
+  return (
+    <svg ref={ref} id="test-id">
+      {ref.current?.id}
+    </svg>
+  );
 }
 
 describe('useSvgRef', () => {

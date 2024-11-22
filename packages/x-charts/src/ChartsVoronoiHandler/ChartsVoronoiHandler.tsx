@@ -108,7 +108,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
 
   React.useEffect(() => {
     if (svgRef.current === null) {
-      return;
+      return undefined;
     }
     const element = svgRef.current;
 

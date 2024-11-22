@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useChartContext } from '../../context/ChartProvider';
 import { ChartStore } from '../plugins/utils/ChartStore';
 import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
