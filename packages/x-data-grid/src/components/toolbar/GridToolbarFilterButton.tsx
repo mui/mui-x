@@ -50,7 +50,7 @@ export interface GridToolbarFilterButtonProps {
   slotProps?: {
     button?: Partial<ButtonProps>;
     tooltip?: Partial<TooltipProps>;
-    baseBadge?: Partial<BadgeProps>;
+    badge?: Partial<BadgeProps>;
   };
 }
 
@@ -59,7 +59,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
     const tooltipProps = slotProps.tooltip || {};
-    const badgeProps = slotProps.baseBadge || {};
+    const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
