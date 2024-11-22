@@ -456,7 +456,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           fields={headerInfo.fields}
           colIndex={headerInfo.colIndex}
           depth={depth}
-          isLastColumn={headerInfo.colIndex === visibleColumns.length - headerInfo.fields.length}
+          isLastColumn={index === visibleColumnGroupHeader.length - 1}
           maxDepth={headerGroupingMaxDepth}
           height={dimensions.groupHeaderHeight}
           hasFocus={hasFocus}
