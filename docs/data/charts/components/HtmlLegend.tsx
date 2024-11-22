@@ -42,7 +42,7 @@ function MyCustomLegend() {
 }
 
 const veryLongText =
-  "Second Series. You should always try to avoid long sentences. But oftentimes, it's not possible. So, we need to handle them gracefully.";
+  "Second Series. You should always try to avoid long sentences. But oftentimes, it's not possible. So, we need to handle them gracefully. This is a very long sentence that should be fully readable.";
 
 export default function HtmlLegend() {
   return (
