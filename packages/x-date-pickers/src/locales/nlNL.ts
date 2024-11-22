@@ -25,10 +25,10 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   // DateRange labels
   start: 'Start',
   end: 'Einde',
-  startDate: 'Start datum',
-  startTime: 'Start tijd',
-  endDate: 'Eind datum',
-  endTime: 'Eind tijd',
+  startDate: 'Startdatum',
+  startTime: 'Starttijd',
+  endDate: 'Einddatum',
+  endTime: 'Eindtijd',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
