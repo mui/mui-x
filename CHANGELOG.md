@@ -99,6 +99,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 
 #### `@mui/x-charts@v8.0.0-alpha.1`
 
+- [charts] React 19 support (#15342) @arminmeh
 - [charts] Decouple `<ChartDataProvider />` and `<ChartsSurface />` (#15375) @JCQuintas
 - [charts] Fix Scatter Chart tooltip wrong defaults (#15537) @JCQuintas
 - [charts] Fix key generation for the `<ChartsGrid />` component (#15463) @alexfauquette
@@ -407,6 +408,7 @@ No changes since `@mui/x-charts@7.22.2`.
 - [docs] Add `PickersPopper` component to customization playground (#15397) @LukasTy
 - [docs] Add `next` version links (#15423) @LukasTy
 - [docs] Use the `loading` state in the demos (#15538) @cherniavskii
+- [docs] Add data caching to lazy loaded detail panel demo (#15506) @cherniavskii
 
 - [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
 - [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
