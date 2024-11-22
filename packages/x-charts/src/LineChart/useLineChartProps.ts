@@ -7,7 +7,6 @@ import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartContainerProps } from '../ChartContainer';
 import { AreaPlotProps } from './AreaPlot';
@@ -34,7 +33,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     colors,
     dataset,
     sx,
-    tooltip,
     onAxisClick,
     onAreaClick,
     onLineClick,
@@ -89,7 +87,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
-      tooltip?.trigger !== 'axis' &&
+      slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
@@ -164,12 +162,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
-  const tooltipProps: ChartsTooltipProps<'line'> = {
-    ...tooltip,
-    slots,
-    slotProps,
-  };
-
   return {
     chartContainerProps,
     axisClickHandlerProps,
@@ -184,7 +176,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
-    tooltipProps,
     children,
   };
 };

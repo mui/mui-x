@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
 import { useDrawingArea } from './useDrawingArea';
+import { useStore } from '../internals/useStore';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
@@ -15,7 +15,8 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { dispatch } = React.useContext(InteractionContext);
+
+  const store = useStore(disableAxisListener);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -29,7 +30,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || disableAxisListener) {
+    if (element === null || disableAxisListener || !store) {
       return () => {};
     }
 
@@ -100,7 +101,11 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
         x: -1,
         y: -1,
       };
-      dispatch({ type: 'exitChart' });
+
+      store.update((prev) => ({
+        ...prev,
+        interaction: { item: null, axis: { x: null, y: null } },
+      }));
     };
 
     const handleMove = (event: MouseEvent | TouchEvent) => {
@@ -112,7 +117,10 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
 
       if (!drawingArea.isPointInside(svgPoint, { targetElement: event.target as SVGElement })) {
         if (mousePosition.current.isInChart) {
-          dispatch({ type: 'exitChart' });
+          store.update((prev) => ({
+            ...prev,
+            interaction: { item: null, axis: { x: null, y: null } },
+          }));
           mousePosition.current.isInChart = false;
         }
         return;
@@ -121,7 +129,24 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       const newStateX = getNewAxisState(xAxis[usedXAxis], svgPoint.x);
       const newStateY = getNewAxisState(yAxis[usedYAxis], svgPoint.y);
 
-      dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
+      store.update((prev) => ({
+        ...prev,
+        interaction: {
+          ...prev.interaction,
+          axis: {
+            // A bit verbose, but prevent losing the x value if only y got modified.
+            ...prev.interaction.axis,
+            ...(prev.interaction.axis.x?.index !== newStateX?.index ||
+            prev.interaction.axis.x?.value !== newStateX?.value
+              ? { x: newStateX }
+              : {}),
+            ...(prev.interaction.axis.y?.index !== newStateY?.index ||
+            prev.interaction.axis.y?.value !== newStateY?.value
+              ? { y: newStateY }
+              : {}),
+          },
+        },
+      }));
     };
 
     const handleDown = (event: PointerEvent) => {
@@ -147,5 +172,5 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
       element.removeEventListener('pointercancel', handleOut);
       element.removeEventListener('pointerleave', handleOut);
     };
-  }, [svgRef, dispatch, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
+  }, [svgRef, store, usedYAxis, yAxis, usedXAxis, xAxis, disableAxisListener, drawingArea]);
 };
