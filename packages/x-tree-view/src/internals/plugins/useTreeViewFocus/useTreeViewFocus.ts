@@ -38,7 +38,24 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   models,
   rootRef,
 }) => {
-  const defaultFocusableItemId = useDefaultFocusableItemId(instance, models.selectedItems.value);
+  React.useEffect(() => {
+    let defaultFocusableItemId = convertSelectedItemsToArray(models.selectedItems.value).find(
+      (itemId) => {
+        if (!selectorCanItemBeFocused(store.value, itemId)) {
+          return false;
+        }
+
+        const itemMeta = selectorItemMeta(store.value, itemId);
+        return (
+          itemMeta &&
+          (itemMeta.parentId == null || selectorIsItemExpanded(store.value, itemMeta.parentId))
+        );
+      },
+    );
+
+    if (defaultFocusableItemId == null) {
+      defaultFocusableItemId = getFirstNavigableItem(store.value) ?? null;
+    }
 
   const setFocusedItemId = useEventCallback((itemId: React.SetStateAction<string | null>) => {
     const cleanItemId = typeof itemId === 'function' ? itemId(state.focusedItemId) : itemId;
