@@ -157,7 +157,6 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
       toolbar: {
         hidden: true,
         toolbarVariant: 'desktop',
-        ampmInClock: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
