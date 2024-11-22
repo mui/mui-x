@@ -46,7 +46,7 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
       {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper
         className={clsx(pickersLayoutClasses.contentWrapper, classes?.contentWrapper)}
-        sx={{ display: 'grid' }}
+        sx={{ display: 'grid', gridColumn: '2 / 4' }}
       >
         {content}
         {tabs}
