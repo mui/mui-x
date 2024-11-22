@@ -88,7 +88,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
     - To override the tooltip placement, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get default data and place them in your custom tooltip.
 
 - The library now uses the SVG `filter` attribute instead of `d3-color` for color manipulation.
-  - This modification impacts the `LinePlot`, `AreaPlot`, and `BarPlot`.
+  - This modification impacts the `LinePlot`, `AreaPlot`, and `BarPlot` components.
     If you've customized the `fill` of those elements, you might need to override it by using the CSS `filter`.
   - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
     You can still target those elements by using the `MuiLinePlot`, `MuiAreaPlot`, and `MuiBarPlot` and target the appropriate classes `lineElementClasses.root`, `areaElementClasses.root`, `barElementClasses.root`
