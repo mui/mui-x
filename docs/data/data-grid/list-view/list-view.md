@@ -31,7 +31,7 @@ const listColDef: GridListColDef = {
 
 ## Enable with a media query
 
-The `useMediaQuery` hook from `@mui/material` can be used to enable the list view feature at a specified breakpoint.
+Use the `useMediaQuery` hook from `@mui/material` to enable the list view feature at a specified breakpoint.
 
 ```tsx
 import * as React from 'react';
@@ -47,15 +47,14 @@ function App() {
 
 ## Editable rows
 
-The [editing](/x/react-data-grid/editing/) feature is not supported in list view, however, it is possible to build an editing experience from within your custom cell renderer.
+The [editing feature](/x/react-data-grid/editing/) is not supported in list view, but it is possible to build an editing experience from within your custom cell renderer, as shown below.
 
 {{"demo": "ListViewEdit.js", "bg": true}}
 
 ## Field visibility
 
-Similar to the default grid view, field visibilty can be toggled in list view.
-
-In the list view column's `renderCell` function, data can be conditionally rendered based on [column visibility](/x/react-data-grid/column-visibility/).
+Field visibility can be toggled in list view, similarly to the default grid view.
+In the list view column's `renderCell` function, data can be conditionally rendered based on [column visibility](/x/react-data-grid/column-visibility/), as shown in the code snippet below.
 
 ```tsx
 import {
@@ -106,7 +105,7 @@ The list view feature can be used in combination with the following features:
 :::warning
 Features not listed may not work as expected, or may not work at all.
 
-If you are using a feature that is listed and it is not working as expected, please [open a bug report](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cbug+%F0%9F%90%9B&projects=&template=1.bug.yml).
+If you're using a feature that's listed above and it's not working as expected, please [open a bug report](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cbug+%F0%9F%90%9B&projects=&template=1.bug.yml).
 
 If you need to use list view with any other features, please [open a feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cnew+feature&projects=&template=2.feature.yml).
 :::
