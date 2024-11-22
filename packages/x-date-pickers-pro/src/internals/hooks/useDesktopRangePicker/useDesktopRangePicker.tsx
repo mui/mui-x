@@ -8,8 +8,8 @@ import {
   usePicker,
   PickersPopper,
   ExportedBaseToolbarProps,
-  ExportedBaseTabsProps,
   DateOrTimeViewWithMeridiem,
+  ExportedBaseTabsProps,
   PickerProvider,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
@@ -68,7 +68,6 @@ export const useDesktopRangePicker = <
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
-  const anchorRefEndDate = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
   const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
@@ -180,7 +179,6 @@ export const useDesktopRangePicker = <
     pickerSlots: slots,
     fieldProps,
     anchorRef,
-    anchorRefEndDate,
     startFieldRef,
     endFieldRef,
     currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
