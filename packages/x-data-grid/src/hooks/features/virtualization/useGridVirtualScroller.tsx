@@ -51,7 +51,7 @@ const MINIMUM_COLUMN_WIDTH = 50;
 
 interface PrivateApiWithInfiniteLoader
   extends GridPrivateApiCommunity,
-  GridInfiniteLoaderPrivateApi { }
+    GridInfiniteLoaderPrivateApi {}
 
 export type VirtualScroller = ReturnType<typeof useGridVirtualScroller>;
 
@@ -134,41 +134,50 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  const mainRefCallback = React.useCallback((node: HTMLDivElement | null) => {
-    mainRef.current = node;
+  const mainRefCallback = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      // @ts-ignore
+      mainRef.current = node;
 
-    if (node) {
+      if (!node) {
+        return undefined;
+      }
+
       const initialRect = node.getBoundingClientRect();
       let lastSize = {
         width: initialRect.width,
-        height: initialRect.height
+        height: initialRect.height,
       };
 
       apiRef.current.publishEvent('resize', lastSize);
 
       const observer = new ResizeObserver((entries) => {
         const entry = entries[0];
-        if (!entry) return;
+        if (!entry) {
+          return;
+        }
 
         const newSize = {
           width: entry.contentRect.width,
-          height: entry.contentRect.height
+          height: entry.contentRect.height,
         };
 
-        if (newSize.width === lastSize.width && newSize.height === lastSize.height) return;
+        if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
+          return;
+        }
 
         apiRef.current.publishEvent('resize', newSize);
-        
         lastSize = newSize;
       });
 
-      observer.observe(mainRef.current);
+      observer.observe(node);
 
       return () => {
         observer.disconnect();
-      }
-    }
-  }, []);
+      };
+    },
+    [apiRef, mainRef],
+  );
 
   /*
    * Scroll context logic
