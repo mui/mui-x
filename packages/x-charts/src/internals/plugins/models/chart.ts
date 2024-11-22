@@ -21,5 +21,8 @@ export type ChartState<
   TOptionalSignatures extends readonly ChartAnyPluginSignature[] = [],
 > = MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'state'> &
   Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
+    /**
+     * The key used to identify the chart in the global cache object.
+     */
     cacheKey: ChartStateCacheKey;
   };

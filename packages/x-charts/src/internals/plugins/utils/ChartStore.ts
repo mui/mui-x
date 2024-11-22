@@ -1,4 +1,4 @@
-import type { ChartState } from '../models/chart'; // For now this is fixed. Will need to support generic if we add plugins
+import type { ChartState } from '../models/chart';
 import type { ChartAnyPluginSignature } from '../models/plugin';
 
 type Listener<T> = (value: T) => void;
