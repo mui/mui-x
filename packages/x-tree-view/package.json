@@ -58,8 +58,8 @@
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.15.14 || ^6.0.0",
     "@mui/system": "^5.15.14 || ^6.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
