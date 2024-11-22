@@ -123,7 +123,7 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
 
     setLoading(true);
     setError(null);
-    apiRef.current.setState((state) => ({ ...state, rows: { ...state.rows, loading: true } }));
+    apiRef.current.setLoading(true);
 
     onPrompt(context, query)
       .then((result) => {
