@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
 import { ChartProvider } from '../context/ChartProvider';
 
@@ -25,17 +25,20 @@ describe('useSvgRef', () => {
 
     const errorRef = React.createRef<any>();
 
+    const errorMessages = [
+      'MUI X: Could not find the Chart context.',
+      'It looks like you rendered your component outside of a ChartDataProvider.',
+      'The above error occurred in the <UseSvgRef> component',
+    ];
+    const expextedError = reactMajor < 19 ? errorMessages : errorMessages.slice(0, 2).join('\n');
+
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
           <UseSvgRef />
         </ErrorBoundary>,
       ),
-    ).toErrorDev([
-      'MUI X: Could not find the Chart context.',
-      'It looks like you rendered your component outside of a ChartDataProvider.',
-      'The above error occurred in the <UseSvgRef> component',
-    ]);
+    ).toErrorDev(expextedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(

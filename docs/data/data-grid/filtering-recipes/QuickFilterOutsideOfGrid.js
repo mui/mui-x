@@ -19,7 +19,7 @@ function MyCustomToolbar(props) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function QuickFilterOutsideOfGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 1000,
   });
@@ -38,6 +38,7 @@ export default function QuickFilterOutsideOfGrid() {
       <Grid item style={{ height: 400, width: '100%' }}>
         <DataGrid
           {...data}
+          loading={loading}
           columns={columns}
           slots={{
             toolbar: MyCustomToolbar,

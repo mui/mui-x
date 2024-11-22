@@ -3,12 +3,11 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerVariant } from '../../models/common';
-import { FormProps } from '../../models';
 
 /**
  * Props used to create the layout of the views.
  */
-interface UsePickerLayoutProps extends FormProps {
+interface UsePickerLayoutProps {
   /**
    * Force rendering in particular orientation.
    */
@@ -57,8 +56,6 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMer
     isLandscape,
     isRtl,
     wrapperVariant: variant,
-    disabled: props.disabled,
-    readOnly: props.readOnly,
   };
 
   return { layoutProps };
