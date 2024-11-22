@@ -38,7 +38,7 @@
     "@mui/utils": "^5.16.6 || ^6.0.0"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "^1.0.21",
