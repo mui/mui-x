@@ -28,7 +28,8 @@ export type ChartContextValue<
   svgRef: React.RefObject<SVGSVGElement>;
 };
 
-export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
-  value: ChartContextValue<TSignatures>;
+// export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
+export interface ChartProviderProps {
+  // value: ChartContextValue<TSignatures>;
   children: React.ReactNode;
 }
