@@ -11,7 +11,7 @@ _Nov 22, 2024_
 
 We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔧 Refactor Tooltip customisation for charts -  — [Learn more](https://next.mui.com/x/react-charts/tooltip/#overriding-content)
+- 🔧 Refactor Tooltip customisation for charts — [Learn more](https://next.mui.com/x/react-charts/tooltip/#overriding-content).
 - 🌍 Improve Chinese, Spanish, and Swedish locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -21,7 +21,7 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 Special thanks go out to the community contributors who have helped make this release possible:
 @arminmeh, @CarlosLopezLg, @headironc, @hendrikpeilke, @k-rajat19, @KenanYusuf, @lhilgert9, @viktormelin.
 Following are all team members who have contributed to this release:
-@alexfauquette, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari.
+@alexfauquette, @arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy, @MBilalShafi, @oliviertassinari, @KenanYusuf, @arminmeh.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -54,7 +54,7 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 #### Breaking change
 
 - The `FieldValueType` type was renamed `PickerValueType` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
-- The `toolbar` and `layout` slots no longer receive the  `disabled` and `readOnly` props. — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+- The `toolbar` and `layout` slots no longer receive the  `disabled` and `readOnly` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.1`
 
@@ -62,7 +62,7 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 - [pickers] Add new properties to `PickerOwnerState` and `PickerContextValue` (#15415) @flaviendelangle
 - [pickers] Always use `props.value` when it changes (#15490) @flaviendelangle
 - [pickers] Ensure internal value timezone is updated  (#15435) @LukasTy
-- [pickers] Fix unused code in `PickersToolbar` component (#15515) @LukasTy
+- [pickers] Fix unused code in `<PickersToolbar />` component (#15515) @LukasTy
 - [pickers] Remove  `FieldValueType` in favor of `PickerValueType` (#15259) @arthurbalduini
 - [pickers] Remove the form props from the layout and the toolbar slots (#15492) @flaviendelangle
 - [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15532) @flaviendelangle
@@ -96,15 +96,15 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 
 #### `@mui/x-charts@v8.0.0-alpha.1`
 
-- [charts] Decouple `ChartDataProvider` and `ChartsSurface` (#15375) @JCQuintas
-- [charts] Fix `ScatterChart` tooltip wrong defaults (#15537) @JCQuintas
-- [charts] Fix key generation for the ChartsGrid (#15463) @alexfauquette
-- [charts] Improve `SvgRefProvider` to split the received ref (#15424) @JCQuintas
+- [charts] Decouple `<ChartDataProvider />` and `<ChartsSurface />` (#15375) @JCQuintas
+- [charts] Fix Scatter Chart tooltip wrong defaults (#15537) @JCQuintas
+- [charts] Fix key generation for the `<ChartsGrid />` component (#15463) @alexfauquette
+- [charts] Improve `<SvgRefProvider />` to split the received ref (#15424) @JCQuintas
 - [charts] Move interaction state in store (#15426) @alexfauquette
 - [charts] Refactor Tooltip customisation (#15154) @alexfauquette
 - [charts] Remove intrinsic size requirement (#15471) @JCQuintas
-- [charts] Replace d3-color by CSS filter for highlight (#15084) @alexfauquette
-- [charts] Split `DrawingProvider` into `DrawingAreaProvider` and `SvgRefProvider` (#15417) @JCQuintas
+- [charts] Replace `d3-color` with CSS filter for highlight (#15084) @alexfauquette
+- [charts] Split `<DrawingProvider />` into `<DrawingAreaProvider />` and `<SvgRefProvider />` (#15417) @JCQuintas
 
 #### `@mui/x-charts-pro@v8.0.0-alpha.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -120,7 +120,7 @@ Same changes as in `@mui/x-charts@v8.0.0-alpha.1`.
 
 - [TreeView] Do not re-render every Tree Item when the Rich Tree View re-renders (introduce selectors) (#14210) @flaviendelangle
 - [TreeView] Remove `treeId` from the item context (#15542) @flaviendelangle
-- [TreeView] Remove state mutation in `moveItemInTree` (#15539) @flaviendelangle
+- [TreeView] Remove state mutation in `moveItemInTree()` (#15539) @flaviendelangle
 - [TreeItem] Correct the typing of `slotProps.groupTransition` (#15534) @flaviendelangle
 
 ### Docs
