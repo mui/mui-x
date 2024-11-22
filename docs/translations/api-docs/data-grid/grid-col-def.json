@@ -75,6 +75,9 @@
     "sortingOrder": { "description": "The order of the sorting sequence." },
     "type": { "description": "The type of the column." },
     "valueFormatter": { "description": "Formats the cell value before rendering." },
+    "unstable_examples": {
+      "description": "Example values that can be used by the grid to get more context about the column."
+    },
     "valueGetter": {
       "description": "Function that returns specific data to render in the cell instead of using the field value."
     },

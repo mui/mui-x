@@ -293,6 +293,10 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * @default 1
    */
   colSpan?: number | GridColSpanFn<R, V, F>;
+  /**
+   * Example values that can be used by the grid to get more context about the column.
+   */
+  unstable_examples?: V[];
 }
 
 /**
