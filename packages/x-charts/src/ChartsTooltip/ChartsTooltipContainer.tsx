@@ -15,7 +15,7 @@ import {
   selectorChartsInteractionItemIsDefined,
   selectorChartsInteractionXAxisIsDefined,
   selectorChartsInteractionYAxisIsDefined,
-} from '../context/InteractionSelectors';
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**

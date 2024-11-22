@@ -15,7 +15,7 @@ import { useXAxis, useYAxis } from '../hooks/useAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
-} from '../context/InteractionSelectors';
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,

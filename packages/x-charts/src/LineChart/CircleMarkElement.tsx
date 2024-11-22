@@ -8,7 +8,7 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../context';
 import { MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
+import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useStore } from '../internals/store/useStore';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &

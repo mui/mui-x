@@ -4,7 +4,7 @@ import { getValueToPositionMapper, useXScale } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsInteractionXAxis } from '../context/InteractionSelectors';
+import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useDrawingArea } from '../hooks';
 import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
