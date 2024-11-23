@@ -32,16 +32,17 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Limpar',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlDeleteIconLabel: 'Clear',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Digite um prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
+  toolbarPromptControlLabel: 'Entrada de prompt',
+  toolbarPromptControlDeleteIconLabel: 'Limpar',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
+  toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
+  toolbarPromptControlSendActionLabel: 'Enviar',
+  toolbarPromptControlSendActionAriaLabel: 'Enviar prompt',
+  toolbarPromptControlErrorMessage:
+    'Ocorreu um erro ao processar a solicitação. Por favor, tente novamente com um prompt diferente.',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
@@ -55,7 +56,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Nenhuma coluna',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar Todas',
   columnsManagementReset: 'Redefinir',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Limpar',
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
