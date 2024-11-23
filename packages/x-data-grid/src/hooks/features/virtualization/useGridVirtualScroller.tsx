@@ -139,7 +139,7 @@ export const useGridVirtualScroller = () => {
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
 
-      if (!node || typeof ResizeObserver === 'undefined') {
+      if (!node) {
         return undefined;
       }
 
@@ -150,6 +150,10 @@ export const useGridVirtualScroller = () => {
       };
 
       apiRef.current.publishEvent('resize', lastSize);
+
+      if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
 
       const observer = new ResizeObserver((entries) => {
         const entry = entries[0];
