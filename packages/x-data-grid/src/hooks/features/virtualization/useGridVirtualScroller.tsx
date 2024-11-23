@@ -33,6 +33,7 @@ import type {
   GridRowEntry,
   GridRowId,
 } from '../../../models';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
@@ -640,6 +641,7 @@ type RenderContextInputs = {
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
   hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
   listView: boolean;
+  virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 };
 
 function inputsSelector(
@@ -677,6 +679,7 @@ function inputsSelector(
     visibleColumns,
     hiddenCellsOriginMap,
     listView: rootProps.unstable_listView ?? false,
+    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }
 
@@ -740,12 +743,14 @@ function computeRenderContext(
       lastSize: inputs.lastRowHeight,
     });
 
-    for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
-      const row = inputs.rows[i];
-      hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+    if (!inputs.virtualizeColumnsWithAutoRowHeight) {
+      for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
+        const row = inputs.rows[i];
+        hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+      }
     }
 
-    if (!hasRowWithAutoHeight) {
+    if (!hasRowWithAutoHeight || inputs.virtualizeColumnsWithAutoRowHeight) {
       firstColumnIndex = binarySearch(realLeft, inputs.columnPositions, {
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,

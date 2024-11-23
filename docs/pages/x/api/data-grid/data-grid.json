@@ -485,7 +485,8 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
+    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
   "imports": [

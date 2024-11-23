@@ -54,7 +54,6 @@ This side effect happens because a row height estimation is used while a row is 
 You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
 If not provided, the default row height of `52px` is used as estimation.
 It's recommended to pass this prop if the content deviates too much from the default value.
-Note that, due to the implementation adopted, the virtualization of the columns is also disabled to force all columns to be rendered at the same time.
 
 ```tsx
 <DataGrid getRowHeight={() => 'auto'} getEstimatedRowHeight={() => 200} />
@@ -77,6 +76,17 @@ Add padding to the cells to increase the space between the content and the cell 
 ```
 
 :::
+
+### Column virtualization
+
+By default, the virtualization of the columns is disabled to force all columns to be rendered at the same time and calculate the row height correctly.
+However, this can lead to poor performance when rendering a lot of columns.
+
+If you need column virtualization, you can set the `virtualizeColumnsWithAutoRowHeight` prop to `true`.
+With this approach, the Data Grid measures the row height based on the visible columns.
+However, the row height might change during horizontal scrolling.
+
+{{"demo": "VirtualizeColumnsWithAutoRowHeight.js", "bg": "inline" }}
 
 ## Row density
 
