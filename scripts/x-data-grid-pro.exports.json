@@ -386,7 +386,7 @@
   { "name": "gridNumberComparator", "kind": "Variable" },
   { "name": "GridOverlay", "kind": "Variable" },
   { "name": "GridOverlayProps", "kind": "TypeAlias" },
-  { "name": "GridOverlays", "kind": "Function" },
+  { "name": "GridOverlayWrapper", "kind": "Function" },
   { "name": "gridPageCountSelector", "kind": "Variable" },
   { "name": "gridPageSelector", "kind": "Variable" },
   { "name": "gridPageSizeSelector", "kind": "Variable" },
