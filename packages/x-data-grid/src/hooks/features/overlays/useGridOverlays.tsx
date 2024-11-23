@@ -5,6 +5,7 @@ import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
 import { GridSlotsComponent } from '../../../models/gridSlotsComponent';
+import { GridOverlayWrapper } from '../../../components/containers';
 
 export type GridOverlayType =
   | keyof Pick<GridSlotsComponent, 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'>
@@ -43,5 +44,20 @@ export const useGridOverlays = () => {
       rootProps.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] || null;
   }
 
-  return { overlayType, loadingOverlayVariant };
+  const overlaysProps = { overlayType, loadingOverlayVariant };
+
+  const getOverlay = () => {
+    if (!overlayType) {
+      return null;
+    }
+    const Overlay = rootProps.slots?.[overlayType];
+    const overlayProps = rootProps.slotProps?.[overlayType];
+    return (
+      <GridOverlayWrapper {...overlaysProps}>
+        <Overlay {...overlayProps} />
+      </GridOverlayWrapper>
+    );
+  };
+
+  return { getOverlay, overlaysProps };
 };
