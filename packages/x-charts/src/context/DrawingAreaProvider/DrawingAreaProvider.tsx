@@ -4,9 +4,11 @@ import useId from '@mui/utils/useId';
 import useChartDimensions from '../../hooks/useChartDimensions';
 import { DrawingAreaProviderProps, DrawingAreaState } from './DrawingArea.types';
 import { DrawingAreaContext } from './DrawingAreaContext';
+import { useSize } from '../SizeProvider';
 
 export function DrawingAreaProvider(props: DrawingAreaProviderProps) {
-  const { width, height, margin, children } = props;
+  const { margin, children } = props;
+  const { width, height } = useSize();
   const drawingArea = useChartDimensions(width, height, margin);
   const chartId = useId();
 

@@ -11,6 +11,7 @@ import {
   GridRowSelectionModel,
   GridRowsProp,
   GridColDef,
+  GridFilterModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -192,6 +193,69 @@ describe('<DataGridPro /> - Row selection', () => {
     });
 
     expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+  });
+
+  // Context: https://github.com/mui/mui-x/issues/15045
+  it('should not throw when using `isRowSelectable` and `keepNonExistentRowsSelected`', () => {
+    function TestDataGrid() {
+      const [gridRows, setRows] = React.useState(rows);
+      const onFilterChange = React.useCallback(
+        (filterModel: GridFilterModel) => {
+          if (filterModel.items?.length === 0) {
+            return;
+          }
+
+          const filteredRows = rows.filter((row) => {
+            return row.jobTitle.includes(filterModel.items[0].value);
+          });
+          setRows(filteredRows);
+        },
+        [setRows],
+      );
+      return (
+        <TreeDataGrid
+          defaultGroupingExpansionDepth={-1}
+          isRowSelectable={() => true}
+          rows={gridRows}
+          onFilterModelChange={onFilterChange}
+          keepNonExistentRowsSelected
+        />
+      );
+    }
+    render(<TestDataGrid />);
+
+    // Select `Thomas`
+    fireEvent.click(
+      screen.getAllByRole('checkbox', {
+        name: /select row/i,
+      })[1],
+    );
+
+    expect(apiRef.current.getSelectedRows()).to.have.length(1);
+    expect(Array.from(apiRef.current.getSelectedRows())[0][0]).to.equal(1);
+
+    act(() => {
+      apiRef.current.setFilterModel({
+        items: [{ field: 'jobTitle', value: 'Head of Human Resources', operator: 'contains' }],
+      });
+    });
+
+    expect(apiRef.current.getSelectedRows()).to.have.length(1);
+    expect(Array.from(apiRef.current.getSelectedRows())[0][0]).to.equal(1);
+  });
+
+  // Context: https://github.com/mui/mui-x/issues/15068
+  it('should not call `onRowSelectionModelChange` when adding a new row', () => {
+    const onRowSelectionModelChange = spy();
+    const { setProps } = render(
+      <TreeDataGrid onRowSelectionModelChange={onRowSelectionModelChange} />,
+    );
+
+    act(() => {
+      setProps({ rows: [...rows, { id: 15, hierarchy: ['New'], jobTitle: 'Test Job' }] });
+    });
+
+    expect(onRowSelectionModelChange.callCount).to.equal(0);
   });
 
   it('should put the parent into indeterminate if some but not all the children are selected', () => {
