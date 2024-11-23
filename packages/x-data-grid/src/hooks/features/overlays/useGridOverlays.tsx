@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useGridSelector } from '../../utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';

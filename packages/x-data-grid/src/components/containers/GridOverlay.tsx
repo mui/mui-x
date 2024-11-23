@@ -10,12 +10,17 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridOverlayType } from '../../hooks/features/overlays/useGridOverlays';
-import { GridLoadingOverlayVariant } from '../GridLoadingOverlay';
+import { GridSlotsComponent } from '../../models';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
+
+type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' | 'skeleton';
+
+type GridOverlayType =
+  | keyof Pick<GridSlotsComponent, 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'>
+  | null;
 
 interface GridOverlaysProps {
   overlayType: GridOverlayType;
@@ -147,6 +152,7 @@ GridOverlay.propTypes = {
     PropTypes.object,
   ]),
 } as any;
+
 GridOverlayWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
