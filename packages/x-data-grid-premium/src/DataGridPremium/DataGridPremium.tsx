@@ -1128,7 +1128,7 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_rowSpanning: PropTypes.bool,
   /**
-   * If `true`, the Data Grid doesn't disable column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
    * For datasets with a large number of columns, this can cause performance issues.
    * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.

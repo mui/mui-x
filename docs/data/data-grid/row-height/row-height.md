@@ -80,9 +80,11 @@ Add padding to the cells to increase the space between the content and the cell 
 ### Column virtualization
 
 By default, the virtualization of the columns is disabled to force all columns to be rendered at the same time and calculate the row height correctly.
+However, this can lead to poor performance when rendering a lot of columns.
 
 If you need column virtualization, you can set the `virtualizeColumnsWithAutoRowHeight` prop to `true`.
-With this approach, the Data Grid measures the row height based on the visible columns, and the row height might change during horizontal scrolling.
+With this approach, the Data Grid measures the row height based on the visible columns.
+However, the row height might change during horizontal scrolling.
 
 {{"demo": "VirtualizeColumnsWithAutoRowHeight.js", "bg": "inline" }}
 
