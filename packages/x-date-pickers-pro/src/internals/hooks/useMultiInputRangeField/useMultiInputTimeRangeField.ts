@@ -47,6 +47,7 @@ export const useMultiInputTimeRangeField = <
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     format,
     formatDensity,
     shouldRespectLeadingZeros,
@@ -67,6 +68,7 @@ export const useMultiInputTimeRangeField = <
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
+    referenceDate,
   });
 
   const { validationError, getValidationErrorForNewValue } = useValidation({
