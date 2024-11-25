@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0-alpha.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -71,7 +71,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@argos-ci/core": "^2.10.0",
+    "@argos-ci/core": "^2.11.0",
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
@@ -93,9 +93,9 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
     "@mui/internal-markdown": "^1.0.20",
-    "@mui/internal-test-utils": "^1.0.20",
+    "@mui/internal-test-utils": "^1.0.21",
     "@mui/material": "^5.16.7",
-    "@mui/monorepo": "github:mui/material-ui#123f0de85460c82ed1dc9b8015878c3239a56895",
+    "@mui/monorepo": "github:mui/material-ui#f706939f7ce7fd90d8d4436515d752daff7395c6",
     "@mui/utils": "^5.16.6",
     "@next/eslint-plugin-next": "15.0.3",
     "@octokit/plugin-retry": "^7.1.2",
@@ -108,7 +108,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.13",
-    "@types/mocha": "^10.0.9",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.17.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -144,15 +144,15 @@
     "eslint-import-resolver-webpack": "^0.13.9",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.4.3",
+    "eslint-plugin-jsdoc": "^50.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.5.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-compiler": "19.0.0-beta-63b359f-20241101",
+    "eslint-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-testing-library": "^6.4.0",
+    "eslint-plugin-testing-library": "^7.0.0",
     "fast-glob": "^3.3.2",
     "format-util": "^1.0.5",
     "fs-extra": "^11.2.0",
@@ -189,7 +189,7 @@
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
     "webpack": "^5.96.1",
@@ -201,9 +201,9 @@
     "react-is": "^18.3.1",
     "@types/node": "^20.17.6"
   },
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@9.14.2",
   "engines": {
-    "pnpm": "9.12.3"
+    "pnpm": "9.14.2"
   },
   "pnpm": {
     "patchedDependencies": {

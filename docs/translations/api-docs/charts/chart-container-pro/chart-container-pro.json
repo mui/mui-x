@@ -28,9 +28,6 @@
     "plugins": {
       "description": "An array of plugins defining how to preprocess data. If not provided, the container supports line, bar, scatter and pie charts."
     },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
     "series": {
       "description": "The array of series to display. Each type of series has its own specificity. Please refer to the appropriate docs page to learn more about it."
     },

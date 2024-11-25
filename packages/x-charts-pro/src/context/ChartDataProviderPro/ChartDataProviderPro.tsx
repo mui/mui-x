@@ -3,15 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ChartDataProviderProps,
-  ChartsAxesGradients,
   DrawingAreaProvider,
   InteractionProvider,
   PluginProvider,
   SeriesProvider,
   AnimationProvider,
   SvgRefProvider,
+  SizeProvider,
 } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { HighlightedProvider, ZAxisContextProvider } from '@mui/x-charts/context';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import { getReleaseInfo } from '../../internals/utils/releaseInfo';
@@ -23,29 +22,25 @@ const releaseInfo = getReleaseInfo();
 
 export interface ChartDataProviderProProps extends ChartDataProviderProps, ZoomProps {}
 
-const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
-  props: ChartDataProviderProProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+function ChartDataProviderPro(props: ChartDataProviderProProps) {
   const {
     zoomProviderProps,
-    drawingProviderProps,
+    drawingAreaProviderProps,
     seriesProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     cartesianProviderProps,
-    chartsSurfaceProps,
+    sizeProviderProps,
     pluginProviderProps,
     animationProviderProps,
-    svgRefProviderProps,
     children,
-  } = useChartContainerProProps(props, ref);
+  } = useChartContainerProProps(props);
 
   useLicenseVerifier('x-charts-pro', releaseInfo);
 
   return (
-    <DrawingAreaProvider {...drawingProviderProps}>
-      <SvgRefProvider {...svgRefProviderProps}>
+    <SizeProvider {...sizeProviderProps}>
+      <DrawingAreaProvider {...drawingAreaProviderProps}>
         <AnimationProvider {...animationProviderProps}>
           <PluginProvider {...pluginProviderProps}>
             <ZoomProvider {...zoomProviderProps}>
@@ -54,10 +49,7 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
                   <ZAxisContextProvider {...zAxisContextProps}>
                     <InteractionProvider>
                       <HighlightedProvider {...highlightedProviderProps}>
-                        <ChartsSurface {...chartsSurfaceProps}>
-                          <ChartsAxesGradients />
-                          {children}
-                        </ChartsSurface>
+                        <SvgRefProvider>{children}</SvgRefProvider>
                       </HighlightedProvider>
                     </InteractionProvider>
                   </ZAxisContextProvider>
@@ -66,10 +58,10 @@ const ChartDataProviderPro = React.forwardRef(function ChartDataProviderPro(
             </ZoomProvider>
           </PluginProvider>
         </AnimationProvider>
-      </SvgRefProvider>
-    </DrawingAreaProvider>
+      </DrawingAreaProvider>
+    </SizeProvider>
   );
-});
+}
 
 ChartDataProviderPro.propTypes = {
   // ----------------------------- Warning --------------------------------
