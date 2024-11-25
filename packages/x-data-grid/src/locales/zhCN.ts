@@ -31,15 +31,15 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: '清除',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: '输入提示词',
+  toolbarPromptControlWithRecordingPlaceholder: '输入提示词或点击录音',
+  toolbarPromptControlRecordingPlaceholder: '正在录音…',
+  toolbarPromptControlLabel: '提示词输入',
+  toolbarPromptControlRecordButtonDefaultLabel: '录音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止录音',
+  toolbarPromptControlSendActionLabel: '发送',
+  toolbarPromptControlSendActionAriaLabel: '发送提示词',
+  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词再试。',
 
   // Export selector toolbar button text
   toolbarExport: '导出',
@@ -53,7 +53,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '没有列',
   columnsManagementShowHideAllText: '显示/隐藏所有',
   columnsManagementReset: '重置',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
