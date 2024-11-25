@@ -254,6 +254,48 @@ const theme = createTheme({
 });
 ```
 
+## Slots breaking changes
+
+### Slot: `layout`
+
+- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.disabled);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
+  +console.log(disabled);
+  ```
+
+- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.readOnly);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
+  +console.log(readOnly);
+  ```
+
+### Slot: `toolbar`
+
+- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.disabled);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { disabled } = usePickerContext();
+  +console.log(disabled);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.readOnly);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { readOnly } = usePickerContext();
+  +console.log(readOnly);
+  ```
+
 ## Renamed variables
 
 The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:

@@ -17,6 +17,8 @@ import {
 import { TreeViewItemDepthContext } from '../../TreeViewItemDepthContext';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 import { isItemExpandable } from '../../../hooks/useTreeItemUtils/useTreeItemUtils';
+import { useSelector } from '../../hooks/useSelector';
+import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> = ({
   instance,
@@ -113,7 +115,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 };
 
 const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, contentRef }) => {
-  const { instance, store, treeId } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
+  const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
   const { children, disabled = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
@@ -131,6 +133,7 @@ const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, con
   const expandable = isItemExpandable(children);
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useForkRef(pluginContentRef, contentRef);
+  const treeId = useSelector(store, selectorTreeViewId);
 
   // Prevent any flashing
   useEnhancedEffect(() => {

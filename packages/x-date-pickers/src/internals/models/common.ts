@@ -1,6 +1,8 @@
 import { DateView, TimeView } from '../../models/views';
 
-export type WrapperVariant = 'mobile' | 'desktop' | null;
+export type PickerOrientation = 'portrait' | 'landscape';
+
+export type PickerVariant = 'mobile' | 'desktop' | null;
 
 export type TimeViewWithMeridiem = TimeView | 'meridiem';
 
