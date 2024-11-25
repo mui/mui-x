@@ -1,0 +1,6 @@
+<DataGridPremium
+  {...data}
+  slots={{
+    toolbar: ToolbarWithPromptInput,
+  }}
+/>
