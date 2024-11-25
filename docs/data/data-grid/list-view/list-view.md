@@ -47,39 +47,6 @@ The [editing feature](/x/react-data-grid/editing/) is not supported in list view
 
 {{"demo": "ListViewEdit.js", "bg": true}}
 
-## Field visibility
-
-Field visibility can be toggled in list view, similarly to the default grid view.
-In the list view column's `renderCell` function, data can be conditionally rendered based on [column visibility](/x/react-data-grid/column-visibility/), as shown in the code snippet below.
-
-```tsx
-import {
-  useGridSelector,
-  useGridApiContext,
-  gridColumnVisibilityModelSelector,
-} from '@mui/x-data-grid';
-
-function ListViewCell(params: GridRenderCellParams) {
-  const apiRef = useGridApiContext();
-  const columnVisibilityModel = useGridSelector(
-    apiRef,
-    gridColumnVisibilityModelSelector,
-  );
-  const showCreatedAt = columnVisibilityModel.createdBy !== false;
-
-  return (
-    <>
-      <span>{params.row.id}</span>
-      {showCreatedAt && (
-        <time datetime={params.row.createdAt}>
-          {formatDate(params.row.createdAt)}
-        </time>
-      )}
-    </>
-  );
-}
-```
-
 ## Advanced usage
 
 The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens, as shown below.
@@ -116,3 +83,4 @@ If you need to use list view with any other features, please [open a feature req
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridListColDef](/x/api/data-grid/grid-list-col-def/)
+```
