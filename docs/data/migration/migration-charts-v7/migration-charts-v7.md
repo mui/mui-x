@@ -38,7 +38,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-# Charts specific
+# Charts-specific
 npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path>
 
 # Target the other packages as well
