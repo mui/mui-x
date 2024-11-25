@@ -151,7 +151,7 @@ const useMultiInputFieldSlotProps = <
   const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
   React.useEffect(() => {
-    if (!open) {
+    if (!open || variant === 'mobile') {
       return;
     }
 
@@ -169,7 +169,7 @@ const useMultiInputFieldSlotProps = <
       previousRangePosition.current === rangePosition ? currentView : 0,
     );
     previousRangePosition.current = rangePosition;
-  }, [rangePosition, open, currentView, startFieldRef, endFieldRef]);
+  }, [rangePosition, open, currentView, startFieldRef, endFieldRef, variant]);
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
@@ -321,7 +321,7 @@ const useSingleInputFieldSlotProps = <
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 
   React.useEffect(() => {
-    if (!open || !singleInputFieldRef.current) {
+    if (!open || !singleInputFieldRef.current || variant === 'mobile') {
       return;
     }
 
@@ -338,7 +338,7 @@ const useSingleInputFieldSlotProps = <
           : sections.lastIndexOf(currentView);
       singleInputFieldRef.current?.focusField(newSelectedSection);
     }
-  }, [rangePosition, open, currentView, singleInputFieldRef]);
+  }, [rangePosition, open, currentView, singleInputFieldRef, variant]);
 
   const updateRangePosition = () => {
     if (!singleInputFieldRef.current?.isFieldFocused()) {

@@ -18,11 +18,10 @@ export interface PickersToolbarProps<
 }
 
 const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
-  const { classes, isLandscape } = ownerState;
+  const { classes } = ownerState;
   const slots = {
     root: ['root'],
     content: ['content'],
-    penIconButton: ['penIconButton', isLandscape && 'penIconButtonLandscape'],
   };
 
   return composeClasses(slots, getPickersToolbarUtilityClass, classes);

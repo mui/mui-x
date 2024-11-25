@@ -607,6 +607,9 @@
     },
     "unstable_rowSpanning": {
       "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
+    },
+    "virtualizeColumnsWithAutoRowHeight": {
+      "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."
     }
   },
   "classDescriptions": {
@@ -1136,6 +1139,27 @@
     "toolbarFilterList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
+    },
+    "toolbarPromptControl": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control element"
+    },
+    "toolbarPromptControl--recording": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the toolbar prompt control element",
+      "conditions": "recording"
+    },
+    "toolbarPromptControlRecordButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control record button element"
+    },
+    "toolbarPromptControlRecordingIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control recording indicator element"
+    },
+    "toolbarPromptControlSendButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar prompt control send button element"
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",

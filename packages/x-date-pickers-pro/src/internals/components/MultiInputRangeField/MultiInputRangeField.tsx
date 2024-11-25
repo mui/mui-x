@@ -99,6 +99,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     timezone: timezoneProp,
     enableAccessibleFieldDOMStructure,
     autoFocus,
+    referenceDate,
   } = internalPropsWithDefaults;
 
   const {
@@ -116,6 +117,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager: manager.internal_valueManager,
   });

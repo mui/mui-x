@@ -156,6 +156,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });

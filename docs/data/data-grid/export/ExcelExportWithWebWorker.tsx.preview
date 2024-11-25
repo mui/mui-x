@@ -5,7 +5,7 @@
 </Snackbar>
 <DataGridPremium
   {...data}
-  loading={data.rows.length === 0}
+  loading={loading}
   rowHeight={38}
   checkboxSelection
   slots={{ toolbar: CustomToolbar }}

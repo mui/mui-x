@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   slots={{ toolbar: GridToolbar }}
   slotProps={{
     filterPanel: {
