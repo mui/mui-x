@@ -78,7 +78,7 @@ function ListViewCell(params: GridRenderCellParams) {
 
 ## Advanced usage
 
-The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens.
+The list view feature can be combined with [custom subcomponents](/x/react-data-grid/components/) to provide an improved user experience on small screens, as shown below.
 
 {{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 360, "height": 600}}
 

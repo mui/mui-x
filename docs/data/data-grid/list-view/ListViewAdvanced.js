@@ -13,6 +13,7 @@ import OpenIcon from '@mui/icons-material/Visibility';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
+import { useTheme } from '@mui/material/styles';
 import { FileIcon } from './components/FileIcon';
 import { DetailsDrawer } from './components/DetailsDrawer';
 import { ListCell } from './components/ListCell';
@@ -28,8 +29,11 @@ export default function ListViewAdvanced() {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef(null);
   const container = () => containerRef.current;
+  const isDocsDemo = containerRef.current !== null;
 
-  const isListView = useMediaQuery('(min-width: 700px)');
+  const theme = useTheme();
+  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
 
