@@ -18,7 +18,7 @@ This component transforms the data and makes it available to its children, which
 
 There are two main classes of components, which are used to create a chart.
 
-### 1. Structural components
+### Structural components
 
 These are used to define the chart's structure and data.
 
@@ -27,7 +27,7 @@ Most of the demos here will be using the `ChartContainer` component.
 To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
 :::
 
-#### The `ChartDataProvider` and `ChartsSurface` components
+#### The Data Provider and Surface components
 
 As the name suggests, the `ChartDataProvider` provides the data to the children components.
 While the `ChartsSurface` renders the SVG elements.
@@ -47,9 +47,10 @@ It can be used instead of them when there is no need to customize anything outsi
 <ChartContainer>{children}</ChartContainer>
 ```
 
-### 2. Graphical components
+### Graphical components
 
-These are any component that render the graphical elements of the chart. They are the children of the **Structural components** shown above.
+These are any component that render the graphical elements of the chart.
+They are the children of the **Structural components** shown above.
 There are many of them, so we will not list them all here. You can even [create your own components](/x/react-charts/components/).
 
 Some examples of graphical components are:
