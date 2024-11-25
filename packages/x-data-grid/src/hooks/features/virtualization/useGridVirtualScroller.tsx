@@ -6,8 +6,8 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useRtl } from '@mui/system/RtlProvider';
+import reactMajor from '@mui/x-internals/reactMajor';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -136,7 +136,57 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  useResizeObserver(mainRef, () => apiRef.current.resize());
+  const mainRefCallback = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      mainRef.current = node;
+
+      if (!node) {
+        return undefined;
+      }
+
+      const initialRect = node.getBoundingClientRect();
+      let lastSize = {
+        width: initialRect.width,
+        height: initialRect.height,
+      };
+
+      apiRef.current.publishEvent('resize', lastSize);
+
+      if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
+
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) {
+          return;
+        }
+
+        const newSize = {
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        };
+
+        if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
+          return;
+        }
+
+        apiRef.current.publishEvent('resize', newSize);
+        lastSize = newSize;
+      });
+
+      observer.observe(node);
+
+      if (reactMajor >= 19) {
+        return () => {
+          mainRef.current = null;
+          observer.disconnect();
+        };
+      }
+      return undefined;
+    },
+    [apiRef, mainRef],
+  );
 
   /*
    * Scroll context logic
@@ -551,11 +601,6 @@ export const useGridVirtualScroller = () => {
   }, [apiRef, contentSize]);
 
   useEnhancedEffect(() => {
-    // FIXME: Is this really necessary?
-    apiRef.current.resize();
-  }, [apiRef, rowsMeta.currentPageTotalHeight]);
-
-  useEnhancedEffect(() => {
     // TODO a scroll reset should not be necessary
     if (enabledForColumns) {
       scrollerRef.current!.scrollLeft = 0;
@@ -597,7 +642,7 @@ export const useGridVirtualScroller = () => {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: mainRef,
+      ref: mainRefCallback,
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
