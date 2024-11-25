@@ -29,6 +29,7 @@ import { useSelector } from '../internals/hooks/useSelector';
 import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
 import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -42,7 +43,6 @@ export const useTreeItem = <
     selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
     label: labelContext,
-    treeId,
     instance,
     publicAPI,
     store,
@@ -71,6 +71,7 @@ export const useTreeItem = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
+  const treeId = useSelector(store, selectorTreeViewId);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useSelector(
     store,
