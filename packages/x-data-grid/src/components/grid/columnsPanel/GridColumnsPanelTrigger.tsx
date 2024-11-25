@@ -19,6 +19,7 @@ export interface GridColumnsPanelTriggerState {
 }
 
 export interface GridColumnsPanelTriggerProps extends ButtonProps {
+  // eslint-disable-next-line react/no-unused-prop-types
   render?: RenderProp<GridColumnsPanelTriggerState>;
 }
 

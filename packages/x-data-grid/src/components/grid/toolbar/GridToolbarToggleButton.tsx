@@ -21,33 +21,34 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const StyledToggleButton = styled(ToggleButton, {
+const StyledGridToolbarToggleButton = styled(ToggleButton, {
   name: 'MuiDataGrid',
   slot: 'ToolbarToggleButton',
   overridesResolver: (_, styles) => styles.toolbarToggleButton,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  border: 0,
   gap: theme.spacing(0.5),
+  minHeight: 34,
+  lineHeight: 'normal',
 }));
 
 const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarToggleButtonProps>(
   function GridToolbarToggleButton(props, ref) {
-    const { children, className, ...other } = props;
+    const { children, className, size = 'small', ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (
-      <StyledToggleButton
+      <StyledGridToolbarToggleButton
         ref={ref}
         as={rootProps.slots.baseToggleButton}
         ownerState={rootProps}
         className={clsx(classes.root, className)}
-        size="small"
+        size={size}
         {...rootProps.slotProps?.baseToggleButton}
         {...other}
       >
         {children}
-      </StyledToggleButton>
+      </StyledGridToolbarToggleButton>
     );
   },
 );
