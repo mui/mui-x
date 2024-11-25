@@ -26,10 +26,8 @@ const listColDef: GridListColDef = {
   renderCell: ListViewCell,
 };
 
-<DataGridPro
-  unstable_listColumn={listColDef}
-  unstable_listView={true}
-/>
+<DataGridPro unstable_listColumn={listColDef} unstable_listView={true} />;
+```
 
 {{"demo": "ListView.js", "bg": true}}
 
@@ -83,4 +81,3 @@ If you need to use list view with any other features, please [open a feature req
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridListColDef](/x/api/data-grid/grid-list-col-def/)
-```
