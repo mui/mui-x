@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.3
+
+_Nov 21, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Charts Pro get stable. The [zoom](https://mui.com/x/react-charts/zoom-and-pan/) and [Heatmap](https://mui.com/x/react-charts/heatmap/) are now stable.
+- 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger, @hendrikpeilke, @k-rajat19.
+Following are all team members who have contributed to this release:
+@alexfauquette, @LukasTy, @MBilalShafi, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.3`
+
+- [DataGrid] Add prop to override search input props in `GridColumnsManagement` (#15476) @k-rajat19
+- [DataGrid] Add test coverage for issues fixed in #15184 @MBilalShafi
+- [DataGrid] Fix memoized selectors with arguments (#15336) @MBilalShafi
+- [DataGrid] Fix right column group header border with virtualization (#15503) @hendrikpeilke
+- [DataGrid] Pass reason to `onPaginationModelChange` (#15402) @DungTiger
+- [DataGrid] Set default overlay height in flex parent layout (#15535) @cherniavskii
+- [l10n] Improve Chinese (zh-CN) locale (#15365) @headironc
+- [l10n] Improve Spanish (es-ES) locale (#15369) @CarlosLopezLg
+- [l10n] Improve Swedish (sv-SE) locale (#15371) @viktormelin
+- [l10n] Improve Turkish (tr-TR) locale (#15414) @qerkules
+
+#### `@mui/x-data-grid-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.3`.
+
+#### `@mui/x-data-grid-premium@7.22.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.3`
+
+- [pickers] Always use `props.value` when it changes (#15500) @flaviendelangle
+- [pickers] Ensure internal value timezone is updated (#15491) @LukasTy
+- [pickers] Fix `DateTimeRangePicker` error when using format without time (#15341) @fxnoob
+- [pickers] Fix unused code in `PickersToolbar` component (#15525) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
+
+- [DateTimeRangePicker] Use time in `referenceDate` when selecting date (#15431) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.22.3`
+
+No changes since `@mui/x-charts@7.22.2`.
+
+#### `@mui/x-charts-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [charts-pro] Fix missing typeOverload (#15400) @alexfauquette
+
+### Docs
+
+- [docs] Add `PickersPopper` component to customization playground (#15397) @LukasTy
+- [docs] Add `next` version links (#15423) @LukasTy
+- [docs] Use the `loading` state in the demos (#15538) @cherniavskii
+
+- [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
+- [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
+- [core] Clarify release version bump strategy (#15536) @cherniavskii
+
 ## 7.22.2
 
 _Nov 8, 2024_

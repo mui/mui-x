@@ -163,6 +163,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
