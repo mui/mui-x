@@ -25,14 +25,15 @@ import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
 
-export default function ListViewAdvanced() {
+export default function ListViewAdvanced(props) {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef(null);
   const container = () => containerRef.current;
-  const isDocsDemo = containerRef.current !== null;
 
   const theme = useTheme();
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isDocsDemo = props.window !== undefined;
   const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();

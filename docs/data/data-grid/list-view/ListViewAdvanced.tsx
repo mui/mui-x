@@ -38,14 +38,20 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export default function ListViewAdvanced() {
+interface Props {
+  // Injected by the documentation to work in an iframe.
+  window?: () => Window;
+}
+
+export default function ListViewAdvanced(props: Props) {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef<HTMLDivElement>(null);
   const container = () => containerRef.current as HTMLElement;
-  const isDocsDemo = containerRef.current !== null;
 
   const theme = useTheme();
   const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isDocsDemo = props.window !== undefined;
   const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
