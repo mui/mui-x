@@ -34,10 +34,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
