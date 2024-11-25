@@ -297,7 +297,7 @@ jobs:
           command: apt update && apt upgrade -y && apt install ffmpeg -y
       - run:
           name: Run visual regression tests
-          command: pnpm test:regressions
+          command: xvfb-run pnpm test:regressions
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
