@@ -90,7 +90,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/filtering/header-filters',
                 plan: 'pro',
-                newFeature: true,
               },
               { pathname: '/x/react-data-grid/filtering-recipes', title: 'Recipes' },
             ],
@@ -100,7 +99,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/selection',
             children: [
               { pathname: '/x/react-data-grid/row-selection' },
-              { pathname: '/x/react-data-grid/cell-selection', plan: 'premium', newFeature: true },
+              { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
             ],
           },
           { pathname: '/x/react-data-grid/virtualization' },
@@ -128,7 +127,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
           { pathname: '/x/react-data-grid/export' },
-          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
 
           {
