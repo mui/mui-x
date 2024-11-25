@@ -27,7 +27,7 @@ export type GridExportTriggerProps = ButtonProps & {
 
 const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerProps>(
   function GridExportTrigger(props, ref) {
-    const { render, exportType, exportOptions, ...other } = props;
+    const { render, exportType, exportOptions, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const apiRef = useGridApiContext();
 
@@ -43,7 +43,7 @@ const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerP
           break;
       }
 
-      props.onClick?.(event);
+      onClick?.(event);
     };
 
     const { renderElement } = useGridComponentRenderer({
