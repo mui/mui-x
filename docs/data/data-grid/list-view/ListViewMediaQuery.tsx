@@ -67,7 +67,6 @@ export default function ListViewMediaQuery() {
         rowHeight={rowHeight}
         unstable_listView={isListView}
         unstable_listColumn={listColDef}
-        sx={{ backgroundColor: 'background.paper' }}
       />
     </div>
   );
