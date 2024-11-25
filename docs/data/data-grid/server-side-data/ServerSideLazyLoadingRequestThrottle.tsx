@@ -4,8 +4,7 @@ import {
   GridDataSource,
   GridGetRowsParams,
   GridRowCount,
-  GridRowCountProps,
-  GridSlots,
+  GridSlotProps,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import Box from '@mui/material/Box';
@@ -15,25 +14,20 @@ import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 
-declare module '@mui/x-data-grid-pro' {
-  interface FooterRowCountOverrides {
-    requestCount: number;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    throttleMs: number;
+    setThrottleMs: React.Dispatch<React.SetStateAction<number>>;
   }
-}
-
-interface CustomFooterRowCounProps extends GridRowCountProps {
-  requestCount: number;
-}
-
-interface CustomToolbarProps {
-  throttleMs: number;
-  setThrottleMs: (value: number) => void;
+  interface FooterRowCountOverrides {
+    requestCount?: number;
+  }
 }
 
 function GridCustomFooterRowCount({
   requestCount,
   ...props
-}: CustomFooterRowCounProps) {
+}: GridSlotProps['footerRowCount']) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'start' }}>
       <span>Request count: {requestCount}</span>
@@ -42,7 +36,7 @@ function GridCustomFooterRowCount({
   );
 }
 
-function GridCustomToolbar({ throttleMs, setThrottleMs }: CustomToolbarProps) {
+function GridCustomToolbar({ throttleMs, setThrottleMs }: GridSlotProps['toolbar']) {
   return (
     <Box sx={{ display: 'flex', alignItems: 'start' }}>
       <FormControl
@@ -79,7 +73,7 @@ function ServerSideLazyLoadingRequestThrottle() {
     { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
 
-  const [requestCount, setRequestCount] = React.useState(0);
+  const [requestCount, setRequestCount] = React.useState<number>(0);
   const [throttleMs, setThrottleMs] = React.useState<number>(500);
 
   const dataSource: GridDataSource = React.useMemo(
@@ -118,8 +112,8 @@ function ServerSideLazyLoadingRequestThrottle() {
         lazyLoadingRequestThrottleMs={throttleMs}
         paginationModel={{ page: 0, pageSize: 10 }}
         slots={{
-          footerRowCount: GridCustomFooterRowCount as GridSlots['footerRowCount'],
-          toolbar: GridCustomToolbar as GridSlots['toolbar'],
+          footerRowCount: GridCustomFooterRowCount,
+          toolbar: GridCustomToolbar,
         }}
         slotProps={{
           footerRowCount: {

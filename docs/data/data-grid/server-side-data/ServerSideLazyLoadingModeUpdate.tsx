@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridDataSource,
   GridGetRowsParams,
-  GridSlots,
+  GridSlotProps,
 } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import FormControl from '@mui/material/FormControl';
@@ -12,12 +12,14 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 
-interface CustomToolbarProps {
-  count: number;
-  setCount: (count: number) => void;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    count: number;
+    setCount: React.Dispatch<React.SetStateAction<number>>;
+  }
 }
 
-function GridCustomToolbar({ count, setCount }: CustomToolbarProps) {
+function GridCustomToolbar({ count, setCount }: GridSlotProps['toolbar']) {
   return (
     <FormControl
       style={{
@@ -77,7 +79,7 @@ function ServerSideLazyLoadingModeUpdate() {
         lazyLoading
         paginationModel={{ page: 0, pageSize: 10 }}
         rowCount={rowCount}
-        slots={{ toolbar: GridCustomToolbar as GridSlots['toolbar'] }}
+        slots={{ toolbar: GridCustomToolbar }}
         slotProps={{
           toolbar: {
             count: rowCount,
