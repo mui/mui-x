@@ -25,7 +25,11 @@ const listColDef: GridListColDef = {
   field: 'listColumn',
   renderCell: ListViewCell,
 };
-```
+
+<DataGridPro
+  unstable_listColumn={listColDef}
+  unstable_listView={true}
+/>
 
 {{"demo": "ListView.js", "bg": true}}
 
