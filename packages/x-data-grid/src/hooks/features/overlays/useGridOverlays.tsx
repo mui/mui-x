@@ -5,12 +5,8 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
-import { GridSlotsComponent } from '../../../models/gridSlotsComponent';
-import { GridOverlayWrapper } from '../../../components/containers';
-
-export type GridOverlayType =
-  | keyof Pick<GridSlotsComponent, 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'>
-  | null;
+import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
+import type { GridOverlayType } from '../../../components/base/GridOverlays';
 
 /**
  * Uses the grid state to determine which overlay to display.
