@@ -119,3 +119,4 @@ If you need to use list view with any other features, please [open a feature req
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
