@@ -39,9 +39,10 @@ Examples:
 To pass more options directly to jscodeshift, use `--jscodeshift=...`. For example:
 
 ```bash
-// single option
+# single option
 npx @mui/x-codemod@next --jscodeshift=--run-in-band
-// multiple options
+
+# multiple options
 npx @mui/x-codemod@next --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 

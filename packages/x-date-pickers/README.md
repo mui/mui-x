@@ -20,13 +20,16 @@ The pickers currently support the following date libraries:
 - [Moment.js](https://momentjs.com/)
 
 ```bash
-// date-fns
+# date-fns
 npm install date-fns
-// or dayjs
+
+# or dayjs
 npm install dayjs
-// or luxon
+
+# or luxon
 npm install luxon
-// or moment
+
+# or moment
 npm install moment
 ```
 

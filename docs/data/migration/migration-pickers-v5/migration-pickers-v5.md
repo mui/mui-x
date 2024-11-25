@@ -30,9 +30,10 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path>
-// Target Data Grid as well
+
+# Target Data Grid as well
 npx @mui/x-codemod@latest v6.0.0/preset-safe <path>
 ```
 
