@@ -33,17 +33,9 @@ const listColDef: GridListColDef = {
 
 Use the `useMediaQuery` hook from `@mui/material` to enable the list view feature at a specified breakpoint.
 
-```tsx
-import * as React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
+The demo below automatically switches to a list layout when the viewport width is below the `md` breakpoint.
 
-function App() {
-  const theme = useTheme();
-  const isListView = useMediaQuery(theme.breakpoints.down('md'));
-
-  return <DataGrid unstable_listView={isListView} />;
-}
-```
+{{"demo": "ListViewMediaQuery.js", "bg": "inline"}}
 
 ## Editable rows
 
@@ -90,16 +82,16 @@ The list view feature can be combined with [custom subcomponents](/x/react-data-
 
 {{"demo": "ListViewAdvanced.js", "iframe": true, "maxWidth": 360, "height": 600}}
 
-## Feature support
+## Feature compatibility
 
 The list view feature can be used in combination with the following features:
 
 - ✅ [Sorting](/x/react-data-grid/sorting/)
 - ✅ [Filtering](/x/react-data-grid/filtering/)
-- ✅ [Multi filters](/x/react-data-grid/filtering/multi-filters/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-- ✅ [Row pinning](/x/react-data-grid/row-pinning/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 - ✅ [Pagination](/x/react-data-grid/pagination/)
 - ✅ [Row selection](/x/react-data-grid/row-selection/)
+- ✅ [Multi filters](/x/react-data-grid/filtering/multi-filters/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+- ✅ [Row pinning](/x/react-data-grid/row-pinning/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 - ✅ [Cell selection](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 :::warning

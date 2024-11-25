@@ -300,7 +300,7 @@
     "name": "gridListColumnSelector",
     "returnType": "GridListViewState",
     "category": "List View",
-    "description": "Get a list column definition",
+    "description": "Get the list column definition",
     "supportsApiRef": false
   },
   {

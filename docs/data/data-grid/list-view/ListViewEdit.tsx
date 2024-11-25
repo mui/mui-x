@@ -124,7 +124,7 @@ function EditAction(props: EditActionProps) {
         }}
       >
         <DialogTitle>Edit Employee</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <DialogContentText>
             Make changes to the employee&apos;s information.
           </DialogContentText>
