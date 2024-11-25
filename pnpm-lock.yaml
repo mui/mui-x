@@ -761,10 +761,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
@@ -832,10 +832,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@mui/material':
@@ -1002,10 +1002,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       reselect:
         specifier: ^5.1.1
@@ -1058,7 +1058,7 @@ importers:
         specifier: ^11.0.1
         version: 11.0.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
     devDependencies:
       '@mui/icons-material':
@@ -1114,10 +1114,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       reselect:
         specifier: ^5.1.1
@@ -1176,10 +1176,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       reselect:
         specifier: ^5.1.1
@@ -1229,10 +1229,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       react-transition-group:
         specifier: ^4.4.5
@@ -1324,10 +1324,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       react-transition-group:
         specifier: ^4.4.5
@@ -1377,7 +1377,7 @@ importers:
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.6(@types/react@18.3.12)(react@18.3.1)
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
@@ -1397,7 +1397,7 @@ importers:
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.6(@types/react@18.3.12)(react@18.3.1)
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
     devDependencies:
       '@mui/internal-test-utils':
@@ -1435,10 +1435,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       react-transition-group:
         specifier: ^4.4.5
@@ -1494,10 +1494,10 @@ importers:
         specifier: ^15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1
       react-dom:
-        specifier: ^17.0.0 || ^18.0.0
+        specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
       react-transition-group:
         specifier: ^4.4.5
