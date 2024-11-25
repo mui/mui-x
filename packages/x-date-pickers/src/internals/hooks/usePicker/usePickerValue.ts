@@ -168,6 +168,7 @@ export const usePickerValue = <
     defaultValue: inDefaultValue,
     closeOnSelect = variant === 'desktop',
     timezone: timezoneProp,
+    referenceDate,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -218,6 +219,7 @@ export const usePickerValue = <
     timezone: timezoneProp,
     value: inValueWithoutRenderTimezone,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager,
   });
@@ -236,7 +238,7 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       hasBeenModifiedSinceMount: false,
     };
   });
@@ -315,15 +317,7 @@ export const usePickerValue = <
     }
   });
 
-  if (
-    inValueWithTimezoneToRender !== undefined &&
-    (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(
-        utils,
-        dateState.lastControlledValue,
-        inValueWithTimezoneToRender,
-      ))
-  ) {
+  if (dateState.lastControlledValue !== inValueWithoutRenderTimezone) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(
       utils,
       dateState.draft,
@@ -332,7 +326,7 @@ export const usePickerValue = <
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       ...(isUpdateComingFromPicker
         ? {}
         : {
