@@ -12,7 +12,7 @@ import {
   useUtils,
   BaseToolbarProps,
   ExportedBaseToolbarProps,
-  WrapperVariant,
+  PickerVariant,
   TimeViewWithMeridiem,
   PickersToolbarText,
   getMeridiem,
@@ -46,7 +46,7 @@ export interface TimeRangePickerToolbarProps
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'>,
     ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
-  toolbarVariant?: WrapperVariant;
+  toolbarVariant?: PickerVariant;
 }
 
 export interface ExportedTimeRangePickerToolbarProps
@@ -78,7 +78,7 @@ const TimeRangePickerToolbarContainer = styled('div', {
   slot: 'Container',
   shouldForwardProp: (prop) => prop !== 'toolbarVariant',
   overridesResolver: (_, styles) => styles.container,
-})<{ toolbarVariant: WrapperVariant }>({
+})<{ toolbarVariant: PickerVariant }>({
   display: 'flex',
   flex: 1,
   variants: [
