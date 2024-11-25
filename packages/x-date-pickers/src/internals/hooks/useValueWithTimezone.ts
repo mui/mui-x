@@ -11,22 +11,17 @@ import { PickersTimezone, PickerValidDate } from '../../models';
  * - The value rendered is always the one from `props.timezone` if defined
  */
 export const useValueWithTimezone = <
-  TDate extends PickerValidDate,
   TValue,
+  TDate extends PickerValidDate,
   TChange extends (...params: any[]) => void,
 >({
   timezone: timezoneProp,
   value: valueProp,
   defaultValue,
+  referenceDate,
   onChange,
   valueManager,
-}: {
-  timezone: PickersTimezone | undefined;
-  value: TValue | undefined;
-  defaultValue: TValue | undefined;
-  onChange: TChange | undefined;
-  valueManager: PickerValueManager<TValue, TDate, any>;
-}) => {
+}: UseValueWithTimezoneParameters<TValue, TDate, TChange>) => {
   const utils = useUtils<TDate>();
 
   const firstDefaultValue = React.useRef(defaultValue);
@@ -45,7 +40,16 @@ export const useValueWithTimezone = <
     return valueManager.setTimezone(utils, inputTimezone, newValue);
   });
 
-  const timezoneToRender = timezoneProp ?? inputTimezone ?? 'default';
+  let timezoneToRender: PickersTimezone;
+  if (timezoneProp) {
+    timezoneToRender = timezoneProp;
+  } else if (inputTimezone) {
+    timezoneToRender = inputTimezone;
+  } else if (referenceDate) {
+    timezoneToRender = utils.getTimezone(referenceDate);
+  } else {
+    timezoneToRender = 'default';
+  }
 
   const valueWithTimezoneToRender = React.useMemo(
     () => valueManager.setTimezone(utils, timezoneToRender, inputValue),
@@ -64,24 +68,18 @@ export const useValueWithTimezone = <
  * Wrapper around `useControlled` and `useValueWithTimezone`
  */
 export const useControlledValueWithTimezone = <
-  TDate extends PickerValidDate,
   TValue,
+  TDate extends PickerValidDate,
   TChange extends (...params: any[]) => void,
 >({
   name,
   timezone: timezoneProp,
   value: valueProp,
   defaultValue,
+  referenceDate,
   onChange: onChangeProp,
   valueManager,
-}: {
-  name: string;
-  timezone: PickersTimezone | undefined;
-  value: TValue | undefined;
-  defaultValue: TValue | undefined;
-  onChange: TChange | undefined;
-  valueManager: PickerValueManager<TValue, TDate, any>;
-}) => {
+}: UseControlledValueWithTimezoneParameters<TValue, TDate, TChange>) => {
   const [valueWithInputTimezone, setValue] = useControlled({
     name,
     state: 'value',
@@ -98,7 +96,34 @@ export const useControlledValueWithTimezone = <
     timezone: timezoneProp,
     value: valueWithInputTimezone,
     defaultValue: undefined,
+    referenceDate,
     onChange,
     valueManager,
   });
 };
+
+interface UseValueWithTimezoneParameters<
+  TValue,
+  TDate extends PickerValidDate,
+  TChange extends (...params: any[]) => void,
+> {
+  timezone: PickersTimezone | undefined;
+  value: TValue | undefined;
+  defaultValue: TValue | undefined;
+  /**
+   * The reference date as passed to `props.referenceDate`.
+   * It does not need to have its default value.
+   * This is only used to determine the timezone to use when `props.value` and `props.defaultValue` are not defined.
+   */
+  referenceDate: TDate | undefined;
+  onChange: TChange | undefined;
+  valueManager: PickerValueManager<TValue, TDate, any>;
+}
+
+interface UseControlledValueWithTimezoneParameters<
+  TValue,
+  TDate extends PickerValidDate,
+  TChange extends (...params: any[]) => void,
+> extends UseValueWithTimezoneParameters<TValue, TDate, TChange> {
+  name: string;
+}
