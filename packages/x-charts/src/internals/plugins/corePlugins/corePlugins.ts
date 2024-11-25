@@ -3,7 +3,7 @@ import { useChartId, UseChartIdParameters } from './useChartId';
 
 /**
  * Internal plugins that create the tools used by the other plugins.
- * These plugins are used by the Tree View components.
+ * These plugins are used by the Charts components.
  */
 export const CHART_CORE_PLUGINS = [useChartId] as const;
 
