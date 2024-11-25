@@ -36,7 +36,6 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarPromptControlWithRecordingPlaceholder: 'Digite ou grave um prompt…',
   toolbarPromptControlRecordingPlaceholder: 'Ouvindo o prompt…',
   toolbarPromptControlLabel: 'Entrada de prompt',
-  toolbarPromptControlDeleteIconLabel: 'Limpar',
   toolbarPromptControlRecordButtonDefaultLabel: 'Gravar',
   toolbarPromptControlRecordButtonActiveLabel: 'Parar gravação',
   toolbarPromptControlSendActionLabel: 'Enviar',
