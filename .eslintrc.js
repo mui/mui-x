@@ -59,7 +59,7 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
-    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx', `packages/${root}/src/index{.ts,.tsx,.js}`],
     rules: {
       'no-restricted-imports': [
         'error',
