@@ -190,7 +190,7 @@ If you need to get the clean value from the input, you can remove this character
 :::
 
 :::warning
-Luxon is not able to respect the leading zeroes when using macro tokens (for example, "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
 :::
 
 {{"demo": "RespectLeadingZerosFieldFormat.js"}}
