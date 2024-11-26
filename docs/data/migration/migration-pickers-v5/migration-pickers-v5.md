@@ -172,7 +172,7 @@ The picker components no longer have a keyboard view to render the input inside 
 
 - If you want to keep the old keyboard view, you can pass a custom `Layout` component slot to re-introduce the keyboard view.
 
-{{"demo": "MobileKeyboardView.js", "defaultCodeOpen": false}}
+{{"demo": "MobileKeyboardView.js", "hideToolbar": true, "bg": true}}
 
 :::info
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
