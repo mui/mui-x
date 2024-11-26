@@ -5,7 +5,7 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useDrawingArea } from '../hooks';
+import { useDrawingArea, useSvgRef } from '../hooks';
 import { useSize } from '../context/SizeProvider';
 import type { SizeContextState } from '../context/SizeProvider';
 
@@ -61,7 +61,8 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 ) {
   const { width, height, left, right, top, bottom } = useDrawingArea();
   const { hasIntrinsicSize, svgRef: containerRef, inHeight, inWidth } = useSize();
-  const handleRef = useForkRef(containerRef as any, ref);
+  const svgRef = useSvgRef();
+  const handleRef = useForkRef(containerRef, svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
