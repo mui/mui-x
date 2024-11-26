@@ -365,14 +365,6 @@ DataGridRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
-  /**
    * The initial state of the DataGrid.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
