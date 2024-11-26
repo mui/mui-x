@@ -129,8 +129,8 @@ This inconsistency has been solved, all the event manager now target the root of
 
 ```diff
 -<SimpleTreeView>
--  <TreeItem onClick={handleItemClick}>
 +<SimpleTreeView onItemClick={handleItemClick}>
+-  <TreeItem onClick={handleItemClick}>
 +  <TreeItem>
  </SimpleTreeView>
 ```
