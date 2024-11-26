@@ -22,21 +22,32 @@ There are two main classes of components, which are used to create a chart.
 
 These are used to define the chart's structure and data.
 
-:::info
-Most of the demos here will be using the `ChartContainer` component.
-To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
-:::
-
 #### The Data Provider and Surface components
 
 As the name suggests, the `ChartDataProvider` provides the data to the children components.
 While the `ChartsSurface` renders the SVG elements.
 
 ```jsx
-<ChartDataProvider>
-  <ChartsSurface>{children}</ChartsSurface>
+<ChartDataProvider
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+>
+  <ChartsSurface
+    // Ref needs to be directly on the ChartsSurface
+    ref={mySvgRef}
+  >
+    {children}
+  </ChartsSurface>
 </ChartDataProvider>
 ```
+
+:::info
+The demos here are using the `ChartContainer` component.
+To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
+:::
 
 #### The `ChartContainer` helper
 
@@ -44,7 +55,17 @@ This component is a composition of the two previous components.
 It can be used instead of them when there is no need to customize anything outside the chart's graphical elements.
 
 ```jsx
-<ChartContainer>{children}</ChartContainer>
+<ChartContainer
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+  // Ref is forwarded internally to the ChartsSurface
+  ref={mySvgRef}
+>
+  {children}
+</ChartContainer>
 ```
 
 ### Graphical components
