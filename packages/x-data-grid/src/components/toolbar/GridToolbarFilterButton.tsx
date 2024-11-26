@@ -8,6 +8,7 @@ import {
 } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
+import { BadgeProps } from '@mui/material/Badge';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -46,7 +47,11 @@ export interface GridToolbarFilterButtonProps {
    * The props used for each slot inside.
    * @default {}
    */
-  slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
+  slotProps?: {
+    button?: Partial<ButtonProps>;
+    tooltip?: Partial<TooltipProps>;
+    badge?: Partial<BadgeProps>;
+  };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
@@ -54,6 +59,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};
     const tooltipProps = slotProps.tooltip || {};
+    const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
@@ -131,8 +137,8 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       <rootProps.slots.baseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
           ref={ref}
@@ -143,13 +149,18 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           aria-expanded={isOpen}
           aria-haspopup
           startIcon={
-            <rootProps.slots.baseBadge badgeContent={activeFilters.length} color="primary">
+            <rootProps.slots.baseBadge
+              badgeContent={activeFilters.length}
+              color="primary"
+              {...rootProps.slotProps?.baseBadge}
+              {...badgeProps}
+            >
               <rootProps.slots.openFilterButtonIcon />
             </rootProps.slots.baseBadge>
           }
-          {...buttonProps}
           onClick={toggleFilter}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
         </rootProps.slots.baseButton>
