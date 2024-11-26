@@ -3,8 +3,11 @@ import {
   ChartAnyPluginSignature,
   ChartInstance,
   ChartPublicAPI,
+  ConvertSignaturesIntoPlugins,
+  MergeSignaturesProperty,
 } from '../../internals/plugins/models';
 import { ChartStore } from '../../internals/plugins/utils/ChartStore';
+import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -28,8 +31,8 @@ export type ChartContextValue<
   svgRef: React.RefObject<SVGSVGElement>;
 };
 
-// export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
-export interface ChartProviderProps {
-  // value: ChartContextValue<TSignatures>;
+export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
+  plugins: ConvertSignaturesIntoPlugins<TSignatures>;
+  pluginParams: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
   children: React.ReactNode;
 }

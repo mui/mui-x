@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
-import { DrawingAreaProvider, DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
 import { PluginProvider, PluginProviderProps } from '../PluginProvider';
@@ -11,18 +10,17 @@ import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../..
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
-import { SizeProvider, SizeProviderProps } from '../SizeProvider';
-import { ChartProvider } from '../ChartProvider';
+
+import { ChartProvider, ChartProviderProps } from '../ChartProvider';
 
 export type ChartDataProviderProps = Omit<
-  SizeProviderProps &
-    Omit<SeriesProviderProps, 'seriesFormatters'> &
-    Pick<DrawingAreaProviderProps, 'margin'> &
+  Omit<SeriesProviderProps, 'seriesFormatters'> &
     Pick<CartesianProviderProps, 'dataset'> &
     ZAxisContextProviderProps &
     HighlightedProviderProps &
     PluginProviderProps &
-    AnimationProviderProps,
+    AnimationProviderProps &
+    ChartProviderProps<[]>['pluginParams'],
   'children'
 > & {
   /**
@@ -43,33 +41,28 @@ export type ChartDataProviderProps = Omit<
 function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
-    drawingAreaProviderProps,
     seriesProviderProps,
     cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
     pluginProviderProps,
     animationProviderProps,
-    sizeProviderProps,
+    chartProviderProps,
   } = useChartDataProviderProps(props);
 
   return (
-    <ChartProvider>
-      <SizeProvider {...sizeProviderProps}>
-        <DrawingAreaProvider {...drawingAreaProviderProps}>
-          <PluginProvider {...pluginProviderProps}>
-            <SeriesProvider {...seriesProviderProps}>
-              <CartesianProvider {...cartesianProviderProps}>
-                <ZAxisContextProvider {...zAxisContextProps}>
-                  <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-                  </HighlightedProvider>
-                </ZAxisContextProvider>
-              </CartesianProvider>
-            </SeriesProvider>
-          </PluginProvider>
-        </DrawingAreaProvider>
-      </SizeProvider>
+    <ChartProvider {...chartProviderProps}>
+      <PluginProvider {...pluginProviderProps}>
+        <SeriesProvider {...seriesProviderProps}>
+          <CartesianProvider {...cartesianProviderProps}>
+            <ZAxisContextProvider {...zAxisContextProps}>
+              <HighlightedProvider {...highlightedProviderProps}>
+                <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
+              </HighlightedProvider>
+            </ZAxisContextProvider>
+          </CartesianProvider>
+        </SeriesProvider>
+      </PluginProvider>
     </ChartProvider>
   );
 }

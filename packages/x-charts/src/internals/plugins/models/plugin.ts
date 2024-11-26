@@ -84,4 +84,7 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
   (options: ChartPluginOptions<TSignature>): ChartResponse<TSignature>;
   getInitialState?: (params: ChartUsedDefaultizedParams<TSignature>) => TSignature['state'];
   params: Record<keyof TSignature['params'], true>;
+  getDefaultizedParams?: (options: {
+    params: ChartUsedParams<TSignature>;
+  }) => TSignature['defaultizedParams'];
 };
