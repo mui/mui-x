@@ -34,10 +34,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
@@ -258,6 +258,22 @@ const theme = createTheme({
 
 ### Slot: `layout`
 
+- The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:
+
+  ```diff
+  -const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  +const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
+
+   return (
+  -  <PickersLayoutRoot ownerState={props}>
+  +  <PickersLayoutRoot ownerState={ownerState}>
+  -    <PickersLayoutContentWrapper>
+  +    <PickersLayoutContentWrapper ownerState={ownerState}>
+       </PickersLayoutContentWrapper>
+     </PickersLayoutRoot>
+   );
+  ```
+
 - The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
@@ -274,6 +290,39 @@ const theme = createTheme({
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
   +const { readOnly } = usePickerContext();
   +console.log(readOnly);
+  ```
+
+- The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
+
+  ```diff
+  +import { useRtl } from '@mui/system/RtlProvider';
+   function CustomLayout(props) {
+  -  console.log(props.isRtl);
+  +  const isRtl = useRtl();
+  +  console.log(isRtl);
+   }
+  ```
+
+- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.orientation);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickerContext();
+  +console.log(orientation);
+  -console.log(props.isLandscape);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { orientation } = usePickerContext();
+  +console.log(orientation === 'landscape');
+  ```
+
+- The component passed to the `layout` slot no longer receives a `wrapperVariant` prop, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.wrapperVariant);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { variant } = usePickerContext();
+  +console.log(variant);
   ```
 
 ### Slot: `toolbar`
