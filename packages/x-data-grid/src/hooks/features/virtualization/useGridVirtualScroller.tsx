@@ -203,6 +203,7 @@ export const useGridVirtualScroller = () => {
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
   const scrollPosition = React.useRef(rootProps.initialState?.scroll ?? EMPTY_SCROLL_POSITION);
+  const ignoreNextScrollEvent = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
@@ -345,6 +346,11 @@ export const useGridVirtualScroller = () => {
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
+    if (ignoreNextScrollEvent.current) {
+      ignoreNextScrollEvent.current = false;
+      return;
+    }
+
     const { scrollTop, scrollLeft } = event.currentTarget;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
@@ -616,6 +622,11 @@ export const useGridVirtualScroller = () => {
     if (rootProps.initialState?.scroll && scrollerRef.current) {
       const scroller = scrollerRef.current;
       const { top, left } = rootProps.initialState.scroll;
+
+      if (left > 0) {
+        scroller.scrollLeft = left;
+        ignoreNextScrollEvent.current = true;
+      }
 
       const unsubscribeContentSizeChange = apiRef.current.subscribeEvent(
         'virtualScrollerContentSizeChange',
