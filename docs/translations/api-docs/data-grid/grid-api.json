@@ -83,7 +83,6 @@
     "getRowIdFromRowIndex": {
       "description": "Gets the <code>GridRowId</code> of a row at a specific index.<br />The index is based on the sorted but unfiltered row list."
     },
-    "getRowIndex": { "description": "Gets the index of a row for <code>GridRowId</code>." },
     "getRowIndexRelativeToVisibleRows": {
       "description": "Gets the index of a row relative to the rows that are reachable by scroll."
     },

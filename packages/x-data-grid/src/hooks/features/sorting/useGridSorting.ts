@@ -5,7 +5,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridGroupNode, GridRowId } from '../../../models/gridRows';
+import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -14,7 +14,6 @@ import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import {
   gridSortedRowEntriesSelector,
   gridSortedRowIdsSelector,
-  gridSortedRowIndexLookupSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
@@ -221,14 +220,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getRowIndex = React.useCallback<GridSortApi['getRowIndex']>(
-    (id: GridRowId) => {
-      const lookup = gridSortedRowIndexLookupSelector(apiRef);
-      return lookup[id];
-    },
-    [apiRef],
-  );
-
   const sortApi: GridSortApi = {
     getSortModel,
     getSortedRows,
@@ -237,7 +228,6 @@ export const useGridSorting = (
     setSortModel,
     sortColumn,
     applySorting,
-    getRowIndex,
   };
   useGridApiMethod(apiRef, sortApi, 'public');
 

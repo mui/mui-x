@@ -48,10 +48,4 @@ export interface GridSortApi {
    * @returns {GridRowId} The `GridRowId` of the row.
    */
   getRowIdFromRowIndex: (index: number) => GridRowId;
-  /**
-   * Gets the index of a row for `GridRowId`.
-   * @param {GridRowId} id The `GridRowId` of the row.
-   * @returns {number} The index of the row.
-   */
-  getRowIndex: (id: GridRowId) => number;
 }

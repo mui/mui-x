@@ -13,11 +13,6 @@
       "type": "(index: number) => GridRowId"
     },
     {
-      "name": "getRowIndex",
-      "description": "Gets the index of a row for <code>GridRowId</code>.",
-      "type": "(id: GridRowId) => number"
-    },
-    {
       "name": "getSortedRowIds",
       "description": "Returns all row ids sorted according to the active sort model.",
       "type": "() => GridRowId[]"

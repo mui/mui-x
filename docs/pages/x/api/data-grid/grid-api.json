@@ -159,7 +159,6 @@
       "type": { "description": "(index: number) =&gt; GridRowId" },
       "required": true
     },
-    "getRowIndex": { "type": { "description": "(id: GridRowId) =&gt; number" }, "required": true },
     "getRowIndexRelativeToVisibleRows": {
       "type": { "description": "(id: GridRowId) =&gt; number" },
       "required": true
