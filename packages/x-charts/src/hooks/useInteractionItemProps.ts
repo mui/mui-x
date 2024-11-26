@@ -28,7 +28,10 @@ export const useInteractionItemProps = (skip?: boolean) => {
       });
     };
     const onPointerLeave = (event: React.PointerEvent) => {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+
       dispatchInteraction({ type: 'leaveItem', data });
       clearHighlighted();
     };
