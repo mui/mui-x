@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/utils';
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { SlotComponentProps } from '@mui/utils/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import {
   RichTreeViewPluginParameters,
