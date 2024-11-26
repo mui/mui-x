@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
