@@ -19,6 +19,17 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
     const mainEl = rootRef?.current;
 
     if (!mainEl) {
+      if (process.env.NODE_ENV !== 'production') {
+        // This is mostly for internal use.
+        throw new Error(
+          [
+            `MUI X: ChartContainer does not have a valid reference to the <svg /> element.`,
+            'This may be caused by a ref forwarding issue.',
+            'Make sure that the ref from SizedProvider is forwarded correctly.',
+          ].join('\n'),
+        );
+      }
+
       return {};
     }
 
