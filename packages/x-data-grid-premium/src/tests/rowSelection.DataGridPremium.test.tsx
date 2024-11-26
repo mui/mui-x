@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -67,6 +68,19 @@ describe('<DataGridPremium /> - Row selection', () => {
         </div>
       );
     }
+
+    it('should auto select parents when controlling row selection model', () => {
+      const onRowSelectionModelChange = spy();
+      render(
+        <Test rowSelectionModel={[3, 4]} onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([
+        3,
+        4,
+        'auto-generated-row-category1/Cat B',
+      ]);
+    });
 
     it('should select all the children when selecting a parent', () => {
       render(<Test />);

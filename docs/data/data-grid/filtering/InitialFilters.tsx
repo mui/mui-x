@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function InitialFilters() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -15,9 +15,8 @@ export default function InitialFilters() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        loading={loading}
+        slots={{ toolbar: GridToolbar }}
         initialState={{
           ...data.initialState,
           filter: {

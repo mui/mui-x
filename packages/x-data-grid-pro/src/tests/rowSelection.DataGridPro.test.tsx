@@ -534,6 +534,18 @@ describe('<DataGridPro /> - Row selection', () => {
       );
     }
 
+    it('should not auto select parents when controlling row selection model', () => {
+      const onRowSelectionModelChange = spy();
+      render(
+        <SelectionPropagationGrid
+          rowSelectionModel={[2, 3, 4, 5, 6, 7]}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+    });
+
     it('should select the parent only when selecting it', () => {
       render(<SelectionPropagationGrid />);
 
@@ -694,6 +706,19 @@ describe('<DataGridPro /> - Row selection', () => {
         <TreeDataGrid rowSelectionPropagation={{ descendants: false, parents: true }} {...props} />
       );
     }
+
+    it('should auto select parents when controlling row selection model', () => {
+      const onRowSelectionModelChange = spy();
+      render(
+        <SelectionPropagationGrid
+          rowSelectionModel={[2, 3, 4, 5, 6, 7]}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+        />,
+      );
+
+      expect(onRowSelectionModelChange.callCount).to.equal(2); // Dev mode calls twice
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3, 4, 5, 6, 7, 1]);
+    });
 
     it('should select the parent only when selecting it', () => {
       render(<SelectionPropagationGrid />);
