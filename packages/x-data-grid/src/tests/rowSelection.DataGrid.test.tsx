@@ -12,7 +12,6 @@ import {
 import {
   DataGrid,
   DataGridProps,
-  GridInputRowSelectionModel,
   GridRowId,
   GridEditModes,
   useGridApiRef,
@@ -741,21 +740,8 @@ describe('<DataGrid /> - Row selection', () => {
   });
 
   describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
-    it('should select rows when initialised (array-version)', () => {
+    it('should select rows when initialised', () => {
       render(<TestDataGridSelection rowSelectionModel={[1]} />);
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-    });
-
-    it('should select rows when initialised (non-array version)', () => {
-      render(<TestDataGridSelection rowSelectionModel={1} />);
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-    });
-
-    it('should allow to switch rowSelectionModel from array version to non-array version', () => {
-      const { setProps } = render(<TestDataGridSelection rowSelectionModel={[1]} />);
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-
-      setProps({ rowSelectionModel: 1 });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -765,7 +751,7 @@ describe('<DataGrid /> - Row selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           onRowSelectionModelChange={onRowSelectionModelChange}
-          rowSelectionModel={0}
+          rowSelectionModel={[0]}
         />,
       );
       expect(onRowSelectionModelChange.callCount).to.equal(0);
@@ -827,7 +813,7 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should not update the selection model when the rowSelectionModel prop is set', () => {
-      const rowSelectionModel: GridInputRowSelectionModel = [1];
+      const rowSelectionModel: GridRowSelectionModel = [1];
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
 

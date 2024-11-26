@@ -32,38 +32,16 @@ import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
 
-const getSelectionModelPropValue = (
-  selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
-  prevSelectionModel?: GridRowSelectionModel,
-) => {
-  if (selectionModelProp == null) {
-    return selectionModelProp;
-  }
-
-  if (Array.isArray(selectionModelProp)) {
-    return selectionModelProp;
-  }
-
-  if (prevSelectionModel && prevSelectionModel[0] === selectionModelProp) {
-    return prevSelectionModel;
-  }
-
-  return [selectionModelProp];
-};
-
 export const rowSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
-  rowSelection: props.rowSelection
-    ? (getSelectionModelPropValue(props.rowSelectionModel) ?? [])
-    : [],
+  rowSelection: props.rowSelection ? (props.rowSelectionModel ?? []) : [],
 });
 
 /**
@@ -110,11 +88,8 @@ export const useGridRowSelection = (
     (props.rowSelectionPropagation?.parents || props.rowSelectionPropagation?.descendants);
 
   const propRowSelectionModel = React.useMemo(() => {
-    return getSelectionModelPropValue(
-      props.rowSelectionModel,
-      gridRowSelectionStateSelector(apiRef.current.state),
-    );
-  }, [apiRef, props.rowSelectionModel]);
+    return props.rowSelectionModel;
+  }, [props.rowSelectionModel]);
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 

@@ -325,7 +325,6 @@
   { "name": "GridHydrateColumnsValue", "kind": "TypeAlias" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "TypeAlias" },
-  { "name": "GridInputRowSelectionModel", "kind": "TypeAlias" },
   { "name": "GridKeyboardArrowRight", "kind": "Variable" },
   { "name": "GridKeyValue", "kind": "TypeAlias" },
   { "name": "GridLeafColumn", "kind": "Interface" },
