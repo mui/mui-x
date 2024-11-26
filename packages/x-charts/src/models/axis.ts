@@ -9,7 +9,7 @@ import type {
   ScaleSequential,
   ScaleThreshold,
 } from '@mui/x-charts-vendor/d3-scale';
-import { SxProps } from '@mui/system';
+import { SxProps } from '@mui/system/styleFunctionSx';
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 import { ChartsTextProps } from '../ChartsText';

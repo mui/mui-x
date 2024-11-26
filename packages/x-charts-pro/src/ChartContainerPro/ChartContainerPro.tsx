@@ -5,7 +5,7 @@ import type {} from '../typeOverloads';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { ResizableContainer } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
 import { ZoomProps } from '../context/ZoomProvider';
