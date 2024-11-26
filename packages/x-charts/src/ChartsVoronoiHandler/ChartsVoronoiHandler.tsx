@@ -116,7 +116,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | 'no-point-found' {
       const element = svgRef.current;
       if (element === null) {
-        return 'no-point-found';
+        return 'outside-chart';
       }
 
       // Get mouse coordinate in global SVG space
