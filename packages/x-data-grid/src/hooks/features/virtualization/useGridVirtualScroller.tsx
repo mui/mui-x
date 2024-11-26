@@ -205,7 +205,6 @@ export const useGridVirtualScroller = () => {
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
   const scrollPosition = React.useRef(rootProps.initialState?.scroll ?? EMPTY_SCROLL_POSITION);
-  const ignoreNextScroll = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
@@ -348,11 +347,6 @@ export const useGridVirtualScroller = () => {
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
-    if (ignoreNextScroll.current) {
-      ignoreNextScroll.current = false;
-      return;
-    }
-
     const { scrollTop, scrollLeft } = event.currentTarget;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
@@ -625,27 +619,18 @@ export const useGridVirtualScroller = () => {
       const scroller = scrollerRef.current;
       const { top, left } = rootProps.initialState.scroll;
 
-      if (top > 0 || left > 0) {
-        ignoreNextScroll.current = true;
-      }
+      const unsubscribeContentSizeChange = apiRef.current.subscribeEvent(
+        'virtualScrollerContentSizeChange',
+        () => {
+          if (scroller) {
+            scroller.scrollTop = top;
+            scroller.scrollLeft = left;
+          }
+          unsubscribeContentSizeChange();
+        },
+      );
 
-      scroller.scrollTop = top;
-      scroller.scrollLeft = left;
-
-      if (rootProps.loading && !rootProps.rows?.length && top > 0) {
-        const unsubscribeContentSizeChange = apiRef.current.subscribeEvent(
-          'virtualScrollerContentSizeChange',
-          () => {
-            if (scroller) {
-              ignoreNextScroll.current = true;
-              scroller.scrollTop = top;
-            }
-            unsubscribeContentSizeChange();
-          },
-        );
-
-        return unsubscribeContentSizeChange;
-      }
+      return unsubscribeContentSizeChange;
     }
   });
 
