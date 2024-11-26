@@ -14,6 +14,7 @@ import {
   GridGetRowsResponse,
   gridRowGroupsToFetchSelector,
   GridStateInitializer,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
@@ -76,7 +77,7 @@ export const useGridDataSource = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
-      'dataSource',
+      GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
       props.unstable_dataSource && !props.lazyLoading ? () => true : () => false,
     );
@@ -336,7 +337,8 @@ export const useGridDataSource = (
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
     setDefaultRowsUpdateStrategyActive(
-      apiRef.current.getActiveStrategy('dataSource') === DataSourceRowsUpdateStrategy.Default,
+      apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
+        DataSourceRowsUpdateStrategy.Default,
     );
   }, [apiRef]);
 

@@ -18,6 +18,7 @@ import {
   getVisibleRows,
   GridGetRowsParams,
   gridRenderContextSelector,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
@@ -59,7 +60,7 @@ export const useGridDataSourceLazyLoader = (
 ): void => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'dataSource',
+      GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
       props.unstable_dataSource && props.lazyLoading ? () => true : () => false,
     );
@@ -428,7 +429,7 @@ export const useGridDataSourceLazyLoader = (
     GridEventListener<'strategyAvailabilityChange'>
   >(() => {
     setLazyLoadingRowsUpdateStrategyActive(
-      privateApiRef.current.getActiveStrategy('dataSource') ===
+      privateApiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) ===
         DataSourceRowsUpdateStrategy.LazyLoading,
     );
   }, [privateApiRef]);

@@ -38,6 +38,7 @@ import {
   computeRowsUpdates,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
+import { GridStrategyGroup } from '../../core/strategyProcessing';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'unstable_dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>
@@ -561,7 +562,10 @@ export const useGridRows = (
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
-    if (apiRef.current.getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)) {
+    if (
+      apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) !==
+      gridRowGroupingNameSelector(apiRef)
+    ) {
       groupRows();
     }
   }, [apiRef, groupRows]);
