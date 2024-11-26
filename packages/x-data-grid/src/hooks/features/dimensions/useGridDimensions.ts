@@ -126,6 +126,8 @@ export function useGridDimensions(
     [props.resizeThrottleMs],
   );
   React.useEffect(() => debouncedSetSavedSize.clear, [debouncedSetSavedSize]);
+  
+  const previousSize = React.useRef<ElementSize>();
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
 
