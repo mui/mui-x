@@ -3,7 +3,6 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_useEventCallback as useEventCallback,
-  unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
 import { throttle } from '@mui/x-internals/throttle';
 import { GridEventListener } from '../../../models/events';
@@ -125,32 +124,12 @@ export function useGridDimensions(
     () => throttle(setSavedSize, props.resizeThrottleMs),
     [props.resizeThrottleMs],
   );
-  const previousSize = React.useRef<ElementSize>();
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
 
   const setDimensions = useEventCallback((dimensions: GridDimensions) => {
     apiRef.current.setState((state) => ({ ...state, dimensions }));
   });
-
-  const resize = React.useCallback(() => {
-    const element = apiRef.current.mainElementRef.current;
-    if (!element) {
-      return;
-    }
-
-    const computedStyle = ownerWindow(element).getComputedStyle(element);
-
-    const newSize = {
-      width: parseFloat(computedStyle.width) || 0,
-      height: parseFloat(computedStyle.height) || 0,
-    };
-
-    if (!previousSize.current || !areElementSizesEqual(previousSize.current, newSize)) {
-      apiRef.current.publishEvent('resize', newSize);
-      previousSize.current = newSize;
-    }
-  }, [apiRef]);
 
   const getViewportPageSize = React.useCallback(() => {
     const dimensions = gridDimensionsSelector(apiRef.current.state);
@@ -304,7 +283,6 @@ export function useGridDimensions(
   ]);
 
   const apiPublic: GridDimensionsApi = {
-    resize,
     getRootDimensions,
   };
 
