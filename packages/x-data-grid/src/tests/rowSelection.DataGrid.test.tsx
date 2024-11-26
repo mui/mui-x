@@ -597,28 +597,28 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    describe('ripple', () => {
-      it('should keep only one ripple visible when navigating between checkboxes', async function test() {
-        // Skip on everything as this is failing on all environments
-        if (isJSDOM || !isJSDOM) {
-          // JSDOM doesn't fire "blur" when .focus is called in another element
-          // FIXME Firefox doesn't show any ripple
-          this.skip();
-        }
-        const { user, container } = render(<TestDataGridSelection checkboxSelection />);
+    // Skip on everything as this is failing on all environments
+    // describe('ripple', () => {
+    //   it('should keep only one ripple visible when navigating between checkboxes', async function test() {
+    //     if (isJSDOM) {
+    //       // JSDOM doesn't fire "blur" when .focus is called in another element
+    //       // FIXME Firefox doesn't show any ripple
+    //       this.skip();
+    //     }
+    //     const { user, container } = render(<TestDataGridSelection checkboxSelection />);
 
-        // Focus the first checkbox
-        await user.keyboard('{Tab}');
-        // then navigate to the third one
-        await user.keyboard('{ArrowDown}{ArrowDown}');
+    //     // Focus the first checkbox
+    //     await user.keyboard('{Tab}');
+    //     // then navigate to the third one
+    //     await user.keyboard('{ArrowDown}{ArrowDown}');
 
-        expect(document.activeElement).to.equal(
-          container.querySelector('[data-rowindex="1"] .PrivateSwitchBase-input[tabindex="0"]'),
-        );
+    //     expect(document.activeElement).to.equal(
+    //       container.querySelector('[data-rowindex="1"] .PrivateSwitchBase-input[tabindex="0"]'),
+    //     );
 
-        expect(container.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
-      });
-    });
+    //     expect(container.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+    //   });
+    // });
   });
 
   describe('prop: isRowSelectable', () => {
