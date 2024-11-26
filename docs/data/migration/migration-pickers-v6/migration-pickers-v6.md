@@ -56,10 +56,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
-// Target other MUI X components as well
+# Target other MUI X components as well
 npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 
@@ -177,7 +177,7 @@ The same applies to `slotProps` and `componentsProps`.
 
 ### ✅ Rename slots types
 
-The slot interfaces got renamed to match with `@mui/base` naming convention.
+The slot interfaces have been renamed to match with `@mui/base` naming convention.
 Suffix `SlotsComponent` is replaced by `Slots` and `SlotsComponentsProps` is replaced by `SlotProps`.
 If you are not relying on the codemod, consider checking all the renamed types in [this file](https://github.com/mui/mui-x/blob/HEAD/packages/x-codemod/src/v7.0.0/pickers/rename-slots-types/index.ts).
 Here is an example on the `DateCalendar` typing.

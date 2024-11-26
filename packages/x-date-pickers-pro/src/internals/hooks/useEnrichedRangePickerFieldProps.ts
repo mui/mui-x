@@ -1,18 +1,12 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/utils';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import {
-  BaseSingleInputFieldProps,
-  FieldSelectedSections,
-  FieldRef,
-  PickerOwnerState,
-} from '@mui/x-date-pickers/models';
+import { FieldSelectedSections, FieldRef, PickerOwnerState } from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
@@ -22,20 +16,23 @@ import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   onSpaceOrEnter,
   UsePickerResponse,
-  WrapperVariant,
+  PickerVariant,
   DateOrTimeViewWithMeridiem,
+  BaseSingleInputFieldProps,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
+import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
-  BaseMultiInputFieldProps,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
+  PickerRangeFieldSlotProps,
 } from '../../models';
 import { UseRangePositionResponse } from './useRangePosition';
+import { BaseMultiInputFieldProps } from '../models/fields';
 
 export interface RangePickerFieldSlots extends UseClearableFieldSlots {
   field: React.ElementType;
@@ -60,11 +57,10 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    BaseMultiInputFieldProps<
+    PickerRangeFieldSlotProps<
       PickerRangeValue,
       RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      unknown
+      TEnableAccessibleFieldDOMStructure
     >,
     {},
     PickerOwnerState
@@ -72,7 +68,7 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
   textField?: SlotComponentProps<
-    typeof TextField,
+    typeof PickersTextField,
     {},
     UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure> & { position?: RangePosition }
   >;
@@ -110,7 +106,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
       'open' | 'actions'
     >,
     UseRangePositionResponse {
-  wrapperVariant: WrapperVariant;
+  variant: PickerVariant;
   fieldType: FieldType;
   readOnly?: boolean;
   labelId?: string;
@@ -138,7 +134,7 @@ const useMultiInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
-  wrapperVariant,
+  variant,
   open,
   actions,
   readOnly,
@@ -177,7 +173,7 @@ const useMultiInputFieldSlotProps = <
   const previousRangePosition = React.useRef<RangePosition>(rangePosition);
 
   React.useEffect(() => {
-    if (!open) {
+    if (!open || variant === 'mobile') {
       return;
     }
 
@@ -195,7 +191,7 @@ const useMultiInputFieldSlotProps = <
       previousRangePosition.current === rangePosition ? currentView : 0,
     );
     previousRangePosition.current = rangePosition;
-  }, [rangePosition, open, currentView, startFieldRef, endFieldRef]);
+  }, [rangePosition, open, currentView, startFieldRef, endFieldRef, variant]);
 
   const openRangeStartSelection: React.UIEventHandler = (event) => {
     event.stopPropagation();
@@ -255,7 +251,7 @@ const useMultiInputFieldSlotProps = <
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
-          ...(wrapperVariant === 'mobile' && { readOnly: true }),
+          ...(variant === 'mobile' && { readOnly: true }),
         };
         if (anchorRef) {
           InputProps = {
@@ -272,7 +268,7 @@ const useMultiInputFieldSlotProps = <
           // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeEndSelection }),
-          ...(wrapperVariant === 'mobile' && { readOnly: true }),
+          ...(variant === 'mobile' && { readOnly: true }),
         };
         InputProps = resolvedComponentProps?.InputProps;
       }
@@ -316,7 +312,7 @@ const useSingleInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 >({
-  wrapperVariant,
+  variant,
   open,
   actions,
   readOnly,
@@ -349,7 +345,7 @@ const useSingleInputFieldSlotProps = <
   const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
 
   React.useEffect(() => {
-    if (!open || !startFieldRef.current) {
+    if (!open || !startFieldRef.current || variant === 'mobile') {
       return;
     }
 
@@ -366,7 +362,7 @@ const useSingleInputFieldSlotProps = <
           : sections.lastIndexOf(currentView);
       startFieldRef.current?.focusField(newSelectedSection);
     }
-  }, [rangePosition, open, currentView, startFieldRef]);
+  }, [rangePosition, open, currentView, startFieldRef, variant]);
 
   const updateRangePosition = () => {
     if (!startFieldRef.current?.isFieldFocused()) {
@@ -408,8 +404,8 @@ const useSingleInputFieldSlotProps = <
   const slotProps = {
     ...fieldProps.slotProps,
     textField: pickerSlotProps?.textField,
-    clearButton: pickerSlots?.clearButton,
-    clearIcon: pickerSlots?.clearIcon,
+    clearButton: pickerSlotProps?.clearButton,
+    clearIcon: pickerSlotProps?.clearIcon,
   };
 
   const enrichedFieldProps: ReturnType = {
@@ -427,7 +423,7 @@ const useSingleInputFieldSlotProps = <
     },
     focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
-    ...(wrapperVariant === 'mobile' && { readOnly: true }),
+    ...(variant === 'mobile' && { readOnly: true }),
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !fieldProps.disabled && { onClick: openPicker }),

@@ -18,6 +18,7 @@ import {
   useGridApiRef,
   GridApi,
   GridPreferencePanelsValue,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -64,6 +65,29 @@ describe('<DataGrid /> - Row selection', () => {
       </div>
     );
   }
+
+  // Context: https://github.com/mui/mui-x/issues/15079
+  it('should not call `onRowSelectionModelChange` twice when using filterMode="server"', () => {
+    const onRowSelectionModelChange = spy();
+    function TestDataGrid() {
+      const [, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+      const handleRowSelectionModelChange = React.useCallback((model: GridRowSelectionModel) => {
+        setRowSelectionModel(model);
+        onRowSelectionModelChange(model);
+      }, []);
+      return (
+        <TestDataGridSelection
+          getRowId={(row) => row.id}
+          checkboxSelection
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          filterMode="server"
+        />
+      );
+    }
+    render(<TestDataGrid />);
+    fireEvent.click(getCell(0, 0).querySelector('input')!);
+    expect(onRowSelectionModelChange.callCount).to.equal(1);
+  });
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
@@ -435,24 +459,12 @@ describe('<DataGrid /> - Row selection', () => {
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
 
-    describe('prop: indeterminateCheckboxAction = "select"', () => {
-      it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="select" />);
-        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
-        fireEvent.click(selectAllCheckbox);
-        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      });
-    });
-
-    describe('prop: indeterminateCheckboxAction = "deselect"', () => {
-      it('should deselect all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="deselect" />);
-        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
-        fireEvent.click(selectAllCheckbox);
-        expect(getSelectedRowIds()).to.deep.equal([]);
-      });
+    it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+      fireEvent.click(selectAllCheckbox);
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
     });
   });
 

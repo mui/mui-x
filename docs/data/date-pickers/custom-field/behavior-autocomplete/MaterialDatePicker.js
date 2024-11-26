@@ -25,7 +25,7 @@ function AutocompleteField(props) {
     ...other
   } = forwardedProps;
 
-  const { hasValidationError } = useValidation({
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
     value,
     timezone,
@@ -85,7 +85,9 @@ function AutocompleteField(props) {
       }}
       value={value}
       onChange={(_, newValue) => {
-        onChange?.(newValue, { validationError: null });
+        onChange(newValue, {
+          validationError: getValidationErrorForNewValue(newValue),
+        });
       }}
       isOptionEqualToValue={(option, valueToCheck) =>
         option.toISOString() === valueToCheck.toISOString()

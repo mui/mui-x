@@ -2,10 +2,8 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { FieldSection, InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
-import { usePickerOwnerState } from './usePickerOwnerState';
 import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
@@ -18,7 +16,7 @@ export const usePicker = <
   props,
   valueManager,
   valueType,
-  wrapperVariant,
+  variant,
   additionalViewProps,
   validator,
   autoFocusView,
@@ -44,7 +42,7 @@ export const usePicker = <
     props,
     valueManager,
     valueType,
-    wrapperVariant,
+    variant,
     validator,
   });
 
@@ -63,19 +61,13 @@ export const usePicker = <
     rendererInterceptor,
   });
 
-  const pickerLayoutResponse = usePickerLayoutProps({
-    props,
-    wrapperVariant,
-    propsFromPickerValue: pickerValueResponse.layoutProps,
-    propsFromPickerViews: pickerViewsResponse.layoutProps,
-  });
-
-  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse, valueManager });
-
   const providerProps = usePickerProvider({
+    props,
     pickerValueResponse,
-    ownerState: pickerOwnerState,
     localeText,
+    valueManager,
+    variant,
+    views: pickerViewsResponse.views,
   });
 
   return {
@@ -90,12 +82,15 @@ export const usePicker = <
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    layoutProps: pickerLayoutResponse.layoutProps,
+    layoutProps: {
+      ...pickerViewsResponse.layoutProps,
+      ...pickerValueResponse.layoutProps,
+    },
 
     // Picker provider
     providerProps,
 
     // Picker owner state
-    ownerState: pickerOwnerState,
+    ownerState: providerProps.privateContextValue.ownerState,
   };
 };

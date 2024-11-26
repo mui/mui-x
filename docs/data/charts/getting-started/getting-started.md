@@ -41,15 +41,15 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 ```json
 "peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 
 ### Usage with D3
 
 To help folks using CommonJS, the `@mui/x-charts` package uses a vendored package named `@mui/x-charts-vendor` to access D3 libraries.
-You can import D3 functions from `@mui/x-charts-vendor/d3-color`.
+You can import D3 functions from `@mui/x-charts-vendor/d3-scale`.
 
 ## Rendering Charts
 

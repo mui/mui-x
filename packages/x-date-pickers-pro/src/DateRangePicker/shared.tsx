@@ -6,7 +6,6 @@ import {
   useDefaultDates,
   useUtils,
   applyDefaultDate,
-  BaseDateValidationProps,
   BasePickerInputProps,
   PickerViewRendererLookup,
   PickerRangeValue,
@@ -23,6 +22,7 @@ import {
   ExportedDateRangePickerToolbarProps,
 } from './DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+import { ValidateDateRangePropsToDefault } from '../validation/validateDateRange';
 
 export interface BaseDateRangePickerSlots extends DateRangeCalendarSlots {
   /**
@@ -63,7 +63,7 @@ export interface BaseDateRangePickerProps
 }
 
 type UseDateRangePickerDefaultizedProps<Props extends BaseDateRangePickerProps> =
-  LocalizedComponent<DefaultizedProps<Props, keyof BaseDateValidationProps>>;
+  LocalizedComponent<DefaultizedProps<Props, ValidateDateRangePropsToDefault>>;
 
 export function useDateRangePickerDefaultizedProps<Props extends BaseDateRangePickerProps>(
   props: Props,

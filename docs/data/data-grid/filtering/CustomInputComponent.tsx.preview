@@ -1,6 +1,7 @@
 <DataGrid
   rows={data.rows}
   columns={columns}
+  loading={loading}
   initialState={{
     ...data.initialState,
     filter: {
