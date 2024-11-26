@@ -32,25 +32,7 @@ export const useInteractionItemProps = (skip?: boolean) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
 
-      store.update((prev) => {
-        const prevItem = prev.interaction.item;
-        if (
-          prevItem === null ||
-          Object.keys(data).some(
-            (key) => data[key as keyof typeof data] !== prevItem[key as keyof typeof prevItem],
-          )
-        ) {
-          // The item is already something else, no need to clean it.
-          return prev;
-        }
-        return {
-          ...prev,
-          interaction: {
-            ...prev.interaction,
-            item: null,
-          },
-        };
-      });
+      dispatchInteraction({ type: 'leaveItem', data });
       clearHighlighted();
     };
     return {
