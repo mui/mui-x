@@ -64,16 +64,10 @@ const buildPackageRestrictedImports = (packageName, root, allowRootImports = tru
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            {
-              name: packageName,
-              message: 'Use relative import instead',
-            },
-            {
-              name: '@mui/material',
-              message: 'Use @mui/utils or a more specific import instead',
-            },
-          ],
+          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+            name: pkName,
+            message: 'Use relative import instead',
+          })),
           patterns: [
             // TODO move rule into main repo to allow deep @mui/monorepo imports
             {
