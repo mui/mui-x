@@ -87,7 +87,7 @@ If you want to access the grouping column field, for instance, to use it with co
 
 Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion).
 
-## Disable automatic parents and children selection
+## Automatic parents and children selection
 
 Same behavior as for the [Row grouping](/x/react-data-grid/row-grouping/#automatic-parents-and-children-selection).
 

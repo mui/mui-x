@@ -309,10 +309,10 @@ In the example below:
 If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not be cleaned up automatically, and the sorting/filtering will not be re-applied.
 :::
 
-## Disable automatic parents and children selection
+## Automatic parents and children selection
 
 By default, selecting a parent row selects all its descendants automatically.
-You can disable this behavior by using the `rowSelectionPropagation` prop.
+You can customize this behavior by using the `rowSelectionPropagation` prop.
 
 Here's how it's structured:
 
