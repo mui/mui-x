@@ -67,4 +67,5 @@ export interface GridInitialStateCommunity {
   columns?: GridColumnsInitialState;
   preferencePanel?: GridPreferencePanelInitialState;
   density?: GridDensityState;
+  scroll?: { top: number; left: number };
 }

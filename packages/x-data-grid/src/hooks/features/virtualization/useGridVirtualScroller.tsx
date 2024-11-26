@@ -48,6 +48,7 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -203,7 +204,8 @@ export const useGridVirtualScroller = () => {
    * work that's not necessary. Thus we store the context at the start of the scroll in `frozenContext`, and the rows
    * that are part of this old context will keep their same render context as to avoid re-rendering.
    */
-  const scrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
+  const scrollPosition = React.useRef(rootProps.initialState?.scroll ?? EMPTY_SCROLL_POSITION);
+  const ignoreNextScroll = React.useRef(false);
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
@@ -346,6 +348,11 @@ export const useGridVirtualScroller = () => {
   };
 
   const handleScroll = useEventCallback((event: React.UIEvent) => {
+    if (ignoreNextScroll.current) {
+      ignoreNextScroll.current = false;
+      return;
+    }
+
     const { scrollTop, scrollLeft } = event.currentTarget;
 
     // On iOS and macOS, negative offsets are possible when swiping past the start
@@ -596,20 +603,6 @@ export const useGridVirtualScroller = () => {
     return size;
   }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar]);
 
-  React.useEffect(() => {
-    apiRef.current.publishEvent('virtualScrollerContentSizeChange');
-  }, [apiRef, contentSize]);
-
-  useEnhancedEffect(() => {
-    // TODO a scroll reset should not be necessary
-    if (enabledForColumns) {
-      scrollerRef.current!.scrollLeft = 0;
-    }
-    if (enabledForRows) {
-      scrollerRef.current!.scrollTop = 0;
-    }
-  }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
-
   useEnhancedEffect(() => {
     if (listView) {
       scrollerRef.current!.scrollLeft = 0;
@@ -627,6 +620,33 @@ export const useGridVirtualScroller = () => {
       left: scrollPosition.current.left,
       renderContext: initialRenderContext,
     });
+
+    if (rootProps.initialState?.scroll && scrollerRef.current) {
+      const scroller = scrollerRef.current;
+      const { top, left } = rootProps.initialState.scroll;
+
+      if (top > 0 || left > 0) {
+        ignoreNextScroll.current = true;
+      }
+
+      scroller.scrollTop = top;
+      scroller.scrollLeft = left;
+
+      if (rootProps.loading && !rootProps.rows?.length && top > 0) {
+        const unsubscribeContentSizeChange = apiRef.current.subscribeEvent(
+          'virtualScrollerContentSizeChange',
+          () => {
+            if (scroller) {
+              ignoreNextScroll.current = true;
+              scroller.scrollTop = top;
+            }
+            unsubscribeContentSizeChange();
+          },
+        );
+
+        return unsubscribeContentSizeChange;
+      }
+    }
   });
 
   apiRef.current.register('private', {
