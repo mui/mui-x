@@ -630,6 +630,8 @@ export const useGridVirtualScroller = () => {
 
       return unsubscribeContentSizeChange;
     }
+
+    return undefined;
   });
 
   apiRef.current.register('private', {
