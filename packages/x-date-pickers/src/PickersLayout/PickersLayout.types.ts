@@ -4,9 +4,8 @@ import { SlotComponentProps } from '@mui/utils';
 import { PickersActionBar, PickersActionBarProps } from '../PickersActionBar';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { DateOrTimeViewWithMeridiem, PickerVariant } from '../internals/models/common';
+import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 import {
   ExportedPickersShortcutProps,
@@ -14,6 +13,8 @@ import {
 } from '../PickersShortcuts/PickersShortcuts';
 import { PickerOwnerState } from '../models';
 import { PickerValidValue } from '../internals/models';
+import { UsePickerViewsLayoutResponse } from '../internals/hooks/usePicker/usePickerViews';
+import { UsePickerValueLayoutResponse } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface ExportedPickersLayoutSlots<
   TValue extends PickerValidValue,
@@ -39,8 +40,11 @@ export interface ExportedPickersLayoutSlots<
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
-  wrapperVariant: PickerVariant;
-  isLandscape: boolean;
+  // isRTL cannot be part of PickerOwnerState because we need to have the correct isRTL value even when there is not picker above for some components.
+  /**
+   * `true` if the application is in right-to-left direction.
+   */
+  isRtl: boolean;
 }
 
 export interface ExportedPickersLayoutSlotProps<
@@ -93,7 +97,8 @@ export interface PickersLayoutSlotProps<
 export interface PickersLayoutProps<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends UsePickerLayoutPropsResponseLayoutProps<TValue, TView> {
+> extends UsePickerViewsLayoutResponse<TView>,
+    UsePickerValueLayoutResponse<TValue> {
   className?: string;
   children?: React.ReactNode;
   /**
@@ -114,10 +119,6 @@ export interface PickersLayoutProps<
    * @default {}
    */
   slotProps?: PickersLayoutSlotProps<TValue, TView>;
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: boolean;
 }
 
 export interface SubComponents<TValue extends PickerValidValue> {

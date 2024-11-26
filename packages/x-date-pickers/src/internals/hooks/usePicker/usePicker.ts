@@ -2,7 +2,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { InferError } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import { usePickerProvider } from './usePickerProvider';
@@ -54,13 +53,6 @@ export const usePicker = <
     rendererInterceptor,
   });
 
-  const pickerLayoutResponse = usePickerLayoutProps({
-    props,
-    variant,
-    propsFromPickerValue: pickerValueResponse.layoutProps,
-    propsFromPickerViews: pickerViewsResponse.layoutProps,
-  });
-
   const providerProps = usePickerProvider({
     props,
     pickerValueResponse,
@@ -82,7 +74,10 @@ export const usePicker = <
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    layoutProps: pickerLayoutResponse.layoutProps,
+    layoutProps: {
+      ...pickerViewsResponse.layoutProps,
+      ...pickerValueResponse.layoutProps,
+    },
 
     // Picker provider
     providerProps,

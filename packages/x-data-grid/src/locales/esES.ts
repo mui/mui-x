@@ -36,7 +36,6 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarPromptControlWithRecordingPlaceholder: 'Escriba o grabe un prompt…',
   toolbarPromptControlRecordingPlaceholder: 'Esperando por un prompt…',
   toolbarPromptControlLabel: 'Introduzca un prompt',
-  toolbarPromptControlDeleteIconLabel: 'Limpiar',
   toolbarPromptControlRecordButtonDefaultLabel: 'Grabar',
   toolbarPromptControlRecordButtonActiveLabel: 'Parar de grabar',
   toolbarPromptControlSendActionLabel: 'Enviar',
