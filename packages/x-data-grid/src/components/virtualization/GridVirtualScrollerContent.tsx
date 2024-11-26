@@ -2,10 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = DataGridProcessedProps;
@@ -37,7 +37,7 @@ const GridVirtualScrollerContent = React.forwardRef<
 
   useEnhancedEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
-  }, [props.style]);
+  }, [apiRef, props.style]);
 
   return (
     <VirtualScrollerContentRoot

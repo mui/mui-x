@@ -1,20 +1,15 @@
 import * as React from 'react';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import HomeIcon from '@mui/icons-material/Home';
 import {
   DataGridPro,
   useGridApiRef,
-  gridExpandedRowCountSelector,
   gridVisibleColumnDefinitionsSelector,
   gridExpandedSortedRowIdsSelector,
   GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function ScrollPlayground() {
+export default function ScrollRestoration() {
   const apiRef = useGridApiRef();
 
   const [coordinates, setCoordinates] = React.useState({
@@ -34,26 +29,6 @@ export default function ScrollPlayground() {
     const column = gridVisibleColumnDefinitionsSelector(apiRef)[colIndex];
     apiRef.current.setCellFocus(id, column.field);
   }, [apiRef, coordinates]);
-
-  const handleClick = (position: string) => () => {
-    const maxRowIndex = gridExpandedRowCountSelector(apiRef) - 1;
-    const maxColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
-
-    setCoordinates((coords) => {
-      switch (position) {
-        case 'top':
-          return { ...coords, rowIndex: Math.max(0, coords.rowIndex - 1) };
-        case 'bottom':
-          return { ...coords, rowIndex: Math.min(maxRowIndex, coords.rowIndex + 1) };
-        case 'left':
-          return { ...coords, colIndex: Math.max(0, coords.colIndex - 1) };
-        case 'right':
-          return { ...coords, colIndex: Math.min(maxColIndex, coords.colIndex + 1) };
-        default:
-          return { ...coords, rowIndex: 0, colIndex: 0 };
-      }
-    });
-  };
 
   const handleCellClick = (params: GridCellParams) => {
     const rowIndex = gridExpandedSortedRowIdsSelector(apiRef).findIndex(

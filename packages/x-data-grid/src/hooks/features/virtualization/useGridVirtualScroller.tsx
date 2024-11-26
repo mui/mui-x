@@ -48,7 +48,6 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -128,7 +127,6 @@ export const useGridVirtualScroller = () => {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
