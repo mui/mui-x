@@ -309,17 +309,17 @@ In the example below:
 If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not be cleaned up automatically, and the sorting/filtering will not be re-applied.
 :::
 
-## Automatic parents and children selection
+## Disable automatic parents and children selection
 
-By default, selecting a parent row does not select its children.
-You can override this behavior by using the `rowSelectionPropagation` prop.
+By default, selecting a parent row selects all its descendants automatically.
+You can disable this behavior by using the `rowSelectionPropagation` prop.
 
 Here's how it's structured:
 
 ```ts
 type GridRowSelectionPropagation = {
-  descendants?: boolean; // default: false
-  parents?: boolean; // default: false
+  descendants?: boolean; // default: true
+  parents?: boolean; // default: true
 };
 ```
 
