@@ -10,7 +10,6 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDimensions, gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridVirtualScroller } from '../../hooks/features/virtualization/useGridVirtualScroller';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
-import { GridOverlays as Overlays } from '../base/GridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
 import { GridTopContainer as TopContainer } from './GridTopContainer';
@@ -73,7 +72,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const overlaysProps = useGridOverlays();
+  const { getOverlay, overlaysProps } = useGridOverlays();
   const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
 
   const virtualScroller = useGridVirtualScroller();
@@ -99,7 +98,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
           <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
-        <Overlays {...overlaysProps} />
+        {getOverlay()}
 
         <Content {...getContentProps()}>
           <RenderZone {...getRenderZoneProps()}>

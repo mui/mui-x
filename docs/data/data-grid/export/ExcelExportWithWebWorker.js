@@ -31,7 +31,7 @@ function SlideTransition(props) {
 export default function ExcelExportWithWebWorker() {
   const [inProgress, setInProgress] = React.useState(false);
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10000,
     editable: true,
@@ -46,7 +46,7 @@ export default function ExcelExportWithWebWorker() {
       </Snackbar>
       <DataGridPremium
         {...data}
-        loading={data.rows.length === 0}
+        loading={loading}
         rowHeight={38}
         checkboxSelection
         slots={{ toolbar: CustomToolbar }}

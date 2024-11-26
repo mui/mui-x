@@ -38,10 +38,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Charts specific
+# Charts-specific
 npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
@@ -120,3 +120,8 @@ This code has been removed in v8, which implies removing the following props: `a
 
 This should not impact your code.
 If you used axes in a pie chart please open an issue, we would be curious to get more information about the use-case.
+
+## Remove `resolveSizeBeforeRender` prop
+
+The `resolveSizeBeforeRender` prop has been removed from all components.
+If you were using this prop, you can safely remove it.

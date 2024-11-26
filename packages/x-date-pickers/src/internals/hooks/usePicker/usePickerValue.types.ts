@@ -1,6 +1,6 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
-import { WrapperVariant } from '../../models/common';
+import { PickerVariant } from '../../models/common';
 import {
   FieldSection,
   TimezoneProps,
@@ -142,7 +142,7 @@ export interface UsePickerValueState<TValue> {
    */
   lastCommittedValue: TValue;
   /**
-   * Last value passed with `props.value`.
+   * Last value passed to `props.value`.
    * Used to update the `draft` value whenever the `value` prop changes.
    */
   lastControlledValue: TValue | undefined;
@@ -257,7 +257,10 @@ export interface UsePickerValueNonStaticProps {
 export interface UsePickerValueProps<TValue, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerValueNonStaticProps,
-    TimezoneProps {}
+    TimezoneProps {
+  // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
+  referenceDate?: PickerValidDate;
+}
 
 export interface UsePickerValueParams<
   TValue,
@@ -266,7 +269,7 @@ export interface UsePickerValueParams<
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, InferError<TExternalProps>>;
   valueType: PickerValueType;
-  wrapperVariant: WrapperVariant;
+  variant: PickerVariant;
   validator: Validator<TValue, InferError<TExternalProps>, TExternalProps>;
 }
 
