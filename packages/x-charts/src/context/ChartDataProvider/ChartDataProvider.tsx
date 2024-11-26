@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
-import { InteractionProvider } from '../InteractionProvider';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
 import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
@@ -13,7 +12,7 @@ import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider'
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
-import { SvgRefProvider } from '../SvgRefProvider';
+import { ChartProvider } from '../ChartProvider';
 
 export type ChartDataProviderProps = Omit<
   SizeProviderProps &
@@ -55,25 +54,23 @@ function ChartDataProvider(props: ChartDataProviderProps) {
   } = useChartDataProviderProps(props);
 
   return (
-    <SizeProvider {...sizeProviderProps}>
-      <DrawingAreaProvider {...drawingAreaProviderProps}>
-        <PluginProvider {...pluginProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProvider {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
+    <ChartProvider>
+      <SizeProvider {...sizeProviderProps}>
+        <DrawingAreaProvider {...drawingAreaProviderProps}>
+          <PluginProvider {...pluginProviderProps}>
+            <SeriesProvider {...seriesProviderProps}>
+              <CartesianProvider {...cartesianProviderProps}>
+                <ZAxisContextProvider {...zAxisContextProps}>
                   <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>
-                      <SvgRefProvider>{children}</SvgRefProvider>
-                    </AnimationProvider>
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProvider>
-          </SeriesProvider>
-        </PluginProvider>
-      </DrawingAreaProvider>
-    </SizeProvider>
+                </ZAxisContextProvider>
+              </CartesianProvider>
+            </SeriesProvider>
+          </PluginProvider>
+        </DrawingAreaProvider>
+      </SizeProvider>
+    </ChartProvider>
   );
 }
 

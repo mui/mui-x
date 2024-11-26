@@ -6,8 +6,8 @@ import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
-import { useStore } from '../internals/useStore';
-import { useSelector } from '../internals/useSelector';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
@@ -15,7 +15,7 @@ import { useXAxis, useYAxis } from '../hooks/useAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
-} from '../context/InteractionSelectors';
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,

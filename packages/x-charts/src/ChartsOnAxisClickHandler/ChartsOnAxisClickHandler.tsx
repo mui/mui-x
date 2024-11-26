@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 
 export type ChartsAxisData = {
   dataIndex: number;
