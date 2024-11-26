@@ -11,6 +11,7 @@ import {
 import { CHART_CORE_PLUGINS, ChartCorePluginSignatures } from '../plugins/corePlugins';
 import { UseChartBaseProps } from './useCharts.types';
 import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 
 export function useChartApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T | undefined> | undefined,
@@ -48,7 +49,11 @@ export function useCharts<
     [inPlugins],
   );
 
-  const pluginParams = {}; // To generate when plugins use params.
+  const pluginParams = extractPluginParamsFromProps<TSignatures, typeof props>({
+    plugins,
+    props,
+  });
+
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
@@ -70,7 +75,7 @@ export function useCharts<
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(initialState, plugin.getInitialState({}));
+        Object.assign(initialState, plugin.getInitialState(pluginParams));
       }
     });
     storeRef.current = new ChartStore(initialState);
