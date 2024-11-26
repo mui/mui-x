@@ -39,6 +39,14 @@ Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/
 
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
+:::warning
+This feature is deprecated and will be removed in `v9.x`.
+
+Use [Server-side data infinite loading](/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading) instead.
+
+If you are unable to migrate for some reason, please open an issue to describe what is missing in the new API so that we can improve it before this feature is removed.
+:::
+
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
 In addition, the area in which `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
@@ -51,6 +59,14 @@ Otherwise, the sorting and filtering will only be applied to the subset of rows 
 :::
 
 ## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+:::warning
+This feature is deprecated and will be removed in `v9.x`.
+
+Use [Server-side data viewport loading](/x/react-data-grid/server-side-data/lazy-loading/#viewport-loading) instead.
+
+If you are unable to migrate for some reason, please open an issue to describe what is missing in the new API so that we can improve it before this feature is removed.
+:::
 
 Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
 It loads new rows in chunks, as the user scrolls through the Data Grid and reveals empty rows.

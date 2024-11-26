@@ -76,7 +76,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
   extends DataGridPropsWithDefaultValues<R>,
     DataGridProSharedPropsWithDefaultValue {
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd (deprecated) is called.
    * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
@@ -130,7 +130,8 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
-   * * @default "client"
+   * @default "client"
+   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   rowsLoadingMode: GridFeatureMode;
   /**
@@ -203,6 +204,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   onRowsScrollEnd?: GridEventListener<'rowsScrollEnd'>;
   /**
@@ -254,6 +256,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
