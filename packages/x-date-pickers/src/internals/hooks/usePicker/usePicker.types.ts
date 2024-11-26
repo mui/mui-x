@@ -10,7 +10,6 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 import { PickerOwnerState } from '../../../models';
 import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import {
@@ -64,8 +63,9 @@ export interface UsePickerResponse<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
+  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &
+    UsePickerViewsResponse<TView>['layoutProps'];
 }
