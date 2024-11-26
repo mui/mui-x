@@ -68,6 +68,5 @@ export interface UsePickerResponse<
     Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
-  layoutProps: UsePickerValueResponse<TValue, TSection, TError>['layoutProps'] &
-    UsePickerViewsResponse<TView>['layoutProps'];
+  layoutProps: UsePickerValueResponse<TValue, TSection, TError>['layoutProps'];
 }

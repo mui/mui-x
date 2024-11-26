@@ -8,6 +8,7 @@ import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 import { FieldRef, FieldSection, PickerValidDate, TimezoneProps } from '../../../models';
+import { PickerContextValue } from '../../components/PickerProvider';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -132,13 +133,7 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem
   views: readonly TView[];
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
-  layoutProps: UsePickerViewsLayoutResponse<TView>;
-}
-
-export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
-  view: TView | null;
-  onViewChange: (view: TView) => void;
-  views: readonly TView[];
+  context: Pick<PickerContextValue, 'views' | 'view' | 'onViewChange'>;
 }
 
 /**
@@ -265,17 +260,20 @@ export const usePickerViews = <
     setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const layoutProps: UsePickerViewsLayoutResponse<TView> = {
-    views,
-    view: popperView,
-    onViewChange: setView,
-  };
+  const context = React.useMemo<Pick<PickerContextValue, 'views' | 'view' | 'onViewChange'>>(
+    () => ({
+      views,
+      view: popperView,
+      onViewChange: setView,
+    }),
+    [views, popperView, setView],
+  );
 
   return {
     hasUIView,
     views,
     shouldRestoreFocus,
-    layoutProps,
+    context,
     renderCurrentView: () => {
       if (popperView == null) {
         return null;

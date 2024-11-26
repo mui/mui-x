@@ -61,10 +61,10 @@ export const usePickerOrientation = (
 export function usePickerProvider<TValue>(
   parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
-  const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
+  const { props, pickerValueResponse, valueManager, localeText, variant, viewContext } = parameters;
 
   const utils = useUtils();
-  const orientation = usePickerOrientation(views, props.orientation);
+  const orientation = usePickerOrientation(viewContext.views, props.orientation);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -100,6 +100,7 @@ export function usePickerProvider<TValue>(
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      ...viewContext,
     }),
     [
       pickerValueResponse.actions.onOpen,
@@ -109,6 +110,7 @@ export function usePickerProvider<TValue>(
       orientation,
       props.disabled,
       props.readOnly,
+      viewContext,
     ],
   );
 
@@ -130,7 +132,7 @@ export interface UsePickerProviderParameters<TValue>
   pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
-  views: readonly DateOrTimeViewWithMeridiem[];
+  viewContext: Pick<PickerContextValue, 'views' | 'view' | 'onViewChange'>;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
