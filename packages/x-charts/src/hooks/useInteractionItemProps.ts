@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 
 export const useInteractionItemProps = (skip?: boolean) => {
   const store = useStore();
