@@ -16,11 +16,6 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  DateTimeValidationProps,
-} from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -33,6 +28,10 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
+import {
+  ExportedValidateDateTimeProps,
+  ValidateDateTimePropsToDefault,
+} from '../validation/validateDateTime';
 
 export interface BaseDateTimePickerSlots extends DateCalendarSlots, TimeClockSlots {
   /**
@@ -76,7 +75,7 @@ export interface BaseDateTimePickerProps<TView extends DateOrTimeViewWithMeridie
   extends BasePickerInputProps<PickerValidDate | null, TView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps, 'onViewChange'>,
     ExportedBaseClockProps,
-    DateTimeValidationProps {
+    ExportedValidateDateTimeProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -106,12 +105,7 @@ type UseDateTimePickerDefaultizedProps<
 > = LocalizedComponent<
   DefaultizedProps<
     Props,
-    | 'views'
-    | 'openTo'
-    | 'orientation'
-    | 'ampm'
-    | keyof BaseDateValidationProps
-    | keyof BaseTimeValidationProps
+    'views' | 'openTo' | 'orientation' | 'ampm' | ValidateDateTimePropsToDefault
   >
 >;
 
