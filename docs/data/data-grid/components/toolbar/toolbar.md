@@ -56,7 +56,7 @@ Renders a `div` with `role="toolbar"`.
 
 A button item that can be used to perform actions from the toolbar.
 
-Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
+See [ButtonBase API](/material-ui/api/button-base/) for available props.
 
 {{"demo": "GridToolbarButton.js"}}
 
@@ -64,7 +64,7 @@ Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some 
 
 A toggle button group that can be used to switch between multiple states.
 
-Renders a [ToggleButtonGroup](/material-ui/react-toggle-button/) component with some overrides.
+See [ToggleButtonGroup API](/material-ui/api/toggle-button/) for available props.
 
 {{"demo": "GridToolbarToggleButtonGroup.js"}}
 
@@ -72,7 +72,7 @@ Renders a [ToggleButtonGroup](/material-ui/react-toggle-button/) component with 
 
 A toggle button item that can be used to switch between two states.
 
-Renders a [ToggleButton](/material-ui/react-toggle-button/) component with some overrides.
+See [ToggleButton API](/material-ui/api/toggle-button-group/) for available props.
 
 {{"demo": "GridToolbarToggleButton.js"}}
 

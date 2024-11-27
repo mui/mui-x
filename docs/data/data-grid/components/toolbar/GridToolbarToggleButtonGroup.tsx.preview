@@ -1,10 +1,10 @@
 <Grid.Toolbar.ToggleButtonGroup value={view}>
   <Grid.Toolbar.ToggleButton
     color="primary"
-    value="columns"
-    onChange={() => setView('columns')}
+    value="grid"
+    onChange={() => setView('grid')}
   >
-    <ColumnsViewIcon fontSize="small" /> Columns view
+    <GridViewIcon fontSize="small" /> Grid view
   </Grid.Toolbar.ToggleButton>
   <Grid.Toolbar.ToggleButton
     color="primary"

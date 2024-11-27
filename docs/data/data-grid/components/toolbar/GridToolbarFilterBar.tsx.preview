@@ -2,6 +2,6 @@
   {...data}
   filterModel={filterModel}
   onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
-  slots={{ toolbar: Toolbar as any }}
-  slotProps={{ toolbar: { onRemoveFilter } } as any}
+  slots={{ toolbar: Toolbar }}
+  slotProps={{ toolbar: { onRemoveFilter } }}
 />
