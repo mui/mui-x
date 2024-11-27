@@ -24,7 +24,7 @@ Row count can be provided in either of the following ways.
 - Return `rowCount` in the `getRows` method of the [data source](/x/react-data-grid/server-side-data/#data-source)
 - Set the `rowCount` using the [`setRowCount`](/x/api/data-grid/grid-api/#grid-api-prop-setRowCount) API method.
 
-The above list is given in the order of precedence, which means if the row count is set using the API, that value gets overridden once a new value is returned by the `getRows` method, even if it is `undefined`.
+The above list is given in the order of precedence, which means if the row count is set using the API, that value gets overridden once a new value is returned by the `getRows` method, unless if it is `undefined`.
 :::
 
 ## Viewport loading

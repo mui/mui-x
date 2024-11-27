@@ -219,7 +219,10 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const { response, fetchParams } = params;
-      privateApiRef.current.setRowCount(response.rowCount === undefined ? -1 : response.rowCount);
+      const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+      if (response.rowCount !== undefined || pageRowCount === undefined) {
+        privateApiRef.current.setRowCount(response.rowCount === undefined ? -1 : response.rowCount);
+      }
 
       if (rowsStale.current) {
         rowsStale.current = false;
