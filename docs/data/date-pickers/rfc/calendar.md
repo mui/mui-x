@@ -94,7 +94,9 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
     <Calendar.Navigation.GoToYear target="next">▶</Calendar.Navigation.GoToYear>
   </Calendar.Header.Root>
   <Calendar.Months.Root>
-    {(monthValue) => <Calendar.Months.Cell value={monthValue} />}
+    {({ months }) =>
+      months.map((month) => <Calendar.Months.Cell value={monthValue} />)
+    }
   </Calendar.Months.Root>
 </Calendar.Root>;
 ```
@@ -129,7 +131,7 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Years.Root>
-    {(yearValue) => <Calendar.Years.Cell value={yearValue} />}
+    {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
   </Calendar.Years.Root>
 </Calendar.Root>;
 ```
@@ -210,12 +212,14 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
   </Calendar.MatchView>
   <Calendar.MatchView match="month">
     <Calendar.Months.Root>
-      {(monthValue) => <Calendar.Months.Cell value={monthValue} />}
+      {({ months }) =>
+        months.map((month) => <Calendar.Months.Cell value={monthValue} />)
+      }
     </Calendar.Months.Root>
   </Calendar.MatchView>
   <Calendar.MatchView match="year">
     <Calendar.Years.Root>
-      {(yearValue) => <Calendar.Years.Cell value={yearValue} />}
+      {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
     </Calendar.Years.Root>
   </Calendar.MatchView>
 </Calendar.Root>
@@ -405,8 +409,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
          <PickerCalendarHeaderLabelContainer>
            <PickerCalendarHeaderLabel format={format} />
          </PickerCalendarHeaderLabelContainer>
-       </PickerCalendarHeaderRoot>
-     );
+       </PickerCalendarHeaderRoot>WeekNumberCell
    };
    ```
 
@@ -522,7 +525,7 @@ Renders a button to set the current visible view.
 
 ### `Calendar.Days.Root`
 
-Top level component for the `Calendar.Days.*` components
+Top level component for the `Calendar.Days.*` components.
 
 #### Props
 
@@ -618,16 +621,52 @@ Renders the number of the current week.
 
 ### `Calendar.Months.Root`
 
-TODO
+Top level component for the `Calendar.Months.*` components.
+
+It expects a function as its children, which has the list of the months as a parameter:
+
+```tsx
+<Calendar.Months.Root>
+  {({ months }) => months.map((month) => <Calendar.Months.Cell value={month} />)}
+</Calendar.Months.Root>
+```
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+- `children`: `(params: { months: PickerValidDate[] }) => React.ReactNode`
 
 ### `Calendar.Months.Cell`
 
-TODO
+Renders the cell for a single month.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+- `value`: `PickerValidDate` - **required**.
 
 ### `Calendar.Years.Root`
 
-TODO
+Top level component for the `Calendar.Years.*` components.
+
+It expects a function as its children, which has the list of the years as a parameter:
+
+```tsx
+<Calendar.Years.Root>
+  {({ years }) => years.map((year) => <Calendar.Years.Cell value={year} />)}
+</Calendar.Years.Root>
+```
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+- `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
 
 ### `Calendar.Years.Cell`
 
-TODO
+Renders the cell for a single year.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+- `value`: `PickerValidDate` - **required**.
