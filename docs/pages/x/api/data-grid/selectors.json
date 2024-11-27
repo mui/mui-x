@@ -297,13 +297,6 @@
     "supportsApiRef": false
   },
   {
-    "name": "gridListColumnSelector",
-    "returnType": "GridListViewState",
-    "category": "List View",
-    "description": "Get the list column definition",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridPageCountSelector",
     "returnType": "number",
     "category": "Pagination",
