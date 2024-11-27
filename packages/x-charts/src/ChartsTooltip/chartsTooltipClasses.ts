@@ -21,6 +21,8 @@ export interface ChartsTooltipClasses {
   labelCell: string;
   /** Styles applied to the valueCell element. */
   valueCell: string;
+  /** Styles applied to the axisValueCell element. Only available for axis tooltip. */
+  axisValueCell: string;
 }
 
 export type ChartsTooltipClassKey = keyof Omit<
@@ -34,7 +36,18 @@ export function getChartsTooltipUtilityClass(slot: string) {
 }
 export const chartsTooltipClasses: ChartsTooltipClasses = generateUtilityClasses(
   'MuiChartsTooltip',
-  ['root', 'paper', 'table', 'row', 'cell', 'mark', 'markCell', 'labelCell', 'valueCell'],
+  [
+    'root',
+    'paper',
+    'table',
+    'row',
+    'cell',
+    'mark',
+    'markCell',
+    'labelCell',
+    'valueCell',
+    'axisValueCell',
+  ],
 );
 
 export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
@@ -48,6 +61,7 @@ export const useUtilityClasses = (classes?: Partial<ChartsTooltipClasses>) => {
     markCell: ['markCell'],
     labelCell: ['labelCell'],
     valueCell: ['valueCell'],
+    axisValueCell: ['axisValueCell'],
   };
 
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
