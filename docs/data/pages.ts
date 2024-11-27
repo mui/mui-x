@@ -218,6 +218,7 @@ const pages: MuiPage[] = [
               },
 
               { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
+              { pathname: '/x/api/data-grid/grid-list-col-def', title: 'GridListColDef' },
               {
                 pathname: '/x/api/data-grid/grid-export-state-params',
                 title: 'GridExportStateParams',

@@ -140,6 +140,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridColDef',
       'GridSingleSelectColDef',
       'GridActionsColDef',
+      'GridListColDef',
       'GridCsvExportOptions',
       'GridPrintExportOptions',
       'GridExcelExportOptions',

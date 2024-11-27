@@ -331,6 +331,7 @@
   { "name": "GridLeafColumn", "kind": "Interface" },
   { "name": "GridLeafNode", "kind": "Interface" },
   { "name": "GridListColDef", "kind": "TypeAlias" },
+  { "name": "gridListColumnSelector", "kind": "Variable" },
   { "name": "GridLoadIcon", "kind": "Variable" },
   { "name": "GridLoadingOverlay", "kind": "Variable" },
   { "name": "GridLoadingOverlayProps", "kind": "Interface" },
