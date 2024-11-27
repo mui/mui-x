@@ -162,8 +162,9 @@ export class CacheChunkManager {
           ...response.pageInfo,
           // If the original response had page info, update that information for all but last chunk and keep the original value for the last chunk
           hasNextPage:
-            (response.pageInfo?.hasNextPage !== undefined && !isLastChunk) ||
-            response.pageInfo?.hasNextPage,
+            response.pageInfo?.hasNextPage !== undefined && !isLastChunk
+              ? true
+              : response.pageInfo?.hasNextPage,
           nextCursor:
             response.pageInfo?.nextCursor !== undefined && !isLastChunk
               ? response.rows[chunkKey.end + 1].id
