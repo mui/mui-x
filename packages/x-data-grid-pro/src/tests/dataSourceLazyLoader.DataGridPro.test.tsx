@@ -95,7 +95,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // The 11th row should be a skeleton
-      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
     });
 
     it('should make a new data source request once the skeleton rows are in the render context', async () => {
@@ -274,7 +274,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       setProps({ rowCount: 100 });
 
       // The 11th row should be a skeleton
-      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
     });
 
     it('should reset the grid if the rowCount becomes unknown', async () => {
@@ -285,7 +285,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // The 11th row should not exist
-      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
 
       // make the rowCount unknown
       setProps({ rowCount: -1 });
@@ -331,7 +331,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are added
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
       // The 11th row should be a skeleton
-      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
+      expect(getRow(10).dataset.id).to.equal('auto-generated-skeleton-row-root-10');
     });
   });
 });
