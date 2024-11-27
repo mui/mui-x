@@ -104,7 +104,7 @@ export const useGridDataSource = (
   }, [paginationModel.pageSize, props.pageSizeOptions]);
 
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(
-    () => new CacheChunkManager({ chunkSize: cacheChunkSize }),
+    () => new CacheChunkManager(cacheChunkSize),
   ).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
     getCache(props.unstable_dataSourceCache),
@@ -136,7 +136,7 @@ export const useGridDataSource = (
       };
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
-      const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
+      const responses = cacheKeys.map(cache.get);
       const cachedData = responses.some((response) => response === undefined)
         ? undefined
         : CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]);
