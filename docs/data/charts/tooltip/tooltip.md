@@ -105,18 +105,14 @@ Examples about helpers are provided in the composition section.
 ```jsx
 import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 
-function CustomItemTooltip() {
+function CustomItemTooltipContent() {
   const tooltipData = useItemTooltip();
 
   if (!tooltipData) { // No data to display
     return null;
   }
 
-  return (
-    <ChartsTooltipContainer trigger="item">
-      {/** Your custom content **/}
-    </ChartsTooltipContainer>
-  )
+  return <div>{/** Your custom content **/}</div>;
 }
 
 <LineChart
@@ -126,9 +122,30 @@ function CustomItemTooltip() {
 // With composition
 <ChartContainer>
   // ...
-  <CustomItemTooltip />
+  <ChartsTooltipContainer trigger="item">
+    <CustomItemTooltipContent />
+  </ChartsTooltipContainer>
 </ChartContainer>
 ```
+
+:::warning
+Do not skip ChartsTooltipContainer rendering if the tooltip has no data to display.
+For example the following code does not work.
+
+```jsx
+if (tooltipData === null) {
+  return null;
+}
+
+return (
+  <ChartsTooltipContainer trigger="item">
+    {/** My content **/}
+  </ChartsTooltipContainer>
+);
+```
+
+The ChartsTooltipContainer must render before the pointer enters the SVG because it uses this event to get the pointer type.
+:::
 
 ### Overriding placement
 
