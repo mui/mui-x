@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   rowHeight={rowHeight}
   unstable_listView={isListView}
   unstable_listColumn={listColDef}

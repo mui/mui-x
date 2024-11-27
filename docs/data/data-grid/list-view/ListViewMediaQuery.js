@@ -41,7 +41,7 @@ export default function ListViewMediaQuery() {
   const theme = useTheme();
   const isListView = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 5,
     visibleFields: VISIBLE_FIELDS,
@@ -60,6 +60,7 @@ export default function ListViewMediaQuery() {
     >
       <DataGridPro
         {...data}
+        loading={loading}
         rowHeight={rowHeight}
         unstable_listView={isListView}
         unstable_listColumn={listColDef}

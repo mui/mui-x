@@ -115,7 +115,7 @@ export default function ListView() {
   const [view, setView] = React.useState<'grid' | 'list'>('list');
   const isListView = view === 'list';
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 20,
     visibleFields: VISIBLE_FIELDS,
@@ -139,6 +139,7 @@ export default function ListView() {
     <div style={{ maxWidth: 360, height: 600 }}>
       <DataGridPro
         {...data}
+        loading={loading}
         columns={columns}
         rowHeight={rowHeight}
         unstable_listView={isListView}
