@@ -39,9 +39,6 @@ const useUtilityClasses = (ownerState: { classes: HeatmapTooltipProps['classes']
   return composeClasses(slots, getChartsTooltipUtilityClass, classes);
 };
 
-/**
- * @ignore - internal component.
- */
 function DefaultHeatmapTooltipContent(props: Pick<HeatmapTooltipProps, 'classes'>) {
   const { classes } = props;
 

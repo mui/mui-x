@@ -1,0 +1,135 @@
+{
+  "props": {
+    "anchorEl": {
+      "type": {
+        "name": "union",
+        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func<br>&#124;&nbsp;{ contextElement?: (props, propName) => {\n  if (props[propName] == null) {\n    return null;\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}, getBoundingClientRect: func }"
+      }
+    },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "component": { "type": { "name": "elementType" } },
+    "components": {
+      "type": { "name": "shape", "description": "{ Root?: elementType }" },
+      "default": "{}"
+    },
+    "componentsProps": {
+      "type": { "name": "shape", "description": "{ root?: func<br>&#124;&nbsp;object }" },
+      "default": "{}"
+    },
+    "container": {
+      "type": {
+        "name": "union",
+        "description": "(props, propName) => {\n  if (props[propName] == null) {\n    return new Error(`Prop '${propName}' is required but wasn't specified`);\n  }\n  if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {\n    return new Error(`Expected prop '${propName}' to be of type Element`);\n  }\n  return null;\n}<br>&#124;&nbsp;func"
+      }
+    },
+    "disablePortal": { "type": { "name": "bool" }, "default": "false" },
+    "keepMounted": { "type": { "name": "bool" }, "default": "false" },
+    "modifiers": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ data?: object, effect?: func, enabled?: bool, fn?: func, name?: any, options?: object, phase?: 'afterMain'<br>&#124;&nbsp;'afterRead'<br>&#124;&nbsp;'afterWrite'<br>&#124;&nbsp;'beforeMain'<br>&#124;&nbsp;'beforeRead'<br>&#124;&nbsp;'beforeWrite'<br>&#124;&nbsp;'main'<br>&#124;&nbsp;'read'<br>&#124;&nbsp;'write', requires?: Array&lt;string&gt;, requiresIfExists?: Array&lt;string&gt; }&gt;"
+      }
+    },
+    "open": { "type": { "name": "bool" } },
+    "placement": {
+      "type": {
+        "name": "enum",
+        "description": "'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top'"
+      },
+      "default": "'bottom'"
+    },
+    "popperOptions": {
+      "type": {
+        "name": "shape",
+        "description": "{ modifiers?: array, onFirstUpdate?: func, placement?: 'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top', strategy?: 'absolute'<br>&#124;&nbsp;'fixed' }"
+      },
+      "default": "{}"
+    },
+    "popperRef": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { destroy: func, forceUpdate: func, setOptions: func, state: { attributes: object, elements: object, modifiersData: object, options: object, orderedModifiers: Array&lt;object&gt;, placement: 'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top', rects: object, reset: bool, scrollParents: object, strategy: 'absolute'<br>&#124;&nbsp;'fixed', styles: object }, update: func } }"
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      },
+      "additionalInfo": { "sx": true }
+    },
+    "transition": { "type": { "name": "bool" }, "default": "false" }
+  },
+  "name": "HeatmapTooltip",
+  "imports": [
+    "import { HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';",
+    "import { HeatmapTooltip } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "cell",
+      "className": "MuiHeatmapTooltip-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiHeatmapTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiHeatmapTooltip-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markCell",
+      "className": "MuiHeatmapTooltip-markCell",
+      "description": "Styles applied to the markCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiHeatmapTooltip-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiHeatmapTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiHeatmapTooltip-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiHeatmapTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiHeatmapTooltip-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiHeatmapTooltip",
+  "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}
