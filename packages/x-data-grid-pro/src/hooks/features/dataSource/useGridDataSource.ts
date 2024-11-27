@@ -91,7 +91,7 @@ export const useGridDataSource = (
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
-  const lastRequestIdentifier = React.useRef<string | null>(null);
+  const lastRequestId = React.useRef<number>(0);
 
   const onError = props.unstable_onDataSourceError;
 
@@ -154,8 +154,8 @@ export const useGridDataSource = (
         apiRef.current.setLoading(true);
       }
 
-      const requestIdentifier = JSON.stringify(fetchParams);
-      lastRequestIdentifier.current = requestIdentifier;
+      const requestId = lastRequestId.current + 1;
+      lastRequestId.current = requestId;
 
       try {
         const getRowsResponse = await getRows(fetchParams);
@@ -165,14 +165,14 @@ export const useGridDataSource = (
           cache.set(key, response);
         });
 
-        if (lastRequestIdentifier.current === requestIdentifier) {
+        if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
           });
         }
       } catch (error) {
-        if (lastRequestIdentifier.current === requestIdentifier) {
+        if (lastRequestId.current === requestId) {
           apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
             error: error as Error,
             fetchParams,
@@ -180,10 +180,7 @@ export const useGridDataSource = (
           onError?.(error as Error, fetchParams);
         }
       } finally {
-        if (
-          defaultRowsUpdateStrategyActive &&
-          lastRequestIdentifier.current === requestIdentifier
-        ) {
+        if (defaultRowsUpdateStrategyActive && lastRequestId.current === requestId) {
           apiRef.current.setLoading(false);
         }
       }
