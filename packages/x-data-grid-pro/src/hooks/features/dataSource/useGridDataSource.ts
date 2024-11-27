@@ -136,7 +136,7 @@ export const useGridDataSource = (
       };
 
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
-      const responses = cacheKeys.map(cache.get);
+      const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
       const cachedData = responses.some((response) => response === undefined)
         ? undefined
         : CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]);
