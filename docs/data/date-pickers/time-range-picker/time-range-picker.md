@@ -87,6 +87,10 @@ You can pass the `SingleInputTimeRangeField` component to the Time Range Picker 
 For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
 :::
 
+### Change end time label
+
+{{"demo": "CustomizedBehaviorTimeRangePicker.js"}}
+
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
