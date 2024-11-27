@@ -81,7 +81,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: svgWidth, height: svgHeight }}
+      ownerState={{ width: svgWidth || undefined, height: svgHeight || undefined }}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
