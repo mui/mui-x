@@ -107,6 +107,11 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
     function getClosestPoint(
       event: MouseEvent,
     ):
@@ -114,13 +119,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       | 'outside-chart'
       | 'outside-voronoi-max-radius'
       | 'no-point-found' {
-      const element = svgRef.current;
-      if (element === null) {
-        return 'outside-chart';
-      }
-
       // Get mouse coordinate in global SVG space
-      const svgPoint = getSVGPoint(element, event);
+      const svgPoint = getSVGPoint(element!, event);
 
       if (!drawingArea.isPointInside(svgPoint)) {
         lastFind.current = undefined;
@@ -215,11 +215,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       const { seriesId, dataIndex } = closestPoint;
       onItemClick(event, { type: 'scatter', seriesId, dataIndex });
     };
-
-    const element = svgRef.current;
-    if (element === null) {
-      return undefined;
-    }
 
     element.addEventListener('pointerleave', handleMouseLeave);
     element.addEventListener('pointermove', handleMouseMove);
