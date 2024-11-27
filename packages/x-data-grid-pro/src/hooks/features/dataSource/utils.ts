@@ -9,15 +9,6 @@ export const runIf = (condition: boolean, fn: Function) => (params: unknown) => 
   }
 };
 
-export type GridDataSourceCacheChunkManagerConfig = {
-  /**
-   * The number of rows to store in each cache entry. If not set, the whole array will be stored in a single cache entry.
-   * Setting this value to smallest page size will result in better cache hit rate.
-   * Has no effect if cursor pagination is used.
-   */
-  chunkSize: number;
-};
-
 export enum RequestStatus {
   QUEUED,
   PENDING,
@@ -135,8 +126,14 @@ export class NestedDataManager {
 export class CacheChunkManager {
   private chunkSize: number;
 
-  constructor(config: GridDataSourceCacheChunkManagerConfig) {
-    this.chunkSize = config.chunkSize;
+  /**
+   * @param chunkSize The number of rows to store in each cache entry.
+   * If not set, the whole array will be stored in a single cache entry.
+   * Setting this value to smallest page size will result in better cache hit rate.
+   * Has no effect if cursor pagination is used.
+   */
+  constructor(chunkSize: number) {
+    this.chunkSize = chunkSize;
   }
 
   public getCacheKeys = (key: GridGetRowsParams) => {
@@ -190,13 +187,11 @@ export class CacheChunkManager {
     }
 
     return responses.reduce(
-      (acc, response) => {
-        return {
-          rows: [...acc.rows, ...response.rows],
-          rowCount: response.rowCount,
-          pageInfo: response.pageInfo,
-        };
-      },
+      (acc, response) => ({
+        rows: [...acc.rows, ...response.rows],
+        rowCount: response.rowCount,
+        pageInfo: response.pageInfo,
+      }),
       { rows: [], rowCount: 0, pageInfo: {} },
     );
   };
