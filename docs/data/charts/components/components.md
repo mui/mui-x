@@ -82,14 +82,15 @@ By using `invert`, the value associated with the current mouse coordinate `y` ca
 With the introduction of the `ChartDataProvider` in v8, the chart data can be accessed from any component.
 This allows you to create HTML components that interact with the charts data.
 
-In the next example, notice that `MyCustomLegend` component displays the series names and colors. You can expand the code to see how it works.
+In the next example, notice that `MyCustomLegend` component displays the series names and colors.
 This creates an html `table` element, which handles long series names better than the default legend.
 
 {{"demo": "HtmlLegend.js"}}
 
 :::warning
-Note that the HTML components are not part of the SVG hierarchy. Hence, they should be placed outside the `<ChartsSurface />` component,
-but inside the `<ChartDataProvider />` component. Else they will not be visible.
+Note that the HTML components are not part of the SVG hierarchy.
+Hence, they should be:
 
-If you want to position an HTML component relative to the SVG, you can use the `useDrawingArea()` hook to get the SVG's position and size.
+- Outside the `<ChartsSurface />` component to avoid mixing HTAM and SVG.
+- Inside the `<ChartDataProvider />` component to get access to the data.
 :::
