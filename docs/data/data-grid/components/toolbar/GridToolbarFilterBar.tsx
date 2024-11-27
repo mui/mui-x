@@ -9,13 +9,19 @@ import {
   useGridApiContext,
   useGridSelector,
   GridFilterListIcon,
-  GridSlots,
+  GridToolbarProps,
 } from '@mui/x-data-grid-pro';
 import Chip from '@mui/material/Chip';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-type ToolbarProps = GridSlots['toolbar'] & {
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    onRemoveFilter: (filterId: GridFilterItem['id']) => void;
+  }
+}
+
+type ToolbarProps = GridToolbarProps & {
   onRemoveFilter: (filterId: GridFilterItem['id']) => void;
 };
 
@@ -92,8 +98,8 @@ export default function GridToolbarFilterBar() {
         {...data}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
-        slots={{ toolbar: Toolbar as any }}
-        slotProps={{ toolbar: { onRemoveFilter } } as any}
+        slots={{ toolbar: Toolbar }}
+        slotProps={{ toolbar: { onRemoveFilter } }}
       />
     </div>
   );

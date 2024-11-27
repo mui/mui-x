@@ -30,11 +30,11 @@ const StyledGridToolbarRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  flexWrap: 'wrap',
   gap: theme.spacing(0.25),
   padding: theme.spacing(0, 0.5),
   minHeight: 48,
   borderBottom: `1px solid ${theme.palette.divider}`,
+  overflow: 'auto',
 }));
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(

@@ -48,7 +48,7 @@ function Toolbar() {
           onClick={() => setDownloadMenuOpen(true)}
         >
           <FileDownloadIcon fontSize="small" />
-          <ArrowDropDownIcon fontSize="small" />
+          <ArrowDropDownIcon fontSize="small" sx={{ ml: -1, mr: -0.5 }} />
         </Grid.Toolbar.Button>
       </Tooltip>
 

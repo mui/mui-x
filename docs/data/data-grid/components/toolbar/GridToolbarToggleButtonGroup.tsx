@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Grid } from '@mui/x-data-grid';
-import ColumnsViewIcon from '@mui/icons-material/ViewWeek';
-import ListViewIcon from '@mui/icons-material/ViewStream';
+import GridViewIcon from '@mui/icons-material/GridOnOutlined';
+import ListViewIcon from '@mui/icons-material/TableRowsOutlined';
 
 // IGNORE THE FOLLOWING IMPORTS
 import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -9,17 +9,17 @@ import MUIToggleButton from '@mui/material/ToggleButton';
 import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext'; // eslint-disable-line
 
 export default function GridToolbarToggleButtonGroup() {
-  const [view, setView] = React.useState('columns');
+  const [view, setView] = React.useState('grid');
 
   return (
     <DemoContainer>
       <Grid.Toolbar.ToggleButtonGroup value={view}>
         <Grid.Toolbar.ToggleButton
           color="primary"
-          value="columns"
-          onChange={() => setView('columns')}
+          value="grid"
+          onChange={() => setView('grid')}
         >
-          <ColumnsViewIcon fontSize="small" /> Columns view
+          <GridViewIcon fontSize="small" /> Grid view
         </Grid.Toolbar.ToggleButton>
         <Grid.Toolbar.ToggleButton
           color="primary"
