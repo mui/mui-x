@@ -95,17 +95,14 @@ export const useGridDataSource = (
 
   const onError = props.unstable_onDataSourceError;
 
-  const cacheChunkSize = React.useMemo(() => {
+  const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
     const sortedPageSizeOptions = props.pageSizeOptions
       .map((option) => (typeof option === 'number' ? option : option.value))
       .sort((a, b) => a - b);
+    const cacheChunkSize = Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
 
-    return Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
-  }, [paginationModel.pageSize, props.pageSizeOptions]);
-
-  const cacheChunkManager = useLazyRef<CacheChunkManager, void>(
-    () => new CacheChunkManager(cacheChunkSize),
-  ).current;
+    return new CacheChunkManager(cacheChunkSize);
+  }).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
     getCache(props.unstable_dataSourceCache),
   );
