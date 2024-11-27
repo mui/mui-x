@@ -25,7 +25,7 @@ import {
   GridCellParams,
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
-import { GridTreeNodeWithRender } from '../../models/gridRows';
+import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -57,7 +57,9 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
   colIndex: number;
   column: GridColDef;
+  row: GridRowModel;
   rowId: GridRowId;
+  rowNode: GridTreeNode;
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
@@ -155,7 +157,9 @@ let warnedOnce = false;
 const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
+    row,
     rowId,
+    rowNode,
     editCellState,
     align,
     children: childrenProp,
@@ -195,14 +199,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
-      const row = apiRef.current.getRow(rowId);
-      if (!row) {
-        return EMPTY_CELL_PARAMS;
-      }
 
       const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
         rowId,
         field,
+        row,
+        rowNode as GridTreeNodeWithRender,
       );
       result.api = apiRef.current;
       return result;

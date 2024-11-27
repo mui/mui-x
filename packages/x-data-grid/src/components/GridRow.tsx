@@ -279,6 +279,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
+  /* Start of rendering */
+  if (!rowNode) {
+    return null;
+  }
+
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,
@@ -350,16 +355,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
         gridHasFiller={gridHasFiller}
+        row={row}
+        rowNode={rowNode}
         {...slotProps?.cell}
       />
     );
   };
-
-  /* Start of rendering */
-
-  if (!rowNode) {
-    return null;
-  }
 
   const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;

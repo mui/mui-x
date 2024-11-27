@@ -55,14 +55,14 @@ export function useGridParamsApi(
   );
 
   const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
-    (id, field) => {
+    (id, field, rowParam, rowNodeParam) => {
       const colDef = (
         props.unstable_listView
           ? gridListColumnSelector(apiRef.current.state)
           : apiRef.current.getColumn(field)
       ) as GridStateColDef;
-      const row = apiRef.current.getRow(id);
-      const rowNode = apiRef.current.getRowNode(id);
+      const row = rowParam ?? apiRef.current.getRow(id);
+      const rowNode = rowNodeParam ?? apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
         throw new MissingRowIdError(`No row with id #${id} found`);
