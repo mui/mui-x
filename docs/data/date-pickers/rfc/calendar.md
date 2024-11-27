@@ -35,11 +35,11 @@ The user can use the `Calendar.Days.*` components to create a grid of days and t
 import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
-  <Calendar.Header.Root>
+  <div>
     <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
-    <Calendar.Header.Title />
+    <Calendar.FormattedValue format="MMMM YYYY" />
     <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
-  </Calendar.Header.Root>
+  </div>
   <Calendar.Days.Root>
     <Calendar.Days.Header>
       {({ days }) => days.map((day) => <Calendar.Days.Label value={day} />)}
@@ -86,11 +86,11 @@ The user can use the `Calendar.Months.*` components to create a grid of months a
 import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
-  <Calendar.Header.Root>
+  <div>
     <Calendar.GoToYear target="previous">◀</Calendar.GoToYear>
-    <Calendar.Header.Title format="YYYY" />
+    <Calendar.FormattedValue format="YYYY" />
     <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
-  </Calendar.Header.Root>
+  </div>
   <Calendar.Months.Root>
     {({ months }) =>
       months.map((month) => <Calendar.Months.Cell value={monthValue} />)
@@ -158,7 +158,7 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
 
 ```tsx
 <Calendar.Root value={value} onChange={setValue}>
-  <Calendar.Header.Root>
+  <div>
     {({ view }) => (
       <React.Fragment>
         <div>
@@ -167,7 +167,7 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
             target={view === 'year' ? 'day' : 'year'}
             disabled={view === 'month'}
           >
-            <Calendar.Header.Title format="YYYY" />
+            <Calendar.FormattedValue format="YYYY" />
           </Calendar.SetView>
           <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
         </div>
@@ -177,13 +177,13 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
             target={view === 'month' ? 'day' : 'month'}
             disabled={view === 'year'}
           >
-            <Calendar.Header.Title format="YYYY" />
+            <Calendar.FormattedValue format="YYYY" />
           </Calendar.SetView>
           <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
         </div>
       </React.Fragment>
     )}
-  </Calendar.Header.Root>
+  </div>
   <Calendar.MatchView match="day">
     <Calendar.Days.Root>
       <Calendar.Days.Header>
@@ -220,11 +220,11 @@ The header above tries to replicate the behavior of a MD3 Date Picker.
 Today's `<DateCalendar />` header would look as follow:
 
 ```tsx
-<Calendar.Header.Root>
+<div>
   {({ view }) => (
     <React.Fragment>
       <Calendar.SetView target={view === 'year' ? 'month' : 'year'}>
-        <Calendar.Header.Title /> {view === 'year' ? '▲' : '▼'}
+        <Calendar.FormattedValue format="MMMM YYYY" /> {view === 'year' ? '▲' : '▼'}
       </Calendar.SetView>
       <Calendar.MatchView match="day">
         <div>
@@ -234,7 +234,7 @@ Today's `<DateCalendar />` header would look as follow:
       </Calendar.MatchView>
     </React.Fragment>
   )}
-</Calendar.Header.Root>
+</div>
 ```
 
 But the current behavior is not great, once the user is on the `year` view, there is no way to go back to the `day` view without picking a value.
@@ -328,18 +328,18 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    That way, this components can be composed more freely, it now only has to be mounted inside `<Calendar.Root />`.
    :::
 
-2. Using the `Calendar.*` primitives exposed by `@base-ui/x-date-pickers/Calendar`:
+2. Using the primitives exposed by `@base-ui/x-date-pickers/Calendar`:
 
-   If the user wants to totally own the styling of this part of the UI (because he wants to build something really different from Material UI), he can use `Calendar.*` only for this part of the UI while still using `@mui/x-date-pickers` for everything he doesn't want to deeply customize:
+   If the user wants to totally own the styling of this part of the UI (because he wants to build something really different from Material UI), he can use components like `<Calendar.FormattedValue />` only for this part of the UI while still using `@mui/x-date-pickers` for everything he doesn't want to deeply customize:
 
    ```tsx
    import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
    function CustomCalendarHeader() {
      return (
-       <Calendar.Header.Root>
-         <Calendar.Header.Title format="MMMM YYYY" />
-       </Calendar.Header.Root>
+       <div>
+         <Calendar.FormattedValue format="MMMM YYYY" />
+       </div>
      );
    }
    ```
@@ -370,7 +370,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    ```tsx
    import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
-   export const PickerCalendarHeaderRoot = styled(Calendar.Header.Root)({
+   export const PickerCalendarHeaderRoot = styled('div')({
      display: 'flex',
      alignItems: 'center',
      marginTop: 12,
@@ -379,7 +379,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
      paddingRight: 12,
    });
 
-   export const PickerCalendarHeaderLabel = styled(Calendar.Header.Title)({
+   export const PickerCalendarHeaderLabel = styled(Calendar.FormattedValue)({
      /** ... */
    });
 
@@ -409,7 +409,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    Should it be:
 
    1. `<PickersCalendarHeaderRoot />` like it would be today
-   2. `<Calendar.Header.Root />` to match the exports from `@base-ui/x-date-pickers`
+   2. `<Calendar.Header />` to match the exports from `@base-ui/x-date-pickers`
    3. Something else?
 
    :::
@@ -459,6 +459,16 @@ Doesn't render a DOM node (it does not have a `render` prop either).
 
 - `children`: `React.ReactNode`
 
+### `Calendar.FormattedValue`
+
+Formats the value based on the provided format.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLSpanElement>`
+
+- `format`: `string` - **required**
+
 ### `Calendar.GoToMonth`
 
 Renders a button to go to the previous or the next month.
@@ -498,24 +508,6 @@ Renders a button to set the current visible view.
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
 
 - `target`: `TView`
-
-### `Calendar.Header.Root`
-
-Top level component for the `Calendar.Header.*` components.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLDivElement>`
-
-### `Calendar.Header.Title`
-
-Renders the header label for the current value based on the provided format.
-
-#### Props
-
-- Extends `React.HTMLAttributes<HTMLSpanElement>`
-
-- `format`: `string`, default: `${utils.formats.month} ${utils.formats.year}`
 
 ### `Calendar.Days.Root`
 
