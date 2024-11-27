@@ -140,61 +140,95 @@ export const useGridDataSourceLazyLoader = (
     [privateApiRef, resetGrid],
   );
 
-  const addSkeletonRows = React.useCallback(
-    (fillEmptyGrid = false) => {
-      const tree = privateApiRef.current.state.rows.tree;
-      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-      const rootGroupChildren = [...rootGroup.children];
+  const addSkeletonRows = React.useCallback(() => {
+    const tree = privateApiRef.current.state.rows.tree;
+    const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+    const rootGroupChildren = [...rootGroup.children];
 
-      const pageRowCount = privateApiRef.current.state.pagination.rowCount;
-      const rootChildrenCount = rootGroupChildren.length;
+    const pageRowCount = privateApiRef.current.state.pagination.rowCount;
+    const rootChildrenCount = rootGroupChildren.length;
 
-      /**
-       * Do nothing if
-       * - rowCount is unknown
-       * - children count is 0 and empty grid should not be filled
-       * - children count is equal to rowCount
-       */
-      if (
-        pageRowCount === -1 ||
-        pageRowCount === undefined ||
-        (!fillEmptyGrid && rootChildrenCount === 0) ||
-        rootChildrenCount === pageRowCount
-      ) {
-        return;
+    /**
+     * Do nothing if
+     * - rowCount is unknown
+     * - children count is 0
+     * - children count is equal to rowCount
+     */
+    if (
+      pageRowCount === -1 ||
+      pageRowCount === undefined ||
+      rootChildrenCount === 0 ||
+      rootChildrenCount === pageRowCount
+    ) {
+      return;
+    }
+
+    // fill the grid with skeleton rows
+    for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
+      const skeletonId = getSkeletonRowId(i);
+      rootGroupChildren.push(skeletonId);
+
+      const skeletonRowNode: GridSkeletonRowNode = {
+        type: 'skeletonRow',
+        id: skeletonId,
+        parent: GRID_ROOT_GROUP_ID,
+        depth: 0,
+      };
+
+      tree[skeletonId] = skeletonRowNode;
+    }
+
+    tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+
+    privateApiRef.current.setState(
+      (state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          tree,
+        },
+      }),
+      'addSkeletonRows',
+    );
+  }, [privateApiRef]);
+
+  const rebuildSkeletonRows = React.useCallback(() => {
+    // replace all data rows with skeleton rows. After that, fill the grid with the new skeleton rows
+    const tree = privateApiRef.current.state.rows.tree;
+    const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+    const rootGroupChildren = [...rootGroup.children];
+
+    for (let i = 0; i < rootGroupChildren.length; i += 1) {
+      if (tree[rootGroupChildren[i]]?.type === 'skeletonRow') {
+        continue;
       }
 
-      // fill the grid with skeleton rows
-      for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
-        const skeletonId = getSkeletonRowId(i);
+      const skeletonId = getSkeletonRowId(i);
+      rootGroupChildren[i] = skeletonId;
 
-        rootGroupChildren.push(skeletonId);
+      const skeletonRowNode: GridSkeletonRowNode = {
+        type: 'skeletonRow',
+        id: skeletonId,
+        parent: GRID_ROOT_GROUP_ID,
+        depth: 0,
+      };
 
-        const skeletonRowNode: GridSkeletonRowNode = {
-          type: 'skeletonRow',
-          id: skeletonId,
-          parent: GRID_ROOT_GROUP_ID,
-          depth: 0,
-        };
+      tree[rootGroupChildren[i]] = skeletonRowNode;
+    }
 
-        tree[skeletonId] = skeletonRowNode;
-      }
+    tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
 
-      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
-
-      privateApiRef.current.setState(
-        (state) => ({
-          ...state,
-          rows: {
-            ...state.rows,
-            tree,
-          },
-        }),
-        'addSkeletonRows',
-      );
-    },
-    [privateApiRef],
-  );
+    privateApiRef.current.setState(
+      (state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          tree,
+        },
+      }),
+      'addSkeletonRows',
+    );
+  }, [privateApiRef]);
 
   const updateLoadingTrigger = React.useCallback(
     (rowCount: number) => {
@@ -390,8 +424,7 @@ export const useGridDataSourceLazyLoader = (
       privateApiRef.current.setLoading(true);
       if (loadingTrigger.current === LoadingTrigger.VIEWPORT) {
         // replace all rows with skeletons to maintain the same scroll position
-        privateApiRef.current.setRows([]);
-        addSkeletonRows(true);
+        rebuildSkeletonRows();
       } else {
         rowsStale.current = true;
       }
@@ -406,7 +439,7 @@ export const useGridDataSourceLazyLoader = (
       filterModel,
       paginationModel.pageSize,
       renderContext,
-      addSkeletonRows,
+      rebuildSkeletonRows,
       adjustRowParams,
     ],
   );
