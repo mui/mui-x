@@ -4,7 +4,6 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   TimePickerToolbarProps,
@@ -17,6 +16,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { ValidateTimePropsToDefault } from '../validation/validateTime';
 
 export interface BaseTimePickerSlots extends TimeClockSlots {
   /**
@@ -70,7 +70,7 @@ type UseTimePickerDefaultizedProps<
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TView>,
 > = LocalizedComponent<
-  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | ValidateTimePropsToDefault>
 >;
 
 export function useTimePickerDefaultizedProps<

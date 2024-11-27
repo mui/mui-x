@@ -6,7 +6,7 @@ import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
 import { SizeProvider, useSize } from '../context/SizeProvider';
-import { SvgRefProvider } from '../context/SvgRefProvider';
+import { ChartProvider } from '../context/ChartProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
@@ -84,8 +84,8 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <SizeProvider width={inWidth} height={inHeight}>
-      <SvgRefProvider>
+    <ChartProvider>
+      <SizeProvider width={inWidth} height={inHeight}>
         <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
           <GaugeProvider
             value={value}
@@ -118,8 +118,8 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
             </ResizableContainer>
           </GaugeProvider>
         </DrawingAreaProvider>
-      </SvgRefProvider>
-    </SizeProvider>
+      </SizeProvider>
+    </ChartProvider>
   );
 });
 

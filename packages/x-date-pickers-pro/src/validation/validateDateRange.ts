@@ -1,3 +1,4 @@
+import type { MakeRequired } from '@mui/x-internals/types';
 import { validateDate, Validator } from '@mui/x-date-pickers/validation';
 import { BaseDateValidationProps, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../internals/utils/date-utils';
@@ -12,9 +13,16 @@ export interface ExportedValidateDateRangeProps
   extends DayRangeValidationProps,
     BaseDateValidationProps {}
 
+/**
+ * Validation props as received by the validateDateRange method.
+ */
 export interface ValidateDateRangeProps
-  extends DayRangeValidationProps,
-    Required<BaseDateValidationProps> {}
+  extends MakeRequired<ExportedValidateDateRangeProps, ValidateDateRangePropsToDefault> {}
+
+/**
+ * Name of the props that should be defaulted before being passed to the validateDateRange method.
+ */
+export type ValidateDateRangePropsToDefault = keyof BaseDateValidationProps;
 
 export const validateDateRange: Validator<
   PickerRangeValue,

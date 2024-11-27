@@ -1,14 +1,12 @@
+import * as React from 'react';
 import { useGridSelector } from '../../utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
-import { GridSlotsComponent } from '../../../models/gridSlotsComponent';
-
-export type GridOverlayType =
-  | keyof Pick<GridSlotsComponent, 'noRowsOverlay' | 'noResultsOverlay' | 'loadingOverlay'>
-  | null;
+import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
+import type { GridOverlayType } from '../../../components/base/GridOverlays';
 
 /**
  * Uses the grid state to determine which overlay to display.
@@ -43,5 +41,20 @@ export const useGridOverlays = () => {
       rootProps.slotProps?.loadingOverlay?.[noRows ? 'noRowsVariant' : 'variant'] || null;
   }
 
-  return { overlayType, loadingOverlayVariant };
+  const overlaysProps = { overlayType, loadingOverlayVariant };
+
+  const getOverlay = () => {
+    if (!overlayType) {
+      return null;
+    }
+    const Overlay = rootProps.slots?.[overlayType];
+    const overlayProps = rootProps.slotProps?.[overlayType];
+    return (
+      <GridOverlayWrapper {...overlaysProps}>
+        <Overlay {...overlayProps} />
+      </GridOverlayWrapper>
+    );
+  };
+
+  return { getOverlay, overlaysProps };
 };

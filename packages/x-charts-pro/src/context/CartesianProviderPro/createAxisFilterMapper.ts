@@ -8,7 +8,8 @@ import {
   isDefined,
   getScale,
 } from '@mui/x-charts/internals';
-import { ChartsAxisProps, ScaleName, AxisConfig } from '@mui/x-charts';
+import { ScaleName, AxisConfig } from '@mui/x-charts/models';
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { ZoomData } from '../ZoomProvider';
 
 type CreateAxisFilterMapperParams = {

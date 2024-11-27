@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
