@@ -8,7 +8,7 @@ title: DX - Field
 <p class="description">This page describes how people can use field with Material UI and how they can build custom fields while keeping the built-in editing behavior.</p>
 
 :::success
-This page extends the initial proposal made in [this Github comment](https://github.com/mui/mui-x/issues/14496#issuecomment-2348917294)
+This page extends the initial proposal made in [this GitHub comment](https://github.com/mui/mui-x/issues/14496#issuecomment-2348917294)
 :::
 
 ## Basic standalone usage
@@ -87,8 +87,11 @@ The field can then be rendered just like the Material UI fields:
 ### With Material UI
 
 :::success
-No DX change here compared to today
+No DX change here compared to today.
+The only change is that the field component are detecting if there is a picker around them and adding an opening button if so (instead of having the picker pass a prop to define this opening button).
 :::
+
+The field exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers` automatically
 
 ```tsx
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -101,6 +104,15 @@ The concept of slots does not fit this use case very well, but the exploration o
 :::
 
 ### Without Material UI
+
+To use the field inside a picker, it has to contain a way to open the picker.
+
+:::success
+TODO: Find the DX to define a trigger button.
+
+- Should it a custom `Picker.Trigger` or directly the `Popover.Trigger` and `Dialog.Trigger`?
+- If it uses the Base UI component, how should it handle the responsive version of the picker?
+  :::
 
 #### Inside a picker from `@mui/x-date-pickers`
 
@@ -187,7 +199,7 @@ When used inside a picker, `<MultiInputRangeField />` can be passed directly and
 ```
 
 :::success
-I have a POC of this in [#15505](https://github.com/mui/mui-x/pull/15505).
+THere is a POC of this in [#15505](https://github.com/mui/mui-x/pull/15505).
 :::
 
 ### Without Material UI

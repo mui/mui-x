@@ -37,7 +37,7 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Header.Root>
     <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
-    <Calendar.Header.Label />
+    <Calendar.Header.Title />
     <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
   </Calendar.Header.Root>
   <Calendar.Days.Root>
@@ -88,7 +88,7 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Header.Root>
     <Calendar.GoToYear target="previous">◀</Calendar.GoToYear>
-    <Calendar.Header.Label format="YYYY" />
+    <Calendar.Header.Title format="YYYY" />
     <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
   </Calendar.Header.Root>
   <Calendar.Months.Root>
@@ -167,7 +167,7 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
             target={view === 'year' ? 'day' : 'year'}
             disabled={view === 'month'}
           >
-            <Calendar.Header.Label format="YYYY" />
+            <Calendar.Header.Title format="YYYY" />
           </Calendar.SetView>
           <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
         </div>
@@ -177,7 +177,7 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
             target={view === 'month' ? 'day' : 'month'}
             disabled={view === 'year'}
           >
-            <Calendar.Header.Label format="YYYY" />
+            <Calendar.Header.Title format="YYYY" />
           </Calendar.SetView>
           <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
         </div>
@@ -224,7 +224,7 @@ Today's `<DateCalendar />` header would look as follow:
   {({ view }) => (
     <React.Fragment>
       <Calendar.SetView target={view === 'year' ? 'month' : 'year'}>
-        <Calendar.Header.Label /> {view === 'year' ? '▲' : '▼'}
+        <Calendar.Header.Title /> {view === 'year' ? '▲' : '▼'}
       </Calendar.SetView>
       <Calendar.MatchView match="day">
         <div>
@@ -338,7 +338,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    function CustomCalendarHeader() {
      return (
        <Calendar.Header.Root>
-         <Calendar.Header.Label format="MMMM YYYY" />
+         <Calendar.Header.Title format="MMMM YYYY" />
        </Calendar.Header.Root>
      );
    }
@@ -379,7 +379,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
      paddingRight: 12,
    });
 
-   export const PickerCalendarHeaderLabel = styled(Calendar.Header.Label)({
+   export const PickerCalendarHeaderLabel = styled(Calendar.Header.Title)({
      /** ... */
    });
 
@@ -507,7 +507,7 @@ Top level component for the `Calendar.Header.*` components.
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 
-### `Calendar.Header.Label`
+### `Calendar.Header.Title`
 
 Renders the header label for the current value based on the provided format.
 
