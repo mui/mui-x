@@ -71,10 +71,6 @@ If you're using a feature that's listed above and it's not working as expected, 
 If you need to use list view with any other features, please [open a feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+waiting+for+maintainer%2Cnew+feature&projects=&template=2.feature.yml).
 :::
 
-## Selectors
-
-{{"component": "modules/components/SelectorsDocs.js", "category": "List View"}}
-
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
