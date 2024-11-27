@@ -17,6 +17,9 @@ In `package.json`, change the version of the date pickers package to `next`.
 ```diff
 -"@mui/x-date-pickers": "7.x.x",
 +"@mui/x-date-pickers": "next",
+
+-"@mui/x-date-pickers-pro": "7.x.x",
++"@mui/x-date-pickers-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -352,34 +355,34 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
 - `usePickersTranslations`
 
   ```diff
-  - import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
-  - import { usePickersTranslations } from '@mui/x-date-pickers';
-  - import { usePickersTranslations } from '@mui/x-date-pickers-pro';
+  -import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+  -import { usePickersTranslations } from '@mui/x-date-pickers';
+  -import { usePickersTranslations } from '@mui/x-date-pickers-pro';
 
-  + import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
-  + import { usePickerTranslations } from '@mui/x-date-pickers';
-  + import { usePickerTranslations } from '@mui/x-date-pickers-pro';
+  +import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+  +import { usePickerTranslations } from '@mui/x-date-pickers';
+  +import { usePickerTranslations } from '@mui/x-date-pickers-pro';
 
-  - const translations = usePickersTranslations();
-  + const translations = usePickerTranslations();
+  -const translations = usePickersTranslations();
+  +const translations = usePickerTranslations();
   ```
 
-  - `usePickersContext`
+- `usePickersContext`
 
   ```diff
-  - import { usePickersContext } from '@mui/x-date-pickers/hooks';
-  - import { usePickersContext } from '@mui/x-date-pickers';
-  - import { usePickersContext } from '@mui/x-date-pickers-pro';
+  -import { usePickersContext } from '@mui/x-date-pickers/hooks';
+  -import { usePickersContext } from '@mui/x-date-pickers';
+  -import { usePickersContext } from '@mui/x-date-pickers-pro';
 
-  + import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  + import { usePickerContext } from '@mui/x-date-pickers';
-  + import { usePickerContext } from '@mui/x-date-pickers-pro';
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +import { usePickerContext } from '@mui/x-date-pickers';
+  +import { usePickerContext } from '@mui/x-date-pickers-pro';
 
-  - const pickersContext = usePickersContext();
-  + const pickerContext = usePickerContext();
+  -const pickersContext = usePickersContext();
+  +const pickerContext = usePickerContext();
   ```
 
-  - `FieldValueType`
+- `FieldValueType`
 
   ```diff
   -import { FieldValueType } from '@mui/x-date-pickers/models';

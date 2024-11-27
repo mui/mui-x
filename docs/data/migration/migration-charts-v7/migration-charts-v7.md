@@ -19,6 +19,9 @@ In `package.json`, change the version of the charts package to `next`.
 ```diff
 -"@mui/x-charts": "^7.0.0",
 +"@mui/x-charts": "next",
+
+-"@mui/x-charts-pro": "^7.0.0",
++"@mui/x-charts-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -85,8 +88,8 @@ The `legend` prop of charts single components has been removed.
 To pass props to the legend, use the `slotProps.legend`.
 
 ```diff
-- <PieChart legend={{ ... }} />
-+ <PieChart slotProps={{ legend: { ... } }} />
+-<PieChart legend={{ ... }} />
++<PieChart slotProps={{ legend: { ... } }} />
 ```
 
 ## Removing ResponsiveChartContainer ✅
@@ -95,16 +98,16 @@ The `ResponsiveChartContainer` has been removed.
 You can now use `ChartContainer` as a responsive container which works now exactly the same way.
 
 ```diff
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-- import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
-+ import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+-import { ResponsiveChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
++import { ChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainerPro } from '@mui/x-charts-pro/ResponsiveChartContainerPro';
 
-- <ResponsiveChartContainer>
-+ <ChartContainer>
+-<ResponsiveChartContainer>
++<ChartContainer>
    <BarPlot />
-- </ResponsiveChartContainer>
-+ </ChartContainer>
+-</ResponsiveChartContainer>
++</ChartContainer>
 ```
 
 ## New DOM structure for ChartContainer

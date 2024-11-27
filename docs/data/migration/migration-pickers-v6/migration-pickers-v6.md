@@ -18,6 +18,9 @@ In `package.json`, change the version of the date pickers package to `^7.0.0`.
 ```diff
 -"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
+
+-"@mui/x-date-pickers-pro": "^6.0.0",
++"@mui/x-date-pickers-pro": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.

@@ -129,7 +129,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
-
           {
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
