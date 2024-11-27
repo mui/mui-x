@@ -36,11 +36,9 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Header.Root>
-    <Calendar.Navigation.GoToMonth target="previous">
-      ◀
-    </Calendar.Navigation.GoToMonth>
+    <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
     <Calendar.Header.Label />
-    <Calendar.Navigation.GoToMonth target="next">▶</Calendar.Navigation.GoToMonth>
+    <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
   </Calendar.Header.Root>
   <Calendar.Days.Root>
     <Calendar.Days.Header>
@@ -89,9 +87,9 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Header.Root>
-    <Calendar.Navigation.GoToYear target="previous">◀</Calendar.Navigation.GoToYear>
+    <Calendar.GoToYear target="previous">◀</Calendar.GoToYear>
     <Calendar.Header.Label format="YYYY" />
-    <Calendar.Navigation.GoToYear target="next">▶</Calendar.Navigation.GoToYear>
+    <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
   </Calendar.Header.Root>
   <Calendar.Months.Root>
     {({ months }) =>
@@ -164,32 +162,24 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
     {({ view }) => (
       <React.Fragment>
         <div>
-          <Calendar.Navigation.GoToMonth target="previous">
-            ◀
-          </Calendar.Navigation.GoToMonth>
-          <Calendar.Navigation.SetView
+          <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
+          <Calendar.SetView
             target={view === 'year' ? 'day' : 'year'}
             disabled={view === 'month'}
           >
             <Calendar.Header.Label format="YYYY" />
-          </Calendar.Navigation.SetView>
-          <Calendar.Navigation.GoToMonth target="next">
-            ▶
-          </Calendar.Navigation.GoToMonth>
+          </Calendar.SetView>
+          <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
         </div>
         <div>
-          <Calendar.Navigation.GoToYear target="previous">
-            ◀
-          </Calendar.Navigation.GoToYear>
-          <Calendar.Navigation.SetView
+          <Calendar.GoToYear target="previous">◀</Calendar.GoToYear>
+          <Calendar.SetView
             target={view === 'month' ? 'day' : 'month'}
             disabled={view === 'year'}
           >
             <Calendar.Header.Label format="YYYY" />
-          </Calendar.Navigation.SetView>
-          <Calendar.Navigation.GoToYear target="next">
-            ▶
-          </Calendar.Navigation.GoToYear>
+          </Calendar.SetView>
+          <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
         </div>
       </React.Fragment>
     )}
@@ -233,17 +223,13 @@ Today's `<DateCalendar />` header would look as follow:
 <Calendar.Header.Root>
   {({ view }) => (
     <React.Fragment>
-      <Calendar.Navigation.SetView target={view === 'year' ? 'month' : 'year'}>
+      <Calendar.SetView target={view === 'year' ? 'month' : 'year'}>
         <Calendar.Header.Label /> {view === 'year' ? '▲' : '▼'}
-      </Calendar.Navigation.SetView>
+      </Calendar.SetView>
       <Calendar.MatchView match="day">
         <div>
-          <Calendar.Navigation.GoToMonth target="previous">
-            ◀
-          </Calendar.Navigation.GoToMonth>
-          <Calendar.Navigation.GoToMonth target="next">
-            ▶
-          </Calendar.Navigation.GoToMonth>
+          <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
+          <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
         </div>
       </Calendar.MatchView>
     </React.Fragment>
@@ -251,7 +237,7 @@ Today's `<DateCalendar />` header would look as follow:
 </Calendar.Header.Root>
 ```
 
-But the current behavior is not great, once you are on the `year` view, there is no way to go back to the `day` view without picking a value.
+But the current behavior is not great, once the user is on the `year` view, there is no way to go back to the `day` view without picking a value.
 :::
 
 ## Display week number
@@ -309,7 +295,7 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
 
 ### With Material UI
 
-You can use slots to override part of the UI in self-contained components:
+Users can use slots to override part of the UI in self-contained components:
 
 ```tsx
 <DateCalendar slots={{ calendarHeader: CustomCalendarHeader }} />
@@ -473,6 +459,46 @@ Doesn't render a DOM node (it does not have a `render` prop either).
 
 - `children`: `React.ReactNode`
 
+### `Calendar.GoToMonth`
+
+Renders a button to go to the previous or the next month.
+It does not modify the value it only navigates to the target month.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+
+- `target`: `'previous' | 'next'`
+
+:::success
+TODO: Clarify the behavior when multiple calendars are rendered at once.
+:::
+
+### `Calendar.GoToYear`
+
+Renders a button to go to the previous or the next month.
+It does not modify the value it only navigates to the target year.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+
+- `target`: `'previous' | 'next'`
+
+:::success
+TODO: Clarify the behavior when multiple calendars are rendered at once.
+:::
+
+### `Calendar.SetView`
+
+Renders a button to set the current visible view.
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+
+- `target`: `TView`
+
 ### `Calendar.Header.Root`
 
 Top level component for the `Calendar.Header.*` components.
@@ -490,40 +516,6 @@ Renders the header label for the current value based on the provided format.
 - Extends `React.HTMLAttributes<HTMLSpanElement>`
 
 - `format`: `string`, default: `${utils.formats.month} ${utils.formats.year}`
-
-### `Calendar.Navigation.GoToMonth`
-
-Renders a button to go to the previous or the next month.
-It does not modify the value it only navigates to the target month.
-
-- Extends `React.HTMLAttributes<HTMLButtonElement>`
-
-- `target`: `'previous' | 'next'`
-
-:::success
-TODO: Clarify the behavior when multiple calendars are rendered at once.
-:::
-
-### `Calendar.Navigation.GoToYear`
-
-Renders a button to go to the previous or the next month.
-It does not modify the value it only navigates to the target year.
-
-- Extends `React.HTMLAttributes<HTMLButtonElement>`
-
-- `target`: `'previous' | 'next'`
-
-:::success
-TODO: Clarify the behavior when multiple calendars are rendered at once.
-:::
-
-### `Calendar.Navigation.SetView`
-
-Renders a button to set the current visible view.
-
-- Extends `React.HTMLAttributes<HTMLButtonElement>`
-
-- `target`: `TView`
 
 ### `Calendar.Days.Root`
 
@@ -647,26 +639,28 @@ It expects a function as its children, which has the list of the months as a par
 
 - `children`: `(params: { months: PickerValidDate[] }) => React.ReactNode`
 
-- `cellsPerRow`: `number`, default: `1`
+- `monthsOrder`: `'asc' | 'desc'`, default: `'asc'`.
+
+- `monthsPerRow`: `number`, default: `1`
 
   :::success
-  The `cellsPerRow` prop is needed to have a working keyboard navigation.
+  The `monthsOrder` and `monthsPerRow` prop is needed to have a working keyboard navigation.
   But it's not a great DX, especially if the user wants to vary the amount of items per row based on the viewport width.
 
   The navigation behavior should looks something like this:
 
-  - if `cellsPerRow === 1`:
+  - if `monthsPerRow === 1`:
 
     - <kbd class="key">ArrowLeft</kbd> do nothing
     - <kbd class="key">ArrowRight</kbd> do nothing
-    - <kbd class="key">ArrowTop</kbd> go to the month rendered above (should handle `display: flex-reverse`)
-    - <kbd class="key">ArrowBottom</kbd> go to month rendered below (should handle `display: flex-reverse`)
+    - <kbd class="key">ArrowTop</kbd> go to the month rendered above
+    - <kbd class="key">ArrowBottom</kbd> go to month rendered below
 
-  - if `cellsPerRow > 1`:
-    - <kbd class="key">ArrowLeft</kbd> go the month rendered on the left, and if none should go to the outer-right month of the line rendered above (should handle `display: flex-reverse`)
-    - <kbd class="key">ArrowRight</kbd> go the month rendered on the right, and if none should go to the outer-left month of the line rendered below (should handle `display: flex-reverse`)
-    - <kbd class="key">ArrowTop</kbd> go to the month rendered above (should handle `display: flex-reverse`)
-    - <kbd class="key">ArrowBottom</kbd> go to month rendered below (should handle `display: flex-reverse`)
+  - if `monthsPerRow > 1`:
+    - <kbd class="key">ArrowLeft</kbd> go the month rendered on the left, and if none should go to the outer-right month of the line rendered above
+    - <kbd class="key">ArrowRight</kbd> go the month rendered on the right, and if none should go to the outer-left month of the line rendered below
+    - <kbd class="key">ArrowTop</kbd> go to the month rendered above
+    - <kbd class="key">ArrowBottom</kbd> go to month rendered below
 
   And with no assumption on the layout, this seems to be a real challenge to achieve.
   The MVP could probably not contain any keyboard navigation.
@@ -700,10 +694,12 @@ It expects a function as its children, which has the list of the years as a para
 
 - `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
 
-- `cellsPerRow`: `number`, default: `1`
+- `yearsOrder`: `'asc' | 'desc'`, default: `'asc'`.
+
+- `yearsPerRow`: `number`, default: `1`
 
   :::success
-  The `cellsPerRow` prop is needed to have a working keyboard navigation.
+  The `yearsPerRow` prop is needed to have a working keyboard navigation.
   See the equivalent prop in `Calendar.Months.Root` for more details.
   :::
 

@@ -61,13 +61,15 @@ function CustomDateField(props) {
   return (
     <PickerField.Root manager={manager} {...props}>
       <PickerField.Content>
-        {(section) => (
-          <PickerField.Section section={section}>
-            <PickerField.SectionSeparator position="before" />
-            <PickerField.SectionContent />
-            <PickerField.SectionSeparator position="after" />
-          </PickerField.Section>
-        )}
+        {({ sections }) =>
+          sections.map((section) => (
+            <PickerField.Section section={section}>
+              <PickerField.SectionSeparator position="before" />
+              <PickerField.SectionContent />
+              <PickerField.SectionSeparator position="after" />
+            </PickerField.Section>
+          ))
+        }
       </PickerField.Content>
     </PickerField.Root>
   );
@@ -300,10 +302,14 @@ That way, users only have to pass the props specific to the field to `<PickerFie
 
 It would expend `Field.Control` from `@base-ui-components/react/Field`.
 
-It expects a function as its children, which is called for every section to render:
+It expects a function as its children, which has the list of sections as a parameter:
 
 ```tsx
-<PickerField.Content>{(section) => <div>{section.value}</div>}</PickerField.Content>
+<PickerField.Content>
+  {({ sections }) =>
+    sections.map((section) => <PickerField.Section section={section} />)
+  }
+</PickerField.Content>
 ```
 
 It also renders a hidden input which contains the stringified value and can be used for form submission and testing.
