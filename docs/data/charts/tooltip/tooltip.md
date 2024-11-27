@@ -144,7 +144,7 @@ return (
 );
 ```
 
-The ChartsTooltipContainer needs needs to be render before the pointer enters the SVG, because it uses this event to get pointer type.
+The ChartsTooltipContainer must render before the pointer enters the SVG because it uses this event to get the pointer type.
 :::
 
 ### Overriding placement
