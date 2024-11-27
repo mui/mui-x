@@ -459,24 +459,12 @@ describe('<DataGrid /> - Row selection', () => {
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
     });
 
-    describe('prop: indeterminateCheckboxAction = "select"', () => {
-      it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="select" />);
-        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
-        fireEvent.click(selectAllCheckbox);
-        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      });
-    });
-
-    describe('prop: indeterminateCheckboxAction = "deselect"', () => {
-      it('should deselect all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
-        render(<TestDataGridSelection checkboxSelection indeterminateCheckboxAction="deselect" />);
-        const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-        fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
-        fireEvent.click(selectAllCheckbox);
-        expect(getSelectedRowIds()).to.deep.equal([]);
-      });
+    it('should select all the rows when clicking on "Select All" checkbox in indeterminate state', () => {
+      render(<TestDataGridSelection checkboxSelection />);
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
+      fireEvent.click(screen.getAllByRole('checkbox', { name: /select row/i })[0]);
+      fireEvent.click(selectAllCheckbox);
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
     });
   });
 

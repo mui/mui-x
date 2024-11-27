@@ -156,7 +156,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
   },
   {
     folder: 'charts',
-    packages: ['x-charts'],
+    packages: ['x-charts', 'x-charts-pro'],
     documentedInterfaces: [
       'BarSeriesType',
       'LineSeriesType',

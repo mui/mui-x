@@ -299,7 +299,7 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all rows of all the pages if 1 row of another page is selected', () => {
+    it('should select all rows of all the pages if 1 row of another page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -315,8 +315,8 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.length(0);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.length(4);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should select all visible rows if pagination is not enabled', () => {
@@ -405,7 +405,7 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(selectAllCheckbox.checked).to.equal(true);
     });
 
-    it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
+    it('should select all the rows of the current page if 1 row of the current page is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
@@ -425,8 +425,8 @@ describe('<DataGridPro /> - Row selection', () => {
         name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
-      expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
-      expect(selectAllCheckbox.checked).to.equal(false);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
+      expect(selectAllCheckbox.checked).to.equal(true);
     });
 
     it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
@@ -832,38 +832,13 @@ describe('<DataGridPro /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([11, 12, 13, 14]);
     });
 
-    describe("prop: indeterminateCheckboxAction = 'select'", () => {
-      it('should select all the children when selecting an indeterminate parent', () => {
-        render(
-          <SelectionPropagationGrid
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="select"
-          />,
-        );
+    it('should select all the children when selecting an indeterminate parent', () => {
+      render(<SelectionPropagationGrid defaultGroupingExpansionDepth={-1} density="compact" />);
 
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
-      });
-    });
-
-    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
-      it('should deselect all the children when selecting an indeterminate parent', () => {
-        render(
-          <SelectionPropagationGrid
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="deselect"
-          />,
-        );
-
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(1, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows().size).to.equal(0);
-      });
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(getCell(1, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
     });
 
     describe('prop: keepNonExistentRowsSelected = true', () => {

@@ -18,6 +18,9 @@ In `package.json`, change the version of the date pickers package to `^7.0.0`.
 ```diff
 -"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
+
+-"@mui/x-date-pickers-pro": "^6.0.0",
++"@mui/x-date-pickers-pro": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
@@ -56,10 +59,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Date and Time Pickers specific
+# Date and Time Pickers specific
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path>
 
-// Target other MUI X components as well
+# Target other MUI X components as well
 npx @mui/x-codemod@latest v7.0.0/preset-safe <path>
 ```
 

@@ -1,6 +1,9 @@
 {
   "name": "LineSeriesType",
-  "imports": ["import { LineSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { LineSeriesType } from '@mui/x-charts-pro'",
+    "import { LineSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
     "type": { "type": { "description": "'line'" }, "required": true },
     "area": { "type": { "description": "boolean" } },
