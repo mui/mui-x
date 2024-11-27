@@ -142,6 +142,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/heatmap-tooltip',
+    title: 'HeatmapTooltip',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
