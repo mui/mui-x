@@ -137,7 +137,7 @@ function CustomDatePicker(props) {
 }
 ```
 
-People could of course also inline their field if they want:
+The user can also inline their field if they want:
 
 ```tsx
 import { useDateManager } from '@base-ui/x-date-pickers/managers';
@@ -211,7 +211,7 @@ No DX change here compared to today
 
 ### Without Material UI
 
-People can use the `<PickerField.Clear />` component to add a button to clear the value:
+The user can use the `<PickerField.Clear />` component to add a button to clear the value:
 
 ```tsx
 import { useDateManager } from '@base-ui/x-date-pickers/managers';
@@ -239,6 +239,8 @@ Top level component that wraps the other components.
 It would expend `Field.Root` from `@base-ui-components/react/Field`.
 
 #### Props
+
+- Extends `Field.Root.Props`
 
 - `manager`: `PickerManager` - **required for standalone fields**
 
@@ -308,6 +310,8 @@ It also renders a hidden input which contains the stringified value and can be u
 
 #### Props
 
+- Extends `Field.Control.Props`
+
 - `children`: `(section: InferFieldSection<TValue>) => React.ReactNode`
 
 ### `PickerField.Section`
@@ -316,7 +320,7 @@ Renders a single section (for instance the year of the hour of the current value
 
 #### Props
 
-- `children`: `React.ReactNode`
+- Extends `React.HTMLAttributes<HTMLSpanElement>`
 - `section`: `InferFieldSection<TValue>` (can be `FieldSection` or `FieldRangeSection`) - **required**.
 
 ### `PickerField.SectionContent`
@@ -325,7 +329,7 @@ Renders the content of a single section.
 
 #### Props
 
-- nothing?
+- Extends `React.HTMLAttributes<HTMLSpanElement>`
 
 ### `PickerField.SectionSeparator`
 
@@ -337,6 +341,7 @@ Renders the separator to display before or after the current section.
 
 #### Props
 
+- Extends `React.HTMLAttributes<HTMLSpanElement>`
 - `position`: `'before' | 'after'` - **required**.
 
 ### `PickerField.Clear`
@@ -344,6 +349,8 @@ Renders the separator to display before or after the current section.
 Renders the button to clear the value of the field.
 
 #### Props
+
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
 
 - `children`: `React.ReactNode`
 

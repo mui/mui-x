@@ -470,6 +470,7 @@ Doesn't render a DOM node (it does not have a `render` prop either).
 #### Props
 
 - `match`: `TView | readonly TView[]` - **required**.
+
 - `children`: `React.ReactNode`
 
 ### `Calendar.Header.Root`
@@ -487,6 +488,7 @@ Renders the header label for the current value based on the provided format.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLSpanElement>`
+
 - `format`: `string`, default: `${utils.formats.month} ${utils.formats.year}`
 
 ### `Calendar.Navigation.GoToMonth`
@@ -495,8 +497,8 @@ Renders a button to go to the previous or the next month.
 It does not modify the value it only navigates to the target month.
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `target`: `'previous' | 'next'`
-- `children`: `React.ReactNode`
 
 :::success
 TODO: Clarify the behavior when multiple calendars are rendered at once.
@@ -508,8 +510,8 @@ Renders a button to go to the previous or the next month.
 It does not modify the value it only navigates to the target year.
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `target`: `'previous' | 'next'`
-- `children`: `React.ReactNode`
 
 :::success
 TODO: Clarify the behavior when multiple calendars are rendered at once.
@@ -520,14 +522,16 @@ TODO: Clarify the behavior when multiple calendars are rendered at once.
 Renders a button to set the current visible view.
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `target`: `TView`
-- `children`: `React.ReactNode`
 
 ### `Calendar.Days.Root`
 
 Top level component for the `Calendar.Days.*` components.
 
 #### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
 
 - `fixedWeekNumber`: `number`
 
@@ -546,6 +550,7 @@ It expects a function as its children, which has the list of days as a parameter
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
+
 - `children`: `(params: { days: PickerValidDate[] }) => React.ReactNode`
 
 ### `Calendar.Days.HeaderCell`
@@ -555,6 +560,7 @@ Renders the header of a day in the week.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLSpanElement>`
+
 - `value`: `PickerValidDate` - **required**.
 
 ### `Calendar.Days.WeekNumberHeaderCell`
@@ -584,6 +590,7 @@ Maybe it should be named `<Calendar.Days.Grid />`.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
+
 - `children`: `(params: { weeks: PickerValidDate[] }) => React.ReactNode`
 
 ### `Calendar.Days.WeekRow`
@@ -601,7 +608,9 @@ It expects a function as its children, which has the list of days to render and 
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
+
 - `value`: `{ value: PickerValidDate }` - **required**
+
 - `children`: `(params: { days: PickerValidDate[], week: PickerValidDate }) => React.ReactNode`
 
 ### `Calendar.Days.Cell`
@@ -611,6 +620,7 @@ Renders the cell for a single day.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `value`: `PickerValidDate` - **required**
 
 ### `Calendar.Days.WeekNumberCell`
@@ -634,7 +644,9 @@ It expects a function as its children, which has the list of the months as a par
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
+
 - `children`: `(params: { months: PickerValidDate[] }) => React.ReactNode`
+
 - `cellsPerRow`: `number`, default: `1`
 
   :::success
@@ -667,6 +679,7 @@ Renders the cell for a single month.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `value`: `PickerValidDate` - **required**.
 
 ### `Calendar.Years.Root`
@@ -684,7 +697,9 @@ It expects a function as its children, which has the list of the years as a para
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
+
 - `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
+
 - `cellsPerRow`: `number`, default: `1`
 
   :::success
@@ -699,4 +714,5 @@ Renders the cell for a single year.
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
+
 - `value`: `PickerValidDate` - **required**.
