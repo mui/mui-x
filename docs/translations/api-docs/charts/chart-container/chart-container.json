@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {

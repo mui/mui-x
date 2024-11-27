@@ -9,7 +9,7 @@ const MAX_COMPUTE_RUN = 10;
 export const useChartContainerDimensions = (inWidth?: number, inHeight?: number) => {
   const hasInSize = inWidth !== undefined && inHeight !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
-  const rootRef = React.useRef<HTMLDivElement>(null);
+  const rootRef = React.useRef<SVGSVGElement>(null);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
@@ -19,6 +19,17 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
     const mainEl = rootRef?.current;
 
     if (!mainEl) {
+      if (process.env.NODE_ENV !== 'production') {
+        // This is mostly for internal use.
+        throw new Error(
+          [
+            `MUI X: ChartContainer does not have a valid reference to the <svg /> element.`,
+            'This may be caused by a ref forwarding issue.',
+            'Make sure that the ref from SizedProvider is forwarded correctly.',
+          ].join('\n'),
+        );
+      }
+
       return {};
     }
 
@@ -112,7 +123,7 @@ export const useChartContainerDimensions = (inWidth?: number, inHeight?: number)
   const finalHeight = inHeight ?? height;
 
   return {
-    containerRef: rootRef,
+    svgRef: rootRef,
     width: finalWidth,
     height: finalHeight,
     hasIntrinsicSize: finalWidth > 0 && finalHeight > 0,

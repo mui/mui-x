@@ -1,7 +1,8 @@
+import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import { ChartState } from '../internals/plugins/models';
 import { createSelector } from '../internals/plugins/utils/selectors';
 
-function selectInteraction(state: ChartState) {
+function selectInteraction(state: ChartState<[UseChartInteractionSignature]>) {
   return state.interaction;
 }
 
