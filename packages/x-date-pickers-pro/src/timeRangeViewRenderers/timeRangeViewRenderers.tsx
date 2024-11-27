@@ -185,7 +185,13 @@ export const renderDigitalClockTimeRangeView = ({
       minutesStep={minutesStep}
       ampm={ampm}
       slots={slots}
-      slotProps={slotProps}
+      slotProps={{
+        ...slotProps,
+        digitalClockItem: {
+          'data-range-position': rangePosition,
+          ...slotProps?.digitalClockItem,
+        } as any,
+      }}
       readOnly={readOnly}
       disabled={disabled}
       sx={sx}
@@ -279,6 +285,7 @@ export const renderMultiSectionDigitalClockTimeRangeView = ({
       timeSteps={timeSteps}
       skipDisabled={skipDisabled}
       timezone={timezone}
+      data-range-position={rangePosition}
     />
   );
 };
