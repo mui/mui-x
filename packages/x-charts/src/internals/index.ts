@@ -26,7 +26,6 @@ export * from './computeAxisValue';
 // contexts
 
 export * from '../context/CartesianProvider';
-export * from '../context/DrawingAreaProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export * from '../context/PluginProvider';

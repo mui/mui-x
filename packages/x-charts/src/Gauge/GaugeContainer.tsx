@@ -3,23 +3,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { SizeProvider, useSize } from '../context/SizeProvider';
+import { useSize } from '../context/SizeProvider';
 import { ChartProvider } from '../context/ChartProvider';
+import { MergeSignaturesProperty } from '../internals/plugins/models';
+import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Pick<DrawingAreaProviderProps, 'margin'>,
+    MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
     Omit<GaugeProviderProps, 'children'> {
-  /**
-   * The width of the chart in px. If not defined, it takes the width of the parent element.
-   */
-  width?: number;
-  /**
-   * The height of the chart in px. If not defined, it takes the height of the parent element.
-   */
-  height?: number;
   children?: React.ReactNode;
 }
 
@@ -84,41 +77,37 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
   } = props;
 
   return (
-    <ChartProvider>
-      <SizeProvider width={inWidth} height={inHeight}>
-        <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
-          <GaugeProvider
-            value={value}
-            valueMin={valueMin}
-            valueMax={valueMax}
-            startAngle={startAngle}
-            endAngle={endAngle}
-            outerRadius={outerRadius}
-            innerRadius={innerRadius}
-            cornerRadius={cornerRadius}
-            cx={cx}
-            cy={cy}
-          >
-            <ResizableContainer
-              role="meter"
-              aria-valuenow={value === null ? undefined : value}
-              aria-valuemin={valueMin}
-              aria-valuemax={valueMax}
-              {...other}
-            >
-              <ChartsSurface
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-                ref={ref}
-              >
-                {children}
-              </ChartsSurface>
-            </ResizableContainer>
-          </GaugeProvider>
-        </DrawingAreaProvider>
-      </SizeProvider>
+    <ChartProvider
+      pluginParams={{
+        width: inWidth,
+        height: inHeight,
+        margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+      }}
+    >
+      <GaugeProvider
+        value={value}
+        valueMin={valueMin}
+        valueMax={valueMax}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        outerRadius={outerRadius}
+        innerRadius={innerRadius}
+        cornerRadius={cornerRadius}
+        cx={cx}
+        cy={cy}
+      >
+        <ResizableContainer
+          role="meter"
+          aria-valuenow={value === null ? undefined : value}
+          aria-valuemin={valueMin}
+          aria-valuemax={valueMax}
+          {...other}
+        >
+          <ChartsSurface title={title} desc={desc} disableAxisListener aria-hidden="true" ref={ref}>
+            {children}
+          </ChartsSurface>
+        </ResizableContainer>
+      </GaugeProvider>
     </ChartProvider>
   );
 });

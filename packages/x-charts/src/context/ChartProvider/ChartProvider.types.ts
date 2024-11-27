@@ -31,8 +31,8 @@ export type ChartContextValue<
   svgRef: React.RefObject<SVGSVGElement>;
 };
 
-export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[]> {
-  plugins: ConvertSignaturesIntoPlugins<TSignatures>;
-  pluginParams: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[] = []> {
+  plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
+  pluginParams?: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
   children: React.ReactNode;
 }

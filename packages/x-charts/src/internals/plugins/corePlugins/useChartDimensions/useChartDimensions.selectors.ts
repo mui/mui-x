@@ -1,15 +1,24 @@
-import { createSelector, ChartRootSelector } from '../../utils/selectors';
+import { ChartRootSelector, createSelector } from '../../utils/selectors';
 import { UseChartDimensionsSignature } from './useChartDimensions.types';
 
-const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (state) =>
-  state.dimensions;
+export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
+  state,
+) => state.dimensions;
+
+export const selectorChartContainerSize = createSelector(
+  selectorChartDimensionsState,
+  (dimensionsState) => ({
+    width: dimensionsState.width + dimensionsState.left + dimensionsState.right,
+    height: dimensionsState.height + dimensionsState.top + dimensionsState.bottom,
+  }),
+);
 
 /**
  * Get the id attribute of the chart.
- * @param {ChartState<[UseChartDimensionsSignature]>} state The state of the chart.
+ * @param {ChartState<[UseChartIdSignature]>} state The state of the chart.
  * @returns {string} The id attribute of the chart.
  */
-export const selectorChartDrawingArea = createSelector(
-  selectorChartDimensionsState,
-  (drawingArea) => drawingArea,
+export const selectorChartHasIntrinsicSize = createSelector(
+  selectorChartContainerSize,
+  (svgSize) => svgSize.width > 0 && svgSize.height > 0,
 );

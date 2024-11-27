@@ -33,7 +33,7 @@ export interface UseChartDimensionsParameters {
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
    */
-  margin?: ChartMargin;
+  margin?: Partial<ChartMargin>;
 }
 
 export type UseChartDimensionsDefaultizedParameters = UseChartDimensionsParameters & {

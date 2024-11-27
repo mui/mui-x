@@ -10,7 +10,7 @@ import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
-import { useDrawingArea } from '../hooks/useDrawingArea';
+import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface LineHighlightPlotSlots {
@@ -49,7 +49,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
-  const drawingArea = useDrawingArea();
+  const { instance } = useChartContext();
 
   const store = useStore();
   const xAxisIdentifier = useSelector(store, selectorChartsInteractionXAxis);
@@ -102,7 +102,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
           const x = xScale(xData[highlightedIndex]);
           const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
-          if (!drawingArea.isPointInside({ x, y })) {
+          if (!instance.isPointInside({ x, y })) {
             return null;
           }
 

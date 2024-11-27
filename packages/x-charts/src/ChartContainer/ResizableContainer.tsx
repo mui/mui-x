@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { useSize } from '../context/SizeProvider';
-import type { SizeContextState } from '../context/SizeProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartContainerSize } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 /**
  * Wrapping div that take the shape of its parent.
@@ -12,7 +13,7 @@ import type { SizeContextState } from '../context/SizeProvider';
 export const ResizableContainerRoot = styled('div', {
   name: 'MuiResponsiveChart',
   slot: 'Container',
-})<{ ownerState: Partial<Pick<SizeContextState, 'width' | 'height'>> }>(({ ownerState }) => ({
+})<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -34,13 +35,14 @@ export const ResizableContainerRoot = styled('div', {
  * @ignore - do not document.
  */
 function ResizableContainer(props: { children: React.ReactNode }) {
-  const { inHeight, inWidth, containerRef } = useSize();
+  const store = useStore();
+  const { height, width } = useSelector(store, selectorChartContainerSize);
 
   return (
     <ResizableContainerRoot
       {...props}
-      ownerState={{ width: inWidth, height: inHeight }}
-      ref={containerRef}
+      ownerState={{ width, height }}
+      // ref={containerRef}
     >
       {props.children}
     </ResizableContainerRoot>

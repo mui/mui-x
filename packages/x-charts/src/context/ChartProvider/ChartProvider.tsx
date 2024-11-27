@@ -8,7 +8,7 @@ import { ChartAnyPluginSignature } from '../../internals/plugins/models';
 function ChartProvider<TSignatures extends readonly ChartAnyPluginSignature[]>(
   props: ChartProviderProps<TSignatures>,
 ) {
-  const { children, plugins = [], pluginParams } = props;
+  const { children, plugins = [], pluginParams = {} } = props;
 
   const { contextValue } = useCharts(plugins, pluginParams);
 

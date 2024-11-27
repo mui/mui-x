@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DrawingAreaContext } from '../context/DrawingAreaProvider';
 import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
 import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
 import { usePieSeries } from '../hooks/useSeries';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { useDrawingArea } from '../hooks';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
 
@@ -39,7 +39,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
 function PiePlot(props: PiePlotProps) {
   const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = usePieSeries();
-  const { left, top, width, height } = React.useContext(DrawingAreaContext);
+  const { left, top, width, height } = useDrawingArea();
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   if (seriesData === undefined) {

@@ -13,7 +13,7 @@ import { CartesianChartSeriesType } from '../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from './colorScale';
 import { getTickNumber } from '../hooks/useTicks';
 import { getScale } from './getScale';
-import { DrawingAreaState } from '../context/DrawingAreaProvider';
+
 import { FormattedSeries } from '../context/SeriesProvider';
 import { zoomScaleRange } from '../context/CartesianProvider/zoom';
 import { ExtremumGetter } from '../context/PluginProvider';
@@ -24,9 +24,10 @@ import {
   GetZoomAxisFilters,
 } from '../context/CartesianProvider/Cartesian.types';
 import { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
+import type { ChartDrawingArea } from '../hooks';
 
 function getRange(
-  drawingArea: DrawingAreaState,
+  drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y' | 'radius' | 'rotation',
   axis: AxisConfig<
     ScaleName,
@@ -79,7 +80,7 @@ type ComputeResult<T extends ChartsAxisProps> = {
 };
 
 type ComputeCommonParams = {
-  drawingArea: DrawingAreaState;
+  drawingArea: ChartDrawingArea;
   formattedSeries: FormattedSeries;
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
   zoomData?: ZoomData[];

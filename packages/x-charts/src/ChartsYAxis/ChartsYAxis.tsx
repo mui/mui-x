@@ -14,6 +14,7 @@ import { ChartsText, ChartsTextProps } from '../ChartsText';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
+import { useChartContext } from '../context/ChartProvider';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -89,7 +90,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const { left, top, width, height, isPointInside } = useDrawingArea();
+  const { instance } = useChartContext();
+  const { left, top, width, height } = useDrawingArea();
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
@@ -179,7 +181,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const skipLabel =
           typeof tickLabelInterval === 'function' && !tickLabelInterval?.(value, index);
 
-        const showLabel = isPointInside({ x: -1, y: offset }, { direction: 'y' });
+        const showLabel = instance.isPointInside({ x: -1, y: offset }, { direction: 'y' });
 
         if (!showLabel) {
           return null;

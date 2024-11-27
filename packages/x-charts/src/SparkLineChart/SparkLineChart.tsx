@@ -11,12 +11,12 @@ import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/Cha
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import { CardinalDirections } from '../models/layout';
 import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
 import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
 import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
 import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
 import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -95,7 +95,7 @@ export interface SparkLineChartProps
    *   right: 5,
    * }
    */
-  margin?: Partial<CardinalDirections<number>>;
+  margin?: Partial<ChartMargin>;
   /**
    * Overridable component slots.
    * @default {}

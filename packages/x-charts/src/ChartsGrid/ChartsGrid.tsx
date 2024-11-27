@@ -59,11 +59,21 @@ function ChartsGrid(inProps: ChartsGridProps) {
   return (
     <GridRoot {...other} className={classes.root}>
       {vertical && (
-        <ChartsGridVertical axis={verticalAxis} drawingArea={drawingArea} classes={classes} />
+        <ChartsGridVertical
+          axis={verticalAxis}
+          start={drawingArea.top}
+          end={drawingArea.height + drawingArea.top}
+          classes={classes}
+        />
       )}
 
       {horizontal && (
-        <ChartsGridHorizontal axis={horizontalAxis} drawingArea={drawingArea} classes={classes} />
+        <ChartsGridHorizontal
+          axis={horizontalAxis}
+          start={drawingArea.left}
+          end={drawingArea.width + drawingArea.left}
+          classes={classes}
+        />
       )}
     </GridRoot>
   );

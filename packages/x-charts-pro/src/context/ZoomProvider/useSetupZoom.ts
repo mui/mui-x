@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
-import { getSVGPoint } from '@mui/x-charts/internals';
+import { getSVGPoint, useChartContext } from '@mui/x-charts/internals';
 import { useZoom } from './useZoom';
 import { DefaultizedZoomOptions, ZoomData } from './Zoom.types';
 
@@ -58,6 +58,7 @@ const zoomAtPoint = (
 export const useSetupZoom = () => {
   const { setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
   const drawingArea = useDrawingArea();
+  const { instance } = useChartContext();
 
   const svgRef = useSvgRef();
   const eventCacheRef = React.useRef<PointerEvent[]>([]);
@@ -77,7 +78,7 @@ export const useSetupZoom = () => {
 
       const point = getSVGPoint(element, event);
 
-      if (!drawingArea.isPointInside(point)) {
+      if (!instance.isPointInside(point)) {
         return;
       }
 
@@ -217,7 +218,7 @@ export const useSetupZoom = () => {
         clearTimeout(interactionTimeoutRef.current);
       }
     };
-  }, [svgRef, setZoomData, drawingArea, isZoomEnabled, options, setIsInteracting]);
+  }, [svgRef, setZoomData, drawingArea, isZoomEnabled, options, setIsInteracting, instance]);
 };
 
 /**

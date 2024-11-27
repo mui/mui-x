@@ -7,7 +7,9 @@ import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSize } from '../context/SizeProvider';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { selectorChartHasIntrinsicSize } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -36,8 +38,9 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
+  const store = useStore();
   const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { hasIntrinsicSize } = useSize();
+  const hasIntrinsicSize = useSelector(store, selectorChartHasIntrinsicSize);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });

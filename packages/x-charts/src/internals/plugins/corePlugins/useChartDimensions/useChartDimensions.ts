@@ -6,7 +6,7 @@ import ownerWindow from '@mui/utils/ownerWindow';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { ChartPlugin } from '../../models';
 import { UseChartDimensionsSignature } from './useChartDimensions.types';
-import { selectorChartDrawingArea } from './useChartDimensions.selectors';
+import { selectorChartDimensionsState } from './useChartDimensions.selectors';
 
 const MAX_COMPUTE_RUN = 10;
 
@@ -151,7 +151,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       if (options?.targetElement && options?.targetElement.closest('[data-drawing-container]')) {
         return true;
       }
-      const drawingArea = selectorChartDrawingArea(store.value);
+      const drawingArea = selectorChartDimensionsState(store.value);
 
       const isInsideX = x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width;
       const isInsideY = y >= drawingArea.top - 1 && y <= drawingArea.top + drawingArea.height;
@@ -180,7 +180,7 @@ useChartDimensions.params = {
 
 useChartDimensions.getDefaultizedParams = ({ params }) => ({
   ...params,
-  margin: params.margin ?? DEFAULT_MARGINS,
+  margin: params.margin ? { ...DEFAULT_MARGINS, ...params.margin } : DEFAULT_MARGINS,
 });
 
 useChartDimensions.getInitialState = ({ width = 0, height = 0, margin }) => ({
