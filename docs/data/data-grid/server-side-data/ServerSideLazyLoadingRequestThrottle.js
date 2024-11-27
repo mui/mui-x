@@ -49,8 +49,9 @@ function GridCustomToolbar({ throttleMs, setThrottleMs }) {
 }
 
 function ServerSideLazyLoadingRequestThrottle() {
+  const rowCount = 1000;
   const { fetchRows, ...props } = useMockServer(
-    { rowLength: 1000 },
+    { rowLength: rowCount },
     { useCursorPagination: false, minDelay: 200, maxDelay: 500 },
   );
 
@@ -73,7 +74,6 @@ function ServerSideLazyLoadingRequestThrottle() {
         setRequestCount((prev) => prev + 1);
         return {
           rows: getRowsResponse.rows,
-          rowCount: getRowsResponse.rowCount,
         };
       },
     }),
@@ -89,6 +89,7 @@ function ServerSideLazyLoadingRequestThrottle() {
       <DataGridPro
         {...props}
         unstable_dataSource={dataSource}
+        rowCount={rowCount}
         lazyLoading
         lazyLoadingRequestThrottleMs={throttleMs}
         paginationModel={{ page: 0, pageSize: 10 }}
