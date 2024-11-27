@@ -1,9 +1,9 @@
 ---
 productId: x-date-pickers
-title: DX - Fields
+title: DX - Field
 ---
 
-# Fields
+# Field
 
 <p class="description">This page describes how people can use field with Material UI and how they can build custom fields while keeping the built-in editing behavior.</p>
 
@@ -233,7 +233,7 @@ function CustomDateField(props) {
 
 ## Anatomy of `Picker.*`
 
-### `<PickerField.Root />`
+### `PickerField.Root`
 
 Top level component that wraps the other components.
 It would expend `Field.Root` from `@base-ui-components/react/Field`.
@@ -294,11 +294,11 @@ That way, users only have to pass the props specific to the field to `<PickerFie
 
 :::
 
-### `<PickerField.Content />`
+### `PickerField.Content`
 
 It would expend `Field.Control` from `@base-ui-components/react/Field`.
 
-It expects a function as it's children, which is called for every section to render:
+It expects a function as its children, which is called for every section to render:
 
 ```tsx
 <PickerField.Content>{(section) => <div>{section.value}</div>}</PickerField.Content>
@@ -310,7 +310,7 @@ It also renders a hidden input which contains the stringified value and can be u
 
 - `children`: `(section: InferFieldSection<TValue>) => React.ReactNode`
 
-### `<PickerField.Section />`
+### `PickerField.Section`
 
 Renders a single section (for instance the year of the hour of the current value).
 
@@ -319,7 +319,7 @@ Renders a single section (for instance the year of the hour of the current value
 - `children`: `React.ReactNode`
 - `section`: `InferFieldSection<TValue>` (can be `FieldSection` or `FieldRangeSection`) - **required**.
 
-### `<PickerField.SectionContent />`
+### `PickerField.SectionContent`
 
 Renders the content of a single section.
 
@@ -327,7 +327,7 @@ Renders the content of a single section.
 
 - nothing?
 
-### `<PickerField.SectionSeparator />`
+### `PickerField.SectionSeparator`
 
 Renders the separator to display before or after the current section.
 
@@ -339,7 +339,7 @@ Renders the separator to display before or after the current section.
 
 - `position`: `'before' | 'after'` - **required**.
 
-### `<PickerField.Clear />`
+### `PickerField.Clear`
 
 Renders the button to clear the value of the field.
 
