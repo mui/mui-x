@@ -43,7 +43,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Sin columnas',
   columnsManagementShowHideAllText: 'Mostrar/Ocultar todas',
   columnsManagementReset: 'Restablecer',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Limpiar',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',

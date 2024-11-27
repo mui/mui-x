@@ -35,7 +35,7 @@ export interface UsePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerValueProps<TValue, TError>,
+> extends UsePickerValueProps<TValue, TDate, TError>,
     UsePickerViewsProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
     UsePickerLayoutProps {}
 

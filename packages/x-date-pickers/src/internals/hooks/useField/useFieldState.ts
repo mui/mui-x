@@ -120,6 +120,7 @@ export const useFieldState = <
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager,
   });

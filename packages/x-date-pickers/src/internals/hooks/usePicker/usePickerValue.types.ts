@@ -267,15 +267,18 @@ export interface UsePickerValueNonStaticProps {
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerValueProps<TValue, TError>
+export interface UsePickerValueProps<TValue, TDate extends PickerValidDate, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerValueNonStaticProps,
-    TimezoneProps {}
+    TimezoneProps {
+  // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
+  referenceDate?: TDate;
+}
 
 export interface UsePickerValueParams<
   TValue,
   TDate extends PickerValidDate,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TExternalProps extends UsePickerValueProps<TValue, TDate, any>,
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
