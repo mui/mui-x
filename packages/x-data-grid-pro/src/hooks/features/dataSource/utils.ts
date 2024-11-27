@@ -119,9 +119,9 @@ export class NestedDataManager {
 }
 
 /**
- * Provides better cache hit rate by splitting the data into smaller chunks
- * Splits the data into smaller chunks to be stored in the cache
- * Merges multiple cache entries into a single response
+ * Provides better cache hit rate by:
+ * 1. Splitting the data into smaller chunks to be stored in the cache (cache `set`)
+ * 2. Merging multiple cache entries into a single response to get the required chunk (cache `get`)
  */
 export class CacheChunkManager {
   private chunkSize: number;
