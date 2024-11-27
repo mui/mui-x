@@ -728,7 +728,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   onFetchRows: PropTypes.func,
   /**
@@ -856,7 +855,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   onRowsScrollEnd: PropTypes.func,
   /**
@@ -1019,7 +1017,6 @@ DataGridPremiumRaw.propTypes = {
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
    * @default "client"
-   * @deprecated Use Server-side data `lazyLoading` instead.
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
@@ -1032,7 +1029,7 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd (deprecated) is called.
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */

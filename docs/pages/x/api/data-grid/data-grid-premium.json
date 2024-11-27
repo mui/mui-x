@@ -396,8 +396,6 @@
     },
     "onFetchRows": {
       "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use Server-side data <code>lazyLoading</code> instead.",
       "signature": {
         "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -532,8 +530,6 @@
     },
     "onRowsScrollEnd": {
       "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use Server-side data <code>lazyLoading</code> instead.",
       "signature": {
         "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
         "describedArgs": ["params", "event", "details"]
@@ -610,9 +606,7 @@
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\"",
-      "deprecated": true,
-      "deprecationInfo": "Use Server-side data <code>lazyLoading</code> instead."
+      "default": "\"client\""
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
