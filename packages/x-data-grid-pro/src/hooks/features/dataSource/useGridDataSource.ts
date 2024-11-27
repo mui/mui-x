@@ -72,16 +72,16 @@ export const useGridDataSource = (
     | 'paginationMode'
     | 'pageSizeOptions'
     | 'treeData'
-    | 'lazyLoading'
+    | 'unstable_lazyLoading'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
-      props.unstable_dataSource && !props.lazyLoading ? () => true : () => false,
+      props.unstable_dataSource && !props.unstable_lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, props.lazyLoading, props.unstable_dataSource]);
+  }, [apiRef, props.unstable_lazyLoading, props.unstable_dataSource]);
 
   const [defaultRowsUpdateStrategyActive, setDefaultRowsUpdateStrategyActive] =
     React.useState(false);

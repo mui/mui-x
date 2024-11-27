@@ -109,7 +109,7 @@ function ServerSideLazyLoadingRequestThrottle() {
         {...props}
         unstable_dataSource={dataSource}
         rowCount={rowCount}
-        lazyLoading
+        unstable_lazyLoading
         lazyLoadingRequestThrottleMs={throttleMs}
         paginationModel={{ page: 0, pageSize: 10 }}
         slots={{

@@ -53,7 +53,7 @@ export const useGridDataSourceLazyLoader = (
     | 'pagination'
     | 'paginationMode'
     | 'unstable_dataSource'
-    | 'lazyLoading'
+    | 'unstable_lazyLoading'
     | 'lazyLoadingRequestThrottleMs'
     | 'scrollEndThreshold'
   >,
@@ -62,9 +62,9 @@ export const useGridDataSourceLazyLoader = (
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.unstable_dataSource && props.lazyLoading ? () => true : () => false,
+      props.unstable_dataSource && props.unstable_lazyLoading ? () => true : () => false,
     );
-  }, [privateApiRef, props.lazyLoading, props.unstable_dataSource]);
+  }, [privateApiRef, props.unstable_lazyLoading, props.unstable_dataSource]);
 
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);

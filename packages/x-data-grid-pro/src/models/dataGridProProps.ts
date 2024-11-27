@@ -77,7 +77,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
     DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
+   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: number;
@@ -150,7 +150,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
    * @default false
    */
-  lazyLoading: boolean;
+  unstable_lazyLoading: boolean;
   /**
    * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
    * @default 500

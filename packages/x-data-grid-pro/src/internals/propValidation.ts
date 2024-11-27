@@ -34,7 +34,7 @@ export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>
   (props) =>
     (props.signature !== GridSignature.DataGrid &&
       (props.rowsLoadingMode === 'server' || props.onRowsScrollEnd) &&
-      props.lazyLoading &&
-      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"` or `onRowsScrollEnd=...`) cannot be used together with server side lazy loading `lazyLoading="true"`.') ||
+      props.unstable_lazyLoading &&
+      'MUI X: Usage of the client side lazy loading (`rowsLoadingMode="server"` or `onRowsScrollEnd=...`) cannot be used together with server side lazy loading `unstable_lazyLoading="true"`.') ||
     undefined,
 ];

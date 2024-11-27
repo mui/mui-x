@@ -61,7 +61,7 @@ describe('<DataGridPro /> - Data source lazy loader', () => {
     const baselineProps = {
       unstable_dataSource: dataSource,
       columns: mockServer.columns,
-      lazyLoading: true,
+      unstable_lazyLoading: true,
       paginationModel: { page: 0, pageSize: 10 },
       disableVirtualization: true,
     };

@@ -39,7 +39,7 @@ function ServerSideLazyLoadingViewport() {
       <DataGridPro
         {...props}
         unstable_dataSource={dataSource}
-        lazyLoading
+        unstable_lazyLoading
         paginationModel={{ page: 0, pageSize: 10 }}
       />
     </div>

@@ -101,7 +101,7 @@ function ServerSideLazyLoadingErrorHandling() {
           unstable_dataSource={dataSource}
           unstable_onDataSourceError={(_, params) => setRetryParams(params)}
           unstable_dataSourceCache={null}
-          lazyLoading
+          unstable_lazyLoading
           paginationModel={{ page: 0, pageSize: 10 }}
           slots={{ toolbar: GridToolbar }}
         />

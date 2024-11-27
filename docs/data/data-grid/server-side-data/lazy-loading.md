@@ -8,7 +8,7 @@ title: React Data Grid - Server-side lazy loading
 
 Lazy Loading changes the way pagination works by removing page controls and loading data dynamically (in a single list) as the user scrolls through the grid.
 
-It is enabled by adding `lazyLoading` prop in combination with `unstable_dataSource` prop.
+It is enabled by adding `unstable_lazyLoading` prop in combination with `unstable_dataSource` prop.
 
 Initially, the first page data is fetched and displayed in the grid. What triggers the loading of next page data depends on the value of the total row count.
 
@@ -92,7 +92,7 @@ This feature isn't implemented yet. It's coming.
 Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this feature, or if you are facing a pain point with your current solution.
 :::
 
-When completed, it would be possible to use `lazyLoading` flag in combination with [Tree data](/x/react-data-grid/server-side-data/tree-data/) and [Row grouping](/x/react-data-grid/server-side-data/row-grouping/).
+When completed, it would be possible to use `unstable_lazyLoading` flag in combination with [Tree data](/x/react-data-grid/server-side-data/tree-data/) and [Row grouping](/x/react-data-grid/server-side-data/row-grouping/).
 
 ## Error handling
 

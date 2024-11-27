@@ -56,7 +56,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   scrollEndThreshold: 80,
   treeData: false,
   unstable_listView: false,
-  lazyLoading: false,
+  unstable_lazyLoading: false,
   lazyLoadingRequestThrottleMs: 500,
 };
 

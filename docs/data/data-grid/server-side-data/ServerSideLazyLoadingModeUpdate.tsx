@@ -76,7 +76,7 @@ function ServerSideLazyLoadingModeUpdate() {
       <DataGridPro
         {...props}
         unstable_dataSource={dataSource}
-        lazyLoading
+        unstable_lazyLoading
         paginationModel={{ page: 0, pageSize: 10 }}
         rowCount={rowCount}
         slots={{ toolbar: GridCustomToolbar }}
