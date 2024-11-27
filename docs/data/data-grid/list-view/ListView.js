@@ -12,7 +12,8 @@ import GridIcon from '@mui/icons-material/GridOn';
 import ListIcon from '@mui/icons-material/TableRowsOutlined';
 
 function MessageAction(params) {
-  const handleMessage = () => {
+  const handleMessage = (event) => {
+    event.stopPropagation();
     console.log(`send message to ${params.row.phone}`);
   };
   return (

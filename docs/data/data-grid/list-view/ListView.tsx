@@ -26,7 +26,8 @@ declare module '@mui/x-data-grid' {
 }
 
 function MessageAction(params: Pick<GridRowParams, 'row'>) {
-  const handleMessage = () => {
+  const handleMessage = (event: React.MouseEvent) => {
+    event.stopPropagation();
     console.log(`send message to ${params.row.phone}`);
   };
   return (

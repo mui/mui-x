@@ -90,7 +90,8 @@ function EditAction(props: EditActionProps) {
   const [name, setName] = React.useState(row.name);
   const [position, setPosition] = React.useState(row.position);
 
-  const handleEdit = () => {
+  const handleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation();
     setEditing(true);
   };
 
