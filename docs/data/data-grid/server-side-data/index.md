@@ -189,14 +189,14 @@ This means that if the user navigates to a page or expands a node that has alrea
 
 The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
 
-### Improving the cache-hit ratio
+### Improving the cache hit rate
 
-To increase the cache-hit ratio, Data Grid splits `getRows` results into chunks before storing them in cache. For the next request one or more chunks are combined to recreate the response.
+To increase the cache hit rate, Data Grid splits `getRows` results into chunks before storing them in cache. For the next request one or more chunks are combined to recreate the response.
 This means that a single request can make multiple calls to the `get` or `set` method of `GridDataSourceCache`.
 
 Chunk size is the lowest expected amount of records per request based on `pageSize` from `paginationModel` and `pageSizeOptions` prop.
 
-Because of this, values in the `pageSizeOptions` prop play a big role in the cache-hit ratio.
+Because of this, values in the `pageSizeOptions` prop play a big role in the cache hit rate.
 It is recommended to have values that are multiples of the lowest value.
 Even better if every value is a multiple of the previous value.
 
