@@ -237,9 +237,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
   if (!estimated) {
     return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
   }
-  const estimateLabel =
-    estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
-  return `${from}–${to} od ${count !== -1 ? count : estimateLabel}`;
+  return `${from}–${to} od ${count !== -1 ? count : `više nego ${estimated > to ? estimated : to}`}`;
 };
 
 <DataGrid
