@@ -49,9 +49,9 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
     <Calendar.Days.Content>
       {({ weeks }) =>
         weeks.map((week) => (
-          <Calendar.Days.WeekLine value={week}>
+          <Calendar.Days.WeekRow value={week}>
             {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
-          </Calendar.Days.WeekLine>
+          </Calendar.Days.WeekRow>
         ))
       }
     </Calendar.Days.Content>
@@ -202,9 +202,9 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
       <Calendar.Days.Content>
         {({ weeks }) =>
           weeks.map((week) => (
-            <Calendar.Days.WeekLine value={week}>
+            <Calendar.Days.WeekRow value={week}>
               {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
-            </Calendar.Days.WeekLine>
+            </Calendar.Days.WeekRow>
           ))
         }
       </Calendar.Days.Content>
@@ -289,7 +289,7 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
   <Calendar.Days.Content>
     {({ weeks }) =>
       weeks.map((week) => (
-        <Calendar.Days.WeekLine value={week}>
+        <Calendar.Days.WeekRow value={week}>
           {({ days }) => (
             <React.Fragment>
               <Calendar.Days.WeekNumberCell />
@@ -298,7 +298,7 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
               ))}
             </React.Fragment>
           )}
-        </Calendar.Days.WeekLine>
+        </Calendar.Days.WeekRow>
       ))
     }
   </Calendar.Days.Content>
@@ -573,7 +573,7 @@ It expects a function as its children, which has the list of weeks to render as 
 
 ```tsx
 <Calendar.Days.Content>
-  {({ weeks }) => weeks.map((week) => <Calendar.Days.WeekLine value={week} />)}
+  {({ weeks }) => weeks.map((week) => <Calendar.Days.WeekRow value={week} />)}
 </Calendar.Days.Content>
 ```
 
@@ -586,16 +586,16 @@ Maybe it should be named `<Calendar.Days.Grid />`.
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 - `children`: `(params: { weeks: PickerValidDate[] }) => React.ReactNode`
 
-### `Calendar.Days.WeekLine`
+### `Calendar.Days.WeekRow`
 
 Renders the content all the days in a week.
 
 It expects a function as its children, which has the list of days to render and the week number as a parameter:
 
 ```tsx
-<Calendar.Days.WeekLine>
+<Calendar.Days.WeekRow>
   {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
-</Calendar.Days.Content>
+</Calendar.Days.WeekRow>
 ```
 
 #### Props
@@ -635,6 +635,30 @@ It expects a function as its children, which has the list of the months as a par
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 - `children`: `(params: { months: PickerValidDate[] }) => React.ReactNode`
+- `cellsPerRow`: `number`, default: `1`
+
+  :::success
+  The `cellsPerRow` prop is needed to have a working keyboard navigation.
+  But it's not a great DX, especially if the user wants to vary the amount of items per row based on the viewport width.
+
+  The navigation behavior should looks something like this:
+
+  - if `cellsPerRow === 1`:
+
+    - <kbd class="key">ArrowLeft</kbd> do nothing
+    - <kbd class="key">ArrowRight</kbd> do nothing
+    - <kbd class="key">ArrowTop</kbd> go to the month rendered above (should handle `display: flex-reverse`)
+    - <kbd class="key">ArrowBottom</kbd> go to month rendered below (should handle `display: flex-reverse`)
+
+  - if `cellsPerRow > 1`:
+    - <kbd class="key">ArrowLeft</kbd> go the month rendered on the left, and if none should go to the outer-right month of the line rendered above (should handle `display: flex-reverse`)
+    - <kbd class="key">ArrowRight</kbd> go the month rendered on the right, and if none should go to the outer-left month of the line rendered below (should handle `display: flex-reverse`)
+    - <kbd class="key">ArrowTop</kbd> go to the month rendered above (should handle `display: flex-reverse`)
+    - <kbd class="key">ArrowBottom</kbd> go to month rendered below (should handle `display: flex-reverse`)
+
+  And with no assumption on the layout, this seems to be a real challenge to achieve.
+  The MVP could probably not contain any keyboard navigation.
+  :::
 
 ### `Calendar.Months.Cell`
 
@@ -661,6 +685,12 @@ It expects a function as its children, which has the list of the years as a para
 
 - Extends `React.HTMLAttributes<HTMLDivElement>`
 - `children`: `(params: { years: PickerValidDate[] }) => React.ReactNode`
+- `cellsPerRow`: `number`, default: `1`
+
+  :::success
+  The `cellsPerRow` prop is needed to have a working keyboard navigation.
+  See the equivalent prop in `Calendar.Months.Root` for more details.
+  :::
 
 ### `Calendar.Years.Cell`
 
