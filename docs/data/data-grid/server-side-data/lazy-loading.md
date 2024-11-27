@@ -46,9 +46,9 @@ Open info section of the browser console to see the requests being made and the 
 
 ### Request throttling
 
-While user is scrolling through the grid, rendering context changes and the Data Grid tries to fill in any missing rows by making a new data source request. This avoid making huge amount of request, Data Grid throttles new data fetches on the rendering context change. By default throttle is set to 500 ms, but the time can be controlled with `lazyLoadingRequestThrottleMs` prop.
-
-The demo below shows the difference in behavior for different values of the `lazyLoadingRequestThrottleMs` prop. In the footer of the Data Grid, you can see the amount of requests made while scrolling.
+While user is scrolling through the grid, rendering context changes and the Data Grid tries to fill in any missing rows by making a new server request.
+The Data Grid throttles new data fetches on the rendering context change to avoid doing unnecessary requests.
+The default throttle time is 500 milliseconds, use `lazyLoadingRequestThrottleMs` prop to customize it, as the following example demonstrates.
 
 {{"demo": "ServerSideLazyLoadingRequestThrottle.js", "bg": "inline"}}
 
@@ -75,14 +75,14 @@ Based on the previous and the new value for the total row count, the following s
 - **Known `rowCount` greater than the actual row count**: This can happen either by reducing the value of the row count after more rows were already fetched or if the row count was unknown and the grid in the inifite loading mode already fetched more rows. In this case, the grid resets, fetches the first page and continues in one of the modes depending on the new value of the `rowCount`.
 
 :::warning
-`rowCount` is expected to be static. Changing its value can cause the grid to reset and the cache to be cleared which leads to poor performance and user experience.
+`rowCount` is expected to be static. Changing its value can cause the grid to reset and the cache to be cleared which may lead to performance and UX degradation.
 :::
 
 The demo below serves more as a showcase of the behavior described above and is not representing something you would implement in a real-world scenario.
 
 {{"demo": "ServerSideLazyLoadingModeUpdate.js", "bg": "inline"}}
 
-## Nested rows 🚧
+## Nested lazy loading 🚧
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -98,7 +98,8 @@ When completed, it would be possible to use `lazyLoading` flag in combination wi
 
 To handle errors, use `unstable_onDataSourceError` prop as described in the [Error handling](/x/react-data-grid/server-side-data/#error-handling) section of the data source overview page.
 
-Second parameter of type `GridGetRowsParams` can be passed to `getRows` method of the [`unstable_dataSource`](/x/api/data-grid/grid-api/#grid-api-prop-unstable_dataSource) to retry the request. If successful, the grid uses `rows` and `rowCount` data to determine if the rows should be appended at the end of the grid or if the skeleton rows should be replaced.
+Second parameter of type `GridGetRowsParams` can be passed to `getRows` method of the [`unstable_dataSource`](/x/api/data-grid/grid-api/#grid-api-prop-unstable_dataSource) to retry the request.
+If successful, the Data Grid uses `rows` and `rowCount` data to determine if the rows should be appended at the end of the grid or if the skeleton rows should be replaced.
 
 The following demo gives an example how to use `GridGetRowsParams` to retry a failed request.
 
