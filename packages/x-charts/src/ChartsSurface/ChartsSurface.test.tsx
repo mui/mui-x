@@ -3,7 +3,7 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { expect } from 'chai';
 import { SizeProvider } from '../context/SizeProvider';
-import { ChartProvider } from '../internals';
+import { ChartProvider } from '../context/ChartProvider';
 
 describe('<ChartsSurface />', () => {
   // JSDOM doesn't implement SVGElement

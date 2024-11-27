@@ -12,6 +12,6 @@
   "muiName": "MuiChartsSurface",
   "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li>\n<li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
   "cssComponent": false
 }

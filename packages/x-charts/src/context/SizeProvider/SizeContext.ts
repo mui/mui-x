@@ -7,7 +7,7 @@ export const SizeContext = React.createContext<Initializable<SizeContextState>>(
   isInitialized: false,
   data: {
     hasIntrinsicSize: false,
-    containerRef: null as any,
+    svgRef: { current: null as any },
     height: 0,
     width: 0,
   },
