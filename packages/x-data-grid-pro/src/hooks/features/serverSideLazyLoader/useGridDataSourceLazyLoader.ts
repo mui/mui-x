@@ -165,7 +165,7 @@ export const useGridDataSourceLazyLoader = (
 
     // fill the grid with skeleton rows
     for (let i = 0; i < pageRowCount - rootChildrenCount; i += 1) {
-      const skeletonId = getSkeletonRowId(i);
+      const skeletonId = getSkeletonRowId(i + rootChildrenCount); // to avoid duplicate keys on rebuild
       rootGroupChildren.push(skeletonId);
 
       const skeletonRowNode: GridSkeletonRowNode = {
