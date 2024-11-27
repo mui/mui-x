@@ -438,6 +438,29 @@ Top level component that wraps the other components.
 
 - `autoFocus`: `boolean`
 
+:::success
+All the props that the picker can pass to the calendar (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that the calendar can be used inside a picker built with composition.
+
+That way, users only have to pass the props specific to the calendar to the `Calendar.*` components:
+
+```tsx
+<Picker.Root manager={manager} {...props} disablePast>
+  <PickerField.Root>{/** See the field documentation */}</PickerField.Root>
+  <Popover.Backdrop />
+  <Popover.Positioner>
+    <Popover.Popup>
+      <Calendar.Root>
+        <Calendar.Days.Root fixedWeekNumber={6}>
+          {/** See demo above */}
+        </Calendar.Days.Root>
+      </Calendar.Root>
+    </Popover.Popup>
+  </Popover.Positioner>
+</Picker.Root>
+```
+
+:::
+
 ### `Calendar.MatchView`
 
 Utility component to conditionally render some components based on the current view.

@@ -35,7 +35,7 @@ function CustomDatePicker(props) {
         <Popover.Backdrop />
         <Popover.Positioner>
           <Popover.Popup>
-            <Picker.Views></Picker.Views>
+            <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
           </Popover.Popup>
         </Popover.Positioner>
       </Picker.Root>
@@ -64,7 +64,29 @@ TODO
 
 TODO
 
-## Basic responsive usage
+## Usage with date and time views
+
+### With Material UI
+
+TODO
+
+### Without Material UI
+
+The user can use the `<Picker.MatchView />` component to conditionally render the view components.
+This is needed to build date time pickers:
+
+```tsx
+<Popover.Popup>
+  <Picker.MatchView match={['day', 'month', 'year']}>
+    <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+  </Picker.MatchView>
+  <Picker.MatchView match={['hours', 'minutes', 'seconds', 'meridiem']}>
+    <DigitalClock.Root>
+      {/** See digital clock documentation (not available yet) */}
+    </DigitalClock.Root>
+  </Picker.MatchView>
+</Popover.Popup>
+```
 
 ## Add an action bar
 
@@ -77,8 +99,8 @@ TODO
 The user can use the `<Picker.AcceptValue />`, `<Picker.CancelValue />` and `<Picker.SetValue />` components to create an action bar and interact with the value:
 
 ```tsx
-<Picker.Layout>
-  <Picker.Views>{/** See demo above */}</Picker.Views>
+<Popover.Popup>
+ <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
   <div>
     <Picker.SetValue target={null}>Clear</Picker.Clear>
     <Picker.SetValue target={dayjs()}>Today</Picker.Clear>
@@ -86,7 +108,7 @@ The user can use the `<Picker.AcceptValue />`, `<Picker.CancelValue />` and `<Pi
     <Picker.CancelValue>Cancel</Picker.CancelValue>
     <Popover.Close>Close</Popover.Close>
   </div>
-</Picker.Layout>
+</Popover.Popup>
 ```
 
 ## Add a toolbar
@@ -97,31 +119,31 @@ TODO
 
 ### Without Material UI
 
-The user can use the `Picker.ToolbarRoot` and `Picker.FormattedValue` components to create a toolbar for its picker:
+The user can use the `<Picker.FormattedValue />` component to create a toolbar for its picker:
 
 ```tsx
-<Picker.Layout>
-  <Picker.ToolbarRoot>
+<Popover.Popup>
+  <div>
     <Picker.FormattedValue format="MMMM YYYY" />
-  </Picker.ToolbarRoot>
-  <Picker.Views>{/** See demo above */}</Picker.Views>
-</Picker.Layout>
+  </div>
+  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+</Popover.Popup>
 ```
 
 The toolbar can also be used to switch between views thanks to the `<Picker.SetView />` component:
 
 ```tsx
-<Picker.Layout>
-  <Picker.ToolbarRoot>
+<Popover.Popup>
+  <div>
     <Picker.SetView target="year">
       <Picker.FormattedValue format="YYYY" />
     </Picker.SetView>
     <Picker.SetView target="day">
       <Picker.FormattedValue format="DD MMMM" />
     </Picker.SetView>
-  </Picker.ToolbarRoot>
-  <Picker.Views>{/** See demo above */}</Picker.Views>
-</Picker.Layout>
+  </div>
+  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+</Popover.Popup>
 ```
 
 ## Add tabs
@@ -132,7 +154,7 @@ TODO
 
 ### Without Material UI
 
-The user can use the `Picker.SetView` component in combination with any `Tabs` component.
+The user can use the `<Picker.SetView />` component in combination with any Tabs / Tab components.
 
 The example below uses the `Tabs` component from Base UI as an example:
 
@@ -140,9 +162,9 @@ The example below uses the `Tabs` component from Base UI as an example:
 import { Tabs } from '@base-ui-components/react/tabs';
 import { Picker } from '@base-ui/x-date-pickers/Picker';
 
-<Picker.Layout>
-  {({ view }) => (
-    <React.Fragment>
+<Picker.Popup>
+  <Picker.ContextValue>
+    {({ view }) => (
       <Tabs.Root value={['day', 'month', 'year'].includes(view) ? 'date' : 'time'}>
         <Tabs.List>
           <Tabs.Tab
@@ -159,10 +181,10 @@ import { Picker } from '@base-ui/x-date-pickers/Picker';
           </Tabs.Tab>
         </Tabs.List>
       </Tabs.Root>
-      <Picker.Views>{/** See demo above */}</Picker.Views>
-    </React.Fragment>
-  )}
-</Picker.Layout>;
+    )}
+  </Picker.ContextValue>
+  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+</Picker.Popup>;
 ```
 
 ## Add shortcuts
@@ -173,8 +195,10 @@ TODO
 
 ### Without Material UI
 
+The user can use the `<Picker.SetValue />` component to create a shortcut UI:
+
 ```tsx
-<Picker.Layout>
+<Popover.Popup>
   <div>
     <Picker.SetValue target={dayjs().month(0).date(1)}>
       New Year's Day
@@ -183,12 +207,12 @@ TODO
       Independence Day
     </Picker.SetValue>
   </div>
-  <Picker.Views>{/** See demo above */}</Picker.Views>
-</Picker.Layout>
+  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+</Popover.Popup>
 ```
 
 :::success
-To support the `isValid` param of the Material UI shortcut implement, a `useIsValidValue` hook could be added.
+To support the `isValid` param of the Material UI shortcut, a `useIsValidValue` hook could be added.
 Without it, it's not trivial to use `useValidation` since it requires a value and params like the validation props or the timezone.
 
 ```tsx
@@ -224,7 +248,27 @@ return (
 
 ### `Picker.Root`
 
-TODO
+#### Props
+
+- `manager`: `PickerManager` - **required**
+
+  :::success
+  See [#15395](https://github.com/mui/mui-x/issues/15395) for context.
+  :::
+
+- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
+
+  Same typing and behavior as today.
+
+- **Validation props**: list based on the `manager` prop
+
+  For `useDateManager()` it would be `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
+
+  Same typing and behavior as today.
+
+- **Form props**: `disabled`, `readOnly`.
+
+  Same typing and behavior as today.
 
 ### `Picker.FormattedValue`
 
@@ -236,11 +280,41 @@ Formats the value based on the provided format.
 
 - `format`: `string` - **required**
 
-### `Picker.Views`
+### `Picker.MatchView`
 
-TODO
+Utility component to conditionally render some components based on the current view.
+Doesn't render a DOM node (it does not have a `render` prop either).
+
+```tsx
+<Picker.MatchView match="day">
+  Only rendered when the view is "day"
+</Picker.MatchView>
+
+<Picker.MatchView match={["day", "month"]}>
+  Only rendered when the view is "day" or "month"
+</Picker.MatchView>
+```
+
+#### Props
+
+- `match`: `TView | readonly TView[]` - **required**.
+
+- `children`: `React.ReactNode`
+
+### `Picker.ContextValue`
+
+Utility component to access the picker public context.
+
+:::success
+The user can also use `usePickerContext()`, but a component allows to not create a dedicated component to access things close from `<Picker.Root />`
+:::
+
+#### Props
 
 ### `Picker.SetValue`
+
+Renders a button to set the current value.
+The button is disabled if the value is invalid.
 
 #### Props
 
@@ -250,11 +324,15 @@ TODO
 
 ### `Picker.AcceptValue`
 
+Renders a button to accept the current value.
+
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
 ### `Picker.CancelValue`
+
+Renders a button to cancel the current value.
 
 #### Props
 
@@ -262,16 +340,10 @@ TODO
 
 ### `Picker.SetView`
 
+Renders a button to set the current visible view.
+
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
 - `target`: `TView` - **required**
-
-### `Picker.Layout`
-
-TODO
-
-### `Picker.ToolbarRoot`
-
-TODO

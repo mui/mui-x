@@ -258,7 +258,9 @@ It would expend `Field.Root` from `@base-ui-components/react/Field`.
 
 - `manager`: `PickerManager` - **required for standalone fields**
 
+  :::success
   See [#15395](https://github.com/mui/mui-x/issues/15395) for context.
+  :::
 
 - **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
 
@@ -293,18 +295,16 @@ It would expend `Field.Root` from `@base-ui-components/react/Field`.
 - `autoFocus`: `boolean`
 
 :::success
-All the props that the picker can pass to the field (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that it can be used inside a picker built with composition.
+All the props that the picker can pass to the field (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that the field can be used inside a picker built with composition.
 
-That way, users only have to pass the props specific to the field to `<PickerField.Root />`:
+That way, users only have to pass the props specific to the field to the `PickerField.*` components:
 
 ```tsx
-<Picker.Root manager={manager} {...props}>
+<Picker.Root manager={manager} {...props} disablePast>
   <PickerField.Root shouldRespectLeadingZeros>
     {/** See demo above */}
   </PickerField.Root>
-  <Picker.ResponsivePopper>
-    {/** See picker documentation */}
-  </Picker.ResponsivePopper>
+  <Popover.Positioner>{/** See picker documentation */}</Popover.Positioner>
 </Picker.Root>
 ```
 
