@@ -93,4 +93,5 @@ Hence, they should be:
 
 - Outside the `<ChartsSurface />` component to avoid mixing HTAM and SVG.
 - Inside the `<ChartDataProvider />` component to get access to the data.
-  :::
+
+:::
