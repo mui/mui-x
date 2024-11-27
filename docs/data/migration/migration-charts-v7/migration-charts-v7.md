@@ -129,7 +129,7 @@ If you used axes in a pie chart please open an issue, we would be curious to get
 The `resolveSizeBeforeRender` prop has been removed from all components.
 If you were using this prop, you can safely remove it.
 
-## Rename `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop ✅
+## Rename `labelFontSize` and `tickFontSize` props ✅
 
 The `labelFontSize` and `tickFontSize` props have been renamed to `labelStyle` and `tickStyle` respectively.
 
