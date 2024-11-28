@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.22.4
+
+_Nov 28, 2024_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🌍 Improve Dutch, Spanish, Swedish, Portuguese, Chinese locales on the Data Grid and Date Pickers.
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@dloeda, @headironc, @mathzdev, @nphmuller.
+Following are all team members who have contributed to this release:
+@oliviertassinari, @arminmeh, @KenanYusuf.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.22.4`
+
+- [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
+- [DataGrid] Change test dom check from /jsdom/ to /jsdom|HappyDOM/. (@jedesroches) (#15642)
+- [DataGrid] Fix last separator not being hidden when grid is scrollable (@KenanYusuf) (#15551)
+- [DataGrid] Fix row-spanning in combination with column-pinning (@lhilgert9) (#15460)
+- [DataGrid] Improve resize performance (@lauri865) (#15592)
+- [DataGrid] Support column virtualization with dynamic row height (@cherniavskii) (#15567)
+- [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+
+#### `@mui/x-data-grid-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.22.4`, plus:
+
+- [DataGridPro] Fix header filtering with `boolean` column type (@k-rajat19) (#15640) @arminmeh
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (@zinoroman) (#15643)
+- [DataGridPro] Fix selection propagation issue on initialization (@MBilalShafi) (#15593)
+
+#### `@mui/x-data-grid-premium@v7.22.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.22.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v7.22.4`
+
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+- [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (@flaviendelangle) (#15544)
+
+#### `@mui/x-date-pickers-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v7.22.4`.
+
+### Charts
+
+#### `@mui/x-charts@v7.22.4`
+
+- [charts] Prevent invalid `releasePointerCapture` (@alexfauquette) (#15609)
+
+#### `@mui/x-charts-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v7.22.4`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v7.22.4`
+
+No changes since `@mui/x-tree-view@v7.22.3`.
+
+### Docs
+
+- [docs] Add data caching to lazy loaded detail panel demo (@cherniavskii) (#15555)
+- [docs] Remove selectors section from list view docs (@KenanYusuf) (#15639)
+
+### Core
+
+- [core] Update @mui/monorepo (#15574) @oliviertassinari
+- React 19 support (@arminmeh) (#15557)
+
 ## 7.22.3
 
 _Nov 21, 2024_
