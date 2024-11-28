@@ -6,25 +6,15 @@ import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../hooks/useClearableField';
-import {
-  DateValidationError,
-  FieldSection,
-  PickerValidDate,
-  BuiltInFieldTextFieldProps,
-  FieldOwnerState,
-} from '../models';
+import { DateValidationError, BuiltInFieldTextFieldProps, FieldOwnerState } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedValidateDateProps } from '../validation/validateDate';
 import { PickersTextFieldProps } from '../PickersTextField';
+import { PickerValue } from '../internals/models';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        DateValidationError
-      >,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,
     ExportedValidateDateProps,

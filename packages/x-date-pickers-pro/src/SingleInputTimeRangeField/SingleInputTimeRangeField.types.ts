@@ -10,7 +10,7 @@ import {
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
 import { UseTimeRangeFieldProps } from '../internals/models';
-import { RangeFieldSection, TimeRangeValidationError } from '../models';
+import { TimeRangeValidationError } from '../models';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -19,7 +19,6 @@ export interface UseSingleInputTimeRangeFieldProps<
     Pick<
       UseFieldInternalProps<
         PickerRangeValue,
-        RangeFieldSection,
         TEnableAccessibleFieldDOMStructure,
         TimeRangeValidationError
       >,

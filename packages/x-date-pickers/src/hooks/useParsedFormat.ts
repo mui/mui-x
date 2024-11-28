@@ -9,7 +9,7 @@ import type { UseFieldInternalProps } from '../internals/hooks/useField';
 
 interface UseParsedFormatParameters
   extends Pick<
-    UseFieldInternalProps<any, any, any, any>,
+    UseFieldInternalProps<any, any, any>,
     'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
   > {}
 
