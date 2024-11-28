@@ -72,7 +72,7 @@ function Toolbar() {
   );
 }
 
-export default function GridToolbarBasic() {
+export default function GridToolbarDefault() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,

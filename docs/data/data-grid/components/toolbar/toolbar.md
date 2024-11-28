@@ -2,7 +2,7 @@
 
 <p class="description">The Toolbar component provides a way to add custom controls and functionality to the Data Grid.</p>
 
-{{"demo": "GridToolbarBasic.js", "bg": "inline"}}
+{{"demo": "GridToolbar.js"}}
 
 ## Usage
 
@@ -89,6 +89,14 @@ Renders a `div` with `role="separator"`.
 ## Examples
 
 Below are some ways the Toolbar component can be used.
+
+### Default toolbar
+
+The demo below shows the default and recommended toolbar configuration.
+
+This example can be used as a starting point for customizing the toolbar by adding or removing features based on specific needs.
+
+{{"demo": "GridToolbarDefault.js", "bg": "inline"}}
 
 ### Filter bar
 
