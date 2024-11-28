@@ -5,6 +5,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v8.0.0-alpha.2
+
+_Nov 28, 2024_
+
+We'd like to offer a big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
+
+- 👨🏽‍💻 Improve resize performance on the Data Gird.
+- 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
+- 🌍 Improve Dutch locales on the Date and Time Pickers components.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@dloeda, @headironc, @jedesroches, @k-rajat19, @lauri865, @mathzdev, @nphmuller, @zinoroman.
+Following are all team members who have contributed to this release:
+@arminmeh, @alexfauquette, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The `GridOverlays` component is not exported anymore.
+- The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- The `apiRef.current.resize` method was removed.
+
+#### `@mui/x-data-grid@v8.0.0-alpha.2`
+
+- [DataGrid] Change test dom check from /jsdom/ to /jsdom|HappyDOM/. (#15634) @jedesroches
+- [DataGrid] Clear timers on unmount (#15620) @cherniavskii
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
+- [DataGrid] Improve resize performance (#15549) @lauri865
+- [DataGrid] Make estimation label more accurate (#15632) @arminmeh
+- [DataGrid] Remove `GridOverlays` export (#15573) @k-rajat19
+- [DataGrid] Remove `indeterminateCheckboxAction` prop (#15522) @MBilalShafi
+- [DataGrid] Remove try/catch from `GridCell` due to performance issues (#15616) @lauri865
+- [DataGrid] Remove unused `resize` method (#15599) @cherniavskii
+- [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
+- [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+
+#### `@mui/x-data-grid-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v8.0.0-alpha.2`, plus:
+
+- [DataGridPro] Fix header filtering with `boolean` column type (#15528) @k-rajat19
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15622) @zinoroman
+- [DataGridPro] Fix selection propagation issue on initialization (#15461) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@v8.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v8.0.0-alpha.2`
+
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15552) @flaviendelangle
+- [pickers] Improve validation internals (#15419) @flaviendelangle
+- [pickers] Remove `TSection` and strictly type `TValue` (#15434) @flaviendelangle
+- [pickers] Remove `orientation`, `isLandscape`, `isRtl`, `wrapperVariant` and `disabled` props from `PickersLayout` (#15494) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.2`.
+
+### Charts
+
+#### Breaking changes
+
+- [Breaking] Charts don't have a `div` wrapping them anymore. All props are now passed to the root `svg` instead of the `div`.
+- `ChartDataProvider` and `ChartsSurface` are now fully divided — [Learn more](https://next.mui.com/x/react-charts/composition/#overview).
+- Users can create their own HTML components using chart data — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
+
+#### `@mui/x-charts@v8.0.0-alpha.2`
+
+- [charts] Allow the creation of custom HTML components using charts data (#15511) @JCQuintas
+- [charts] Flatten imports from `@mui/utils` and `@mui/system` (#15603) @alexfauquette
+- [charts] Introduce the plugin system (#15513) @alexfauquette
+- [charts] Prevent invalid `releasePointerCapture` (#15602) @alexfauquette
+- [charts] Fix custom Tooltip demos (#15631) @alexfauquette
+
+#### `@mui/x-charts-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v8.0.0-alpha.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v8.0.0-alpha.2`
+
+- [TreeView] Flatten import from `@mui/utils` and `@mui/system` (#15604) @alexfauquette
+
+#### `@mui/x-tree-view-pro@v8.0.0-alpha.2`
+
+Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
+
+### Docs
+
+- [docs] Fix 404 links (#15575) @oliviertassinari
+- [docs] Fix bash comments (#15571) @oliviertassinari
+- [docs] Remove selectors section from list view docs (#15637) @KenanYusuf
+- [docs] Replace use of e.g. with for example (#15572) @oliviertassinari
+- [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
+- [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
+- [docs] Fix anchorEl API page for charts (#15625) @oliviertassinari
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+### Core
+
+- [core] Follow () function convention for docs @oliviertassinari
+- [core] Remove dead translation key (#15566) @oliviertassinari
+- [code-infra] Automerge `@types/node` bumps (#15591) @LukasTy
+
 ## v8.0.0-alpha.1
 
 _Nov 22, 2024_
