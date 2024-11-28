@@ -119,10 +119,6 @@ function CustomDatePicker(props) {
 }
 ```
 
-:::success
-
-:::
-
 ## Usage with date and time views
 
 ### With Material UI
@@ -370,16 +366,20 @@ The user can also use `usePickerContext()`, but a component allows to not create
 
 #### Props
 
+- `children`: `(contextValue: PickerContextValue) => React.ReactNode`
+
 ### `Picker.SetValue`
 
 Renders a button to set the current value.
-The button is disabled if the value is invalid.
+The button is disabled if the value is invalid (this could be configurable through an `acceptInvalidValue` prop).
 
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
 - `target`: `PickerValidDate` - **required**
+
+- `importance`: `'set' | 'accept'`, default: `'accept'`
 
 ### `Picker.AcceptValue`
 
