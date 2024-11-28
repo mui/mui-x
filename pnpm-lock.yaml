@@ -99,8 +99,8 @@ importers:
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#f706939f7ce7fd90d8d4436515d752daff7395c6
-        version: https://codeload.github.com/mui/material-ui/tar.gz/f706939f7ce7fd90d8d4436515d752daff7395c6(encoding@0.1.13)
+        specifier: github:mui/material-ui#821784419eefb89e4ce7b66c4b602a1e33d2fa88
+        version: https://codeload.github.com/mui/material-ui/tar.gz/821784419eefb89e4ce7b66c4b602a1e33d2fa88(encoding@0.1.13)
       '@mui/utils':
         specifier: ^5.16.8
         version: 5.16.8(@types/react@18.3.12)(react@18.3.1)
@@ -1680,7 +1680,7 @@ importers:
         version: 3.7.1(@swc/helpers@0.5.5)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))
       '@vitest/browser':
         specifier: 2.1.5
-        version: 2.1.5(@types/node@20.17.7)(playwright@1.44.1)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)
+        version: 2.1.5(@types/node@20.17.7)(playwright@1.48.2)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)
       '@vitest/ui':
         specifier: 2.1.5
         version: 2.1.5(vitest@2.1.5)
@@ -3224,10 +3224,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/f706939f7ce7fd90d8d4436515d752daff7395c6':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/f706939f7ce7fd90d8d4436515d752daff7395c6}
-    version: 6.1.8
-    engines: {pnpm: 9.13.2}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/821784419eefb89e4ce7b66c4b602a1e33d2fa88':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/821784419eefb89e4ce7b66c4b602a1e33d2fa88}
+    version: 6.1.9
+    engines: {pnpm: 9.14.2}
 
   '@mui/private-theming@5.16.8':
     resolution: {integrity: sha512-3Vl9yFVLU6T3CFtxRMQTcJ60Ijv7wxQi4yjH92+9YXcsqvVspeIYoocqNoIV/1bXGYfyWu5zrCmwQVHaGY7bug==}
@@ -4416,7 +4416,7 @@ packages:
   '@vitest/browser@2.1.5':
     resolution: {integrity: sha512-JrpnxvkrjlBrF7oXbK/YytWVYfJIzWYeDKppANlUaisBKwDso+yXlWocAJrANx8gUxyirF355Yx80S+SKQqayg==}
     peerDependencies:
-      playwright: 1.44.1
+      playwright: '*'
       safaridriver: '*'
       vitest: 2.1.5
       webdriverio: '*'
@@ -12183,7 +12183,7 @@ snapshots:
       '@emotion/styled': 11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
       '@types/react': 18.3.12
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/f706939f7ce7fd90d8d4436515d752daff7395c6(encoding@0.1.13)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/821784419eefb89e4ce7b66c4b602a1e33d2fa88(encoding@0.1.13)':
     dependencies:
       '@googleapis/sheets': 9.3.1(encoding@0.1.13)
       '@netlify/functions': 2.8.2
@@ -13549,7 +13549,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser@2.1.5(@types/node@20.17.7)(playwright@1.44.1)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)':
+  '@vitest/browser@2.1.5(@types/node@20.17.7)(playwright@1.48.2)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)':
     dependencies:
       '@testing-library/dom': 10.4.0
       '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
@@ -13562,7 +13562,7 @@ snapshots:
       vitest: 2.1.5(@types/node@20.17.7)(@vitest/browser@2.1.5)(@vitest/ui@2.1.5)(jsdom@25.0.1)(msw@2.6.5(@types/node@20.17.7)(typescript@5.7.2))(terser@5.27.0)
       ws: 8.18.0
     optionalDependencies:
-      playwright: 1.44.1
+      playwright: 1.48.2
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -20216,7 +20216,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.17.7
-      '@vitest/browser': 2.1.5(@types/node@20.17.7)(playwright@1.44.1)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)
+      '@vitest/browser': 2.1.5(@types/node@20.17.7)(playwright@1.48.2)(typescript@5.7.2)(vite@5.3.4(@types/node@20.17.7)(terser@5.27.0))(vitest@2.1.5)
       '@vitest/ui': 2.1.5(vitest@2.1.5)
       jsdom: 25.0.1
     transitivePeerDependencies:
