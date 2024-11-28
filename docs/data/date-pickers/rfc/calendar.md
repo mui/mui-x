@@ -13,20 +13,6 @@ This page extends the initial proposal made in [#15598](https://github.com/mui/m
 
 ## Usage with only days
 
-### With Material UI
-
-:::success
-No DX change here compared to today
-:::
-
-The user can use the `<DateCalendar />` and limit the views:
-
-```tsx
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-
-<DateCalendar views={['day']} value={value} onChange={setValue} />;
-```
-
 ### Without Material UI
 
 The user can use the `Calendar.Days.*` components to create a grid of days and the `Calendar.Header.*` to create a header to navigate across the months:
@@ -57,26 +43,21 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 </Calendar.Root>;
 ```
 
-## Usage with only months
-
 ### With Material UI
 
 :::success
 No DX change here compared to today
 :::
 
-The user can use the `<MonthCalendar />` component:
+The user can use the `<DateCalendar />` and limit the views:
 
 ```tsx
-import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-<MonthCalendar value={value} onChange={setValue}>
+<DateCalendar views={['day']} value={value} onChange={setValue} />;
 ```
 
-:::success
-The big limitation here is that the `<MonthCalendar />` component does not have a header to navigate through the years.
-Once the `Calendar.*` unstyled component is ready, the `<MonthCalendar />` should probably be reworked to improve this (or removed in favor of always using `<DateCalendar />`).
-:::
+## Usage with only months
 
 ### Without Material UI
 
@@ -99,7 +80,40 @@ import { Calendar } from '@base-ui/x-date-pickers/Calendar';
 </Calendar.Root>;
 ```
 
+### With Material UI
+
+:::success
+No DX change here compared to today
+:::
+
+The user can use the `<MonthCalendar />` component:
+
+```tsx
+import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
+
+<MonthCalendar value={value} onChange={setValue}>
+```
+
+:::success
+The big limitation here is that the `<MonthCalendar />` component does not have a header to navigate through the years.
+Once the `Calendar.*` unstyled component is ready, the `<MonthCalendar />` should probably be reworked to improve this (or removed in favor of always using `<DateCalendar />`).
+:::
+
 ## Usage with only years
+
+### Without Material UI
+
+The user can use the `Calendar.Years.*` components to create a grid of years:
+
+```tsx
+import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+
+<Calendar.Root value={value} onChange={setValue}>
+  <Calendar.Years.Root>
+    {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
+  </Calendar.Years.Root>
+</Calendar.Root>;
+```
 
 ### With Material UI
 
@@ -120,39 +134,7 @@ The big limitation here is that the `<YearCalendar />` component does not have a
 Once the `Calendar.*` unstyled component is ready, the `<YearCalendar />` should probably be reworked to improve this (or removed in favor of always using `<DateCalendar />`).
 :::
 
-### Without Material UI
-
-The user can use the `Calendar.Years.*` components to create a grid of years:
-
-```tsx
-import { Calendar } from '@base-ui/x-date-pickers/Calendar';
-
-<Calendar.Root value={value} onChange={setValue}>
-  <Calendar.Years.Root>
-    {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
-  </Calendar.Years.Root>
-</Calendar.Root>;
-```
-
 ## Day + month + years
-
-### With Material UI
-
-:::success
-No DX change here compared to today
-:::
-
-The user can use the `<DateCalendar />` component and add the month view:
-
-```tsx
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-
-<DateCalendar value={value} onChange={setValue}>
-```
-
-:::success
-When MD3 is supported, the default views of `<DateCalendar />` should probably be `['year', 'month', 'day']`
-:::
 
 ### Without Material UI
 
@@ -240,21 +222,25 @@ Today's `<DateCalendar />` header would look as follow:
 But the current behavior is not great, once the user is on the `year` view, there is no way to go back to the `day` view without picking a value.
 :::
 
-## Display week number
-
 ### With Material UI
 
 :::success
 No DX change here compared to today
 :::
 
-The user can use the `<DateCalendar />` with the `displayWeekNumber` prop:
+The user can use the `<DateCalendar />` component and add the month view:
 
 ```tsx
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-<DateCalendar displayWeekNumber views={['day']} value={value} onChange={setValue} />;
+<DateCalendar value={value} onChange={setValue}>
 ```
+
+:::success
+When MD3 is supported, the default views of `<DateCalendar />` should probably be `['year', 'month', 'day']`
+:::
+
+## Display week number
 
 ### Without Material UI
 
@@ -289,6 +275,20 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
     }
   </Calendar.Days.Content>
 </Calendar.Days.Root>
+```
+
+### With Material UI
+
+:::success
+No DX change here compared to today
+:::
+
+The user can use the `<DateCalendar />` with the `displayWeekNumber` prop:
+
+```tsx
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
+<DateCalendar displayWeekNumber views={['day']} value={value} onChange={setValue} />;
 ```
 
 ## Override part of the UI

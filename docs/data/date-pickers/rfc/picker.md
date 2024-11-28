@@ -13,10 +13,6 @@ This page extends the initial proposal made in [#14718](https://github.com/mui/m
 
 ## Basic usage in a Popover
 
-### With Material UI
-
-TODO
-
 ### Without Material UI
 
 ```tsx
@@ -42,11 +38,11 @@ function CustomDatePicker(props) {
 }
 ```
 
-## Basic usage in a Dialog
-
 ### With Material UI
 
 TODO
+
+## Basic usage in a Dialog
 
 ### Without Material UI
 
@@ -69,11 +65,11 @@ function CustomDatePicker(props) {
 }
 ```
 
-## Basic responsive usage
-
 ### With Material UI
 
 TODO
+
+## Basic responsive usage
 
 ### Without Material UI
 
@@ -119,11 +115,11 @@ function CustomDatePicker(props) {
 }
 ```
 
-## Usage with date and time views
-
 ### With Material UI
 
 TODO
+
+## Usage with date and time views
 
 ### Without Material UI
 
@@ -143,11 +139,11 @@ This is needed to build date time pickers:
 </Popover.Popup>
 ```
 
-## Add an action bar
-
 ### With Material UI
 
 TODO
+
+## Add an action bar
 
 ### Without Material UI
 
@@ -166,11 +162,11 @@ The user can use the `<Picker.AcceptValue />`, `<Picker.CancelValue />` and `<Pi
 </Popover.Popup>
 ```
 
-## Add a toolbar
-
 ### With Material UI
 
 TODO
+
+## Add a toolbar
 
 ### Without Material UI
 
@@ -201,11 +197,11 @@ The toolbar can also be used to switch between views thanks to the `<Picker.SetV
 </Popover.Popup>
 ```
 
-## Add tabs
-
 ### With Material UI
 
 TODO
+
+## Add tabs
 
 ### Without Material UI
 
@@ -242,11 +238,11 @@ import { Picker } from '@base-ui/x-date-pickers/Picker';
 </Picker.Popup>;
 ```
 
-## Add shortcuts
-
 ### With Material UI
 
 TODO
+
+## Add shortcuts
 
 ### Without Material UI
 
@@ -298,6 +294,10 @@ return (
 ```
 
 :::
+
+### With Material UI
+
+TODO
 
 ## Anatomy of `Picker.*`
 

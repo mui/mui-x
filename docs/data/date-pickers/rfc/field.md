@@ -13,6 +13,39 @@ This page extends the initial proposal made in [this GitHub comment](https://git
 
 ## Basic standalone usage
 
+### Without Material UI
+
+```tsx
+import { useDateManager } from '@base-ui/x-date-pickers/managers';
+import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+
+function CustomDateField(props) {
+  const manager = useDateManager();
+
+  return (
+    <PickerField.Root manager={manager} {...props}>
+      <PickerField.Content>
+        {({ sections }) =>
+          sections.map((section) => (
+            <PickerField.Section section={section}>
+              <PickerField.SectionSeparator position="before" />
+              <PickerField.SectionContent />
+              <PickerField.SectionSeparator position="after" />
+            </PickerField.Section>
+          ))
+        }
+      </PickerField.Content>
+    </PickerField.Root>
+  );
+}
+```
+
+The field can then be rendered just like the Material UI fields:
+
+```tsx
+<CustomDateField value={value} onChange={setValue} />
+```
+
 ### With Material UI
 
 The `@mui/x-date-pickers` package exposes one field per value type.
@@ -49,59 +82,7 @@ All these self-contained components are built on top of `PickerField`.
 An intermediary internal component is needed to only create the component once and then have each field pass its `manager` to it.
 :::
 
-### Without Material UI
-
-```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { PickerField } from '@base-ui/x-date-pickers/PickerField';
-
-function CustomDateField(props) {
-  const manager = useDateManager();
-
-  return (
-    <PickerField.Root manager={manager} {...props}>
-      <PickerField.Content>
-        {({ sections }) =>
-          sections.map((section) => (
-            <PickerField.Section section={section}>
-              <PickerField.SectionSeparator position="before" />
-              <PickerField.SectionContent />
-              <PickerField.SectionSeparator position="after" />
-            </PickerField.Section>
-          ))
-        }
-      </PickerField.Content>
-    </PickerField.Root>
-  );
-}
-```
-
-The field can then be rendered just like the Material UI fields:
-
-```tsx
-<CustomDateField value={value} onChange={setValue} />
-```
-
 ## Basic usage inside a picker
-
-### With Material UI
-
-:::success
-No DX change here compared to today.
-The only change is that the field component are detecting if there is a picker around them and adding an opening button if so (instead of having the picker pass a prop to define this opening button).
-:::
-
-The field exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers` automatically
-
-```tsx
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-<DatePicker slots={{ field: DateField }} />;
-```
-
-:::success
-The concept of slots does not fit this use case very well, but the exploration of a better DX to override part of the UI in self-contained component is outside the scope of this documentation, so this RFC uses the tools currently available.
-:::
 
 ### Without Material UI
 
@@ -212,10 +193,36 @@ function CustomDatePicker(props) {
 ```
 
 :::success
-When doing that, the `PickerField.Root` doesn't have to receive props like `minDate` because they are accessed using `usePickerContext` (or maybe a dedicated `usePickerValidationContext`). This makes composition viable between the picker and the field (same for the views).
+When doing that, the `<PickerField.Root />` component doesn't have to receive props like `minDate` because they are accessed using `usePickerContext()` (or maybe a dedicated `usePickerValidationContext()`). This makes composition viable between the picker and the field (same for the views).
+:::
+
+### With Material UI
+
+:::success
+No DX change here compared to today.
+The only change is that the field component are detecting if there is a picker around them and adding an opening button if so (instead of having the picker pass a prop to define this opening button).
+:::
+
+The field exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers` automatically
+
+```tsx
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+<DatePicker slots={{ field: DateField }} />;
+```
+
+:::success
+The concept of slots does not fit this use case very well, but the exploration of a better DX to override part of the UI in self-contained component is outside the scope of this documentation, so this RFC uses the tools currently available.
 :::
 
 ## Basic usage (multi input picker)
+
+### Without Material UI
+
+:::warning
+This is not planned for now.
+`Picker.*` could contain some additional components that would be the building blocks for `<MultiInputRangeField />` but it does not seem to be the priority for now.
+:::
 
 ### With Material UI
 
@@ -239,29 +246,10 @@ When used inside a picker, `<MultiInputRangeField />` can be passed directly and
 ```
 
 :::success
-THere is a POC of this in [#15505](https://github.com/mui/mui-x/pull/15505).
-:::
-
-### Without Material UI
-
-:::warning
-This is not planned for now.
-`Picker.*` could contain some additional components that would be the building blocks for `<MultiInputRangeField />` but it does not seem to be the priority for now.
+There is a POC of this in [#15505](https://github.com/mui/mui-x/pull/15505).
 :::
 
 ## Clearable field
-
-### With Material UI
-
-:::success
-No DX change here compared to today
-:::
-
-```tsx
-<DateField clearable />
-
-<DatePicker slotProps={{ field: { clearable: true } }}>
-```
 
 ### Without Material UI
 
@@ -283,6 +271,18 @@ function CustomDateField(props) {
     </PickerField.Root>
   );
 }
+```
+
+### With Material UI
+
+:::success
+No DX change here compared to today
+:::
+
+```tsx
+<DateField clearable />
+
+<DatePicker slotProps={{ field: { clearable: true } }}>
 ```
 
 ## Anatomy of `PickerField.*`
