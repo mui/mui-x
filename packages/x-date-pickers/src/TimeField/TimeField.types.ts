@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import { MakeOptional } from '@mui/x-internals/types';
-import TextField from '@mui/material/TextField';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
+import { TimeValidationError, BuiltInFieldTextFieldProps, FieldOwnerState } from '../models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
@@ -12,6 +11,7 @@ import {
 import { ExportedValidateTimeProps } from '../validation/validateTime';
 import { AmPmProps } from '../internals/models/props/time';
 import { PickerValue } from '../internals/models';
+import { PickersTextFieldProps } from '../PickersTextField';
 
 export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -39,25 +39,21 @@ export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+      slotProps?: TimeFieldSlotProps;
     };
-
-export type TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
-  TimeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 export interface TimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
 }
 
-export interface TimeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
+export interface TimeFieldSlotProps extends UseClearableFieldSlotProps {
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    TimeFieldOwnerState<TEnableAccessibleFieldDOMStructure>
+    FieldOwnerState
   >;
 }

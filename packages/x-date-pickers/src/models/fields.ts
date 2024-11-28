@@ -13,6 +13,7 @@ import {
   PickerRangeValue,
   PickerValidValue,
 } from '../internals/models';
+import { PickerOwnerState } from './pickers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -131,6 +132,17 @@ export interface FieldRef<TValue extends PickerValidValue> {
 }
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
+
+export interface FieldOwnerState extends PickerOwnerState {
+  /**
+   * `true` if the field is disabled, `false` otherwise.
+   */
+  isFieldDisabled: boolean;
+  /**
+   * `true` if the field is read-only, `false` otherwise.
+   */
+  isFieldReadOnly: boolean;
+}
 
 /**
  * Props the prop `slotProps.field` of a picker can receive.
