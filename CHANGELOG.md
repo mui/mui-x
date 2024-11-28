@@ -10,7 +10,8 @@ _Nov 28, 2024_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 Documentation improvements
-- 🌍 Improve Dutch, Spanish, Swedish, Portuguese, Chinese locales on the Data Grid and Date Pickers.
+- 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
+- 🌍 Improve Dutch locales on the Date and Time Pickers components.
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -25,7 +26,7 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@v7.22.4`
 
 - [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
-- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (@jedesroches) (#15642)
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
 - [DataGrid] Improve resize performance (#15592) @lauri865
@@ -50,8 +51,8 @@ Same changes as in `@mui/x-data-grid-pro@v7.22.4`.
 #### `@mui/x-date-pickers@v7.22.4`
 
 - [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
-- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` #15653 (@flaviendelangle)
-- [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (@flaviendelangle) (#15544)
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15653) @flaviendelangle
+- [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15544) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -61,7 +62,7 @@ Same changes as in `@mui/x-date-pickers@v7.22.4`.
 
 #### `@mui/x-charts@v7.22.4`
 
-- [charts] Prevent invalid `releasePointerCapture` (@alexfauquette) (#15609)
+- [charts] Prevent invalid `releasePointerCapture` (#15609) @alexfauquette
 
 #### `@mui/x-charts-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -75,13 +76,14 @@ No changes since `@mui/x-tree-view@v7.22.3`.
 
 ### Docs
 
-- [docs] Add data caching to lazy loaded detail panel demo (@cherniavskii) (#15555)
-- [docs] Remove selectors section from list view docs (@KenanYusuf) (#15639)
+- [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
+- [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
+- [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
 
 ### Core
 
 - [core] Update @mui/monorepo (#15574) @oliviertassinari
-- React 19 support (@arminmeh) (#15557)
+- React 19 support (#15557) @arminmeh
 
 ## 7.22.3
 
