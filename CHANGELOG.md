@@ -4803,7 +4803,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
   The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-  You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+  You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 
   ```diff
    const fieldResponse = useDateField(props);

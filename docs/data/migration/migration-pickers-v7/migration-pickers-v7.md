@@ -86,7 +86,7 @@ Starting with version `v8.x`, all the field and picker components come with a ne
 ### Migrate `slotProps.field`
 
 When using `slotProps.field` to pass props to your field component,
-the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+the field consumes some props (for example `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
 
 - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
