@@ -546,7 +546,8 @@ export const useGridVirtualScroller = () => {
           tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          renderContext={currentRenderContext}
+          firstColumnIndex={currentRenderContext.firstColumnIndex}
+          lastColumnIndex={currentRenderContext.lastColumnIndex}
           focusedColumnIndex={hasFocus ? focusedCell.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}

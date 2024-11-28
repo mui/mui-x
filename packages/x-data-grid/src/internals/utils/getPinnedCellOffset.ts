@@ -1,11 +1,9 @@
-import {
-  GridPinnedColumnPosition,
-  gridColumnPositionsSelector,
-} from '../../hooks/features/columns';
+import { PinnedPosition } from '../../components/cell/GridCell';
+import { gridColumnPositionsSelector } from '../../hooks/features/columns';
 import type { GridDimensions } from '../../hooks/features/dimensions';
 
 export const getPinnedCellOffset = (
-  pinnedPosition: GridPinnedColumnPosition | undefined,
+  pinnedPosition: PinnedPosition | undefined,
   computedWidth: number,
   columnIndex: number,
   columnPositions: ReturnType<typeof gridColumnPositionsSelector>,
@@ -13,12 +11,12 @@ export const getPinnedCellOffset = (
 ) => {
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
 
-  let pinnedOffset: number;
+  let pinnedOffset: number | undefined;
   switch (pinnedPosition) {
-    case GridPinnedColumnPosition.LEFT:
+    case PinnedPosition.LEFT:
       pinnedOffset = columnPositions[columnIndex];
       break;
-    case GridPinnedColumnPosition.RIGHT:
+    case PinnedPosition.RIGHT:
       pinnedOffset =
         dimensions.columnsTotalWidth -
         columnPositions[columnIndex] -
@@ -26,7 +24,7 @@ export const getPinnedCellOffset = (
         scrollbarWidth;
       break;
     default:
-      pinnedOffset = 0;
+      pinnedOffset = undefined;
       break;
   }
 

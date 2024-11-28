@@ -17,10 +17,14 @@ import {
   getGridFilter,
   GridStateColDef,
   GridColumnHeaderRow,
+  shouldCellShowLeftBorder,
+  shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { getPinnedCellOffset } from '@mui/x-data-grid/internals/utils/getPinnedCellOffset';
+import { PinnedPosition } from '@mui/x-data-grid/components/cell/GridCell';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -51,7 +55,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     rightRenderContext,
     pinnedColumns,
     visibleColumns,
-    getCellOffsetStyle,
+    columnPositions,
     ...otherProps
   } = useGridColumnHeadersCommunity({
     ...props,
@@ -117,11 +121,25 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const item = getFilterItem(colDef);
 
       const pinnedPosition = params?.position;
-      const style = getCellOffsetStyle({
+      const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
+        colDef.computedWidth,
         columnIndex,
-        computedWidth: colDef.computedWidth,
-      });
+        columnPositions,
+        dimensions,
+      );
+
+      const indexInSection = i;
+      const sectionLength = renderedColumns.length;
+
+      const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+      const showRightBorder = shouldCellShowRightBorder(
+        pinnedPosition,
+        indexInSection,
+        sectionLength,
+        rootProps.showCellVerticalBorder,
+        gridHasFiller,
+      );
 
       filters.push(
         <rootProps.slots.headerFilterCell
@@ -137,10 +155,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           data-field={colDef.field}
           item={item}
           pinnedPosition={pinnedPosition}
-          style={style}
-          indexInSection={i}
-          sectionLength={renderedColumns.length}
-          gridHasFiller={gridHasFiller}
+          pinnedOffset={pinnedOffset}
+          showLeftBorder={showLeftBorder}
+          showRightBorder={showRightBorder}
           {...rootProps.slotProps?.headerFilterCell}
         />,
       );
@@ -164,7 +181,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       >
         {leftRenderContext &&
           getColumnFilters({
-            position: GridPinnedColumnPosition.LEFT,
+            position: PinnedPosition.LEFT,
             renderContext: leftRenderContext,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
@@ -174,7 +191,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         })}
         {rightRenderContext &&
           getColumnFilters({
-            position: GridPinnedColumnPosition.RIGHT,
+            position: PinnedPosition.RIGHT,
             renderContext: rightRenderContext,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}

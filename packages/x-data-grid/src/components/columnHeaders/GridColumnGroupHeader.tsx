@@ -12,8 +12,9 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
-import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
+import { PinnedPosition } from '../cell/GridCell';
+import { useRtl } from '@mui/system/RtlProvider';
+import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -26,11 +27,11 @@ interface GridColumnGroupHeaderProps {
   height: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  pinnedPosition?: GridPinnedColumnPosition;
   style?: React.CSSProperties;
-  indexInSection: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
+  pinnedPosition: PinnedPosition | undefined;
+  pinnedOffset?: number;
 }
 
 type OwnerState = {
@@ -41,7 +42,7 @@ type OwnerState = {
   isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedPosition | undefined;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -67,8 +68,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
-      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
-      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedPosition.RIGHT && 'columnHeader--pinnedRight',
       isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
@@ -92,13 +93,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     tabIndex,
     isLastColumn,
     pinnedPosition,
-    style,
-    indexInSection,
-    sectionLength,
-    gridHasFiller,
+    pinnedOffset,
   } = props;
 
   const rootProps = useGridRootProps();
+  const isRtl = useRtl();
 
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
@@ -128,20 +127,9 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     headerComponent = render(renderParams);
   }
 
-  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
-  const showRightBorder = shouldCellShowRightBorder(
-    pinnedPosition,
-    indexInSection,
-    sectionLength,
-    rootProps.showColumnVerticalBorder,
-    gridHasFiller,
-  );
-
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showLeftBorder,
-    showRightBorder,
     headerAlign,
     depth,
     isDragging: false,
@@ -188,6 +176,15 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     typeof group.headerClassName === 'function'
       ? group.headerClassName(renderParams)
       : group.headerClassName;
+
+  const style = React.useMemo(() => {
+    let style = props.style;
+    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
+    if (pinnedSide && pinnedOffset !== undefined) {
+      style = { ...style, [pinnedSide]: pinnedOffset };
+    }
+    return style;
+  }, [pinnedPosition, pinnedOffset, props.style]);
 
   return (
     <GridGenericColumnHeaderItem

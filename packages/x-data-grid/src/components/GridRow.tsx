@@ -11,7 +11,7 @@ import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
-import type { GridRenderContext } from '../models/params/gridScrollParams';
+import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -43,7 +43,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   offsetTop: number | undefined;
   offsetLeft: number;
   dimensions: GridDimensions;
-  renderContext: GridRenderContext;
+  firstColumnIndex: number;
+  lastColumnIndex: number;
   visibleColumns: GridStateColDef[];
   pinnedColumns: GridPinnedColumns;
   /**
@@ -81,7 +82,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     offsetTop,
     offsetLeft,
     dimensions,
-    renderContext,
+    firstColumnIndex,
+    lastColumnIndex,
     focusedColumnIndex,
     isFirstVisible,
     isLastVisible,
@@ -116,11 +118,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
     focusedColumnIndex >= pinnedColumns.left.length &&
-    focusedColumnIndex < renderContext.firstColumnIndex;
+    focusedColumnIndex < firstColumnIndex;
   const hasVirtualFocusCellRight =
     hasFocusCell &&
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
-    focusedColumnIndex >= renderContext.lastColumnIndex;
+    focusedColumnIndex >= lastColumnIndex;
 
   const classes = composeGridClasses(rootProps.classes, {
     root: [
@@ -297,7 +299,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1;
 
     const pinnedOffset = getPinnedCellOffset(
-      gridPinnedColumnPositionLookup[pinnedPosition],
+      pinnedPosition,
       column.computedWidth,
       indexRelativeToAllColumns,
       columnPositions,
@@ -331,6 +333,15 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
     const cellIsNotVisible = pinnedPosition === PinnedPosition.VIRTUAL;
 
+    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showRightBorder = shouldCellShowRightBorder(
+      pinnedPosition,
+      indexInSection,
+      sectionLength,
+      rootProps.showCellVerticalBorder,
+      gridHasFiller,
+    );
+
     return (
       <slots.cell
         key={column.field}
@@ -345,9 +356,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         isNotVisible={cellIsNotVisible}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
-        sectionIndex={indexInSection}
-        sectionLength={sectionLength}
-        gridHasFiller={gridHasFiller}
+        showLeftBorder={showLeftBorder}
+        showRightBorder={showRightBorder}
         {...slotProps?.cell}
       />
     );
@@ -397,7 +407,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     );
   }
 
-  for (let i = renderContext.firstColumnIndex; i < renderContext.lastColumnIndex; i += 1) {
+  for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
 
@@ -499,6 +509,7 @@ GridRow.propTypes = {
       width: PropTypes.number.isRequired,
     }).isRequired,
   }).isRequired,
+  firstColumnIndex: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
@@ -512,6 +523,7 @@ GridRow.propTypes = {
   isFirstVisible: PropTypes.bool.isRequired,
   isLastVisible: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
+  lastColumnIndex: PropTypes.number.isRequired,
   offsetLeft: PropTypes.number.isRequired,
   offsetTop: PropTypes.number,
   onClick: PropTypes.func,
@@ -519,12 +531,6 @@ GridRow.propTypes = {
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
   pinnedColumns: PropTypes.object.isRequired,
-  renderContext: PropTypes.shape({
-    firstColumnIndex: PropTypes.number.isRequired,
-    firstRowIndex: PropTypes.number.isRequired,
-    lastColumnIndex: PropTypes.number.isRequired,
-    lastRowIndex: PropTypes.number.isRequired,
-  }).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

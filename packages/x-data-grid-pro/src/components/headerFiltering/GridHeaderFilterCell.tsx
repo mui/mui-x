@@ -37,6 +37,9 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
+import { PinnedPosition } from '@mui/x-data-grid/components/cell/GridCell';
+import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
+import { useRtl } from '@mui/system/RtlProvider';
 
 export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
   inputRef: React.RefObject<unknown>;
@@ -54,16 +57,16 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedPosition;
+  pinnedOffset?: number;
   style?: React.CSSProperties;
-  indexInSection: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
 }
 
 type OwnerState = DataGridProProcessedProps & {
   colDef: GridColDef;
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedPosition;
   showRightBorder: boolean;
   showLeftBorder: boolean;
 };
@@ -80,8 +83,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
-      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedPosition.RIGHT && 'columnHeader--pinnedRight',
     ],
   };
 
@@ -115,14 +118,15 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       InputComponentProps,
       showClearIcon = true,
       pinnedPosition,
+      pinnedOffset,
       style: styleProp,
-      indexInSection,
-      sectionLength,
-      gridHasFiller,
+      showLeftBorder,
+      showRightBorder,
       ...other
     } = props;
 
     const apiRef = useGridPrivateApiContext();
+    const isRtl = useRtl();
     const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
     const rootProps = useGridRootProps();
     const cellRef = React.useRef<HTMLDivElement>(null);
@@ -293,15 +297,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       [onMouseDown, onKeyDown, publish],
     );
 
-    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
-    const showRightBorder = shouldCellShowRightBorder(
-      pinnedPosition,
-      indexInSection,
-      sectionLength,
-      rootProps.showCellVerticalBorder,
-      gridHasFiller,
-    );
-
     const ownerState: OwnerState = {
       ...rootProps,
       pinnedPosition,
@@ -323,6 +318,17 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       );
 
     const isFilterActive = isApplied || hasFocus;
+
+    let style = {
+      height,
+      width,
+      ...styleProp,
+    };
+
+    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
+    if (pinnedSide && pinnedOffset !== undefined) {
+      style = { ...style, [pinnedSide]: pinnedOffset };
+    }
 
     return (
       <div
@@ -405,7 +411,6 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   /**
    * Class name added to the column header cell.
@@ -415,7 +420,6 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
-  indexInSection: PropTypes.number.isRequired,
   InputComponentProps: PropTypes.object,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
@@ -423,9 +427,11 @@ GridHeaderFilterCell.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  pinnedPosition: PropTypes.oneOf(['left', 'right']),
-  sectionLength: PropTypes.number.isRequired,
+  pinnedOffset: PropTypes.number,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]),
   showClearIcon: PropTypes.bool,
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   sortIndex: PropTypes.number,
   style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,

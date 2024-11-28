@@ -31,12 +31,12 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
+import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
 
 export enum PinnedPosition {
   NONE,
@@ -63,11 +63,10 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   disableDragEvents?: boolean;
   isNotVisible: boolean;
   editCellState: GridEditCellProps<any> | null;
-  pinnedOffset: number;
+  pinnedOffset?: number;
   pinnedPosition: PinnedPosition;
-  sectionIndex: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  showRightBorder: boolean;
+  showLeftBorder: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -168,9 +167,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     isNotVisible,
     pinnedOffset,
     pinnedPosition,
-    sectionIndex,
-    sectionLength,
-    gridHasFiller,
+    showRightBorder,
+    showLeftBorder,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -267,16 +265,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   const focusElementRef = React.useRef<FocusElement>(null);
   const isSelectionMode = rootProps.cellSelection ?? false;
 
-  const position = gridPinnedColumnPositionLookup[pinnedPosition];
-  const showLeftBorder = shouldCellShowLeftBorder(position, sectionIndex);
-  const showRightBorder = shouldCellShowRightBorder(
-    position,
-    sectionIndex,
-    sectionLength,
-    rootProps.showCellVerticalBorder,
-    gridHasFiller,
-  );
-
   const ownerState = {
     align,
     showLeftBorder,
@@ -353,14 +341,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
     const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
 
-    if (isLeftPinned || isRightPinned) {
-      let side: 'left' | 'right' = isLeftPinned ? 'left' : 'right';
-
-      if (isRtl) {
-        side = isLeftPinned ? 'right' : 'left';
-      }
-
-      cellStyle[side] = pinnedOffset;
+    const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
+    if (pinnedSide && pinnedOffset !== undefined) {
+      cellStyle[pinnedSide] = pinnedOffset;
     }
 
     if (rowSpan > 1) {
@@ -531,13 +514,12 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
-  gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
-  pinnedOffset: PropTypes.number.isRequired,
+  pinnedOffset: PropTypes.number,
   pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  sectionIndex: PropTypes.number.isRequired,
-  sectionLength: PropTypes.number.isRequired,
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   width: PropTypes.number.isRequired,
 } as any;
 
