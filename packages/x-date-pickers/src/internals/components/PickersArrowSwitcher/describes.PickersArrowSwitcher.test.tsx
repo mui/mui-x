@@ -22,22 +22,26 @@ describe('<PickersArrowSwitcher /> - Describes', () => {
       render,
       muiName: 'MuiPickersArrowSwitcher',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
-      // TODO: Uncomment once `describeConformance` does not enforce the presence of `ownerState.className`
-      // slots: {
-      //   previousIconButton: {
-      //     expectedClassName: pickersArrowSwitcherClasses.previousIconButton,
-      //   },
-      //   nextIconButton: {
-      //     expectedClassName: pickersArrowSwitcherClasses.nextIconButton,
-      //   },
-      //   leftArrowIcon: {
-      //     expectedClassName: pickersArrowSwitcherClasses.leftArrowIcon,
-      //   },
-      //   rightArrowIcon: {
-      //     expectedClassName: pickersArrowSwitcherClasses.rightArrowIcon,
-      //   },
-      // },
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'slotPropsCallbackWithPropsAsOwnerState',
+      ],
+      slots: {
+        previousIconButton: {
+          expectedClassName: pickersArrowSwitcherClasses.previousIconButton,
+        },
+        nextIconButton: {
+          expectedClassName: pickersArrowSwitcherClasses.nextIconButton,
+        },
+        leftArrowIcon: {
+          expectedClassName: pickersArrowSwitcherClasses.leftArrowIcon,
+        },
+        rightArrowIcon: {
+          expectedClassName: pickersArrowSwitcherClasses.rightArrowIcon,
+        },
+      },
     }),
   );
 });

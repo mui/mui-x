@@ -24,16 +24,20 @@ describe('<PickersCalendarHeader /> - Describes', () => {
       render,
       muiName: 'MuiPickersCalendarHeader',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
-      // TODO: Uncomment once `describeConformance` does not enforce the presence of `ownerState.className`
-      // slots: {
-      //   switchViewButton: {
-      //     expectedClassName: pickersCalendarHeaderClasses.switchViewButton,
-      //   },
-      //   switchViewIcon: {
-      //     expectedClassName: pickersCalendarHeaderClasses.switchViewIcon,
-      //   },
-      // },
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'slotPropsCallbackWithPropsAsOwnerState',
+      ],
+      slots: {
+        switchViewButton: {
+          expectedClassName: pickersCalendarHeaderClasses.switchViewButton,
+        },
+        switchViewIcon: {
+          expectedClassName: pickersCalendarHeaderClasses.switchViewIcon,
+        },
+      },
     }),
   );
 });
