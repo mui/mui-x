@@ -538,7 +538,7 @@
     },
     "rowSelectionPropagation": {
       "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
-      "default": "{ parents: false, descendants: false }"
+      "default": "{ parents: true, descendants: true }"
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }

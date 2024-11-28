@@ -8,7 +8,7 @@ import {
 } from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { DateValidationError, DateView, PickerValidDate } from '../models';
+import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -19,6 +19,7 @@ import {
 } from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
+import { PickerValue } from '../internals/models';
 import { ValidateDatePropsToDefault } from '../validation/validateDate';
 
 export interface BaseDatePickerSlots extends DateCalendarSlots {
@@ -36,15 +37,10 @@ export interface BaseDatePickerSlotProps extends DateCalendarSlotProps {
 export type DatePickerViewRenderers<
   TView extends DateView,
   TAdditionalProps extends {} = {},
-> = PickerViewRendererLookup<
-  PickerValidDate | null,
-  TView,
-  DateViewRendererProps<TView>,
-  TAdditionalProps
->;
+> = PickerViewRendererLookup<PickerValue, TView, DateViewRendererProps<TView>, TAdditionalProps>;
 
 export interface BaseDatePickerProps
-  extends BasePickerInputProps<PickerValidDate | null, DateView, DateValidationError>,
+  extends BasePickerInputProps<PickerValue, DateView, DateValidationError>,
     ExportedDateCalendarProps {
   /**
    * Overridable component slots.

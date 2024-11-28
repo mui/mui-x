@@ -9,13 +9,11 @@
     "disableTicks": { "description": "If true, the ticks are disabled." },
     "fill": { "description": "The fill color of the axis text." },
     "label": { "description": "The label of the axis." },
-    "labelFontSize": { "description": "The font size of the axis label." },
     "labelStyle": { "description": "The style applied to the axis label." },
     "position": { "description": "Position of the axis." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "stroke": { "description": "The stroke color of the axis line." },
-    "tickFontSize": { "description": "The font size of the axis ticks text." },
     "tickInterval": {
       "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."
     },

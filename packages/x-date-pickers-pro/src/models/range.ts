@@ -5,5 +5,3 @@ export type DateRange<TDate extends PickerValidDate> = [TDate | null, TDate | nu
 
 // TODO v8: Remove
 export type NonEmptyDateRange = [PickerValidDate, PickerValidDate];
-
-export type RangePosition = 'start' | 'end';

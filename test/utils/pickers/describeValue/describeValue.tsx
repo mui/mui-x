@@ -1,6 +1,10 @@
 import * as React from 'react';
 import createDescribe from '@mui/internal-test-utils/createDescribe';
-import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
+import {
+  BasePickerInputProps,
+  PickerValidValue,
+  UsePickerValueNonStaticProps,
+} from '@mui/x-date-pickers/internals';
 import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
@@ -16,7 +20,7 @@ const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testShortcuts,
 ];
 
-function innerDescribeValue<TValue, C extends PickerComponentFamily>(
+function innerDescribeValue<TValue extends PickerValidValue, C extends PickerComponentFamily>(
   ElementToTest: React.FunctionComponent<any>,
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
@@ -68,19 +72,24 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(WrappedElementToTest, { ...options, renderWithProps });
+    const typedTestSuite = testSuite as DescribeValueTestSuite<TValue, any>;
+    typedTestSuite(WrappedElementToTest, { ...options, renderWithProps });
   });
 }
 
-type P<TValue, C extends PickerComponentFamily> = [
+type P<TValue extends PickerValidValue, C extends PickerComponentFamily> = [
   React.FunctionComponent,
   () => DescribeValueOptions<C, TValue>,
 ];
 
 type DescribeValue = {
-  <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
-  skip: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
-  only: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+  <TValue extends PickerValidValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
+  skip: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
+  ) => void;
+  only: <TValue extends PickerValidValue, C extends PickerComponentFamily>(
+    ...args: P<TValue, C>
+  ) => void;
 };
 
 /**

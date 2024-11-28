@@ -13,8 +13,8 @@ export default function RowGroupingPropagateSelection() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
   const [rowSelectionPropagation, setRowSelectionPropagation] = React.useState({
-    parents: true,
-    descendants: true,
+    parents: false,
+    descendants: false,
   });
 
   const initialState = useKeepGroupedColumnsHidden({

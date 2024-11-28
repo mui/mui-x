@@ -4,11 +4,12 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedDateTimeField,
 } from '@mui/x-date-pickers/internals';
-import { DateTimeValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateTimeValidationError } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import type {
   UseMultiInputDateTimeRangeFieldParams,
@@ -77,7 +78,7 @@ export const useMultiInputDateTimeRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<PickerValidDate | null, DateTimeValidationError> => {
+  ): FieldChangeHandler<PickerValue, DateTimeValidationError> => {
     return (newDate, rawContext) => {
       const newDateRange: PickerRangeValue =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];

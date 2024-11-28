@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { MakeOptional } from '@mui/x-internals/types';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeViewWithMeridiem } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 import { PickerValidDate } from '../../models';
 
 export type PickerOnChangeFn = (
@@ -11,7 +11,10 @@ export type PickerOnChangeFn = (
   selectionState?: PickerSelectionState,
 ) => void;
 
-export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem> {
+export interface UseViewsOptions<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
@@ -63,12 +66,17 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
   onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
 }
 
-export interface ExportedUseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
+export interface ExportedUseViewsOptions<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
-interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
+interface UseViewsResponse<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> {
   view: TView;
   setView: (view: TView) => void;
   focusedView: TView | null;
@@ -84,7 +92,10 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   ) => void;
 }
 
-export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
+export function useViews<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>({
   onChange,
   onViewChange,
   openTo,

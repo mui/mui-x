@@ -7,7 +7,13 @@ import type {
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
-import { BaseForwardedSingleInputFieldProps } from '../internals/models';
+import {
+  BaseForwardedSingleInputFieldProps,
+  FieldRangeSection,
+  PickerRangeValue,
+  PickerValidValue,
+} from '../internals/models';
+import { PickerOwnerState } from './pickers';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -86,12 +92,22 @@ export interface FieldSection {
   endSeparator: string;
 }
 
-export interface FieldRef<TSection extends FieldSection> {
+// If `PickerValidDate` contains `any`, then `TValue extends PickerRangeValue` will return true, so we have to handle this edge case first.
+type IsAny<T> = boolean extends (T extends never ? true : false) ? true : false;
+
+export type InferFieldSection<TValue extends PickerValidValue> =
+  IsAny<TValue> extends true
+    ? FieldSection
+    : TValue extends PickerRangeValue
+      ? FieldRangeSection
+      : FieldSection;
+
+export interface FieldRef<TValue extends PickerValidValue> {
   /**
    * Returns the sections of the current value.
-   * @returns {TSection[]} The sections of the current value.
+   * @returns {InferFieldSection<TValue>[]} The sections of the current value.
    */
-  getSections: () => TSection[];
+  getSections: () => InferFieldSection<TValue>[];
   /**
    * Returns the index of the active section (the first focused section).
    * If no section is active, returns `null`.
@@ -117,16 +133,26 @@ export interface FieldRef<TSection extends FieldSection> {
 
 export type FieldSelectedSections = number | FieldSectionType | null | 'all';
 
+export interface FieldOwnerState extends PickerOwnerState {
+  /**
+   * `true` if the field is disabled, `false` otherwise.
+   */
+  isFieldDisabled: boolean;
+  /**
+   * `true` if the field is read-only, `false` otherwise.
+   */
+  isFieldReadOnly: boolean;
+}
+
 /**
  * Props the prop `slotProps.field` of a picker can receive.
  */
 export type PickerFieldSlotProps<
-  TValue,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > = ExportedUseClearableFieldProps &
   Pick<
-    UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, unknown>,
+    UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'
   > &
   React.HTMLAttributes<HTMLDivElement> & {

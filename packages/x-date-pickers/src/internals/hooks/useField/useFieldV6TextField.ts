@@ -3,11 +3,12 @@ import { useRtl } from '@mui/system/RtlProvider';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { UseFieldTextFieldInteractions, UseFieldTextField } from './useField.types';
-import { FieldSection } from '../../../models';
+import { InferFieldSection } from '../../../models';
 import { getActiveElement } from '../../utils/utils';
 import { getSectionVisibleValue, isAndroid } from './useField.utils';
+import { PickerValidValue } from '../../models';
 
-type FieldSectionWithPositions<TSection> = TSection & {
+type FieldSectionWithPositions<TValue extends PickerValidValue> = InferFieldSection<TValue> & {
   /**
    * Start index of the section in the format
    */
@@ -30,14 +31,14 @@ type FieldSectionWithPositions<TSection> = TSection & {
 
 const cleanString = (dirtyString: string) => dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
-export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: TSection[],
+export const addPositionPropertiesToSections = <TValue extends PickerValidValue>(
+  sections: InferFieldSection<TValue>[],
   localizedDigits: string[],
   isRtl: boolean,
-): FieldSectionWithPositions<TSection>[] => {
+): FieldSectionWithPositions<TValue>[] => {
   let position = 0;
   let positionInInput = isRtl ? 1 : 0;
-  const newSections: FieldSectionWithPositions<TSection>[] = [];
+  const newSections: FieldSectionWithPositions<TValue>[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];

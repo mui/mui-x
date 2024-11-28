@@ -11,6 +11,7 @@ import {
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { describeConformance } from 'test/utils/describeConformance';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -31,7 +32,7 @@ describe('<TimeField /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
-  describeValue(TimeField, () => ({
+  describeValue<PickerValue, 'field'>(TimeField, () => ({
     render,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],

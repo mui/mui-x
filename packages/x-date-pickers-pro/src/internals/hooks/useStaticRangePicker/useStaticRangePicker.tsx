@@ -14,7 +14,6 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
@@ -42,7 +41,6 @@ export const useStaticRangePicker = <
   const { layoutProps, providerProps, renderCurrentView } = usePicker<
     PickerRangeValue,
     TView,
-    RangeFieldSection,
     TExternalProps,
     {}
   >({

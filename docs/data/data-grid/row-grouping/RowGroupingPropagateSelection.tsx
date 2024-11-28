@@ -15,8 +15,8 @@ export default function RowGroupingPropagateSelection() {
   const apiRef = useGridApiRef();
   const [rowSelectionPropagation, setRowSelectionPropagation] =
     React.useState<GridRowSelectionPropagation>({
-      parents: true,
-      descendants: true,
+      parents: false,
+      descendants: false,
     });
 
   const initialState = useKeepGroupedColumnsHidden({

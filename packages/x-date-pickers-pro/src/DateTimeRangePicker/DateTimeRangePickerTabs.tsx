@@ -11,7 +11,9 @@ import {
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
@@ -67,8 +69,7 @@ export interface DateTimeRangePickerTabsProps
     BaseTabsProps<DateOrTimeViewWithMeridiem>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
-const useUtilityClasses = (ownerState: DateTimeRangePickerTabsProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
   const slots = {
     root: ['root'],
     tabButton: ['tabButton'],
@@ -83,7 +84,7 @@ const DateTimeRangePickerTabsRoot = styled('div', {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateTimeRangePickerTabsProps }>(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -120,11 +121,13 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
     rangePosition,
     onRangePositionChange,
     className,
+    classes: classesProp,
     sx,
   } = props;
 
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';
   const isNextHidden = value === 'end-time';
@@ -175,7 +178,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
 
   return (
     <DateTimeRangePickerTabsRoot
-      ownerState={props}
+      ownerState={ownerState}
       className={clsx(classes.root, className)}
       sx={sx}
     >

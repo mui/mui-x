@@ -4,7 +4,7 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { useValidation } from '../../../validation';
-import { FieldSection, PickerChangeHandlerContext, InferError } from '../../../models';
+import { PickerChangeHandlerContext, InferError } from '../../../models';
 import {
   PickerShortcutChangeImportance,
   PickersShortcutsItemContext,
@@ -23,12 +23,13 @@ import {
   PickerValueUpdaterParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
+import { PickerValidValue } from '../../models';
 
 /**
  * Decide if the new value should be published
  * The published value will be passed to `onChange` if defined.
  */
-const shouldPublishValue = <TValue, TError>(
+const shouldPublishValue = <TValue extends PickerValidValue, TError>(
   params: PickerValueUpdaterParams<TValue, TError>,
 ): boolean => {
   const { action, hasChanged, dateState, isControlled } = params;
@@ -81,7 +82,7 @@ const shouldPublishValue = <TValue, TError>(
  * The committed value will be passed to `onAccept` if defined.
  * It will also be used as a reset target when calling the `cancel` picker action (when clicking on the "Cancel" button).
  */
-const shouldCommitValue = <TValue, TError>(
+const shouldCommitValue = <TValue extends PickerValidValue, TError>(
   params: PickerValueUpdaterParams<TValue, TError>,
 ): boolean => {
   const { action, hasChanged, dateState, isControlled, closeOnSelect } = params;
@@ -121,7 +122,7 @@ const shouldCommitValue = <TValue, TError>(
 /**
  * Decide if the picker should be closed after the value is updated.
  */
-const shouldClosePicker = <TValue, TError>(
+const shouldClosePicker = <TValue extends PickerValidValue, TError>(
   params: PickerValueUpdaterParams<TValue, TError>,
 ): boolean => {
   const { action, closeOnSelect } = params;
@@ -145,8 +146,7 @@ const shouldClosePicker = <TValue, TError>(
  * Manage the value lifecycle of all the pickers.
  */
 export const usePickerValue = <
-  TValue,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TExternalProps extends UsePickerValueProps<TValue, any>,
 >({
   props,
@@ -156,7 +156,6 @@ export const usePickerValue = <
   validator,
 }: UsePickerValueParams<TValue, TExternalProps>): UsePickerValueResponse<
   TValue,
-  TSection,
   InferError<TExternalProps>
 > => {
   type TError = InferError<TExternalProps>;
@@ -422,7 +421,7 @@ export const usePickerValue = <
     onClose: handleClose,
   };
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
+  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
     value: dateState.draft,
     onChange: handleChangeFromField,
   };
