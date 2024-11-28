@@ -14,11 +14,6 @@ export default function GridToolbar() {
   return (
     <DemoContainer>
       <Grid.Toolbar.Root sx={demoStyles}>
-        <Grid.Toolbar.Button aria-label="Search">
-          <SearchIcon fontSize="small" />
-        </Grid.Toolbar.Button>
-
-        <Grid.Toolbar.Separator />
         <Grid.Toolbar.Button aria-label="Columns">
           <ViewColumnIcon fontSize="small" />
         </Grid.Toolbar.Button>
@@ -34,6 +29,11 @@ export default function GridToolbar() {
 
         <Grid.Toolbar.Button aria-label="Download">
           <FileDownloadIcon fontSize="small" />
+        </Grid.Toolbar.Button>
+
+        <Grid.Toolbar.Separator />
+        <Grid.Toolbar.Button aria-label="Search">
+          <SearchIcon fontSize="small" />
         </Grid.Toolbar.Button>
 
         <Grid.Toolbar.ToggleButtonGroup sx={{ ml: 'auto' }} value={view}>

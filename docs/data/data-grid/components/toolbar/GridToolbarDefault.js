@@ -16,7 +16,6 @@ function Toolbar() {
 
   return (
     <Grid.Toolbar.Root>
-      <GridToolbarQuickFilter sx={{ mr: 'auto' }} />
       <Tooltip title="Columns">
         <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
           <ViewColumnIcon fontSize="small" />
@@ -62,10 +61,13 @@ function Toolbar() {
         <Grid.Export.Trigger exportType="csv" render={<MenuItem />}>
           Download as CSV
         </Grid.Export.Trigger>
-        <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
-          Download as Excel
-        </Grid.Export.Trigger>
+        {/* Available to MUI X Premium users */}
+        {/* <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
+           Download as Excel
+          </Grid.Export.Trigger> */}
       </Menu>
+
+      <GridToolbarQuickFilter sx={{ ml: 'auto' }} />
     </Grid.Toolbar.Root>
   );
 }

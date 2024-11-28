@@ -37,15 +37,12 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   height: 34,
   [`.${outlinedInputClasses.root}`]: {
     fontSize: theme.typography.body2.fontSize,
-    height: 36,
+    height: 34,
     padding: theme.spacing(0, 0.5, 0, 1),
   },
   '& input': {
     padding: 0,
-    height: 36,
-  },
-  [`&:not(:focus-within) .${outlinedInputClasses.notchedOutline}`]: {
-    border: 0,
+    height: 34,
   },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
