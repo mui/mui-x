@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 7.22.4
+## 7.23.0
 
 _Nov 28, 2024_
 
@@ -24,7 +24,7 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@v7.22.4`
+#### `@mui/x-data-grid@v7.23.0`
 
 - [DataGrid] React 19 support (#15557) @arminmeh
 - [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
@@ -35,51 +35,51 @@ Following are all team members who have contributed to this release:
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
-#### `@mui/x-data-grid-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@v7.22.4`, plus:
+Same changes as in `@mui/x-data-grid@v7.23.0`, plus:
 
 - [DataGridPro] Fix header filtering with `boolean` column type (#15640) @k-rajat19
 - [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15643) @zinoroman
 - [DataGridPro] Fix selection propagation issue on initialization (#15593) @MBilalShafi
 
-#### `@mui/x-data-grid-premium@v7.22.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@v7.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@v7.22.4`.
+Same changes as in `@mui/x-data-grid-pro@v7.23.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@v7.22.4`
+#### `@mui/x-date-pickers@v7.23.0`
 
-- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
 - [pickers] React 19 support (#15557) @arminmeh
 - [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15653) @flaviendelangle
 - [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15544) @flaviendelangle
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
 
-#### `@mui/x-date-pickers-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@v7.22.4`.
+Same changes as in `@mui/x-date-pickers@v7.23.0`.
 
 ### Charts
 
-#### `@mui/x-charts@v7.22.4`
+#### `@mui/x-charts@v7.23.0`
 
 - [charts] React 19 support (#15557) @arminmeh
 - [charts] Prevent invalid `releasePointerCapture` (#15609) @alexfauquette
 
-#### `@mui/x-charts-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@v7.22.4`.
+Same changes as in `@mui/x-charts@v7.23.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@v7.22.4`
+#### `@mui/x-tree-view@v7.23.0`
 
 - [TreeView] React 19 support (#15557) @arminmeh
 
-#### `@mui/x-tree-view-pro@7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@7.22.4`.
+Same changes as in `@mui/x-tree-view@7.23.0`.
 
 ### Docs
 
