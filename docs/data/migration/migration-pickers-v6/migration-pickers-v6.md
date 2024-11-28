@@ -18,6 +18,9 @@ In `package.json`, change the version of the date pickers package to `^7.0.0`.
 ```diff
 -"@mui/x-date-pickers": "^6.0.0",
 +"@mui/x-date-pickers": "^7.0.0",
+
+-"@mui/x-date-pickers-pro": "^6.0.0",
++"@mui/x-date-pickers-pro": "^7.0.0",
 ```
 
 Since `v7` is a major release, it contains changes that affect the public API.
@@ -407,7 +410,7 @@ If you are using a multi input range field hook, the same applies to the ref in 
 
 The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 
 ```diff
   const fieldResponse = useDateField(props);
