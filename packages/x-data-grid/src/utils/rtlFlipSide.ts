@@ -1,10 +1,12 @@
-import { PinnedPosition } from '../components/cell/GridCell';
+import { PinnedPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 
 export const rtlFlipSide = (
   position: PinnedPosition | undefined,
   isRtl: boolean,
 ): 'left' | 'right' | undefined => {
-  if (!position) return;
+  if (!position) {
+    return undefined;
+  }
   if (!isRtl) {
     if (position === PinnedPosition.LEFT) {
       return 'left';
@@ -20,5 +22,6 @@ export const rtlFlipSide = (
       return 'left';
     }
   }
-  return;
+
+  return undefined;
 };

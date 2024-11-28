@@ -38,7 +38,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '../../../utils/cellBorderUtils';
-import { PinnedPosition } from '../../../components/cell/GridCell';
+import { PinnedPosition } from '../columns/gridColumnsInterfaces';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -505,6 +505,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     getColumnHeadersRow,
     getColumnsToRender,
     getColumnGroupHeadersRows,
+    getPinnedCellOffset,
     isDragging: !!dragCol,
     getInnerProps: () => ({
       role: 'rowgroup',

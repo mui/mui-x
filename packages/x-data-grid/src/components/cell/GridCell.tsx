@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
+import { rtlFlipSide } from '../../utils/rtlFlipSide';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -31,19 +32,14 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import {
+  GridPinnedColumnPosition,
+  PinnedPosition,
+} from '../../hooks/features/columns/gridColumnsInterfaces';
 import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
-import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
-
-export enum PinnedPosition {
-  NONE,
-  LEFT,
-  RIGHT,
-  VIRTUAL,
-}
 
 export const gridPinnedColumnPositionLookup = {
   [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,

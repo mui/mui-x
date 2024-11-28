@@ -6,8 +6,8 @@ import {
   gridTabIndexColumnHeaderFilterSelector,
   getDataGridUtilityClass,
   GridFilterItem,
-  GridPinnedColumnPosition,
   gridDimensionsSelector,
+  PinnedPosition,
 } from '@mui/x-data-grid';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
@@ -23,8 +23,6 @@ import {
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { getPinnedCellOffset } from '@mui/x-data-grid/internals/utils/getPinnedCellOffset';
-import { PinnedPosition } from '@mui/x-data-grid/components/cell/GridCell';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -50,6 +48,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   );
   const {
     getColumnsToRender,
+    getPinnedCellOffset,
     renderContext,
     leftRenderContext,
     rightRenderContext,

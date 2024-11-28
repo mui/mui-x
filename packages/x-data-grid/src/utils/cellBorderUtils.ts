@@ -1,4 +1,4 @@
-import { PinnedPosition } from '../components/cell/GridCell';
+import { PinnedPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 
 export const shouldCellShowRightBorder = (
   pinnedPosition: PinnedPosition | undefined,

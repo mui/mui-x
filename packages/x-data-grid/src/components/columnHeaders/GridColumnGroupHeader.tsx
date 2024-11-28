@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useRtl } from '@mui/system/RtlProvider';
+import { rtlFlipSide } from '../../utils/rtlFlipSide';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -12,9 +14,7 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../cell/GridCell';
-import { useRtl } from '@mui/system/RtlProvider';
-import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
+import { PinnedPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -178,13 +178,13 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       : group.headerClassName;
 
   const style = React.useMemo(() => {
-    let style = props.style;
+    let styleProp = props.style;
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
     if (pinnedSide && pinnedOffset !== undefined) {
-      style = { ...style, [pinnedSide]: pinnedOffset };
+      styleProp = { ...styleProp, [pinnedSide]: pinnedOffset };
     }
-    return style;
-  }, [pinnedPosition, pinnedOffset, props.style]);
+    return styleProp;
+  }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
 
   return (
     <GridGenericColumnHeaderItem

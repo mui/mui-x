@@ -22,7 +22,7 @@ import {
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
-  GridPinnedColumnPosition,
+  PinnedPosition,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -30,16 +30,13 @@ import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
-  shouldCellShowLeftBorder,
-  shouldCellShowRightBorder,
+  rtlFlipSide,
 } from '@mui/x-data-grid/internals';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
-import { PinnedPosition } from '@mui/x-data-grid/components/cell/GridCell';
-import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
-import { useRtl } from '@mui/system/RtlProvider';
 
 export interface GridRenderHeaderFilterProps extends GridHeaderFilterCellProps {
   inputRef: React.RefObject<unknown>;
@@ -334,11 +331,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       <div
         className={clsx(classes.root, headerClassName)}
         ref={handleRef}
-        style={{
-          height,
-          width,
-          ...styleProp,
-        }}
+        style={style}
         role="columnheader"
         aria-colindex={colIndex + 1}
         aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}

@@ -24,7 +24,7 @@ import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
-import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
+import { PinnedPosition } from '../hooks/features/columns/gridColumnsInterfaces';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';

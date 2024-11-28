@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { useRtl } from '@mui/system/RtlProvider';
+import { rtlFlipSide } from '../../utils/rtlFlipSide';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -15,9 +17,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../cell/GridCell';
-import { useRtl } from '@mui/system/RtlProvider';
-import { rtlFlipSide } from '@mui/x-data-grid/utils/rtlFlipSide';
+import { PinnedPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -280,13 +280,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const label = colDef.headerName ?? colDef.field;
 
   const style = React.useMemo(() => {
-    let style = props.style;
+    let styleProp = props.style;
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
     if (pinnedSide && pinnedOffset !== undefined) {
-      style = { ...style, [pinnedSide]: pinnedOffset };
+      styleProp = { ...styleProp, [pinnedSide]: pinnedOffset };
     }
-    return style;
-  }, [pinnedPosition, pinnedOffset, props.style]);
+    return styleProp;
+  }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
 
   return (
     <GridGenericColumnHeaderItem
