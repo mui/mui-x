@@ -10,7 +10,10 @@ export type { GridDetailPanelsProps } from '../components/GridDetailPanels';
 export type { GridPinnedRowsProps } from '../components/GridPinnedRows';
 export { GridHeaders } from '../components/GridHeaders';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
-export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+export {
+  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
+  generateDefaultSlots,
+} from '../constants/defaultGridSlotsComponents';
 
 export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtils';
