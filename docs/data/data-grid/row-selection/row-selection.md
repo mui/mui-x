@@ -71,13 +71,6 @@ Always set the `checkboxSelection` prop to `true` even when providing a custom c
 Otherwise, the Data Grid might remove your column.
 :::
 
-### Customize indeterminate checkbox behavior
-
-The parent checkboxes (like "Select All" checkbox) when clicked in an indeterminate state will deselect the selected rows.
-You can customize this behavior by using the [`indeterminateCheckboxAction` prop](/x/api/data-grid/data-grid/#data-grid-prop-indeterminateCheckboxAction).
-
-{{"demo": "CheckboxSelectionIndeterminateGrid.js", "bg": "inline"}}
-
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, when you click the "Select All" checkbox, all rows in the Data Grid are selected.
