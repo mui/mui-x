@@ -1,3 +1,4 @@
+import type { MakeRequired } from '@mui/x-internals/types';
 import { Validator } from './useValidation';
 import {
   BaseDateValidationProps,
@@ -18,11 +19,16 @@ export interface ExportedValidateDateProps
     YearValidationProps,
     BaseDateValidationProps {}
 
+/**
+ * Validation props as received by the validateDate method.
+ */
 export interface ValidateDateProps
-  extends DayValidationProps,
-    MonthValidationProps,
-    YearValidationProps,
-    Required<BaseDateValidationProps> {}
+  extends MakeRequired<ExportedValidateDateProps, ValidateDatePropsToDefault> {}
+
+/**
+ * Name of the props that should be defaulted before being passed to the validateDate method.
+ */
+export type ValidateDatePropsToDefault = keyof BaseDateValidationProps;
 
 export const validateDate: Validator<
   PickerValidDate | null,

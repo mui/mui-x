@@ -132,17 +132,17 @@ export interface UsePickerValueState<TValue> {
    */
   draft: TValue;
   /**
-   * Last value published (e.g: the last value for which `shouldPublishValue` returned `true`).
+   * Last value published (the last value for which `shouldPublishValue` returned `true`).
    * If `onChange` is defined, it's the value that was passed on the last call to this callback.
    */
   lastPublishedValue: TValue;
   /**
-   * Last value committed (e.g: the last value for which `shouldCommitValue` returned `true`).
+   * Last value committed (the last value for which `shouldCommitValue` returned `true`).
    * If `onAccept` is defined, it's the value that was passed on the last call to this callback.
    */
   lastCommittedValue: TValue;
   /**
-   * Last value passed with `props.value`.
+   * Last value passed to `props.value`.
    * Used to update the `draft` value whenever the `value` prop changes.
    */
   lastControlledValue: TValue | undefined;
@@ -257,7 +257,10 @@ export interface UsePickerValueNonStaticProps {
 export interface UsePickerValueProps<TValue, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerValueNonStaticProps,
-    TimezoneProps {}
+    TimezoneProps {
+  // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
+  referenceDate?: PickerValidDate;
+}
 
 export interface UsePickerValueParams<
   TValue,

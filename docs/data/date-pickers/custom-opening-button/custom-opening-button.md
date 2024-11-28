@@ -46,7 +46,7 @@ In the example below, the warning icon will be visible anytime the current value
 
 {{"demo": "AddWarningIconWhenInvalid.js"}}
 
-To add the same behavior to a picker that do not have an input adornment (e.g: Date Range Picker),
+To add the same behavior to a picker that do not have an input adornment (for example Date Range Picker),
 you need to use the `textField` slot to add one:
 
 {{"demo": "AddWarningIconWhenInvalidRange.js"}}
