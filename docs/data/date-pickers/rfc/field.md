@@ -105,14 +105,49 @@ The concept of slots does not fit this use case very well, but the exploration o
 
 ### Without Material UI
 
-To use the field inside a picker, it has to contain a way to open the picker.
+#### Add a trigger to open the picker
+
+To be able to open the picker using its field, the user has to add a trigger button for the Popover or the Modal that is used inside the picker.
+You can find more demos on the picker documentation on how to handle mobile and responsive pickers.
+
+```tsx
+import { useDateManager } from '@base-ui/x-date-pickers/managers';
+import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+
+function CustomDateField(props) {
+  const manager = useDateManager();
+
+  return (
+    <PickerField.Root manager={manager} {...props}>
+      <PickerField.Content>{/** See demo above */}</PickerField.Content>
+      <Popover.Trigger>📅</Popover.Trigger>
+    </PickerField.Root>
+  );
+}
+```
 
 :::success
-TODO: Find the DX to define a trigger button.
+If requested, a new utility hook could be added to easily check if the field is inside a picker. This would allow the same field component to be used as standalone and inside a picker:
 
-- Should it a custom `Picker.Trigger` or directly the `Popover.Trigger` and `Dialog.Trigger`?
-- If it uses the Base UI component, how should it handle the responsive version of the picker?
-  :::
+```tsx
+import { useDateManager } from '@base-ui/x-date-pickers/managers';
+import { useIsInsidePicker } from '@base-ui/x-date-pickers/hooks';
+import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+
+function CustomDateField(props) {
+  const manager = useDateManager();
+  const isInsidePicker = useIsInsidePicker();
+
+  return (
+    <PickerField.Root manager={manager} {...props}>
+      <PickerField.Content>{/** See demo above */}</PickerField.Content>
+      {isInsidePicker && <Popover.Trigger>📅</Popover.Trigger>}
+    </PickerField.Root>
+  );
+}
+```
+
+:::
 
 #### Inside a picker from `@mui/x-date-pickers`
 
@@ -141,12 +176,13 @@ function CustomDatePicker(props) {
   const manager = useDateManager();
 
   return (
-    <Picker.Root manager={manager} {...props}>
-      <CustomField />
-      <Picker.ResponsivePopper>
-        {/** See picker documentation */}
-      </Picker.ResponsivePopper>
-    </Picker.Root>
+    <Popover.Root>
+      <Picker.Root manager={manager} {...props}>
+        <CustomField />
+        <Popover.Backdrop />
+        <Popover.Positioner>{/** See picker documentation */}</Popover.Positioner>
+      </Picker.Root>
+    </Popover.Root>
   );
 }
 ```
@@ -161,18 +197,22 @@ function CustomDatePicker(props) {
   const manager = useDateManager();
 
   return (
-    <Picker.Root manager={manager} {...props}>
-      <PickerField.Root>{/** See demo above */}</PickerField.Root>
-      <Picker.ResponsivePopper>
-        {/** See picker documentation */}
-      </Picker.ResponsivePopper>
-    </Picker.Root>
+    <Popover.Root>
+      <Picker.Root manager={manager} {...props}>
+        <PickerField.Root manager={manager} {...props}>
+          <PickerField.Content>{/** See demo above */}</PickerField.Content>
+          <Popover.Trigger>📅</Popover.Trigger>
+        </PickerField.Root>
+        <Popover.Backdrop />
+        <Popover.Positioner>{/** See picker documentation */}</Popover.Positioner>
+      </Picker.Root>
+    </Popover.Root>
   );
 }
 ```
 
 :::success
-When doing that, the `Picker.Field.Root` doesn't have to receive props like `minDate` because they are accessed using `usePickerContext` (or maybe a dedicated `usePickerValidationContext`). This makes composition viable between the picker and the field (same for the views).
+When doing that, the `PickerField.Root` doesn't have to receive props like `minDate` because they are accessed using `usePickerContext` (or maybe a dedicated `usePickerValidationContext`). This makes composition viable between the picker and the field (same for the views).
 :::
 
 ## Basic usage (multi input picker)
@@ -245,7 +285,7 @@ function CustomDateField(props) {
 }
 ```
 
-## Anatomy of `Picker.*`
+## Anatomy of `PickerField.*`
 
 ### `PickerField.Root`
 

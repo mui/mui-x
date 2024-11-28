@@ -258,6 +258,15 @@ const pages: MuiPage[] = [
     ],
   },
   {
+    pathname: '/x/react-date-pickers/rfc',
+    title: 'Date and Time Pickers - new DX',
+    children: [
+      { pathname: '/x/react-date-pickers/rfc/field', title: 'Field' },
+      { pathname: '/x/react-date-pickers/rfc/calendar', title: 'Calendar' },
+      { pathname: '/x/react-date-pickers/rfc/picker', title: 'Picker' },
+    ],
+  },
+  {
     pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
     children: [
@@ -265,15 +274,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
       { pathname: '/x/react-date-pickers/faq', title: 'FAQs' },
-      {
-        pathname: '/x/react-date-pickers/rfc',
-        title: 'Composition and unstyled DX',
-        children: [
-          { pathname: '/x/react-date-pickers/rfc/field', title: 'Field' },
-          { pathname: '/x/react-date-pickers/rfc/calendar', title: 'Calendar' },
-          { pathname: '/x/react-date-pickers/rfc/picker', title: 'Picker' },
-        ],
-      },
       {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
