@@ -6,6 +6,7 @@ import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 import { TimeViewWithMeridiem } from '../common';
 import { ExportedValidateTimeProps } from '../../../validation/validateTime';
 import { FormProps } from '../formProps';
+import { PickerValue } from '../value';
 
 export interface AmPmProps {
   /**
@@ -21,7 +22,7 @@ export interface ExportedBaseClockProps
     AmPmProps {}
 
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
-  extends ExportedUseViewsOptions<PickerValidDate | null, TView>,
+  extends ExportedUseViewsOptions<PickerValue, TView>,
     ExportedBaseClockProps,
     FormProps {
   className?: string;

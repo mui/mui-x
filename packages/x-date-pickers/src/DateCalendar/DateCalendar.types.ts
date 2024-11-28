@@ -26,6 +26,7 @@ import {
 } from '../MonthCalendar/MonthCalendar.types';
 import { ExportedValidateDateProps } from '../validation/validateDate';
 import { FormProps } from '../internals/models/formProps';
+import { PickerValue } from '../internals/models';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
@@ -80,7 +81,7 @@ export interface ExportedDateCalendarProps
 
 export interface DateCalendarProps
   extends ExportedDateCalendarProps,
-    ExportedUseViewsOptions<PickerValidDate | null, DateView> {
+    ExportedUseViewsOptions<PickerValue, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.

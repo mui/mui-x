@@ -15,8 +15,10 @@ import {
   PickerValidDate,
   FieldSelectedSections,
   PickerValueType,
+  InferFieldSection,
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { PickerValidValue } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = (
   utils: MuiPickersAdapter,
@@ -230,10 +232,10 @@ export const cleanDigitSectionValue = (
   return applyLocalizedDigits(valueStr, localizedDigits);
 };
 
-export const adjustSectionValue = <TSection extends FieldSection>(
+export const adjustSectionValue = <TValue extends PickerValidValue>(
   utils: MuiPickersAdapter,
   timezone: PickersTimezone,
-  section: TSection,
+  section: InferFieldSection<TValue>,
   keyCode: AvailableAdjustKeyCode,
   sectionsValueBoundaries: FieldSectionsValueBoundaries,
   localizedDigits: string[],
@@ -614,8 +616,8 @@ export const getSectionsBoundaries = (
 
 let warnedOnceInvalidSection = false;
 
-export const validateSections = <TSection extends FieldSection>(
-  sections: TSection[],
+export const validateSections = <TValue extends PickerValidValue>(
+  sections: InferFieldSection<TValue>[],
   valueType: PickerValueType,
 ) => {
   if (process.env.NODE_ENV !== 'production') {

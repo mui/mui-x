@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 
 export default function LoadingOverlaySkeleton() {
   const { data } = useDemoData({
@@ -12,18 +12,13 @@ export default function LoadingOverlaySkeleton() {
 
   return (
     <Box sx={{ width: '100%', height: 400 }}>
-      <DataGridPro
+      <DataGrid
         {...data}
         loading
         slotProps={{
           loadingOverlay: {
             variant: 'skeleton',
             noRowsVariant: 'skeleton',
-          },
-        }}
-        initialState={{
-          pinnedColumns: {
-            left: ['desk'],
           },
         }}
       />

@@ -28,12 +28,12 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
   slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
-export interface MultiSectionDigitalClockSectionProps<TValue>
+export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
   extends FormProps,
     ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
-  items: MultiSectionDigitalClockOption<TValue>[];
-  onChange: (value: TValue) => void;
+  items: MultiSectionDigitalClockOption<TSectionValue>[];
+  onChange: (value: TSectionValue) => void;
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
@@ -123,16 +123,17 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   },
 }));
 
-type MultiSectionDigitalClockSectionComponent = <TValue>(
-  props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
+type MultiSectionDigitalClockSectionComponent = <TSectionValue extends number | string>(
+  props: MultiSectionDigitalClockSectionProps<TSectionValue> &
+    React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 export const MultiSectionDigitalClockSection = React.forwardRef(
-  function MultiSectionDigitalClockSection<TValue>(
-    inProps: MultiSectionDigitalClockSectionProps<TValue>,
+  function MultiSectionDigitalClockSection<TSectionValue extends number | string>(
+    inProps: MultiSectionDigitalClockSectionProps<TSectionValue>,
     ref: React.Ref<HTMLUListElement>,
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
