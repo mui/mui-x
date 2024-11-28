@@ -347,7 +347,7 @@ const theme = createTheme({
 
 ## Renamed variables and types
 
-The following variables and types were renamed to have a coherent `Picker` / `Pickers` prefix:
+The following variables and types have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
 - `usePickersTranslations`
 
