@@ -124,6 +124,7 @@ export function useGridDimensions(
     () => throttle(setSavedSize, props.resizeThrottleMs),
     [props.resizeThrottleMs],
   );
+  React.useEffect(() => debouncedSetSavedSize.clear, [debouncedSetSavedSize]);
 
   const getRootDimensions = () => apiRef.current.state.dimensions;
 
@@ -328,7 +329,7 @@ export function useGridDimensions(
       rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities
-      const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+      const isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
 
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(

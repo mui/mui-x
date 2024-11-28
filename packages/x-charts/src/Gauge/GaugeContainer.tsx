@@ -5,13 +5,14 @@ import { styled } from '@mui/material/styles';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { SizeProvider, useSize } from '../context/SizeProvider';
+import { SizeProvider } from '../context/SizeProvider';
 import { ChartProvider } from '../context/ChartProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
     Pick<DrawingAreaProviderProps, 'margin'>,
-    Omit<GaugeProviderProps, 'children'> {
+    Omit<GaugeProviderProps, 'children'>,
+    React.SVGProps<SVGSVGElement> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -23,41 +24,11 @@ export interface GaugeContainerProps
   children?: React.ReactNode;
 }
 
-const ResizableContainerRoot = styled('div', {
-  name: 'MuiGauge',
-  slot: 'Container',
-})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexGrow: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
+const GStyled = styled('g')(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
 }));
-
-function ResizableContainer(props: any) {
-  const { inHeight, inWidth, hasIntrinsicSize, containerRef } = useSize();
-
-  return (
-    <ResizableContainerRoot
-      {...props}
-      ownerState={{ width: inWidth, height: inHeight }}
-      ref={containerRef}
-    >
-      {hasIntrinsicSize && props.children}
-    </ResizableContainerRoot>
-  );
-}
 
 const GaugeContainer = React.forwardRef(function GaugeContainer(
   props: GaugeContainerProps,
@@ -99,23 +70,19 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
             cx={cx}
             cy={cy}
           >
-            <ResizableContainer
+            <ChartsSurface
+              title={title}
+              desc={desc}
+              disableAxisListener
               role="meter"
               aria-valuenow={value === null ? undefined : value}
               aria-valuemin={valueMin}
               aria-valuemax={valueMax}
               {...other}
+              ref={ref}
             >
-              <ChartsSurface
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-                ref={ref}
-              >
-                {children}
-              </ChartsSurface>
-            </ResizableContainer>
+              <GStyled aria-hidden="true">{children}</GStyled>
+            </ChartsSurface>
           </GaugeProvider>
         </DrawingAreaProvider>
       </SizeProvider>
