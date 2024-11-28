@@ -31,6 +31,8 @@ Following are all team members who have contributed to this release:
 - The `GridOverlays` component is not exported anymore.
 - The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 - The `apiRef.current.resize` method was removed.
+- The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
+  To revert to the previous behavior, pass `rowSelectionPropagation` as `{ parents: false, descendants: false }`.
 
 #### `@mui/x-data-grid@v8.0.0-alpha.2`
 
@@ -44,6 +46,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Remove try/catch from `GridCell` due to performance issues (#15616) @lauri865
 - [DataGrid] Remove unused `resize` method (#15599) @cherniavskii
 - [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
+- [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
