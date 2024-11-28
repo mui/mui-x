@@ -9,6 +9,7 @@ _Nov 28, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
+- ⚛️ React 19 support
 - 📚 Documentation improvements
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
 - 🌍 Improve Dutch locales on the Date and Time Pickers components.
@@ -25,7 +26,6 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@v7.22.4`
 
-- [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
 - [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
@@ -78,7 +78,7 @@ No changes since `@mui/x-tree-view@v7.22.3`.
 
 - [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
 - [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
-- [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
 
 ### Core
 
