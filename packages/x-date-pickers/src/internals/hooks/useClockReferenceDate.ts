@@ -3,6 +3,7 @@ import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../model
 import { singleItemValueManager } from '../utils/valueManagers';
 import { getTodayDate } from '../utils/date-utils';
 import { SECTION_TYPE_GRANULARITY } from '../utils/getDefaultReferenceDate';
+import { PickerValue } from '../models';
 
 export const useClockReferenceDate = <TProps extends {}>({
   value,
@@ -11,7 +12,7 @@ export const useClockReferenceDate = <TProps extends {}>({
   props,
   timezone,
 }: {
-  value: PickerValidDate;
+  value: PickerValue;
   referenceDate: PickerValidDate | undefined;
   utils: MuiPickersAdapter;
   props: TProps;
