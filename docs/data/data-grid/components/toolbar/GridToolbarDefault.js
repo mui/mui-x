@@ -3,6 +3,7 @@ import { DataGrid, Grid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
+import Badge from '@mui/material/Badge';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PrintIcon from '@mui/icons-material/Print';
@@ -23,9 +24,18 @@ function Toolbar() {
       </Tooltip>
 
       <Tooltip title="Filters">
-        <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
-          <FilterListIcon fontSize="small" />
-        </Grid.FilterPanel.Trigger>
+        <Grid.FilterPanel.Trigger
+          render={(props, state) => (
+            <Grid.Toolbar.Button
+              {...props}
+              color={state.filterCount ? 'primary' : 'standard'}
+            >
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon fontSize="small" />
+              </Badge>
+            </Grid.Toolbar.Button>
+          )}
+        />
       </Tooltip>
 
       <Grid.Toolbar.Separator />
