@@ -8,6 +8,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
   GridLogicOperator,
+  GridRowSelectionModel,
   gridRowsLookupSelector,
   GridSingleSelectColDef,
 } from '@mui/x-data-grid';
@@ -165,13 +166,15 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         );
 
         const rows = getVisibleRows(apiRef, rootProps);
-        const selectedRowIds =
-          result.select === -1
-            ? []
-            : rows.rows.slice(0, result.select).map((r) => {
-                return apiRef.current.getRowId(r);
-              });
-        apiRef.current.setRowSelectionModel(selectedRowIds);
+        const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
+        if (result.select !== -1) {
+          rows.rows.slice(0, result.select).forEach((r) => {
+            const id = apiRef.current.getRowId(r);
+            rowSelectionModel.ids.add(id);
+          });
+        }
+
+        apiRef.current.setRowSelectionModel(rowSelectionModel);
 
         const columns = apiRef.current.getAllColumns();
         const targetIndex =
