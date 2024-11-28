@@ -1,4 +1,5 @@
-import { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowId, GridRowModel } from '../gridRows';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
@@ -33,17 +34,21 @@ export interface GridRowSelectionApi {
    * Any row already selected will be unselected.
    * @param {readonly GridRowId[]} rowIds The row ids to select.
    */
-  setRowSelectionModel: (rowIds: readonly GridRowId[]) => void;
+  setRowSelectionModel: (rowIds: GridRowSelectionModel) => void;
 }
 
 export interface GridRowMultiSelectionApi {
   /**
    * Change the selection state of multiple rows.
-   * @param {GridRowId[]} ids The row ids.
+   * @param {GridRowSelectionModel} selectionModel The row ids.
    * @param {boolean} isSelected The new selection state. Default is `true`.
    * @param {boolean} resetSelection Whether to reset the already selected rows or not. Default is `false`.
    */
-  selectRows: (ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void;
+  selectRows: (
+    selectionModel: GridRowSelectionModel,
+    isSelected?: boolean,
+    resetSelection?: boolean,
+  ) => void;
   /**
    * Change the selection state of all the selectable rows in a range.
    * @param {Object} range The range of rows to select.

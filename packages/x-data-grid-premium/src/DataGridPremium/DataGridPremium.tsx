@@ -980,9 +980,10 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * When `rowSelectionPropagation.descendants` is set to `true`.
    * - Selecting a parent selects all its filtered descendants automatically.

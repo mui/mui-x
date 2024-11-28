@@ -27,14 +27,14 @@ import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRo
 import { useGridApiEventHandler } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
-import type {
-  GridRenderContext,
-  GridColumnsRenderContext,
-  GridRowEntry,
-  GridRowId,
+import {
+  type GridRenderContext,
+  type GridColumnsRenderContext,
+  type GridRowEntry,
+  type GridRowId,
+  createSelectionManager,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { GridRowProps } from '../../../components/GridRow';
@@ -48,6 +48,7 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { gridRowSelectionStateSelector } from '../rowSelection';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -125,7 +126,7 @@ export const useGridVirtualScroller = () => {
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
+  const rowSelectionModel = useGridSelector(apiRef, gridRowSelectionStateSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
@@ -438,6 +439,8 @@ export const useGridVirtualScroller = () => {
     const rowProps = rootProps.slotProps?.row;
     const columnPositions = gridColumnPositionsSelector(apiRef);
 
+    const selectionManager = createSelectionManager(rowSelectionModel);
+
     rowIndexes.forEach((rowIndexInPage) => {
       const { id, model } = rowModels[rowIndexInPage];
       const rowIndex = (currentPage?.range?.firstRowIndex || 0) + rowIndexOffset + rowIndexInPage;
@@ -479,12 +482,7 @@ export const useGridVirtualScroller = () => {
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
-      let isSelected: boolean;
-      if (selectedRowsLookup[id] == null) {
-        isSelected = false;
-      } else {
-        isSelected = apiRef.current.isRowSelectable(id);
-      }
+      const isSelected = selectionManager.has(id) && apiRef.current.isRowSelectable(id);
 
       let isFirstVisible = false;
       if (params.position === undefined) {

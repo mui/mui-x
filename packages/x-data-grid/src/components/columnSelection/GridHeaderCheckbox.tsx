@@ -14,6 +14,10 @@ import type { GridHeaderSelectionCheckboxParams } from '../../models/params/grid
 import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import type { GridRowId } from '../../models/gridRows';
+import {
+  createSelectionManager,
+  type GridRowSelectionModel,
+} from '../../models/gridRowSelectionModel';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -44,18 +48,29 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     );
 
     const filteredSelection = React.useMemo(() => {
-      if (typeof rootProps.isRowSelectable !== 'function') {
+      const isRowSelectable = rootProps.isRowSelectable;
+      if (typeof isRowSelectable !== 'function') {
         return selection;
       }
 
-      return selection.filter((id) => {
+      if (selection.type === 'exclude') {
+        return selection;
+      }
+
+      // selection.type === 'include'
+      const selectionModel: GridRowSelectionModel = { type: 'include', ids: new Set<GridRowId>() };
+      selection.ids.forEach((id) => {
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
-          return false;
+          return;
         }
 
-        return rootProps.isRowSelectable!(apiRef.current.getRowParams(id));
+        const isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
+        if (isSelectable) {
+          selectionModel.ids.add(id);
+        }
       });
+      return selectionModel;
     }, [apiRef, rootProps.isRowSelectable, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
@@ -65,12 +80,8 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
           ? visibleRowIds
           : paginatedVisibleRowIds;
 
-      // Convert to an object to make O(1) checking if a row exists or not
-      // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
-      return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
-        acc[id] = true;
-        return acc;
-      }, {});
+      // Convert to a Set to make O(1) checking if a row exists or not
+      return new Set(rowIds);
     }, [
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
@@ -79,13 +90,39 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     ]);
 
     // Amount of rows selected and that are visible in the current page
-    const currentSelectionSize = React.useMemo(
-      () => filteredSelection.filter((id) => selectionCandidates[id]).length,
-      [filteredSelection, selectionCandidates],
-    );
+    const currentSelectionSize = React.useMemo(() => {
+      const selectionManager = createSelectionManager(filteredSelection);
+      let size = 0;
+      selectionCandidates.forEach((id) => {
+        if (selectionManager.has(id)) {
+          size += 1;
+        }
+      });
+      return size;
+    }, [filteredSelection, selectionCandidates]);
 
-    const isIndeterminate =
-      currentSelectionSize > 0 && currentSelectionSize < Object.keys(selectionCandidates).length;
+    const isIndeterminate = React.useMemo(() => {
+      if (filteredSelection.ids.size === 0) {
+        return false;
+      }
+      if (filteredSelection?.type === 'include') {
+        for (const rowId of selectionCandidates) {
+          if (!filteredSelection.ids.has(rowId)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      if (filteredSelection?.type === 'exclude') {
+        for (const rowId of selectionCandidates) {
+          if (filteredSelection.ids.has(rowId)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      return false;
+    }, [filteredSelection, selectionCandidates]);
 
     const isChecked = currentSelectionSize > 0;
 

@@ -747,9 +747,10 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the Data Grid.
    */
-  rowSelectionModel: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  rowSelectionModel: PropTypes /* @typescript-to-proptypes-ignore */.shape({
+    ids: PropTypes.instanceOf(Set).isRequired,
+    type: PropTypes.oneOf(['exclude', 'include']).isRequired,
+  }),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
