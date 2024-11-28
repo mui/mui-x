@@ -455,6 +455,7 @@ Doesn't render a DOM node (it does not have a `render` prop either).
 ### `Picker.ContextValue`
 
 Utility component to access the picker public context.
+Doesn't render a DOM node (it does not have a `render` prop either).
 
 :::success
 The user can also use `usePickerContext()`, but a component allows to not create a dedicated component to access things close from `<Picker.Root />`
