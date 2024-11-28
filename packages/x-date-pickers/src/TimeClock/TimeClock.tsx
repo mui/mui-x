@@ -55,7 +55,7 @@ type TimeClockComponent = ((
   props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
+const TIME_CLOCK_DEFAULT_VIEWS: readonly TimeView[] = ['hours', 'minutes'];
 
 /**
  * Demos:
@@ -68,7 +68,7 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
 export const TimeClock = React.forwardRef(function TimeClock(
-  inProps: TimeClockProps,
+  inProps: TimeClockProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
