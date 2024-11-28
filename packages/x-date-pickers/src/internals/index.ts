@@ -64,6 +64,7 @@ export type {
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './hooks/useField';
+export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
 export type {

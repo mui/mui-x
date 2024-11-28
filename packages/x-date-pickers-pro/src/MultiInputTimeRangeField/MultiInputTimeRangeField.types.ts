@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import type { TypographyProps } from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 import { MultiInputFieldRefs, MultiInputRangeFieldClasses, RangePosition } from '../models';
@@ -49,7 +51,7 @@ export interface MultiInputTimeRangeFieldProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MultiInputTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: MultiInputTimeRangeFieldSlotProps;
 }
 
 export interface MultiInputTimeRangeFieldSlots {
@@ -71,24 +73,14 @@ export interface MultiInputTimeRangeFieldSlots {
   separator?: React.ElementType;
 }
 
-export interface MultiInputTimeRangeFieldSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> {
-  root?: SlotComponentProps<
-    typeof Stack,
+export interface MultiInputTimeRangeFieldSlotProps {
+  root?: SlotComponentPropsFromProps<StackProps, {}, FieldOwnerState>;
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >;
-  textField?: SlotComponentProps<
-    typeof TextField,
-    {},
-    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
+    FieldOwnerState & {
       position: RangePosition;
     }
   >;
-  separator?: SlotComponentProps<
-    typeof Typography,
-    {},
-    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>
-  >;
+  separator?: SlotComponentPropsFromProps<TypographyProps, {}, FieldOwnerState>;
 }
