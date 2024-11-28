@@ -78,6 +78,7 @@
     "@mui/system": "^5.16.7",
     "@mui/types": "^7.2.15",
     "@types/prop-types": "^15.7.13",
+    "@types/use-sync-external-store": "^0.0.6",
     "rimraf": "^6.0.1"
   },
   "engines": {

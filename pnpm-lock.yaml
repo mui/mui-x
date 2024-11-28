@@ -1047,6 +1047,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.13
         version: 15.7.13
+      '@types/use-sync-external-store':
+        specifier: ^0.0.6
+        version: 0.0.6
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
