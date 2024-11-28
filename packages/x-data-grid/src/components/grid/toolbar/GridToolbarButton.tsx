@@ -121,6 +121,7 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
         className={clsx(classes.root, className)}
         color={color}
         selected={!!other['aria-expanded']}
+        focusRipple
         {...other}
       >
         {children}
