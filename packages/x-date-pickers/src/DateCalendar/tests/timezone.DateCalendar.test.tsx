@@ -72,6 +72,12 @@ describe('<DateCalendar /> - Timezone', () => {
       ).to.equal(30);
     });
 
+    // See https://github.com/mui/mui-x/issues/14730
+    it('should not render duplicate days when leaving DST in America/Asuncion', () => {
+      render(<DateCalendar timezone="America/Asuncion" value={adapter.date('2024-10-10')} />);
+      expect(screen.getAllByRole('gridcell', { name: '5' })).to.have.length(1);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
         it('should use timezone prop for onChange when no value is provided', () => {
