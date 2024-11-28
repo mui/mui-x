@@ -10,6 +10,7 @@ import {
 import { useGridPaginationModel } from './useGridPaginationModel';
 import { useGridRowCount } from './useGridRowCount';
 import { useGridPaginationMeta } from './useGridPaginationMeta';
+import { gridFilteredTopLevelRowCountSelector } from '../filter';
 
 export const paginationStateInitializer: GridStateInitializer<
   Pick<
@@ -20,6 +21,7 @@ export const paginationStateInitializer: GridStateInitializer<
     | 'autoPageSize'
     | 'signature'
     | 'paginationMeta'
+    | 'paginationMode'
   >
 > = (state, props) => {
   const paginationModel = {
@@ -29,7 +31,10 @@ export const paginationStateInitializer: GridStateInitializer<
 
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
-  const rowCount = props.rowCount ?? props.initialState?.pagination?.rowCount;
+  const rowCount =
+    props.rowCount ??
+    props.initialState?.pagination?.rowCount ??
+    (props.paginationMode === 'client' ? state.rows?.totalRowCount : undefined);
   const meta = props.paginationMeta ?? props.initialState?.pagination?.meta ?? {};
   return {
     ...state,
