@@ -15,6 +15,10 @@ This page extends the initial proposal made in [#14718](https://github.com/mui/m
 
 ### Without Material UI
 
+#### With Base UI `Popover.*` components
+
+The user can use the `Picker.*` components in combination with the `Popover.*` components from `@base-ui-components/react` to build a picker:
+
 ```tsx
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
@@ -44,6 +48,38 @@ function CustomDatePicker(props) {
 <CustomDatePicker value={value} onChange={setValue} />;
 ```
 
+#### With React Aria `<Popover />` components
+
+Even if Base UI will be the solution presented in the doc to connect the field and the view, nothing prevents the user from using another library:
+
+```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Dialog, DialogTrigger, Button, Popover } from 'react-aria-components';
+
+function CustomDatePicker(props) {
+  const manager = useDateManager();
+
+  return (
+    <DialogTrigger>
+      <Picker.Root manager={manager} {...props}>
+        <PickerField.Root>
+          {/** See field documentation */}
+          <Button>📅</Button>
+        </PickerField.Root>
+        <Popover>
+          <Dialog>
+            <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+          </Dialog>
+        </Popover>
+      </Picker.Root>
+    </DialogTrigger>
+  );
+}
+
+<CustomDatePicker value={value} onChange={setValue} />;
+```
+
 ### With Material UI
 
 The user can use the `<DesktopDatePicker />` component:
@@ -61,6 +97,8 @@ This component could be renamed `<PopoverDatePicker />` to better match its beha
 ## Basic usage in a Dialog
 
 ### Without Material UI
+
+The user can use the `Picker.*` components in combination with the `Modal.*` components from `@base-ui-components/react` to build a picker:
 
 ```tsx
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
@@ -153,7 +191,13 @@ function CustomDatePicker(props) {
 
 ### With Material UI
 
-TODO
+The user can use the `<DatePicker />` component:
+
+```tsx
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+<DatePicker value={value} onChange={setValue} />;
+```
 
 ## Usage with date and time views
 
@@ -163,6 +207,9 @@ The user can use the `<Picker.MatchView />` component to conditionally render th
 This is needed to build date time pickers:
 
 ```tsx
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 <Popover.Popup>
   <Picker.MatchView match={['day', 'month', 'year']}>
     <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
@@ -172,7 +219,7 @@ This is needed to build date time pickers:
       {/** See digital clock documentation (not available yet) */}
     </DigitalClock.Root>
   </Picker.MatchView>
-</Popover.Popup>
+</Popover.Popup>;
 ```
 
 ### With Material UI
@@ -186,6 +233,9 @@ TODO
 The user can use the `<Picker.AcceptValue />`, `<Picker.CancelValue />` and `<Picker.SetValue />` components to create an action bar and interact with the value:
 
 ```tsx
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 <Popover.Popup>
  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
   <div>
@@ -209,17 +259,23 @@ TODO
 The user can use the `<Picker.FormattedValue />` component to create a toolbar for its picker:
 
 ```tsx
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 <Popover.Popup>
   <div>
     <Picker.FormattedValue format="MMMM YYYY" />
   </div>
   <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>
+</Popover.Popup>;
 ```
 
 The toolbar can also be used to switch between views thanks to the `<Picker.SetView />` component:
 
 ```tsx
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 <Popover.Popup>
   <div>
     <Picker.SetView target="year">
@@ -230,7 +286,7 @@ The toolbar can also be used to switch between views thanks to the `<Picker.SetV
     </Picker.SetView>
   </div>
   <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>
+</Popover.Popup>;
 ```
 
 ### With Material UI
@@ -285,6 +341,9 @@ TODO
 The user can use the `<Picker.SetValue />` component to create a shortcut UI:
 
 ```tsx
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 <Popover.Popup>
   <div>
     <Picker.SetValue target={dayjs().month(0).date(1)}>
@@ -295,7 +354,7 @@ The user can use the `<Picker.SetValue />` component to create a shortcut UI:
     </Picker.SetValue>
   </div>
   <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Popover.Popup>
+</Popover.Popup>;
 ```
 
 :::success
@@ -304,6 +363,7 @@ Without it, it's not trivial to use `useValidation` since it requires a value an
 
 ```tsx
 import { useIsValueValid } from'@base-ui-components/react-x-date-pickers/hooks';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 const isValueValid = useIsValueValid();
 
