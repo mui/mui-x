@@ -1191,6 +1191,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
     },
+    "toolbarButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar button element"
+    },
     "toolbarContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar container element"
@@ -1219,6 +1223,10 @@
     "toolbarPromptControlSendButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar prompt control send button element"
+    },
+    "toolbarRoot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar root element"
     },
     "toolbarSeparator": {
       "description": "Styles applied to {{nodeName}}.",

@@ -1808,6 +1808,12 @@
       "isGlobal": false
     },
     {
+      "key": "toolbarButton",
+      "className": "MuiDataGridPro-toolbarButton",
+      "description": "Styles applied to the toolbar button element.",
+      "isGlobal": false
+    },
+    {
       "key": "toolbarContainer",
       "className": "MuiDataGridPro-toolbarContainer",
       "description": "Styles applied to the toolbar container element.",
@@ -1847,6 +1853,12 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGridPro-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarRoot",
+      "className": "MuiDataGridPro-toolbarRoot",
+      "description": "Styles applied to the toolbar root element.",
       "isGlobal": false
     },
     {

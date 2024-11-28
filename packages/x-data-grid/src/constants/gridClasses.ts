@@ -593,6 +593,14 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbarRoot: string;
+  /**
+   * Styles applied to the toolbar button element.
+   */
+  toolbarButton: string;
+  /**
    * Styles applied to the toolbar separator element.
    */
   toolbarSeparator: string;
