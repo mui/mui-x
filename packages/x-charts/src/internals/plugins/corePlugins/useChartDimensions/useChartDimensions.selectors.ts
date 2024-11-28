@@ -5,7 +5,7 @@ export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsS
   state,
 ) => state.dimensions;
 
-export const selectorChartContainerDrawingArea = createSelector(
+export const selectorChartDrawingArea = createSelector(
   selectorChartDimensionsState,
   (dimensionsState) => ({
     width: dimensionsState.width,
@@ -14,6 +14,14 @@ export const selectorChartContainerDrawingArea = createSelector(
     height: dimensionsState.height,
     top: dimensionsState.top,
     bottom: dimensionsState.bottom,
+  }),
+);
+
+export const selectorChartPropsSize = createSelector(
+  selectorChartDimensionsState,
+  (dimensionsState) => ({
+    width: dimensionsState.propsWidth,
+    height: dimensionsState.propsHeight,
   }),
 );
 

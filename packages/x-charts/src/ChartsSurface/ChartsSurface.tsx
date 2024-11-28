@@ -5,11 +5,13 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartDimensionsState } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
+import {
+  selectorChartContainerSize,
+  selectorChartPropsSize,
+} from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -62,23 +64,13 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   ref: React.Ref<SVGSVGElement>,
 ) {
   const store = useStore();
-  const { width, height, left, right, top, bottom } = useDrawingArea();
-  const { propsWidth, propsHeight } = useSelector(store, selectorChartDimensionsState);
+  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
+  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, disableAxisListener = false, className, title, desc, ...other } = themeProps;
-
-  const svgWidth = width + left + right;
-  const svgHeight = height + top + bottom;
-
-  const svgView = {
-    width: svgWidth,
-    height: svgHeight,
-    x: 0,
-    y: 0,
-  };
 
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
@@ -87,7 +79,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   return (
     <ChartsSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={className}
       {...other}
       ref={handleRef}

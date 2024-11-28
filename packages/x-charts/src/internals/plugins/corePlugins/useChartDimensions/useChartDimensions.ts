@@ -212,8 +212,8 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
 useChartDimensions.getInitialState = ({ width, height, margin }) => ({
   dimensions: {
     ...margin,
-    width: width ?? 0 - margin.left - margin.right,
-    height: height ?? 0 - margin.top - margin.bottom,
+    width: (width ?? 0) - margin.left - margin.right,
+    height: (height ?? 0) - margin.top - margin.bottom,
     propsWidth: width,
     propsHeight: height,
   },
