@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-
 import {
   throwIfPageSizeExceedsTheLimit,
   getDefaultGridPaginationModel,
@@ -10,7 +9,6 @@ import {
 import { useGridPaginationModel } from './useGridPaginationModel';
 import { useGridRowCount } from './useGridRowCount';
 import { useGridPaginationMeta } from './useGridPaginationMeta';
-import { gridFilteredTopLevelRowCountSelector } from '../filter';
 
 export const paginationStateInitializer: GridStateInitializer<
   Pick<
