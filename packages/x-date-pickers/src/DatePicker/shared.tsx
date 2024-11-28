@@ -19,8 +19,8 @@ import {
 } from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
-import { ValidateDatePropsToDefault } from '../validation/validateDate';
 import { PickerValue } from '../internals/models';
+import { ValidateDatePropsToDefault } from '../validation/validateDate';
 
 export interface BaseDatePickerSlots extends DateCalendarSlots {
   /**
