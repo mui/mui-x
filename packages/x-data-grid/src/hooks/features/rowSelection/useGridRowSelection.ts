@@ -38,6 +38,7 @@ import {
   createSelectionManager,
   type GridRowSelectionModel,
 } from '../../../models/gridRowSelectionModel';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 
 const emptyModel = { type: 'include', ids: new Set<GridRowId>() } as const;
 
@@ -638,12 +639,32 @@ export const useGridRowSelection = (
   >(
     (params) => {
       if (params.value) {
-        apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
+        if (applyAutoSelection) {
+          apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
+        } else {
+          const rowsToBeSelected =
+            props.pagination &&
+            props.checkboxSelectionVisibleOnly &&
+            props.paginationMode === 'client'
+              ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+              : gridExpandedSortedRowIdsSelector(apiRef);
+          apiRef.current.selectRows(
+            { type: 'include', ids: new Set(rowsToBeSelected) },
+            params.value,
+            true,
+          );
+        }
       } else {
         apiRef.current.selectRows({ type: 'include', ids: new Set() }, params.value, true);
       }
     },
-    [apiRef],
+    [
+      apiRef,
+      applyAutoSelection,
+      props.checkboxSelectionVisibleOnly,
+      props.pagination,
+      props.paginationMode,
+    ],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
