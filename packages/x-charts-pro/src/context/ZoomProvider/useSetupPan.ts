@@ -128,5 +128,16 @@ export const useSetupPan = () => {
       document.removeEventListener('pointercancel', handleUp);
       document.removeEventListener('pointerleave', handleUp);
     };
-  }, [instance, svgRef, isDraggingRef, setIsInteracting, zoomData, setZoomData, isPanEnabled, options, drawingArea.width, drawingArea.height]);
+  }, [
+    instance,
+    svgRef,
+    isDraggingRef,
+    setIsInteracting,
+    zoomData,
+    setZoomData,
+    isPanEnabled,
+    options,
+    drawingArea.width,
+    drawingArea.height,
+  ]);
 };

@@ -1,4 +1,4 @@
-import { ChartMargin } from "../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types";
+import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 
 export interface CardinalDirections<T> {
   top?: T;
