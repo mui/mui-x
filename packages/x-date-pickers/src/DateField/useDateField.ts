@@ -7,8 +7,8 @@ import { useField } from '../internals/hooks/useField';
 import { UseDateFieldProps } from './DateField.types';
 import { validateDate } from '../validation';
 import { useSplitFieldProps } from '../hooks';
-import { FieldSection, PickerValidDate } from '../models';
 import { useDefaultizedDateField } from '../internals/hooks/defaultizedFieldProps';
+import { PickerValue } from '../internals/models';
 
 export const useDateField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -24,8 +24,7 @@ export const useDateField = <
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
 
   return useField<
-    PickerValidDate | null,
-    FieldSection,
+    PickerValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
     typeof internalProps

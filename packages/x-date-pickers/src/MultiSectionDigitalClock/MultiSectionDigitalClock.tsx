@@ -154,10 +154,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToNextView, focusedView } = useViews<
-    PickerValidDate | null,
-    TimeViewWithMeridiem
-  >({
+  const { view, setValueAndGoToNextView, focusedView } = useViews({
     view: inView,
     views,
     openTo,

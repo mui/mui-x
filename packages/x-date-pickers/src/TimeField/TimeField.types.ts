@@ -3,12 +3,7 @@ import { SlotComponentProps } from '@mui/utils';
 import { MakeOptional } from '@mui/x-internals/types';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import {
-  FieldSection,
-  PickerValidDate,
-  TimeValidationError,
-  BuiltInFieldTextFieldProps,
-} from '../models';
+import { TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
@@ -16,15 +11,11 @@ import {
 } from '../hooks/useClearableField';
 import { ExportedValidateTimeProps } from '../validation/validateTime';
 import { AmPmProps } from '../internals/models/props/time';
+import { PickerValue } from '../internals/models';
 
 export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
-      UseFieldInternalProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        TimeValidationError
-      >,
+      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
     >,
     ExportedValidateTimeProps,

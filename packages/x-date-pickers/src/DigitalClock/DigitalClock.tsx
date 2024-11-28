@@ -16,7 +16,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -198,7 +198,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
-  const { setValueAndGoToNextView } = useViews<PickerValidDate | null, Extract<TimeView, 'hours'>>({
+  const { setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,

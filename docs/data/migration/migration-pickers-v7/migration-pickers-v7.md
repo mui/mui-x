@@ -348,9 +348,9 @@ const theme = createTheme({
   +console.log(readOnly);
   ```
 
-## Renamed variables
+## Renamed variables and types
 
-The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
+The following variables and types have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
 - `usePickersTranslations`
 
@@ -394,9 +394,19 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   +import { PickerValueType } from '@mui/x-date-pickers-pro';
   ```
 
+  - `RangeFieldSection`
+
+  ```diff
+  -import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
+  -import { RangeFieldSection } from '@mui/x-date-pickers-pro';
+
+  +import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+  +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
+  ```
+
 ## Typing breaking changes
 
-### Remove `TDate` generic
+### Do not pass the date object as a generic
 
 The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
@@ -406,14 +416,24 @@ If you were passing your date object type as a generic to any element of one of 
 -<DatePicker<Dayjs> value={value} onChange={onChange} />
 +<DatePicker value={value} onChange={onChange} />
 
--type Slot = DateCalendarSlots<Dayjs>['calendarHeader'];
-+type Slot = DateCalendarSlots['calendarHeader'];
+-type FieldComponent = DatePickerSlots<Dayjs>['field'];
++type FieldComponent = DatePickerSlots['field'];
 
--type Props = DatePickerToolbarProps<Dayjs>;
-+type Props = DatePickerToolbarProps;
+-function CustomDatePicker(props: DatePickerProps<Dayjs>) {}
++function CustomDatePicker(props: DatePickerProps) {}
 ```
 
-A follow-up release will add the full list of the impacted elements to the migration guide.
+### Do not pass the section type as a generic
+
+The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic:
+
+```diff
+-const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
++const fieldRef = React.useRef<Dayjs | null>(null);
+
+-const fieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
++const fieldRef = React.useRef<DateRange<Dayjs>>(null);
+```
 
 ### Removed types
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { FieldSection, PickerOwnerState } from '../../../models';
+import { PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import {
   PickerProviderProps,
@@ -12,6 +12,7 @@ import {
   DateOrTimeViewWithMeridiem,
   FormProps,
   PickerOrientation,
+  PickerValidValue,
   PickerVariant,
 } from '../../models';
 import { useUtils } from '../useUtils';
@@ -58,7 +59,7 @@ export const usePickerOrientation = (
   return customOrientation ?? orientation;
 };
 
-export function usePickerProvider<TValue>(
+export function usePickerProvider<TValue extends PickerValidValue>(
   parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
   const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
@@ -124,10 +125,10 @@ export function usePickerProvider<TValue>(
   };
 }
 
-export interface UsePickerProviderParameters<TValue>
+export interface UsePickerProviderParameters<TValue extends PickerValidValue>
   extends Pick<PickerProviderProps, 'localeText'> {
   props: UsePickerProps<TValue, any, any, any, any>;
-  pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
+  pickerValueResponse: UsePickerValueResponse<TValue, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   views: readonly DateOrTimeViewWithMeridiem[];

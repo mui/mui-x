@@ -20,12 +20,12 @@ import {
   DateOrTimeViewWithMeridiem,
   BaseSingleInputFieldProps,
   PickerRangeValue,
+  PickerValue,
 } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
-  RangeFieldSection,
   RangePosition,
   FieldType,
   UseDateRangeFieldProps,
@@ -57,11 +57,7 @@ export interface RangePickerFieldSlots extends UseClearableFieldSlots {
 export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    PickerRangeFieldSlotProps<
-      PickerRangeValue,
-      RangeFieldSection,
-      TEnableAccessibleFieldDOMStructure
-    >,
+    PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
@@ -80,20 +76,10 @@ export type RangePickerPropsForFieldSlot<
   TError,
 > =
   | (TIsSingleInput extends true
-      ? BaseSingleInputFieldProps<
-          PickerRangeValue,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          TError
-        >
+      ? BaseSingleInputFieldProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>
       : never)
   | (TIsSingleInput extends false
-      ? BaseMultiInputFieldProps<
-          PickerRangeValue,
-          RangeFieldSection,
-          TEnableAccessibleFieldDOMStructure,
-          TError
-        >
+      ? BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, TError>
       : never);
 
 export interface UseEnrichedRangePickerFieldPropsParams<
@@ -101,10 +87,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends Pick<
-      UsePickerResponse<PickerRangeValue, TView, RangeFieldSection, any>,
-      'open' | 'actions'
-    >,
+> extends Pick<UsePickerResponse<PickerRangeValue, TView, any>, 'open' | 'actions'>,
     UseRangePositionResponse {
   variant: PickerVariant;
   fieldType: FieldType;
@@ -125,8 +108,9 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
-  startFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
-  endFieldRef: React.RefObject<FieldRef<RangeFieldSection>>;
+  startFieldRef: React.RefObject<FieldRef<PickerValue>>;
+  endFieldRef: React.RefObject<FieldRef<PickerValue>>;
+  singleInputFieldRef: React.RefObject<FieldRef<PickerRangeValue>>;
 }
 
 const useMultiInputFieldSlotProps = <
@@ -159,12 +143,7 @@ const useMultiInputFieldSlotProps = <
   TEnableAccessibleFieldDOMStructure,
   TError
 >) => {
-  type ReturnType = BaseMultiInputFieldProps<
-    PickerRangeValue,
-    RangeFieldSection,
-    TEnableAccessibleFieldDOMStructure,
-    TError
-  >;
+  type ReturnType = BaseMultiInputFieldProps<TEnableAccessibleFieldDOMStructure, TError>;
 
   const translations = usePickerTranslations();
   const handleStartFieldRef = useForkRef(fieldProps.unstableStartFieldRef, startFieldRef);
@@ -322,8 +301,7 @@ const useSingleInputFieldSlotProps = <
   onBlur,
   rangePosition,
   onRangePositionChange,
-  startFieldRef,
-  endFieldRef,
+  singleInputFieldRef,
   pickerSlots,
   pickerSlotProps,
   fieldProps,
@@ -337,40 +315,39 @@ const useSingleInputFieldSlotProps = <
 >) => {
   type ReturnType = BaseSingleInputFieldProps<
     PickerRangeValue,
-    RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
 
-  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, startFieldRef, endFieldRef);
+  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, singleInputFieldRef);
 
   React.useEffect(() => {
-    if (!open || !startFieldRef.current || variant === 'mobile') {
+    if (!open || !singleInputFieldRef.current || variant === 'mobile') {
       return;
     }
 
-    if (startFieldRef.current.isFieldFocused()) {
+    if (singleInputFieldRef.current.isFieldFocused()) {
       return;
     }
 
     // bring back focus to the field with the current view section selected
     if (currentView) {
-      const sections = startFieldRef.current.getSections().map((section) => section.type);
+      const sections = singleInputFieldRef.current.getSections().map((section) => section.type);
       const newSelectedSection =
         rangePosition === 'start'
           ? sections.indexOf(currentView)
           : sections.lastIndexOf(currentView);
-      startFieldRef.current?.focusField(newSelectedSection);
+      singleInputFieldRef.current?.focusField(newSelectedSection);
     }
-  }, [rangePosition, open, currentView, startFieldRef, variant]);
+  }, [rangePosition, open, currentView, singleInputFieldRef, variant]);
 
   const updateRangePosition = () => {
-    if (!startFieldRef.current?.isFieldFocused()) {
+    if (!singleInputFieldRef.current?.isFieldFocused()) {
       return;
     }
 
-    const sections = startFieldRef.current.getSections();
-    const activeSectionIndex = startFieldRef.current?.getActiveSectionIndex();
+    const sections = singleInputFieldRef.current.getSections();
+    const activeSectionIndex = singleInputFieldRef.current?.getActiveSectionIndex();
     const domRangePosition =
       activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
 

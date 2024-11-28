@@ -1,8 +1,7 @@
 import { SxProps } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils';
 import { MakeRequired } from '@mui/x-internals/types';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { FieldSection } from '@mui/x-date-pickers/models';
+import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import type {
   MultiInputFieldRefs,
@@ -16,13 +15,11 @@ import type {
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps<
-  TValue,
-  TSection extends FieldSection,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
 > extends MakeRequired<
       Pick<
-        UseFieldInternalProps<TValue, TSection, TEnableAccessibleFieldDOMStructure, TError>,
+        UseFieldInternalProps<PickerRangeValue, TEnableAccessibleFieldDOMStructure, TError>,
         | 'readOnly'
         | 'disabled'
         | 'format'
