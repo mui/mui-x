@@ -5,8 +5,6 @@ import { DataGridHeadless } from './DataGridHeadless';
 import { DataGridProps } from '../models/props/DataGridProps';
 import materialSlotsCommunity from '../material';
 
-export type { GridSlotsComponent as GridSlots } from '../models';
-
 export const DataGrid = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,

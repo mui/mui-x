@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { GridValidRowModel } from '@mui/x-data-grid';
 import materialSlotsCommunity from '@mui/x-data-grid/material';
-import materialSlotsPro from '@mui/x-data-grid-pro/material';
+import materialSlotsPro from '../material';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { DataGridProHeadless } from './DataGridProHeadless';
 
