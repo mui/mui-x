@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { LegendItemParams, SeriesLegendItemContext } from './chartsLegend.types';
+import { useLegend } from '../hooks/useLegend';
 
 const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
   ({
@@ -16,8 +16,6 @@ const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContex
 
 export interface LegendRendererProps
   extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
-  series: FormattedSeries;
-  seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
@@ -37,7 +35,9 @@ export interface LegendRendererProps
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { seriesToDisplay, hidden, onItemClick, ...other } = props;
+  const { hidden, onItemClick, ...other } = props;
+
+  const { itemsToDisplay } = useLegend();
 
   if (hidden) {
     return null;
@@ -46,10 +46,10 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <LegendPerItem
       {...other}
-      itemsToDisplay={seriesToDisplay}
+      itemsToDisplay={itemsToDisplay}
       onItemClick={
         onItemClick
-          ? (event, i) => onItemClick(event, seriesContextBuilder(seriesToDisplay[i]), i)
+          ? (event, i) => onItemClick(event, seriesContextBuilder(itemsToDisplay[i]), i)
           : undefined
       }
     />

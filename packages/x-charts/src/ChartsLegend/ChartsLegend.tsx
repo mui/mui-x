@@ -5,10 +5,8 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
-import { getSeriesToDisplay } from './utils';
 import { getLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultChartsLegend, LegendRendererProps } from './DefaultChartsLegend';
-import { useSeries } from '../hooks/useSeries';
 import { LegendPlacement } from './legend.types';
 
 export type ChartsLegendPropsBase = Omit<
@@ -73,10 +71,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
-  const series = useSeries();
-
-  const seriesToDisplay = getSeriesToDisplay(series);
-
   const ChartLegendRender = slots?.legend ?? DefaultChartsLegend;
   const chartLegendRenderProps = useSlotProps({
     elementType: ChartLegendRender,
@@ -84,8 +78,6 @@ function ChartsLegend(inProps: ChartsLegendProps) {
     additionalProps: {
       ...other,
       classes,
-      series,
-      seriesToDisplay,
     },
     ownerState: {},
   });

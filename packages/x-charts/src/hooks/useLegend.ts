@@ -6,6 +6,7 @@ import getBarLegend from '../BarChart/legend';
 import getScatterLegend from '../ScatterChart/legend';
 import getLineLegend from '../LineChart/legend';
 import getPieLegend from '../PieChart/legend';
+import { useSeries } from './useSeries';
 
 const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   bar: getBarLegend,
@@ -14,7 +15,7 @@ const legendGetter: { [T in ChartSeriesType]?: LegendGetter<T> } = {
   pie: getPieLegend,
 };
 
-export function getSeriesToDisplay(series: FormattedSeries) {
+function getSeriesToDisplay(series: FormattedSeries) {
   return (Object.keys(series) as ChartSeriesType[]).flatMap(
     <T extends ChartSeriesType>(seriesType: T) => {
       const getter = legendGetter[seriesType as T];
@@ -22,3 +23,10 @@ export function getSeriesToDisplay(series: FormattedSeries) {
     },
   );
 }
+
+export const useLegend = () => {
+  const series = useSeries();
+  return {
+    itemsToDisplay: getSeriesToDisplay(series),
+  };
+};
