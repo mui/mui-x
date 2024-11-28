@@ -26,6 +26,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@v7.22.4`
 
+- [DataGrid] React 19 support (#15557) @arminmeh
 - [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
@@ -38,7 +39,7 @@ Following are all team members who have contributed to this release:
 
 Same changes as in `@mui/x-data-grid@v7.22.4`, plus:
 
-- [DataGridPro] Fix header filtering with `boolean` column type (@k-rajat19) (#15640) @arminmeh
+- [DataGridPro] Fix header filtering with `boolean` column type (#15640) @k-rajat19
 - [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15643) @zinoroman
 - [DataGridPro] Fix selection propagation issue on initialization (#15593) @MBilalShafi
 
@@ -51,6 +52,7 @@ Same changes as in `@mui/x-data-grid-pro@v7.22.4`.
 #### `@mui/x-date-pickers@v7.22.4`
 
 - [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+- [pickers] React 19 support (#15557) @arminmeh
 - [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15653) @flaviendelangle
 - [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15544) @flaviendelangle
 
@@ -62,6 +64,7 @@ Same changes as in `@mui/x-date-pickers@v7.22.4`.
 
 #### `@mui/x-charts@v7.22.4`
 
+- [charts] React 19 support (#15557) @arminmeh
 - [charts] Prevent invalid `releasePointerCapture` (#15609) @alexfauquette
 
 #### `@mui/x-charts-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -72,7 +75,11 @@ Same changes as in `@mui/x-charts@v7.22.4`.
 
 #### `@mui/x-tree-view@v7.22.4`
 
-No changes since `@mui/x-tree-view@v7.22.3`.
+- [TreeView] React 19 support (#15557) @arminmeh
+
+#### `@mui/x-tree-view-pro@7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.22.4`.
 
 ### Docs
 
@@ -83,7 +90,6 @@ No changes since `@mui/x-tree-view@v7.22.3`.
 ### Core
 
 - [core] Update @mui/monorepo (#15574) @oliviertassinari
-- React 19 support (#15557) @arminmeh
 
 ## 7.22.3
 
