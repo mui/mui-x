@@ -613,7 +613,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should support server side pagination with estimated row count', () => {
       const { setProps } = render(<ServerPaginationGrid rowCount={-1} estimatedRowCount={2} />);
       expect(getColumnValues(0)).to.deep.equal(['0']);
-      expect(screen.getByText('1–1 of more than 2')).not.to.equal(null);
+      expect(screen.getByText('1–1 of around 2')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(screen.getByText('2–2 of more than 2')).not.to.equal(null);
