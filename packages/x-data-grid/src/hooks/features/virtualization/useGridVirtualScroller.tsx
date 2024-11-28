@@ -92,7 +92,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 let isJSDOM = false;
 try {
   if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
   }
 } catch (_) {
   /* ignore */
