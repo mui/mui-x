@@ -908,7 +908,7 @@
     {
       "name": "exportIcon",
       "description": "Icon displayed on the open export button present in the toolbar by default.",
-      "default": "GridSaveAltIcon",
+      "default": "GridFileDownloadIcon",
       "class": null
     },
     {
