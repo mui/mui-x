@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PickerOwnerState } from '../../models';
+import { DateOrTimeView, PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
-import { PickerOrientation, PickerVariant } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerOrientation, PickerVariant } from '../models';
 
 export const PickerContext = React.createContext<PickerContextValue | null>(null);
 
@@ -83,6 +83,9 @@ export interface PickerContextValue {
    * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   orientation: PickerOrientation;
+  views: readonly DateOrTimeViewWithMeridiem[];
+  view: DateOrTimeViewWithMeridiem;
+  onViewChange: (view: DateOrTimeViewWithMeridiem) => void;
 }
 export interface PickerPrivateContextValue {
   /**
