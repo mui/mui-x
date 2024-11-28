@@ -14,9 +14,9 @@ export interface SizeProviderProps {
 
 export interface SizeContextState extends Required<Pick<SizeProviderProps, 'height' | 'width'>> {
   /**
-   * The ref of the container element that the chart is rendered in.
+   * The ref of the svg element that the chart is rendered in.
    */
-  containerRef: React.RefObject<HTMLDivElement>;
+  svgRef: React.RefObject<SVGSVGElement>;
   /**
    * If the chart has a defined size.
    */

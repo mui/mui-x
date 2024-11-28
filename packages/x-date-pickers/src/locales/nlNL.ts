@@ -25,10 +25,10 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   // DateRange labels
   start: 'Start',
   end: 'Einde',
-  startDate: 'Start datum',
-  startTime: 'Start tijd',
-  endDate: 'Eind datum',
-  endTime: 'Eind tijd',
+  startDate: 'Startdatum',
+  startTime: 'Starttijd',
+  endDate: 'Einddatum',
+  endTime: 'Eindtijd',
 
   // Action bar
   cancelButtonLabel: 'Annuleren',
@@ -70,11 +70,11 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   dateTableLabel: 'kies datum',
 
   // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
   fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
-  fieldHoursPlaceholder: () => 'hh',
+  fieldHoursPlaceholder: () => 'uu',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
@@ -90,7 +90,7 @@ const nlNLPickers: Partial<PickersLocaleText> = {
   meridiem: 'Middag',
 
   // Common
-  empty: 'Legen',
+  empty: 'Leeg',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

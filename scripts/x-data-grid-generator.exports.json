@@ -20,6 +20,7 @@
   { "name": "GridDataGeneratorContext", "kind": "Interface" },
   { "name": "GridDemoData", "kind": "Interface" },
   { "name": "loadServerRows", "kind": "Variable" },
+  { "name": "mockPromptResolver", "kind": "Variable" },
   { "name": "Movie", "kind": "TypeAlias" },
   { "name": "QueryOptions", "kind": "Interface" },
   { "name": "random", "kind": "Variable" },

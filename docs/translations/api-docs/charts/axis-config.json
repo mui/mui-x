@@ -39,6 +39,7 @@
     "tickPlacement": {
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
     },
-    "valueFormatter": { "description": "Formats the axis value." }
+    "valueFormatter": { "description": "Formats the axis value." },
+    "zoom": { "description": "" }
   }
 }

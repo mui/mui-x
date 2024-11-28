@@ -6,7 +6,7 @@ import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
 import { useDrawingArea } from './useDrawingArea';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;

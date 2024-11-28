@@ -233,7 +233,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    */
   is12HourCycleInCurrentLocale(): boolean;
   /**
-   * Create a format with no meta-token (e.g: `LLL` or `PP`).
+   * Create a format with no meta-token (for example: `LLL` or `PP`).
    * @param {string} format The format to expand.
    * @returns {string} The expanded format.
    */
@@ -266,7 +266,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    */
   formatNumber(numberToFormat: string): string;
   /**
-   * Check if the two dates are equal (e.g: they represent the same timestamp).
+   * Check if the two dates are equal (which means they represent the same timestamp).
    * @param {PickerValidDate | null} value The reference date.
    * @param {PickerValidDate | null} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
@@ -464,7 +464,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    */
   getMonth(value: PickerValidDate): number;
   /**
-   * Get the date (e.g: the day in the month) of the given date.
+   * Get the date (day in the month) of the given date.
    * @param {PickerValidDate} value The given date.
    * @returns {number} The date of the given date.
    */
@@ -508,7 +508,7 @@ export interface MuiPickersAdapter<TLocale = any> {
    */
   setMonth(value: PickerValidDate, month: number): PickerValidDate;
   /**
-   * Set the date (e.g: the day in the month) to the given date.
+   * Set the date (day in the month) to the given date.
    * @param {PickerValidDate} value The date to be changed.
    * @param {number} date The date of the new date.
    * @returns {PickerValidDate} The new date with the date set.

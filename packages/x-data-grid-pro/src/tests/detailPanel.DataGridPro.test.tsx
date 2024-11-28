@@ -11,7 +11,14 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import { $, $$, grid, getRow, getCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
@@ -311,12 +318,18 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
     // + 2x when sortedRowsSet is fired (StrictMode) = 8x
-    expect(getDetailPanelContent.callCount).to.equal(8);
+    // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+    // from React 19 it is:
+    //   2x during state initialization
+    // + 2x when sortedRowsSet is fired
+    const expectedCallCount = reactMajor >= 19 ? 4 : 8;
+
+    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(8);
+    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(8);
+    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
 
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
@@ -342,16 +355,23 @@ describe('<DataGridPro /> - Detail panel', () => {
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
+
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
     // + 2x when sortedRowsSet is fired (StrictMode) = 8x
-    expect(getDetailPanelHeight.callCount).to.equal(8);
+    // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+    // from React 19 it is:
+    //   2x during state initialization
+    // + 2x when sortedRowsSet is fired
+    const expectedCallCount = reactMajor >= 19 ? 4 : 8;
+
+    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(8);
+    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(8);
+    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
@@ -413,7 +433,13 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 1x during state initialization (StrictMode)
     // + 1x when sortedRowsSet is fired
     // + 1x when sortedRowsSet is fired (StrictMode) = 4x
-    expect(getDetailPanelHeight.callCount).to.equal(4);
+    // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+    // from React 19 it is:
+    //   1x during state initialization
+    // + 1x when sortedRowsSet is fired
+    const expectedCallCount = reactMajor >= 19 ? 2 : 4;
+
+    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
   });
 
@@ -478,8 +504,8 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should not reuse detail panel components', () => {
     let counter = 0;
     function DetailPanel() {
-      const [number] = React.useState((counter += 1));
-      return <div data-testid="detail-panel-content">{number}</div>;
+      counter += 1;
+      return <div data-testid="detail-panel-content">{counter}</div>;
     }
     const { setProps } = render(
       <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,

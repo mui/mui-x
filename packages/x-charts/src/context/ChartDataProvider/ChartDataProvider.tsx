@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../DrawingAreaProvider';
 import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
-import { InteractionProvider } from '../InteractionProvider';
 import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
 import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
@@ -13,7 +12,7 @@ import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider'
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { SizeProvider, SizeProviderProps } from '../SizeProvider';
-import { SvgRefProvider } from '../SvgRefProvider';
+import { ChartProvider } from '../ChartProvider';
 
 export type ChartDataProviderProps = Omit<
   SizeProviderProps &
@@ -41,6 +40,33 @@ export type ChartDataProviderProps = Omit<
   children?: React.ReactNode;
 };
 
+/**
+ * Orchestrates the data providers for the chart components and hooks.
+ *
+ * Use this component if you have custom HTML components that need to access the chart data.
+ *
+ * Demos:
+ *
+ * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartDataProvider API](https://mui.com/x/api/charts/chart-data-provider/)
+ *
+ * @example
+ * ```jsx
+ * <ChartDataProvider
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *   <ChartsSurface>
+ *      <BarPlot />
+ *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *   </ChartsSurface>
+ *   {'Custom Legend Component'}
+ * </ChartDataProvider>
+ * ```
+ */
 function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
@@ -55,25 +81,23 @@ function ChartDataProvider(props: ChartDataProviderProps) {
   } = useChartDataProviderProps(props);
 
   return (
-    <SizeProvider {...sizeProviderProps}>
-      <DrawingAreaProvider {...drawingAreaProviderProps}>
-        <PluginProvider {...pluginProviderProps}>
-          <SeriesProvider {...seriesProviderProps}>
-            <CartesianProvider {...cartesianProviderProps}>
-              <ZAxisContextProvider {...zAxisContextProps}>
-                <InteractionProvider>
+    <ChartProvider>
+      <SizeProvider {...sizeProviderProps}>
+        <DrawingAreaProvider {...drawingAreaProviderProps}>
+          <PluginProvider {...pluginProviderProps}>
+            <SeriesProvider {...seriesProviderProps}>
+              <CartesianProvider {...cartesianProviderProps}>
+                <ZAxisContextProvider {...zAxisContextProps}>
                   <HighlightedProvider {...highlightedProviderProps}>
-                    <AnimationProvider {...animationProviderProps}>
-                      <SvgRefProvider>{children}</SvgRefProvider>
-                    </AnimationProvider>
+                    <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
                   </HighlightedProvider>
-                </InteractionProvider>
-              </ZAxisContextProvider>
-            </CartesianProvider>
-          </SeriesProvider>
-        </PluginProvider>
-      </DrawingAreaProvider>
-    </SizeProvider>
+                </ZAxisContextProvider>
+              </CartesianProvider>
+            </SeriesProvider>
+          </PluginProvider>
+        </DrawingAreaProvider>
+      </SizeProvider>
+    </ChartProvider>
   );
 }
 

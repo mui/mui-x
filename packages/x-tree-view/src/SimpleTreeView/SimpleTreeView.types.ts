@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils';
-import { SxProps } from '@mui/system';
+import { SlotComponentProps } from '@mui/utils/types';
+import { SxProps } from '@mui/system/styleFunctionSx';
 import { SimpleTreeViewClasses } from './simpleTreeViewClasses';
 import {
   SimpleTreeViewPluginParameters,

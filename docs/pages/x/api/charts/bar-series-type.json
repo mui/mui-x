@@ -1,6 +1,9 @@
 {
   "name": "BarSeriesType",
-  "imports": ["import { BarSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { BarSeriesType } from '@mui/x-charts-pro'",
+    "import { BarSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
     "color": { "type": { "description": "string" } },

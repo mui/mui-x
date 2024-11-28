@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
 title: Tree View - Getting started
-components: SimpleTreeView, RichTreeView, TreeItem, TreeView
+components: SimpleTreeView, RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -44,8 +44,8 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 ```json
 "peerDependencies": {
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 

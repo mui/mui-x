@@ -1,6 +1,9 @@
 {
   "name": "AxisConfig",
-  "imports": ["import { AxisConfig } from '@mui/x-charts'"],
+  "imports": [
+    "import { AxisConfig } from '@mui/x-charts-pro'",
+    "import { AxisConfig } from '@mui/x-charts'"
+  ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
     "scaleType": { "type": { "description": "'band'" }, "required": true },
@@ -32,6 +35,7 @@
     },
     "valueFormatter": {
       "type": { "description": "(value: V, context: AxisValueFormatterContext) =&gt; string" }
-    }
+    },
+    "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
   }
 }

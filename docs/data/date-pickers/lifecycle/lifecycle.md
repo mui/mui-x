@@ -174,10 +174,10 @@ Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#lifecycl
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on a value will call `onChange` if the value to publish is different from the current value
-(e.g: clicking on the already selected day in the `day` view will not call `onChange`).
+(for example clicking on the already selected day in the `day` view will not call `onChange`).
 
 If the component is not controlled, the behavior is the same, except if no value has ever been published, in which case clicking on the current value will fire `onChange`
-(e.g: clicking on the already selected day in the `day` view will call `onChange` if `onChange` has never been called before).
+(for example clicking on the already selected day in the `day` view will call `onChange` if `onChange` has never been called before).
 
 Some views can decide not to call `onChange` for some value modifications.
 The most common example is the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component).

@@ -57,8 +57,8 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
           ref={ref}
@@ -69,9 +69,9 @@ const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, GridToolbar
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
           startIcon={<rootProps.slots.columnSelectorIcon />}
-          {...buttonProps}
           onClick={showColumns}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
         </rootProps.slots.baseButton>

@@ -86,14 +86,17 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 
 function MyCustomLayout(props) {
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   // Put the action bar before the content
   return (
-    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={ownerState}>
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

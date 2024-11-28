@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
 import { TreeViewCancellableEvent } from '../models';

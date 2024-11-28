@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 /**

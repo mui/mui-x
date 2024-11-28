@@ -20,7 +20,7 @@ describe('<DateCalendar /> - Timezone', () => {
       fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
       const expectedDate = adapter.setDate(adapter.date(undefined, 'default'), 25);
 
-      // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
+      // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
 
       // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.

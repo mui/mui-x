@@ -132,12 +132,12 @@ export interface UsePickerValueState<TValue> {
    */
   draft: TValue;
   /**
-   * Last value published (e.g: the last value for which `shouldPublishValue` returned `true`).
+   * Last value published (the last value for which `shouldPublishValue` returned `true`).
    * If `onChange` is defined, it's the value that was passed on the last call to this callback.
    */
   lastPublishedValue: TValue;
   /**
-   * Last value committed (e.g: the last value for which `shouldCommitValue` returned `true`).
+   * Last value committed (the last value for which `shouldCommitValue` returned `true`).
    * If `onAccept` is defined, it's the value that was passed on the last call to this callback.
    */
   lastCommittedValue: TValue;

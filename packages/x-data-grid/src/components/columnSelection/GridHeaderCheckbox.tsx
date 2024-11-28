@@ -126,19 +126,16 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
+      isChecked && !isIndeterminate
+        ? 'checkboxSelectionUnselectAllRows'
+        : 'checkboxSelectionSelectAllRows',
     );
-
-    const checked =
-      rootProps.indeterminateCheckboxAction === 'select'
-        ? isChecked && !isIndeterminate
-        : isChecked;
 
     return (
       <rootProps.slots.baseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
-        checked={checked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
         inputProps={{ 'aria-label': label }}

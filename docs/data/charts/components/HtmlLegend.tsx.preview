@@ -1,0 +1,14 @@
+<ChartDataProvider
+  series={[
+    { label: 'First Series', type: 'bar', data: [100, 200] },
+    { label: veryLongText, type: 'bar', data: [45, 333] },
+  ]}
+  xAxis={[{ data: ['A', 'B'], scaleType: 'band', id: 'x-axis' }]}
+>
+  <ChartsSurface>
+    <BarPlot />
+    <ChartsXAxis position="bottom" axisId="x-axis" />
+    <ChartsYAxis position="left" />
+  </ChartsSurface>
+  <MyCustomLegend />
+</ChartDataProvider>

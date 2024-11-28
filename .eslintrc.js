@@ -59,21 +59,22 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
-    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+    excludedFiles: [
+      '*.d.ts',
+      '*.spec.ts',
+      '*.spec.tsx',
+      '**.test.tx',
+      '**.test.tsx',
+      `packages/${root}/src/index{.ts,.tsx,.js}`,
+    ],
     rules: {
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            {
-              name: packageName,
-              message: 'Use relative import instead',
-            },
-            {
-              name: '@mui/material',
-              message: 'Use @mui/utils or a more specific import instead',
-            },
-          ],
+          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+            name: pkName,
+            message: 'Use relative import instead',
+          })),
           patterns: [
             // TODO move rule into main repo to allow deep @mui/monorepo imports
             {

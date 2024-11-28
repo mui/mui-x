@@ -199,7 +199,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
-
+      
       const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
         rowId,
         field,

@@ -67,7 +67,7 @@ export interface GridCorePrivateApi<
   /**
    * The React ref of the grid main container div element.
    */
-  mainElementRef: React.RefObject<HTMLDivElement>;
+  mainElementRef: React.MutableRefObject<HTMLDivElement | null>;
   /**
    * The React ref of the grid's virtual scroller container element.
    */

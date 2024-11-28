@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';

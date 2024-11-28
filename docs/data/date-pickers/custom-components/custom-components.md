@@ -34,8 +34,8 @@ You can override the actions displayed by passing the `actions` prop to the `act
       actions: ['clear'],
     },
     // The actions will be different between desktop and mobile
-    actionBar: ({ wrapperVariant }) => ({
-      actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+    actionBar: ({ variant }) => ({
+      actions: variant === 'desktop' ? [] : ['clear'],
     }),
   }}
 />

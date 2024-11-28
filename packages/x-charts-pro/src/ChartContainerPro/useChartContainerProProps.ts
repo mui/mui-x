@@ -22,15 +22,16 @@ export const useChartContainerProProps = (
     onZoomChange,
   };
 
-  const { chartDataProviderProps, chartsSurfaceProps, resizableContainerProps, children } =
-    useChartContainerProps(baseProps, ref);
+  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps(
+    baseProps,
+    ref,
+  );
 
   return {
     chartDataProviderProProps: {
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
     },
-    resizableContainerProps,
     chartsSurfaceProps,
     children,
   };

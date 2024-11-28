@@ -16,6 +16,7 @@ import {
   gridClasses,
   GridColDef,
   getGridStringOperators,
+  GridFilterItem,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-test-utils';
 import { expect } from 'chai';
@@ -1117,6 +1118,74 @@ describe('<DataGridPro /> - Filter', () => {
           />,
         );
       }).not.toErrorDev();
+    });
+
+    it('should work correctly with boolean column type', () => {
+      const getRows = (item: Omit<GridFilterItem, 'field'>) => {
+        const { unmount } = render(
+          <TestCase
+            filterModel={{
+              items: [{ field: 'isPublished', ...item }],
+            }}
+            rows={[
+              {
+                id: 0,
+                isPublished: undefined,
+              },
+              {
+                id: 1,
+                isPublished: null,
+              },
+              {
+                id: 2,
+                isPublished: true,
+              },
+              {
+                id: 3,
+                isPublished: false,
+              },
+            ]}
+            columns={[
+              {
+                field: 'isPublished',
+                type: 'boolean',
+                // The boolean cell does not handle the formatted value, so we override it
+                renderCell: (params) => {
+                  const value = params.value as boolean | null | undefined;
+
+                  if (value === null) {
+                    return 'null';
+                  }
+
+                  if (value === undefined) {
+                    return 'undefined';
+                  }
+
+                  return value.toString();
+                },
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        const values = getColumnValues(0);
+        unmount();
+        return values;
+      };
+      const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
+      const TRUTHY_ROWS = ['true'];
+      const FALSY_ROWS = ['undefined', 'null', 'false'];
+
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(TRUTHY_ROWS);
+      expect(getRows({ operator: 'is', value: true })).to.deep.equal(TRUTHY_ROWS);
+
+      expect(getRows({ operator: 'is', value: 'false' })).to.deep.equal(FALSY_ROWS);
+      expect(getRows({ operator: 'is', value: false })).to.deep.equal(FALSY_ROWS);
+
+      expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
   });
 

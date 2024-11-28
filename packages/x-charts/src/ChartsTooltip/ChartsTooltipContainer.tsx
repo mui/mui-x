@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { PopperProps } from '@mui/material/Popper';
@@ -8,14 +9,14 @@ import NoSsr from '@mui/material/NoSsr';
 import { useSvgRef } from '../hooks/useSvgRef';
 import { TriggerOptions, usePointerType } from './utils';
 import { ChartsTooltipClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
 import { useXAxis } from '../hooks';
 import {
   selectorChartsInteractionItemIsDefined,
   selectorChartsInteractionXAxisIsDefined,
   selectorChartsInteractionYAxisIsDefined,
-} from '../context/InteractionSelectors';
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface ChartsTooltipContainerProps extends Partial<PopperProps> {
   /**
@@ -153,29 +154,10 @@ ChartsTooltipContainer.propTypes = {
    * It's used to set the position of the popper.
    * The return value will passed as the reference object of the Popper instance.
    */
-  anchorEl: PropTypes.oneOfType([
-    (props, propName) => {
-      if (props[propName] == null) {
-        return new Error(`Prop '${propName}' is required but wasn't specified`);
-      }
-      if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-        return new Error(`Expected prop '${propName}' to be of type Element`);
-      }
-      return null;
-    },
+  anchorEl: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    HTMLElementType,
+    PropTypes.object,
     PropTypes.func,
-    PropTypes.shape({
-      contextElement: (props, propName) => {
-        if (props[propName] == null) {
-          return null;
-        }
-        if (typeof props[propName] !== 'object' || props[propName].nodeType !== 1) {
-          return new Error(`Expected prop '${propName}' to be of type Element`);
-        }
-        return null;
-      },
-      getBoundingClientRect: PropTypes.func.isRequired,
-    }),
   ]),
   /**
    * Popper render function or node.

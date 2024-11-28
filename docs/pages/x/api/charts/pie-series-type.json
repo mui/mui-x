@@ -1,6 +1,9 @@
 {
   "name": "PieSeriesType",
-  "imports": ["import { PieSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { PieSeriesType } from '@mui/x-charts-pro'",
+    "import { PieSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
     "data": { "type": { "description": "TData[]" }, "required": true },
     "type": { "type": { "description": "'pie'" }, "required": true },

@@ -110,8 +110,8 @@ const GridToolbarDensitySelector = React.forwardRef<
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarDensityLabel')}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
           ref={handleRef}
@@ -122,9 +122,9 @@ const GridToolbarDensitySelector = React.forwardRef<
           aria-expanded={open}
           aria-controls={open ? densityMenuId : undefined}
           id={densityButtonId}
-          {...buttonProps}
           onClick={handleDensitySelectorOpen}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
         </rootProps.slots.baseButton>

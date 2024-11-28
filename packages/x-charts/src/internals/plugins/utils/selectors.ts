@@ -1,5 +1,5 @@
 import { lruMemoize, createSelectorCreator, CreateSelectorFunction } from 'reselect';
-import { ChartState, ChartStateCacheKey } from '../models';
+import { ChartAnyPluginSignature, ChartState, ChartStateCacheKey } from '../models';
 
 const reselectCreateSelector = createSelectorCreator({
   memoize: lruMemoize,
@@ -14,7 +14,11 @@ const cache = new WeakMap<
   Map<Parameters<typeof reselectCreateSelector>, any>
 >();
 
-export type ChartsRootSelector = (state: ChartState) => ChartState[keyof ChartState];
+export type ChartRootSelector<TSignature extends ChartAnyPluginSignature> = <
+  TSignatures extends [TSignature],
+>(
+  state: ChartState<TSignatures>,
+) => TSignature['state'][keyof TSignature['state']];
 
 export type ChartsSelector<TState, TArgs, TResult> = (state: TState, args: TArgs) => TResult;
 
@@ -23,7 +27,7 @@ export type ChartsSelector<TState, TArgs, TResult> = (state: TState, args: TArgs
  *
  */
 export const createSelector = ((...createSelectorArgs: any) => {
-  const selector: ChartsSelector<ChartState, any, any> = (state, selectorArgs) => {
+  const selector: ChartsSelector<ChartState<any>, any, any> = (state, selectorArgs) => {
     const cacheKey = state.cacheKey;
 
     // If there is no cache for the current chart instance, create one.

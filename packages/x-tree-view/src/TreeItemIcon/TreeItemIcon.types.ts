@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
+import { SlotComponentProps } from '@mui/utils/types';
 import { UseTreeItemStatus } from '../useTreeItem';
 
 export interface TreeItemIconSlots {

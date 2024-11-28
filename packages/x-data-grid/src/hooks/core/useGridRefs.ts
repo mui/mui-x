@@ -5,7 +5,7 @@ export const useGridRefs = <PrivateApi extends GridPrivateApiCommon>(
   apiRef: React.MutableRefObject<PrivateApi>,
 ) => {
   const rootElementRef = React.useRef<HTMLDivElement>(null);
-  const mainElementRef = React.useRef<HTMLDivElement>(null);
+  const mainElementRef = React.useRef<HTMLDivElement | null>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);

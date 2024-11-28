@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import {
   useLicenseVerifier,
   LicenseInfo,
@@ -94,19 +94,20 @@ describe('useLicenseVerifier', function test() {
       });
       LicenseInfo.setLicenseKey(expiredLicenseKey);
 
-      let actualErrorMsg;
+      const errorRef = React.createRef<any>();
+
       expect(() => {
-        try {
-          render(<TestComponent />);
-        } catch (error: any) {
-          actualErrorMsg = error.message;
-        }
+        render(
+          <ErrorBoundary ref={errorRef}>
+            <TestComponent />
+          </ErrorBoundary>,
+        );
       }).to.toErrorDev([
         'MUI X: Expired license key',
-        'MUI X: Expired license key',
-        'The above error occurred in the <TestComponent> component',
+        reactMajor < 19 && 'MUI X: Expired license key',
+        reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
       ]);
-      expect(actualErrorMsg).to.match(/MUI X: Expired license key/);
+      expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);
     });
 
     it('should throw if the license is not covering charts and tree-view', () => {

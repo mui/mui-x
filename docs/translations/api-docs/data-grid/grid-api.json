@@ -127,9 +127,6 @@
     "publishEvent": { "description": "Emits an event." },
     "removeRowGroupingCriteria": { "description": "Remove the field from the row grouping model." },
     "resetRowHeights": { "description": "Forces the recalculation of the heights of all rows." },
-    "resize": {
-      "description": "Triggers a resize of the component and recalculation of width and height."
-    },
     "restoreState": { "description": "Inject the given values into the state of the DataGrid." },
     "scroll": {
       "description": "Triggers the viewport to scroll to the given positions (in pixels)."

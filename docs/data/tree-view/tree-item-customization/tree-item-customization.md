@@ -17,10 +17,10 @@ Each Tree Item component is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
 <span class="only-light-mode" style="border: 1px solid rgb(232, 234, 238); border-radius:12px">
-<img src="/static/x/tree-view-illustrations/tree-item-light.png" alt="Tree Item anatomy" loading="lazy"   >
+  <img src="/static/x/tree-view-illustrations/tree-item-light.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
 </span>
 <span class="only-dark-mode" style="border: 1px solid rgb(29, 33, 38); border-radius:12px">
-<img src="/static/x/tree-view-illustrations/tree-item-dark.png" alt="Tree Item anatomy" loading="lazy"   >
+  <img src="/static/x/tree-view-illustrations/tree-item-dark.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
 </span>
 
 ### Content

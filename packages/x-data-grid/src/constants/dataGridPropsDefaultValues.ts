@@ -36,8 +36,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   hideFooterSelectedRowCount: false,
   ignoreDiacritics: false,
   ignoreValueFormatterDuringExport: false,
-  // TODO v8: Update to 'select'
-  indeterminateCheckboxAction: 'deselect',
   keepColumnPositionIfDraggedOutside: false,
   keepNonExistentRowsSelected: false,
   loading: false,
@@ -59,4 +57,5 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
   unstable_rowSpanning: false,
+  virtualizeColumnsWithAutoRowHeight: false,
 };
