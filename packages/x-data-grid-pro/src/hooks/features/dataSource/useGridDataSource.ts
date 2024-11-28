@@ -95,7 +95,7 @@ export const useGridDataSource = (
       if (cachedData !== undefined) {
         const rows = cachedData.rows;
         apiRef.current.setRows(rows);
-        if (cachedData.rowCount) {
+        if (cachedData.rowCount !== undefined) {
           apiRef.current.setRowCount(cachedData.rowCount);
         }
         return;
@@ -109,7 +109,7 @@ export const useGridDataSource = (
       try {
         const getRowsResponse = await getRows(fetchParams);
         apiRef.current.unstable_dataSource.cache.set(fetchParams, getRowsResponse);
-        if (getRowsResponse.rowCount) {
+        if (getRowsResponse.rowCount !== undefined) {
           apiRef.current.setRowCount(getRowsResponse.rowCount);
         }
         apiRef.current.setRows(getRowsResponse.rows);
