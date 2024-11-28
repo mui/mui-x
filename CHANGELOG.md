@@ -28,22 +28,22 @@ Following are all team members who have contributed to this release:
 
 #### Breaking changes
 
-- The `GridOverlays` component is not exported anymore.
-- The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
-- The `apiRef.current.resize` method was removed.
+- The `<GridOverlays />` component is not exported anymore.
+- The `indeterminateCheckboxAction` prop has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- The `apiRef.current.resize()` method was removed.
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation` as `{ parents: false, descendants: false }`.
 
 #### `@mui/x-data-grid@v8.0.0-alpha.2`
 
-- [DataGrid] Change test dom check from /jsdom/ to /jsdom|HappyDOM/. (#15634) @jedesroches
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15634) @jedesroches
 - [DataGrid] Clear timers on unmount (#15620) @cherniavskii
 - [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
 - [DataGrid] Improve resize performance (#15549) @lauri865
 - [DataGrid] Make estimation label more accurate (#15632) @arminmeh
-- [DataGrid] Remove `GridOverlays` export (#15573) @k-rajat19
+- [DataGrid] Remove `<GridOverlays />` export (#15573) @k-rajat19
 - [DataGrid] Remove `indeterminateCheckboxAction` prop (#15522) @MBilalShafi
-- [DataGrid] Remove try/catch from `GridCell` due to performance issues (#15616) @lauri865
+- [DataGrid] Remove try/catch from `<GridCell />` due to performance issues (#15616) @lauri865
 - [DataGrid] Remove unused `resize` method (#15599) @cherniavskii
 - [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
 - [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
@@ -63,6 +63,14 @@ Same changes as in `@mui/x-data-grid@v8.0.0-alpha.2`, plus:
 Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
 
 ### Date and Time Pickers
+
+#### Breaking changes
+
+- - The props receives by the `layout` and the `toolbar` slots have been reworked — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#do-not-pass-the-section-type-as-a-generic).
+
+
+- The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.2`
 
