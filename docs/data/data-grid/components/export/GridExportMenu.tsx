@@ -22,7 +22,7 @@ function ExportMenu() {
       >
         <FileDownloadIcon fontSize="small" />
         Export
-        <ArrowDropDownIcon fontSize="small" />
+        <ArrowDropDownIcon fontSize="small" sx={{ mx: -0.5 }} />
       </Grid.Toolbar.Button>
       <Menu
         id="export-menu"
