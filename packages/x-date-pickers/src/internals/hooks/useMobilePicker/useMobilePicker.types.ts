@@ -13,7 +13,6 @@ import {
 import { UsePickerParams } from '../usePicker';
 import {
   FieldOwnerState,
-  FieldSection,
   PickerFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
