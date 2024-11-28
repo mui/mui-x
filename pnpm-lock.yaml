@@ -1025,6 +1025,9 @@ importers:
       reselect:
         specifier: ^5.1.1
         version: 5.1.1
+      use-sync-external-store:
+        specifier: ^1.0.0
+        version: 1.2.2(react@18.3.1)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: ^1.0.21
