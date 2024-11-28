@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   filterModel={filterModel}
   onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
   slots={{ toolbar: Toolbar }}

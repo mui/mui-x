@@ -63,7 +63,7 @@ function Toolbar({ onRemoveFilter, ...other }: ToolbarProps) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'position'];
 
 export default function GridToolbarFilterBar() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -96,6 +96,7 @@ export default function GridToolbarFilterBar() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
         slots={{ toolbar: Toolbar }}

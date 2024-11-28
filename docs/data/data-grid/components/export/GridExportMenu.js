@@ -53,14 +53,14 @@ function Toolbar() {
 }
 
 export default function GridExportMenu() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
   });
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} slots={{ toolbar: Toolbar }} />
+      <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
     </div>
   );
 }

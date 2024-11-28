@@ -1,1 +1,1 @@
-<DataGrid {...data} slots={{ toolbar: Toolbar }} />
+<DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
