@@ -155,7 +155,7 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
    * @default 500
    */
-  lazyLoadingRequestThrottleMs: number;
+  unstable_lazyLoadingRequestThrottleMs: number;
 }
 
 interface DataGridProDataSourceProps {

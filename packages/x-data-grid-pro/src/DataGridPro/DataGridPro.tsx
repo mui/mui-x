@@ -476,11 +476,6 @@ DataGridProRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
-   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
-   * @default 500
-   */
-  lazyLoadingRequestThrottleMs: PropTypes.number,
-  /**
    * If `true`, a loading overlay is displayed.
    * @default false
    */
@@ -1010,6 +1005,11 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   unstable_lazyLoading: PropTypes.bool,
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  unstable_lazyLoadingRequestThrottleMs: PropTypes.number,
   /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */

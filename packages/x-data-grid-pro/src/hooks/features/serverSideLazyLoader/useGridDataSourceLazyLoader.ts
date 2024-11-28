@@ -54,7 +54,7 @@ export const useGridDataSourceLazyLoader = (
     | 'paginationMode'
     | 'unstable_dataSource'
     | 'unstable_lazyLoading'
-    | 'lazyLoadingRequestThrottleMs'
+    | 'unstable_lazyLoadingRequestThrottleMs'
     | 'scrollEndThreshold'
   >,
 ): void => {
@@ -397,8 +397,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
-    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, props.unstable_lazyLoadingRequestThrottleMs),
+    [props.unstable_lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(

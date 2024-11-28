@@ -91,7 +91,7 @@ function ServerSideLazyLoadingRequestThrottle() {
         unstable_dataSource={dataSource}
         rowCount={rowCount}
         unstable_lazyLoading
-        lazyLoadingRequestThrottleMs={throttleMs}
+        unstable_lazyLoadingRequestThrottleMs={throttleMs}
         paginationModel={{ page: 0, pageSize: 10 }}
         slots={{
           footerRowCount: GridCustomFooterRowCount,
