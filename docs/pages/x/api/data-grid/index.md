@@ -17,6 +17,7 @@
 - [GridColDef](/x/api/data-grid/grid-col-def/)
 - [GridSingleSelectColDef](/x/api/data-grid/grid-single-select-col-def/)
 - [GridActionsColDef](/x/api/data-grid/grid-actions-col-def/)
+- [GridListColDef](/x/api/data-grid/grid-list-col-def/)
 - [GridExportStateParams](/x/api/data-grid/grid-export-state-params/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)

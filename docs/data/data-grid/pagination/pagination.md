@@ -235,10 +235,12 @@ The following example demonstrates how to show the estimated row count in the pa
 ```jsx
 const labelDisplayedRows = ({ from, to, count, estimated }) => {
   if (!estimated) {
-    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`,
+    return `${from}–${to} od ${count !== -1 ? count : `više nego ${to}`}`;
   }
-  return `${from}–${to} od ${count !== -1 ? count : `više nego ${estimated > to ? estimated : to}`}`;
-}
+  const estimateLabel =
+    estimated && estimated > to ? `oko ${estimated}` : `više nego ${to}`;
+  return `${from}–${to} od ${count !== -1 ? count : estimateLabel}`;
+};
 
 <DataGrid
   {...data}
@@ -247,7 +249,7 @@ const labelDisplayedRows = ({ from, to, count, estimated }) => {
       labelDisplayedRows,
     },
   }}
-/>
+/>;
 ```
 
 For more information, see the [Translation keys](/x/react-data-grid/localization/#translation-keys) section of the localization documentation.
