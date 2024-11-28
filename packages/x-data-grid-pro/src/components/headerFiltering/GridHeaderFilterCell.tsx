@@ -22,17 +22,18 @@ import {
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
-  GridPinnedColumnPosition,
 } from '@mui/x-data-grid';
 import {
+  PinnedColumnPosition,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
-  shouldCellShowLeftBorder,
-  shouldCellShowRightBorder,
+  rtlFlipSide,
+  attachPinnedStyle,
 } from '@mui/x-data-grid/internals';
+import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -55,16 +56,16 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedColumnPosition;
+  pinnedOffset?: number;
   style?: React.CSSProperties;
-  indexInSection: number;
-  sectionLength: number;
-  gridHasFiller: boolean;
+  showLeftBorder: boolean;
+  showRightBorder: boolean;
 }
 
 type OwnerState = DataGridProProcessedProps & {
   colDef: GridColDef;
-  pinnedPosition?: GridPinnedColumnPosition;
+  pinnedPosition?: PinnedColumnPosition;
   showRightBorder: boolean;
   showLeftBorder: boolean;
 };
@@ -81,8 +82,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === 'left' && 'columnHeader--pinnedLeft',
-      pinnedPosition === 'right' && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
     ],
   };
 
@@ -115,14 +116,15 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     InputComponentProps,
     showClearIcon = true,
     pinnedPosition,
+    pinnedOffset,
     style: styleProp,
-    indexInSection,
-    sectionLength,
-    gridHasFiller,
+    showLeftBorder,
+    showRightBorder,
     ...other
   } = props;
 
   const apiRef = useGridPrivateApiContext();
+  const isRtl = useRtl();
   const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const rootProps = useGridRootProps();
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -282,15 +284,6 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
     [onMouseDown, onKeyDown, publish],
   );
 
-  const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
-  const showRightBorder = shouldCellShowRightBorder(
-    pinnedPosition,
-    indexInSection,
-    sectionLength,
-    rootProps.showCellVerticalBorder,
-    gridHasFiller,
-  );
-
   const ownerState: OwnerState = {
     ...rootProps,
     pinnedPosition,
@@ -313,14 +306,19 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
 
   const isFilterActive = isApplied || hasFocus;
 
+  const style = {
+    height,
+    width,
+    ...styleProp,
+  };
+
+  const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
+  attachPinnedStyle(style, pinnedSide, pinnedOffset);
+
   return (
     <div
       className={clsx(classes.root, headerClassName)}
-      style={{
-        height,
-        width,
-        ...styleProp,
-      }}
+      style={style}
       role="columnheader"
       aria-colindex={colIndex + 1}
       aria-label={headerFilterComponent == null ? (colDef.headerName ?? colDef.field) : undefined}
@@ -397,7 +395,6 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   /**
    * Class name added to the column header cell.
@@ -407,7 +404,6 @@ GridHeaderFilterCell.propTypes = {
     current: PropTypes.object,
   }).isRequired,
   height: PropTypes.number.isRequired,
-  indexInSection: PropTypes.number.isRequired,
   InputComponentProps: PropTypes.object,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
@@ -415,9 +411,11 @@ GridHeaderFilterCell.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
-  pinnedPosition: PropTypes.oneOf(['left', 'right']),
-  sectionLength: PropTypes.number.isRequired,
+  pinnedOffset: PropTypes.number,
+  pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]),
   showClearIcon: PropTypes.bool,
+  showLeftBorder: PropTypes.bool.isRequired,
+  showRightBorder: PropTypes.bool.isRequired,
   sortIndex: PropTypes.number,
   style: PropTypes.object,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,

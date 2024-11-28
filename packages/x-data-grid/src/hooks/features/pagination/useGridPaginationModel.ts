@@ -63,6 +63,7 @@ export const useGridPaginationModel = (
     | 'autoPageSize'
     | 'initialState'
     | 'paginationMode'
+    | 'pagination'
     | 'signature'
     | 'rowHeight'
   >,
@@ -256,7 +257,15 @@ export const useGridPaginationModel = (
   /**
    * EFFECTS
    */
+  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (!props.pagination) {
+      return;
+    }
     apiRef.current.setState((state) => ({
       ...state,
       pagination: {
@@ -268,7 +277,28 @@ export const useGridPaginationModel = (
         ),
       },
     }));
-  }, [apiRef, props.paginationModel, props.paginationMode, props.signature]);
+  }, [apiRef, props.paginationModel, props.signature, props.pagination]);
+
+  React.useEffect(() => {
+    apiRef.current.setState((state) => {
+      const isEnabled = props.pagination === true;
+      if (
+        state.pagination.paginationMode === props.paginationMode ||
+        state.pagination.enabled === isEnabled
+      ) {
+        return state;
+      }
+
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          paginationMode: props.paginationMode,
+          enabled: props.pagination === true,
+        },
+      };
+    });
+  }, [apiRef, props.paginationMode, props.pagination]);
 
   React.useEffect(handleUpdateAutoPageSize, [handleUpdateAutoPageSize]);
 };
