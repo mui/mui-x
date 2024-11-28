@@ -71,6 +71,8 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
 - [pickers] Improve validation internals (#15419) @flaviendelangle
 - [pickers] Remove `TSection` and strictly type `TValue` (#15434) @flaviendelangle
 - [pickers] Remove `orientation`, `isLandscape`, `isRtl`, `wrapperVariant` and `disabled` props from `PickersLayout` (#15494) @flaviendelangle
+- [pickers] Use the new `ownerState` in `<PickersCalendarHeader />`, `<PickersArrowSwitcher />` and `<DayCalendarSkeleton />` (#15499) @flaviendelangle
+- [pickers] Use the new `ownerState` object in all the field components (#15510) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
