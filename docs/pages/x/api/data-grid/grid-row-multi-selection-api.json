@@ -10,7 +10,7 @@
     {
       "name": "selectRows",
       "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+      "type": "(selectionModel: GridRowSelectionModel, isSelected?: boolean, resetSelection?: boolean) => void"
     }
   ]
 }
