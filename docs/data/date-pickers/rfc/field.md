@@ -16,8 +16,8 @@ This page extends the initial proposal made in [this GitHub comment](https://git
 ### Without Material UI
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { PickerField } from '@base-ui-components/react-x-date-pickers/picker-field';
 
 function CustomDateField(props) {
   const manager = useDateManager();
@@ -92,8 +92,8 @@ To be able to open the picker using its field, the user has to add a trigger but
 You can find more demos on the picker documentation on how to handle mobile and responsive pickers.
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { PickerField } from '@base-ui-components/react-x-date-pickers/picker-field';
 
 function CustomDateField(props) {
   const manager = useDateManager();
@@ -111,9 +111,9 @@ function CustomDateField(props) {
 If requested, a new utility hook could be added to easily check if the field is inside a picker. This would allow the same field component to be used as standalone and inside a picker:
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { useIsInsidePicker } from '@base-ui/x-date-pickers/hooks';
-import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { useIsInsidePicker } from '@base-ui-components/react-x-date-pickers/hooks';
+import { PickerField } from '@base-ui-components/react-x-date-pickers/picker-field';
 
 function CustomDateField(props) {
   const manager = useDateManager();
@@ -147,11 +147,11 @@ The concept of slots does not fit this use case very well, but the exploration o
 
 #### Inside an unstyled picker
 
-The custom field can also be used inside a picker built with the composable `Picker.*` component from `@base-ui/x-date-pickers/Picker`:
+The custom field can also be used inside a picker built with the composable `Picker.*` component from `@base-ui-components/react-x-date-pickers/picker`:
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { Picker } from '@base-ui/x-date-pickers/Picker';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 function CustomDatePicker(props) {
   const manager = useDateManager();
@@ -171,8 +171,8 @@ function CustomDatePicker(props) {
 The user can also inline their field if they want:
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { Picker } from '@base-ui/x-date-pickers/Picker';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 function CustomDatePicker(props) {
   const manager = useDateManager();
@@ -256,8 +256,8 @@ There is a POC of this in [#15505](https://github.com/mui/mui-x/pull/15505).
 The user can use the `<PickerField.Clear />` component to add a button to clear the value:
 
 ```tsx
-import { useDateManager } from '@base-ui/x-date-pickers/managers';
-import { PickerField } from '@base-ui/x-date-pickers/PickerField';
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { PickerField } from '@base-ui-components/react-x-date-pickers/picker-field';
 
 function CustomDateField(props) {
   const manager = useDateManager();

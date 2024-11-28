@@ -16,6 +16,10 @@ This page extends the initial proposal made in [#14718](https://github.com/mui/m
 ### Without Material UI
 
 ```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+
 function CustomDatePicker(props) {
   const manager = useDateManager();
 
@@ -36,17 +40,33 @@ function CustomDatePicker(props) {
     </Popover.Root>
   );
 }
+
+<CustomDatePicker value={value} onChange={setValue} />;
 ```
 
 ### With Material UI
 
-TODO
+The user can use the `<DesktopDatePicker />` component:
+
+```tsx
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+
+<DesktopDatePicker value={value} onChange={setValue} />;
+```
+
+:::success
+This component could be renamed `<PopoverDatePicker />` to better match its behavior.
+:::
 
 ## Basic usage in a Dialog
 
 ### Without Material UI
 
 ```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Dialog } from '@base-ui-components/react/dialog';
+
 function CustomDatePicker(props) {
   const manager = useDateManager();
 
@@ -63,11 +83,21 @@ function CustomDatePicker(props) {
     </Dialog.Root>
   );
 }
+
+<CustomDatePicker value={value} onChange={setValue} />;
 ```
 
 ### With Material UI
 
-TODO
+```tsx
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+
+<MobileDatePicker value={value} onChange={setValue} />;
+```
+
+:::success
+This component could be renamed `<DialogDatePicker />` to better match its behavior.
+:::
 
 ## Basic responsive usage
 
@@ -76,6 +106,12 @@ TODO
 If the library does not provide any higher level utilities to create a responsive picker and sticks with "1 React component = 1 DOM element", here is what a responsive picker could look like:
 
 ```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { useMediaQuery } from '@base-ui-utils/useMediaQuery'; // not sure how the util package will be named
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Popover } from '@base-ui-components/react/popover';
+import { Dialog } from '@base-ui-components/react/dialog';
+
 function CustomDatePicker(props) {
   const manager = useDateManager();
   const isDesktop = useMediaQuery('@media (pointer: fine)', {
@@ -211,7 +247,7 @@ The example below uses the `Tabs` component from Base UI as an example:
 
 ```tsx
 import { Tabs } from '@base-ui-components/react/tabs';
-import { Picker } from '@base-ui/x-date-pickers/Picker';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 <Picker.Popup>
   <Picker.ContextValue>
@@ -267,7 +303,7 @@ To support the `isValid` param of the Material UI shortcut, a `useIsValidValue`
 Without it, it's not trivial to use `useValidation` since it requires a value and params like the validation props or the timezone.
 
 ```tsx
-import { useIsValueValid } from '@base-ui/x-date-pickers/hooks';
+import { useIsValueValid } from'@base-ui-components/react-x-date-pickers/hooks';
 
 const isValueValid = useIsValueValid();
 

@@ -18,7 +18,7 @@ This page extends the initial proposal made in [#15598](https://github.com/mui/m
 The user can use the `Calendar.Days.*` components to create a grid of days and the `Calendar.Header.*` to create a header to navigate across the months:
 
 ```tsx
-import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <div>
@@ -64,7 +64,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 The user can use the `Calendar.Months.*` components to create a grid of months and the `Calendar.Header.*` to create a header to navigate across the years:
 
 ```tsx
-import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <div>
@@ -106,7 +106,7 @@ Once the `Calendar.*` unstyled component is ready, the `<MonthCalendar />` shoul
 The user can use the `Calendar.Years.*` components to create a grid of years:
 
 ```tsx
-import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Years.Root>
@@ -312,7 +312,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    This is mostly viable for components that don't interact a lot with the picker state. For example, if someone wants to build a custom header for their calendar that just displays the current month, they could do it from scratch:
 
    ```tsx
-   import { useCalendarContext } from '@base-ui/x-date-pickers/Calendar';
+   import { useCalendarContext } from '@base-ui-components/react-x-date-pickers/calendar';
 
    function CustomCalendarHeader() {
      const { currentMonth } = useCalendarContext();
@@ -328,12 +328,12 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    That way, this components can be composed more freely, it now only has to be mounted inside `<Calendar.Root />`.
    :::
 
-2. Using the primitives exposed by `@base-ui/x-date-pickers/Calendar`:
+2. Using the primitives exposed by `@base-ui-components/react-x-date-pickers/calendar`:
 
    If the user wants to totally own the styling of this part of the UI (because he wants to build something really different from Material UI), he can use components like `<Calendar.FormattedValue />` only for this part of the UI while still using `@mui/x-date-pickers` for everything he doesn't want to deeply customize:
 
    ```tsx
-   import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+   import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
    function CustomCalendarHeader() {
      return (
@@ -364,11 +364,11 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    ```
 
    :::success
-   The components like `<PickersCalendarHeaderRoot />` would be built on top of their `@base-ui/x-date-pickers/Calendar` counterparts and would be used to build `<PickersCalendarHeader />`. The packages expose several version but they don't have logic duplication.
+   The components like `<PickersCalendarHeaderRoot />` would be built on top of their `@base-ui-components/react-x-date-pickers/Calendar` counterparts and would be used to build `<PickersCalendarHeader />`. The packages expose several version but they don't have logic duplication.
    Internally, the code would look something like that:
 
    ```tsx
-   import { Calendar } from '@base-ui/x-date-pickers/Calendar';
+   import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
    export const PickerCalendarHeaderRoot = styled('div')({
      display: 'flex',
@@ -383,7 +383,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
      /** ... */
    });
 
-   // This component is purely presentational and not present in `@base-ui/x-date-pickers/Calendar'.
+   // This component is purely presentational and not present in `@base-ui-components/react-x-date-pickers/Calendar'.
    export const PickerCalendarHeaderLabelContainer = styled('div')({
      /** ... */
    });
@@ -409,7 +409,7 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
    Should it be:
 
    1. `<PickersCalendarHeaderRoot />` like it would be today
-   2. `<Calendar.Header />` to match the exports from `@base-ui/x-date-pickers`
+   2. `<Calendar.Header />` to match the exports from `@base-ui-components/react-x-date-pickers`
    3. Something else?
 
    :::
