@@ -28,7 +28,10 @@ import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import {
+  gridFocusCellSelector,
+  gridTabIndexCellSelector,
+} from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -199,14 +202,16 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     row,
     rowNode as GridTreeNodeWithRender,
   );
-  cellParams.api = apiRef.current;
 
-  const hasFocus = useGridSelector(apiRef, () => {
+  cellParams.tabIndex = useGridSelector(apiRef, () => {
+    const cellTabIndex = gridTabIndexCellSelector(apiRef);
+    return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+  });
+  cellParams.hasFocus = useGridSelector(apiRef, () => {
     const focus = gridFocusCellSelector(apiRef);
     return focus?.id === rowId && focus.field === field;
   });
-
-  cellParams.hasFocus = hasFocus;
+  cellParams.api = apiRef.current;
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
@@ -218,7 +223,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
   const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
 
-  const { cellMode, isEditable = false, value } = cellParams;
+  const { cellMode, hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
