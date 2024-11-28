@@ -33,27 +33,15 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
-:::info
-The list is currently empty, but as we move forward with development during the alpha and beta phases, we'll feed this page with all changes in the API.
-:::
-
-<!-- ### Columns
-
-TBD
-
-### Rows
-
-TBD
-
-### `apiRef` methods
-
-TBD
-
 ### Selection
 
-TBD
+- The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 
-### Accessibility
+### Localization
+
+- If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
+
+<!-- ### Accessibility
 
 TBD
 

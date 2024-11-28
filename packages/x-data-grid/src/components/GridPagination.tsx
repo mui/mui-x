@@ -48,7 +48,8 @@ const defaultLabelDisplayedRows: WrappedLabelDisplayedRows = ({ from, to, count,
   if (!estimated) {
     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
   }
-  return `${from}–${to} of ${count !== -1 ? count : `more than ${estimated > to ? estimated : to}`}`;
+  const estimateLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
+  return `${from}–${to} of ${count !== -1 ? count : estimateLabel}`;
 };
 
 // A mutable version of a readonly array.

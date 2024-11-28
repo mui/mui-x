@@ -1,7 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
@@ -24,7 +23,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   store,
   models,
 }) => {
-  useEnhancedEffect(() => {
+  React.useEffect(() => {
     let defaultFocusableItemId = convertSelectedItemsToArray(models.selectedItems.value).find(
       (itemId) => {
         if (!selectorCanItemBeFocused(store.value, itemId)) {

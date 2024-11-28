@@ -13,6 +13,14 @@ parameters:
     description: The name of the workflow to run
     type: string
     default: pipeline
+  with-material-ui-6:
+    description: Use material-ui v6 for additional checks and tests
+    type: boolean
+    default: false
+  with-react-version:
+    description: The version of react to be used for the additional tests
+    type: string
+    default: stable
   e2e-base-url:
     description: The base url for running end-to-end test
     type: string
@@ -90,11 +98,10 @@ commands:
             git --no-pager diff HEAD
 
       - when:
-          condition:
-            equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+          condition: << pipeline.parameters.with-material-ui-6 >>
           steps:
             - run:
-                name: Install @mui/material@next
+                name: Install @mui/material v6
                 command: pnpm use-material-ui-v6
 
 jobs:
@@ -349,50 +356,38 @@ workflows:
           requires:
             - checkout
 
-  react-next:
+  additional-tests:
     when:
-      equal: [react-next, << pipeline.parameters.workflow >>]
-    # triggers:
-    #   - schedule:
-    #       cron: '0 0 * * *'
-    #       filters:
-    #         branches:
-    #           only:
-    #             - master
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - or:
+            - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
+            - not:
+                equal: ['stable', << pipeline.parameters.with-react-version >>]
     jobs:
       - test_unit:
           <<: *default-context
-          react-version: next
-          name: test_unit-react@next
+          name: test_unit_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_browser:
           <<: *default-context
-          react-version: next
-          name: test_browser-react@next
+          name: test_browser_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_regressions:
           <<: *default-context
-          react-version: next
-          name: test_regressions-react@next
+          name: test_regressions_additional
+          react-version: << pipeline.parameters.with-react-version >>
       - test_e2e:
           <<: *default-context
-          react-version: next
-          name: test_e2e-react@next
+          name: test_e2e_additional
+          react-version: << pipeline.parameters.with-react-version >>
 
-  material-ui-v6:
+  additional-checks:
     when:
-      equal: [material-ui-v6, << pipeline.parameters.workflow >>]
+      and:
+        - equal: [additional, << pipeline.parameters.workflow >>]
+        - equal: [true, << pipeline.parameters.with-material-ui-6 >>]
     jobs:
-      - test_unit:
-          <<: *default-context
-          name: test_unit-material@next
-      - test_browser:
-          <<: *default-context
-          name: test_browser-material@next
-      - test_regressions:
-          <<: *default-context
-          name: test_regressions-material@next
-      - test_e2e:
-          <<: *default-context
-          name: test_e2e-material@next
       - test_types:
           <<: *default-context
-          name: test_types-material@next
+          name: test_types_additional
