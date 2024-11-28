@@ -11,7 +11,6 @@ import {
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import Divider from '@mui/material/Divider';
 import {
   multiSectionDigitalClockClasses,
   multiSectionDigitalClockSectionClasses,
@@ -20,6 +19,10 @@ import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { PickersActionBarAction } from '@mui/x-date-pickers/PickersActionBar';
 import { PickerLayoutOwnerState } from '@mui/x-date-pickers/PickersLayout';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopTimeRangePickerProps } from './DesktopTimeRangePicker.types';
 import {
@@ -32,11 +35,8 @@ import {
   UseDesktopRangePickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
-import {
-  renderDigitalClockTimeRangeView,
-  renderMultiSectionDigitalClockTimeRangeView,
-} from '../timeRangeViewRenderers';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 
 const rendererInterceptor = function rendererInterceptor<
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -64,8 +64,8 @@ const rendererInterceptor = function rendererInterceptor<
   const { openTo, rangePosition, focusedView, ...otherProps } = rendererProps;
   const finalProps = {
     ...otherProps,
-    focusedView: null,
     rangePosition,
+    focusedView: null,
     sx: [
       {
         [`&.${multiSectionDigitalClockClasses.root}`]: {
@@ -80,21 +80,13 @@ const rendererInterceptor = function rendererInterceptor<
   };
   const viewRenderer = inViewRenderers[popperView];
   return (
-    <React.Fragment>
-      {viewRenderer?.({
-        ...finalProps,
-        view: popperView,
-        rangePosition: 'start',
-        sx: [{ gridColumn: 1 }, ...finalProps.sx],
-      })}
-      <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
-      {viewRenderer?.({
-        ...finalProps,
-        view: popperView,
-        rangePosition: 'end',
-        sx: [{ gridColumn: 3 }, ...finalProps.sx],
-      })}
-    </React.Fragment>
+    <TimeRangePickerTimeWrapper
+      {...finalProps}
+      rangePosition={rangePosition}
+      view={popperView}
+      viewRenderer={viewRenderer}
+      sx={[{ gridColumn: '1 / 3' }, ...finalProps.sx]}
+    />
   );
 };
 
@@ -117,8 +109,8 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   >(inProps, 'MuiDesktopTimeRangePicker');
 
   const renderTimeRangeView = defaultizedProps.shouldRenderTimeInASingleColumn
-    ? renderDigitalClockTimeRangeView
-    : renderMultiSectionDigitalClockTimeRangeView;
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: TimeRangePickerRenderers<TimeViewWithMeridiem, any> = {
     hours: renderTimeRangeView,
@@ -129,7 +121,7 @@ const DesktopTimeRangePicker = React.forwardRef(function DesktopTimeRangePicker<
   };
 
   const shouldHoursRendererContainMeridiemView =
-    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeRangeView.name;
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
   const views = !shouldHoursRendererContainMeridiemView
     ? defaultizedProps.views.filter((view) => view !== 'meridiem')
     : defaultizedProps.views;

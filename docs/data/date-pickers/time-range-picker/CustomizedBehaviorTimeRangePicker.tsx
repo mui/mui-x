@@ -19,7 +19,7 @@ function CustomDigitalClockItem(
 ) {
   const { rangePosition, selectedValue, formattedValue, itemValue, ...other } =
     props;
-  if (selectedValue[0] && other?.['data-range-position'] === 'end') {
+  if (selectedValue[0] && rangePosition === 'end') {
     const timeDifference = itemValue.diff(selectedValue[0], ['minutes']);
     const timeDifferenceLabel =
       timeDifference.minutes < 60
@@ -45,7 +45,7 @@ export default function CustomizedBehaviorTimeRangePicker() {
           timeSteps={{ minutes: 15 }}
           value={value}
           onChange={setValue}
-          minTime={value[0] ?? undefined}
+          minTime={rangePosition === 'end' && value[0] ? value[0] : undefined}
           rangePosition={rangePosition}
           skipDisabled
           onRangePositionChange={setRangePosition}

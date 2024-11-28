@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DIALOG_WIDTH,
-  isInternalTimeView,
   PickerRangeValue,
-  PickerViewRenderer,
   PickerViewsRendererProps,
   resolveTimeFormat,
   TimeViewWithMeridiem,
@@ -38,7 +36,7 @@ import {
 } from '../internals/hooks/useMobileRangePicker';
 import { validateTimeRange } from '../validation/validateTimeRange';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+import { TimeRangePickerTimeWrapper } from '../TimeRangePicker/TimeRangePickerTimeWrapper';
 
 const rendererInterceptor = function rendererInterceptor<
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -55,7 +53,7 @@ const rendererInterceptor = function rendererInterceptor<
     {}
   >,
 ) {
-  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
+  const { rangePosition, ...otherRendererProps } = rendererProps;
   const finalProps = {
     ...otherRendererProps,
     rangePosition,
@@ -88,17 +86,7 @@ const rendererInterceptor = function rendererInterceptor<
   if (!viewRenderer) {
     return null;
   }
-  return (
-    <DateTimeRangePickerTimeWrapper
-      {...finalProps}
-      viewRenderer={
-        viewRenderer as PickerViewRenderer<PickerRangeValue, TimeViewWithMeridiem, any, {}>
-      }
-      view={view && isInternalTimeView(view) ? view : 'hours'}
-      views={finalProps.views as TimeViewWithMeridiem[]}
-      openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
-    />
-  );
+  return <TimeRangePickerTimeWrapper {...finalProps} viewRenderer={viewRenderer} />;
 };
 
 type MobileTimeRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
