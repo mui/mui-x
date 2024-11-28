@@ -7,16 +7,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 28, 2024_
 
-We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 Documentation improvements
 - 🌍 Improve Dutch, Spanish, Swedish, Portuguese, Chinese locales on the Data Grid and Date Pickers.
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@dloeda, @headironc, @mathzdev, @nphmuller.
+@dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9.
 Following are all team members who have contributed to this release:
-@oliviertassinari, @arminmeh, @KenanYusuf.
+@oliviertassinari, @arminmeh, @KenanYusuf, @flaviendelangle, @MBilalShafi.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -25,11 +25,11 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@v7.22.4`
 
 - [docs][data grid] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
-- [DataGrid] Change test dom check from /jsdom/ to /jsdom|HappyDOM/. (@jedesroches) (#15642)
-- [DataGrid] Fix last separator not being hidden when grid is scrollable (@KenanYusuf) (#15551)
-- [DataGrid] Fix row-spanning in combination with column-pinning (@lhilgert9) (#15460)
-- [DataGrid] Improve resize performance (@lauri865) (#15592)
-- [DataGrid] Support column virtualization with dynamic row height (@cherniavskii) (#15567)
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (@jedesroches) (#15642)
+- [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
+- [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
+- [DataGrid] Improve resize performance (#15592) @lauri865
+- [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
@@ -38,8 +38,8 @@ Following are all team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@v7.22.4`, plus:
 
 - [DataGridPro] Fix header filtering with `boolean` column type (@k-rajat19) (#15640) @arminmeh
-- [DataGridPro] Fix pagination state not updating if the data source response has no rows (@zinoroman) (#15643)
-- [DataGridPro] Fix selection propagation issue on initialization (@MBilalShafi) (#15593)
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15643) @zinoroman
+- [DataGridPro] Fix selection propagation issue on initialization (#15593) @MBilalShafi
 
 #### `@mui/x-data-grid-premium@v7.22.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -50,6 +50,7 @@ Same changes as in `@mui/x-data-grid-pro@v7.22.4`.
 #### `@mui/x-date-pickers@v7.22.4`
 
 - [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` #15653 (@flaviendelangle)
 - [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (@flaviendelangle) (#15544)
 
 #### `@mui/x-date-pickers-pro@v7.22.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
