@@ -27,10 +27,8 @@ function CustomDatePicker(props) {
     <Popover.Root>
       <Picker.Root manager={manager} {...props}>
         <PickerField.Root>
-          <PickerField.Root>
-            {/** See field documentation */}
-            <Popover.Trigger>📅</Popover.Trigger>
-          </PickerField.Root>
+          {/** See field documentation */}
+          <Popover.Trigger>📅</Popover.Trigger>
         </PickerField.Root>
         <Popover.Backdrop />
         <Popover.Positioner>
@@ -52,7 +50,24 @@ TODO
 
 ### Without Material UI
 
-TODO
+```tsx
+function CustomDatePicker(props) {
+  const manager = useDateManager();
+
+  return (
+    <Dialog.Root>
+      <PickerField.Root>
+        {/** See field documentation */}
+        <Dialog.Trigger>📅</Dialog.Trigger>
+      </PickerField.Root>
+      <Dialog.Backdrop />
+      <Dialog.Popup>
+        <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+      </Dialog.Popup>
+    </Dialog.Root>
+  );
+}
+```
 
 ## Basic responsive usage
 
@@ -62,7 +77,51 @@ TODO
 
 ### Without Material UI
 
-TODO
+If the library does not provide any higher level utilities to create a responsive picker and sticks with "1 React component = 1 DOM element", here is what a responsive picker could look like:
+
+```tsx
+function CustomDatePicker(props) {
+  const manager = useDateManager();
+  const isDesktop = useMediaQuery('@media (pointer: fine)', {
+    defaultMatches: true,
+  });
+
+  const wrapView = (viewNode: React.ReactNode) => {
+    if (variant === 'mobile') {
+      return <Dialog.Popup>{viewNode}</Dialog.Popup>;
+    }
+
+    return (
+      <Popover.Positioner>
+        <Popover.Popup>{viewNode}</Popover.Popup>
+      </Popover.Positioner>
+    );
+  };
+
+  return (
+    <Popover.Root>
+      <Picker.Root manager={manager} {...props}>
+        <PickerField.Root>
+          {/** See field documentation */}
+          {variant === 'mobile' ? (
+            <Dialog.Trigger>📅</Dialog.Trigger>
+          ) : (
+            <Popover.Trigger>📅</Popover.Trigger>
+          )}
+        </PickerField.Root>
+        <Popover.Backdrop />
+        {wrapView(
+          <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>,
+        )}
+      </Picker.Root>
+    </Popover.Root>
+  );
+}
+```
+
+:::success
+
+:::
 
 ## Usage with date and time views
 
