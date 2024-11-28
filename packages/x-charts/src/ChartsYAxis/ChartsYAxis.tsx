@@ -39,8 +39,6 @@ const defaultProps = {
   position: 'left',
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 12,
-  labelFontSize: 14,
   tickSize: 6,
 } as const;
 
@@ -68,9 +66,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     position,
     disableLine,
     disableTicks,
-    tickFontSize,
     label,
-    labelFontSize,
     labelStyle,
     tickLabelStyle,
     tickSize: tickSizeProp,
@@ -104,6 +100,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const positionSign = position === 'right' ? 1 : -1;
 
+  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
+
   const labelRefPoint = {
     x: positionSign * (tickFontSize + tickSize + 10),
     y: top + height / 2,
@@ -135,7 +133,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisLabel,
     additionalProps: {
       style: {
-        fontSize: labelFontSize,
+        fontSize: 14,
         angle: positionSign * 90,
         textAnchor: 'middle',
         dominantBaseline: 'auto',
@@ -249,12 +247,6 @@ ChartsYAxis.propTypes = {
    */
   label: PropTypes.string,
   /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize: PropTypes.number,
-  /**
    * The style applied to the axis label.
    */
   labelStyle: PropTypes.object,
@@ -282,12 +274,6 @@ ChartsYAxis.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize: PropTypes.number,
   /**
    * Defines which ticks are displayed.
    * Its value can be:

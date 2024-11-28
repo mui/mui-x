@@ -136,6 +136,7 @@ The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
+- [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
 #### `rename-legend-to-slots-legend`
 
@@ -174,6 +175,23 @@ Verify the git diff to remove the duplicate.
 ```
 
 :::
+
+#### `rename-label-and-tick-font-size`
+
+Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop.
+
+```diff
+  <ChartsXAxis
+-   labelFontSize={18}
++   labelStyle={{
++     fontSize: 18
++   }}
+-   tickFontSize={20}
++   tickStyle={{
++     fontSize: 20
++   }}
+  />
+```
 
 ## v7.0.0
 
