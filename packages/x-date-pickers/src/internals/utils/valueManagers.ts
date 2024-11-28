@@ -1,10 +1,5 @@
 import type { PickerValueManager } from '../hooks/usePicker';
-import {
-  DateValidationError,
-  TimeValidationError,
-  DateTimeValidationError,
-  FieldSection,
-} from '../../models';
+import { DateValidationError, TimeValidationError, DateTimeValidationError } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
 import { getDefaultReferenceDate } from './getDefaultReferenceDate';
@@ -12,11 +7,11 @@ import {
   createDateStrForV7HiddenInputFromSections,
   createDateStrForV6InputFromSections,
 } from '../hooks/useField/useField.utils';
+import { PickerValue } from '../models';
 
 export type SingleItemPickerValueManager<
-  TValue = any,
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
-> = PickerValueManager<TValue, TError>;
+> = PickerValueManager<PickerValue, TError>;
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
@@ -43,7 +38,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
     value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<any, FieldSection> = {
+export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
@@ -53,7 +48,7 @@ export const singleItemFieldValueManager: FieldValueManager<any, FieldSection> =
       return prevSections;
     }
 
-    return getSectionsFromDate(date);
+    return getSectionsFromDate(date!);
   },
   getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
   getV6InputValueFromSections: createDateStrForV6InputFromSections,

@@ -125,6 +125,7 @@
   { "name": "getTimeClockUtilityClass", "kind": "Function" },
   { "name": "getYearCalendarUtilityClass", "kind": "Function" },
   { "name": "InferError", "kind": "TypeAlias" },
+  { "name": "InferFieldSection", "kind": "TypeAlias" },
   { "name": "LocalizationProvider", "kind": "Variable" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "LocalizedComponent", "kind": "TypeAlias" },

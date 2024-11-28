@@ -106,10 +106,9 @@ export const createCalendarStateReducer =
     }
   };
 
-interface UseCalendarStateParams
+interface UseCalendarStateParameters
   extends Pick<
     DateCalendarDefaultizedProps,
-    | 'value'
     | 'referenceDate'
     | 'disableFuture'
     | 'disablePast'
@@ -119,11 +118,27 @@ interface UseCalendarStateParams
     | 'reduceAnimations'
     | 'shouldDisableDate'
   > {
+  value: PickerValidDate | null;
   disableSwitchToMonthOnDayFocus?: boolean;
   timezone: PickersTimezone;
 }
 
-export const useCalendarState = (params: UseCalendarStateParams) => {
+interface UseCalendarStateReturnValue {
+  referenceDate: PickerValidDate;
+  calendarState: CalendarState;
+  changeMonth: (newDate: PickerValidDate) => void;
+  changeFocusedDay: (
+    newFocusedDate: PickerValidDate | null,
+    withoutMonthSwitchingAnimation?: boolean,
+  ) => void;
+  isDateDisabled: (day: PickerValidDate | null) => boolean;
+  onMonthSwitchingAnimationEnd: () => void;
+  handleChangeMonth: (payload: ChangeMonthPayload) => void;
+}
+
+export const useCalendarState = (
+  params: UseCalendarStateParameters,
+): UseCalendarStateReturnValue => {
   const {
     value,
     referenceDate: referenceDateProp,
@@ -144,7 +159,7 @@ export const useCalendarState = (params: UseCalendarStateParams) => {
     createCalendarStateReducer(Boolean(reduceAnimations), disableSwitchToMonthOnDayFocus, utils),
   ).current;
 
-  const referenceDate = React.useMemo(
+  const referenceDate = React.useMemo<PickerValidDate>(
     () => {
       return singleItemValueManager.getInitialReferenceValue({
         value,
