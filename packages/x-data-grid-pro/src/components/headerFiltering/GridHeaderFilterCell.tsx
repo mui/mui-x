@@ -167,7 +167,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
-        if (item.value && !updatedItem.value) {
+        if (item.value && updatedItem.value === undefined) {
           apiRef.current.deleteFilterItem(updatedItem);
           return;
         }
@@ -314,7 +314,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isNoInputOperator = currentOperator.requiresFilterValue === false;
 
-    const isApplied = Boolean(item?.value) || isNoInputOperator;
+    const isApplied = item?.value !== undefined || isNoInputOperator;
 
     const label =
       currentOperator.headerLabel ??
@@ -408,7 +408,7 @@ GridHeaderFilterCell.propTypes = {
   gridHasFiller: PropTypes.bool.isRequired,
   hasFocus: PropTypes.bool,
   /**
-   * Class name that will be added in the column header cell.
+   * Class name added to the column header cell.
    */
   headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   headerFilterMenuRef: PropTypes.shape({
