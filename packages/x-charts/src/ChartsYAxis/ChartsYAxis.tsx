@@ -100,7 +100,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const positionSign = position === 'right' ? 1 : -1;
 
-  const tickFontSize = 12;
+  const tickFontSize = typeof tickLabelStyle?.fontSize === 'number' ? tickLabelStyle.fontSize : 12;
 
   const labelRefPoint = {
     x: positionSign * (tickFontSize + tickSize + 10),
