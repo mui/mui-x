@@ -11,6 +11,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDatePicker /> - Describes', () => {
@@ -41,7 +42,7 @@ describe('<MobileDatePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileDatePicker, () => ({
+  describeValue<PickerValue, 'picker'>(MobileDatePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date',

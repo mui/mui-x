@@ -30,7 +30,7 @@ function QuickSearchToolbar() {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function QuickFilteringCustomizedGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -46,6 +46,7 @@ export default function QuickFilteringCustomizedGrid() {
     <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         initialState={{
           ...data.initialState,
