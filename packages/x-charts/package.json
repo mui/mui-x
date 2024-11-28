@@ -48,7 +48,7 @@
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "reselect": "^5.1.1",
-    "use-sync-external-store": "^1.0.0"
+    "use-sync-external-store": "^1.2.2"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
