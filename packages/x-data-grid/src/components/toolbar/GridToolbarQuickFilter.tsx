@@ -152,7 +152,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       {...other}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
             <rootProps.slots.quickFilterIcon fontSize="small" />
           </InputAdornment>
         ),
