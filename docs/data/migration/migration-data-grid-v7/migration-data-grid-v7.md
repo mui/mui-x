@@ -35,6 +35,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### Selection
 
+- The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
+  To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
 
 ### Localization

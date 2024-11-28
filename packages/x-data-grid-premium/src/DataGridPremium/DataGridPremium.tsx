@@ -995,7 +995,7 @@ DataGridPremiumRaw.propTypes = {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: PropTypes.shape({
     descendants: PropTypes.bool,
