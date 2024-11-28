@@ -18,7 +18,7 @@
     "@vitejs/plugin-react-swc": "^3.7.1",
     "@vitest/browser": "2.1.5",
     "@vitest/ui": "2.1.5",
-    "jsdom": "^24.1.3",
+    "jsdom": "^25.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "vitest": "2.1.5"
