@@ -68,9 +68,7 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
 
 - - The props receives by the `layout` and the `toolbar` slots have been reworked — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#do-not-pass-the-section-type-as-a-generic).
 
-
 - The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
-
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.2`
 
