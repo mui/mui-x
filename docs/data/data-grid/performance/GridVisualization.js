@@ -35,7 +35,7 @@ const slots = {
 };
 
 export default function GridVisualization() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     editable: true,
@@ -62,6 +62,7 @@ export default function GridVisualization() {
     >
       <DataGridPro
         {...data}
+        loading={loading}
         rowHeight={38}
         checkboxSelection
         disableRowSelectionOnClick

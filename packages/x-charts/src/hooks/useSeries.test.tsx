@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { useSeries } from './useSeries';
 import { SeriesProvider } from '../context/SeriesProvider';
 import { PluginProvider } from '../internals';
@@ -22,17 +22,22 @@ describe('useSeries', () => {
 
     const errorRef = React.createRef<any>();
 
+    const errorMessage1 = 'MUI X: Could not find the series ref context.';
+    const errorMessage2 =
+      'It looks like you rendered your component outside of a ChartsContainer parent component.';
+    const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
+    const expextedError =
+      reactMajor < 19
+        ? [errorMessage1, errorMessage2, errorMessage3]
+        : `${errorMessage1}\n${errorMessage2}`;
+
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
           <UseSeries />
         </ErrorBoundary>,
       ),
-    ).toErrorDev([
-      'MUI X: Could not find the series ref context.',
-      'It looks like you rendered your component outside of a ChartsContainer parent component.',
-      'The above error occurred in the <UseSeries> component:',
-    ]);
+    ).toErrorDev(expextedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(

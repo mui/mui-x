@@ -86,10 +86,6 @@ export interface GridDimensions {
 
 export interface GridDimensionsApi {
   /**
-   * Triggers a resize of the component and recalculation of width and height.
-   */
-  resize: () => void;
-  /**
    * Returns the dimensions of the grid
    * @returns {GridDimensions} The dimension information of the grid. If `null`, the grid is not ready yet.
    */

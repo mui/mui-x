@@ -59,8 +59,8 @@ const GridToolbarExportContainer = React.forwardRef<
       <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarExportLabel')}
         enterDelay={1000}
-        {...tooltipProps}
         {...rootProps.slotProps?.baseTooltip}
+        {...tooltipProps}
       >
         <rootProps.slots.baseButton
           ref={handleRef}
@@ -71,9 +71,9 @@ const GridToolbarExportContainer = React.forwardRef<
           aria-haspopup="menu"
           aria-controls={open ? exportMenuId : undefined}
           id={exportButtonId}
-          {...buttonProps}
           onClick={handleMenuOpen}
           {...rootProps.slotProps?.baseButton}
+          {...buttonProps}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
         </rootProps.slots.baseButton>

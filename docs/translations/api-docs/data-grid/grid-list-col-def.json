@@ -1,0 +1,14 @@
+{
+  "interfaceDescription": "Column Definition interface used for the list view column.",
+  "propertiesDescriptions": {
+    "field": {
+      "description": "The unique identifier of the column. Used to map with GridRowModel values."
+    },
+    "align": { "description": "Align cell content." },
+    "cellClassName": { "description": "Class name added to cells in this column." },
+    "display": {
+      "description": "Display mode for the cell:<br /> - &#39;text&#39;: For text-based cells (default)<br /> - &#39;flex&#39;: For cells with HTMLElement children"
+    },
+    "renderCell": { "description": "Override the component rendered as cell for this column." }
+  }
+}
