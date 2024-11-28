@@ -66,6 +66,14 @@ export interface UseChartDimensionsState {
      * The height of the drawing area.
      */
     height: number;
+    /**
+     * The SVG width in px provided by props.
+     */
+    propsWidth: number | undefined;
+    /**
+     * The SVG height in px provided by props.
+     */
+    propsHeight: number | undefined;
   };
 }
 

@@ -57,6 +57,32 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     };
   }, [store, svgRef]);
 
+  store.update((prev) => {
+    if (
+      (params.width === undefined || prev.dimensions.propsWidth === params.width) &&
+      (params.height === undefined || prev.dimensions.propsHeight === params.height)
+    ) {
+      return prev;
+    }
+
+    return {
+      ...prev,
+      dimensions: {
+        ...prev.dimensions,
+        width:
+          params.width === undefined
+            ? prev.dimensions.width
+            : params.width - prev.dimensions.left - prev.dimensions.right,
+        height:
+          params.height === undefined
+            ? prev.dimensions.height
+            : params.height - prev.dimensions.top - prev.dimensions.bottom,
+        propsWidth: params.width,
+        propsHeight: params.height,
+      },
+    };
+  });
+
   React.useEffect(() => {
     // Ensure the error detection occurs after the first rendering.
     stateRef.current.displayError = true;
@@ -183,10 +209,12 @@ useChartDimensions.getDefaultizedParams = ({ params }) => ({
   margin: params.margin ? { ...DEFAULT_MARGINS, ...params.margin } : DEFAULT_MARGINS,
 });
 
-useChartDimensions.getInitialState = ({ width = 0, height = 0, margin }) => ({
+useChartDimensions.getInitialState = ({ width, height, margin }) => ({
   dimensions: {
     ...margin,
-    width: width - margin.left - margin.right,
-    height: height - margin.top - margin.bottom,
+    width: width ?? 0 - margin.left - margin.right,
+    height: height ?? 0 - margin.top - margin.bottom,
+    propsWidth: width,
+    propsHeight: height,
   },
 });

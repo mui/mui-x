@@ -7,6 +7,9 @@ import { useAxisEvents } from '../hooks/useAxisEvents';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartDimensionsState } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 export interface ChartsSurfaceProps {
   className?: string;
@@ -58,7 +61,9 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
+  const store = useStore();
   const { width, height, left, right, top, bottom } = useDrawingArea();
+  const { propsWidth, propsHeight } = useSelector(store, selectorChartDimensionsState);
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -81,7 +86,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: svgWidth || undefined, height: svgHeight || undefined }}
+      ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       className={className}
       {...other}
