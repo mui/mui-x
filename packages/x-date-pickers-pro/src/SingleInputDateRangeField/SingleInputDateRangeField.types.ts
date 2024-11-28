@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import TextField from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
+import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import type { DateRangeValidationError, UseDateRangeFieldProps } from '../models';
 
 export interface UseSingleInputDateRangeFieldProps<
@@ -39,23 +40,21 @@ export type SingleInputDateRangeFieldProps<
      * The props used for each component slot.
      * @default {}
      */
-    slotProps?: SingleInputDateRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+    slotProps?: SingleInputDateRangeFieldSlotProps;
   };
 
 export interface SingleInputDateRangeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
 }
 
-export interface SingleInputDateRangeFieldSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
+export interface SingleInputDateRangeFieldSlotProps extends UseClearableFieldSlotProps {
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    SingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>
+    FieldOwnerState
   >;
 }
