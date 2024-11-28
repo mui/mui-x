@@ -1,0 +1,7 @@
+<DataGridPremium
+  {...data}
+  columns={columns}
+  slots={{
+    toolbar: ToolbarWithPromptInput,
+  }}
+/>

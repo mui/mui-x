@@ -38,7 +38,7 @@ const getApplyQuickFilterFnSameYear: GetApplyQuickFilterFn<any, unknown> = (
 };
 
 export default function QuickFilteringCustomLogic() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -71,6 +71,7 @@ export default function QuickFilteringCustomLogic() {
     <Box sx={{ height: 400, width: 1 }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         slots={{ toolbar: QuickSearchToolbar }}
       />
