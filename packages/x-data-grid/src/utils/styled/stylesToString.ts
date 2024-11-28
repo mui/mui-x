@@ -1,7 +1,7 @@
 import type { CSSObject } from '@mui/system';
 import unitLessProperties from './unitLessProperties';
 
-const SPECIAL_CHAR = /#|\.|\s|>|&/
+const SPECIAL_CHAR = /#|\.|\s|>|&|:/
 const UPPERCASE_LETTERS = /[A-Z]/g
 
 const stack = [] as any[]
@@ -65,11 +65,11 @@ function uppercaseToDashLowercase(char: string) {
   return '-' + char.toLowerCase()
 }
 
-function transformSelector(selector: string, parents: string[]) {
+function transformSelector(selector: string, parents: string) {
   if (selector.includes('&')) {
-    return selector.replaceAll('&', parents.join(' '))
+    return selector.replaceAll('&', parents)
   }
-  return parents.join(' ') + ' ' + selector
+  return parents + ' ' + selector
 }
 
 function transformValue(cssKey: string, value: any) {
