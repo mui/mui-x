@@ -33,16 +33,8 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  width: 'auto',
-  height: 34,
   [`.${outlinedInputClasses.root}`]: {
     fontSize: theme.typography.body2.fontSize,
-    height: 34,
-    padding: theme.spacing(0, 0.5, 0, 1),
-  },
-  '& input': {
-    padding: 0,
-    height: 34,
   },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
@@ -150,6 +142,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       as={rootProps.slots.baseTextField}
       ownerState={rootProps}
       variant="outlined"
+      size="small"
       value={searchValue}
       onChange={handleSearchValueChange}
       className={clsx(classes.root, className)}
@@ -178,6 +171,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                     },
               ]}
               onClick={handleSearchReset}
+              edge="end"
               {...rootProps.slotProps?.baseIconButton}
             >
               <rootProps.slots.quickFilterClearIcon fontSize="small" />

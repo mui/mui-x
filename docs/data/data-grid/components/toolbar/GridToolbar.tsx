@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { DemoContainer } from '@mui/x-data-grid/internals/demo';
-import { Grid } from '@mui/x-data-grid';
+import { Grid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GridViewIcon from '@mui/icons-material/GridOnOutlined';
 import ListViewIcon from '@mui/icons-material/TableRowsOutlined';
-import SearchIcon from '@mui/icons-material/Search';
 
 export default function GridToolbar() {
   const [view, setView] = React.useState<'grid' | 'list'>('grid');
@@ -32,13 +31,9 @@ export default function GridToolbar() {
           <FileDownloadIcon fontSize="small" />
         </Grid.Toolbar.Button>
 
-        <Grid.Toolbar.Separator />
+        <GridToolbarQuickFilter sx={{ ml: 'auto', mr: 0.5 }} />
 
-        <Grid.Toolbar.Button aria-label="Search">
-          <SearchIcon fontSize="small" />
-        </Grid.Toolbar.Button>
-
-        <Grid.Toolbar.ToggleButtonGroup sx={{ ml: 'auto' }} value={view}>
+        <Grid.Toolbar.ToggleButtonGroup value={view}>
           <Grid.Toolbar.ToggleButton
             value="grid"
             aria-label="Grid view"
