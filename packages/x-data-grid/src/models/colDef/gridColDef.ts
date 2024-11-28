@@ -91,43 +91,43 @@ export type GridColSpanFn<R extends GridValidRowModel = GridValidRowModel, V = a
  */
 export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> {
   /**
-   * The column identifier. It's used to map with [[GridRowModel]] values.
+   * The unique identifier of the column. Used to map with [[GridRowModel]] values.
    */
   field: string;
   /**
-   * The title of the column rendered in the column header cell.
+   * The title displayed in the column header cell.
    */
   headerName?: string;
   /**
-   * The description of the column rendered as tooltip if the column header name is not fully displayed.
+   * The tooltip text shown when the column header name is truncated.
    */
   description?: string;
   /**
-   * Set the width of the column.
+   * The width of the column in pixels.
    * @default 100
    */
   width?: number;
   /**
-   * If set, it indicates that a column has fluid width. Range [0, ∞).
+   * The flex grow factor of the column. Must be a positive number.
    */
   flex?: number;
   /**
-   * Sets the minimum width of a column.
+   * The minimum width of the column in pixels.
    * @default 50
    */
   minWidth?: number;
   /**
-   * Sets the maximum width of a column.
+   * The maximum width of the column in pixels.
    * @default Infinity
    */
   maxWidth?: number;
   /**
-   * If `false`, removes the buttons for hiding this column.
+   * If `false`, removes the option to hide this column.
    * @default true
    */
   hideable?: boolean;
   /**
-   * If `true`, the column is sortable.
+   * If `false`, disables sorting for this column.
    * @default true
    */
   sortable?: boolean;
@@ -136,7 +136,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   sortingOrder?: readonly GridSortDirection[];
   /**
-   * If `true`, the column is resizable.
+   * If `false`, disables resizing for this column.
    * @default true
    */
   resizable?: boolean;
@@ -164,7 +164,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   sortComparator?: GridComparatorFn<V>;
   /**
-   * Allows to use a different comparator function depending on the sort direction.
+   * Provide an alternative comparator function for sorting.
    * Takes precedence over `sortComparator`.
    * @param {GridSortDirection} sortDirection The direction of the sort.
    * @returns {GridComparatorFn<V>} The comparator function to use.
@@ -177,25 +177,25 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   type?: GridColType;
   /**
-   * Allows to align the column values in cells.
+   * Align cell content.
    */
   align?: GridAlignment;
   /**
-   * Function that allows to get a specific data instead of field to render in the cell.
+   * Function that returns specific data to render in the cell instead of using the field value.
    */
   valueGetter?: GridValueGetter<R, V, F>;
   /**
-   * Function that allows to provide a specific value to be used in row spanning.
+   * Function that returns a specific value to be used in row spanning.
    */
   rowSpanValueGetter?: GridValueGetter<R, V, F>;
   /**
-   * Function that allows to customize how the entered value is stored in the row.
-   * It only works with cell/row editing.
+   * Function that customizes how the entered value is stored in the row.
+   * Only works with cell/row editing.
    * @returns {R} The row with the updated field.
    */
   valueSetter?: GridValueSetter<R, V, F>;
   /**
-   * Function that allows to apply a formatter before rendering its value.
+   * Formats the cell value before rendering.
    */
   valueFormatter?: GridValueFormatter<R, V, F>;
   /**
@@ -204,7 +204,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   valueParser?: GridValueParser<R, V, F>;
   /**
-   * Class name that will be added in cells for that column.
+   * Class name added to cells in this column.
    */
   cellClassName?: GridCellClassNamePropType<R, V>;
   /**
@@ -214,21 +214,21 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   display?: 'text' | 'flex';
   /**
-   * Allows to override the component rendered as cell for this column.
+   * Override the component rendered as cell for this column.
    * @template R, V, F
    * @param {GridRenderCellParams<R, V, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderCell?: (params: GridRenderCellParams<R, V, F>) => React.ReactNode;
   /**
-   * Allows to override the component rendered in edit cell mode for this column.
+   * Override the component rendered in edit cell mode for this column.
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderEditCell?: (params: GridRenderEditCellParams<R, V, F>) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
-   * It allows to process the props that saved into the state.
+   * Processes the props before being saved into the state.
    * @param {GridPreProcessEditCellProps} params Object containing parameters of the cell being edited.
    * @returns {GridEditCellProps | Promise<GridEditCellProps>} The new edit cell props.
    */
@@ -236,18 +236,18 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
     params: GridPreProcessEditCellProps,
   ) => GridEditCellProps | Promise<GridEditCellProps>;
   /**
-   * Class name that will be added in the column header cell.
+   * Class name added to the column header cell.
    */
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
-   * Allows to render a component in the column header cell.
+   * Override the component rendered in the column header cell.
    * @template R, V, F
    * @param {GridColumnHeaderParams<R, V, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeader?: (params: GridColumnHeaderParams<R, V, F>) => React.ReactNode;
   /**
-   * Header cell element alignment.
+   * Align column header content.
    */
   headerAlign?: GridAlignment;
   /**

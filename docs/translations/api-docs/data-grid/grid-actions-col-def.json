@@ -2,21 +2,21 @@
   "interfaceDescription": "Column Definition interface used for columns with the <code>actions</code> type.",
   "propertiesDescriptions": {
     "field": {
-      "description": "The column identifier. It&#39;s used to map with GridRowModel values."
+      "description": "The unique identifier of the column. Used to map with GridRowModel values."
     },
     "getActions": { "description": "Function that returns the actions to be shown." },
     "type": { "description": "The type of the column." },
     "aggregable": {
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
     },
-    "align": { "description": "Allows to align the column values in cells." },
+    "align": { "description": "Align cell content." },
     "availableAggregationFunctions": {
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
-    "cellClassName": { "description": "Class name that will be added in cells for that column." },
+    "cellClassName": { "description": "Class name added to cells in this column." },
     "colSpan": { "description": "Number of columns a cell should span." },
     "description": {
-      "description": "The description of the column rendered as tooltip if the column header name is not fully displayed."
+      "description": "The tooltip text shown when the column header name is truncated."
     },
     "disableColumnMenu": {
       "description": "If <code>true</code>, the column menu is disabled for this column."
@@ -31,12 +31,12 @@
     "editable": { "description": "If <code>true</code>, the cells of the column are editable." },
     "filterable": { "description": "If <code>true</code>, the column is filterable." },
     "filterOperators": { "description": "Allows setting the filter operators for this column." },
-    "flex": { "description": "If set, it indicates that a column has fluid width. Range [0, ∞)." },
+    "flex": { "description": "The flex grow factor of the column. Must be a positive number." },
     "getApplyQuickFilterFn": {
       "description": "The callback that generates a filtering function for a given quick filter value.<br />This function can return <code>null</code> to skip filtering for this value and column."
     },
     "getSortComparator": {
-      "description": "Allows to use a different comparator function depending on the sort direction.<br />Takes precedence over <code>sortComparator</code>."
+      "description": "Provide an alternative comparator function for sorting.<br />Takes precedence over <code>sortComparator</code>."
     },
     "groupable": {
       "description": "If <code>true</code>, the rows can be grouped based on this column values (pro-plan only).<br />Only available in DataGridPremium."
@@ -44,17 +44,13 @@
     "groupingValueGetter": {
       "description": "Function that transforms a complex cell value into a key that be used for grouping the rows."
     },
-    "headerAlign": { "description": "Header cell element alignment." },
-    "headerClassName": {
-      "description": "Class name that will be added in the column header cell."
-    },
-    "headerName": { "description": "The title of the column rendered in the column header cell." },
-    "hideable": {
-      "description": "If <code>false</code>, removes the buttons for hiding this column."
-    },
+    "headerAlign": { "description": "Align column header content." },
+    "headerClassName": { "description": "Class name added to the column header cell." },
+    "headerName": { "description": "The title displayed in the column header cell." },
+    "hideable": { "description": "If <code>false</code>, removes the option to hide this column." },
     "hideSortIcons": { "description": "Toggle the visibility of the sort icons." },
-    "maxWidth": { "description": "Sets the maximum width of a column." },
-    "minWidth": { "description": "Sets the minimum width of a column." },
+    "maxWidth": { "description": "The maximum width of the column in pixels." },
+    "minWidth": { "description": "The minimum width of the column in pixels." },
     "pastedValueParser": {
       "description": "Function that takes the clipboard-pasted value and converts it to a value used internally."
     },
@@ -62,40 +58,36 @@
       "description": "If <code>false</code>, the menu items for column pinning menu will not be rendered.<br />Only available in DataGridPro."
     },
     "preProcessEditCellProps": {
-      "description": "Callback fired when the edit props of the cell changes.<br />It allows to process the props that saved into the state."
+      "description": "Callback fired when the edit props of the cell changes.<br />Processes the props before being saved into the state."
     },
-    "renderCell": {
-      "description": "Allows to override the component rendered as cell for this column."
-    },
+    "renderCell": { "description": "Override the component rendered as cell for this column." },
     "renderEditCell": {
-      "description": "Allows to override the component rendered in edit cell mode for this column."
+      "description": "Override the component rendered in edit cell mode for this column."
     },
-    "renderHeader": { "description": "Allows to render a component in the column header cell." },
+    "renderHeader": { "description": "Override the component rendered in the column header cell." },
     "renderHeaderFilter": {
       "description": "Allows to render a component in the column header filter cell."
     },
-    "resizable": { "description": "If <code>true</code>, the column is resizable." },
+    "resizable": { "description": "If <code>false</code>, disables resizing for this column." },
     "rowSpanValueGetter": {
-      "description": "Function that allows to provide a specific value to be used in row spanning."
+      "description": "Function that returns a specific value to be used in row spanning."
     },
-    "sortable": { "description": "If <code>true</code>, the column is sortable." },
+    "sortable": { "description": "If <code>false</code>, disables sorting for this column." },
     "sortComparator": { "description": "A comparator function used to sort rows." },
     "sortingOrder": { "description": "The order of the sorting sequence." },
     "unstable_examples": {
       "description": "Example values that can be used by the grid to get more context about the column."
     },
-    "valueFormatter": {
-      "description": "Function that allows to apply a formatter before rendering its value."
-    },
+    "valueFormatter": { "description": "Formats the cell value before rendering." },
     "valueGetter": {
-      "description": "Function that allows to get a specific data instead of field to render in the cell."
+      "description": "Function that returns specific data to render in the cell instead of using the field value."
     },
     "valueParser": {
       "description": "Function that takes the user-entered value and converts it to a value used internally."
     },
     "valueSetter": {
-      "description": "Function that allows to customize how the entered value is stored in the row.<br />It only works with cell/row editing."
+      "description": "Function that customizes how the entered value is stored in the row.<br />Only works with cell/row editing."
     },
-    "width": { "description": "Set the width of the column." }
+    "width": { "description": "The width of the column in pixels." }
   }
 }
