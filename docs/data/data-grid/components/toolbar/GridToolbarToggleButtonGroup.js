@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DemoContainer } from '@mui/x-data-grid/internals/demo';
 import { Grid } from '@mui/x-data-grid';
-import GridViewIcon from '@mui/icons-material/GridOnOutlined';
-import ListViewIcon from '@mui/icons-material/TableRowsOutlined';
+import GridViewIcon from '@mui/icons-material/ViewModule';
+import ListViewIcon from '@mui/icons-material/ViewList';
 
 export default function GridToolbarToggleButtonGroup() {
   const [view, setView] = React.useState('grid');

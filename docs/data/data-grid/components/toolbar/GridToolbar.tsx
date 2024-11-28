@@ -5,8 +5,8 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import GridViewIcon from '@mui/icons-material/GridOnOutlined';
-import ListViewIcon from '@mui/icons-material/TableRowsOutlined';
+import GridViewIcon from '@mui/icons-material/ViewModule';
+import ListViewIcon from '@mui/icons-material/ViewList';
 
 export default function GridToolbar() {
   const [view, setView] = React.useState<'grid' | 'list'>('grid');
