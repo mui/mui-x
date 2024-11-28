@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   unstable_useForkRef as useForkRef,
-  unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_capitalize as capitalize,
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
