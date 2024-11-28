@@ -269,7 +269,7 @@ export const useGridVirtualScroller = () => {
   const triggerUpdateRenderContext = useEventCallback(() => {
     const scroller = scrollerRef.current;
     if (!scroller) {
-      return;
+      return undefined;
     }
 
     const newScroll = {
