@@ -131,7 +131,7 @@ If you were using this prop, you can safely remove it.
 
 ## Rename `labelFontSize` and `tickFontSize` props ✅
 
-The `labelFontSize` and `tickFontSize` props have been renamed to `labelStyle` and `tickStyle` respectively.
+The `labelFontSize` and `tickFontSize` props have been removed in favor of the style objects `labelStyle` and `tickStyle` respectively.
 
 ```diff
   <ChartsXAxis
