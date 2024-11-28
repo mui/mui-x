@@ -5,7 +5,11 @@ import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { gridDetailPanelExpandedRowsContentCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
+import {
+  gridDetailPanelExpandedRowIdsSelector,
+  gridDetailPanelExpandedRowsContentCacheSelector,
+} from '../hooks/features/detailPanel/gridDetailPanelSelector';
+import { GridApiPro } from '../models';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 
@@ -20,7 +24,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridDetailPanelToggleCell(props: GridRenderCellParams) {
-  const { id, value: isExpanded } = props;
+  const { id, row, api } = props;
+  const rowId = api.getRowId(row);
+  const isExpanded = useGridSelector({ current: api }, () => {
+    const expandedRowIds = gridDetailPanelExpandedRowIdsSelector((api as GridApiPro).state);
+    return expandedRowIds.includes(rowId);
+  });
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
