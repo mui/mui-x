@@ -12,7 +12,6 @@ import {
   gridPaginationModelSelector,
   gridDimensionsSelector,
   gridFilteredSortedRowIdsSelector,
-  useFirstRender,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
@@ -507,16 +506,7 @@ export const useGridDataSourceLazyLoader = (
     runIf(lazyLoadingRowsUpdateStrategyActive, handleGridFilterModelChange),
   );
 
-  useFirstRender(() => {
-    setStrategyAvailability();
-  });
-
-  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
-    if (!isFirstRender.current) {
-      setStrategyAvailability();
-    } else {
-      isFirstRender.current = false;
-    }
+    setStrategyAvailability();
   }, [setStrategyAvailability]);
 };

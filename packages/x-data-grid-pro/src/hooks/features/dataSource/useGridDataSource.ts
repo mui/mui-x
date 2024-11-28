@@ -7,7 +7,6 @@ import {
   useGridSelector,
   gridPaginationModelSelector,
   GRID_ROOT_GROUP_ID,
-  useFirstRender,
   GridEventListener,
 } from '@mui/x-data-grid';
 import {
@@ -410,11 +409,7 @@ export const useGridDataSource = (
   }, [props.unstable_dataSourceCache]);
 
   React.useEffect(() => {
-    if (!isFirstRender.current) {
-      setStrategyAvailability();
-    } else {
-      isFirstRender.current = false;
-    }
+    setStrategyAvailability();
   }, [setStrategyAvailability]);
 
   React.useEffect(() => {
@@ -435,8 +430,4 @@ export const useGridDataSource = (
       scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [apiRef, nestedDataManager, groupsToAutoFetch]);
-
-  useFirstRender(() => {
-    setStrategyAvailability();
-  });
 };
