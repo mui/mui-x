@@ -35,7 +35,11 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends UseClearableFieldResponse<BaseSingleInputPickersTextFieldProps<true>> {}
+  extends Omit<
+      React.HTMLAttributes<HTMLDivElement>,
+      keyof BaseSingleInputPickersTextFieldProps<true>
+    >,
+    UseClearableFieldResponse<BaseSingleInputPickersTextFieldProps<true>> {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
