@@ -651,7 +651,6 @@ export const useGridRowSelection = (
           apiRef.current.selectRows(
             { type: 'include', ids: new Set(rowsToBeSelected) },
             params.value,
-            true,
           );
         }
       } else {
