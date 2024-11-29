@@ -12,7 +12,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - ⚛️ React 19 support
 - 📚 Documentation improvements
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
-- 🌍 Improve Dutch locales on the Date and Time Pickers components.
+- 🌍 Improve Dutch locale on the Date and Time Picker components.
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
