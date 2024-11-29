@@ -108,7 +108,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
     TEnableAccessibleFieldDOMStructure,
     TError
   >;
-  anchorRef?: React.Ref<HTMLDivElement>;
+  anchorRef?: React.Ref<HTMLElement>;
   currentView?: TView | null;
   initialView?: TView;
   onViewChange?: (view: TView) => void;
