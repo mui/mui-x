@@ -1,0 +1,5 @@
+<DatePicker
+  slotProps={{
+    field: { openPickerButtonPosition: 'start' },
+  }}
+/>

@@ -259,6 +259,19 @@ const theme = createTheme({
 
 ## Slots breaking changes
 
+### Slot: `inputAdornment`
+
+- The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button. This allow to define the position of the opening button and of the clear button independently. Instead you can use the `openPickerButtonPosition` prop:
+
+  ```diff
+   <DatePicker
+     slotProps={{
+  -    inputAdornment: { position: 'start' },
+  +    field: { openPickerButtonPosition: 'start' },
+     }}
+   />
+  ```
+
 ### Slot: `layout`
 
 - The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:

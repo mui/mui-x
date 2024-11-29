@@ -39,6 +39,10 @@ If you want to track the opening of the picker, you should use the `onOpen` / `o
 
 :::
 
+## Render the opening button of the left of the input
+
+{{"demo": "StartEdgeOpeningButton.js"}}
+
 ## Add an icon next to the opening button
 
 If you want to add an icon next to the opening button, you can use the `inputAdornment` slot.
