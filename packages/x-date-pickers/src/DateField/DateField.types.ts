@@ -1,10 +1,13 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 import { DateValidationError, BuiltInFieldTextFieldProps } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { ExportedValidateDateProps } from '../validation/validateDate';
 import { PickerValue } from '../internals/models';
-import { PickerFieldUISlotProps, PickerFieldUISlots } from '../internals/components/PickerFieldUI';
+import {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlotProps,
+  ExportedPickerFieldUISlots,
+} from '../internals/components/PickerFieldUI';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -12,7 +15,7 @@ export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends bo
       'format'
     >,
     ExportedValidateDateProps,
-    ExportedUseClearableFieldProps {}
+    ExportedPickerFieldUIProps {}
 
 export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   // The hook props
@@ -37,6 +40,6 @@ export type DateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
 export type DateFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
   DateFieldProps<TEnableAccessibleFieldDOMStructure>;
 
-export interface DateFieldSlots extends PickerFieldUISlots {}
+export interface DateFieldSlots extends ExportedPickerFieldUISlots {}
 
 export interface DateFieldSlotProps extends PickerFieldUISlotProps {}

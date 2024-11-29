@@ -9,6 +9,7 @@ import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../validation';
+import { useGetOpenRangeDialogAriaText } from '../internals/hooks/useGetOpenRangeDialogAriaText';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -28,6 +29,11 @@ export const useSingleInputDateTimeRangeField = <
     [internalProps.dateSeparator],
   );
 
+  const getOpenDialogAriaText = useGetOpenRangeDialogAriaText({
+    formatKey: 'fullDate',
+    translationKey: 'openDateRangePickerDialogue',
+  });
+
   return useField<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
@@ -40,5 +46,6 @@ export const useSingleInputDateTimeRangeField = <
     fieldValueManager,
     validator: validateDateTimeRange,
     valueType: 'date-time',
+    getOpenDialogAriaText,
   });
 };

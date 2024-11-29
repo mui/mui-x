@@ -5,7 +5,6 @@ import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
-import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef, InferError } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
@@ -46,6 +45,7 @@ export const useMobilePicker = <
     inputRef,
     readOnly,
     disabled,
+    autoFocus,
     localeText,
   } = props;
 
@@ -82,7 +82,7 @@ export const useMobilePicker = <
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       // Internal props
-      readOnly: readOnly ?? true,
+      readOnly,
       disabled,
       format,
       formatDensity,
@@ -90,6 +90,7 @@ export const useMobilePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      autoFocus: autoFocus && !props.open,
       ...pickerFieldProps, // onChange and value
 
       // Forwarded props
@@ -97,11 +98,8 @@ export const useMobilePicker = <
       sx,
       label,
       name,
+      focused: open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!(disabled || readOnly) && {
-        onClick: actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
-      }),
       ...(!!inputRef && { inputRef }),
     },
     ownerState,

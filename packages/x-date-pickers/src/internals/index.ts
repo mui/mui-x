@@ -4,6 +4,11 @@ export type {
   PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotProps,
 } from './components/PickersArrowSwitcher';
+export { PickerFieldUI, cleanFieldResponse } from './components/PickerFieldUI';
+export type {
+  ExportedPickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from './components/PickerFieldUI';
 export { PickerProvider } from './components/PickerProvider';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
@@ -130,7 +135,6 @@ export type {
   PickerValidValue,
 } from './models/value';
 
-export { convertFieldResponseIntoMuiTextFieldProps } from './utils/convertFieldResponseIntoMuiTextFieldProps';
 export {
   applyDefaultDate,
   replaceInvalidDateByNull,

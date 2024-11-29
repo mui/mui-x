@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
-} from '../hooks/useClearableField';
+import type { UseClearableFieldResponse } from '../hooks/useClearableField';
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
@@ -14,6 +11,7 @@ import {
   PickerValidValue,
 } from '../internals/models';
 import { PickerOwnerState } from './pickers';
+import { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
@@ -150,7 +148,7 @@ export interface FieldOwnerState extends PickerOwnerState {
 export type PickerFieldSlotProps<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = ExportedUseClearableFieldProps &
+> = ExportedPickerFieldUIProps &
   Pick<
     UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, unknown>,
     'shouldRespectLeadingZeros' | 'readOnly'

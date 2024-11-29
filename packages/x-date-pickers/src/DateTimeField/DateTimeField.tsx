@@ -10,6 +10,7 @@ import { useDateTimeField } from './useDateTimeField';
 import { PickersTextField } from '../PickersTextField';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerFieldUI } from '../internals/components/PickerFieldUI';
+import { CalendarIcon } from '../icons';
 
 type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
@@ -62,7 +63,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<
     textFieldProps,
   );
 
-  return <PickerFieldUI slots={slots} slotProps={slotProps} fieldResponse={fieldResponse} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: CalendarIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as DateTimeFieldComponent;
 
 DateTimeField.propTypes = {

@@ -1,5 +1,6 @@
 import { usePickerTranslations } from '../../hooks';
-import { AdapterFormats, PickerValidDate } from '../../models';
+import { AdapterFormats } from '../../models';
+import { PickerValue } from '../models';
 import { useUtils } from './useUtils';
 
 export const useGetOpenDialogAriaText = (params: {
@@ -10,7 +11,7 @@ export const useGetOpenDialogAriaText = (params: {
   const translations = usePickerTranslations();
   const { formatKey, translationKey } = params;
 
-  return (value: PickerValidDate | null) => {
+  return (value: PickerValue) => {
     const formattedValue =
       value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
     return translations[translationKey](formattedValue);

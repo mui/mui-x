@@ -9,6 +9,7 @@ import { useTimeField } from './useTimeField';
 import { PickersTextField } from '../PickersTextField';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerFieldUI } from '../internals/components/PickerFieldUI';
+import { ClockIcon } from '../icons';
 
 type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -56,7 +57,13 @@ const TimeField = React.forwardRef(function TimeField<
     textFieldProps,
   );
 
-  return <PickerFieldUI slots={slots} slotProps={slotProps} fieldResponse={fieldResponse} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: ClockIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as TimeFieldComponent;
 
 TimeField.propTypes = {

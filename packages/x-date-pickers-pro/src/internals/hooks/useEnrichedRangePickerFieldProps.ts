@@ -309,7 +309,6 @@ const useSingleInputFieldSlotProps = <
   pickerSlots,
   pickerSlotProps,
   fieldProps,
-  anchorRef,
   currentView,
 }: UseEnrichedRangePickerFieldPropsParams<
   true,
@@ -398,10 +397,6 @@ const useSingleInputFieldSlotProps = <
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
-    InputProps: {
-      ref: anchorRef,
-      ...fieldProps?.InputProps,
-    },
     focused: open ? true : undefined,
     ...(labelId != null && { id: labelId }),
     ...(variant === 'mobile' && { readOnly: true }),

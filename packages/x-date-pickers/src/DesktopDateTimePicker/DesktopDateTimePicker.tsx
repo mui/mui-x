@@ -16,7 +16,6 @@ import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
-import { CalendarIcon } from '../icons';
 import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
 import {
@@ -182,7 +181,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
     slots: {
       field: DateTimeField,
       layout: DesktopDateTimePickerLayout,
-      openPickerIcon: CalendarIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {

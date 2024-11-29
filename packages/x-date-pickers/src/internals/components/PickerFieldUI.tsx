@@ -4,7 +4,7 @@ import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { FieldOwnerState } from '../../models';
 import { useFieldOwnerState } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
@@ -109,11 +109,15 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     }
   };
 
+  const clearButtonPosition = clearable ? clearButtonPositionProp : null;
+  const openPickerButtonPosition =
+    openingUIStatus !== 'hidden' ? openPickerButtonPositionProp : null;
+
   const TextField =
-    slots?.textField ??
+    slots.textField ??
     (fieldResponse.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
 
-  const InputAdornment = slots?.inputAdornment ?? MuiInputAdornment;
+  const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const { ownerState: startInputAdornmentOwnerState, ...startInputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
     externalSlotProps: slotProps?.inputAdornment,
@@ -131,27 +135,33 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const OpenPickerButton = slots?.openPickerButton ?? MuiIconButton;
-  const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
+  const OpenPickerButton = slots.openPickerButton ?? MuiIconButton;
+  const {
+    ownerState: openPickerButtonOwnerState,
+    ...openPickerButtonProps
+  }: IconButtonProps & { ownerState: any } = useSlotProps({
     elementType: OpenPickerButton,
     externalSlotProps: slotProps?.openPickerButton,
     additionalProps: {
       disabled: openingUIStatus === 'disabled',
       onClick: handleTogglePicker,
       'aria-label': openPickerAriaLabel,
-      edge: openPickerButtonPositionProp,
+      edge:
+        clearButtonPosition === 'start' && openPickerButtonPosition === 'start'
+          ? undefined
+          : openPickerButtonPosition,
     },
     ownerState,
   });
 
-  const OpenPickerIcon = slots?.openPickerIcon;
+  const OpenPickerIcon = slots.openPickerIcon;
   const openPickerIconProps = useSlotProps({
     elementType: OpenPickerIcon,
     externalSlotProps: slotProps?.openPickerIcon,
     ownerState,
   });
 
-  const ClearButton = slots?.clearButton ?? MuiIconButton;
+  const ClearButton = slots.clearButton ?? MuiIconButton;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: clearButtonOwnerState, ...clearButtonProps } = useSlotProps({
     elementType: ClearButton,
@@ -161,11 +171,14 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
       title: translations.fieldClearLabel,
       tabIndex: -1,
       onClick: onClear,
-      edge: clearButtonPositionProp,
+      edge:
+        clearButtonPosition === 'end' && openPickerButtonPosition === 'end'
+          ? undefined
+          : clearButtonPosition,
     },
     ownerState,
   });
-  const ClearIcon = slots?.clearIcon ?? MuiClearIcon;
+  const ClearIcon = slots.clearIcon ?? MuiClearIcon;
   const clearIconProps = useSlotProps({
     elementType: ClearIcon,
     externalSlotProps: slotProps?.clearIcon,
@@ -174,10 +187,6 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     },
     ownerState,
   });
-
-  const clearButtonPosition = clearable ? clearButtonPositionProp : null;
-  const openPickerButtonPosition =
-    openingUIStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
   if (!textFieldProps.InputProps) {
     textFieldProps.InputProps = {};
@@ -243,13 +252,15 @@ export interface ExportedPickerFieldUIProps {
   /**
    * The position at which the UI to clear the value should be placed.
    * If the field is not clearable, the button will not be rendered.
+   * @default 'end'
    */
-  clearButtonPosition: 'start' | 'end';
+  clearButtonPosition?: 'start' | 'end';
   /**
    * The position at which the UI to clear the value should be placed.
-   * If there is no picker to open, the button will not be rendered.
+   * If there is no picker to open, the button will not be rendered
+   * @default 'end'
    */
-  openPickerButtonPosition: 'start' | 'end';
+  openPickerButtonPosition?: 'start' | 'end';
 }
 
 export interface PickerFieldUIProps {
@@ -257,16 +268,16 @@ export interface PickerFieldUIProps {
    * Overridable component slots.
    * @default {}
    */
-  slots: PickerFieldUISlots | undefined;
+  slots: PickerFieldUISlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickerFieldUISlotProps | undefined;
+  slotProps?: PickerFieldUISlotProps;
   fieldResponse: UseFieldResponse<any, any>;
 }
 
-export interface PickerFieldUISlots {
+interface PickerFieldUISlots {
   /**
    * Form control with an input to render the value.
    * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
@@ -297,6 +308,9 @@ export interface PickerFieldUISlots {
    */
   clearButton?: React.ElementType;
 }
+
+export interface ExportedPickerFieldUISlots
+  extends MakeOptional<PickerFieldUISlots, 'openPickerIcon'> {}
 
 export interface PickerFieldUISlotProps {
   textField?: SlotComponentPropsFromProps<

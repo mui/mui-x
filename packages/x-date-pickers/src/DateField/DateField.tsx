@@ -9,6 +9,7 @@ import { useDateField } from './useDateField';
 import { PickersTextField } from '../PickersTextField';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerFieldUI } from '../internals/components/PickerFieldUI';
+import { CalendarIcon } from '../icons';
 
 type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -56,7 +57,13 @@ const DateField = React.forwardRef(function DateField<
     textFieldProps,
   );
 
-  return <PickerFieldUI slots={slots} slotProps={slotProps} fieldResponse={fieldResponse} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: CalendarIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as DateFieldComponent;
 
 DateField.propTypes = {

@@ -18,7 +18,7 @@ import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types'
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickersTextFieldProps } from '../../../PickersTextField';
-import { PickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
+import { ExportedPickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
@@ -27,7 +27,7 @@ export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlots<PickerValue, TView>,
-    PickerFieldUISlots {
+    ExportedPickerFieldUISlots {
   /**
    * Component used to enter the date with the keyboard.
    */

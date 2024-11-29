@@ -9,7 +9,6 @@ import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { TimePickerViewRenderers, useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useUtils } from '../internals/hooks/useUtils';
 import { extractValidationProps, validateTime } from '../validation';
-import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   renderDigitalClockTimeView,
@@ -91,7 +90,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {

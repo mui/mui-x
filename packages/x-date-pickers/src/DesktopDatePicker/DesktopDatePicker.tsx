@@ -10,7 +10,6 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
@@ -57,7 +56,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
-      openPickerIcon: CalendarIcon,
       field: DateField,
       ...defaultizedProps.slots,
     },

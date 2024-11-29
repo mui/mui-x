@@ -1,11 +1,14 @@
 import { MakeOptional } from '@mui/x-internals/types';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { TimeValidationError, BuiltInFieldTextFieldProps } from '../models';
-import { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 import { ExportedValidateTimeProps } from '../validation/validateTime';
 import { AmPmProps } from '../internals/models/props/time';
 import { PickerValue } from '../internals/models';
-import { PickerFieldUISlotProps, PickerFieldUISlots } from '../internals/components/PickerFieldUI';
+import {
+  ExportedPickerFieldUIProps,
+  PickerFieldUISlotProps,
+  ExportedPickerFieldUISlots,
+} from '../internals/components/PickerFieldUI';
 
 export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -13,7 +16,7 @@ export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends bo
       'format'
     >,
     ExportedValidateTimeProps,
-    ExportedUseClearableFieldProps,
+    ExportedPickerFieldUIProps,
     AmPmProps {}
 
 export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
@@ -36,6 +39,6 @@ export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = 
       slotProps?: TimeFieldSlotProps;
     };
 
-export interface TimeFieldSlots extends PickerFieldUISlots {}
+export interface TimeFieldSlots extends ExportedPickerFieldUISlots {}
 
 export interface TimeFieldSlotProps extends PickerFieldUISlotProps {}
