@@ -639,7 +639,7 @@ export const useGridRowSelection = (
   >(
     (params) => {
       if (params.value) {
-        if (applyAutoSelection) {
+        if (!props.isRowSelectable && !props.checkboxSelectionVisibleOnly && applyAutoSelection) {
           apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
         } else {
           const rowsToBeSelected =
@@ -663,6 +663,7 @@ export const useGridRowSelection = (
       props.checkboxSelectionVisibleOnly,
       props.pagination,
       props.paginationMode,
+      props.isRowSelectable,
     ],
   );
 
