@@ -89,6 +89,7 @@ function DemoWrapper({
         })}
       >
         {ToolbarControls}
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <Button size="small" href={link} endIcon={<ArrowForwardIcon />}>
           More info
         </Button>
@@ -184,14 +185,17 @@ function Controls({
     <Box sx={{ flexGrow: 1 }}>
       <ToggleButtonGroup
         size="small"
+        // eslint-disable-next-line material-ui/no-hardcoded-labels
         aria-label="Select language"
         value={selectedLanguage}
         exclusive
         onChange={handleLanguageSwitch}
       >
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <ToggleButton value="ro" key="ro">
           Română
         </ToggleButton>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
         <ToggleButton value="en" key="en">
           English
         </ToggleButton>

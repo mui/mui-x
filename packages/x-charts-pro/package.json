@@ -67,8 +67,8 @@
     }
   },
   "devDependencies": {
-    "@mui/material": "^5.16.7",
-    "@mui/system": "^5.16.7",
+    "@mui/material": "^5.16.8",
+    "@mui/system": "^5.16.8",
     "@react-spring/core": "^9.7.5",
     "@react-spring/shared": "^9.7.5",
     "@types/prop-types": "^15.7.13",

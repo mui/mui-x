@@ -457,6 +457,7 @@ export default function Keyboard() {
           <SectionHeadline
             overline="Accessibility"
             title={
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
               <Typography variant="h2" fontSize="1.625rem">
                 Assistive technology support
               </Typography>
@@ -468,6 +469,7 @@ export default function Keyboard() {
             href="/x/react-date-pickers/accessibility/"
             endIcon={<ArrowForwardIcon />}
             sx={{ width: 'fit-content' }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             More info
           </Button>
