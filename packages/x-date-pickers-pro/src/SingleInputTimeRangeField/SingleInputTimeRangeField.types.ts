@@ -1,18 +1,17 @@
 import {
+  ExportedPickerFieldUIProps,
   ExportedPickerFieldUISlots,
   PickerFieldUISlotProps,
   PickerRangeValue,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
-import { ExportedUseClearableFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseTimeRangeFieldProps } from '../internals/models';
 import { TimeRangeValidationError } from '../models';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    ExportedUseClearableFieldProps,
     Pick<
       UseFieldInternalProps<
         PickerRangeValue,
@@ -20,7 +19,8 @@ export interface UseSingleInputTimeRangeFieldProps<
         TimeRangeValidationError
       >,
       'unstableFieldRef'
-    > {}
+    >,
+    ExportedPickerFieldUIProps {}
 
 export type SingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,

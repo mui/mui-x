@@ -11,7 +11,6 @@ import type { DateRangeValidationError, UseDateRangeFieldProps } from '../models
 export interface UseSingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends UseDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    ExportedPickerFieldUIProps,
     Pick<
       UseFieldInternalProps<
         PickerRangeValue,
@@ -19,7 +18,8 @@ export interface UseSingleInputDateRangeFieldProps<
         DateRangeValidationError
       >,
       'unstableFieldRef'
-    > {}
+    >,
+    ExportedPickerFieldUIProps {}
 
 export type SingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
