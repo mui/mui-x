@@ -91,6 +91,12 @@ SingleInputDateRangeField.propTypes = {
    */
   clearable: PropTypes.bool,
   /**
+   * The position at which the UI to clear the value should be placed.
+   * If the field is not clearable, the button will not be rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#custom-colors).
@@ -238,6 +244,12 @@ SingleInputDateRangeField.propTypes = {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange: PropTypes.func,
+  /**
+   * The position at which the UI to clear the value should be placed.
+   * If there is no picker to open, the button will not be rendered
+   * @default 'end'
+   */
+  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
