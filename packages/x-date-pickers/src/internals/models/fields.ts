@@ -25,11 +25,6 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedPickerFieldU
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
   inputRef?: React.Ref<HTMLInputElement>;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
   inputProps?: {
     'aria-label'?: string;
   };

@@ -58,7 +58,7 @@ export interface PickerContextValue {
   /**
    * The ref that should be attached to the element that triggers the picker opening.
    */
-  triggerRef: React.RefObject<HTMLElement>;
+  triggerRef: React.Ref<HTMLElement>;
   /**
    * `true` if the picker is open, `false` otherwise.
    */
