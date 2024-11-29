@@ -5,7 +5,6 @@ import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateRange } from '../validation';
-import { useGetOpenRangeDialogAriaText } from '../internals/hooks/useGetOpenRangeDialogAriaText';
 
 export const useSingleInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -25,11 +24,6 @@ export const useSingleInputDateRangeField = <
     [internalProps.dateSeparator],
   );
 
-  const getOpenDialogAriaText = useGetOpenRangeDialogAriaText({
-    formatKey: 'fullDate',
-    translationKey: 'openDateRangePickerDialogue',
-  });
-
   return useField<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
@@ -42,6 +36,7 @@ export const useSingleInputDateRangeField = <
     fieldValueManager,
     validator: validateDateRange,
     valueType: 'date',
-    getOpenDialogAriaText,
+    // TODO v8: Add a real aria label before enabling the button.
+    getOpenDialogAriaText: () => '',
   });
 };

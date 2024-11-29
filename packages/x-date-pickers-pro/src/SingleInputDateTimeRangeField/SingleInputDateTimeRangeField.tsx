@@ -279,12 +279,6 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * The position at which the UI to clear the value should be placed.
-   * If there is no picker to open, the button will not be rendered
-   * @default 'end'
-   */
-  openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),
-  /**
    * If `true`, the component is read-only.
    * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false

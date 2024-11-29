@@ -57,36 +57,6 @@ const enUSPickers: PickersLocaleText = {
     formattedDate ? `Choose date, selected date is ${formattedDate}` : 'Choose date',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Choose time, selected time is ${formattedTime}` : 'Choose time',
-  openDateRangePickerDialogue: ([formattedStartDate, formattedEndDate]) => {
-    if (!formattedStartDate && !formattedEndDate) {
-      return 'Choose date range';
-    }
-
-    if (!formattedStartDate) {
-      return `Choose date range, end date is ${formattedEndDate}`;
-    }
-
-    if (!formattedEndDate) {
-      return `Choose date range, start date is ${formattedStartDate}`;
-    }
-
-    return `Choose date range, start date is ${formattedStartDate}, end date is ${formattedEndDate}`;
-  },
-  openTimeRangePickerDialogue: ([formattedStartTime, formattedEndTime]) => {
-    if (!formattedStartTime && !formattedEndTime) {
-      return 'Choose time range';
-    }
-
-    if (!formattedStartTime) {
-      return `Choose time range, end time is ${formattedEndTime}`;
-    }
-
-    if (!formattedEndTime) {
-      return `Choose time range, start time is ${formattedStartTime}`;
-    }
-
-    return `Choose time range, start time is ${formattedStartTime}, end time is ${formattedEndTime}`;
-  },
 
   fieldClearLabel: 'Clear',
 
