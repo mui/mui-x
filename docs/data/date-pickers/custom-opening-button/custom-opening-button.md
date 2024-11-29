@@ -41,7 +41,7 @@ If you want to track the opening of the picker, you should use the `onOpen` / `o
 
 ## Render the opening button at the start of the input
 
-You can use the `openPickerButtonPosition` on the `field` slot to set the opening button at the start of the input (on the left in lef-to-right direction, on the right in left-to-right direction).
+You can use the `openPickerButtonPosition` on the `field` slot to set the opening button at the start of the input (on the left in lef-to-right direction, on the right in left-to-right direction):
 
 {{"demo": "StartEdgeOpeningButton.js"}}
 
