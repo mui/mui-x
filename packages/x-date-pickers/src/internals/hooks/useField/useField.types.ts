@@ -124,6 +124,9 @@ export interface UseFieldInternalProps<
 
 export interface UseFieldCommonAdditionalProps
   extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {
+  /**
+   * The aria label to set on the button that opens the picker.
+   */
   openPickerAriaLabel: string;
 }
 
