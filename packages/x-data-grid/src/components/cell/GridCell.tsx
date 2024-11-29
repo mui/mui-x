@@ -30,7 +30,6 @@ import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGrid
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -196,19 +195,17 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
-      try {
-        const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-          rowId,
-          field,
-        );
-        result.api = apiRef.current;
-        return result;
-      } catch (error) {
-        if (error instanceof MissingRowIdError) {
-          return EMPTY_CELL_PARAMS;
-        }
-        throw error;
+      const row = apiRef.current.getRow(rowId);
+      if (!row) {
+        return EMPTY_CELL_PARAMS;
       }
+
+      const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        rowId,
+        field,
+      );
+      result.api = apiRef.current;
+      return result;
     },
     objectShallowCompare,
   );
