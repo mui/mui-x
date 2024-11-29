@@ -207,6 +207,7 @@ export const useGridVirtualScroller = () => {
   const focusedVirtualCell = useGridSelector(
     apiRef,
     () => {
+      const currentRenderContext = gridRenderContextSelector(apiRef);
       const focusedCell = gridFocusCellSelector(apiRef);
       if (!focusedCell?.id) {
         return null;
@@ -220,7 +221,8 @@ export const useGridVirtualScroller = () => {
       }
 
       const isFocusedCellInContext =
-        renderContext.firstRowIndex <= rowIndex && rowIndex <= renderContext.lastRowIndex;
+        currentRenderContext.firstRowIndex <= rowIndex &&
+        rowIndex <= currentRenderContext.lastRowIndex;
 
       if (isFocusedCellInContext) {
         return null;

@@ -28,7 +28,7 @@ interface WatermarkProps {
   releaseInfo: string;
 }
 
-export function Watermark(props: WatermarkProps) {
+function Watermark(props: WatermarkProps) {
   const { packageName, releaseInfo } = props;
   const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
 
@@ -55,3 +55,6 @@ export function Watermark(props: WatermarkProps) {
     </div>
   );
 }
+
+const WatermarkMemo = React.memo(Watermark);
+export { WatermarkMemo as Watermark };
