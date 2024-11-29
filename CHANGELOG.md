@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 
 - 👨🏽‍💻 Improve resize performance on the Data Gird.
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
-- 🌍 Improve Dutch locales on the Date and Time Pickers components.
+- 🌍 Improve Dutch locale on the Date and Time Pickers components.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
