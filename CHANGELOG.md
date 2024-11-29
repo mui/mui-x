@@ -33,6 +33,7 @@ Following are all team members who have contributed to this release:
 - The `apiRef.current.resize()` method was removed.
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation` as `{ parents: false, descendants: false }`.
+- If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
 
 #### `@mui/x-data-grid@v8.0.0-alpha.2`
 
