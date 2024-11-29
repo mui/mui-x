@@ -209,7 +209,7 @@ export const useGridVirtualScroller = () => {
     () => {
       const currentRenderContext = gridRenderContextSelector(apiRef);
       const focusedCell = gridFocusCellSelector(apiRef);
-      if (!focusedCell?.id) {
+      if (!focusedCell) {
         return null;
       }
 
