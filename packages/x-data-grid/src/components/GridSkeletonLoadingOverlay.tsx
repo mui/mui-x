@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/system';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
+import { useRtl } from '@mui/system/RtlProvider';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -22,7 +23,6 @@ import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { escapeOperandAttributeSelector } from '../utils/domUtils';
 import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
-import { useRtl } from '@mui/system/RtlProvider';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
 
 const SkeletonOverlay = styled('div', {
@@ -211,6 +211,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     dimensions.scrollbarSize,
     getPinnedPosition,
     getPinnedStyle,
+    isRtl,
   ]);
 
   // Sync the column resize of the overlay columns with the grid

@@ -52,11 +52,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    * If `null`, no cell in this row has focus.
    */
   focusedColumnIndex: number | undefined;
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: string | null;
   isFirstVisible: boolean;
   isLastVisible: boolean;
   isNotVisible: boolean;
@@ -89,7 +84,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isLastVisible,
     isNotVisible,
     showBottomBorder,
-    tabbableCell,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -536,11 +530,6 @@ GridRow.propTypes = {
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
   showBottomBorder: PropTypes.bool.isRequired,
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: PropTypes.string,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
