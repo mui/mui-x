@@ -41,7 +41,9 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         sx={props.sx}
         ref={ref}
         {...props.forwardedProps}
-      ></GridRoot>
+      >
+        <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+      </GridRoot>
     </GridContextProvider>
   );
 });
