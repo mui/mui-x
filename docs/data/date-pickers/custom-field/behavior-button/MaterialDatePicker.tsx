@@ -45,7 +45,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={pickerContext.triggerRef as React.Ref<HTMLElement>}
+      ref={pickerContext.triggerRef}
       onClick={handleTogglePicker}
     >
       {label ? `${label}: ${valueStr}` : valueStr}

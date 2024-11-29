@@ -54,7 +54,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
 
   const parsedFormat = useParsedFormat(internalProps);
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event: React.MouseEvent) => {
+  const handleTogglePicker = (event: React.UIEvent) => {
     if (pickerContext.open) {
       pickerContext.onClose(event);
     } else {

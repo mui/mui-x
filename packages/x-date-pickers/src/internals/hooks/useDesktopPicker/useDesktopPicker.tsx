@@ -152,7 +152,7 @@ export const useDesktopPicker = <
       <PickersPopper
         role="dialog"
         placement="bottom-start"
-        anchorEl={providerProps.contextValue.triggerRef.current}
+        anchorEl={providerProps.contextValue.triggerRef!.current}
         {...actions}
         open={open}
         slots={slots}

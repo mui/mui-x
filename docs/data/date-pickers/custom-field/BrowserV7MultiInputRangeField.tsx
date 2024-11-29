@@ -170,6 +170,19 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       unstableEndFieldRef,
     });
 
+    const {
+      onClear: onClearStartDate,
+      clearable: isStartDateClearable,
+      openPickerAriaLabel: openPickerStartDateAriaLabel,
+      ...startDateProps
+    } = fieldResponse.startDate;
+    const {
+      onClear: onClearEndDate,
+      clearable: isEndDateClearable,
+      openPickerAriaLabel: openPickerEndDateAriaLabel,
+      ...endDateProps
+    } = fieldResponse.endDate;
+
     return (
       <Stack
         ref={ref}
@@ -178,9 +191,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         overflow="auto"
         className={className}
       >
-        <BrowserTextField {...fieldResponse.startDate} />
+        <BrowserTextField {...startDateProps} />
         <span> — </span>
-        <BrowserTextField {...fieldResponse.endDate} />
+        <BrowserTextField {...endDateProps} />
       </Stack>
     );
   },

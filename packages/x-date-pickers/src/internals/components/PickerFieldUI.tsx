@@ -97,7 +97,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   } = cleanFieldResponse(fieldResponse);
   const ownerState = useFieldOwnerState(textFieldProps);
 
-  const handleTogglePicker = (event: React.MouseEvent<HTMLElement>) => {
+  const handleTogglePicker = (event: React.UIEvent) => {
     if (!pickerContext) {
       return;
     }

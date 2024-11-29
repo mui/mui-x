@@ -173,6 +173,9 @@ export type BaseSingleInputPickersTextFieldProps<
   | 'openPickerAriaLabel'
 >;
 
+export type BaseSingleInputPickerFieldResponse<TEnableAccessibleFieldDOMStructure extends boolean> =
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>;
+
 /**
  * Props the built-in text field component can receive.
  */
