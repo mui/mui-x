@@ -86,6 +86,7 @@ export default function GridToolbarDefault() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
+    maxColumns: 10,
   });
 
   return (
