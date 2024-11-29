@@ -62,10 +62,12 @@ export const usePickerOrientation = (
 export function usePickerProvider<TValue extends PickerValidValue>(
   parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
-  const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
+  const { props, pickerValueResponse, valueManager, localeText, variant, views, hasUIView } =
+    parameters;
 
   const utils = useUtils();
   const orientation = usePickerOrientation(views, props.orientation);
+  const triggerRef = React.useRef<HTMLElement>(null);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -101,6 +103,7 @@ export function usePickerProvider<TValue extends PickerValidValue>(
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      triggerRef,
     }),
     [
       pickerValueResponse.actions.onOpen,
@@ -113,9 +116,21 @@ export function usePickerProvider<TValue extends PickerValidValue>(
     ],
   );
 
+  const openingUIStatus = React.useMemo(() => {
+    if (props.disableOpenPicker || !hasUIView) {
+      return 'hidden';
+    }
+
+    if (props.disabled || props.readOnly) {
+      return 'disabled';
+    }
+
+    return 'enabled';
+  }, [props.disableOpenPicker, hasUIView, props.disabled, props.readOnly]);
+
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ownerState }),
-    [ownerState],
+    () => ({ ownerState, openingUIStatus }),
+    [ownerState, openingUIStatus],
   );
 
   return {
@@ -127,17 +142,18 @@ export function usePickerProvider<TValue extends PickerValidValue>(
 
 export interface UsePickerProviderParameters<TValue extends PickerValidValue>
   extends Pick<PickerProviderProps, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any, any> & UsePickerProviderNonStaticProps;
   pickerValueResponse: UsePickerValueResponse<TValue, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   views: readonly DateOrTimeViewWithMeridiem[];
+  hasUIView: boolean;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
 
 /**
- * Props used to create the private context.
+ * Props used to create the picker's contexts.
  * Those props are exposed on all the pickers.
  */
 export interface UsePickerProviderProps extends FormProps {
@@ -145,4 +161,15 @@ export interface UsePickerProviderProps extends FormProps {
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
+}
+
+/**
+ * Props used to create the picker's contexts and that are not available on static pickers.
+ */
+export interface UsePickerProviderNonStaticProps {
+  /**
+   * If `true`, the open picker button will not be rendered (renders only the field).
+   * @default false
+   */
+  disableOpenPicker?: boolean;
 }

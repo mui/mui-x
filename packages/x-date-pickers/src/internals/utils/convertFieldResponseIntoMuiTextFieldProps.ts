@@ -8,7 +8,7 @@ export const convertFieldResponseIntoMuiTextFieldProps = <
   ...fieldResponse
 }: TFieldResponse): TextFieldProps => {
   if (enableAccessibleFieldDOMStructure) {
-    const { InputProps, readOnly, ...other } = fieldResponse;
+    const { InputProps, readOnly, value, ...other } = fieldResponse;
 
     return {
       ...other,

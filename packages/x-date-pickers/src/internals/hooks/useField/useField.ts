@@ -52,6 +52,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -282,6 +283,7 @@ export const useField = <
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel: getOpenDialogAriaText(state.value),
   };
 
   return {

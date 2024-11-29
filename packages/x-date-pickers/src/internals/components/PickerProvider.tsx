@@ -15,6 +15,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
   },
+  openingUIStatus: 'hidden',
 });
 
 /**
@@ -55,6 +56,10 @@ export interface PickerContextValue {
    */
   onClose: (event: React.UIEvent) => void;
   /**
+   * The ref that should be attached to the element that triggers the picker opening.
+   */
+  triggerRef: React.RefObject<HTMLElement>;
+  /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
@@ -89,4 +94,8 @@ export interface PickerPrivateContextValue {
    * The ownerState of the picker.
    */
   ownerState: PickerOwnerState;
+  /**
+   * Informs the field if it should render the UI to open the picker.
+   */
+  openingUIStatus: 'hidden' | 'disabled' | 'enabled';
 }

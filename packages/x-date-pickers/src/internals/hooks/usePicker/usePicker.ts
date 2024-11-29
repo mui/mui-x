@@ -60,6 +60,7 @@ export const usePicker = <
     valueManager,
     variant,
     views: pickerViewsResponse.views,
+    hasUIView: pickerViewsResponse.hasUIView,
   });
 
   return {
@@ -70,7 +71,6 @@ export const usePicker = <
 
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
-    hasUIView: pickerViewsResponse.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout

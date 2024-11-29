@@ -34,6 +34,7 @@ export interface UseFieldParams<
   fieldValueManager: FieldValueManager<TValue>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
   valueType: PickerValueType;
+  getOpenDialogAriaText: (value: TValue) => string;
 }
 
 export interface UseFieldInternalProps<
@@ -122,7 +123,9 @@ export interface UseFieldInternalProps<
 }
 
 export interface UseFieldCommonAdditionalProps
-  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {}
+  extends Required<Pick<UseFieldInternalProps<any, any, any>, 'disabled' | 'readOnly'>> {
+  openPickerAriaLabel: string;
+}
 
 export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
   onKeyDown?: React.KeyboardEventHandler;

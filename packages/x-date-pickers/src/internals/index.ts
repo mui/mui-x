@@ -80,11 +80,11 @@ export type {
   PickerSelectionState,
 } from './hooks/usePicker/usePickerValue.types';
 export type {
-  UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
   PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
+export type { UsePickerProviderNonStaticProps } from './hooks/usePicker/usePickerProvider';
 export { usePickerPrivateContext } from './hooks/usePickerPrivateContext';
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {

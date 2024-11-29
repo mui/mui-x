@@ -63,7 +63,7 @@ export interface UsePickerResponse<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<UsePickerValueResponse<TValue, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'> {
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views' | 'hasUIView'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
   layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &

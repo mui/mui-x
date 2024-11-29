@@ -1,16 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerFieldUI } from '../internals/components/PickerFieldUI';
 
 type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: TimeFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -38,11 +36,10 @@ const TimeField = React.forwardRef(function TimeField<
 
   const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+  // The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
+  // Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
   const textFieldProps = useSlotProps({
-    elementType: TextField,
+    elementType: PickersTextField,
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
     ownerState,
@@ -58,15 +55,8 @@ const TimeField = React.forwardRef(function TimeField<
   const fieldResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return <PickerFieldUI slots={slots} slotProps={slotProps} fieldResponse={fieldResponse} />;
 }) as TimeFieldComponent;
 
 TimeField.propTypes = {

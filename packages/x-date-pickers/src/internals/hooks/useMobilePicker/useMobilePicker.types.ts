@@ -11,21 +11,17 @@ import {
   PickersModalDialogSlotProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams } from '../usePicker';
-import {
-  FieldOwnerState,
-  PickerFieldSlotProps,
-  PickerOwnerState,
-  PickerValidDate,
-} from '../../../models';
+import { FieldOwnerState, PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
-import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
+import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickersTextFieldProps } from '../../../PickersTextField';
+import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseMobilePickerSlots<TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlots,
@@ -68,7 +64,7 @@ export interface MobileOnlyPickerProps
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
-    UsePickerViewsNonStaticProps {}
+    UsePickerProviderNonStaticProps {}
 
 export interface UseMobilePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
@@ -103,5 +99,4 @@ export interface UseMobilePickerParams<
     'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: PickerValidDate | null) => string;
 }

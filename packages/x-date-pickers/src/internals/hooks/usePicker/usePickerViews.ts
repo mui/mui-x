@@ -79,17 +79,6 @@ export interface UsePickerViewsBaseProps<
 }
 
 /**
- * Props used to handle the views of the pickers.
- */
-export interface UsePickerViewsNonStaticProps {
-  /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
-   * @default false
-   */
-  disableOpenPicker?: boolean;
-}
-
-/**
  * Props used to handle the value of the pickers.
  */
 export interface UsePickerViewsProps<

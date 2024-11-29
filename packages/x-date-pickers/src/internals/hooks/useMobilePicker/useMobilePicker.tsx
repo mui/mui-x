@@ -28,7 +28,6 @@ export const useMobilePicker = <
   >,
 >({
   props,
-  getOpenDialogAriaText,
   ...pickerParams
 }: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
@@ -108,17 +107,6 @@ export const useMobilePicker = <
     ownerState,
   });
 
-  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  fieldProps.inputProps = {
-    ...fieldProps.inputProps,
-    'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
-  } as typeof fieldProps.inputProps;
-
-  const slotsForField = {
-    textField: slots.textField,
-    ...fieldProps.slots,
-  };
-
   const Layout = slots.layout ?? PickersLayout;
 
   let labelledById = labelId;
@@ -141,6 +129,16 @@ export const useMobilePicker = <
     },
   };
 
+  const slotsForField = {
+    ...slots,
+    ...fieldProps.slots,
+  };
+
+  const slotPropsForField = {
+    ...slotProps,
+    ...fieldProps.slotProps,
+  };
+
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
@@ -148,7 +146,7 @@ export const useMobilePicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
-        slotProps={slotProps}
+        slotProps={slotPropsForField}
         unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>

@@ -7,10 +7,9 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
 import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
-import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
-import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { PickerFieldUI } from '../internals/components/PickerFieldUI';
 
 type DateTimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
@@ -62,15 +61,8 @@ const DateTimeField = React.forwardRef(function DateTimeField<
   const fieldResponse = useDateTimeField<TEnableAccessibleFieldDOMStructure, typeof textFieldProps>(
     textFieldProps,
   );
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return <PickerFieldUI slots={slots} slotProps={slotProps} fieldResponse={fieldResponse} />;
 }) as DateTimeFieldComponent;
 
 DateTimeField.propTypes = {
