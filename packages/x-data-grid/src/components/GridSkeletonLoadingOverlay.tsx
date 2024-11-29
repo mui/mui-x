@@ -77,20 +77,6 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   );
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
 
-  const getPinnedStyle = React.useCallback(
-    (computedWidth: number, index: number, position: PinnedPosition) => {
-      const pinnedOffset = getPinnedCellOffset(
-        position,
-        computedWidth,
-        index,
-        positions,
-        dimensions,
-      );
-      return { [position]: pinnedOffset } as const;
-    },
-    [dimensions, positions],
-  );
-
   const getPinnedPosition = React.useCallback(
     (field: string) => {
       if (pinnedColumns.left.findIndex((col) => col.field === field) !== -1) {
@@ -122,8 +108,17 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const sectionIndex = pinnedSide
           ? pinnedColumns[pinnedSide].findIndex((col) => col.field === column.field) // pinned section
           : colIndex - pinnedColumns.left.length; // middle section
-        const pinnedStyle =
-          pinnedPosition && getPinnedStyle(column.computedWidth, colIndex, pinnedPosition);
+        const pinnedStyle = pinnedSide
+          ? {
+              [pinnedSide]: getPinnedCellOffset(
+                pinnedPosition,
+                column.computedWidth,
+                colIndex,
+                positions,
+                dimensions,
+              ),
+            }
+          : {};
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
         const showRightBorder = shouldCellShowRightBorder(
           pinnedPosition,
@@ -204,13 +199,9 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
     pinnedColumns,
     skeletonRowsCount,
     rootProps.showCellVerticalBorder,
-    dimensions.columnsTotalWidth,
-    dimensions.viewportOuterSize.width,
-    dimensions.rowHeight,
-    dimensions.hasScrollY,
-    dimensions.scrollbarSize,
+    dimensions,
+    positions,
     getPinnedPosition,
-    getPinnedStyle,
     isRtl,
   ]);
 
