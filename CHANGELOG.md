@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
-@dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9.
+@dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9, @lauri865.
 Following are all team members who have contributed to this release:
 @oliviertassinari, @arminmeh, @KenanYusuf, @flaviendelangle, @MBilalShafi.
 
@@ -37,6 +37,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
 - [DataGrid] Improve resize performance (#15592) @lauri865
 - [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
+- [DataGrid] Improve `GridCell` performance (#15621) @lauri865
 - [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
 - [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
 
