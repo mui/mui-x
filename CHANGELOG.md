@@ -29,6 +29,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] React 19 support (#15557) @arminmeh
 - [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
 - [DataGrid] Improve resize performance (#15592) @lauri865
 - [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
