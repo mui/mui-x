@@ -5,14 +5,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 7.23.0
 
-_Nov 28, 2024_
+_Nov 29, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Support for a new display mode on the Data Grid with the [List View feature](https://mui.com/x/react-data-grid/list-view/), offering an extremely flexible way to render datasets and enabling developers to adapt how data is displayed across different screen sizes.
+  
+  https://github.com/user-attachments/assets/61286adc-03fc-4323-9739-8ca726fcc16c
 
 - ⚛️ React 19 support
 - 📚 Documentation improvements
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
-- 🌍 Improve Dutch locales on the Date and Time Pickers components.
+- 🌍 Improve Dutch locale on the Date and Time Picker components.
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -29,6 +33,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] React 19 support (#15557) @arminmeh
 - [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
 - [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
 - [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
 - [DataGrid] Improve resize performance (#15592) @lauri865
 - [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
@@ -85,7 +90,7 @@ Same changes as in `@mui/x-tree-view@7.23.0`.
 
 - [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
 - [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
-- [docs] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
 
 ### Core
 
