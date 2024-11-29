@@ -86,7 +86,7 @@ Same changes as in `@mui/x-tree-view@7.23.0`.
 
 - [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
 - [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
-- [docs] Add documentation for the list view feature (#15344) (#15635) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
 
 ### Core
 
