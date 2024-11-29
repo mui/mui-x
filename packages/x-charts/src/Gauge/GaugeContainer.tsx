@@ -9,7 +9,7 @@ import { MergeSignaturesProperty } from '../internals/plugins/models';
 import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 
 export interface GaugeContainerProps
-  extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
+  extends Omit<ChartsSurfaceProps, 'series' | 'width' | 'height' | 'children'>,
     MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
     Omit<GaugeProviderProps, 'children'>,
     React.SVGProps<SVGSVGElement> {
@@ -60,6 +60,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         width: inWidth,
         height: inHeight,
         margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
+        series: [],
       }}
     >
       <GaugeProvider

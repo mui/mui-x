@@ -16,7 +16,7 @@ describe('<ChartsSurface />', () => {
     const ref = React.createRef<SVGSVGElement>();
 
     render(
-      <ChartProvider pluginParams={{ width: 100, height: 100 }}>
+      <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
         <ChartsSurface
           ref={ref}
           disableAxisListener // TODO: remove during v8 when charts store is always available

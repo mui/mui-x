@@ -5,7 +5,7 @@ import { Gauge } from '@mui/x-charts/Gauge';
 describe('<Gauge />', () => {
   const { render } = createRenderer();
 
-  describeConformance(<Gauge height={100} width={100} value={60} />, () => ({
+  describeConformance(<Gauge height={100} width={100} value={60} series={[]} />, () => ({
     classes: {} as any,
     inheritComponent: 'svg',
     render,

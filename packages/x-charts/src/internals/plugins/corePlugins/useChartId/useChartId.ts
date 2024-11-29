@@ -24,5 +24,5 @@ useChartId.params = {
 };
 
 useChartId.getInitialState = ({ id }) => ({
-  id: { chartId: createChartDefaultId(), providedChartId: id },
+  id: { chartId: undefined, providedChartId: id },
 });

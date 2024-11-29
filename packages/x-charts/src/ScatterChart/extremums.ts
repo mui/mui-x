@@ -1,16 +1,16 @@
 import {
-  ExtremumGetter,
-  ExtremumGetterResult,
-} from '../context/PluginProvider/ExtremumGetter.types';
+  CartesianExtremumGetter,
+  CartesianExtremumGetterResult,
+} from '../internals/plugins/models/seriesConfig/extremumGetter.types';
 
 const mergeMinMax = (
-  acc: ExtremumGetterResult,
-  val: ExtremumGetterResult,
-): ExtremumGetterResult => {
+  acc: CartesianExtremumGetterResult,
+  val: CartesianExtremumGetterResult,
+): CartesianExtremumGetterResult => {
   return [Math.min(acc[0], val[0]), Math.max(acc[1], val[1])];
 };
 
-export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
@@ -27,7 +27,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
           seriesYAxisId: series[seriesId].yAxisId,
         });
 
-        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
+        const seriesMinMax = series[seriesId].data?.reduce<CartesianExtremumGetterResult>(
           (accSeries, d, dataIndex) => {
             if (filter && !filter(d, dataIndex)) {
               return accSeries;
@@ -42,7 +42,7 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
     );
 };
 
-export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
 
   return Object.keys(series)
@@ -59,7 +59,7 @@ export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
           seriesYAxisId: series[seriesId].yAxisId,
         });
 
-        const seriesMinMax = series[seriesId].data?.reduce<ExtremumGetterResult>(
+        const seriesMinMax = series[seriesId].data?.reduce<CartesianExtremumGetterResult>(
           (accSeries, d, dataIndex) => {
             if (filter && !filter(d, dataIndex)) {
               return accSeries;

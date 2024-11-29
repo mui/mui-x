@@ -19,17 +19,14 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
-export * from './computeAxisValue';
+export * from './plugins/featurePlugins/useChartCartesianAxis/computeAxisValue';
 
 // contexts
 
-export * from '../context/CartesianProvider';
-export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
-export * from '../context/PluginProvider';
 export * from '../context/AnimationProvider';
 export type * from '../context/context.types';
-export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
+export { getAxisExtremum } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtremum';
 export * from '../context/ChartDataProvider';
 export * from '../context/ChartProvider';
 
@@ -39,3 +36,5 @@ export * from '../models/seriesType/common';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
+
+export * from './plugins/models';

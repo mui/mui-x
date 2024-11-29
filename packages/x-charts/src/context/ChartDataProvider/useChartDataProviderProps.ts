@@ -1,13 +1,12 @@
 'use client';
-import type { CartesianProviderProps } from '../CartesianProvider';
-import type { SeriesProviderProps } from '../SeriesProvider';
+import { useTheme } from '@mui/material/styles';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../HighlightedProvider';
 import { useDefaultizeAxis } from './useDefaultizeAxis';
-import { PluginProviderProps } from '../PluginProvider';
 import { AnimationProviderProps } from '../AnimationProvider';
 import { ChartProviderProps } from '../ChartProvider';
+import { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
   const {
@@ -22,40 +21,32 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     dataset,
     highlightedItem,
     onHighlightChange,
-    plugins,
     children,
     skipAnimation,
   } = props;
 
+  const theme = useTheme();
   const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const chartProviderProps: Omit<ChartProviderProps<[]>, 'children'> = {
-    plugins: [],
+  const chartProviderProps: Omit<
+    ChartProviderProps<[UseChartCartesianAxisSignature]>,
+    'children'
+  > = {
     pluginParams: {
       width,
       height,
       margin,
+      dataset,
+      series,
+      colors,
+      theme: theme.palette.mode,
+      xAxis: defaultizedXAxis,
+      yAxis: defaultizedYAxis,
     },
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
     skipAnimation,
-  };
-
-  const pluginProviderProps: Omit<PluginProviderProps, 'children'> = {
-    plugins,
-  };
-
-  const seriesProviderProps: Omit<SeriesProviderProps, 'children'> = {
-    series,
-    colors,
-    dataset,
-  };
-
-  const cartesianProviderProps: Omit<CartesianProviderProps, 'children'> = {
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
-    dataset,
   };
 
   const zAxisContextProps: Omit<ZAxisContextProviderProps, 'children'> = {
@@ -70,11 +61,8 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
 
   return {
     children,
-    seriesProviderProps,
-    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    pluginProviderProps,
     animationProviderProps,
     xAxis: defaultizedXAxis,
     yAxis: defaultizedYAxis,

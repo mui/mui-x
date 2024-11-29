@@ -2,23 +2,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { MakeOptional } from '@mui/x-internals/types';
-import { SeriesProvider, SeriesProviderProps } from '../SeriesProvider';
-import { CartesianProvider, CartesianProviderProps } from '../CartesianProvider';
-import { PluginProvider, PluginProviderProps } from '../PluginProvider';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
-
 import { ChartProvider, ChartProviderProps } from '../ChartProvider';
+import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 export type ChartDataProviderProps = Omit<
-  Omit<SeriesProviderProps, 'seriesFormatters'> &
-    Pick<CartesianProviderProps, 'dataset'> &
-    ZAxisContextProviderProps &
+  ZAxisContextProviderProps &
     HighlightedProviderProps &
-    PluginProviderProps &
     AnimationProviderProps &
     ChartProviderProps<[]>['pluginParams'],
   'children'
@@ -68,28 +62,19 @@ export type ChartDataProviderProps = Omit<
 function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
-    seriesProviderProps,
-    cartesianProviderProps,
     zAxisContextProps,
     highlightedProviderProps,
-    pluginProviderProps,
     animationProviderProps,
     chartProviderProps,
   } = useChartDataProviderProps(props);
 
   return (
-    <ChartProvider {...chartProviderProps}>
-      <PluginProvider {...pluginProviderProps}>
-        <SeriesProvider {...seriesProviderProps}>
-          <CartesianProvider {...cartesianProviderProps}>
-            <ZAxisContextProvider {...zAxisContextProps}>
-              <HighlightedProvider {...highlightedProviderProps}>
-                <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
-              </HighlightedProvider>
-            </ZAxisContextProvider>
-          </CartesianProvider>
-        </SeriesProvider>
-      </PluginProvider>
+    <ChartProvider {...chartProviderProps} plugins={[useChartCartesianAxis]}>
+      <ZAxisContextProvider {...zAxisContextProps}>
+        <HighlightedProvider {...highlightedProviderProps}>
+          <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>
+        </HighlightedProvider>
+      </ZAxisContextProvider>
     </ChartProvider>
   );
 }

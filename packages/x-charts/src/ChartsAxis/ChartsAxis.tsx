@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
 import {
@@ -11,6 +10,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
 } from '../models/axis';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface ChartsAxisProps {
   /**
@@ -87,7 +87,8 @@ const mergeProps = (
  */
 function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis, slots, slotProps } = props;
-  const { xAxis, xAxisIds, yAxis, yAxisIds } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   // TODO: use for plotting line without ticks or any thing
   // const drawingArea = React.useContext(DrawingContext);

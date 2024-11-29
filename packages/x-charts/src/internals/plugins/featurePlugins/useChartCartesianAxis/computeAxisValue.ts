@@ -1,55 +1,53 @@
 import { scaleBand, scalePoint, scaleTime } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, ScaleName } from '../models';
+import { AxisConfig, ScaleName } from '../../../../models';
 import {
   ChartsXAxisProps,
   ChartsAxisProps,
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-} from '../models/axis';
-import { CartesianChartSeriesType } from '../models/seriesType/config';
-import { getColorScale, getOrdinalColorScale } from './colorScale';
-import { getTickNumber } from '../hooks/useTicks';
-import { getScale } from './getScale';
-
-import { FormattedSeries } from '../context/SeriesProvider';
-import { zoomScaleRange } from '../context/CartesianProvider/zoom';
-import { ExtremumGetter } from '../context/PluginProvider';
+} from '../../../../models/axis';
+import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
+import { getTickNumber } from '../../../../hooks/useTicks';
+import { getScale } from '../../../getScale';
+import { zoomScaleRange } from './zoom';
+import { getAxisExtremum } from './getAxisExtremum';
+import type { ChartDrawingArea } from '../../../../hooks';
+import { ChartSeriesConfig } from '../../models/seriesConfig';
 import {
   DefaultizedAxisConfig,
+  GetZoomAxisFilters,
   ZoomData,
   ZoomOptions,
-  GetZoomAxisFilters,
-} from '../context/CartesianProvider/Cartesian.types';
-import { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
-import type { ChartDrawingArea } from '../hooks';
+} from './useChartCartesianAxis.types';
+import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 
 function getRange(
   drawingArea: ChartDrawingArea,
-  axisDirection: 'x' | 'y' | 'radius' | 'rotation',
+  axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
   axis: AxisConfig<
     ScaleName,
     any,
-    ChartsRotationAxisProps | ChartsRotationAxisProps | ChartsAxisProps
+    // ChartsRotationAxisProps | ChartsRotationAxisProps |
+    ChartsAxisProps
   >,
 ): [number, number] {
-  if (axisDirection === 'rotation') {
-    const { startAngle = 0, endAngle = startAngle + 360 } = axis as AxisConfig<
-      ScaleName,
-      any,
-      ChartsRotationAxisProps
-    >;
-    return axis.reverse
-      ? [(Math.PI * startAngle) / 180, (Math.PI * endAngle) / 180]
-      : [(Math.PI * endAngle) / 180, (Math.PI * startAngle) / 180];
-  }
-  if (axisDirection === 'radius') {
-    const { minRadius = 0, maxRadius = Math.min(drawingArea.width, drawingArea.height) / 2 } =
-      axis as AxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
-    return [minRadius, maxRadius];
-  }
+  // if (axisDirection === 'rotation') {
+  //   const { startAngle = 0, endAngle = startAngle + 360 } = axis as AxisConfig<
+  //     ScaleName,
+  //     any,
+  //     ChartsRotationAxisProps
+  //   >;
+  //   return axis.reverse
+  //     ? [(Math.PI * startAngle) / 180, (Math.PI * endAngle) / 180]
+  //     : [(Math.PI * endAngle) / 180, (Math.PI * startAngle) / 180];
+  // }
+  // if (axisDirection === 'radius') {
+  //   const { minRadius = 0, maxRadius = Math.min(drawingArea.width, drawingArea.height) / 2 } =
+  //     axis as AxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
+  //   return [minRadius, maxRadius];
+  // }
 
   const range: [number, number] =
     axisDirection === 'x'
@@ -81,8 +79,8 @@ type ComputeResult<T extends ChartsAxisProps> = {
 
 type ComputeCommonParams = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: FormattedSeries;
-  extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
+  formattedSeries: ProcessedSeries;
+  seriesConfig: ChartSeriesConfig<ChartSeriesType>;
   zoomData?: ZoomData[];
   zoomOptions?: ZoomOptions;
   getFilters?: GetZoomAxisFilters;
@@ -100,30 +98,30 @@ export function computeAxisValue(
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsAxisProps>;
-export function computeAxisValue(
-  options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
-    axisDirection: 'radius';
-  },
-): ComputeResult<ChartsRadiusAxisProps>;
-export function computeAxisValue(
-  options: ComputeCommonParams & {
-    axis: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-    axisDirection: 'rotation';
-  },
-): ComputeResult<ChartsRotationAxisProps>;
+// export function computeAxisValue(
+//   options: ComputeCommonParams & {
+//     axis: AxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
+//     axisDirection: 'radius';
+//   },
+// ): ComputeResult<ChartsRadiusAxisProps>;
+// export function computeAxisValue(
+//   options: ComputeCommonParams & {
+//     axis: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+//     axisDirection: 'rotation';
+//   },
+// ): ComputeResult<ChartsRotationAxisProps>;
 export function computeAxisValue({
   drawingArea,
   formattedSeries,
   axis: allAxis,
-  extremumGetters,
+  seriesConfig,
   axisDirection,
   zoomData,
   zoomOptions,
   getFilters,
 }: ComputeCommonParams & {
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
-  axisDirection: 'x' | 'y' | 'radius' | 'rotation';
+  axisDirection: 'x' | 'y'; // | 'radius' | 'rotation';
 }) {
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
@@ -135,7 +133,8 @@ export function computeAxisValue({
 
     const [minData, maxData] = getAxisExtremum(
       axis,
-      extremumGetters,
+      axisDirection,
+      seriesConfig,
       axisIndex,
       formattedSeries,
       zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.

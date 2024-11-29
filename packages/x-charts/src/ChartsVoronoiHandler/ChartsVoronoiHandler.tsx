@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
@@ -14,6 +13,7 @@ import { useScatterSeries } from '../hooks/useSeries';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useSvgRef } from '../hooks/useSvgRef';
+import { useXAxes, useYAxes } from '../hooks';
 
 export type ChartsVoronoiHandlerProps = {
   /**
@@ -36,7 +36,9 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { instance } = useChartContext();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const store = useStore();
 

@@ -1,7 +1,7 @@
 import { MakeOptional } from '@mui/x-internals/types';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
-import { AxisConfig, ScaleName } from '../../models';
-import { ChartsAxisProps } from '../../models/axis';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../../../constants';
+import { AxisConfig, ScaleName } from '../../../../models';
+import { ChartsAxisProps } from '../../../../models/axis';
 
 export const defaultizeAxis = (
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,

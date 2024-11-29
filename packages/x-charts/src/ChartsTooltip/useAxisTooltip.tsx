@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useSeries } from '../hooks/useSeries';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
@@ -11,7 +10,7 @@ import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
-import { useXAxis, useYAxis } from '../hooks/useAxis';
+import { useXAxes, useXAxis, useYAxes, useYAxis } from '../hooks/useAxis';
 import {
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
@@ -50,7 +49,8 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
 
   const series = useSeries();
 
-  const { xAxis, yAxis } = useCartesianContext();
+  const { xAxis } = useXAxes();
+  const { yAxis } = useYAxes();
 
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();

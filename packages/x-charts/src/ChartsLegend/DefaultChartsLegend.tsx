@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
 import { LegendItemParams, SeriesLegendItemContext } from './chartsLegend.types';
+import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 
 const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
   ({
@@ -16,7 +16,7 @@ const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContex
 
 export interface LegendRendererProps
   extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
-  series: FormattedSeries;
+  series: ProcessedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
   /**
    * Callback fired when a legend item is clicked.

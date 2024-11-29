@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useSeries } from '../hooks/useSeries';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import {
@@ -15,6 +14,7 @@ import { CommonSeriesType } from '../models/seriesType/common';
 import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
   identifier: ChartItemIdentifier<T>;
@@ -30,7 +30,9 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
 
   const series = useSeries();
 
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+  const {  xAxis, xAxisIds } = useXAxes();
+  const {  yAxis,  yAxisIds } = useYAxes();
+  
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 

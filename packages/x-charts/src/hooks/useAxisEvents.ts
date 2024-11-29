@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { isBandScale } from '../internals/isBandScale';
 import { AxisDefaultized } from '../models/axis';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { useSvgRef } from './useSvgRef';
 import { useStore } from '../internals/store/useStore';
 import { useChartContext } from '../context/ChartProvider';
+import { useXAxes, useYAxes } from './useAxis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
@@ -14,7 +14,8 @@ function getAsANumber(value: number | Date) {
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = useSvgRef();
   const { instance } = useChartContext();
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const store = useStore(disableAxisListener);
 

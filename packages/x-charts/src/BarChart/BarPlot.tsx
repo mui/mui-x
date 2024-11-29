@@ -3,20 +3,19 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
 import { styled } from '@mui/material/styles';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
-import { useChartId, useDrawingArea } from '../hooks';
+import { useChartId, useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { AnimationData, CompletedBarData, MaskData } from './types';
 import { BarClipPath } from './BarClipPath';
 import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { checkScaleErrors } from './checkScaleErrors';
 import { useBarSeries } from '../hooks/useSeries';
-import { SeriesFormatterResult } from '../context/PluginProvider';
 import { useSkipAnimation } from '../context/AnimationProvider';
+import { SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 
 /**
  * Solution of the equations
@@ -91,13 +90,14 @@ const useAggregatedData = (): {
 } => {
   const seriesData =
     useBarSeries() ??
-    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesFormatterResult<'bar'>);
-  const axisData = useCartesianContext();
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
+
   const drawingArea = useDrawingArea();
   const chartId = useChartId();
 
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 

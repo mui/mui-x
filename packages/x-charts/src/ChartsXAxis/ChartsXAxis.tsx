@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks, TickItemType } from '../hooks/useTicks';
 import { AxisDefaultized, ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -17,6 +16,7 @@ import { getWordsByLines } from '../internals/getWordsByLines';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useXAxes } from '../hooks/useAxis';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -108,7 +108,7 @@ const defaultProps = {
  * - [ChartsXAxis API](https://mui.com/x/api/charts/charts-x-axis/)
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const { xAxisIds, xAxis } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
   const isMounted = useMounted();

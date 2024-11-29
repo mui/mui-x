@@ -2,8 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useSeries } from '../hooks/useSeries';
-import { useSvgRef } from '../hooks';
-import { useCartesianContext } from '../context/CartesianProvider';
+import { useSvgRef, useXAxes, useYAxes } from '../hooks';
 import { useStore } from '../internals/store/useStore';
 
 export type ChartsAxisData = {
@@ -29,7 +28,8 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
   const series = useSeries();
   const store = useStore();
 
-  const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   React.useEffect(() => {
     const element = svgRef.current;

@@ -1,8 +1,8 @@
 import * as React from 'react';
-
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
 import { ChartStore } from '../utils/ChartStore';
+import { ChartSeriesConfig } from './seriesConfig';
 
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
   instance: ChartUsedInstance<TSignature>;
@@ -10,6 +10,7 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
   store: ChartUsedStore<TSignature>;
   svgRef: React.RefObject<SVGSVGElement>;
   plugins: ChartPlugin<ChartAnyPluginSignature>[];
+  seriesConfig: ChartSeriesConfig<any>;
 }
 
 type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
@@ -82,7 +83,11 @@ export type ChartUsedStore<TSignature extends ChartAnyPluginSignature> = ChartSt
 
 export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
   (options: ChartPluginOptions<TSignature>): ChartResponse<TSignature>;
-  getInitialState?: (params: ChartUsedDefaultizedParams<TSignature>) => TSignature['state'];
+  getInitialState?: (
+    params: ChartUsedDefaultizedParams<TSignature>,
+    currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
+    seriesConfig: ChartSeriesConfig<any>,
+  ) => TSignature['state'];
   params: Record<keyof TSignature['params'], true>;
   getDefaultizedParams?: (options: {
     params: ChartUsedParams<TSignature>;

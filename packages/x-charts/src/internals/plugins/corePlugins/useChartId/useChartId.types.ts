@@ -12,7 +12,7 @@ export type UseChartIdDefaultizedParameters = UseChartIdParameters;
 
 export interface UseChartIdState {
   id: {
-    chartId: string;
+    chartId: string | undefined;
     providedChartId: string | undefined;
   };
 }

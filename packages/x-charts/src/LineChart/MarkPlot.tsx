@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../context/AnimationProvider';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useLineSeries } from '../hooks/useSeries';
@@ -13,6 +12,7 @@ import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './getColor';
 import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
+import { useXAxes, useYAxes } from '../hooks';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -74,7 +74,9 @@ function MarkPlot(props: MarkPlotProps) {
   const skipAnimation = useSkipAnimation(inSkipAnimation);
 
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+
   const chartId = useChartId();
   const { instance } = useChartContext();
 
@@ -84,7 +86,6 @@ function MarkPlot(props: MarkPlotProps) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 

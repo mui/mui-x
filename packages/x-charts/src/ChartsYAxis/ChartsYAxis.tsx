@@ -5,7 +5,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { ChartsYAxisProps } from '../models/axis';
@@ -15,6 +14,7 @@ import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import { isInfinity } from '../internals/isInfinity';
 import { isBandScale } from '../internals/isBandScale';
 import { useChartContext } from '../context/ChartProvider';
+import { useYAxes } from '../hooks';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -55,7 +55,7 @@ const defaultProps = {
  * - [ChartsYAxis API](https://mui.com/x/api/charts/charts-y-axis/)
  */
 function ChartsYAxis(inProps: ChartsYAxisProps) {
-  const { yAxisIds, yAxis } = useCartesianContext();
+  const { yAxisIds, yAxis } = useYAxes();
   const { scale: yScale, tickNumber, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });

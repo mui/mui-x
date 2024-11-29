@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { useCartesianContext } from '../context/CartesianProvider';
 import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
@@ -12,6 +11,7 @@ import getColor from './getColor';
 import { useLineSeries } from '../hooks/useSeries';
 import { useChartContext } from '../context/ChartProvider';
 import { selectorChartsInteractionXAxis } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -48,7 +48,9 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { slots, slotProps, ...other } = props;
 
   const seriesData = useLineSeries();
-  const axisData = useCartesianContext();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+
   const { instance } = useChartContext();
 
   const store = useStore();
@@ -64,7 +66,6 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
     return null;
   }
   const { series, stackingGroups } = seriesData;
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
