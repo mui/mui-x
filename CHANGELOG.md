@@ -119,6 +119,7 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 - [docs] Fix 404 links (#15575) @oliviertassinari
 - [docs] Fix bash comments (#15571) @oliviertassinari
+- [docs] Fix Pickers theme augmentation example (#15672) @LukasTy 
 - [docs] Replace use of "e.g." with "for example" (#15572) @oliviertassinari
 - [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
 - [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
