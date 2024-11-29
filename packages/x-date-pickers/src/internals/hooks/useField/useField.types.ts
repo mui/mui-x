@@ -18,8 +18,8 @@ import type { Validator } from '../../../validation';
 import type { UseFieldStateResponse } from './useFieldState';
 import type { UseFieldCharacterEditingResponse } from './useFieldCharacterEditing';
 import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
-import { ExportedUseClearableFieldProps } from '../../../hooks/useClearableField';
 import { FormProps, InferNonNullablePickerValue, PickerValidValue } from '../../models';
+import type { ExportedPickerFieldUIProps } from '../../components/PickerFieldUI';
 
 export interface UseFieldParams<
   TValue extends PickerValidValue,
@@ -127,7 +127,8 @@ export interface UseFieldCommonAdditionalProps
   openPickerAriaLabel: string;
 }
 
-export interface UseFieldCommonForwardedProps extends ExportedUseClearableFieldProps {
+export interface UseFieldCommonForwardedProps
+  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
   onKeyDown?: React.KeyboardEventHandler;
   error?: boolean;
 }

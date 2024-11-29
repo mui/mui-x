@@ -11,7 +11,7 @@ import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
 import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
-import { UseFieldResponse } from '../hooks/useField';
+import type { UseFieldResponse } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
 export const cleanFieldResponse = <

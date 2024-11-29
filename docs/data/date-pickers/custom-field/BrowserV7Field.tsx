@@ -9,7 +9,10 @@ import {
   DatePickerProps,
 } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import {
+  useClearableField,
+  UseClearableFieldResponse,
+} from '@mui/x-date-pickers/hooks';
 import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -32,11 +35,7 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
-    Omit<
-      React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
-    > {}
+  extends UseClearableFieldResponse<BaseSingleInputPickersTextFieldProps<true>> {}
 
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
