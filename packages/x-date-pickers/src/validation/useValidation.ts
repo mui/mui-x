@@ -5,8 +5,9 @@ import { useLocalizationContext } from '../internals/hooks/useUtils';
 import { MuiPickersAdapterContextValue } from '../LocalizationProvider/LocalizationProvider';
 import { OnErrorProps, PickersTimezone } from '../models';
 import type { PickerValueManager } from '../internals/hooks/usePicker';
+import { PickerValidValue } from '../internals/models';
 
-export type Validator<TValue, TError, TValidationProps> = {
+export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {
   (params: {
     adapter: MuiPickersAdapterContextValue;
     value: TValue;
@@ -16,7 +17,7 @@ export type Validator<TValue, TError, TValidationProps> = {
   valueManager: PickerValueManager<TValue, any>;
 };
 
-interface UseValidationOptions<TValue, TError, TValidationProps extends {}>
+interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidationProps extends {}>
   extends OnErrorProps<TValue, TError> {
   /**
    * The value to validate.
@@ -40,7 +41,7 @@ interface UseValidationOptions<TValue, TError, TValidationProps extends {}>
   props: TValidationProps;
 }
 
-interface UseValidationReturnValue<TValue, TError> {
+interface UseValidationReturnValue<TValue extends PickerValidValue, TError> {
   /**
    * The validation error associated to the value passed to the `useValidation` hook.
    */
@@ -54,7 +55,7 @@ interface UseValidationReturnValue<TValue, TError> {
   /**
    * Get the validation error for a new value.
    * This can be used to validate the value in a change handler before updating the state.
-   * @template TValue The value type.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} newValue The value to validate.
    * @returns {TError} The validation error associated to the new value.
    */
@@ -63,7 +64,7 @@ interface UseValidationReturnValue<TValue, TError> {
 
 /**
  * Utility hook to check if a given value is valid based on the provided validation props.
- * @template TValue The value type. It will be either the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+ * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
  * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
  * @param {UseValidationOptions<TValue, TError, TValidationProps>} options The options to configure the hook.
  * @param {TValue} options.value The value to validate.
@@ -72,7 +73,7 @@ interface UseValidationReturnValue<TValue, TError> {
  * @param {TValidationProps} options.props The validation props, they differ depending on the component.
  * @param {(error: TError, value: TValue) => void} options.onError Callback fired when the error associated with the current value changes.
  */
-export function useValidation<TValue, TError, TValidationProps extends {}>(
+export function useValidation<TValue extends PickerValidValue, TError, TValidationProps extends {}>(
   options: UseValidationOptions<TValue, TError, TValidationProps>,
 ): UseValidationReturnValue<TValue, TError> {
   const { props, validator, value, timezone, onError } = options;
