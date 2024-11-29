@@ -138,7 +138,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     // Context: https://github.com/mui/mui-x/issues/15206
-    it.only('should keep the correct selection items and the selection count when rows are updated', () => {
+    it('should keep the correct selection items and the selection count when rows are updated', () => {
       render(<Test />);
 
       const expectedKeys = ['auto-generated-row-category1/Cat B', 3, 4];
