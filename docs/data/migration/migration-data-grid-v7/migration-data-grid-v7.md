@@ -43,6 +43,11 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
 
+### Changes to the public API
+
+- The `apiRef.current.resize()` method was removed.
+- The `<GridOverlays />` component is not exported anymore.
+
 <!-- ### Accessibility
 
 TBD
@@ -56,10 +61,6 @@ TBD
 TBD
 
 ### CSS classes and styling
-
-TBD
-
-### Changes to the public API
 
 TBD
 
