@@ -126,7 +126,7 @@ function ApiRefProMethods() {
 
   React.useEffect(() => {
     // available in Pro and Premium
-    apiRef.current.selectRows([]);
+    apiRef.current.selectRows({ type: 'include', ids: new Set() });
     apiRef.current.selectRowRange({ startId: 0, endId: 1 });
     apiRef.current.setColumnIndex;
     apiRef.current.setRowIndex;

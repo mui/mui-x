@@ -3,7 +3,7 @@ import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-da
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { SinonSpy, spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
         writeText = spy(navigator.clipboard, 'writeText');
 
-        act(() => apiRef.current.selectRows([0, 1]));
+        act(() => apiRef.current.selectRows(includeRowSelection([0, 1])));
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
@@ -93,7 +93,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
       writeText = spy(navigator.clipboard, 'writeText');
 
-      act(() => apiRef.current.selectRows([0, 1]));
+      act(() => apiRef.current.selectRows(includeRowSelection([0, 1])));
       const cell = getCell(0, 0);
       fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
