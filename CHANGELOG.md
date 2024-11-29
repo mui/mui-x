@@ -119,17 +119,17 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 - [docs] Fix 404 links (#15575) @oliviertassinari
 - [docs] Fix bash comments (#15571) @oliviertassinari
-- [docs] Replace use of e.g. with for example (#15572) @oliviertassinari
+- [docs] Replace use of "e.g." with "for example" (#15572) @oliviertassinari
 - [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
 - [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
-- [docs] Fix anchorEl API page for charts (#15625) @oliviertassinari
+- [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
 - [docs] Add documentation for the list view feature (#15344) @KenanYusuf
 
 ### Core
 
 - [core] Follow `()` function convention for docs @oliviertassinari
 - [core] Remove dead translation key (#15566) @oliviertassinari
-- [code-infra] Automerge `@types/node` bumps (#15591) @LukasTy
+- [code-infra] Auto-merge `@types/node` bumps (#15591) @LukasTy
 
 ## v8.0.0-alpha.1
 
