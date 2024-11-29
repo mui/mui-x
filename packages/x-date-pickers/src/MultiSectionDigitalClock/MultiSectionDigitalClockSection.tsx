@@ -20,6 +20,9 @@ import {
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 import { FormProps } from '../internals/models/formProps';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClasses';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -39,8 +42,14 @@ export interface MultiSectionDigitalClockSectionProps<TSectionValue extends numb
   role?: string;
 }
 
-const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
-  const { classes } = ownerState;
+interface MultiSectionDigitalClockSectionOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
+}
+
+const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     item: ['item'],
@@ -53,44 +62,42 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
-  ({ theme }) => ({
-    maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-    width: 56,
-    padding: 0,
-    overflow: 'hidden',
-    '@media (prefers-reduced-motion: no-preference)': {
-      scrollBehavior: 'auto',
-    },
-    '@media (pointer: fine)': {
-      '&:hover': {
-        overflowY: 'auto',
-      },
-    },
-    '@media (pointer: none), (pointer: coarse)': {
+})<{ ownerState: MultiSectionDigitalClockSectionOwnerState }>(({ theme }) => ({
+  maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
+  width: 56,
+  padding: 0,
+  overflow: 'hidden',
+  '@media (prefers-reduced-motion: no-preference)': {
+    scrollBehavior: 'auto',
+  },
+  '@media (pointer: fine)': {
+    '&:hover': {
       overflowY: 'auto',
     },
-    '&:not(:first-of-type)': {
-      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-    },
-    '&::after': {
-      display: 'block',
-      content: '""',
-      // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-      height: 'calc(100% - 40px - 6px)',
-    },
-    variants: [
-      {
-        props: { alreadyRendered: true },
-        style: {
-          '@media (prefers-reduced-motion: no-preference)': {
-            scrollBehavior: 'smooth',
-          },
+  },
+  '@media (pointer: none), (pointer: coarse)': {
+    overflowY: 'auto',
+  },
+  '&:not(:first-of-type)': {
+    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&::after': {
+    display: 'block',
+    content: '""',
+    // subtracting the height of one item, extra margin and borders to make sure the max height is correct
+    height: 'calc(100% - 40px - 6px)',
+  },
+  variants: [
+    {
+      props: { hasDigitalClockAlreadyBeenRendered: true },
+      style: {
+        '@media (prefers-reduced-motion: no-preference)': {
+          scrollBehavior: 'smooth',
         },
       },
-    ],
-  }),
-);
+    },
+  ],
+}));
 
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClockSection',
@@ -149,6 +156,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       autoFocus,
       onChange,
       className,
+      classes: classesProp,
       disabled,
       readOnly,
       items,
@@ -159,11 +167,13 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       ...other
     } = props;
 
-    const ownerState = React.useMemo(
-      () => ({ ...props, alreadyRendered: !!containerRef.current }),
-      [props],
-    );
-    const classes = useUtilityClasses(ownerState);
+    const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+    const ownerState: MultiSectionDigitalClockSectionOwnerState = {
+      ...pickerOwnerState,
+      hasDigitalClockAlreadyBeenRendered: !!containerRef.current,
+    };
+
+    const classes = useUtilityClasses(classesProp);
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 

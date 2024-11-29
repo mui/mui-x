@@ -13,22 +13,25 @@ import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getMultiSectionDigitalClockUtilityClass } from './multiSectionDigitalClockClasses';
+import {
+  getMultiSectionDigitalClockUtilityClass,
+  MultiSectionDigitalClockClasses,
+} from './multiSectionDigitalClockClasses';
 import { MultiSectionDigitalClockSection } from './MultiSectionDigitalClockSection';
 import {
   MultiSectionDigitalClockProps,
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { PickerValidDate, TimeStepOptions, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { formatMeridiem } from '../internals/utils/date-utils';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<MultiSectionDigitalClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -40,7 +43,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockProps }>(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
@@ -97,6 +100,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     focusedView: inFocusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     skipDisabled = false,
@@ -419,8 +423,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     );
   }, [views, buildViewProps]);
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <MultiSectionDigitalClockRoot

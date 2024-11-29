@@ -3,23 +3,37 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import { TimeView } from '../models';
+import { PickerOwnerState, TimeView } from '../models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
-  hasSelected: boolean;
+  /**
+   * `true` if the pointer is between two clock values.
+   * On the `hours` view, it is always false.
+   * On the `minutes` view, it is true if the pointer is on a value that is not a multiple of 5.
+   */
+  isBetweenTwoClockValues: boolean;
   isInner: boolean;
   type: TimeView;
   viewValue: number;
   classes?: Partial<ClockPointerClasses>;
 }
 
-interface ClockPointerState {
-  shouldAnimate: boolean;
+interface ClockPointerOwnerState extends PickerOwnerState {
+  /**
+   * `true` if the clock pointer should animate.
+   */
+  isClockPointerAnimated: boolean;
+  /**
+   * `true` if the pointer is between two clock values.
+   * On the `hours` view, it is always false.
+   * On the `minutes` view, it is true if the pointer is on a value that is not a multiple of 5.
+   */
+  isClockPointerBetweenTwoValues: boolean;
 }
 
-const useUtilityClasses = (ownerState: ClockPointerProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<ClockPointerClasses> | undefined) => {
   const slots = {
     root: ['root'],
     thumb: ['thumb'],
@@ -33,7 +47,7 @@ const ClockPointerRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: ClockPointerProps & ClockPointerState;
+  ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
   width: 2,
   backgroundColor: (theme.vars || theme).palette.primary.main,
@@ -43,7 +57,7 @@ const ClockPointerRoot = styled('div', {
   transformOrigin: 'center bottom 0px',
   variants: [
     {
-      props: { shouldAnimate: true },
+      props: { isClockPointerAnimated: true },
       style: {
         transition: theme.transitions.create(['transform', 'height']),
       },
@@ -56,7 +70,7 @@ const ClockPointerThumb = styled('div', {
   slot: 'Thumb',
   overridesResolver: (_, styles) => styles.thumb,
 })<{
-  ownerState: ClockPointerProps & ClockPointerState;
+  ownerState: ClockPointerOwnerState;
 }>(({ theme }) => ({
   width: 4,
   height: 4,
@@ -69,7 +83,7 @@ const ClockPointerThumb = styled('div', {
   boxSizing: 'content-box',
   variants: [
     {
-      props: { hasSelected: true },
+      props: { isBetweenTwoClockValues: false },
       style: {
         backgroundColor: (theme.vars || theme).palette.primary.main,
       },
@@ -82,14 +96,27 @@ const ClockPointerThumb = styled('div', {
  */
 export function ClockPointer(inProps: ClockPointerProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
-  const { className, hasSelected, isInner, type, viewValue, ...other } = props;
+  const {
+    className,
+    classes: classesProp,
+    isBetweenTwoClockValues,
+    isInner,
+    type,
+    viewValue,
+    ...other
+  } = props;
   const previousType = React.useRef<TimeView | null>(type);
   React.useEffect(() => {
     previousType.current = type;
   }, [type]);
 
-  const ownerState = { ...props, shouldAnimate: previousType.current !== type };
-  const classes = useUtilityClasses(ownerState);
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState: ClockPointerOwnerState = {
+    ...pickerOwnerState,
+    isClockPointerAnimated: previousType.current !== type,
+    isClockPointerBetweenTwoValues: isBetweenTwoClockValues,
+  };
+  const classes = useUtilityClasses(classesProp);
 
   const getAngleStyle = () => {
     const max = type === 'hours' ? 12 : 60;

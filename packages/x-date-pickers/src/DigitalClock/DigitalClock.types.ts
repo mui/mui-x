@@ -7,7 +7,7 @@ import {
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/time';
-import { TimeView } from '../models';
+import { PickerOwnerState, TimeView } from '../models';
 
 export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 
@@ -20,7 +20,7 @@ export interface DigitalClockSlots {
 }
 
 export interface DigitalClockSlotProps {
-  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
+  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, DigitalClockOwnerState>;
 }
 
 export interface DigitalClockProps
@@ -45,4 +45,11 @@ export interface DigitalClockProps
    * @default {}
    */
   slotProps?: DigitalClockSlotProps;
+}
+
+export interface DigitalClockOwnerState extends PickerOwnerState {
+  /**
+   * `true` if this is not the initial render of the digital clock.
+   */
+  hasDigitalClockAlreadyBeenRendered: boolean;
 }
