@@ -250,13 +250,13 @@ export interface ExportedPickerFieldUIProps {
    */
   onClear?: React.MouseEventHandler;
   /**
-   * The position at which the UI to clear the value should be placed.
+   * The position at which the clear button is placed.
    * If the field is not clearable, the button will not be rendered.
    * @default 'end'
    */
   clearButtonPosition?: 'start' | 'end';
   /**
-   * The position at which the UI to clear the value should be placed.
+   * The position at which the opening button is placed.
    * If there is no picker to open, the button will not be rendered
    * @default 'end'
    */
@@ -274,6 +274,9 @@ export interface PickerFieldUIProps {
    * @default {}
    */
   slotProps?: PickerFieldUISlotProps;
+  /**
+   * Object returned by the `useField` hook or one of its wrapper (for example `useDateField`).
+   */
   fieldResponse: UseFieldResponse<any, any>;
 }
 

@@ -97,7 +97,7 @@ SingleInputTimeRangeField.propTypes = {
    */
   clearable: PropTypes.bool,
   /**
-   * The position at which the UI to clear the value should be placed.
+   * The position at which the clear button is placed.
    * If the field is not clearable, the button will not be rendered.
    * @default 'end'
    */
