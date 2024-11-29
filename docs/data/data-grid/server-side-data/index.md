@@ -176,10 +176,10 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
-In a real-world scenario, you should replace this with your own server-side data-fetching logic.
+The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
-Open info section of the browser console to see the requests being made and the data being fetched in response.
+Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Data caching
