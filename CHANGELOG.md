@@ -88,7 +88,7 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.2`.
 
 #### Breaking changes
 
-- [Breaking] Charts don't have a `div` wrapping them anymore. All props are now passed to the root `svg` instead of the `div`.
+- [Breaking] Charts Container don't have a `div` wrapping them anymore. All props are now passed to the root `svg` instead of the `div`.
 - `ChartDataProvider` and `ChartsSurface` are now fully divided — [Learn more](https://next.mui.com/x/react-charts/composition/#overview).
 - Users can create their own HTML components using chart data — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
 
