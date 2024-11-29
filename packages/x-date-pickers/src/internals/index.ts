@@ -6,6 +6,7 @@ export type {
 } from './components/PickersArrowSwitcher';
 export { PickerFieldUI, cleanFieldResponse } from './components/PickerFieldUI';
 export type {
+  ExportedPickerFieldUIProps,
   ExportedPickerFieldUISlots,
   PickerFieldUISlotProps,
 } from './components/PickerFieldUI';

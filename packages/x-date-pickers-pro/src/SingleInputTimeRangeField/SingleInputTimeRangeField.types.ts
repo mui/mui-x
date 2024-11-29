@@ -1,14 +1,11 @@
-import * as React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
-import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '@mui/x-date-pickers/hooks';
+  ExportedPickerFieldUISlots,
+  PickerFieldUISlotProps,
+  PickerRangeValue,
+  UseFieldInternalProps,
+} from '@mui/x-date-pickers/internals';
+import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { ExportedUseClearableFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseTimeRangeFieldProps } from '../internals/models';
 import { TimeRangeValidationError } from '../models';
 
@@ -44,18 +41,6 @@ export type SingleInputTimeRangeFieldProps<
     slotProps?: SingleInputTimeRangeFieldSlotProps;
   };
 
-export interface SingleInputTimeRangeFieldSlots extends UseClearableFieldSlots {
-  /**
-   * Form control with an input to render the value.
-   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
-   */
-  textField?: React.ElementType;
-}
+export interface SingleInputTimeRangeFieldSlots extends ExportedPickerFieldUISlots {}
 
-export interface SingleInputTimeRangeFieldSlotProps extends UseClearableFieldSlotProps {
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
-  >;
-}
+export interface SingleInputTimeRangeFieldSlotProps extends PickerFieldUISlotProps {}

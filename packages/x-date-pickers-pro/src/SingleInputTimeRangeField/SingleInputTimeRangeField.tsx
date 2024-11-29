@@ -2,11 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
+import { ClockIcon } from '@mui/x-date-pickers/icons';
+import { PickerFieldUI, useFieldOwnerState } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
@@ -66,15 +63,14 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: ClockIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as DateRangeFieldComponent;
 
 SingleInputTimeRangeField.fieldType = 'single-input';

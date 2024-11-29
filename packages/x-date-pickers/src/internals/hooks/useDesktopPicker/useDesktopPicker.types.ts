@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
@@ -8,7 +7,7 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
-import { FieldOwnerState, PickerFieldSlotProps, PickerOwnerState } from '../../../models';
+import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -17,7 +16,6 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import { PickersTextFieldProps } from '../../../PickersTextField';
 import { ExportedPickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
@@ -39,12 +37,6 @@ export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
   textField?: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends ExportedUseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
-
 export interface ExportedUseDesktopPickerSlotProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -56,12 +48,13 @@ export interface ExportedUseDesktopPickerSlotProps<
     {},
     PickerOwnerState
   >;
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
-  >;
 }
+
+export interface UseDesktopPickerSlotProps<
+  TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends ExportedUseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
+    Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps
   extends BaseNonStaticPickerProps,

@@ -11,7 +11,7 @@ import {
   PickerValidValue,
 } from '../internals/models';
 import { PickerOwnerState } from './pickers';
-import { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
+import type { ExportedPickerFieldUIProps } from '../internals/components/PickerFieldUI';
 
 // Update PickersComponentAgnosticLocaleText -> viewNames when adding new entries
 export type FieldSectionType =
