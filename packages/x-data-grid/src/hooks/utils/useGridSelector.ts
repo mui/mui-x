@@ -12,6 +12,7 @@ function isOutputSelector<Api extends GridApiCommon, T>(
 ): selector is OutputSelector<Api['state'], T> {
   return selector.acceptsApiRef;
 }
+
 type Selector<Api extends GridApiCommon, Args, T> =
   | ((state: Api['state']) => T)
   | OutputSelectorV8<Api['state'], Args, T>;
