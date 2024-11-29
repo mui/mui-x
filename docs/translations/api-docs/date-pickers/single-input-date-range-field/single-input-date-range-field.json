@@ -82,9 +82,6 @@
       "description": "Callback fired when the selected sections change.",
       "typeDescriptions": { "newValue": "The new selected sections." }
     },
-    "openPickerButtonPosition": {
-      "description": "The position at which the UI to clear the value should be placed. If there is no picker to open, the button will not be rendered"
-    },
     "readOnly": {
       "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },

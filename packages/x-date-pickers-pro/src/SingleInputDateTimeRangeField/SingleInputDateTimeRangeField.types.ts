@@ -20,7 +20,8 @@ export interface UseSingleInputDateTimeRangeFieldProps<
       >,
       'unstableFieldRef'
     >,
-    ExportedPickerFieldUIProps {}
+    // TODO v8: Remove once the range fields open with a button.
+    Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition:'> {}
 
 export type SingleInputDateTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
