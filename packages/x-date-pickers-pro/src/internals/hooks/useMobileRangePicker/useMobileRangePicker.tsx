@@ -106,8 +106,10 @@ export const useMobileRangePicker = <
     },
   });
 
-  const Field = slots.field;
+  // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
+  providerProps.privateContextValue.openingUIStatus = 'hidden';
 
+  const Field = slots.field;
   const fieldProps: RangePickerPropsForFieldSlot<
     boolean,
     TEnableAccessibleFieldDOMStructure,

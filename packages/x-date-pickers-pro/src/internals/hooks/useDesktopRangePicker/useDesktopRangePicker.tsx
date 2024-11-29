@@ -110,6 +110,9 @@ export const useDesktopRangePicker = <
     },
   });
 
+  // Temporary hack to hide the opening button on the range pickers until we have migrate them to the new opening logic.
+  providerProps.privateContextValue.openingUIStatus = 'hidden';
+
   React.useEffect(() => {
     if (layoutProps.view) {
       initialView.current = layoutProps.view;
