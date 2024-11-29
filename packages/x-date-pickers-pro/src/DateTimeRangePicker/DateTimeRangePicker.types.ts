@@ -9,7 +9,7 @@ import {
   MobileDateTimeRangePickerSlots,
   MobileDateTimeRangePickerSlotProps,
 } from '../MobileDateTimeRangePicker';
-import { DateTimeRangeValidationError, RangeFieldSection } from '../models';
+import { DateTimeRangeValidationError } from '../models';
 import type { ValidateDateTimeRangeProps } from '../validation';
 
 export interface DateTimeRangePickerSlots
@@ -49,7 +49,6 @@ export type DateTimeRangePickerFieldProps<
 > = ValidateDateTimeRangeProps &
   BaseSingleInputFieldProps<
     PickerRangeValue,
-    RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     DateTimeRangeValidationError
   >;

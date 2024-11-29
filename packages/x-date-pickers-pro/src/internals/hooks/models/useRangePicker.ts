@@ -20,7 +20,6 @@ import {
   RangePickerFieldSlots,
   RangePickerFieldSlotProps,
 } from '../useEnrichedRangePickerFieldProps';
-import { RangeFieldSection } from '../../../models';
 
 export interface UseRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlots<PickerRangeValue, TView>,
@@ -58,13 +57,7 @@ export interface UseRangePickerParams<
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps, TAdditionalViewProps>,
   TAdditionalViewProps extends {},
 > extends Pick<
-    UsePickerParams<
-      PickerRangeValue,
-      TView,
-      RangeFieldSection,
-      TExternalProps,
-      TAdditionalViewProps
-    >,
+    UsePickerParams<PickerRangeValue, TView, TExternalProps, TAdditionalViewProps>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

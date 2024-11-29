@@ -219,6 +219,7 @@ describe('<DataGridPro /> - Row selection', () => {
           rows={gridRows}
           onFilterModelChange={onFilterChange}
           keepNonExistentRowsSelected
+          rowSelectionPropagation={{ parents: false, descendants: false }}
         />
       );
     }
@@ -950,7 +951,12 @@ describe('<DataGridPro /> - Row selection', () => {
   describe('apiRef: selectRows', () => {
     it('should call onRowSelectionModelChange with the ids selected', () => {
       const handleRowSelectionModelChange = spy();
-      render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
+      render(
+        <TestDataGridSelection
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          rowSelectionPropagation={{ parents: false, descendants: false }}
+        />,
+      );
 
       act(() => apiRef.current.selectRows(includeRowSelection([1, 2])));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(

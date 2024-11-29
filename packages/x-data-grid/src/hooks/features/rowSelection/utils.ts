@@ -17,8 +17,8 @@ import {
 } from '../../../models/gridRowSelectionModel';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
-  parents: false,
-  descendants: false,
+  parents: true,
+  descendants: true,
 };
 
 function getGridRowGroupSelectableDescendants(
