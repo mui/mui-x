@@ -191,9 +191,9 @@ The `GridDataSourceCacheDefault` is used by default which is a simple in-memory 
 
 ### Improving the cache hit rate
 
-To increase the cache hit rate, Data Grid splits `getRows()` results into chunks before storing them in cache. 
+To increase the cache hit rate, Data Grid splits `getRows()` results into chunks before storing them in cache.
 For the requests that follow, chunks are combined as needed to recreate the response.
-This means that a single request can make multiple calls to the `get` or `set` method of `GridDataSourceCache`.
+This means that a single request can make multiple calls to the `get()` or `set()` method of `GridDataSourceCache`.
 
 Chunk size is the lowest expected amount of records per request based on the `pageSize` value from the `paginationModel` and `pageSizeOptions` props.
 
@@ -216,7 +216,7 @@ Here are some examples:
 
 3. Incompatible page sizes - `pageSizeOptions={[7, 15, 40]}`
 
-   In this situation, the chunk size is 7. 
+   In this situation, the chunk size is 7.
    Retrieving the first page with `pageSize={15}` creates chunks split into `[7, 7, 1]` records.
    Loading the second page creates 3 new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
    These chunks with 1 record can only be used as the last piece of a request for `pageSize={15}` and are useless in all other cases.
