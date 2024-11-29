@@ -9,6 +9,10 @@ _Nov 29, 2024_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
+- ✨ Support for a new display mode on the Data Grid with the [List View feature](https://mui.com/x/react-data-grid/list-view/), offering an extremely flexible way to render datasets and enabling developers to adapt how data is displayed across different screen sizes.
+  
+  https://github.com/user-attachments/assets/61286adc-03fc-4323-9739-8ca726fcc16c
+
 - ⚛️ React 19 support
 - 📚 Documentation improvements
 - 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
