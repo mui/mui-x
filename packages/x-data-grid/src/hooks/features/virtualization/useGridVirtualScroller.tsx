@@ -211,8 +211,13 @@ export const useGridVirtualScroller = () => {
       if (!focusedCell?.id) {
         return null;
       }
+
       const rowIndex = currentPage.rows.findIndex((row) => row.id === focusedCell.id);
       const columnIndex = visibleColumns.findIndex((column) => column.field === focusedCell.field);
+
+      if (rowIndex === -1 || columnIndex === -1) {
+        return null;
+      }
 
       const isFocusedCellInContext =
         renderContext.firstRowIndex <= rowIndex && rowIndex <= renderContext.lastRowIndex;
@@ -431,7 +436,7 @@ export const useGridVirtualScroller = () => {
       ? range(0, params.rows.length)
       : range(firstRowToRender, lastRowToRender);
 
-    if (focusedVirtualCell) {
+    if (!isPinnedSection && focusedVirtualCell) {
       if (focusedVirtualCell.rowIndex < firstRowToRender) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
       }
