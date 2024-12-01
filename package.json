@@ -95,7 +95,7 @@
     "@mui/internal-markdown": "^1.0.21",
     "@mui/internal-test-utils": "^1.0.22",
     "@mui/material": "^5.16.8",
-    "@mui/monorepo": "github:mui/material-ui#821784419eefb89e4ce7b66c4b602a1e33d2fa88",
+    "@mui/monorepo": "github:mui/material-ui#e1b3bfa687e75d62db6f9a545f1f865f0a7e9273",
     "@mui/utils": "^5.16.8",
     "@next/eslint-plugin-next": "15.0.3",
     "@octokit/plugin-retry": "^7.1.2",
