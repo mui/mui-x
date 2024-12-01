@@ -150,7 +150,7 @@
     "eslint-plugin-mocha": "^10.5.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
+    "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-testing-library": "^7.0.0",
     "fast-glob": "^3.3.2",
