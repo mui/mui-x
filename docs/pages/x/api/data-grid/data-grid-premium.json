@@ -81,10 +81,7 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ ariaV8?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -603,7 +600,7 @@
     },
     "rowSelectionPropagation": {
       "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
-      "default": "{ parents: false, descendants: false }"
+      "default": "{ parents: true, descendants: true }"
     },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }

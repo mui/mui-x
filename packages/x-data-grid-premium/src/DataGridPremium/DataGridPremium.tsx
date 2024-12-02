@@ -329,7 +329,6 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    ariaV8: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -995,7 +994,7 @@ DataGridPremiumRaw.propTypes = {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: PropTypes.shape({
     descendants: PropTypes.bool,

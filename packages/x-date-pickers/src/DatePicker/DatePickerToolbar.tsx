@@ -9,15 +9,16 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { PickerValue } from '../internals/models';
 
 export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValidDate | null, DateView>,
+  extends BaseToolbarProps<PickerValue, DateView>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
