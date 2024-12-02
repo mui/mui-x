@@ -185,7 +185,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
           {
             pathname: '/x/react-data-grid/components/',
-            title: 'Grid components',
+            title: 'Components',
             unstable: true,
             children: [
               { pathname: '/x/react-data-grid/components/overview', title: 'Overview' },

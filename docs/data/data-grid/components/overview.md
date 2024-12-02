@@ -1,6 +1,6 @@
-# Data Grid - Grid components
+# Data Grid - Components
 
-<p class="description">Grid components provide a way to extend the default Data Grid UI via composable parts.</p>
+<p class="description">Data Grid components provide a way to extend the default UI via composable parts.</p>
 
 ## Introduction
 
@@ -26,13 +26,33 @@ function App() {
 
 ## Customization
 
-The `render` prop can be used to override the element rendered by each grid component.
+The grid components are highly customizable, built to integrate with components from any design system, and any styling method.
+
+### className
+
+The `className` prop can be used to apply styles to grid components:
+
+```tsx
+<Grid.FilterPanel.Trigger className="text-blue-600 underline" />
+```
+
+Some parts also provide internal state that can be used to conditionally add classes:
+
+```tsx
+<Grid.FilterPanel.Trigger
+  className={(state) => (state.open ? 'text-blue-600' : 'text-gray-900')}
+/>
+```
+
+### render
+
+The `render` prop can be used to override the element rendered by each grid component:
 
 ```tsx
 <Grid.FilterPanel.Trigger render={<MyCustomButton />} />
 ```
 
-A function can also be passed to the `render` prop, giving you control over the props that are forwarded to the custom element.
+A function can also be passed to the `render` prop, giving you control over the props that are forwarded to the custom element:
 
 ```tsx
 <Grid.FilterPanel.Trigger
@@ -40,7 +60,7 @@ A function can also be passed to the `render` prop, giving you control over the 
 />
 ```
 
-Some parts also provide internal state that can be used to control what is rendered by the `render` function.
+Some parts also provide internal state that can be used to control what is rendered by the `render` function:
 
 ```tsx
 <Grid.FilterPanel.Trigger
@@ -51,3 +71,10 @@ Some parts also provide internal state that can be used to control what is rende
   )}
 />
 ```
+
+## Components
+
+- [Toolbar](/x/react-data-grid/components/toolbar/)
+- [Columns Panel](/x/react-data-grid/components/columns-panel/)
+- [Filter Panel](/x/react-data-grid/components/filter-panel/)
+- [Export](/x/react-data-grid/components/export/)
