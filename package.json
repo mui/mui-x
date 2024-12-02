@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0-alpha.1",
+  "version": "8.0.0-alpha.2",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -95,7 +95,7 @@
     "@mui/internal-markdown": "^1.0.21",
     "@mui/internal-test-utils": "^1.0.22",
     "@mui/material": "^5.16.8",
-    "@mui/monorepo": "github:mui/material-ui#821784419eefb89e4ce7b66c4b602a1e33d2fa88",
+    "@mui/monorepo": "github:mui/material-ui#e1b3bfa687e75d62db6f9a545f1f865f0a7e9273",
     "@mui/utils": "^5.16.8",
     "@next/eslint-plugin-next": "15.0.3",
     "@octokit/plugin-retry": "^7.1.2",
@@ -109,7 +109,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.7",
+    "@types/node": "^20.17.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-test-renderer": "^18.3.0",
@@ -144,13 +144,13 @@
     "eslint-import-resolver-webpack": "^0.13.9",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsdoc": "^50.5.0",
+    "eslint-plugin-jsdoc": "^50.6.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-material-ui": "workspace:^",
     "eslint-plugin-mocha": "^10.5.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-compiler": "19.0.0-beta-a7bf2bd-20241110",
+    "eslint-plugin-react-compiler": "19.0.0-beta-df7b47d-20241124",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-testing-library": "^7.0.0",
     "fast-glob": "^3.3.2",
@@ -199,7 +199,7 @@
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^20.17.7"
+    "@types/node": "^20.17.9"
   },
   "packageManager": "pnpm@9.14.2",
   "engines": {
