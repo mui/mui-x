@@ -55,6 +55,11 @@ export interface PickerContextValue {
    */
   onClose: (event: React.UIEvent) => void;
   /**
+   * Close the picker if it's open, open it if it's closed.
+   * @param {React.UIEvent} event The DOM event that triggered the change.
+   */
+  onToggleOpening: (event: React.UIEvent) => void;
+  /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;

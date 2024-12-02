@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerOwnerState } from '../../../models';
 import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
 import {
@@ -67,6 +68,14 @@ export function usePickerProvider<TValue extends PickerValidValue>(
   const utils = useUtils();
   const orientation = usePickerOrientation(views, props.orientation);
 
+  const handleTogglePicker = useEventCallback((event: React.UIEvent) => {
+    if (pickerValueResponse.open) {
+      pickerValueResponse.actions.onClose(event);
+    } else {
+      pickerValueResponse.actions.onOpen(event);
+    }
+  });
+
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
       isPickerValueEmpty: valueManager.areValuesEqual(
@@ -96,6 +105,7 @@ export function usePickerProvider<TValue extends PickerValidValue>(
     () => ({
       onOpen: pickerValueResponse.actions.onOpen,
       onClose: pickerValueResponse.actions.onClose,
+      onToggleOpening: handleTogglePicker,
       open: pickerValueResponse.open,
       disabled: props.disabled ?? false,
       readOnly: props.readOnly ?? false,
@@ -105,6 +115,7 @@ export function usePickerProvider<TValue extends PickerValidValue>(
     [
       pickerValueResponse.actions.onOpen,
       pickerValueResponse.actions.onClose,
+      handleTogglePicker,
       pickerValueResponse.open,
       variant,
       orientation,
