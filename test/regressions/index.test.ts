@@ -47,8 +47,11 @@ async function main() {
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
-    args: ['--font-render-hinting=none'],
-    // otherwise the loaded google Roboto font isn't applied
+    args: [
+      // We could add the hide-scrollbars flag, which should improve argos
+      // flaky tests based on the scrollbars.
+      // '--hide-scrollbars',
+    ],
     headless: false,
   });
   // reuse viewport from `vrtest`
@@ -120,6 +123,10 @@ async function main() {
       const pathURL = route.replace(baseURL, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
+        // Move cursor offscreen to not trigger unwanted hover effects.
+        // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
+        await page.mouse.move(0, 0);
+
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
           this.timeout(0);
@@ -130,9 +137,6 @@ async function main() {
         }
 
         await navigateToTest(page, pathURL);
-
-        // Move cursor offscreen to not trigger unwanted hover effects.
-        await page.mouse.move(0, 0);
 
         const screenshotPath = path.resolve(screenshotDir, path.join('.', `${pathURL}.png`));
         await fse.ensureDir(path.dirname(screenshotPath));
