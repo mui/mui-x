@@ -111,7 +111,8 @@ export const useGridRowPinningPreProcessors = (
 
       if (prevPinnedRowsCache) {
         const pinnedRowCleanup = (rowId: GridRowId) => {
-          if (newGroupingParams.tree[rowId].type === 'pinnedRow') {
+          const node = newGroupingParams.tree[rowId];
+          if (node?.type === 'pinnedRow') {
             delete newGroupingParams.tree[rowId];
             delete newGroupingParams.dataRowIdToModelLookup[rowId];
             delete newGroupingParams.dataRowIdToIdLookup[rowId];
