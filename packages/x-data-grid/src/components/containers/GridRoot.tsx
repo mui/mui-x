@@ -97,5 +97,5 @@ GridRoot.propTypes = {
   ]),
 } as any;
 
-const GridRootMemo = React.memo(GridRoot);
+const MemoizedGridRoot = fastMemo(GridRoot);
 export { GridRootMemo as GridRoot };
