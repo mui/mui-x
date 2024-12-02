@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
+import { InferNonNullablePickerValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import {
   BuildFieldInteractionsResponse,
   FieldPressCharacter,
@@ -8,11 +9,14 @@ import {
 } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 
-interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {
+interface DescribeValueBaseOptions<
+  TValue extends PickerValidValue,
+  C extends PickerComponentFamily,
+> {
   componentFamily: C;
   render: (node: React.ReactElement) => MuiRenderResult;
   assertRenderedValue: (expectedValue: TValue) => void;
-  values: [TValue, TValue];
+  values: [InferNonNullablePickerValue<TValue>, InferNonNullablePickerValue<TValue>];
   emptyValue: TValue;
   defaultProps?: object;
   // TODO: Export `Clock` from monorepo
@@ -21,12 +25,12 @@ interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {
 
 export type DescribeValueOptions<
   C extends PickerComponentFamily,
-  TValue,
+  TValue extends PickerValidValue,
 > = DescribeValueBaseOptions<TValue, C> &
   (C extends 'picker'
     ? OpenPickerParams & {
         setNewValue: (
-          value: TValue,
+          value: InferNonNullablePickerValue<TValue>,
           options: {
             selectSection: FieldSectionSelector;
             pressKey: FieldPressCharacter;
@@ -34,7 +38,7 @@ export type DescribeValueOptions<
             applySameValue?: boolean;
             setEndDate?: boolean;
           },
-        ) => TValue;
+        ) => InferNonNullablePickerValue<TValue>;
       }
     : {
         setNewValue: (
@@ -43,7 +47,10 @@ export type DescribeValueOptions<
         ) => TValue;
       });
 
-export type DescribeValueTestSuite<TValue, C extends PickerComponentFamily> = (
+export type DescribeValueTestSuite<
+  TValue extends PickerValidValue,
+  C extends PickerComponentFamily,
+> = (
   ElementToTest: React.FunctionComponent<any>,
   options: DescribeValueOptions<C, TValue> & {
     renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];

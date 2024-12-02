@@ -10,6 +10,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DigitalClock /> - Describes', () => {
@@ -32,7 +33,7 @@ describe('<DigitalClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(DigitalClock, () => ({
+  describeValue<PickerValue, 'digital-clock'>(DigitalClock, () => ({
     render,
     componentFamily: 'digital-clock',
     type: 'time',

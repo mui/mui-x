@@ -193,10 +193,12 @@ export default function ChartDemoPropsForm<T extends string>({
           component="h3"
           fontWeight="bold"
           sx={{ scrollMarginTop: 160, fontFamily: 'General Sans' }}
+          // eslint-disable-next-line material-ui/no-hardcoded-labels
         >
           Playground
         </Typography>
         <IconButton
+          // eslint-disable-next-line material-ui/no-hardcoded-labels
           aria-label="Reset all"
           size="small"
           onClick={() => onPropsChange(initialProps)}
@@ -427,6 +429,7 @@ export default function ChartDemoPropsForm<T extends string>({
           if (knob === 'placement') {
             return (
               <FormControl key={propName}>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <FormLabel>Placement</FormLabel>
                 <RadioGroup
                   name="placement"

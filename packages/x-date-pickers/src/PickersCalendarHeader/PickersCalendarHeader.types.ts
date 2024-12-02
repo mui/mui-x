@@ -9,7 +9,7 @@ import {
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, DateView } from '../models';
+import { PickerValidDate, DateView, PickerOwnerState } from '../models';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
@@ -29,19 +29,17 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
 // We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderSlotPropsOverrides {}
 
-export type PickersCalendarHeaderOwnerState = PickersCalendarHeaderProps;
-
 export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderSlotPropsOverrides,
-    PickersCalendarHeaderOwnerState
+    PickerOwnerState
   >;
 
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
-    PickersCalendarHeaderOwnerState
+    PickerOwnerState
   >;
 }
 

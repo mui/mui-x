@@ -9,7 +9,6 @@ import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
 import { validateDateTimeRange } from '../validation';
-import { RangeFieldSection } from '../models';
 
 export const useSingleInputDateTimeRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -31,7 +30,6 @@ export const useSingleInputDateTimeRangeField = <
 
   return useField<
     PickerRangeValue,
-    RangeFieldSection,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
     typeof internalProps

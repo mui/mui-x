@@ -53,7 +53,11 @@ export default function AxisWithComposition() {
       >
         <BarPlot />
         <LinePlot />
-        <ChartsXAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
+        <ChartsXAxis
+          axisId="quarters"
+          label="2021 quarters"
+          labelStyle={{ fontSize: 18 }}
+        />
         <ChartsYAxis axisId="quantities" label="# units sold" />
         <ChartsYAxis axisId="money" position="right" label="revenue" />
       </ChartContainer>

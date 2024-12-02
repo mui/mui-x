@@ -7,12 +7,13 @@ import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersL
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { UseFieldInternalProps } from '../../hooks/useField';
+import { PickerValidValue } from '../value';
 
 /**
  * Props common to all pickers after applying the default props on each picker.
  */
 export interface BasePickerProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
@@ -33,8 +34,11 @@ export interface BasePickerProps<
 /**
  * Props common to all pickers before applying the default props on each picker.
  */
-export interface BasePickerInputProps<TValue, TView extends DateOrTimeViewWithMeridiem, TError>
-  extends Omit<
+export interface BasePickerInputProps<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+> extends Omit<
     MakeOptional<BasePickerProps<TValue, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
@@ -46,7 +50,7 @@ export interface BasePickerInputProps<TValue, TView extends DateOrTimeViewWithMe
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any>,
+    UseFieldInternalProps<any, any, any>,
     | 'formatDensity'
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'

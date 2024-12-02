@@ -522,6 +522,7 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
 
     let count = 0;
     let current = start;
+    let currentDayOfYear = current.get('dayOfYear');
     const nestedWeeks: Moment[][] = [];
 
     while (current.isBefore(end)) {
@@ -529,7 +530,17 @@ export class AdapterMoment implements MuiPickersAdapter<string> {
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
 
+      const prevDayOfYear = currentDayOfYear;
       current = this.addDays(current, 1);
+      currentDayOfYear = current.get('dayOfYear');
+
+      // If there is a TZ change at midnight, adding 1 day may only increase the date by 23 hours to 11pm
+      // To fix, bump the date into the next day (add 12 hours) and then revert to the start of the day
+      // See https://github.com/moment/moment/issues/4743#issuecomment-811306874 for context.
+      if (prevDayOfYear === currentDayOfYear) {
+        current = current.add(12, 'h').startOf('day');
+      }
+
       count += 1;
     }
 

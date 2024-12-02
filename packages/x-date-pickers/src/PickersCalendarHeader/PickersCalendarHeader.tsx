@@ -18,15 +18,14 @@ import {
 } from '../internals/hooks/date-helpers-hooks';
 import {
   getPickersCalendarHeaderUtilityClass,
+  PickersCalendarHeaderClasses,
   pickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import {
-  PickersCalendarHeaderOwnerState,
-  PickersCalendarHeaderProps,
-} from './PickersCalendarHeader.types';
+import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {
     root: ['root'],
     labelContainer: ['labelContainer'],
@@ -43,7 +42,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState;
+  ownerState: PickerOwnerState;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -61,7 +60,7 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   slot: 'LabelContainer',
   overridesResolver: (_, styles) => styles.labelContainer,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState;
+  ownerState: PickerOwnerState;
 }>(({ theme }) => ({
   display: 'flex',
   overflow: 'hidden',
@@ -77,7 +76,7 @@ const PickersCalendarHeaderLabel = styled('div', {
   slot: 'Label',
   overridesResolver: (_, styles) => styles.label,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState;
+  ownerState: PickerOwnerState;
 }>({
   marginRight: 6,
 });
@@ -87,7 +86,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   slot: 'SwitchViewButton',
   overridesResolver: (_, styles) => styles.switchViewButton,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState;
+  ownerState: PickerOwnerState;
 }>({
   marginRight: 'auto',
   variants: [
@@ -107,7 +106,7 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
 })<{
-  ownerState: PickersCalendarHeaderOwnerState;
+  ownerState: PickerOwnerState;
 }>(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
@@ -154,14 +153,14 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
     views,
     labelId,
     className,
+    classes: classesProp,
     timezone,
     format = `${utils.formats.month} ${utils.formats.year}`,
     ...other
   } = props;
 
-  const ownerState = props;
-
-  const classes = useUtilityClasses(props);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
 
   const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
