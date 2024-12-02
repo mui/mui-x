@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
@@ -56,5 +57,5 @@ function Watermark(props: WatermarkProps) {
   );
 }
 
-const WatermarkMemo = React.memo(Watermark);
-export { WatermarkMemo as Watermark };
+const MemoizedWatermark = fastMemo(Watermark);
+export { MemoizedWatermark as Watermark };

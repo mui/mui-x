@@ -19,6 +19,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
 import { GridHeader } from '../GridHeader';
 import { GridBody, GridFooterPlaceholder } from '../base';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -98,4 +99,4 @@ GridRoot.propTypes = {
 } as any;
 
 const MemoizedGridRoot = fastMemo(GridRoot);
-export { GridRootMemo as GridRoot };
+export { MemoizedGridRoot as GridRoot };
