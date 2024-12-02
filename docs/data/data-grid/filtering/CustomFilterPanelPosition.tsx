@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridSlots,
+  GridSlotProps,
   GridToolbarContainer,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid';
@@ -9,11 +9,15 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-interface CustomToolbarProps {
-  setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverrides {
+    setFilterButtonEl: React.Dispatch<
+      React.SetStateAction<HTMLButtonElement | null>
+    >;
+  }
 }
 
-function CustomToolbar({ setFilterButtonEl }: CustomToolbarProps) {
+function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   return (
     <GridToolbarContainer>
       <GridToolbarFilterButton ref={setFilterButtonEl} />
@@ -22,7 +26,7 @@ function CustomToolbar({ setFilterButtonEl }: CustomToolbarProps) {
 }
 
 export default function CustomFilterPanelPosition() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -35,16 +39,13 @@ export default function CustomFilterPanelPosition() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{
-          toolbar: CustomToolbar as GridSlots['toolbar'],
-        }}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
         slotProps={{
           panel: {
             anchorEl: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          },
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

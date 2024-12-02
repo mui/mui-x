@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { firePointerEvent } from '../tests/firePointerEvent';
 
 const config = {
   dataset: [
@@ -54,7 +53,8 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
+      fireEvent.pointerMove(svg, {
         clientX: 198,
         clientY: 60,
       });
@@ -73,7 +73,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 201,
         clientY: 60,
       });
@@ -120,7 +120,8 @@ describe('ChartsTooltip', () => {
       );
       const svg = document.querySelector<HTMLElement>('svg')!;
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       });
@@ -139,7 +140,7 @@ describe('ChartsTooltip', () => {
         '2',
       ]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 220,
       });
@@ -182,7 +183,7 @@ describe('ChartsTooltip', () => {
               { dataKey: 'v2', id: 's2', label: 'S2' },
             ]}
             xAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );
@@ -191,7 +192,8 @@ describe('ChartsTooltip', () => {
 
       fireEvent.pointerEnter(rectangles[0]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position
@@ -226,7 +228,7 @@ describe('ChartsTooltip', () => {
             ]}
             layout="horizontal"
             yAxis={[{ scaleType: 'band', dataKey: 'x' }]}
-            tooltip={{ trigger: 'item' }}
+            slotProps={{ tooltip: { trigger: 'item' } }}
           />
         </div>,
       );
@@ -235,7 +237,8 @@ describe('ChartsTooltip', () => {
 
       fireEvent.pointerEnter(rectangles[0]);
 
-      firePointerEvent(svg, 'pointermove', {
+      fireEvent.pointerEnter(svg); // Trigger the tooltip
+      fireEvent.pointerMove(svg, {
         clientX: 150,
         clientY: 60,
       }); // Only to set the tooltip position

@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -67,7 +67,7 @@ export default function ReverseExampleNoSnap() {
         />
       </Stack>
       <Box sx={{ width: '100%' }}>
-        <ResponsiveChartContainer
+        <ChartContainer
           series={series}
           xAxis={[
             {
@@ -97,7 +97,7 @@ export default function ReverseExampleNoSnap() {
             label="precipitation (mm)"
           />
           <ChartsTooltip />
-        </ResponsiveChartContainer>
+        </ChartContainer>
       </Box>
     </Stack>
   );

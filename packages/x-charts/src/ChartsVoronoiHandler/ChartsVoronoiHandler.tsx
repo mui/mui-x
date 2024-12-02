@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { InteractionContext } from '../context/InteractionProvider';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
@@ -34,7 +34,8 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { dispatch } = React.useContext(InteractionContext);
+
+  const store = useStore();
 
   const { series, seriesOrder } = useScatterSeries() ?? {};
   const voronoiRef = React.useRef<Record<string, VoronoiSeries>>({});
@@ -47,11 +48,18 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const defaultYAxisId = yAxisIds[0];
 
   useEnhancedEffect(() => {
-    dispatch({ type: 'updateVoronoiUsage', useVoronoiInteraction: true });
+    store.update((prev) => ({
+      ...prev,
+      interaction: { ...prev.interaction, useVoronoiInteraction: true },
+    }));
+
     return () => {
-      dispatch({ type: 'updateVoronoiUsage', useVoronoiInteraction: false });
+      store.update((prev) => ({
+        ...prev,
+        interaction: { ...prev.interaction, useVoronoiInteraction: false },
+      }));
     };
-  }, [dispatch]);
+  }, [store]);
 
   useEnhancedEffect(() => {
     // This effect generate and store the Delaunay object that's used to map coordinate to closest point.
@@ -64,10 +72,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     voronoiRef.current = {};
     let points: number[] = [];
     seriesOrder.forEach((seriesId) => {
-      const { data, xAxisId, yAxisId, xAxisKey, yAxisKey } = series[seriesId];
+      const { data, xAxisId, yAxisId } = series[seriesId];
 
-      const xScale = xAxis[xAxisId ?? xAxisKey ?? defaultXAxisId].scale;
-      const yScale = yAxis[yAxisId ?? yAxisKey ?? defaultYAxisId].scale;
+      const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+      const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
 
       const getXPosition = getValueToPositionMapper(xScale);
       const getYPosition = getValueToPositionMapper(yScale);
@@ -99,10 +107,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
+    if (svgRef.current === null) {
       return undefined;
     }
+    const element = svgRef.current;
 
     function getClosestPoint(
       event: MouseEvent,
@@ -153,7 +161,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     }
 
     const handleMouseLeave = () => {
-      dispatch({ type: 'exitChart' });
+      store.update((prev) => ({
+        ...prev,
+        interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
+      }));
       clearHighlighted();
     };
 
@@ -161,19 +172,29 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
       const closestPoint = getClosestPoint(event);
 
       if (closestPoint === 'outside-chart') {
-        dispatch({ type: 'exitChart' });
+        store.update((prev) => ({
+          ...prev,
+          interaction: { ...prev.interaction, axis: { x: null, y: null }, item: null },
+        }));
         clearHighlighted();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        dispatch({ type: 'leaveItem', data: { type: 'scatter' } });
+        store.update((prev) => ({
+          ...prev,
+          interaction: { ...prev.interaction, item: null },
+        }));
         clearHighlighted();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      dispatch({ type: 'enterItem', data: { type: 'scatter', seriesId, dataIndex } });
+      store.update((prev) => ({
+        ...prev,
+        interaction: { ...prev.interaction, item: { type: 'scatter', seriesId, dataIndex } },
+      }));
+
       setHighlighted({
         seriesId,
         dataIndex,
@@ -205,7 +226,6 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     };
   }, [
     svgRef,
-    dispatch,
     yAxis,
     xAxis,
     voronoiMaxRadius,
@@ -213,6 +233,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
     setHighlighted,
     clearHighlighted,
     drawingArea,
+    store,
   ]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment

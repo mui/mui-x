@@ -55,16 +55,16 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   { label: 'Reset', getValue: () => [null, null] },
 ];
 
-interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, Dayjs, 'day'> {
+interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, 'day'> {
   isHorizontal?: boolean;
 }
 function CustomLayout(props: CustomLayoutProps) {
   const { isHorizontal, ...other } = props;
-  const { tabs, content, shortcuts } = usePickerLayout(other);
+  const { tabs, content, shortcuts, ownerState } = usePickerLayout(other);
 
   return (
     <PickersLayoutRoot
-      ownerState={props}
+      ownerState={ownerState}
       sx={{
         overflow: 'auto',
         [`.${pickersLayoutClasses.shortcuts}`]: isHorizontal
@@ -83,7 +83,10 @@ function CustomLayout(props: CustomLayoutProps) {
       }}
     >
       {shortcuts}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

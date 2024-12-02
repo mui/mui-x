@@ -8,8 +8,8 @@ import { MUI_X_PRODUCTS } from './products';
 
 const CustomContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
-  width: '100%',
   border: '1px solid',
   display: 'flex',
   '&:hover': {

@@ -12,9 +12,11 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  convertFieldResponseIntoMuiTextFieldProps,
+  useFieldOwnerState,
+} from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
   MultiInputTimeRangeFieldProps,
@@ -31,8 +33,7 @@ export const multiInputTimeRangeFieldClasses: MultiInputRangeFieldClasses = gene
 export const getMultiInputTimeRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputTimeRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputTimeRangeFieldProps<any, any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undefined) => {
   const slots = {
     root: ['root'],
     separator: ['separator'],
@@ -61,10 +62,9 @@ const MultiInputTimeRangeFieldSeparator = styled(Typography, {
 });
 
 type MultiInputTimeRangeFieldComponent = (<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  props: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> &
+  props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -79,10 +79,9 @@ type MultiInputTimeRangeFieldComponent = (<
  * - [MultiInputTimeRangeField API](https://mui.com/x/api/multi-input-time-range-field/)
  */
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+  inProps: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
@@ -98,11 +97,12 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
+    classes: classesProp,
     ...otherForwardedProps
   } = forwardedProps;
 
-  const ownerState = themeProps;
-  const classes = useUtilityClasses(ownerState);
+  const ownerState = useFieldOwnerState(themeProps);
+  const classes = useUtilityClasses(classesProp);
 
   const Root = slots?.root ?? MultiInputTimeRangeFieldRoot;
   const rootProps = useSlotProps({
@@ -121,9 +121,9 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputTimeRangeFieldSlotProps['textField'],
     {},
-    MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -134,9 +134,9 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 
   const endTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputTimeRangeFieldSlotProps<TDate, TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputTimeRangeFieldSlotProps['textField'],
     {},
-    MultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure> & {
+    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
     }
   >({
@@ -157,7 +157,6 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   });
 
   const fieldResponse = useMultiInputTimeRangeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startTextFieldProps
   >({
@@ -221,6 +220,7 @@ MultiInputTimeRangeField.propTypes = {
   ]),
   /**
    * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -296,8 +296,8 @@ MultiInputTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -333,17 +333,16 @@ MultiInputTimeRangeField.propTypes = {
   ]),
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.

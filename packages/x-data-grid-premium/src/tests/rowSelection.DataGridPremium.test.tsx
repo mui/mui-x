@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createRenderer, fireEvent } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -68,6 +69,19 @@ describe('<DataGridPremium /> - Row selection', () => {
       );
     }
 
+    it('should auto select parents when controlling row selection model', () => {
+      const onRowSelectionModelChange = spy();
+      render(
+        <Test rowSelectionModel={[3, 4]} onRowSelectionModelChange={onRowSelectionModelChange} />,
+      );
+
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([
+        3,
+        4,
+        'auto-generated-row-category1/Cat B',
+      ]);
+    });
+
     it('should select all the children when selecting a parent', () => {
       render(<Test />);
 
@@ -122,43 +136,36 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
     });
 
-    describe("prop: indeterminateCheckboxAction = 'select'", () => {
-      it('should select all the children when selecting an indeterminate parent', () => {
-        render(
-          <Test
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="select"
-          />,
-        );
+    // Context: https://github.com/mui/mui-x/issues/15206
+    it('should keep the correct selection items and the selection count when rows are updated', () => {
+      render(<Test />);
 
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(0, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([
-          0,
-          1,
-          2,
-          'auto-generated-row-category1/Cat A',
-        ]);
+      const expectedKeys = ['auto-generated-row-category1/Cat B', 3, 4];
+      const expectedCount = 3;
+
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
+
+      act(() => {
+        apiRef.current.updateRows([...rows]);
       });
+      expect(apiRef.current.getSelectedRows()).to.have.keys(expectedKeys);
+      expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
     });
 
-    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
-      it('should deselect all the children when selecting an indeterminate parent', () => {
-        render(
-          <Test
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="deselect"
-          />,
-        );
+    it('should select all the children when selecting an indeterminate parent', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(0, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows().size).to.equal(0);
-      });
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([
+        0,
+        1,
+        2,
+        'auto-generated-row-category1/Cat A',
+      ]);
     });
   });
 });

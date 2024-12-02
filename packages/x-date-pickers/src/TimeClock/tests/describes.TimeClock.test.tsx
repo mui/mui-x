@@ -13,6 +13,7 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
@@ -26,7 +27,7 @@ describe('<TimeClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(TimeClock, () => ({
+  describeValue<PickerValue, 'clock'>(TimeClock, () => ({
     render,
     componentFamily: 'clock',
     values: [adapterToUse.date('2018-01-01T12:30:00'), adapterToUse.date('2018-01-01T13:35:00')],
@@ -51,7 +52,7 @@ describe('<TimeClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
 
       timeClockHandler.setViewValue(adapterToUse, newValue, 'hours');
       timeClockHandler.setViewValue(adapterToUse, newValue, 'minutes');

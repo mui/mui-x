@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useCartesianContext } from '../context/CartesianProvider';
 import {
   AreaElement,
+  areaElementClasses,
   AreaElementProps,
   AreaElementSlotProps,
   AreaElementSlots,
@@ -36,6 +38,16 @@ export interface AreaPlotProps
   ) => void;
 }
 
+const AreaPlotRoot = styled('g', {
+  name: 'MuiAreaPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${areaElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 const useAggregatedData = () => {
   const seriesData = useLineSeries();
   const axisData = useCartesianContext();
@@ -56,18 +68,13 @@ const useAggregatedData = () => {
         .reverse() // Revert stacked area for a more pleasant animation
         .map((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             connectNulls,
             baseline,
           } = series[seriesId];
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;
@@ -159,7 +166,7 @@ function AreaPlot(props: AreaPlotProps) {
   const completedData = useAggregatedData();
 
   return (
-    <g {...other}>
+    <AreaPlotRoot {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientUsed }) =>
           !!area && (
@@ -176,7 +183,7 @@ function AreaPlot(props: AreaPlotProps) {
             />
           ),
       )}
-    </g>
+    </AreaPlotRoot>
   );
 }
 

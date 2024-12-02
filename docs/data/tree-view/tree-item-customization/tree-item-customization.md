@@ -17,10 +17,10 @@ Each Tree Item component is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
 <span class="only-light-mode" style="border: 1px solid rgb(232, 234, 238); border-radius:12px">
-<img src="/static/x/tree-view-illustrations/tree-item-light.png" alt="Tree Item anatomy" loading="lazy"   >
+  <img src="/static/x/tree-view-illustrations/tree-item-light.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
 </span>
 <span class="only-dark-mode" style="border: 1px solid rgb(29, 33, 38); border-radius:12px">
-<img src="/static/x/tree-view-illustrations/tree-item-dark.png" alt="Tree Item anatomy" loading="lazy"   >
+  <img src="/static/x/tree-view-illustrations/tree-item-dark.png" width="1632" height="644" alt="Tree Item anatomy" loading="lazy" style="display: block;">
 </span>
 
 ### Content
@@ -81,40 +81,6 @@ Use the `itemChildrenIndentation` prop to change the indentation of the nested i
 By default, a nested item is indented by `12px` from its parent item.
 
 {{"demo": "ItemChildrenIndentationProp.js"}}
-
-:::success
-If you are using a custom Tree Item component, and you want to override the padding,
-then apply the following padding to your `groupTransition` element:
-
-```ts
-const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)(({ theme }) => ({
-  // ...other styles
-  paddingLeft: `var(--TreeView-itemChildrenIndentation)`,
-}
-```
-
-If you are using the `indentationAtItemLevel` prop, then instead apply the following padding to your `content` element:
-
-```ts
-const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
-  // ...other styles
-  paddingLeft:
-      `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
-}
-```
-
-:::
-
-### Apply the nested item's indentation at the item level
-
-By default, the indentation of nested items is applied by the `groupTransition` slot of its parent (i.e.: the DOM element that wraps all the children of a given item).
-This approach is not compatible with upcoming features like the reordering of items using drag & drop.
-
-To apply the indentation at the item level (i.e.: have each item responsible for setting its own indentation using the `padding-left` CSS property on its `content` slot),
-you can use the `indentationAtItemLevel` experimental feature.
-It will become the default behavior in the next major version of the Tree View component.
-
-{{"demo": "IndentationAtItemLevel.js"}}
 
 :::success
 If you are using a custom Tree Item component, and you want to override the padding,
@@ -180,13 +146,20 @@ You can use the `useTreeItem` hook to access the `publicAPI` object from within 
 
 See the **Imperative API** section on each feature page to learn more about the public API methods available on the Tree View.
 
+:::warning
+The `publicAPI` object should not be used in the render because the item won't necessarily re-render when the returned value is updated.
+
+If you want to access the item model, you can use the `useTreeItemModel` hook.
+See [Tree Item Customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
+:::
+
 ### `useTreeItemUtils`
 
 The `useTreeItemUtils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
 It also returns the status of the Item.
 
 ```jsx
-const { interactions, status } = useTreeItemUtils({
+const { interactions, status, publicAPI } = useTreeItemUtils({
   itemId: props.itemId,
   children: props.children,
 });
@@ -241,3 +214,13 @@ const {
 ```
 
 See [Editing—enable editing using only icons](/x/react-tree-view/rich-tree-view/editing/#enable-editing-using-only-icons) for more details on customizing this behavior.
+
+### `useTreeItemModel`
+
+The `useTreeItemModel` hook lets you access the item model (the object passed to `props.items`):
+
+```jsx
+const item = useTreeItemModel(itemId);
+```
+
+{{"demo": "LabelSlot.js"}}

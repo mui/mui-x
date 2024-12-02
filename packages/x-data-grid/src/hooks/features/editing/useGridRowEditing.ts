@@ -432,10 +432,11 @@ export const useGridRowEditing = (
           return acc;
         }
 
+        const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           if (deleteValue) {
-            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+            newValue = getDefaultCellValue(column);
           } else if (initialValue) {
             newValue = initialValue;
           }
@@ -444,7 +445,7 @@ export const useGridRowEditing = (
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: false,
+          isProcessingProps: !!column.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -455,8 +456,35 @@ export const useGridRowEditing = (
       if (fieldToFocus) {
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
+
+      columnFields
+        .filter((field) => !!apiRef.current.getColumn(field).preProcessEditCellProps && deleteValue)
+        .forEach((field) => {
+          const column = apiRef.current.getColumn(field);
+          const value = apiRef.current.getCellValue(id, field);
+          const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
+
+          Promise.resolve(
+            column.preProcessEditCellProps!({
+              id,
+              row: apiRef.current.getRow(id),
+              props: newProps[field],
+              hasChanged: newValue !== value,
+            }),
+          ).then((processedProps) => {
+            // Check if still in edit mode before updating
+            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
+              const editingState = gridEditRowsStateSelector(apiRef.current.state);
+              updateOrDeleteFieldState(id, field, {
+                ...processedProps,
+                value: editingState[id][field].value,
+                isProcessingProps: false,
+              });
+            }
+          });
+        });
     },
-  ) as GridRowEditingApi['stopRowEditMode'];
+  ) as GridRowEditingApi['startRowEditMode'];
 
   const stopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
     (params) => {

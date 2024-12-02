@@ -30,7 +30,9 @@
     "disableAutoMonthSwitching": {
       "description": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date."
     },
-    "disabled": { "description": "If <code>true</code>, the picker and text field are disabled." },
+    "disabled": {
+      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
+    },
     "disableDragEditing": {
       "description": "If <code>true</code>, editing dates by dragging is disabled."
     },
@@ -115,6 +117,9 @@
     "open": { "description": "Control the popup or dialog open state." },
     "rangePosition": {
       "description": "The position in the currently edited date range. Used when the component position is controlled."
+    },
+    "readOnly": {
+      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },
     "reduceAnimations": { "description": "If <code>true</code>, disable heavy animations." },
     "referenceDate": {

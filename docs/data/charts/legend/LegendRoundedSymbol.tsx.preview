@@ -1,0 +1,10 @@
+<PieChart
+  series={series}
+  width={400}
+  height={200}
+  sx={{
+    [`& .${legendClasses.mark}`]: {
+      ry: '50%',
+    },
+  }}
+/>

@@ -94,11 +94,16 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     const onScrollerScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+      if (!scrollbar) {
+        return;
+      }
 
       if (scroller[propertyScroll] === lastPosition.current) {
         return;
       }
+
+      lastPosition.current = scroller[propertyScroll];
 
       if (isLocked.current) {
         isLocked.current = false;
@@ -108,13 +113,14 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
       const value = scroller[propertyScroll] / contentSize;
       scrollbar[propertyScroll] = value * scrollbarInnerSize;
-
-      lastPosition.current = scroller[propertyScroll];
     });
 
     const onScrollbarScroll = useEventCallback(() => {
       const scroller = apiRef.current.virtualScrollerRef.current!;
-      const scrollbar = scrollbarRef.current!;
+      const scrollbar = scrollbarRef.current;
+      if (!scrollbar) {
+        return;
+      }
 
       if (isLocked.current) {
         isLocked.current = false;

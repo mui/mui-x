@@ -58,12 +58,12 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) {
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
+  const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   return (
     <PickersLayoutRoot
-      ownerState={props}
+      ownerState={ownerState}
       sx={{
         overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
@@ -79,7 +79,10 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) 
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

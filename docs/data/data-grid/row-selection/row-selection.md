@@ -36,6 +36,13 @@ In the demo below only rows with quantity above 50,000 can be selected:
 
 {{"demo": "DisableRowSelection.js", "bg": "inline"}}
 
+## Row selection with filtering
+
+By default, when the rows are filtered the selection is cleared from the rows that don't meet the filter criteria.
+To keep those rows selected even when they're not visible, set the `keepNonExistentRowsSelected` prop.
+
+{{"demo": "KeepNonExistentRowsSelected.js", "bg": "inline"}}
+
 ## Controlled row selection
 
 Use the `rowSelectionModel` prop to control the selection.
@@ -63,13 +70,6 @@ In the following demo, the checkbox column has been moved to the right and its w
 Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
 Otherwise, the Data Grid might remove your column.
 :::
-
-### Customize indeterminate checkbox behavior
-
-The parent checkboxes (like "Select All" checkbox) when clicked in an indeterminate state will deselect the selected rows.
-You can customize this behavior by using the [`indeterminateCheckboxAction` prop](/x/api/data-grid/data-grid/#data-grid-prop-indeterminateCheckboxAction).
-
-{{"demo": "CheckboxSelectionIndeterminateGrid.js", "bg": "inline"}}
 
 ### Visible rows selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 

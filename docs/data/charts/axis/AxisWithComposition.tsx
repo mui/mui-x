@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -10,7 +10,7 @@ import { axisClasses } from '@mui/x-charts/ChartsAxis';
 export default function AxisWithComposition() {
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
-      <ResponsiveChartContainer
+      <ChartContainer
         xAxis={[
           {
             scaleType: 'band',
@@ -53,10 +53,14 @@ export default function AxisWithComposition() {
       >
         <BarPlot />
         <LinePlot />
-        <ChartsXAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
+        <ChartsXAxis
+          axisId="quarters"
+          label="2021 quarters"
+          labelStyle={{ fontSize: 18 }}
+        />
         <ChartsYAxis axisId="quantities" label="# units sold" />
         <ChartsYAxis axisId="money" position="right" label="revenue" />
-      </ResponsiveChartContainer>
+      </ChartContainer>
     </Box>
   );
 }

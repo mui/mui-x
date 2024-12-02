@@ -1,17 +1,16 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import {
-  unstable_useDateField as useDateField,
-  UseDateFieldComponentProps,
-} from '@mui/x-date-pickers/DateField';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import { DateValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateValidationError } from '@mui/x-date-pickers/models';
 import {
   UseMultiInputDateRangeFieldParams,
   UseMultiInputDateRangeFieldProps,
@@ -19,12 +18,11 @@ import {
 import { validateDateRange } from '../../../validation';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { DateRangeValidationError, DateRange } from '../../../models';
+import { DateRangeValidationError } from '../../../models';
 import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useMultiInputDateRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
@@ -34,19 +32,18 @@ export const useMultiInputDateRangeField = <
   endTextFieldProps,
   unstableEndFieldRef,
 }: UseMultiInputDateRangeFieldParams<
-  TDate,
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedDateField<
-    TDate,
-    UseMultiInputDateRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseMultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     typeof inSharedProps
   >(inSharedProps);
 
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     format,
     formatDensity,
     shouldRespectLeadingZeros,
@@ -65,6 +62,7 @@ export const useMultiInputDateRangeField = <
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager: rangeValueManager,
   });
@@ -80,9 +78,9 @@ export const useMultiInputDateRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<TDate | null, DateValidationError> => {
+  ): FieldChangeHandler<PickerValue, DateValidationError> => {
     return (newDate, rawContext) => {
-      const newDateRange: DateRange<TDate> =
+      const newDateRange: PickerRangeValue =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<DateRangeValidationError> = {
@@ -104,11 +102,7 @@ export const useMultiInputDateRangeField = <
     unstableEndFieldRef,
   });
 
-  const startFieldProps: UseDateFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const startFieldProps = {
     error: !!validationError[0],
     ...startTextFieldProps,
     ...selectedSectionsResponse.start,
@@ -125,11 +119,7 @@ export const useMultiInputDateRangeField = <
     autoFocus, // Do not add on end field.
   };
 
-  const endFieldProps: UseDateFieldComponentProps<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof sharedProps
-  > = {
+  const endFieldProps = {
     error: !!validationError[1],
     ...endTextFieldProps,
     ...selectedSectionsResponse.end,
@@ -146,16 +136,13 @@ export const useMultiInputDateRangeField = <
   };
 
   const startDateResponse = useDateField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
   >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  const endDateResponse = useDateField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof endFieldProps
-  >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
+  const endDateResponse = useDateField<TEnableAccessibleFieldDOMStructure, typeof endFieldProps>(
+    endFieldProps,
+  ) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

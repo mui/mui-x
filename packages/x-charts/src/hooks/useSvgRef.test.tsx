@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import { useSvgRef } from './useSvgRef';
-import { DrawingProvider } from '../context/DrawingProvider';
+import { ChartProvider } from '../context/ChartProvider';
 
 function UseSvgRef() {
   const ref = useSvgRef();
-  return <div>{ref.current?.id}</div>;
+  return (
+    <svg ref={ref} id="test-id">
+      {ref.current?.id}
+    </svg>
+  );
 }
 
 describe('useSvgRef', () => {
@@ -21,34 +25,33 @@ describe('useSvgRef', () => {
 
     const errorRef = React.createRef<any>();
 
+    const errorMessages = [
+      'MUI X: Could not find the Chart context.',
+      'It looks like you rendered your component outside of a ChartDataProvider.',
+      'The above error occurred in the <UseSvgRef> component',
+    ];
+    const expextedError = reactMajor < 19 ? errorMessages : errorMessages.slice(0, 2).join('\n');
+
     expect(() =>
       render(
         <ErrorBoundary ref={errorRef}>
           <UseSvgRef />
         </ErrorBoundary>,
       ),
-    ).toErrorDev([
-      'MUI X: Could not find the svg ref context.',
-      'It looks like you rendered your component outside of a ChartsContainer parent component.',
-      'The above error occurred in the <UseSvgRef> component:',
-    ]);
+    ).toErrorDev(expextedError);
 
     expect((errorRef.current as any).errors).to.have.length(1);
     expect((errorRef.current as any).errors[0].toString()).to.include(
-      'MUI X: Could not find the svg ref context.',
+      'MUI X: Could not find the Chart context.',
     );
   });
 
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
-      const ref = React.useRef<SVGSVGElement | null>(null);
-
       return (
-        <svg ref={ref} id="test-id">
-          <DrawingProvider svgRef={ref} width={1} height={1}>
-            <UseSvgRef />
-          </DrawingProvider>
-        </svg>
+        <ChartProvider>
+          <UseSvgRef />
+        </ChartProvider>
       );
     }
 

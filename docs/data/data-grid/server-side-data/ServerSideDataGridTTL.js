@@ -4,7 +4,7 @@ import { useMockServer } from '@mui/x-data-grid-generator';
 
 const lowTTLCache = new GridDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
 
-function ServerSideDataGridTTL() {
+export default function ServerSideDataGridTTL() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: false },
@@ -54,5 +54,3 @@ function ServerSideDataGridTTL() {
     </div>
   );
 }
-
-export default ServerSideDataGridTTL;

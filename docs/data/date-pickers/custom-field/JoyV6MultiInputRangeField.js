@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -106,12 +105,10 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
     value,
-    defaultValue,
     format,
     onChange,
     readOnly,
     disabled,
-    onError,
     shouldDisableDate,
     minDate,
     maxDate,
@@ -120,6 +117,8 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     selectedSections,
     onSelectedSectionsChange,
     className,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   } = props;
 
   const startTextFieldProps = useSlotProps({
@@ -137,12 +136,10 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
       value,
-      defaultValue,
       format,
       onChange,
       readOnly,
       disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
@@ -154,6 +151,8 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     },
     startTextFieldProps,
     endTextFieldProps,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   });
 
   return (

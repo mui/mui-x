@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function BasicExampleDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -13,7 +13,7 @@ export default function BasicExampleDataGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} slots={{ toolbar: GridToolbar }} />
+      <DataGridPro {...data} loading={loading} slots={{ toolbar: GridToolbar }} />
     </div>
   );
 }

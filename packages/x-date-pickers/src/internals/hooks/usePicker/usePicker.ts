@@ -2,36 +2,31 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { FieldSection, PickerValidDate, InferError } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
-import { usePickerOwnerState } from './usePickerOwnerState';
+import { InferError } from '../../../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
+import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
-  TValue,
-  TDate extends PickerValidDate,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
-  TExternalProps extends UsePickerProps<TValue, TDate, TView, any, any, any>,
+  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   valueManager,
   valueType,
-  wrapperVariant,
+  variant,
   additionalViewProps,
   validator,
   autoFocusView,
   rendererInterceptor,
   fieldRef,
-}: UsePickerParams<
+  localeText,
+}: UsePickerParams<TValue, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
   TValue,
-  TDate,
   TView,
-  TSection,
-  TExternalProps,
-  TAdditionalProps
->): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
+  InferError<TExternalProps>
+> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnOnce([
@@ -41,22 +36,15 @@ export const usePicker = <
       ]);
     }
   }
-  const pickerValueResponse = usePickerValue({
+  const pickerValueResponse = usePickerValue<TValue, TExternalProps>({
     props,
     valueManager,
     valueType,
-    wrapperVariant,
+    variant,
     validator,
   });
 
-  const pickerViewsResponse = usePickerViews<
-    TValue,
-    TDate,
-    TView,
-    TSection,
-    TExternalProps,
-    TAdditionalProps
-  >({
+  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps, TAdditionalProps>({
     props,
     additionalViewProps,
     autoFocusView,
@@ -65,14 +53,14 @@ export const usePicker = <
     rendererInterceptor,
   });
 
-  const pickerLayoutResponse = usePickerLayoutProps({
+  const providerProps = usePickerProvider({
     props,
-    wrapperVariant,
-    propsFromPickerValue: pickerValueResponse.layoutProps,
-    propsFromPickerViews: pickerViewsResponse.layoutProps,
+    pickerValueResponse,
+    localeText,
+    valueManager,
+    variant,
+    views: pickerViewsResponse.views,
   });
-
-  const pickerOwnerState = usePickerOwnerState({ props, pickerValueResponse });
 
   return {
     // Picker value
@@ -86,12 +74,15 @@ export const usePicker = <
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    layoutProps: pickerLayoutResponse.layoutProps,
+    layoutProps: {
+      ...pickerViewsResponse.layoutProps,
+      ...pickerValueResponse.layoutProps,
+    },
 
-    // Picker context
-    contextValue: pickerValueResponse.contextValue,
+    // Picker provider
+    providerProps,
 
     // Picker owner state
-    ownerState: pickerOwnerState,
+    ownerState: providerProps.privateContextValue.ownerState,
   };
 };

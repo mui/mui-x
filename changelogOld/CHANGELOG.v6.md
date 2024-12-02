@@ -20,7 +20,7 @@ Same changes as in `@mui/x-date-pickers@6.19.12`.
 
 ### Docs
 
-- [docs] Use MUI X v6 in Codesandbox and Stackblitz demos (#12838) @cherniavskii
+- [docs] Use MUI X v6 in CodeSandbox and StackBlitz demos (#12838) @cherniavskii
 
 ## 6.19.11
 
@@ -2596,7 +2596,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [docs] Fix date pickers typo in the docs (#8939) @richbustos
 - [docs] Fix master detail demo (#8894) @m4theushw
 - [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
-- [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
+- [docs] Reduce list of dependencies in CodeSandbox/StackBlitz demos (#8535) @cherniavskii
 
 ### Core
 
@@ -2625,7 +2625,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
 - [DataGrid] Remove unwarranted warning log (#8847) @romgrk
 - [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
-- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows()` (#8823) @cherniavskii
 
 ### `@mui/x-date-pickers@6.3.1` / `@mui/x-date-pickers-pro@6.3.1`
 
@@ -3256,7 +3256,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
 - [DataGrid] Allow to pass props to the `FocusTrap` inside the panel wrapper (#7733) @ivek-Prajapatii
-- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows()` (#7857) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
 
@@ -4362,7 +4362,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGrid] Stop exporting root base state selectors (#6912) @DanailH
 - [DataGrid] Support `theme.vars` (#6784) @alexfauquette
 - [DataGrid] Rename `rowsScroll` event to `scrollPositionChange` (#6957) @DanailH
-- [DataGridPro] Fix lazy-loaded rows not working with `updateRows` API method (#6976) @cherniavskii
+- [DataGridPro] Fix lazy-loaded rows not working with `updateRows()` API method (#6976) @cherniavskii
 - [DataGridPremium] Improve typing for theme in `styleOverrides` (#6920) @m4theushw
 - [l10n] Fix translation of `filterOperatorBefore` in Arabic (ar-SD) locale (#6884) @HassanGhazy
 

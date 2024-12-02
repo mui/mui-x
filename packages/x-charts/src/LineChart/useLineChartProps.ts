@@ -7,9 +7,8 @@ import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { AreaPlotProps } from './AreaPlot';
 import type { LineChartProps } from './LineChart';
 import { LineHighlightPlotProps } from './LineHighlightPlot';
@@ -34,14 +33,13 @@ export const useLineChartProps = (props: LineChartProps) => {
     colors,
     dataset,
     sx,
-    tooltip,
     onAxisClick,
     onAreaClick,
     onLineClick,
     onMarkClick,
     axisHighlight,
     disableLineItemHighlight,
-    legend,
+    hideLegend,
     grid,
     topAxis,
     leftAxis,
@@ -62,7 +60,7 @@ export const useLineChartProps = (props: LineChartProps) => {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps = {
     ...other,
     series: series.map((s) => ({
       disableHighlight: !!disableLineItemHighlight,
@@ -89,7 +87,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
-      tooltip?.trigger !== 'axis' &&
+      slotProps?.tooltip?.trigger !== 'axis' &&
       axisHighlight?.x === 'none' &&
       axisHighlight?.y === 'none' &&
       !onAxisClick,
@@ -160,13 +158,6 @@ export const useLineChartProps = (props: LineChartProps) => {
   };
 
   const legendProps: ChartsLegendProps = {
-    ...legend,
-    slots,
-    slotProps,
-  };
-
-  const tooltipProps: ChartsTooltipProps<'line'> = {
-    ...tooltip,
     slots,
     slotProps,
   };
@@ -185,7 +176,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
-    tooltipProps,
     children,
   };
 };

@@ -30,6 +30,17 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '搜索',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: '输入提示词',
+  toolbarPromptControlWithRecordingPlaceholder: '输入提示词或点击录音',
+  toolbarPromptControlRecordingPlaceholder: '正在录音…',
+  toolbarPromptControlLabel: '提示词输入',
+  toolbarPromptControlRecordButtonDefaultLabel: '录音',
+  toolbarPromptControlRecordButtonActiveLabel: '停止录音',
+  toolbarPromptControlSendActionLabel: '发送',
+  toolbarPromptControlSendActionAriaLabel: '发送提示词',
+  toolbarPromptControlErrorMessage: '处理请求时出现错误。请使用其他提示词再试。',
+
   // Export selector toolbar button text
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
@@ -42,6 +53,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: '没有列',
   columnsManagementShowHideAllText: '显示/隐藏所有',
   columnsManagementReset: '重置',
+  columnsManagementDeleteIconLabel: '清除',
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
@@ -57,9 +69,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: '包含',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: '不包含',
   filterOperatorEquals: '等于',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: '不等于',
   filterOperatorStartsWith: '开始于',
   filterOperatorEndsWith: '结束于',
   filterOperatorIs: '是',
@@ -80,9 +92,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: '包含',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: '不包含',
   headerFilterOperatorEquals: '等于',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: '不等于',
   headerFilterOperatorStartsWith: '开始于',
   headerFilterOperatorEndsWith: '结束于',
   headerFilterOperatorIs: '是',

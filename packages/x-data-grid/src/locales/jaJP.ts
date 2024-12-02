@@ -30,6 +30,17 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: '検索',
   toolbarQuickFilterDeleteIconLabel: 'クリア',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'エクスポート',
   toolbarExportLabel: 'エクスポート',
@@ -42,6 +53,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'カラムなし',
   columnsManagementShowHideAllText: 'すべて表示/非表示',
   columnsManagementReset: 'リセット',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',

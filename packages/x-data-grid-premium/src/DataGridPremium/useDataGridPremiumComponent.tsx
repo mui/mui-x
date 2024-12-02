@@ -61,6 +61,7 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
+  useGridDataSourceLazyLoader,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
   virtualizationStateInitializer,
@@ -86,6 +87,7 @@ import {
   rowGroupingStateInitializer,
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
+import { useGridDataSourceRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridDataSourceRowGroupingPreProcessors';
 import { useGridExcelExport } from '../hooks/features/export/useGridExcelExport';
 import {
   cellSelectionStateInitializer,
@@ -105,6 +107,7 @@ export const useDataGridPremiumComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
+  useGridDataSourceRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
@@ -178,6 +181,7 @@ export const useDataGridPremiumComponent = (
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
+  useGridDataSourceLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);
   useGridPrintExport(apiRef, props);
