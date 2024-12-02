@@ -36,9 +36,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const selection = useGridSelector(apiRef, () =>
-      gridRowSelectionStateSelector(apiRef.current.state),
-    );
+    const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
     const visibleRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
     const paginatedVisibleRowIds = useGridSelector(
       apiRef,
