@@ -34,7 +34,6 @@ const StyledGridToolbarRoot = styled('div', {
   padding: theme.spacing(0.5),
   minHeight: 45,
   borderBottom: `1px solid ${theme.palette.divider}`,
-  overflow: 'auto',
 }));
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
