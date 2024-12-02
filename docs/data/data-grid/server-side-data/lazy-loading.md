@@ -1,5 +1,5 @@
 ---
-title: React Server-side lazy loading
+title: React Data Grid - Server-side lazy loading
 ---
 
 # Data Grid - Server-side lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
