@@ -35,7 +35,6 @@ async function main() {
 
   const browser = await chromium.launch({
     args: [
-      '--font-render-hinting=none',
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
