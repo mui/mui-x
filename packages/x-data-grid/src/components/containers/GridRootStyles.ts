@@ -778,6 +778,8 @@ export const GridRootStyles = styled('div', {
 
 function transformMaterialUITheme(theme: Theme) {
   return {
+    [vars.spacingUnit]: theme.spacing(1),
+
     [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
     [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
   }
