@@ -22,9 +22,8 @@ import {
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
-  PinnedPosition,
 } from '@mui/x-data-grid';
-import {
+import { PinnedPosition ,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,

@@ -7,7 +7,6 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
-  PinnedPosition,
   gridColumnPositionsSelector,
   gridColumnsTotalWidthSelector,
   gridDimensionsSelector,
@@ -16,6 +15,7 @@ import {
   useGridApiEventHandler,
   useGridSelector,
 } from '../hooks';
+import { PinnedPosition } from '../internals/constants';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';

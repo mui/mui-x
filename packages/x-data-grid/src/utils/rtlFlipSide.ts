@@ -1,4 +1,4 @@
-import { PinnedPosition } from '../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedPosition } from '../internals/constants';
 
 export const rtlFlipSide = (
   position: PinnedPosition | undefined,

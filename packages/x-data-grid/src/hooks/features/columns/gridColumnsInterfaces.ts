@@ -6,13 +6,6 @@ export enum GridPinnedColumnPosition {
   RIGHT = 'right',
 }
 
-export enum PinnedPosition {
-  NONE,
-  LEFT,
-  RIGHT,
-  VIRTUAL,
-}
-
 export type GridColumnLookup = {
   [field: string]: GridStateColDef;
 };

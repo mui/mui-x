@@ -14,7 +14,7 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedPosition } from '../../internals/constants';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;

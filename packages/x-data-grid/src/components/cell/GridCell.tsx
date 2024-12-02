@@ -32,10 +32,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import {
-  GridPinnedColumnPosition,
-  PinnedPosition,
-} from '../../hooks/features/columns/gridColumnsInterfaces';
+import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedPosition } from '../../internals/constants';
 import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,

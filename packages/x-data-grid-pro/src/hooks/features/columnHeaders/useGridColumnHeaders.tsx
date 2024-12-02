@@ -7,7 +7,6 @@ import {
   getDataGridUtilityClass,
   GridFilterItem,
   gridDimensionsSelector,
-  PinnedPosition,
 } from '@mui/x-data-grid';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
@@ -19,6 +18,7 @@ import {
   GridColumnHeaderRow,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
+  PinnedPosition,
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';

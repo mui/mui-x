@@ -1,4 +1,4 @@
-import { PinnedPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedPosition } from "../constants";
 import { gridColumnPositionsSelector } from '../../hooks/features/columns';
 import type { GridDimensions } from '../../hooks/features/dimensions';
 

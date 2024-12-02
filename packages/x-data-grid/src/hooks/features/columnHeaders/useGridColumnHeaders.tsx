@@ -38,7 +38,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '../../../utils/cellBorderUtils';
-import { PinnedPosition } from '../columns/gridColumnsInterfaces';
+import { PinnedPosition } from '../../../internals/constants';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;

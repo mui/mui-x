@@ -17,7 +17,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { PinnedPosition } from '../../internals/constants';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
