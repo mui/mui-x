@@ -72,13 +72,13 @@ function AutocompleteField(props: AutocompleteFieldProps) {
                 {
                   children: (
                     <React.Fragment>
+                      <IconButton onClick={handleTogglePicker} size="small">
+                        <CalendarIcon />
+                      </IconButton>
                       {
                         (params.InputProps.endAdornment as React.ReactElement)?.props
                           .children
                       }
-                      <IconButton onClick={handleTogglePicker} size="small">
-                        <CalendarIcon />
-                      </IconButton>
                     </React.Fragment>
                   ),
                 },

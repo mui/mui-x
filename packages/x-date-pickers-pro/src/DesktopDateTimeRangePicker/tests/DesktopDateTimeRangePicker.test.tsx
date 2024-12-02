@@ -20,7 +20,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
     it('should allow to select range within the same day', () => {
       render(<DesktopDateTimeRangePicker />);
 
-      openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-time-range', initialFocus: 'start' });
 
       // select start date range
       fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
@@ -45,7 +45,7 @@ describe('<DesktopDateTimeRangePicker />', () => {
         <DesktopDateTimeRangePicker referenceDate={adapterToUse.date('2022-04-14T14:15:00')} />,
       );
 
-      openPicker({ type: 'date-time-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-time-range', initialFocus: 'start' });
 
       fireEvent.click(screen.getByRole('gridcell', { name: '11' }));
 

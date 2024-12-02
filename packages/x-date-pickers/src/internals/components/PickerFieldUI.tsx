@@ -250,13 +250,13 @@ export interface ExportedPickerFieldUIProps {
   onClear?: React.MouseEventHandler;
   /**
    * The position at which the clear button is placed.
-   * If the field is not clearable, the button will not be rendered.
+   * If the field is not clearable, the button is not rendered.
    * @default 'end'
    */
   clearButtonPosition?: 'start' | 'end';
   /**
    * The position at which the opening button is placed.
-   * If there is no picker to open, the button will not be rendered
+   * If there is no picker to open, the button is not rendered
    * @default 'end'
    */
   openPickerButtonPosition?: 'start' | 'end';
@@ -326,7 +326,7 @@ export interface PickerFieldUISlotProps {
     FieldInputAdornmentOwnerState
   >;
   openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, FieldOwnerState>;
-  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, FieldOwnerState>;
+  openPickerIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, FieldOwnerState>;
   clearIcon?: SlotComponentPropsFromProps<SvgIconProps, {}, FieldOwnerState>;
   clearButton?: SlotComponentPropsFromProps<IconButtonProps, {}, FieldOwnerState>;
 }

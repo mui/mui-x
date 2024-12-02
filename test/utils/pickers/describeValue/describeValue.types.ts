@@ -29,6 +29,7 @@ export type DescribeValueOptions<
 > = DescribeValueBaseOptions<TValue, C> &
   (C extends 'picker'
     ? OpenPickerParams & {
+        variant: 'desktop' | 'mobile';
         setNewValue: (
           value: InferNonNullablePickerValue<TValue>,
           options: {

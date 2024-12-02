@@ -59,10 +59,10 @@ function AutocompleteField(props) {
               endAdornment: React.cloneElement(params.InputProps.endAdornment, {
                 children: (
                   <React.Fragment>
-                    {params.InputProps.endAdornment?.props.children}
                     <IconButton onClick={handleTogglePicker} size="small">
                       <CalendarIcon />
                     </IconButton>
+                    {params.InputProps.endAdornment?.props.children}
                   </React.Fragment>
                 ),
               }),

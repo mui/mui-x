@@ -29,7 +29,6 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     clock,
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
-    variant: 'mobile',
   }));
 
   describeConformance(<MobileDateTimeRangePicker />, () => ({
@@ -88,7 +87,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
       if (!isOpened) {
         openPicker({
           type: 'date-time-range',
-          variant: 'mobile',
+
           initialFocus: setEndDate ? 'end' : 'start',
         });
       }

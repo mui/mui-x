@@ -29,7 +29,6 @@ describe('<MobileTimePicker /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
-    variant: 'mobile',
   }));
 
   describeConformance(<MobileTimePicker />, () => ({
@@ -71,7 +70,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'time', variant: 'mobile' });
+        openPicker({ type: 'time' });
       }
 
       const newValue = applySameValue

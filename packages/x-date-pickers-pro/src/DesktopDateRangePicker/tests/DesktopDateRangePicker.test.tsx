@@ -36,14 +36,14 @@ describe('<DesktopDateRangePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    openPicker({ type: 'date-range', initialFocus: 'start' });
     expect(screen.getByText('May 2019')).toBeVisible();
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+    openPicker({ type: 'date-range', initialFocus: 'end' });
     expect(screen.getByText('October 2019')).toBeVisible();
 
     // scroll back
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    openPicker({ type: 'date-range', initialFocus: 'start' });
     expect(screen.getByText('May 2019')).toBeVisible();
   });
 
@@ -52,7 +52,7 @@ describe('<DesktopDateRangePicker />', () => {
       <DesktopDateRangePicker defaultValue={[new Date(NaN), adapterToUse.date('2019-01-31')]} />,
     );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+    openPicker({ type: 'date-range', initialFocus: 'start' });
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
@@ -168,7 +168,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<DesktopDateRangePicker onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -179,7 +179,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       render(<DesktopDateRangePicker onOpen={onOpen} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.getByRole('tooltip')).toBeVisible();
@@ -236,7 +236,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -278,7 +278,7 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -311,7 +311,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
 
       // Change the end date
       fireEvent.click(getPickerDay('3'));
@@ -338,7 +338,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
@@ -365,7 +365,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
@@ -403,7 +403,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Change the start date (already tested)
       fireEvent.click(getPickerDay('3'));
@@ -461,7 +461,7 @@ describe('<DesktopDateRangePicker />', () => {
         </React.Fragment>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       document.querySelector<HTMLButtonElement>('#test')!.focus();
@@ -493,7 +493,7 @@ describe('<DesktopDateRangePicker />', () => {
         </div>,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
@@ -531,7 +531,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -557,7 +557,7 @@ describe('<DesktopDateRangePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Clear the date
       fireEvent.click(screen.getByText(/clear/i));
@@ -584,10 +584,10 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       // Switch to end date
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -608,10 +608,10 @@ describe('<DesktopDateRangePicker />', () => {
       );
 
       // Open the picker (already tested)
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
+      openPicker({ type: 'date-range', initialFocus: 'end' });
 
       // Switch to start date
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -622,7 +622,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disablePast prop', () => {
       render(<DesktopDateRangePicker disablePast />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(getPickerDay('8')).to.have.attribute('disabled');
       expect(getPickerDay('9')).to.have.attribute('disabled');
@@ -634,7 +634,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the disableFuture prop', () => {
       render(<DesktopDateRangePicker disableFuture />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(getPickerDay('8')).not.to.have.attribute('disabled');
       expect(getPickerDay('9')).not.to.have.attribute('disabled');
@@ -646,7 +646,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the minDate prop', () => {
       render(<DesktopDateRangePicker minDate={adapterToUse.date('2018-01-15')} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(getPickerDay('13')).to.have.attribute('disabled');
       expect(getPickerDay('14')).to.have.attribute('disabled');
@@ -658,7 +658,7 @@ describe('<DesktopDateRangePicker />', () => {
     it('should respect the maxDate prop', () => {
       render(<DesktopDateRangePicker maxDate={adapterToUse.date('2018-01-15')} />);
 
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', initialFocus: 'start' });
 
       expect(getPickerDay('13')).not.to.have.attribute('disabled');
       expect(getPickerDay('14')).not.to.have.attribute('disabled');

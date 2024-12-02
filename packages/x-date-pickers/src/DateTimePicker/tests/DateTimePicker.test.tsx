@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { dialogClasses } from '@mui/material/Dialog';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { screen } from '@mui/internal-test-utils/createRenderer';
+import { fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
-import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 
 describe('<DateTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -14,7 +14,8 @@ describe('<DateTimePicker />', () => {
 
     render(<DateTimePicker />);
 
-    expect(screen.getByLabelText(/Choose date/)).to.have.class(pickersInputBaseClasses.input);
+    fireEvent.click(screen.getByLabelText(/Choose date/));
+    expect(screen.getByRole('dialog')).to.have.class(dialogClasses.paper);
 
     window.matchMedia = originalMatchMedia;
   });

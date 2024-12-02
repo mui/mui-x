@@ -28,7 +28,6 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     clock,
     views: ['year', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
-    variant: 'mobile',
   }));
 
   describeConformance(<MobileDateTimePicker />, () => ({
@@ -73,7 +72,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'date-time', variant: 'mobile' });
+        openPicker({ type: 'date-time' });
       }
 
       const newValue = applySameValue

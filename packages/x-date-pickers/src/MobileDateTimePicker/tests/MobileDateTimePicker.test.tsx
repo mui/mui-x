@@ -114,7 +114,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time', variant: 'mobile' });
+      openPicker({ type: 'date-time' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

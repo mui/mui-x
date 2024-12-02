@@ -154,7 +154,7 @@ describe('<MobileDatePicker />', () => {
 
       render(<ControlledMobileDatePicker onAccept={onAccept} />);
 
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
 
       fireEvent.click(screen.getByText('15', { selector: 'button' }));
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
@@ -176,7 +176,7 @@ describe('<MobileDatePicker />', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
 
       // Open and Dismiss the picker
-      openPicker({ type: 'date', variant: 'mobile' });
+      openPicker({ type: 'date' });
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       clock.runToLast();

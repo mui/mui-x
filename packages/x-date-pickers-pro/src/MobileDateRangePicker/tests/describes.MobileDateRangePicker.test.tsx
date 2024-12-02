@@ -27,7 +27,6 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     clock,
     componentFamily: 'picker',
     views: ['day'],
-    variant: 'mobile',
   }));
 
   describeConformance(<MobileDateRangePicker />, () => ({
@@ -84,7 +83,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+        openPicker({ type: 'date-range', initialFocus: 'start' });
       }
 
       fireEvent.click(

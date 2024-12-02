@@ -64,7 +64,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'mobile' });
+      openPicker({ type: 'time' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');
