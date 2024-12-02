@@ -1,42 +1,39 @@
 import * as React from 'react';
-import { GridRootPropsContext } from '../../context/GridRootPropsContext';
+import { GridColDef } from '@mui/x-data-grid-pro';
 import { GridContextProvider } from '../../context/GridContextProvider';
 import { useDataGridProps } from '../../DataGrid/useDataGridProps';
 import { useDataGridComponent } from '../../DataGrid/useDataGridComponent';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../../hooks/features/rows/useGridRowAriaAttributes';
-import materialSlots from '../../material';
+import { DataGridProps } from '../../models/props/DataGridProps';
+import { GridValidRowModel } from '../../models/gridRows';
 
-interface DemoContainerProps {
+interface DemoContainerProps<R extends GridValidRowModel> extends Partial<DataGridProps<R>> {
   children: React.ReactNode;
 }
 
-const configuration = {
+const CONFIGURATION = {
   hooks: {
     useGridAriaAttributes,
     useGridRowAriaAttributes,
   },
 };
 
-const contextValue = { slots: materialSlots };
+const DEFAULT_COLUMNS: GridColDef[] = [];
 
 /**
  * WARNING: This is an internal component used in documentation to provide the required context for demos.
  * Please do not use it in your application.
  */
-export function DemoContainer(props: DemoContainerProps) {
-  const { children } = props;
+export function DemoContainer<R extends GridValidRowModel>(inProps: DemoContainerProps<R>) {
+  const { children } = inProps;
 
-  const dataGridProps = useDataGridProps({ columns: [] });
-  const privateApiRef = useDataGridComponent(dataGridProps.apiRef, dataGridProps);
+  const props = useDataGridProps({ columns: DEFAULT_COLUMNS, ...inProps });
+  const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   return (
-    <GridContextProvider
-      privateApiRef={privateApiRef}
-      configuration={configuration}
-      props={dataGridProps}
-    >
-      <GridRootPropsContext.Provider value={contextValue}>{children}</GridRootPropsContext.Provider>
+    <GridContextProvider privateApiRef={privateApiRef} configuration={CONFIGURATION} props={props}>
+      {children}
     </GridContextProvider>
   );
 }
