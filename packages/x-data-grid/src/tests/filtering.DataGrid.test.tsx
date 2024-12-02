@@ -1127,6 +1127,7 @@ describe('<DataGrid /> - Filter', () => {
 
       expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: null })).to.deep.equal(ALL_ROWS);
       expect(getRows({ operator: 'is', value: 'test' })).to.deep.equal(ALL_ROWS); // Ignores invalid values
     });
   });

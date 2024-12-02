@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent } from '@mui/internal-test-utils';
+import { fireEvent, reactMajor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import {
   UseTreeViewExpansionSignature,
@@ -31,17 +31,19 @@ describeTreeView<
         ).toErrorDev([
           'Encountered two children with the same key, `1`',
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          `The above error occurred in the <ForwardRef(TreeItem`,
-          `The above error occurred in the <ForwardRef(TreeItem`,
+          reactMajor < 19 &&
+            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem`,
         ]);
       } else {
         expect(() =>
           render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
         ).toErrorDev([
           'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          `The above error occurred in the <ForwardRef(${treeViewComponentName}`,
+          reactMajor < 19 &&
+            'MUI X: The Tree View component requires all items to have a unique `id` property.',
+          reactMajor < 19 && `The above error occurred in the <ForwardRef(${treeViewComponentName}`,
         ]);
       }
     });

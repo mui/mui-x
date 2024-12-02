@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -321,7 +321,8 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }).toWarnDev([
         `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        reactMajor < 19 &&
+          `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -349,7 +350,8 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
       }).toWarnDev([
         `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        reactMajor < 19 &&
+          `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -358,7 +360,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
       }).toWarnDev([
         `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
-        `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
+        reactMajor < 19 && `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
       ]);
     });
 
@@ -606,7 +608,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should support server side pagination with estimated row count', () => {
       const { setProps } = render(<ServerPaginationGrid rowCount={-1} estimatedRowCount={2} />);
       expect(getColumnValues(0)).to.deep.equal(['0']);
-      expect(screen.getByText('1–1 of more than 2')).not.to.equal(null);
+      expect(screen.getByText('1–1 of around 2')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['1']);
       expect(screen.getByText('2–2 of more than 2')).not.to.equal(null);

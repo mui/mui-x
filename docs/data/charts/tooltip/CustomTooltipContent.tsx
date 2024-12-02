@@ -4,6 +4,7 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 import { CustomItemTooltip } from './CustomItemTooltip';
 import { dataset, valueFormatter } from '../dataset/weather';
 
@@ -27,8 +28,9 @@ export default function CustomTooltipContent() {
         </g>
         <ChartsXAxis />
         <ChartsYAxis />
-
-        <CustomItemTooltip />
+        <ChartsTooltipContainer trigger="item">
+          <CustomItemTooltip />
+        </ChartsTooltipContainer>
       </ChartContainer>
     </div>
   );

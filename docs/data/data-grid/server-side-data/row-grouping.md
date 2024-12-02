@@ -1,5 +1,5 @@
 ---
-title: React Server-side row grouping
+title: React Data Grid - Server-side row grouping
 ---
 
 # Data Grid - Server-side row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { describeConformance, fireEvent, screen } from '@mui/internal-test-utils';
+import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -46,7 +47,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopDateTimeRangePicker, () => ({
+  describeValue<PickerRangeValue, 'picker'>(DesktopDateTimeRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time-range',
@@ -86,7 +87,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
       value,
       { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
-      let newValue: any[];
+      let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
       } else if (setEndDate) {

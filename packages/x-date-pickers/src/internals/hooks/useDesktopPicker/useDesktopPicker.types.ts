@@ -1,8 +1,7 @@
 import * as React from 'react';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import { InputAdornmentProps } from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { SlotComponentProps } from '@mui/utils';
+import type { IconButtonProps } from '@mui/material/IconButton';
+import type { InputAdornmentProps } from '@mui/material/InputAdornment';
+import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
@@ -12,7 +11,7 @@ import {
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
 import {
-  FieldSection,
+  FieldOwnerState,
   PickerFieldSlotProps,
   PickerOwnerState,
   PickerValidDate,
@@ -24,18 +23,19 @@ import {
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
+import { PickersTextFieldProps } from '../../../PickersTextField';
 
 export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
       PickersPopperSlots,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlots<PickerValidDate | null, TView>,
+    ExportedPickersLayoutSlots<PickerValue, TView>,
     UseClearableFieldSlots {
   /**
    * Component used to enter the date with the keyboard.
@@ -66,22 +66,26 @@ export interface UseDesktopPickerSlotProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedUseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
-    Pick<PickersLayoutSlotProps<PickerValidDate | null, TView>, 'toolbar'> {}
+    Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends PickersPopperSlotProps,
-    ExportedPickersLayoutSlotProps<PickerValidDate | null, TView>,
+    ExportedPickersLayoutSlotProps<PickerValue, TView>,
     UseClearableFieldSlotProps {
   field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValidDate | null, FieldSection, TEnableAccessibleFieldDOMStructure>,
+    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
     {},
     PickerOwnerState
   >;
-  textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
+    {},
+    FieldOwnerState
+  >;
   inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
-  openPickerButton?: SlotComponentProps<typeof IconButton, {}, PickerOwnerState>;
+  openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, PickerOwnerState>;
   openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
 }
 
@@ -101,8 +105,8 @@ export interface UseDesktopPickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-  TExternalProps extends UsePickerViewsProps<PickerValidDate | null, TView, any, {}>,
-> extends BasePickerProps<PickerValidDate | null, TView, TError, TExternalProps, {}>,
+  TExternalProps extends UsePickerViewsProps<PickerValue, TView, any, {}>,
+> extends BasePickerProps<PickerValue, TView, TError, TExternalProps, {}>,
     MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
@@ -126,7 +130,7 @@ export interface UseDesktopPickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParams<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>,
+    UsePickerParams<PickerValue, TView, TExternalProps, {}>,
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;

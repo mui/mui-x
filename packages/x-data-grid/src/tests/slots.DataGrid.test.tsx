@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  ErrorBoundary,
+  fireEvent,
+  reactMajor,
+  screen,
+} from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
@@ -178,9 +184,9 @@ describe('<DataGrid /> - Slots', () => {
       );
     }).toErrorDev([
       'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
-      // Cut off the end of the phrase as vitest seems to 2 at the end of the component name
-      'The above error occurred in the <ForwardRef(GridOverlay',
+      reactMajor < 19 &&
+        'MUI X: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
+      reactMajor < 19 && 'The above error occurred in the <ForwardRef(GridOverlay',
     ]);
   });
 

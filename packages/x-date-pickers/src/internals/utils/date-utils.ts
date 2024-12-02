@@ -110,7 +110,11 @@ export const applyDefaultDate = (
   return value;
 };
 
-export const areDatesEqual = (utils: MuiPickersAdapter, a: PickerValidDate, b: PickerValidDate) => {
+export const areDatesEqual = (
+  utils: MuiPickersAdapter,
+  a: PickerValidDate | null,
+  b: PickerValidDate | null,
+) => {
   if (!utils.isValid(a) && a != null && !utils.isValid(b) && b != null) {
     return true;
   }
