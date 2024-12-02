@@ -33,17 +33,17 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
-import { PinnedPosition } from '../../internals/constants';
+import { PinnedColumnPosition } from '../../internals/constants';
 import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
 
 export const gridPinnedColumnPositionLookup = {
-  [PinnedPosition.LEFT]: GridPinnedColumnPosition.LEFT,
-  [PinnedPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
-  [PinnedPosition.NONE]: undefined,
-  [PinnedPosition.VIRTUAL]: undefined,
+  [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
+  [PinnedColumnPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
+  [PinnedColumnPosition.NONE]: undefined,
+  [PinnedColumnPosition.VIRTUAL]: undefined,
 };
 
 export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -58,7 +58,7 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   isNotVisible: boolean;
   editCellState: GridEditCellProps<any> | null;
   pinnedOffset?: number;
-  pinnedPosition: PinnedPosition;
+  pinnedPosition: PinnedColumnPosition;
   showRightBorder: boolean;
   showLeftBorder: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -132,8 +132,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       showLeftBorder && 'cell--withLeftBorder',
       showRightBorder && 'cell--withRightBorder',
-      pinnedPosition === PinnedPosition.LEFT && 'cell--pinnedLeft',
-      pinnedPosition === PinnedPosition.RIGHT && 'cell--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'cell--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'cell--pinnedRight',
       isSelectionMode && !isEditable && 'cell--selectionMode',
     ],
   };
@@ -332,8 +332,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       ...styleProp,
     } as React.CSSProperties;
 
-    const isLeftPinned = pinnedPosition === PinnedPosition.LEFT;
-    const isRightPinned = pinnedPosition === PinnedPosition.RIGHT;
+    const isLeftPinned = pinnedPosition === PinnedColumnPosition.LEFT;
+    const isRightPinned = pinnedPosition === PinnedColumnPosition.RIGHT;
 
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
     if (pinnedSide && pinnedOffset !== undefined) {

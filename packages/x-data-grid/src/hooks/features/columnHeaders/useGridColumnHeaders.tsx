@@ -38,7 +38,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '../../../utils/cellBorderUtils';
-import { PinnedPosition } from '../../../internals/constants';
+import { PinnedColumnPosition } from '../../../internals/constants';
 
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
@@ -66,7 +66,7 @@ export interface UseGridColumnHeadersProps {
 }
 
 export interface GetHeadersParams {
-  position?: PinnedPosition;
+  position?: PinnedColumnPosition;
   renderContext?: GridColumnsRenderContext;
   maxLastColumn?: number;
 }
@@ -181,7 +181,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     leftOverflow: number,
     borderBottom: boolean = false,
   ) => {
-    const isPinnedRight = params?.position === PinnedPosition.RIGHT;
+    const isPinnedRight = params?.position === PinnedColumnPosition.RIGHT;
     const isNotPinned = params?.position === undefined;
 
     const hasScrollbarFiller =
@@ -241,7 +241,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
 
       const siblingWithBorderingSeparator =
-        pinnedPosition === PinnedPosition.RIGHT ? renderedColumns[i - 1] : renderedColumns[i + 1];
+        pinnedPosition === PinnedColumnPosition.RIGHT
+          ? renderedColumns[i - 1]
+          : renderedColumns[i + 1];
       const isSiblingFocused = siblingWithBorderingSeparator
         ? columnHeaderFocus !== null &&
           columnHeaderFocus.field === siblingWithBorderingSeparator.field
@@ -303,7 +305,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         {leftRenderContext &&
           getColumnHeaders(
             {
-              position: PinnedPosition.LEFT,
+              position: PinnedColumnPosition.LEFT,
               renderContext: leftRenderContext,
               maxLastColumn: leftRenderContext.lastColumnIndex,
             },
@@ -316,7 +318,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         {rightRenderContext &&
           getColumnHeaders(
             {
-              position: PinnedPosition.RIGHT,
+              position: PinnedColumnPosition.RIGHT,
               renderContext: rightRenderContext,
               maxLastColumn: rightRenderContext.lastColumnIndex,
             },
@@ -418,7 +420,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columnIndex += columnFields.length;
 
       let indexInSection = index;
-      if (pinnedPosition === PinnedPosition.LEFT) {
+      if (pinnedPosition === PinnedColumnPosition.LEFT) {
         // Group headers can expand to multiple columns, we need to adjust the index
         indexInSection = columnIndex - 1;
       }
@@ -472,7 +474,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             getColumnGroupHeaders({
               depth,
               params: {
-                position: PinnedPosition.LEFT,
+                position: PinnedColumnPosition.LEFT,
                 renderContext: leftRenderContext,
                 maxLastColumn: leftRenderContext.lastColumnIndex,
               },
@@ -482,7 +484,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             getColumnGroupHeaders({
               depth,
               params: {
-                position: PinnedPosition.RIGHT,
+                position: PinnedColumnPosition.RIGHT,
                 renderContext: rightRenderContext,
                 maxLastColumn: rightRenderContext.lastColumnIndex,
               },

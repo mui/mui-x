@@ -23,7 +23,8 @@ import {
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
 } from '@mui/x-data-grid';
-import { PinnedPosition ,
+import {
+  PinnedColumnPosition,
   GridStateColDef,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
@@ -53,7 +54,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   item: GridFilterItem;
   showClearIcon?: boolean;
   InputComponentProps: GridFilterOperator['InputComponentProps'];
-  pinnedPosition?: PinnedPosition;
+  pinnedPosition?: PinnedColumnPosition;
   pinnedOffset?: number;
   style?: React.CSSProperties;
   showLeftBorder: boolean;
@@ -62,7 +63,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
 
 type OwnerState = DataGridProProcessedProps & {
   colDef: GridColDef;
-  pinnedPosition?: PinnedPosition;
+  pinnedPosition?: PinnedColumnPosition;
   showRightBorder: boolean;
   showLeftBorder: boolean;
 };
@@ -79,8 +80,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === PinnedPosition.LEFT && 'columnHeader--pinnedLeft',
-      pinnedPosition === PinnedPosition.RIGHT && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
     ],
   };
 

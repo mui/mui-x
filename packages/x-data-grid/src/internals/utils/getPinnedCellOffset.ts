@@ -1,9 +1,9 @@
-import { PinnedPosition } from "../constants";
+import { PinnedColumnPosition } from '../constants';
 import { gridColumnPositionsSelector } from '../../hooks/features/columns';
 import type { GridDimensions } from '../../hooks/features/dimensions';
 
 export const getPinnedCellOffset = (
-  pinnedPosition: PinnedPosition | undefined,
+  pinnedPosition: PinnedColumnPosition | undefined,
   computedWidth: number,
   columnIndex: number,
   columnPositions: ReturnType<typeof gridColumnPositionsSelector>,
@@ -13,10 +13,10 @@ export const getPinnedCellOffset = (
 
   let pinnedOffset: number | undefined;
   switch (pinnedPosition) {
-    case PinnedPosition.LEFT:
+    case PinnedColumnPosition.LEFT:
       pinnedOffset = columnPositions[columnIndex];
       break;
-    case PinnedPosition.RIGHT:
+    case PinnedColumnPosition.RIGHT:
       pinnedOffset =
         dimensions.columnsTotalWidth -
         columnPositions[columnIndex] -

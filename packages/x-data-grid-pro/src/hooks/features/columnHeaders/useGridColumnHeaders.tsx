@@ -18,7 +18,7 @@ import {
   GridColumnHeaderRow,
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
-  PinnedPosition,
+  PinnedColumnPosition,
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -180,7 +180,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       >
         {leftRenderContext &&
           getColumnFilters({
-            position: PinnedPosition.LEFT,
+            position: PinnedColumnPosition.LEFT,
             renderContext: leftRenderContext,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
@@ -190,7 +190,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         })}
         {rightRenderContext &&
           getColumnFilters({
-            position: PinnedPosition.RIGHT,
+            position: PinnedColumnPosition.RIGHT,
             renderContext: rightRenderContext,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}

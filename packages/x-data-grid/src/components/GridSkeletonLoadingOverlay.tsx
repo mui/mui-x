@@ -15,7 +15,7 @@ import {
   useGridApiEventHandler,
   useGridSelector,
 } from '../hooks';
-import { PinnedPosition } from '../internals/constants';
+import { PinnedColumnPosition } from '../internals/constants';
 import { GridEventListener } from '../models';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
@@ -80,10 +80,10 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
   const getPinnedPosition = React.useCallback(
     (field: string) => {
       if (pinnedColumns.left.findIndex((col) => col.field === field) !== -1) {
-        return PinnedPosition.LEFT;
+        return PinnedColumnPosition.LEFT;
       }
       if (pinnedColumns.right.findIndex((col) => col.field === field) !== -1) {
-        return PinnedPosition.RIGHT;
+        return PinnedColumnPosition.RIGHT;
       }
       return undefined;
     },
@@ -99,8 +99,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
       for (let colIndex = 0; colIndex < columns.length; colIndex += 1) {
         const column = columns[colIndex];
         const pinnedPosition = getPinnedPosition(column.field);
-        const isPinnedLeft = pinnedPosition === PinnedPosition.LEFT;
-        const isPinnedRight = pinnedPosition === PinnedPosition.RIGHT;
+        const isPinnedLeft = pinnedPosition === PinnedColumnPosition.LEFT;
+        const isPinnedRight = pinnedPosition === PinnedColumnPosition.RIGHT;
         const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
         const sectionLength = pinnedSide
           ? pinnedColumns[pinnedSide].length // pinned section
@@ -218,8 +218,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
 
     const resizedColIndex = columns.findIndex((col) => col.field === colDef.field);
     const pinnedPosition = getPinnedPosition(colDef.field);
-    const isPinnedLeft = pinnedPosition === PinnedPosition.LEFT;
-    const isPinnedRight = pinnedPosition === PinnedPosition.RIGHT;
+    const isPinnedLeft = pinnedPosition === PinnedColumnPosition.LEFT;
+    const isPinnedRight = pinnedPosition === PinnedColumnPosition.RIGHT;
     const currentWidth = getComputedStyle(cells[0]).getPropertyValue('--width');
     const delta = parseInt(currentWidth, 10) - width;
 

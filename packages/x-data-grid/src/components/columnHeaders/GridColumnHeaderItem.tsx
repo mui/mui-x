@@ -17,7 +17,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../../internals/constants';
+import { PinnedColumnPosition } from '../../internals/constants';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -34,7 +34,7 @@ interface GridColumnHeaderItemProps {
   tabIndex: 0 | -1;
   disableReorder?: boolean;
   separatorSide?: GridColumnHeaderSeparatorProps['side'];
-  pinnedPosition?: PinnedPosition;
+  pinnedPosition?: PinnedColumnPosition;
   pinnedOffset?: number;
   style?: React.CSSProperties;
   isLastUnpinned: boolean;
@@ -82,8 +82,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
-      pinnedPosition === PinnedPosition.LEFT && 'columnHeader--pinnedLeft',
-      pinnedPosition === PinnedPosition.RIGHT && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
       // TODO: Remove classes below and restore `:has` selectors when they are supported in jsdom
       // See https://github.com/mui/mui-x/pull/14559
       isLastUnpinned && 'columnHeader--lastUnpinned',

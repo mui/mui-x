@@ -1,24 +1,24 @@
-import { PinnedPosition } from '../internals/constants';
+import { PinnedColumnPosition } from '../internals/constants';
 
 export const rtlFlipSide = (
-  position: PinnedPosition | undefined,
+  position: PinnedColumnPosition | undefined,
   isRtl: boolean,
 ): 'left' | 'right' | undefined => {
   if (!position) {
     return undefined;
   }
   if (!isRtl) {
-    if (position === PinnedPosition.LEFT) {
+    if (position === PinnedColumnPosition.LEFT) {
       return 'left';
     }
-    if (position === PinnedPosition.RIGHT) {
+    if (position === PinnedColumnPosition.RIGHT) {
       return 'right';
     }
   } else {
-    if (position === PinnedPosition.LEFT) {
+    if (position === PinnedColumnPosition.LEFT) {
       return 'right';
     }
-    if (position === PinnedPosition.RIGHT) {
+    if (position === PinnedColumnPosition.RIGHT) {
       return 'left';
     }
   }

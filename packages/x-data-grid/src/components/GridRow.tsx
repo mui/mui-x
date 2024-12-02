@@ -19,7 +19,7 @@ import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
-import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedPosition } from '../internals/constants';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
 import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
@@ -277,7 +277,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     indexInSection: number,
     indexRelativeToAllColumns: number,
     sectionLength: number,
-    pinnedPosition = PinnedPosition.NONE,
+    pinnedPosition = PinnedColumnPosition.NONE,
   ) => {
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
@@ -324,7 +324,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
     const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
-    const cellIsNotVisible = pinnedPosition === PinnedPosition.VIRTUAL;
+    const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
     const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
     const showRightBorder = shouldCellShowRightBorder(
@@ -369,7 +369,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       i,
       indexRelativeToAllColumns,
       pinnedColumns.left.length,
-      PinnedPosition.LEFT,
+      PinnedColumnPosition.LEFT,
     );
   });
 
@@ -380,7 +380,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       i,
       indexRelativeToAllColumns,
       pinnedColumns.right.length,
-      PinnedPosition.RIGHT,
+      PinnedColumnPosition.RIGHT,
     );
   });
 
@@ -395,7 +395,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         focusedColumnIndex - pinnedColumns.left.length,
         focusedColumnIndex,
         middleColumnsLength,
-        PinnedPosition.VIRTUAL,
+        PinnedColumnPosition.VIRTUAL,
       ),
     );
   }
@@ -418,7 +418,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         focusedColumnIndex - pinnedColumns.left.length,
         focusedColumnIndex,
         middleColumnsLength,
-        PinnedPosition.VIRTUAL,
+        PinnedColumnPosition.VIRTUAL,
       ),
     );
   }

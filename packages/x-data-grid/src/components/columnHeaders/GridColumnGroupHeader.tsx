@@ -14,7 +14,7 @@ import { GridColumnGroup } from '../../models/gridColumnGrouping';
 import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
-import { PinnedPosition } from '../../internals/constants';
+import { PinnedColumnPosition } from '../../internals/constants';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -30,7 +30,7 @@ interface GridColumnGroupHeaderProps {
   style?: React.CSSProperties;
   showLeftBorder: boolean;
   showRightBorder: boolean;
-  pinnedPosition: PinnedPosition | undefined;
+  pinnedPosition: PinnedColumnPosition | undefined;
   pinnedOffset?: number;
 }
 
@@ -42,7 +42,7 @@ type OwnerState = {
   isLastColumn: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
-  pinnedPosition?: PinnedPosition | undefined;
+  pinnedPosition?: PinnedColumnPosition | undefined;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -68,8 +68,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       showLeftBorder && 'columnHeader--withLeftBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
-      pinnedPosition === PinnedPosition.LEFT && 'columnHeader--pinnedLeft',
-      pinnedPosition === PinnedPosition.RIGHT && 'columnHeader--pinnedRight',
+      pinnedPosition === PinnedColumnPosition.LEFT && 'columnHeader--pinnedLeft',
+      pinnedPosition === PinnedColumnPosition.RIGHT && 'columnHeader--pinnedRight',
       isLastColumn && 'columnHeader--last',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
