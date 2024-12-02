@@ -122,7 +122,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.3.2",
     "@vitest/browser": "^2.1.5",
-    "@vitest/coverage-v8": "^2.1.5",
+    "@vitest/coverage-istanbul": "^2.1.5",
     "autoprefixer": "^10.4.20",
     "axe-core": "4.10.2",
     "babel-loader": "^9.2.1",

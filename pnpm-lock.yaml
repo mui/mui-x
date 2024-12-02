@@ -180,9 +180,9 @@ importers:
       '@vitest/browser':
         specifier: ^2.1.5
         version: 2.1.5(@types/node@20.17.6)(playwright@1.44.1)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(terser@5.36.0))(vitest@2.1.5)
-      '@vitest/coverage-v8':
+      '@vitest/coverage-istanbul':
         specifier: ^2.1.5
-        version: 2.1.5(@vitest/browser@2.1.5)(vitest@2.1.5)
+        version: 2.1.8(vitest@2.1.5)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)
@@ -4447,14 +4447,10 @@ packages:
       webdriverio:
         optional: true
 
-  '@vitest/coverage-v8@2.1.5':
-    resolution: {integrity: sha512-/RoopB7XGW7UEkUndRXF87A9CwkoZAJW01pj8/3pgmDVsjMH2IKy6H1A38po9tmUlwhSyYs0az82rbKd9Yaynw==}
+  '@vitest/coverage-istanbul@2.1.8':
+    resolution: {integrity: sha512-cSaCd8KcWWvgDwEJSXm0NEWZ1YTiJzjicKHy+zOEbUm0gjbbkz+qJf1p8q71uBzSlS7vdnZA8wRLeiwVE3fFTA==}
     peerDependencies:
-      '@vitest/browser': 2.1.5
-      vitest: 2.1.5
-    peerDependenciesMeta:
-      '@vitest/browser':
-        optional: true
+      vitest: 2.1.8
 
   '@vitest/expect@2.1.5':
     resolution: {integrity: sha512-nZSBTW1XIdpZvEJyoP/Sy8fUg0b8od7ZpGDkTUcfJ7wz/VoZAFzFfLyxVxGFhUjJzhYqSbIpfMtl/+k/dpWa3Q==}
@@ -13637,23 +13633,19 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@vitest/coverage-v8@2.1.5(@vitest/browser@2.1.5)(vitest@2.1.5)':
+  '@vitest/coverage-istanbul@2.1.8(vitest@2.1.5)':
     dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@bcoe/v8-coverage': 0.2.3
+      '@istanbuljs/schema': 0.1.3
       debug: 4.3.7(supports-color@8.1.1)
       istanbul-lib-coverage: 3.2.2
+      istanbul-lib-instrument: 6.0.3
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.6
       istanbul-reports: 3.1.7
-      magic-string: 0.30.13
       magicast: 0.3.5
-      std-env: 3.8.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
       vitest: 2.1.5(@types/node@20.17.6)(@vitest/browser@2.1.5)(@vitest/ui@2.1.5)(jsdom@24.1.3)(msw@2.6.5(@types/node@20.17.6)(typescript@5.6.3))(terser@5.36.0)
-    optionalDependencies:
-      '@vitest/browser': 2.1.5(@types/node@20.17.6)(playwright@1.44.1)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(terser@5.36.0))(vitest@2.1.5)
     transitivePeerDependencies:
       - supports-color
 

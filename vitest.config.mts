@@ -1,7 +1,9 @@
-import path from 'path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
-const MONOREPO_ROOT = path.resolve(__dirname, './');
+const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
+const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
 
 export default defineConfig({
   define: {
@@ -21,11 +23,11 @@ export default defineConfig({
         return [
           {
             find: `@mui/${v.lib}`,
-            replacement: new URL(`./packages/${v.lib}/src`, import.meta.url).pathname,
+            replacement: resolve(WORKSPACE_ROOT, `./packages/${v.lib}/src`),
           },
           ...(v.plans ?? []).map((plan) => ({
             find: `@mui/${v.lib}-${plan}`,
-            replacement: new URL(`./packages/${v.lib}-${plan}/src`, import.meta.url).pathname,
+            replacement: resolve(WORKSPACE_ROOT, `./packages/${v.lib}-${plan}/src`),
           })),
         ];
       }),
@@ -50,10 +52,11 @@ export default defineConfig({
     // Should be removed once we migrate to vitest.
     passWithNoTests: true,
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'lcov'],
-      reportsDirectory: path.resolve(MONOREPO_ROOT, 'coverage'),
+      provider: 'istanbul',
+      reporter: [['text', { maxCols: 200 }], 'lcov'],
+      reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
       include: ['packages/*/src/**/*.ts', 'packages/*/src/**/*.tsx'],
+      exclude: ['**/*.test.{js,ts,tsx}', '**/*.test/*'],
     },
     sequence: {
       hooks: 'list',
