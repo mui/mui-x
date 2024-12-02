@@ -28,6 +28,12 @@ module.exports = function setKarmaConfig(config) {
         served: true,
         included: true,
       },
+      {
+        pattern: 'test/karma.datagrid.tests.js',
+        watched: true,
+        served: true,
+        included: true,
+      },
     ],
     plugins: (process.env.PARALLEL === 'true' ? ['karma-parallel'] : []).concat([
       'karma-mocha',
@@ -47,6 +53,7 @@ module.exports = function setKarmaConfig(config) {
     port: 9876,
     preprocessors: {
       'test/karma.tests.js': ['webpack', 'sourcemap'],
+      'test/karma.datagrid.tests.js': ['webpack', 'sourcemap'],
     },
     reporters: ['dots'],
     webpack: {
