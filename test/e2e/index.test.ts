@@ -13,7 +13,7 @@ import {
   WebError,
   Locator,
 } from '@playwright/test';
-import { pickersTextFieldClasses } from '@mui/x-date-pickers/PickersTextField';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
@@ -806,7 +806,7 @@ async function initializeEnvironment(
           await waitFor(async () => {
             // assert that the dialog has been closed and the focused element is the input
             expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
-              pickersSectionListClasses.sectionContent,
+              iconButtonClasses.root,
             );
           });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
