@@ -44,7 +44,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `apiRef.current.resize()` method was removed.
 - The `<GridOverlays />` component is not exported anymore.
-- `dataRowIdToIdLookup` selector is removed. Use `dataRowIdToModelLookup` selector in combination with `getRowId()` API method instead.
+- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
 
   ```tsx
   // Before
