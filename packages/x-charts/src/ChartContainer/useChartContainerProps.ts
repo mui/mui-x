@@ -7,7 +7,6 @@ import type { ChartContainerProps } from './ChartContainer';
 export type UseChartContainerPropsReturnValue = {
   chartDataProviderProps: ChartDataProviderProps;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
-  resizableContainerProps: any;
   children: React.ReactNode;
 };
 
@@ -37,14 +36,13 @@ export const useChartContainerProps = (
     ...other
   } = props;
 
-  const resizableContainerProps = other;
-
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
     desc,
     sx,
     disableAxisListener,
     ref,
+    ...other,
   };
 
   const chartDataProviderProps: ChartDataProviderProps = {
@@ -65,7 +63,6 @@ export const useChartContainerProps = (
 
   return {
     chartDataProviderProps,
-    resizableContainerProps,
     chartsSurfaceProps,
     children,
   };

@@ -2,16 +2,10 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
-    "disabled": {
-      "description": "If <code>true</code>, the component is disabled. When disabled, the value cannot be changed and no interaction is possible."
-    },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
     "onViewChange": {
       "description": "Callback called when a toolbar is clicked",
       "typeDescriptions": { "view": "The view to open" }
-    },
-    "readOnly": {
-      "description": "If <code>true</code>, the component is read-only. When read-only, the value cannot be changed but the user can interact with the interface."
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
