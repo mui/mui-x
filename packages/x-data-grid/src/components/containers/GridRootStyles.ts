@@ -10,6 +10,7 @@ import {
 } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
+import { vars } from '../../constants/cssVariables';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -214,6 +215,9 @@ export const GridRootStyles = styled('div', {
   };
 
   const gridStyle: CSSInterpolation = {
+
+    ...transformTheme(t),
+
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
     '--unstable_DataGrid-overlayBackground': overlayBackground,
@@ -771,6 +775,13 @@ export const GridRootStyles = styled('div', {
 
   return gridStyle;
 });
+
+function transformTheme(theme: Theme) {
+  return {
+    [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
+    [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
+  }
+}
 
 /**
  * Blend a transparent overlay color with a background color, resulting in a single

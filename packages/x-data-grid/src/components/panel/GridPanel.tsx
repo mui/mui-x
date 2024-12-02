@@ -6,6 +6,7 @@ import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
+import { vars } from '../../constants/cssVariables';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,14 +46,14 @@ const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+})<{ ownerState: OwnerState }>({
+  backgroundColor: vars.palette.background.elevated,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
-  maxWidth: `calc(100vw - ${theme.spacing(0.5)})`,
+  maxWidth: `calc(100vw - ${vars.spacing(0.5)})`,
   overflow: 'auto',
-}));
+});
 
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
