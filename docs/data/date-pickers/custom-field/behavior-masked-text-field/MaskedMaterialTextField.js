@@ -146,7 +146,7 @@ function MaskedDateField(props) {
         ref: pickerContext.triggerRef,
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={handleTogglePicker} size="small">
+            <IconButton onClick={handleTogglePicker} size="small" edge="end">
               <CalendarIcon />
             </IconButton>
           </InputAdornment>

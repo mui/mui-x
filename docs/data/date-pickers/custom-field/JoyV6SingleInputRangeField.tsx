@@ -13,6 +13,7 @@ import {
 import Input, { InputProps } from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import { createSvgIcon } from '@mui/joy/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
@@ -25,13 +26,16 @@ import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
 import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
+export const CalendarIcon = createSvgIcon(
+  <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />,
+  'Calendar',
+);
+
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps
   extends Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>>,
-    BaseSingleInputPickersFieldHooksReturnValue<false> {
-  formControlSx?: InputProps['sx'];
-}
+    BaseSingleInputPickersFieldHooksReturnValue<false> {}
 
 type JoyFieldComponent = ((
   props: JoyFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -61,7 +65,7 @@ const JoyField = React.forwardRef(
       inputRef,
 
       // The rest can be passed to the root element
-      formControlSx,
+      endDecorator,
       slotProps,
       slots,
       ...other
@@ -70,14 +74,17 @@ const JoyField = React.forwardRef(
     const pickerContext = usePickerContext();
 
     return (
-      <FormControl
-        sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
-        ref={ref}
-      >
+      <FormControl ref={ref}>
         <FormLabel>{label}</FormLabel>
         <Input
           ref={pickerContext.triggerRef}
           disabled={disabled}
+          endDecorator={
+            <React.Fragment>
+              <CalendarIcon size="md" />
+              {endDecorator}
+            </React.Fragment>
+          }
           slotProps={{
             ...slotProps,
             input: { ref: inputRef },
@@ -139,11 +146,7 @@ export default function JoyV6SingleInputRangeField() {
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoySingleInputDateRangePicker
-            slotProps={{
-              field: { clearable: true },
-            }}
-          />
+          <JoySingleInputDateRangePicker />
         </LocalizationProvider>
       </CssVarsProvider>
     </MaterialCssVarsProvider>

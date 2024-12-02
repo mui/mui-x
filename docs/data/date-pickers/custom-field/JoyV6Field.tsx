@@ -14,6 +14,7 @@ import Input, { InputProps } from '@mui/joy/Input';
 import IconButton from '@mui/joy/IconButton';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import { createSvgIcon } from '@mui/joy/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
@@ -24,15 +25,17 @@ import {
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+
+export const CalendarIcon = createSvgIcon(
+  <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />,
+  'Calendar',
+);
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps
   extends BaseSingleInputPickersFieldHooksReturnValue<false>,
-    Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>> {
-  formControlSx?: InputProps['sx'];
-}
+    Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>> {}
 
 type JoyFieldComponent = ((
   props: JoyFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -62,7 +65,6 @@ const JoyField = React.forwardRef(
       inputRef,
 
       // The rest can be passed to the root element
-      formControlSx,
       endDecorator,
       slotProps,
       slots,
@@ -79,10 +81,7 @@ const JoyField = React.forwardRef(
     };
 
     return (
-      <FormControl
-        sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
-        ref={ref}
-      >
+      <FormControl ref={ref}>
         <FormLabel>{label}</FormLabel>
         <Input
           ref={pickerContext.triggerRef}
@@ -93,7 +92,7 @@ const JoyField = React.forwardRef(
                 onClick={handleTogglePicker}
                 aria-label={openPickerAriaLabel}
               >
-                <CalendarIcon />
+                <CalendarIcon size="md" />
               </IconButton>
               {endDecorator}
             </React.Fragment>
@@ -127,15 +126,6 @@ const JoyDatePicker = React.forwardRef(
         ref={ref}
         {...props}
         slots={{ ...props.slots, field: JoyDateField }}
-        slotProps={{
-          ...props.slotProps,
-          field: {
-            ...props.slotProps?.field,
-            formControlSx: {
-              flexDirection: 'row',
-            },
-          } as any,
-        }}
       />
     );
   },
@@ -162,11 +152,7 @@ export default function JoyV6Field() {
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker
-            slotProps={{
-              field: { clearable: true },
-            }}
-          />
+          <JoyDatePicker />
         </LocalizationProvider>
       </CssVarsProvider>
     </MaterialCssVarsProvider>

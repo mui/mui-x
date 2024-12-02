@@ -48,6 +48,7 @@ function AutocompleteField(props) {
       ref={pickerContext.triggerRef}
       sx={{ minWidth: 250 }}
       renderInput={(params) => {
+        const endAdornment = params.InputProps.endAdornment;
         return (
           <TextField
             {...params}
@@ -56,13 +57,13 @@ function AutocompleteField(props) {
             inputProps={{ ...params.inputProps, ...inputProps }}
             InputProps={{
               ...params.InputProps,
-              endAdornment: React.cloneElement(params.InputProps.endAdornment, {
+              endAdornment: React.cloneElement(endAdornment, {
                 children: (
                   <React.Fragment>
                     <IconButton onClick={handleTogglePicker} size="small">
                       <CalendarIcon />
                     </IconButton>
-                    {params.InputProps.endAdornment?.props.children}
+                    {endAdornment.props.children}
                   </React.Fragment>
                 ),
               }),
