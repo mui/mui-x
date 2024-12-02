@@ -145,10 +145,7 @@ jobs:
       - install_js
       - run:
           name: Tests fake browser (vitest)
-          command: pnpm vitest --reporter dot --project "jsdom/*" --coverage --pool threads
-          environment:
-            VITEST_MAX_THREADS: 6
-            VITEST_MIN_THREADS: 2
+          command: pnpm vitest --reporter dot --project "jsdom/*" --coverage
       - run:
           name: Check coverage generated
           command: |
@@ -275,7 +272,14 @@ jobs:
           browsers: true
       - run:
           name: Tests real browsers (vitest)
-          command: pnpm vitest --reporter dot --project "browser/*" --fileParallelism=false --browser.fileParallelism=false --no-file-parallelism --maxWorkers 2 --minWorkers 1 --maxConcurrency 3 --sequence.concurrent=false --poolOptions.forks.singleFork --poolOptions.vmThreads.singleThread --pool threads
+          command: pnpm vitest --reporter dot --project "browser/*" --coverage
+      - run:
+          name: Check coverage generated
+          command: |
+            if ! [[ -s coverage/lcov.info ]]
+            then
+              exit 1
+            fi
 
   test_types:
     <<: *default-job
