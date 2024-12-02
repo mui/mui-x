@@ -110,8 +110,6 @@ export const useGridRowPinningPreProcessors = (
           if (node?.type === 'pinnedRow') {
             delete newGroupingParams.tree[rowId];
             delete newGroupingParams.dataRowIdToModelLookup[rowId];
-            delete newGroupingParams.dataRowIdToIdLookup[rowId];
-            delete apiRef.current.caches.rows.dataRowIdToIdLookup[rowId];
             delete apiRef.current.caches.rows.dataRowIdToModelLookup[rowId];
           }
         };
