@@ -84,7 +84,7 @@ DateField.propTypes = {
   clearable: PropTypes.bool,
   /**
    * The position at which the clear button is placed.
-   * If the field is not clearable, the button will not be rendered.
+   * If the field is not clearable, the button is not rendered.
    * @default 'end'
    */
   clearButtonPosition: PropTypes.oneOf(['end', 'start']),
@@ -233,7 +233,7 @@ DateField.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * The position at which the opening button is placed.
-   * If there is no picker to open, the button will not be rendered
+   * If there is no picker to open, the button is not rendered
    * @default 'end'
    */
   openPickerButtonPosition: PropTypes.oneOf(['end', 'start']),

@@ -3,7 +3,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -94,7 +94,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
         sx={{ marginLeft: 1.5 }}
         aria-label={openPickerAriaLabel}
       >
-        <CalendarIcon />
+        <DateRangeIcon />
       </IconButton>
     </BrowserFieldRoot>
   );

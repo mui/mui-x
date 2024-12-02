@@ -98,7 +98,7 @@ SingleInputDateTimeRangeField.propTypes = {
   clearable: PropTypes.bool,
   /**
    * The position at which the clear button is placed.
-   * If the field is not clearable, the button will not be rendered.
+   * If the field is not clearable, the button is not rendered.
    * @default 'end'
    */
   clearButtonPosition: PropTypes.oneOf(['end', 'start']),
