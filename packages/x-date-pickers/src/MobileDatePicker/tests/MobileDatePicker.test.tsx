@@ -11,7 +11,6 @@ import {
   expectFieldValueV7,
   buildFieldInteractions,
   openPicker,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileDatePicker />', () => {
@@ -132,17 +131,6 @@ describe('<MobileDatePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileDatePicker onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
     it('should call `onAccept` even if controlled', () => {
       const onAccept = spy();
 

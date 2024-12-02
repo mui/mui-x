@@ -157,7 +157,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
     });
 
-    it('should not allow editing with keyboard in mobile pickers', () => {
+    it('should allow editing with keyboard in mobile pickers', () => {
       if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
@@ -170,7 +170,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       });
       v7Response.selectSection(undefined);
       fireUserEvent.keyPress(v7Response.getActiveSection(0), { key: 'ArrowUp' });
-      expect(handleChange.callCount).to.equal(0);
+      expect(handleChange.callCount).to.equal(1);
     });
 
     it('should have correct labelledby relationship when toolbar is shown', () => {
