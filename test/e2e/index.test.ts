@@ -799,10 +799,7 @@ async function initializeEnvironment(
         it('should allow selecting a value', async () => {
           await renderFixture('DatePicker/BasicMobileDatePicker');
 
-          // Old selector: await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
-          await page
-            .locator(`.${pickersTextFieldClasses.root}`)
-            .click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
@@ -824,7 +821,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox');
 
-          await input.click({ position: { x: 10, y: 2 } });
+          await page.getByRole('button').click();
           await page.getByRole('button', { name: 'Clear' }).click();
 
           await input.blur();
