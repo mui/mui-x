@@ -176,10 +176,10 @@ The following demo showcases this behavior.
 {{"demo": "ServerSideDataGrid.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
-In a real-world scenario, you should replace this with your own server-side data-fetching logic.
+The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
-Open info section of the browser console to see the requests being made and the data being fetched in response.
+Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Data caching
@@ -188,6 +188,43 @@ The data source caches fetched data by default.
 This means that if the user navigates to a page or expands a node that has already been fetched, the grid will not call the `getRows` function again to avoid unnecessary calls to the server.
 
 The `GridDataSourceCacheDefault` is used by default which is a simple in-memory cache that stores the data in a plain object. It can be seen in action in the [demo above](#with-data-source).
+
+### Improving the cache hit rate
+
+To increase the cache hit rate, Data Grid splits `getRows()` results into chunks before storing them in cache.
+For the requests that follow, chunks are combined as needed to recreate the response.
+This means that a single request can make multiple calls to the `get()` or `set()` method of `GridDataSourceCache`.
+
+Chunk size is the lowest expected amount of records per request based on the `pageSize` value from the `paginationModel` and `pageSizeOptions` props.
+
+Because of this, values in the `pageSizeOptions` prop play a big role in the cache hit rate.
+We recommend using values that are multiples of the lowest value; even better if each subsequent value is a multiple of the previous value.
+
+Here are some examples:
+
+1. Best scenario - `pageSizeOptions={[5, 10, 50, 100]}`
+
+   In this case the chunk size is 5, which means that with `pageSize={100}` there are 20 cache records stored.
+
+   Retrieving data for any other `pageSize` up to the first 100 records results in a cache hit, since the whole dataset can be made of the existing chunks.
+
+2. Parts of the data missing - `pageSizeOptions={[10, 20, 50]}`
+
+   Loading the first page with `pageSize={50}` results in 5 cache records.
+   This works well with `pageSize={10}`, but not as well with `pageSize={20}`.
+   Loading the third page with `pageSize={20}` results in a new request being made, even though half of the data is already in the cache.
+
+3. Incompatible page sizes - `pageSizeOptions={[7, 15, 40]}`
+
+   In this situation, the chunk size is 7.
+   Retrieving the first page with `pageSize={15}` creates chunks split into `[7, 7, 1]` records.
+   Loading the second page creates 3 new chunks (again `[7, 7, 1]`), but now the third chunk from the first request has an overlap of 1 record with the first chunk of the second request.
+   These chunks with 1 record can only be used as the last piece of a request for `pageSize={15}` and are useless in all other cases.
+
+:::info
+In the examples above, `sortModel` and `filterModel` remained unchanged.
+Changing those would require a new response to be retrieved and stored in the chunks.
+:::
 
 ### Customize the cache lifetime
 
