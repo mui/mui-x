@@ -2,11 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/internal-test-utils';
+import { PickerRangeValue, PickerValidValue } from '@mui/x-date-pickers/internals';
 import { getExpectedOnChangeCount, getFieldInputRoot, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 import { fireUserEvent } from '../../fireUserEvent';
 
-export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
+export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<PickerValidValue, 'picker'> = (
   ElementToTest,
   options,
 ) => {
@@ -78,7 +79,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           selectSection,
           pressKey,
         });
-        newValue.forEach((value, index) => {
+        (newValue as PickerRangeValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
@@ -136,7 +137,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           selectSection,
           pressKey,
         });
-        newValue.forEach((value, index) => {
+        (newValue as PickerRangeValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
@@ -212,7 +213,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           selectSection,
           pressKey,
         });
-        newValue.forEach((value, index) => {
+        (newValue as PickerRangeValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
@@ -235,7 +236,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           selectSection,
           pressKey,
         });
-        newValueBis.forEach((value, index) => {
+        (newValueBis as PickerRangeValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
@@ -277,7 +278,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       if (isRangeType) {
-        newValue.forEach((value, index) => {
+        (newValue as PickerRangeValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
