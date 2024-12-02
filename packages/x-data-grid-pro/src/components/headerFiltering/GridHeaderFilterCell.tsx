@@ -324,7 +324,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
     if (pinnedSide && pinnedOffset !== undefined) {
-      style = { ...style, [pinnedSide]: pinnedOffset };
+      style[pinnedSide] = pinnedOffset;
     }
 
     return (
