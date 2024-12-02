@@ -216,7 +216,7 @@ export const GridRootStyles = styled('div', {
 
   const gridStyle: CSSInterpolation = {
 
-    ...transformTheme(t),
+    ...transformMaterialUITheme(t),
 
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
@@ -776,7 +776,7 @@ export const GridRootStyles = styled('div', {
   return gridStyle;
 });
 
-function transformTheme(theme: Theme) {
+function transformMaterialUITheme(theme: Theme) {
   return {
     [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
     [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
