@@ -193,6 +193,36 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
   />
 ```
 
+### Data Grid codemods
+
+#### `preset-safe` for Data Grid v8.0.0
+
+The `preset-safe` codemods for Data Grid.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+
+#### `remove-stabilized-v8-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{
+-    ariaV8: true,
+-  }}
+ />
+```
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
 ## v7.0.0
 
 ### 🚀 `preset-safe` for v7.0.0
