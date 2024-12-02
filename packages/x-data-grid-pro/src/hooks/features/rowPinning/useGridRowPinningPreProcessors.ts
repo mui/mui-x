@@ -13,7 +13,7 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { GridPinnedRowsProp } from './gridRowPinningInterface';
+import type { GridPinnedRowsProp, GridRowPinningInternalCache } from './gridRowPinningInterface';
 import { insertNodeInTree } from '../../../utils/tree/utils';
 
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
@@ -92,9 +92,13 @@ export function addPinnedRow({
 export const useGridRowPinningPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
 ) => {
+  const prevPinnedRowsCacheRef = React.useRef<GridRowPinningInternalCache | null>(null);
+
   const addPinnedRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       const pinnedRowsCache = apiRef.current.caches.pinnedRows || {};
+      const prevPinnedRowsCache = prevPinnedRowsCacheRef.current;
+      prevPinnedRowsCacheRef.current = pinnedRowsCache;
 
       let newGroupingParams: GridHydrateRowsValue = {
         ...groupingParams,
@@ -104,6 +108,22 @@ export const useGridRowPinningPreProcessors = (
           pinnedRows: {},
         },
       };
+
+      if (prevPinnedRowsCache) {
+        const pinnedRowCleanup = (rowId: GridRowId) => {
+          const node = newGroupingParams.tree[rowId];
+          if (node?.type === 'pinnedRow') {
+            delete newGroupingParams.tree[rowId];
+            delete newGroupingParams.dataRowIdToModelLookup[rowId];
+            delete newGroupingParams.dataRowIdToIdLookup[rowId];
+            delete apiRef.current.caches.rows.dataRowIdToIdLookup[rowId];
+            delete apiRef.current.caches.rows.dataRowIdToModelLookup[rowId];
+          }
+        };
+
+        prevPinnedRowsCache.topIds?.forEach(pinnedRowCleanup);
+        prevPinnedRowsCache.bottomIds?.forEach(pinnedRowCleanup);
+      }
 
       pinnedRowsCache.topIds?.forEach((rowId) => {
         newGroupingParams = addPinnedRow({
