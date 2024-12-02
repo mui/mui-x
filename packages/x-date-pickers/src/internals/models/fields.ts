@@ -14,7 +14,8 @@ export interface FieldRangeSection extends FieldSection {
   dateName: RangePosition;
 }
 
-export interface BaseForwardedSingleInputFieldProps extends ExportedPickerFieldUIProps {
+export interface BaseForwardedSingleInputFieldProps
+  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
   className: string | undefined;
   sx: SxProps<any> | undefined;
   label: React.ReactNode | undefined;

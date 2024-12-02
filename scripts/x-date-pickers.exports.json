@@ -5,6 +5,7 @@
   { "name": "ArrowLeftIcon", "kind": "Variable" },
   { "name": "ArrowRightIcon", "kind": "Variable" },
   { "name": "BaseSingleInputPickerFieldResponse", "kind": "TypeAlias" },
+  { "name": "BaseSingleInputPickersFieldHooksReturnValue", "kind": "TypeAlias" },
   { "name": "BaseSingleInputPickersTextFieldProps", "kind": "TypeAlias" },
   { "name": "BuiltInFieldTextFieldProps", "kind": "TypeAlias" },
   { "name": "CalendarIcon", "kind": "Variable" },

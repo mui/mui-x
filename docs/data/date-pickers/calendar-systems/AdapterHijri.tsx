@@ -29,16 +29,8 @@ const cacheRtl = createCache({
 function ButtonDateTimeField(props: DateTimePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
+  const { slotProps, slots, ownerState, label, focused, name, ...other } =
+    forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -65,7 +57,7 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
+      ref={pickerContext.triggerRef}
       onClick={handleTogglePicker}
     >
       {label ? `${label}: ${valueStr}` : valueStr}

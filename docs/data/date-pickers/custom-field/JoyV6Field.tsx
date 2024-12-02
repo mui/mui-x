@@ -29,8 +29,8 @@ import { CalendarIcon } from '@mui/x-date-pickers/icons';
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps
-  extends Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>>,
-    BaseSingleInputPickersFieldHooksReturnValue<false> {
+  extends BaseSingleInputPickersFieldHooksReturnValue<false>,
+    Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>> {
   formControlSx?: InputProps['sx'];
 }
 

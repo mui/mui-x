@@ -15,7 +15,7 @@ import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField }
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -36,10 +36,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
+  extends BaseSingleInputPickersFieldHooksReturnValue<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
+      keyof BaseSingleInputPickersFieldHooksReturnValue<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
@@ -141,7 +141,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 
     const fieldResponse = useSingleInputDateRangeField<true, typeof textFieldProps>(
       textFieldProps,
-    );
+    ) as BaseSingleInputPickersFieldHooksReturnValue<true>;
 
     return (
       <BrowserTextField

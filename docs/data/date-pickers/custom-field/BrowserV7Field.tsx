@@ -12,7 +12,7 @@ import {
 } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -34,10 +34,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
+  extends BaseSingleInputPickersFieldHooksReturnValue<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
+      keyof BaseSingleInputPickersFieldHooksReturnValue<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
