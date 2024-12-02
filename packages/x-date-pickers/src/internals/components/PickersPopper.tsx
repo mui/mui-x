@@ -28,7 +28,7 @@ import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 import { PickerOwnerState } from '../../models';
 
 interface PickerPopperOwnerState extends PickerOwnerState {
-  placement: PopperPlacementType;
+  popperPlacement: PopperPlacementType;
 }
 
 export interface PickersPopperSlots {
@@ -122,8 +122,8 @@ const PickersPopperPaper = styled(MuiPaper, {
   transformOrigin: 'top center',
   variants: [
     {
-      props: ({ placement }: PickerPopperOwnerState) =>
-        ['top', 'top-start', 'top-end'].includes(placement),
+      props: ({ popperPlacement }: PickerPopperOwnerState) =>
+        ['top', 'top-start', 'top-end'].includes(popperPlacement),
       style: {
         transformOrigin: 'bottom center',
       },
@@ -397,7 +397,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const defaultReduceAnimations = useDefaultReduceAnimations();
   const reduceAnimations = inReduceAnimations ?? defaultReduceAnimations;
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const ownerState = { ...pickerOwnerState, placement };
+  const ownerState: PickerPopperOwnerState = { ...pickerOwnerState, popperPlacement: placement };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
