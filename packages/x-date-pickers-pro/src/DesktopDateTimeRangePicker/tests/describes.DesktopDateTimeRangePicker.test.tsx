@@ -28,6 +28,7 @@ describe('<DesktopDateTimeRangePicker /> - Describes', () => {
     clock,
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeConformance(<DesktopDateTimeRangePicker />, () => ({

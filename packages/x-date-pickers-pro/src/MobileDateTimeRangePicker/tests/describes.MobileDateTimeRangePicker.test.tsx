@@ -29,6 +29,7 @@ describe('<MobileDateTimeRangePicker /> - Describes', () => {
     clock,
     views: ['day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeConformance(<MobileDateTimeRangePicker />, () => ({
