@@ -7,18 +7,20 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
+import { PickersArrowSwitcherProps } from './PickersArrowSwitcher.types';
 import {
-  PickersArrowSwitcherOwnerState,
-  PickersArrowSwitcherProps,
-} from './PickersArrowSwitcher.types';
-import { getPickersArrowSwitcherUtilityClass } from './pickersArrowSwitcherClasses';
+  getPickersArrowSwitcherUtilityClass,
+  PickersArrowSwitcherClasses,
+} from './pickersArrowSwitcherClasses';
+import { usePickerPrivateContext } from '../../hooks/usePickerPrivateContext';
+import { PickerOwnerState } from '../../../models';
 
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{
-  ownerState: PickersArrowSwitcherProps;
+  ownerState: PickerOwnerState;
 }>({
   display: 'flex',
 });
@@ -28,7 +30,7 @@ const PickersArrowSwitcherSpacer = styled('div', {
   slot: 'Spacer',
   overridesResolver: (props, styles) => styles.spacer,
 })<{
-  ownerState: PickersArrowSwitcherProps;
+  ownerState: PickerOwnerState;
 }>(({ theme }) => ({
   width: theme.spacing(3),
 }));
@@ -38,7 +40,7 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   slot: 'Button',
   overridesResolver: (props, styles) => styles.button,
 })<{
-  ownerState: PickersArrowSwitcherProps;
+  ownerState: PickerOwnerState;
 }>({
   variants: [
     {
@@ -48,8 +50,7 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   ],
 });
 
-const useUtilityClasses = (ownerState: PickersArrowSwitcherOwnerState) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersArrowSwitcherClasses> | undefined) => {
   const slots = {
     root: ['root'],
     spacer: ['spacer'],
@@ -84,12 +85,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     onGoToPrevious,
     previousLabel,
     labelId,
+    classes: classesProp,
     ...other
   } = props;
 
-  const ownerState = props;
+  const { ownerState } = usePickerPrivateContext();
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const nextProps = {
     isDisabled: isNextDisabled,
@@ -117,7 +119,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       edge: 'end',
       onClick: previousProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: previousProps.isHidden },
+    ownerState: { ...ownerState, hidden: previousProps.isHidden ?? false },
     className: clsx(classes.button, classes.previousIconButton),
   });
 
@@ -133,7 +135,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       edge: 'start',
       onClick: nextProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: nextProps.isHidden },
+    ownerState: { ...ownerState, hidden: nextProps.isHidden ?? false },
     className: clsx(classes.button, classes.nextIconButton),
   });
 

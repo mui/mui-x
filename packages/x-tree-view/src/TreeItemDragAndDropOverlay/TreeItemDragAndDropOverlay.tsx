@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { TreeItemDragAndDropOverlayProps } from './TreeItemDragAndDropOverlay.types';
 import { TreeViewItemsReorderingAction } from '../models';
 import { styled } from '../internals/zero-styled';

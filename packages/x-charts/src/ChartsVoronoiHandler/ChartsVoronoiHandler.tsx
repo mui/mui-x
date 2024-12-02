@@ -5,7 +5,7 @@ import { Delaunay } from '@mui/x-charts-vendor/d3-delaunay';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { ScatterItemIdentifier } from '../models';
 import { SeriesId } from '../models/seriesType/common';
@@ -34,6 +34,7 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   const svgRef = useSvgRef();
   const drawingArea = useDrawingArea();
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
+
   const store = useStore();
 
   const { series, seriesOrder } = useScatterSeries() ?? {};
@@ -106,10 +107,10 @@ function ChartsVoronoiHandler(props: ChartsVoronoiHandlerProps) {
   }, [defaultXAxisId, defaultYAxisId, series, seriesOrder, xAxis, yAxis, drawingArea]);
 
   React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
+    if (svgRef.current === null) {
       return undefined;
     }
+    const element = svgRef.current;
 
     function getClosestPoint(
       event: MouseEvent,

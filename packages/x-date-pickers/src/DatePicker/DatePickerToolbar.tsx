@@ -9,15 +9,16 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateView, PickerValidDate } from '../models';
+import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { PickerValue } from '../internals/models';
 
 export interface DatePickerToolbarProps
-  extends BaseToolbarProps<PickerValidDate | null, DateView>,
+  extends BaseToolbarProps<PickerValue, DateView>,
     ExportedDatePickerToolbarProps {}
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -137,12 +138,6 @@ DatePickerToolbar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * If `true`, the component is disabled.
-   * When disabled, the value cannot be changed and no interaction is possible.
-   * @default false
-   */
-  disabled: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
    */
@@ -155,12 +150,6 @@ DatePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  /**
-   * If `true`, the component is read-only.
-   * When read-only, the value cannot be changed but the user can interact with the interface.
-   * @default false
-   */
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

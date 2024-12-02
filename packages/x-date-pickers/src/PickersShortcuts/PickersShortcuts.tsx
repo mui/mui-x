@@ -6,12 +6,13 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerValidValue } from '../internals/models';
 
-interface PickersShortcutsItemGetValueParams<TValue> {
+interface PickersShortcutsItemGetValueParams<TValue extends PickerValidValue> {
   isValid: (value: TValue) => boolean;
 }
 
-export interface PickersShortcutsItem<TValue> {
+export interface PickersShortcutsItem<TValue extends PickerValidValue> {
   label: string;
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
   /**
@@ -21,11 +22,12 @@ export interface PickersShortcutsItem<TValue> {
   id?: string;
 }
 
-export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
+export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
 export type PickerShortcutChangeImportance = 'set' | 'accept';
 
-export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
+export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
+  extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
@@ -41,7 +43,8 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
   changeImportance?: PickerShortcutChangeImportance;
 }
 
-export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
+export interface PickersShortcutsProps<TValue extends PickerValidValue>
+  extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
   onChange: (
     newValue: TValue,
@@ -66,7 +69,7 @@ const PickersShortcutsRoot = styled(List, {
  *
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
-function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
+function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcutsProps<TValue>) {
   const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {

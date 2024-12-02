@@ -9,24 +9,14 @@ export interface SizeProviderProps {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height?: number;
-  /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender?: boolean;
   children: React.ReactNode;
 }
 
 export interface SizeContextState extends Required<Pick<SizeProviderProps, 'height' | 'width'>> {
   /**
-   * The ref of the container element that the chart is rendered in.
+   * The ref of the svg element that the chart is rendered in.
    */
-  containerRef: React.RefObject<HTMLDivElement>;
+  svgRef: React.RefObject<SVGSVGElement>;
   /**
    * If the chart has a defined size.
    */

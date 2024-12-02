@@ -438,14 +438,6 @@ DataGridProRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
-  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -909,7 +901,7 @@ DataGridProRaw.propTypes = {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: PropTypes.shape({
     descendants: PropTypes.bool,
@@ -1026,4 +1018,12 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   unstable_rowSpanning: PropTypes.bool,
+  /**
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
+   * @default false
+   */
+  virtualizeColumnsWithAutoRowHeight: PropTypes.bool,
 } as any;
