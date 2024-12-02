@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridParamsApi } from '../../../models/api/gridParamsApi';
+import { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -54,19 +54,13 @@ export function useGridParamsApi(
     [apiRef],
   );
 
-  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
-    (id, field, rowParam, rowNodeParam) => {
+  const getCellParamsForRow = React.useCallback<GridParamsPrivateApi['getCellParamsForRow']>(
+    (id, field, row, rowNode) => {
       const colDef = (
         props.unstable_listView
           ? gridListColumnSelector(apiRef.current.state)
           : apiRef.current.getColumn(field)
       ) as GridStateColDef;
-      const row = rowParam ?? apiRef.current.getRow(id);
-      const rowNode = rowNodeParam ?? apiRef.current.getRowNode(id);
-
-      if (!row || !rowNode) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
-      }
 
       const rawValue = row[field];
       const value = colDef?.valueGetter
@@ -97,6 +91,20 @@ export function useGridParamsApi(
       return params;
     },
     [apiRef, props.unstable_listView],
+  );
+
+  const getCellParams = React.useCallback<GridParamsApi['getCellParams']>(
+    (id, field) => {
+      const row = apiRef.current.getRow(id);
+      const rowNode = apiRef.current.getRowNode(id);
+
+      if (!row || !rowNode) {
+        throw new MissingRowIdError(`No row with id #${id} found`);
+      }
+
+      return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, rowNode);
+    },
+    [apiRef],
   );
 
   const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
@@ -185,5 +193,10 @@ export function useGridParamsApi(
     getColumnHeaderElement,
   };
 
+  const paramsPrivateApi: GridParamsPrivateApi = {
+    getCellParamsForRow,
+  };
+
   useGridApiMethod(apiRef, paramsApi, 'public');
+  useGridApiMethod(apiRef, paramsPrivateApi, 'private');
 }
