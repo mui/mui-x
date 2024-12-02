@@ -541,7 +541,8 @@
       "default": "{ parents: true, descendants: true }"
     },
     "rowsLoadingMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\""
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
@@ -576,6 +577,8 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "unstable_listColumn": {
       "type": {
         "name": "shape",
