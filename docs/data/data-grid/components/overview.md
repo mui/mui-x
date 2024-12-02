@@ -36,7 +36,7 @@ The `className` prop can be used to apply styles to grid components:
 <Grid.FilterPanel.Trigger className="text-blue-600 underline" />
 ```
 
-Some parts also provide internal state that can be used to conditionally add classes:
+Some grid components also provide internal state that can be used to conditionally apply classes:
 
 ```tsx
 <Grid.FilterPanel.Trigger
@@ -60,7 +60,7 @@ A function can also be passed to the `render` prop, giving you control over the 
 />
 ```
 
-Some parts also provide internal state that can be used to control what is rendered by the `render` function:
+Some grid components also provide internal state that can be used to control what is rendered by the `render` function:
 
 ```tsx
 <Grid.FilterPanel.Trigger
