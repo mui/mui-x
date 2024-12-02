@@ -168,10 +168,11 @@ function GridToolbarPromptControl(props: GridToolbarPromptControlProps) {
         const rows = getVisibleRows(apiRef, rootProps);
         const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
         if (result.select !== -1) {
-          rows.rows.slice(0, result.select).forEach((r) => {
-            const id = apiRef.current.getRowId(r);
+          for (let i = 0; i < result.select; i += 1) {
+            const row = rows.rows[i];
+            const id = apiRef.current.getRowId(row);
             rowSelectionModel.ids.add(id);
-          });
+          }
         }
 
         apiRef.current.setRowSelectionModel(rowSelectionModel);

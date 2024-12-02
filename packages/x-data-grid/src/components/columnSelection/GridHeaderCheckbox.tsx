@@ -59,17 +59,17 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
 
       // selection.type === 'include'
       const selectionModel: GridRowSelectionModel = { type: 'include', ids: new Set<GridRowId>() };
-      selection.ids.forEach((id) => {
+      for (const id of selection.ids) {
         // The row might have been deleted
         if (!apiRef.current.getRow(id)) {
-          return;
+          continue;
         }
 
         const isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
         if (isSelectable) {
           selectionModel.ids.add(id);
         }
-      });
+      }
       return selectionModel;
     }, [apiRef, rootProps.isRowSelectable, selection]);
 
@@ -93,11 +93,11 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     const currentSelectionSize = React.useMemo(() => {
       const selectionManager = createSelectionManager(filteredSelection);
       let size = 0;
-      selectionCandidates.forEach((id) => {
+      for (const id of selectionCandidates) {
         if (selectionManager.has(id)) {
           size += 1;
         }
-      });
+      }
       return size;
     }, [filteredSelection, selectionCandidates]);
 

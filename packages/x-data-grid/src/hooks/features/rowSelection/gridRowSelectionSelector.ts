@@ -25,15 +25,16 @@ export const selectedGridRowsSelector = createSelectorMemoized(
   (selectionModel, rowsLookup, rowIds) => {
     const map = new Map<GridRowId, GridRowModel>();
     if (selectionModel.type === 'include') {
-      selectionModel.ids.forEach((id) => {
+      for (const id of selectionModel.ids) {
         map.set(id, rowsLookup[id]);
-      });
+      }
     } else {
-      rowIds.forEach((id) => {
+      for (let i = 0; i < rowIds.length; i += 1) {
+        const id = rowIds[i];
         if (!selectionModel.ids.has(id)) {
           map.set(id, rowsLookup[id]);
         }
-      });
+      }
     }
 
     return map;

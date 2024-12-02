@@ -312,11 +312,11 @@ export const useGridRowSelection = (
       let selectableIds = new Set<GridRowId>();
 
       if (selectionModel.type === 'include') {
-        selectionModel.ids.forEach((id) => {
+        for (const id of selectionModel.ids) {
           if (apiRef.current.isRowSelectable(id)) {
             selectableIds.add(id);
           }
-        });
+        }
       } else {
         selectableIds = new Set(selectionModel.ids);
       }
@@ -331,7 +331,7 @@ export const useGridRowSelection = (
             const addRow = (rowId: GridRowId) => {
               selectionManager.select(rowId);
             };
-            selectableIds.forEach((id) => {
+            for (const id of selectableIds) {
               findRowsToSelect(
                 apiRef,
                 tree,
@@ -340,7 +340,7 @@ export const useGridRowSelection = (
                 props.rowSelectionPropagation?.parents ?? false,
                 addRow,
               );
-            });
+            }
           }
         } else {
           newSelectionModel.ids = new Set();
@@ -365,7 +365,7 @@ export const useGridRowSelection = (
           selectionManager.unselect(rowId);
         };
 
-        selectableIds.forEach((id) => {
+        for (const id of selectableIds) {
           if (isSelected) {
             selectionManager.select(id);
             if (applyAutoSelection) {
@@ -391,7 +391,7 @@ export const useGridRowSelection = (
               );
             }
           }
-        });
+        }
       }
 
       const isSelectionValid =
@@ -481,11 +481,11 @@ export const useGridRowSelection = (
         return filteredRowsLookup[id] !== true;
       };
 
-      const newSelectionModel = { ...currentSelection, ids: new Set(currentSelection.ids) };
+      const newSelectionModel = { type: currentSelection.type, ids: new Set(currentSelection.ids) };
       const selectionManager = createSelectionManager(newSelectionModel);
 
       let hasChanged = false;
-      currentSelection.ids.forEach((id: GridRowId) => {
+      for (const id of currentSelection.ids) {
         if (isNonExistent(id)) {
           if (props.keepNonExistentRowsSelected) {
             return;
@@ -511,7 +511,7 @@ export const useGridRowSelection = (
             hasChanged = true;
           }
         }
-      });
+      }
 
       // For nested data, on row tree updation (filtering, adding rows, etc.) when the selection is
       // not empty, we need to re-run scanning of the tree to propagate the selection changes
@@ -721,11 +721,12 @@ export const useGridRowSelection = (
             }
           }
 
-          const rowsBetweenStartAndEnd = visibleRows.rows
-            .slice(start, end + 1)
-            .map((row) => row.id);
+          const rowsBetweenStartAndEnd = new Set<GridRowId>();
+          for (let i = start; i <= end; i += 1) {
+            rowsBetweenStartAndEnd.add(visibleRows.rows[i].id);
+          }
           apiRef.current.selectRows(
-            { type: 'include', ids: new Set(rowsBetweenStartAndEnd) },
+            { type: 'include', ids: rowsBetweenStartAndEnd },
             !isNextRowSelected,
           );
           return;
@@ -801,11 +802,11 @@ export const useGridRowSelection = (
     if (typeof isRowSelectable === 'function') {
       let selectableIds = new Set<GridRowId>();
       if (currentSelection.type === 'include') {
-        currentSelection.ids.forEach((id) => {
+        for (const id of currentSelection.ids) {
           if (isRowSelectable(id)) {
             selectableIds.add(id);
           }
-        });
+        }
       } else {
         selectableIds = new Set(currentSelection.ids);
       }
