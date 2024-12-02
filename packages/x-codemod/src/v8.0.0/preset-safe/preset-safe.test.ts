@@ -14,7 +14,9 @@ function getAllDirs() {
     .readdirSync(path.resolve(__dirname, '..'))
     .filter(
       (file) =>
-        fs.statSync(path.resolve(__dirname, '..', file)).isDirectory() && file !== 'preset-safe',
+        fs.statSync(path.resolve(__dirname, '..', file)).isDirectory() &&
+        file !== 'preset-safe' &&
+        fs.existsSync(path.resolve(__dirname, '..', file, 'preset-safe')),
     );
 }
 
