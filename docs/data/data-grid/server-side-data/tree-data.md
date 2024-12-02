@@ -1,5 +1,5 @@
 ---
-title: React Server-side tree data
+title: React Data Grid - Server-side tree data
 ---
 
 # Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
