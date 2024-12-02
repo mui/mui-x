@@ -2,7 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-//maps TimeView to its translation
+// maps TimeView to its translation
 const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'ساعات',
   minutes: 'دقائق',
@@ -11,11 +11,11 @@ const views: Record<TimeViewWithMeridiem, string> = {
 };
 
 const arPickers: Partial<PickersLocaleText> = {
-  //Calender navigation
+  // Calendar navigation
   previousMonth: 'الشهر السابق',
   nextMonth: 'الشهر المقبل',
 
-  //View navigation
+  // View navigation
   openPreviousView: 'افتح العرض السابق',
   openNextView: 'افتح العرض التالي',
   calendarViewSwitchingButtonAriaLabel: (view) =>
@@ -23,7 +23,7 @@ const arPickers: Partial<PickersLocaleText> = {
       ? 'عرض السنة مفتوح، قم بالتبديل إلى عرض التقويم'
       : 'عرض التقويم مفتوح، قم بالتبديل إلى عرض السنة',
 
-  //DateRange labels
+  // DateRange labels
   start: 'يبدأ',
   end: 'نهاية',
   startDate: 'تاريخ البدء',
@@ -31,23 +31,21 @@ const arPickers: Partial<PickersLocaleText> = {
   endDate: 'تاريخ الانتهاء',
   endTime: 'وقت الانتهاء',
 
-  //Action bar
+  // Action bar
   cancelButtonLabel: 'يلغي',
   clearButtonLabel: 'واضح',
   okButtonLabel: 'نعم',
   todayButtonLabel: 'اليوم',
 
-  //Toolbar titles
+  // Toolbar titles
   datePickerToolbarTitle: 'اختر التاريخ',
   dateTimePickerToolbarTitle: 'حدد التاريخ والوقت',
   timePickerToolbarTitle: 'حدد الوقت',
   dateRangePickerToolbarTitle: 'حدد النطاق الزمني',
 
-  //Clock labels
+  // Clock labels
   clockLabelText: (view, formattedTime) =>
-    `يختار ${views[view]}. ${
-      !formattedTime ? 'لم يتم تحديد الوقت' : `الوقت المختار هو ${formattedTime}`
-    }`,
+    `يختار ${views[view]}. ${!formattedTime ? 'لم يتم تحديد الوقت' : `الوقت المختار هو ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} ساعات`,
   minutesClockNumberText: (minutes) => `${minutes} دقائق`,
   secondsClockNumberText: (seconds) => `${seconds} ثواني`,
@@ -66,7 +64,6 @@ const arPickers: Partial<PickersLocaleText> = {
     formattedDate ? `اختر التاريخ، التاريخ المحدد هو ${formattedDate}` : 'اختر التاريخ',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `اختر الوقت، الوقت المحدد هو ${formattedTime}` : 'اختر الوقت',
-
   fieldClearLabel: 'واضح',
 
   // Table labels
