@@ -10,8 +10,7 @@ import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
 function ButtonDateField(props: DatePickerFieldProps) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
-  const { InputProps, slotProps, slots, ownerState, label, focused, name, ...other } =
-    forwardedProps;
+  const { slotProps, slots, ownerState, label, focused, name, ...other } = forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -42,7 +41,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       sx={{ minWidth: 'fit-content' }}
       fullWidth
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
+      ref={pickerContext.triggerRef}
       onClick={handleTogglePicker}
     >
       {label ? `${label}: ${valueStr}` : valueStr}

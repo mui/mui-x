@@ -23,14 +23,14 @@ import {
 } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps
-  extends Omit<InputProps, keyof BaseSingleInputPickersTextFieldProps<false>>,
-    BaseSingleInputPickersTextFieldProps<false> {
+  extends Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>>,
+    BaseSingleInputPickersFieldHooksReturnValue<false> {
   formControlSx?: InputProps['sx'];
 }
 
@@ -100,7 +100,7 @@ const JoyField = React.forwardRef(
           }
           slotProps={{
             ...slotProps,
-            input: { ...slotProps?.input, ref: inputRef },
+            input: { ref: inputRef },
           }}
           {...other}
         />
@@ -111,10 +111,8 @@ const JoyField = React.forwardRef(
 
 const JoyDateField = React.forwardRef(
   (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...textFieldProps } = props;
-
-    const fieldResponse = useDateField<false, typeof textFieldProps>({
-      ...textFieldProps,
+    const fieldResponse = useDateField<false, typeof props>({
+      ...props,
       enableAccessibleFieldDOMStructure: false,
     });
 

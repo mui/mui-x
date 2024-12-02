@@ -86,7 +86,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
 
   const translations = usePickerTranslations();
   const pickerContext = useNullablePickerContext();
-  const { openingUIStatus } = usePickerPrivateContext();
+  const { triggerStatus } = usePickerPrivateContext();
   const {
     textFieldProps,
     onClear,
@@ -110,8 +110,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   };
 
   const clearButtonPosition = clearable ? clearButtonPositionProp : null;
-  const openPickerButtonPosition =
-    openingUIStatus !== 'hidden' ? openPickerButtonPositionProp : null;
+  const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 
   const TextField =
     slots.textField ??
@@ -143,7 +142,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     elementType: OpenPickerButton,
     externalSlotProps: slotProps?.openPickerButton,
     additionalProps: {
-      disabled: openingUIStatus === 'disabled',
+      disabled: triggerStatus === 'disabled',
       onClick: handleTogglePicker,
       'aria-label': openPickerAriaLabel,
       edge:

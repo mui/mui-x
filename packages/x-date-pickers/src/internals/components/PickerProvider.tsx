@@ -15,7 +15,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
   },
-  openingUIStatus: 'hidden',
+  triggerStatus: 'hidden',
 });
 
 /**
@@ -56,13 +56,14 @@ export interface PickerContextValue {
    */
   onClose: (event: React.UIEvent) => void;
   /**
-   * The ref that should be attached to the element that triggers the picker opening.
-   */
-  triggerRef: React.RefObject<any>;
-  /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
+  /**
+   * The ref that should be attached to the element that triggers the picker opening.
+   * When using a built-in field component, this property is automatically handled.
+   */
+  triggerRef: React.RefObject<any>;
   /**
    * `true` if the picker is disabled, `false` otherwise.
    */
@@ -96,6 +97,9 @@ export interface PickerPrivateContextValue {
   ownerState: PickerOwnerState;
   /**
    * Informs the field if it should render the UI to open the picker.
+   * If it is "hidden", the field should not render the UI to open the picker.
+   * If it is "disabled", the field should render the UI to open the picker, but it should be disabled.
+   * If it is "enabled", the field should render the UI to open the picker and it should be enabled.
    */
-  openingUIStatus: 'hidden' | 'disabled' | 'enabled';
+  triggerStatus: 'hidden' | 'disabled' | 'enabled';
 }

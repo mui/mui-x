@@ -11,13 +11,16 @@ import {
   THEME_ID,
 } from '@mui/joy/styles';
 import Input from '@mui/joy/Input';
+import IconButton from '@mui/joy/IconButton';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 const joyTheme = extendJoyTheme();
 
@@ -25,45 +28,59 @@ const JoyField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
-    disabled,
-    id,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
+    // Can be passed to an icon to clear the value
+    clearable,
+    onClear,
+    // Can be used to render a custom label
     label,
-    InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+    // Can be used to style the component
+    disabled,
+    readOnly,
+    focused,
+    error,
+    inputRef,
+    // The rest can be passed to the root element
     formControlSx,
     endDecorator,
-    startDecorator,
     slotProps,
-    inputRef,
+    slots,
     ...other
   } = props;
 
+  const pickerContext = usePickerContext();
+  const handleTogglePicker = (event) => {
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
+    } else {
+      pickerContext.onOpen(event);
+    }
+  };
+
   return (
     <FormControl
-      disabled={disabled}
-      id={id}
       sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
       ref={ref}
     >
       <FormLabel>{label}</FormLabel>
       <Input
-        ref={ref}
+        ref={pickerContext.triggerRef}
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
         endDecorator={
           <React.Fragment>
-            {endAdornment}
+            <IconButton
+              onClick={handleTogglePicker}
+              aria-label={openPickerAriaLabel}
+            >
+              <CalendarIcon />
+            </IconButton>
             {endDecorator}
           </React.Fragment>
         }
         slotProps={{
           ...slotProps,
-          root: { ...slotProps?.root, ref: containerRef },
-          input: { ...slotProps?.input, ref: inputRef },
+          input: { ref: inputRef },
         }}
         {...other}
       />
@@ -72,21 +89,12 @@ const JoyField = React.forwardRef((props, ref) => {
 });
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...textFieldProps } = props;
-
   const fieldResponse = useDateField({
-    ...textFieldProps,
+    ...props,
     enableAccessibleFieldDOMStructure: false,
   });
 
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <JoyField ref={ref} {...processedFieldProps} />;
+  return <JoyField ref={ref} {...fieldResponse} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {

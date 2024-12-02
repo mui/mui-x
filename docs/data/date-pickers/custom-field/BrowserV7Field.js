@@ -1,11 +1,13 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -41,9 +43,14 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     onInput,
     onPaste,
     onKeyDown,
+    // Should be passed to the button that opens the picker
+    openPickerAriaLabel,
     // Can be passed to a hidden <input /> element
     onChange,
     value,
+    // Can be passed to an icon to clear the value
+    clearable,
+    onClear,
     // Can be used to render a custom label
     label,
     // Can be used to style the component
@@ -52,16 +59,23 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     readOnly,
     focused,
     error,
-    InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
   } = props;
 
-  const handleRef = useForkRef(InputPropsRef, ref);
+  const pickerContext = usePickerContext();
+  const handleTogglePicker = (event) => {
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
+    } else {
+      pickerContext.onOpen(event);
+    }
+  };
+
+  const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
   return (
     <BrowserFieldRoot ref={handleRef} {...other}>
-      {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
           elements={elements}
@@ -75,7 +89,13 @@ const BrowserTextField = React.forwardRef((props, ref) => {
           onKeyDown={onKeyDown}
         />
       </BrowserFieldContent>
-      {endAdornment}
+      <IconButton
+        onClick={handleTogglePicker}
+        sx={{ marginLeft: 1.5 }}
+        aria-label={openPickerAriaLabel}
+      >
+        <CalendarIcon />
+      </IconButton>
     </BrowserFieldRoot>
   );
 });
@@ -85,14 +105,7 @@ const BrowserDateField = React.forwardRef((props, ref) => {
 
   const fieldResponse = useDateField(textFieldProps);
 
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <BrowserTextField ref={ref} {...processedFieldProps} />;
+  return <BrowserTextField ref={ref} {...fieldResponse} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {

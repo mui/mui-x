@@ -4,7 +4,6 @@ import {
   useColorScheme as useMaterialColorScheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -24,13 +23,13 @@ import {
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 const joyTheme = extendJoyTheme();
 
 interface JoyFieldProps
-  extends Omit<InputProps, keyof BaseSingleInputPickersTextFieldProps<false>>,
-    BaseSingleInputPickersTextFieldProps<false> {
+  extends Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>>,
+    BaseSingleInputPickersFieldHooksReturnValue<false> {
   formControlSx?: InputProps['sx'];
 }
 
@@ -81,7 +80,7 @@ const JoyField = React.forwardRef(
           disabled={disabled}
           slotProps={{
             ...slotProps,
-            input: { ...slotProps?.input, ref: inputRef },
+            input: { ref: inputRef },
           }}
           {...other}
         />
@@ -90,33 +89,18 @@ const JoyField = React.forwardRef(
   },
 ) as JoyFieldComponent;
 
-interface JoySingleInputDateRangeFieldProps
-  extends DateRangePickerFieldProps<false> {}
-
 type JoySingleInputDateRangeFieldComponent = ((
-  props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
+  props: DateRangePickerFieldProps<false> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { fieldType?: FieldType };
 
 const JoySingleInputDateRangeField = React.forwardRef(
-  (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...other } = props;
-
-    const textFieldProps: JoySingleInputDateRangeFieldProps = useSlotProps({
-      elementType: FormControl,
-      externalSlotProps: slotProps?.textField,
-      externalForwardedProps: other,
-      ownerState: props as any,
-    });
-
-    const fieldResponse = useSingleInputDateRangeField<
-      false,
-      Omit<JoySingleInputDateRangeFieldProps, 'slots' | 'slotProps'>
-    >({
-      ...textFieldProps,
+  (props: DateRangePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
+    const fieldResponse = useSingleInputDateRangeField<false, typeof props>({
+      ...props,
       enableAccessibleFieldDOMStructure: false,
-    });
+    }) as BaseSingleInputPickersFieldHooksReturnValue<false>;
 
-    return <JoyField {...fieldResponse} ref={ref} />;
+    return <JoyField ref={ref} {...fieldResponse} />;
   },
 ) as JoySingleInputDateRangeFieldComponent;
 

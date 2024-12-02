@@ -116,7 +116,7 @@ export function usePickerProvider<TValue extends PickerValidValue>(
     ],
   );
 
-  const openingUIStatus = React.useMemo(() => {
+  const triggerStatus = React.useMemo(() => {
     if (props.disableOpenPicker || !hasUIView) {
       return 'hidden';
     }
@@ -129,8 +129,8 @@ export function usePickerProvider<TValue extends PickerValidValue>(
   }, [props.disableOpenPicker, hasUIView, props.disabled, props.readOnly]);
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ownerState, openingUIStatus }),
-    [ownerState, openingUIStatus],
+    () => ({ ownerState, triggerStatus }),
+    [ownerState, triggerStatus],
   );
 
   return {
