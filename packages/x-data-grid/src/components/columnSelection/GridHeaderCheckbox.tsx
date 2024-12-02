@@ -76,6 +76,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
         return acc;
       }, {});
     }, [
+      apiRef,
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
