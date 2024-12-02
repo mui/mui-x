@@ -4,6 +4,8 @@ import unitLessProperties from './unitLessProperties';
 const SPECIAL_CHAR = /#|\.|\s|>|&|:/
 const UPPERCASE_LETTERS = /[A-Z]/g
 
+// TODO: By using native CSS nesting, we could make `stylesToString` more simple & performant.
+
 const stack = [] as any[]
 export function stylesToString(selector: string, styles: CSSObject) {
   stack.length = 0
@@ -38,28 +40,6 @@ export function stylesToString(selector: string, styles: CSSObject) {
 
   return rules
 }
-
-// TODO: Use native nested CSS if available
-// function stylesToStringNested(selector: string, styles: CSSObject, parents: string[] = []) {
-//   let output = `${transformSelector(selector, parents)} { `
-//
-//   for (let key in styles) {
-//     const isSubStyles = SPECIAL_CHAR.test(key)
-//
-//     if (isSubStyles) {
-//       output += stylesToStringNested(key, styles[key] as any, parents.concat(selector))
-//     } else {
-//       const cssKey = key.replaceAll(UPPERCASE_LETTERS, uppercaseToDashLowercase)
-//       const cssValue = transformValue(cssKey, styles[key])
-//
-//       output += cssKey + ':' + cssValue + ';'
-//     }
-//   }
-//
-//   output += ' } '
-//
-//   return output
-// }
 
 function uppercaseToDashLowercase(char: string) {
   return '-' + char.toLowerCase()
