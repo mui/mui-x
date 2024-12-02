@@ -652,7 +652,6 @@
   { "name": "OutputSelector", "kind": "Interface" },
   { "name": "PaginationPropsOverrides", "kind": "Interface" },
   { "name": "PanelPropsOverrides", "kind": "Interface" },
-  { "name": "PinnedPosition", "kind": "Enum" },
   { "name": "PinnedRowsPropsOverrides", "kind": "Interface" },
   { "name": "PropsFromSlot", "kind": "TypeAlias" },
   { "name": "renderActionsCell", "kind": "Variable" },
