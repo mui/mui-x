@@ -29,6 +29,7 @@ export const vars = {
       /** Equivalent to "paper", used for elements floating above other ones. */
       elevated: '--DataGrid-t-palette-background-elevated',
     },
+    divider: '--DataGrid-t-palette-divider',
   },
 };
 
