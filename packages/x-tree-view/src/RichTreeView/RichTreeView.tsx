@@ -142,6 +142,15 @@ RichTreeView.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  dataSource: PropTypes.shape({
+    getChildrenCount: PropTypes.func,
+    getTreeItems: PropTypes.func,
+  }).isRequired,
+  dataSourceCache: PropTypes.shape({
+    clear: PropTypes.func.isRequired,
+    get: PropTypes.func.isRequired,
+    set: PropTypes.func.isRequired,
+  }),
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
@@ -323,15 +332,6 @@ RichTreeView.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  treeViewDataSource: PropTypes.shape({
-    getChildrenCount: PropTypes.func,
-    getTreeItems: PropTypes.func,
-  }).isRequired,
-  treeViewDataSourceCache: PropTypes.shape({
-    clear: PropTypes.func.isRequired,
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-  }),
 } as any;
 
 export { RichTreeView };

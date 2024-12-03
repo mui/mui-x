@@ -1,6 +1,6 @@
 import { TreeViewItemMeta } from '../internals/models';
 
-type TreeViewDataSourceCacheDefaultConfig = {
+type DataSourceCacheDefaultConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
@@ -9,7 +9,7 @@ type TreeViewDataSourceCacheDefaultConfig = {
   ttl?: number;
 };
 
-export interface TreeViewDataSourceCache {
+export interface DataSourceCache {
   /**
    * Set the cache entry for the given key.
    * @param {string} key The key of type `string`
@@ -28,12 +28,12 @@ export interface TreeViewDataSourceCache {
   clear: () => void;
 }
 
-export class TreeViewDataSourceCacheDefault {
+export class DataSourceCacheDefault {
   private cache: Record<string, { value: TreeViewItemMeta[]; expiry: number }>;
 
   private ttl: number;
 
-  constructor({ ttl = 300000 }: TreeViewDataSourceCacheDefaultConfig) {
+  constructor({ ttl = 300000 }: DataSourceCacheDefaultConfig) {
     this.cache = {};
     this.ttl = ttl;
   }

@@ -1,11 +1,11 @@
 import { DefaultizedProps } from '@mui/x-internals/types';
 import { TreeViewPluginSignature } from '../../models';
-import { TreeViewDataSourceCache } from '../../../utils';
+import { DataSourceCache } from '../../../utils';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
-type TreeViewDataSource<R extends {}> = {
+type DataSource<R extends {}> = {
   /**
    * Used to determine the number of children the item has.
    * Only relevant for lazy-loaded trees.
@@ -38,12 +38,12 @@ export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPu
 }
 
 export interface UseTreeViewLazyLoadingParameters<R extends {}> {
-  treeViewDataSource: TreeViewDataSource<R>;
-  treeViewDataSourceCache?: TreeViewDataSourceCache;
+  dataSource: DataSource<R>;
+  dataSourceCache?: DataSourceCache;
 }
 export type UseTreeViewLazyLoadingDefaultizedParameters<R extends {}> = DefaultizedProps<
   UseTreeViewLazyLoadingParameters<R>,
-  'treeViewDataSource'
+  'dataSource'
 >;
 
 interface UseTreeViewLazyLoadingContextValue {

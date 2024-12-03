@@ -1,9 +1,9 @@
 import { createSelector, TreeViewRootSelector } from '../../utils/selectors';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 
-export const selectorTreeViewDataSourceState: TreeViewRootSelector<
-  UseTreeViewLazyLoadingSignature
-> = (state) => state.dataSource;
+export const selectorDataSourceState: TreeViewRootSelector<UseTreeViewLazyLoadingSignature> = (
+  state,
+) => state.dataSource;
 
 /**
  * Get the loading state for a tree item.
@@ -12,7 +12,7 @@ export const selectorTreeViewDataSourceState: TreeViewRootSelector<
  * @returns {boolean} The loading state for the Tree Item.
  */
 export const selectorIsItemLoading = createSelector(
-  [selectorTreeViewDataSourceState, (_, itemId: string) => itemId],
+  [selectorDataSourceState, (_, itemId: string) => itemId],
   (dataSourceState, itemId) => dataSourceState.loading[itemId] || false,
 );
 
@@ -23,6 +23,6 @@ export const selectorIsItemLoading = createSelector(
  * @returns {boolean} The error for the Tree Item.
  */
 export const selectorGetTreeItemError = createSelector(
-  [selectorTreeViewDataSourceState, (_, itemId: string) => itemId],
+  [selectorDataSourceState, (_, itemId: string) => itemId],
   (dataSourceState, itemId) => dataSourceState.errors[itemId] || null,
 );

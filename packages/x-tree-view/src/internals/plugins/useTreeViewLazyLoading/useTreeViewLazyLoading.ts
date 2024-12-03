@@ -5,10 +5,10 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 import { NestedDataManager } from './utils';
 import { TreeViewItemId } from '../../../models';
-import { TreeViewDataSourceCache, TreeViewDataSourceCacheDefault } from '../../../utils';
+import { DataSourceCache, DataSourceCacheDefault } from '../../../utils';
 import {
   selectorGetTreeItemError,
-  selectorTreeViewDataSourceState,
+  selectorDataSourceState,
 } from './useTreeViewLazyLoading.selectors';
 import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
 
@@ -17,17 +17,17 @@ const INITIAL_STATE = {
   errors: {},
 };
 
-const noopCache: TreeViewDataSourceCache = {
+const noopCache: DataSourceCache = {
   clear: () => {},
   get: () => undefined,
   set: () => {},
 };
 
-function getCache(cacheProp?: TreeViewDataSourceCache | null) {
+function getCache(cacheProp?: DataSourceCache | null) {
   if (cacheProp === null) {
     return noopCache;
   }
-  return cacheProp ?? new TreeViewDataSourceCacheDefault({});
+  return cacheProp ?? new DataSourceCacheDefault({});
 }
 
 export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignature> = ({
@@ -37,14 +37,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 }) => {
   instance.preventItemUpdates();
 
-  const isLazyLoadingEnabled = params.treeViewDataSource !== undefined;
+  const isLazyLoadingEnabled = params.dataSource !== undefined;
 
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(instance),
   ).current;
-  const cache = React.useRef<TreeViewDataSourceCache>(
-    getCache(params.treeViewDataSourceCache),
-  ).current;
+  const cache = React.useRef<DataSourceCache>(getCache(params.dataSourceCache)).current;
 
   const setDataSourceLoading = React.useCallback(
     (itemId, isLoading) => {
@@ -91,9 +89,9 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
   const fetchItems = React.useCallback(
     async (parentIds?: TreeViewItemId[]) => {
-      const getChildrenCount = params.treeViewDataSource?.getChildrenCount || (() => 0);
+      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
 
-      const getTreeItems = params.treeViewDataSource?.getTreeItems;
+      const getTreeItems = params.dataSource?.getTreeItems;
       if (!getTreeItems) {
         return;
       }
@@ -107,7 +105,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       nestedDataManager.clear();
 
       // reset the state if we are refetching the first visible items
-      if (selectorTreeViewDataSourceState(store.value) !== INITIAL_STATE) {
+      if (selectorDataSourceState(store.value) !== INITIAL_STATE) {
         resetDataSourceState();
       }
       // handle caching here
@@ -138,14 +136,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.setTreeViewLoading(false);
       }
     },
-    [nestedDataManager, params.treeViewDataSource, cache, resetDataSourceState, store, instance],
+    [nestedDataManager, params.dataSource, cache, resetDataSourceState, store, instance],
   );
 
   const fetchItemChildren = React.useCallback(
     async (id: TreeViewItemId) => {
-      const getChildrenCount = params.treeViewDataSource?.getChildrenCount || (() => 0);
+      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
 
-      const getTreeItems = params.treeViewDataSource?.getTreeItems;
+      const getTreeItems = params.dataSource?.getTreeItems;
       if (!getTreeItems) {
         nestedDataManager.clearPendingRequest(id);
         return;
@@ -200,21 +198,21 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         nestedDataManager.setRequestSettled(id);
       }
     },
-    [nestedDataManager, params.treeViewDataSource, instance, cache, store],
+    [nestedDataManager, params.dataSource, instance, cache, store],
   );
 
   React.useEffect(() => {
     if (params.items.length) {
-      const getChildrenCount = params.treeViewDataSource?.getChildrenCount || (() => 0);
+      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
       instance.addItems({ items: params.items, depth: 0, getChildrenCount });
     } else {
       instance.fetchItems();
     }
-  }, [instance, params.items, params.treeViewDataSource]);
+  }, [instance, params.items, params.dataSource]);
 
   const pluginContextValue = React.useMemo(
-    () => ({ lazyLoading: params.treeViewDataSource !== undefined }),
-    [params.treeViewDataSource],
+    () => ({ lazyLoading: params.dataSource !== undefined }),
+    [params.dataSource],
   );
   return {
     instance: {
@@ -232,7 +230,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures }) => {
   const canUseFeature = experimentalFeatures?.lazyLoading;
   if (process.env.NODE_ENV !== 'production') {
-    if (params.treeViewDataSource && !canUseFeature) {
+    if (params.dataSource && !canUseFeature) {
       warnOnce([
         'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
         'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the Rich Tree View Pro component.',
@@ -240,14 +238,14 @@ useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures })
       ]);
     }
   }
-  const defaultDataSource = params?.treeViewDataSource || {
+  const defaultDataSource = params?.dataSource || {
     getChildrenCount: () => 0,
     getTreeItems: () => Promise.resolve([]),
   };
 
   return {
     ...params,
-    treeViewDataSource: canUseFeature ? defaultDataSource : {},
+    dataSource: canUseFeature ? defaultDataSource : {},
   };
 };
 
@@ -256,6 +254,6 @@ useTreeViewLazyLoading.getInitialState = () => ({
 });
 
 useTreeViewLazyLoading.params = {
-  treeViewDataSource: true,
-  treeViewDataSourceCache: true,
+  dataSource: true,
+  dataSourceCache: true,
 };

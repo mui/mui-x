@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Basic usage
 
-To dynamically load data from the server, including lazy-loading of children, you must create a data source and pass the treeViewDataSource prop to the Rich Tree View.
+To dynamically load data from the server, including lazy-loading of children, you must create a data source and pass the dataSource prop to the Rich Tree View.
 
 The data source also requires the `getChildrenCount()` attribute to handle tree data:
 
@@ -33,7 +33,7 @@ If you want to dynamically load all items of the Tree View, you can pass and emp
 
 ### Customize the cache lifetime
 
-The `TreeViewDataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the ttl option in milliseconds to the `TreeViewDataSourceCacheDefault` constructor, and then pass it as the `treeViewDataSourceCache` prop.
+The `DataSourceCacheDefault` has a default Time To Live (`ttl`) of 5 minutes. To customize it, pass the ttl option in milliseconds to the `DataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
 
 {{"demo": "LowTTLCache.js"}}
 

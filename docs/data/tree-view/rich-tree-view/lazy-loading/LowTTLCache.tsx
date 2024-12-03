@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
-import { TreeViewDataSourceCacheDefault } from '@mui/x-tree-view/utils';
+import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 
 const fetchData = async (): Promise<
   TreeViewBaseItem<{
@@ -25,7 +25,7 @@ const fetchData = async (): Promise<
   });
 };
 
-const lowTTLCache = new TreeViewDataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
+const lowTTLCache = new DataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 seconds
 
 export default function LowTTLCache() {
   return (
@@ -33,11 +33,11 @@ export default function LowTTLCache() {
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}
-        treeViewDataSource={{
+        dataSource={{
           getChildrenCount: (item) => item?.childrenCount as number,
           getTreeItems: fetchData,
         }}
-        treeViewDataSourceCache={lowTTLCache}
+        dataSourceCache={lowTTLCache}
       />
     </Box>
   );
