@@ -46,16 +46,11 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The `<GridOverlays />` component is not exported anymore.
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
 
-  ```tsx
-  // Before
-  const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
-  ...
-  const rowId = idToIdLookup[id]
-
-  // After
-  const rowsLookup = gridRowsLookupSelector(apiRef);
-  ...
-  const rowId = apiRef.current.getRowId(rowsLookup[id])
+  ```diff
+  -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  -const rowId = idToIdLookup[id]
+  +const rowsLookup = gridRowsLookupSelector(apiRef);
+  +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
 
 ### Localization
