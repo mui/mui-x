@@ -66,8 +66,10 @@ A combination of all important transformers for migrating v7 to v8.
 It runs codemods for all MUI X packages (Data Grid, Date and Time Pickers, Tree View, and Charts).
 To run codemods for a specific package, refer to the respective section.
 
+<!-- #default-branch-switch -->
+
 ```bash
-npx @mui/x-codemod@latest v8.0.0/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/preset-safe <path|folder>
 ```
 
 The corresponding sub-sections are listed below
@@ -79,12 +81,14 @@ The corresponding sub-sections are listed below
 
 ### Tree View codemods
 
-#### `preset-safe` for tree view v8.0.0
+#### `preset-safe` for Tree View v8.0.0
 
-The `preset-safe` codemods for tree view.
+The `preset-safe` codemods for Tree View.
+
+<!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/tree-view/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -126,12 +130,14 @@ Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or u
 
 ### Charts codemods
 
-#### `preset-safe` for charts v8.0.0
+#### `preset-safe` for Charts v8.0.0
 
-The `preset-safe` codemods for charts.
+The `preset-safe` codemods for Charts.
+
+<!-- #default-branch-switch -->
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -201,8 +207,10 @@ Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle`
 
 The `preset-safe` codemods for Data Grid.
 
+<!-- #default-branch-switch -->
+
 ```bash
-npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
+npx @mui/x-codemod@next v8.0.0/data-grid/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -221,8 +229,10 @@ Remove feature flags for stabilized `experimentalFeatures`.
   />
 ```
 
+<!-- #default-branch-switch -->
+
 ```bash
-npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+npx @mui/x-codemod@next v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 ### Pickers codemods
@@ -231,8 +241,9 @@ npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeature
 
 The `preset-safe` codemods for Pickers.
 
-```bash
 <!-- #default-branch-switch -->
+
+```bash
 npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 ```
 
@@ -256,8 +267,9 @@ Renames `FieldValueType` to `PickerValueType`.
   }
 ```
 
-```bash
 <!-- #default-branch-switch -->
+
+```bash
 npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
 ```
 
@@ -282,9 +294,9 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v7.0.0
+#### `preset-safe` for Pickers v7.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
 npx @mui/x-codemod@latest v7.0.0/pickers/preset-safe <path|folder>
@@ -583,9 +595,9 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v6.0.0
+#### `preset-safe` for Pickers v6.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
 npx @mui/x-codemod@latest v6.0.0/pickers/preset-safe <path|folder>
