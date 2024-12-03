@@ -7,6 +7,7 @@ import {
   pickersLayoutClasses,
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
+  PickerLayoutOwnerState,
 } from '@mui/x-date-pickers/PickersLayout';
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
@@ -61,7 +62,7 @@ interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, 'day'> 
 
 const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
   shouldForwardProp: (prop) => prop !== 'layout',
-})(({ ownerState }: { ownerState: CustomLayoutProps }) => ({
+})(({ ownerState }: { ownerState: PickerLayoutOwnerState & { layout: Layout } }) => ({
   [`.${pickersLayoutClasses.shortcuts}`]:
     ownerState.layout === 'horizontal'
       ? { gridColumn: 2, gridRow: 2 }
@@ -91,13 +92,16 @@ const CustomPickersLayoutRoot = styled(PickersLayoutRoot, {
 }));
 
 function CustomLayout(props: CustomLayoutProps) {
-  const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
 
   return (
-    <CustomPickersLayoutRoot ownerState={props}>
+    <CustomPickersLayoutRoot ownerState={{ ...ownerState, layout: props.layout }}>
       {toolbar}
       {shortcuts}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>
