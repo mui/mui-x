@@ -677,6 +677,14 @@ describe('<DataGrid /> - Row selection', () => {
         );
       }).not.toErrorDev();
     });
+
+    it.only('should set the "Select all" checkbox to selected state on clicking even when some rows are not selectable', () => {
+      render(
+        <TestDataGridSelection checkboxSelection isRowSelectable={({ id }) => id % 2 === 0} />,
+      );
+      fireEvent.click(getColumnHeaderCell(0).querySelector('input')!);
+      expect(getColumnHeaderCell(0).querySelector('input')).to.have.property('checked', true);
+    });
   });
 
   describe('prop: rows', () => {
