@@ -1,5 +1,6 @@
 module.exports = {
   'am-ET': 'Amharic',
+  ar: 'Arabic',
   'ar-EG': 'Arabic (Egypt)',
   'ar-SA': 'Arabic (Saudi Arabia)',
   'ar-SD': 'Arabic (Sudan)',
