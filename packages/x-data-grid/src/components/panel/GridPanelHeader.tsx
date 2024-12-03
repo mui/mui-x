@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -23,9 +24,9 @@ const GridPanelHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelHeader',
   overridesResolver: (props, styles) => styles.panelHeader,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  padding: theme.spacing(1),
-}));
+})<{ ownerState: OwnerState }>({
+  padding: vars.spacing(1),
+});
 
 function GridPanelHeader(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;

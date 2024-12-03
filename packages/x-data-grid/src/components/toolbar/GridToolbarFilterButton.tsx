@@ -9,6 +9,7 @@ import {
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { BadgeProps } from '@mui/material/Badge';
+import { vars } from '../../constants/cssVariables';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -37,10 +38,10 @@ const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
   overridesResolver: (_props, styles) => styles.toolbarFilterList,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  margin: theme.spacing(1, 1, 0.5),
-  padding: theme.spacing(0, 1),
-}));
+})<{ ownerState: OwnerState }>({
+  margin: vars.spacing(1, 1, 0.5),
+  padding: vars.spacing(0, 1),
+});
 
 export interface GridToolbarFilterButtonProps {
   /**
