@@ -11,22 +11,22 @@ title: DX - Digital Clock
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.HoursOptions />` and `<DigitalClock.MinutesOptions />` components to list all the time options with one column per view:
+The user can use the `<DigitalClock.HourOptions />` and `<DigitalClock.MinuteOptions />` components to list all the time options with one column per view:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.HoursOptions>
+  <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
-  </DigitalClock.HoursOptions>
-  <DigitalClock.MinutesOptions>
+  </DigitalClock.HourOptions>
+  <DigitalClock.MinuteOptions>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
+  </DigitalClock.MinuteOptions>
 </DigitalClock.Root>
 ```
 
@@ -48,13 +48,13 @@ It should be used in combination with the `<DigitalClock.HoursWithMeridiemOption
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursWithMeridiemOptions>
-  <DigitalClock.MinutesOptions>
+  <DigitalClock.MinuteOptions>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
+  </DigitalClock.MinuteOptions>
   <DigitalClock.MeridiemOptions>
     {({ meridiems }) =>
       meridiems.map((meridiem) => (
@@ -100,13 +100,13 @@ function App(props) {
           }
         </DigitalClock.Hours>
       )}
-      <DigitalClock.MinutesOptions>
+      <DigitalClock.MinuteOptions>
         {({ minutes }) =>
           minutes.map((minute) => (
             <DigitalClock.Option value={minute} key={minute.toString()} />
           ))
         }
-      </DigitalClock.MinutesOptions>
+      </DigitalClock.MinuteOptions>
       {ampm && (
         <DigitalClock.MeridiemOptions>
           {({ meridiems }) =>
@@ -129,29 +129,29 @@ TODO
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.SecondsOptions />` component to add a column to edit this section:
+The user can use the `<DigitalClock.SecondOptions />` component to add a column to edit this section:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.HoursOptions>
+  <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
-  </DigitalClock.HoursOptions>
-  <DigitalClock.MinutesOptions>
+  </DigitalClock.HourOptions>
+  <DigitalClock.MinuteOptions>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
-  <DigitalClock.SecondsOptions>
+  </DigitalClock.MinuteOptions>
+  <DigitalClock.SecondOptions>
     {({ seconds }) =>
       seconds.map((second) => (
         <DigitalClock.Option value={second} key={second.toString()} />
       ))
     }
-  </DigitalClock.SecondsOptions>
+  </DigitalClock.SecondOptions>
   <DigitalClock.MeridiemOptions>
     {({ meridiems }) =>
       meridiems.map((meridiem) => (
@@ -175,42 +175,42 @@ By default, the step is of `1` for the hours and 5 for the minutes and seconds:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.HoursOptions>
+  <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
-  </DigitalClock.HoursOptions>
-  <DigitalClock.MinutesOptions step={15}>
+  </DigitalClock.HourOptions>
+  <DigitalClock.MinuteOptions step={15}>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
+  </DigitalClock.MinuteOptions>
 </DigitalClock.Root>
 ```
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.HoursOptions>
+  <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
-  </DigitalClock.HoursOptions>
-  <DigitalClock.MinutesOptions step={1}>
+  </DigitalClock.HourOptions>
+  <DigitalClock.MinuteOptions step={1}>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
-  <DigitalClock.MinutesOptions step={10}>
+  </DigitalClock.MinuteOptions>
+  <DigitalClock.MinuteOptions step={10}>
     {({ minutes }) =>
       minutes.map((minute) => (
         <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
-  </DigitalClock.MinutesOptions>
+  </DigitalClock.MinuteOptions>
 </DigitalClock.Root>
 ```
 
@@ -227,7 +227,7 @@ The user can override this format using the `format` prop:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.HoursOptions>
+  <DigitalClock.HourOptions>
     {({ hours }) =>
       hours.map((hour) => (
         <DigitalClock.Option
@@ -237,7 +237,7 @@ The user can override this format using the `format` prop:
         />
       ))
     }
-  </DigitalClock.HoursOptions>
+  </DigitalClock.HourOptions>
 </DigitalClock.Root>
 ```
 
@@ -312,43 +312,135 @@ That way, users only have to pass the props specific to the calendar to the `Dig
 
 ### `DigitalClock.Options`
 
-#### Props
-
-TODO
-
-### `DigitalClock.HoursOptions`
+Renders a list of options.
 
 #### Props
 
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
 TODO
+
+### `DigitalClock.HourOptions`
+
+Renders a list of options to select the hours of the current value.
+
+It expects a function as its children, which receives the list of hours as a parameter:
+
+```tsx
+<DigitalClock.HourOptions>
+  {({ hours }) =>
+    hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
+  }
+</DigitalClock.HourOptions>
+```
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
+- `children`: `(params: { hours: PickerValidDate[] }) => React.ReactNode`
+
+- `skipInvalid`: `boolean`, default: `false`
+  If `true`, the invalid options are not rendered
 
 ### `DigitalClock.HoursWithMeridiemOptions`
 
+Renders a list of options to select the hours of the current value.
+The options will only be hours inside the same meridiem as the one currently selected, this component needs to be used in combination with `<DigitalClock.MeridiemOptions />`.
+
+It expects a function as its children, which receives the list of hours as a parameter:
+
+```tsx
+<DigitalClock.HoursWithMeridiemOptions>
+  {({ hours }) =>
+    hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
+  }
+</DigitalClock.HoursWithMeridiemOptions>
+```
+
 #### Props
 
-TODO
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
+- `children`: `(params: { hours: PickerValidDate[] }) => React.ReactNode`
+
+- `skipInvalid`: `boolean`, default: `false`
+  If `true`, the invalid options are not rendered
 
 ### `DigitalClock.MeridiemOptions`
 
-#### Props
+Renders a list of options to select the meridiem of the current value.
 
-TODO
+It expects a function as its children, which receives the list of meridiems as a parameter:
 
-### `DigitalClock.MinutesOptions`
-
-#### Props
-
-TODO
-
-### `DigitalClock.SecondsOptions`
-
-Renders a list of options to select the section of the current value.
-
-It expects a function as its children, which receives the list of seconds as a parameter
+```tsx
+<DigitalClock.MeridiemOptions>
+  {({ meridiems }) =>
+    meridiems.map((meridiem) => (
+      <DigitalClock.Option value={meridiem} key={meridiem.toString()} />
+    ))
+  }
+</DigitalClock.MeridiemOptions>
+```
 
 #### Props
 
-TODO
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
+- `children`: `(params: { meridiems: PickerValidDate[] }) => React.ReactNode`
+
+- `skipInvalid`: `boolean`, default: `false`
+  If `true`, the invalid options are not rendered
+
+### `DigitalClock.MinuteOptions`
+
+Renders a list of options to select the minutes of the current value.
+
+It expects a function as its children, which receives the list of minutes as a parameter:
+
+```tsx
+<DigitalClock.MinuteOptions>
+  {({ minutes }) =>
+    minutes.map((minute) => (
+      <DigitalClock.Option value={minute} key={minute.toString()} />
+    ))
+  }
+</DigitalClock.MinuteOptions>
+```
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
+- `children`: `(params: { hours: PickerValidDate[] }) => React.ReactNode`
+
+- `skipInvalid`: `boolean`, default: `false`
+  If `true`, the invalid options are not rendered
+
+### `DigitalClock.SecondOptions`
+
+Renders a list of options to select the seconds of the current value.
+
+It expects a function as its children, which receives the list of seconds as a parameter:
+
+```tsx
+<DigitalClock.SecondOptions>
+  {({ seconds }) =>
+    seconds.map((second) => (
+      <DigitalClock.Option value={second} key={second.toString()} />
+    ))
+  }
+</DigitalClock.SecondOptions>
+```
+
+#### Props
+
+- Extends `React.HTMLAttributes<HTMLDivElement>`
+
+- `children`: `(params: { seconds: PickerValidDate[] }) => React.ReactNode`
+
+- `skipInvalid`: `boolean`, default: `false`
+  If `true`, the invalid options are not rendered
 
 ### `DigitalClock.Option`
 
