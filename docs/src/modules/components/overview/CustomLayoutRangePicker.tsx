@@ -56,7 +56,6 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
 ];
 
 interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, 'day'> {
-  // eslint-disable-next-line react/no-unused-prop-types
   layout: Layout;
 }
 
