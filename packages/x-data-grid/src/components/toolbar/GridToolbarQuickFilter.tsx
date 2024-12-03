@@ -45,7 +45,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     & input[type="search"]::-webkit-search-results-button,
     & input[type="search"]::-webkit-search-results-decoration`]: {
     /* clears the 'X' icon from Chrome */
-      display: 'none',
+    display: 'none',
   },
 });
 

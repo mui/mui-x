@@ -145,7 +145,7 @@ const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
   overridesResolver: (props, styles) => styles.filterForm,
-})<{ownerState: OwnerState}>({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   padding: vars.spacing(1),
 });
@@ -154,7 +154,7 @@ const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
-})<{ownerState: OwnerState}>({
+})<{ ownerState: OwnerState }>({
   flexShrink: 0,
   justifyContent: 'flex-end',
   marginRight: vars.spacing(0.5),

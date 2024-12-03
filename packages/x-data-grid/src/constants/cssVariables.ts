@@ -34,7 +34,13 @@ export const vars = {
 
   zIndex: {
     modal: '--DataGrid-t-zIndex-modal',
-  }
+  },
+
+  // fontFamily : "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif"
+  // fontSize : "0.875rem"
+  // fontWeight : 400
+  // lineHeight : 1.43
+  // letterSpacing : "0.01071em"
 };
 
 function spacing(a?: number, b?: number, c?: number, d?: number) {

@@ -28,7 +28,7 @@ const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
   overridesResolver: (_, styles) => styles.toolbarContainer,
-})<{ownerState: OwnerState}>({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',

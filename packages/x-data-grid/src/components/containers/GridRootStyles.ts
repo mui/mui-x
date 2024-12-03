@@ -368,7 +368,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
-      gap: t.spacing(0.25),
+      gap: vars.spacing(0.25),
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
@@ -610,7 +610,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.actionsCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
-      gridGap: t.spacing(1),
+      gridGap: vars.spacing(1),
     },
     [`& .${c.rowReorderCell}`]: {
       display: 'inline-flex',
@@ -713,7 +713,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.treeDataGroupingCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
-      marginRight: t.spacing(2),
+      marginRight: vars.spacing(2),
     },
     [`& .${c.treeDataGroupingCellLoadingContainer}, .${c.groupingCriteriaCellLoadingContainer}`]: {
       display: 'flex',
@@ -729,7 +729,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.groupingCriteriaCellToggle}`]: {
       flex: '0 0 28px',
       alignSelf: 'stretch',
-      marginRight: t.spacing(2),
+      marginRight: vars.spacing(2),
     },
 
     /* ScrollbarFiller styles */

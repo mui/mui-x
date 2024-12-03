@@ -38,7 +38,7 @@ const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
-})<{ownerState: OwnerState}>({
+})<{ ownerState: OwnerState }>({
   zIndex: vars.zIndex.modal,
 });
 
