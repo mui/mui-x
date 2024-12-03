@@ -25,18 +25,9 @@ describe('<DataGridPro /> - Columns', () => {
   const baselineProps = {
     autoHeight: isJSDOM,
     rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
     ],
     columns: [{ field: 'brand' }],
   };
@@ -516,22 +507,10 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     const rows = [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
-      {
-        id: 3,
-        brand: 'Lululemon Athletica',
-      },
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Lululemon Athletica' },
     ];
     const columns = [
       { field: 'id', headerName: 'This is the ID column' },
@@ -564,6 +543,26 @@ describe('<DataGridPro /> - Columns', () => {
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
       expect(getWidths()).to.deep.equal([155, 177]);
+    });
+
+    it('should work with flex columns', async () => {
+      render(
+        <Test
+          rows={rows}
+          columns={[
+            { field: 'id', flex: 1 },
+            { field: 'brand', flex: 2 },
+          ]}
+        />,
+      );
+      const separators = document.querySelectorAll(`.${gridClasses['columnSeparator--resizable']}`);
+      fireEvent.doubleClick(separators[0]);
+      await microtasks();
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 233]);
+
+      fireEvent.doubleClick(separators[1]);
+      await microtasks();
+      expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 64]);
     });
 
     describe('options', () => {
