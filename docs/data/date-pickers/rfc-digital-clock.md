@@ -11,21 +11,19 @@ title: DX - Digital Clock
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOptions />` and `<DigitalClock.SecondsOptions />` components to list all the time options with one column per view:
+The user can use the `<DigitalClock.HoursOptions />` and `<DigitalClock.MinutesOptions />` components to list all the time options with one column per view:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
   <DigitalClock.HoursOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
-      ))
+    {({ hours }) =>
+      hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursOptions>
   <DigitalClock.MinutesOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
@@ -46,23 +44,21 @@ It should be used in combination with the `<DigitalClock.HoursWithMeridiemOption
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
   <DigitalClock.HoursWithMeridiemOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
-      ))
+    {({ hours }) =>
+      hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursWithMeridiemOptions>
   <DigitalClock.MinutesOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
   <DigitalClock.MeridiemOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ meridiems }) =>
+      meridiems.map((meridiem) => (
+        <DigitalClock.Option value={meridiem} key={meridiem.toString()} />
       ))
     }
   </DigitalClock.MeridiemOptions>
@@ -89,33 +85,33 @@ function App(props) {
     <DigitalClock.Root {...other}>
       {ampm ? (
         <DigitalClock.HoursWithMeridiemOptions>
-          {({ options }) =>
-            options.map((option) => (
-              <DigitalClock.Option value={option} key={option.toString()} />
+          {({ hours }) =>
+            hours.map((hour) => (
+              <DigitalClock.Option value={hour} key={hour.toString()} />
             ))
           }
         </DigitalClock.HoursWithMeridiemOptions>
       ) : (
         <DigitalClock.Hours>
-          {({ options }) =>
-            options.map((option) => (
-              <DigitalClock.Option value={option} key={option.toString()} />
+          {({ hours }) =>
+            hours.map((hour) => (
+              <DigitalClock.Option value={hour} key={hour.toString()} />
             ))
           }
         </DigitalClock.Hours>
       )}
       <DigitalClock.MinutesOptions>
-        {({ options }) =>
-          options.map((option) => (
-            <DigitalClock.Option value={option} key={option.toString()} />
+        {({ minutes }) =>
+          minutes.map((minute) => (
+            <DigitalClock.Option value={minute} key={minute.toString()} />
           ))
         }
       </DigitalClock.MinutesOptions>
       {ampm && (
         <DigitalClock.MeridiemOptions>
-          {({ options }) =>
-            options.map((option) => (
-              <DigitalClock.Option value={option} key={option.toString()} />
+          {({ meridiems }) =>
+            meridiems.map((meridiem) => (
+              <DigitalClock.Option value={meridiem} key={meridiem.toString()} />
             ))
           }
         </DigitalClock.MeridiemOptions>
@@ -138,30 +134,28 @@ The user can use the `<DigitalClock.SecondsOptions />` component to add a column
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
   <DigitalClock.HoursOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
-      ))
+    {({ hours }) =>
+      hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursOptions>
   <DigitalClock.MinutesOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
   <DigitalClock.SecondsOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ seconds }) =>
+      seconds.map((second) => (
+        <DigitalClock.Option value={second} key={second.toString()} />
       ))
     }
   </DigitalClock.SecondsOptions>
   <DigitalClock.MeridiemOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ meridiems }) =>
+      meridiems.map((meridiem) => (
+        <DigitalClock.Option value={meridiem} key={meridiem.toString()} />
       ))
     }
   </DigitalClock.MeridiemOptions>
@@ -182,16 +176,14 @@ By default, the step is of `1` for the hours and 5 for the minutes and seconds:
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
   <DigitalClock.HoursOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
-      ))
+    {({ hours }) =>
+      hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursOptions>
   <DigitalClock.MinutesOptions step={15}>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
@@ -201,26 +193,51 @@ By default, the step is of `1` for the hours and 5 for the minutes and seconds:
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
   <DigitalClock.HoursOptions>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
-      ))
+    {({ hours }) =>
+      hours.map((hour) => <DigitalClock.Option value={hour} key={hour.toString()} />)
     }
   </DigitalClock.HoursOptions>
   <DigitalClock.MinutesOptions step={1}>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
   <DigitalClock.MinutesOptions step={10}>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={option} key={option.toString()} />
+    {({ minutes }) =>
+      minutes.map((minute) => (
+        <DigitalClock.Option value={minute} key={minute.toString()} />
       ))
     }
   </DigitalClock.MinutesOptions>
+</DigitalClock.Root>
+```
+
+### With Material UI
+
+TODO
+
+## Multi section - custom format
+
+### Without Material UI
+
+By default, the `<DigitalClock.Option />` uses a default format provided by its parent (for example `<DigitalClock.MinuteOptions />`).
+The user can override this format using the `format` prop:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue}>
+  <DigitalClock.HoursOptions>
+    {({ hours }) =>
+      hours.map((hour) => (
+        <DigitalClock.Option
+          value={hour}
+          key={hour.toString()}
+          format="H" // Removes the trailing zero
+        />
+      ))
+    }
+  </DigitalClock.HoursOptions>
 </DigitalClock.Root>
 ```
 
@@ -325,12 +342,22 @@ TODO
 
 ### `DigitalClock.SecondsOptions`
 
+Renders a list of options to select the section of the current value.
+
+It expects a function as its children, which receives the list of seconds as a parameter
+
 #### Props
 
 TODO
 
 ### `DigitalClock.Option`
 
+Renders the button for a single option
+
 #### Props
 
-TODO
+- Extends `React.HTMLAttributes<HTMLButtonElement>`
+
+- `value`: `PickerValidDate` **required**
+
+- `format`: `string`, default: provided by the parent
