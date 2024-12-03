@@ -297,7 +297,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     if (instance.areItemUpdatesPrevented()) {
       return;
     }
-
     store.update((prevState) => {
       const newState = updateItemsState({
         disabledItemsFocusable: params.disabledItemsFocusable,

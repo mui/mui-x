@@ -35,7 +35,6 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  const isFirstRender = React.useRef(true);
   instance.preventItemUpdates();
 
   const isLazyLoadingEnabled = params.treeViewDataSource !== undefined;
@@ -205,9 +204,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   React.useEffect(() => {
-    if (params.items.length && isFirstRender.current) {
-      isFirstRender.current = false;
-
+    if (params.items.length) {
       const getChildrenCount = params.treeViewDataSource?.getChildrenCount || (() => 0);
       instance.addItems({ items: params.items, depth: 0, getChildrenCount });
     } else {

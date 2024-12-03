@@ -71,6 +71,12 @@ export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
 } from './plugins/useTreeViewLabel';
+
+export { useTreeViewLazyLoading } from './plugins/useTreeViewLazyLoading';
+export type {
+  UseTreeViewLazyLoadingSignature,
+  UseTreeViewLazyLoadingParameters,
+} from './plugins/useTreeViewLazyLoading';
 export { useTreeViewJSXItems } from './plugins/useTreeViewJSXItems';
 export type {
   UseTreeViewJSXItemsSignature,

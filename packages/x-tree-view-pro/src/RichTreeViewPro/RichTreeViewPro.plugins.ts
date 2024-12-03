@@ -15,6 +15,8 @@ import {
   TreeViewCorePluginParameters,
   useTreeViewLabel,
   UseTreeViewLabelParameters,
+  useTreeViewLazyLoading,
+  UseTreeViewLazyLoadingParameters,
 } from '@mui/x-tree-view/internals';
 import {
   useTreeViewItemsReordering,
@@ -29,6 +31,7 @@ export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewKeyboardNavigation,
   useTreeViewIcons,
   useTreeViewLabel,
+  useTreeViewLazyLoading,
   useTreeViewItemsReordering,
 ] as const;
 
@@ -55,4 +58,5 @@ export interface RichTreeViewProPluginParameters<R extends {}, Multiple extends 
     UseTreeViewSelectionParameters<Multiple>,
     UseTreeViewIconsParameters,
     UseTreeViewLabelParameters<R>,
+    UseTreeViewLazyLoadingParameters<R>,
     UseTreeViewItemsReorderingParameters {}

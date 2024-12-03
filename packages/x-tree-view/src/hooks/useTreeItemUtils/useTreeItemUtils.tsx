@@ -205,6 +205,7 @@ export const useTreeItemUtils = <
     if (!hasPlugin(instance, useTreeViewLabel)) {
       return;
     }
+
     if (isEditable) {
       if (isEditing) {
         instance.setEditedItemId(null);
