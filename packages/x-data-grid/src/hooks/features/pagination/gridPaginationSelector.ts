@@ -18,10 +18,10 @@ const ALL_RESULTS_PAGE_VALUE = -1;
 export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
 
 /**
- *
  * @category Pagination
+ * @ignore - do not document.
  */
-export const gridPaginationModeClientEnabled = createSelector(
+export const gridPaginationEnabledClientSideSelector = createSelector(
   gridPaginationSelector,
   (pagination) => pagination.enabled && pagination.paginationMode === 'client',
 );
@@ -87,7 +87,7 @@ export const gridPageCountSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginationRowRangeSelector = createSelectorMemoized(
-  gridPaginationModeClientEnabled,
+  gridPaginationEnabledClientSideSelector,
   gridPaginationModelSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
@@ -204,7 +204,7 @@ export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelectorMemoiz
  * @category Pagination
  */
 export const gridVisibleRowsSelector = createSelectorMemoized(
-  gridPaginationModeClientEnabled,
+  gridPaginationEnabledClientSideSelector,
   gridPaginationRowRangeSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
   gridExpandedSortedRowEntriesSelector,
