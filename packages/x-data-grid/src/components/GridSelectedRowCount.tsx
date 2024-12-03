@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
+import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -33,19 +34,19 @@ const GridSelectedRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SelectedRowCount',
   overridesResolver: (props, styles) => styles.selectedRowCount,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   alignItems: 'center',
   display: 'flex',
-  margin: theme.spacing(0, 2),
+  margin: vars.spacing(0, 2),
   visibility: 'hidden',
   width: 0,
   height: 0,
-  [theme.breakpoints.up('sm')]: {
+  [vars.breakpoints.up('sm')]: {
     visibility: 'visible',
     width: 'auto',
     height: 'auto',
   },
-}));
+});
 
 const GridSelectedRowCount = React.forwardRef<HTMLDivElement, GridSelectedRowCountProps>(
   function GridSelectedRowCount(props, ref) {

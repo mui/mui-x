@@ -215,7 +215,6 @@ export const GridRootStyles = styled('div', {
   };
 
   const gridStyle: CSSInterpolation = {
-
     ...transformMaterialUITheme(t),
 
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
@@ -782,7 +781,7 @@ function transformMaterialUITheme(theme: Theme) {
 
     [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
     [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
-  }
+  };
 }
 
 /**
