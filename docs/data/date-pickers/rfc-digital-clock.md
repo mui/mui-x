@@ -162,8 +162,6 @@ Top level component that wraps the other components.
 
 - `autoFocus`: `boolean`
 
-- `ampm`: `boolean`, default: `utils.is12HourCycleInCurrentLocale()`
-
 :::success
 All the props that the picker can pass to the calendar (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that the calendar can be used inside a picker built with composition.
 
@@ -175,11 +173,8 @@ That way, users only have to pass the props specific to the calendar to the `Dig
   <Popover.Backdrop />
   <Popover.Positioner>
     <Popover.Popup>
-      <DigitalClock.Root>
-        TODO FIX
-        <Calendar.Days.Root fixedWeekNumber={6}>
-          {/** See demo above */}
-        </Calendar.Days.Root>
+      <DigitalClock.Root className="digital-clock-root">
+        {/** See demo above */}
       </DigitalClock.Root>
     </Popover.Popup>
   </Popover.Positioner>
