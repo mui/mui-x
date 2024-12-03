@@ -11,6 +11,7 @@ import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -47,12 +48,12 @@ const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
   overridesResolver: (_, styles) => styles.menu,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: theme.zIndex.modal,
+})<{ownerState: OwnerState}>({
+  zIndex: vars.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
   },
-}));
+});
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
   open: boolean;

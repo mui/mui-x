@@ -31,6 +31,10 @@ export const vars = {
     },
     divider: '--DataGrid-t-palette-divider',
   },
+
+  zIndex: {
+    modal: '--DataGrid-t-zIndex-modal',
+  }
 };
 
 function spacing(a?: number, b?: number, c?: number, d?: number) {

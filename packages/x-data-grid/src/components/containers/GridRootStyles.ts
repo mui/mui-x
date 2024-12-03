@@ -782,6 +782,8 @@ function transformMaterialUITheme(theme: Theme) {
     [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
     [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
     [vars.palette.divider]: (theme.vars || theme).palette.divider,
+
+    [vars.zIndex.modal]: theme.zIndex.modal,
   };
 }
 
