@@ -9,8 +9,7 @@ import {
   DatePickerProps,
 } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -32,10 +31,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
+  extends BaseSingleInputPickersFieldHooksReturnValue<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
+      keyof BaseSingleInputPickersFieldHooksReturnValue<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
@@ -58,6 +57,10 @@ const BrowserTextField = React.forwardRef(
       // Can be passed to a hidden <input /> element
       onChange,
       value,
+
+      // Can be passed to the button that clears the value
+      clearable,
+      onClear,
 
       // Can be used to render a custom label
       label,
@@ -101,18 +104,9 @@ const BrowserTextField = React.forwardRef(
 
 const BrowserDateField = React.forwardRef(
   (props: DatePickerFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...textFieldProps } = props;
+    const fieldResponse = useDateField<true, typeof props>(props);
 
-    const fieldResponse = useDateField<true, typeof textFieldProps>(textFieldProps);
-
-    /* If you don't need a clear button, you can skip the use of this hook */
-    const processedFieldProps = useClearableField({
-      ...fieldResponse,
-      slots,
-      slotProps,
-    });
-
-    return <BrowserTextField ref={ref} {...processedFieldProps} />;
+    return <BrowserTextField ref={ref} {...fieldResponse} />;
   },
 );
 

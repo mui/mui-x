@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldResponse,
-} from '../hooks/useClearableField';
+import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
@@ -159,14 +156,23 @@ export type PickerFieldSlotProps<
     ref?: React.Ref<HTMLDivElement>;
   };
 
+/*
+ * Props the `useDateField()` and equivalent hooks return when used inside a single input picker.
+ * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
+ */
+export type BaseSingleInputPickersFieldHooksReturnValue<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> = UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>;
+
 /**
- * Props the text field receives when used with a single input picker.
+ * Props the text field receives when used with inside single input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = UseClearableFieldResponse<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
+> = Omit<
+  BaseSingleInputPickersFieldHooksReturnValue<TEnableAccessibleFieldDOMStructure>,
+  'slots' | 'slotProps' | 'clearable' | 'onClear'
 >;
 
 /**

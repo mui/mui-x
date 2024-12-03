@@ -5,7 +5,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
@@ -44,6 +43,9 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     // Can be passed to a hidden <input /> element
     onChange,
     value,
+    // Can be passed to the button that clears the value
+    clearable,
+    onClear,
     // Can be used to render a custom label
     label,
     // Can be used to style the component
@@ -81,18 +83,9 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 });
 
 const BrowserDateField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...textFieldProps } = props;
+  const fieldResponse = useDateField(props);
 
-  const fieldResponse = useDateField(textFieldProps);
-
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <BrowserTextField ref={ref} {...processedFieldProps} />;
+  return <BrowserTextField ref={ref} {...fieldResponse} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {

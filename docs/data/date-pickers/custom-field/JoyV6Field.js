@@ -17,7 +17,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
 
 const joyTheme = extendJoyTheme();
 
@@ -25,25 +24,23 @@ const JoyField = React.forwardRef((props, ref) => {
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
+    // Can be passed to the button that clears the value
+    clearable,
+    onClear,
     disabled,
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    formControlSx,
     endDecorator,
     startDecorator,
-    slotProps,
     inputRef,
+    slots,
+    slotProps,
     ...other
   } = props;
 
   return (
-    <FormControl
-      disabled={disabled}
-      id={id}
-      sx={[...(Array.isArray(formControlSx) ? formControlSx : [formControlSx])]}
-      ref={ref}
-    >
+    <FormControl disabled={disabled} id={id} ref={ref}>
       <FormLabel>{label}</FormLabel>
       <Input
         ref={ref}
@@ -61,9 +58,8 @@ const JoyField = React.forwardRef((props, ref) => {
           </React.Fragment>
         }
         slotProps={{
-          ...slotProps,
-          root: { ...slotProps?.root, ref: containerRef },
-          input: { ...slotProps?.input, ref: inputRef },
+          root: { ref: containerRef },
+          input: { ref: inputRef },
         }}
         {...other}
       />
@@ -72,21 +68,12 @@ const JoyField = React.forwardRef((props, ref) => {
 });
 
 const JoyDateField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...textFieldProps } = props;
-
   const fieldResponse = useDateField({
-    ...textFieldProps,
+    ...props,
     enableAccessibleFieldDOMStructure: false,
   });
 
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <JoyField ref={ref} {...processedFieldProps} />;
+  return <JoyField ref={ref} {...fieldResponse} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {
@@ -95,15 +82,6 @@ const JoyDatePicker = React.forwardRef((props, ref) => {
       ref={ref}
       {...props}
       slots={{ ...props.slots, field: JoyDateField }}
-      slotProps={{
-        ...props.slotProps,
-        field: {
-          ...props.slotProps?.field,
-          formControlSx: {
-            flexDirection: 'row',
-          },
-        },
-      }}
     />
   );
 });
@@ -129,11 +107,7 @@ export default function JoyV6Field() {
       <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <JoyDatePicker
-            slotProps={{
-              field: { clearable: true },
-            }}
-          />
+          <JoyDatePicker />
         </LocalizationProvider>
       </CssVarsProvider>
     </MaterialCssVarsProvider>

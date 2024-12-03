@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,10 +12,10 @@ import {
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputPickersTextFieldProps } from '@mui/x-date-pickers/models';
+import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -37,10 +36,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BaseSingleInputPickersTextFieldProps<true>,
+  extends BaseSingleInputPickersFieldHooksReturnValue<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersTextFieldProps<true>
+      keyof BaseSingleInputPickersFieldHooksReturnValue<true>
     > {}
 
 const BrowserTextField = React.forwardRef(
@@ -64,6 +63,10 @@ const BrowserTextField = React.forwardRef(
       onChange,
       value,
 
+      // Can be passed to the button that clears the value
+      clearable,
+      onClear,
+
       // Can be used to render a custom label
       label,
 
@@ -82,6 +85,15 @@ const BrowserTextField = React.forwardRef(
 
     const handleRef = useForkRef(InputPropsRef, ref);
 
+    const pickerContext = usePickerContext();
+    const handleTogglePicker = (event: React.UIEvent) => {
+      if (pickerContext.open) {
+        pickerContext.onClose(event);
+      } else {
+        pickerContext.onOpen(event);
+      }
+    };
+
     return (
       <BrowserFieldRoot ref={handleRef} {...other}>
         {startAdornment}
@@ -99,6 +111,11 @@ const BrowserTextField = React.forwardRef(
           />
         </BrowserFieldContent>
         {endAdornment}
+        <InputAdornment position="end">
+          <IconButton onClick={handleTogglePicker}>
+            <DateRangeIcon />
+          </IconButton>
+        </InputAdornment>
       </BrowserFieldRoot>
     );
   },
@@ -112,49 +129,11 @@ type BrowserSingleInputDateRangeFieldComponent = ((
 
 const BrowserSingleInputDateRangeField = React.forwardRef(
   (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...other } = props;
-
-    const pickerContext = usePickerContext();
-    const handleTogglePicker = (event: React.UIEvent) => {
-      if (pickerContext.open) {
-        pickerContext.onClose(event);
-      } else {
-        pickerContext.onOpen(event);
-      }
-    };
-
-    const textFieldProps: typeof props = useSlotProps({
-      elementType: 'input',
-      externalSlotProps: slotProps?.textField,
-      externalForwardedProps: other,
-      ownerState: props as any,
-    });
-
-    textFieldProps.InputProps = {
-      ...textFieldProps.InputProps,
-      endAdornment: (
-        <InputAdornment position="end">
-          <IconButton onClick={handleTogglePicker}>
-            <DateRangeIcon />
-          </IconButton>
-        </InputAdornment>
-      ),
-    };
-
-    const fieldResponse = useSingleInputDateRangeField<true, typeof textFieldProps>(
-      textFieldProps,
-    );
-
-    /* If you don't need a clear button, you can skip the use of this hook */
-    const processedFieldProps = useClearableField({
-      ...fieldResponse,
-      slots,
-      slotProps,
-    });
+    const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
 
     return (
       <BrowserTextField
-        {...processedFieldProps}
+        {...fieldResponse}
         ref={ref}
         style={{
           minWidth: 300,

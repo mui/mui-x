@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -9,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { useClearableField, usePickerContext } from '@mui/x-date-pickers/hooks';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -47,6 +46,9 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     // Can be passed to a hidden <input /> element
     onChange,
     value,
+    // Can be passed to the button that clears the value
+    clearable,
+    onClear,
     // Can be used to render a custom label
     label,
     // Can be used to style the component
@@ -61,6 +63,15 @@ const BrowserTextField = React.forwardRef((props, ref) => {
   } = props;
 
   const handleRef = useForkRef(InputPropsRef, ref);
+
+  const pickerContext = usePickerContext();
+  const handleTogglePicker = (event) => {
+    if (pickerContext.open) {
+      pickerContext.onClose(event);
+    } else {
+      pickerContext.onOpen(event);
+    }
+  };
 
   return (
     <BrowserFieldRoot ref={handleRef} {...other}>
@@ -79,52 +90,21 @@ const BrowserTextField = React.forwardRef((props, ref) => {
         />
       </BrowserFieldContent>
       {endAdornment}
-    </BrowserFieldRoot>
-  );
-});
-
-const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...other } = props;
-
-  const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
-  const textFieldProps = useSlotProps({
-    elementType: 'input',
-    externalSlotProps: slotProps?.textField,
-    externalForwardedProps: other,
-    ownerState: props,
-  });
-
-  textFieldProps.InputProps = {
-    ...textFieldProps.InputProps,
-    endAdornment: (
       <InputAdornment position="end">
         <IconButton onClick={handleTogglePicker}>
           <DateRangeIcon />
         </IconButton>
       </InputAdornment>
-    ),
-  };
+    </BrowserFieldRoot>
+  );
+});
 
-  const fieldResponse = useSingleInputDateRangeField(textFieldProps);
-
-  /* If you don't need a clear button, you can skip the use of this hook */
-  const processedFieldProps = useClearableField({
-    ...fieldResponse,
-    slots,
-    slotProps,
-  });
+const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
+  const fieldResponse = useSingleInputDateRangeField(props);
 
   return (
     <BrowserTextField
-      {...processedFieldProps}
+      {...fieldResponse}
       ref={ref}
       style={{
         minWidth: 300,
