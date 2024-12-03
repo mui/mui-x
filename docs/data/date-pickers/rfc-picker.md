@@ -28,20 +28,22 @@ function CustomDatePicker(props) {
   const manager = useDateManager();
 
   return (
-    <Popover.Root>
-      <Picker.Root manager={manager} {...props}>
-        <PickerField.Root>
-          {/** See field documentation */}
-          <Popover.Trigger>📅</Popover.Trigger>
-        </PickerField.Root>
-        <Popover.Backdrop />
-        <Popover.Positioner>
-          <Popover.Popup>
-            <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Picker.Root>
-    </Popover.Root>
+    <Picker.Root manager={manager} {...props}>
+      {({ open, setOpen }) => (
+        <Popover.Root open={open} onOpenChange={setOpen}>
+          <PickerField.Root>
+            {/** See field documentation */}
+            <Popover.Trigger>📅</Popover.Trigger>
+          </PickerField.Root>
+          <Popover.Backdrop />
+          <Popover.Positioner>
+            <Popover.Popup>
+              <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+            </Popover.Popup>
+          </Popover.Positioner>
+        </Popover.Root>
+      )}
+    </Picker.Root>
   );
 }
 
@@ -61,19 +63,21 @@ function CustomDatePicker(props) {
   const manager = useDateManager();
 
   return (
-    <DialogTrigger>
-      <Picker.Root manager={manager} {...props}>
-        <PickerField.Root>
-          {/** See field documentation */}
-          <Button>📅</Button>
-        </PickerField.Root>
-        <Popover>
-          <Dialog>
-            <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-          </Dialog>
-        </Popover>
-      </Picker.Root>
-    </DialogTrigger>
+    <Picker.Root manager={manager} {...props}>
+      {({ open, setOpen }) => (
+        <DialogTrigger isOpen={open} onOpenChange={setOpen}>
+          <PickerField.Root>
+            {/** See field documentation */}
+            <Button>📅</Button>
+          </PickerField.Root>
+          <Popover>
+            <Dialog>
+              <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+            </Dialog>
+          </Popover>
+        </DialogTrigger>
+      )}
+    </Picker.Root>
   );
 }
 
@@ -98,7 +102,9 @@ This component could be renamed `<PopoverDatePicker />` to better match its beha
 
 ### Without Material UI
 
-The user can use the `Picker.*` components in combination with the `Modal.*` components from `@base-ui-components/react` to build a picker:
+#### With Base UI `Dialog.*` components
+
+The user can use the `Picker.*` components in combination with the `Dialog.*` components from `@base-ui-components/react` to build a picker:
 
 ```tsx
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
@@ -109,16 +115,54 @@ function CustomDatePicker(props) {
   const manager = useDateManager();
 
   return (
-    <Dialog.Root>
-      <PickerField.Root>
-        {/** See field documentation */}
-        <Dialog.Trigger>📅</Dialog.Trigger>
-      </PickerField.Root>
-      <Dialog.Backdrop />
-      <Dialog.Popup>
-        <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-      </Dialog.Popup>
-    </Dialog.Root>
+    <Picker.Root manager={manager} {...props}>
+      {({ open, setOpen }) => (
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+          <PickerField.Root>
+            {/** See field documentation */}
+            <Dialog.Trigger>📅</Dialog.Trigger>
+          </PickerField.Root>
+          <Dialog.Backdrop />
+          <Dialog.Popup>
+            <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+          </Dialog.Popup>
+        </Dialog.Root>
+      )}
+    </Picker.Root>
+  );
+}
+
+<CustomDatePicker value={value} onChange={setValue} />;
+```
+
+#### With Mantine `<Modal />` component
+
+The user can use a Modal that expect different props for its lifecycle:
+
+```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Modal, Button } from '@mantine/core';
+
+function CustomDatePicker(props) {
+  const manager = useDateManager();
+
+  return (
+    <Picker.Root manager={manager} {...props}>
+      {({ open, openPicker, closePicker }) => (
+        <DialogTrigger isOpen={open} onClose={closePicker}>
+          <PickerField.Root>
+            {/** See field documentation */}
+            <Button onClick={openPicker}>📅</Button>
+          </PickerField.Root>
+          <Popover>
+            <Dialog>
+              <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+            </Dialog>
+          </Popover>
+        </DialogTrigger>
+      )}
+    </Picker.Root>
   );
 }
 
@@ -145,7 +189,7 @@ If the library does not provide any higher level utilities to create a responsiv
 
 ```tsx
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
-import { useMediaQuery } from '@base-ui-utils/useMediaQuery'; // not sure how the util package will be named
+import { useMediaQuery } from '@base-ui-components/react-utils/useMediaQuery'; // not sure how the util package will be named
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
 import { Dialog } from '@base-ui-components/react/dialog';
@@ -156,35 +200,45 @@ function CustomDatePicker(props) {
     defaultMatches: true,
   });
 
-  const wrapView = (viewNode: React.ReactNode) => {
-    if (variant === 'mobile') {
-      return <Dialog.Popup>{viewNode}</Dialog.Popup>;
-    }
+  const field = (
+    <PickerField.Root>
+      {/** See field documentation */}
+      {isDesktop ? (
+        <Popover.Trigger>📅</Popover.Trigger>
+      ) : (
+        <Dialog.Trigger>📅</Dialog.Trigger>
+      )}
+    </PickerField.Root>
+  );
 
+  const view = <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>;
+
+  if (isDesktop) {
     return (
-      <Popover.Positioner>
-        <Popover.Popup>{viewNode}</Popover.Popup>
-      </Popover.Positioner>
-    );
-  };
-
-  return (
-    <Popover.Root>
       <Picker.Root manager={manager} {...props}>
-        <PickerField.Root>
-          {/** See field documentation */}
-          {variant === 'mobile' ? (
-            <Dialog.Trigger>📅</Dialog.Trigger>
-          ) : (
-            <Popover.Trigger>📅</Popover.Trigger>
-          )}
-        </PickerField.Root>
-        <Popover.Backdrop />
-        {wrapView(
-          <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>,
+        {({ open, setOpen }) => (
+          <Popover.Root open={open} onOpenChange={setOpen}>
+            {field}
+            <Popover.Backdrop />
+            <Popover.Positioner>
+              <Popover.Popup>{view}</Popover.Popup>
+            </Popover.Positioner>
+          </Popover.Root>
         )}
       </Picker.Root>
-    </Popover.Root>
+    );
+  }
+
+  return (
+    <Picker.Root manager={manager} {...props}>
+      {({ open, setOpen }) => (
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+          {field}
+          <Dialog.Backdrop />
+          <Dialog.Popup>{view}</Dialog.Popup>
+        </Dialog.Root>
+      )}
+    </Picker.Root>
   );
 }
 ```
@@ -273,8 +327,8 @@ import { Popover } from '@base-ui-components/react/popover';
 The toolbar can also be used to switch between views thanks to the `<Picker.SetView />` component:
 
 ```tsx
-import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 <Popover.Popup>
   <div>
@@ -303,9 +357,10 @@ The example below uses the `Tabs` component from Base UI as an example:
 
 ```tsx
 import { Tabs } from '@base-ui-components/react/tabs';
+import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
-<Picker.Popup>
+<Popover.Popup>
   <Picker.ContextValue>
     {({ view }) => (
       <Tabs.Root value={['day', 'month', 'year'].includes(view) ? 'date' : 'time'}>
@@ -327,7 +382,7 @@ import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
     )}
   </Picker.ContextValue>
   <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-</Picker.Popup>;
+</Popover.Popup>;
 ```
 
 ### With Material UI
@@ -399,6 +454,16 @@ TODO
 
 ### `Picker.Root`
 
+Top level component that wraps the other components.
+
+It expects a function as its children, which receives the context value as a parameter:
+
+```tsx
+<Picker.Root manager={manager} {...props}>
+  {({ open, setOpen }) => <Popover.Root open={open} onOpenChange={setOpen} />}
+</Picker.Root>
+```
+
 #### Props
 
 - `manager`: `PickerManager` - **required**
@@ -406,6 +471,8 @@ TODO
   :::success
   See [#15395](https://github.com/mui/mui-x/issues/15395) for context.
   :::
+
+- `children`: `(contextValue: PickerContextValue) => React.ReactNode`
 
 - **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
 

@@ -28,13 +28,19 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
   </div>
   <Calendar.Days.Root>
     <Calendar.Days.Header>
-      {({ days }) => days.map((day) => <Calendar.Days.Label value={day} />)}
+      {({ days }) =>
+        days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
+      }
     </Calendar.Days.Header>
     <Calendar.Days.Content>
       {({ weeks }) =>
         weeks.map((week) => (
           <Calendar.Days.WeekRow value={week}>
-            {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
+            {({ days }) =>
+              days.map((day) => (
+                <Calendar.Days.Cell value={day} key={day.toString()} />
+              ))
+            }
           </Calendar.Days.WeekRow>
         ))
       }
@@ -74,7 +80,9 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
   </div>
   <Calendar.Months.Root>
     {({ months }) =>
-      months.map((month) => <Calendar.Months.Cell value={monthValue} />)
+      months.map((month) => (
+        <Calendar.Months.Cell value={monthValue} key={month.toString()} />
+      ))
     }
   </Calendar.Months.Root>
 </Calendar.Root>;
@@ -110,7 +118,11 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Years.Root>
-    {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
+    {({ years }) =>
+      years.map((year) => (
+        <Calendar.Years.Cell value={yearValue} key={year.toString()} />
+      ))
+    }
   </Calendar.Years.Root>
 </Calendar.Root>;
 ```
@@ -144,13 +156,19 @@ Once the `Calendar.*` unstyled component is ready, the `<YearCalendar />` should
   <Calendar.MatchView match="day">
     <Calendar.Days.Root>
       <Calendar.Days.Header>
-        {({ days }) => days.map((day) => <Calendar.Days.Label value={day} />)}
+        {({ days }) =>
+          days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
+        }
       </Calendar.Days.Header>
       <Calendar.Days.Content>
         {({ weeks }) =>
           weeks.map((week) => (
-            <Calendar.Days.WeekRow value={week}>
-              {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
+            <Calendar.Days.WeekRow value={week} key={week.toString()}>
+              {({ days }) =>
+                days.map((day) => (
+                  <Calendar.Days.Cell value={day} key={day.toString()} />
+                ))
+              }
             </Calendar.Days.WeekRow>
           ))
         }
@@ -160,13 +178,19 @@ Once the `Calendar.*` unstyled component is ready, the `<YearCalendar />` should
   <Calendar.MatchView match="month">
     <Calendar.Months.Root>
       {({ months }) =>
-        months.map((month) => <Calendar.Months.Cell value={monthValue} />)
+        months.map((month) => (
+          <Calendar.Months.Cell value={monthValue} key={month.toString()} />
+        ))
       }
     </Calendar.Months.Root>
   </Calendar.MatchView>
   <Calendar.MatchView match="year">
     <Calendar.Years.Root>
-      {({ years }) => years.map((year) => <Calendar.Years.Cell value={yearValue} />)}
+      {({ years }) =>
+        years.map((year) => (
+          <Calendar.Years.Cell value={yearValue} key={year.toString()} />
+        ))
+      }
     </Calendar.Years.Root>
   </Calendar.MatchView>
 </Calendar.Root>
@@ -410,7 +434,7 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
       <React.Fragment>
         <Calendar.Days.WeekNumberHeaderCell>#</Calendar.Days.WeekNumberHeaderCell>
         {days.map((day) => (
-          <Calendar.Days.Label value={day} />
+          <Calendar.Days.Label value={day} key={day.toString()} />
         ))}
       </React.Fragment>
     )}
@@ -418,12 +442,12 @@ The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Day
   <Calendar.Days.Content>
     {({ weeks }) =>
       weeks.map((week) => (
-        <Calendar.Days.WeekRow value={week}>
+        <Calendar.Days.WeekRow value={week} key={week.toString()}>
           {({ days }) => (
             <React.Fragment>
               <Calendar.Days.WeekNumberCell />
               {days.map((day) => (
-                <Calendar.Days.Cell value={day} />
+                <Calendar.Days.Cell value={day} key={day.toString()} />
               ))}
             </React.Fragment>
           )}
@@ -593,11 +617,13 @@ Top level component for the `Calendar.Days.*` components.
 
 Renders the header of the day grid.
 
-It expects a function as its children, which has the list of days as a parameter:
+It expects a function as its children, which receives the list of days to render as a parameter:
 
 ```tsx
 <Calendar.Days.Header>
-  {({ days }) => days.map((day) => <Calendar.Days.HeaderCell value={day} />)}
+  {({ days }) =>
+    days.map((day) => <Calendar.Days.HeaderCell value={day} key={day.toString()} />)
+  }
 </Calendar.Days.Header>
 ```
 
@@ -629,11 +655,13 @@ Renders the header of the week number column.
 
 Renders the content all the days in a month (it is the DOM element that should contain all the weeks).
 
-It expects a function as its children, which has the list of weeks to render as a parameter:
+It expects a function as its children, which receives the list of weeks to render as a parameter:
 
 ```tsx
 <Calendar.Days.Content>
-  {({ weeks }) => weeks.map((week) => <Calendar.Days.WeekRow value={week} />)}
+  {({ weeks }) =>
+    weeks.map((week) => <Calendar.Days.WeekRow value={week} key={week.toString()} />)
+  }
 </Calendar.Days.Content>
 ```
 
@@ -651,11 +679,13 @@ Maybe it should be named `<Calendar.Days.Grid />`.
 
 Renders the content all the days in a week.
 
-It expects a function as its children, which has the list of days to render and the week number as a parameter:
+It expects a function as its children, which receives the list of days to render and the week number as a parameter:
 
 ```tsx
 <Calendar.Days.WeekRow>
-  {({ days }) => days.map((day) => <Calendar.Days.Cell value={day} />)}
+  {({ days }) =>
+    days.map((day) => <Calendar.Days.Cell value={day} key={day.toString()} />)
+  }
 </Calendar.Days.WeekRow>
 ```
 
@@ -687,11 +717,15 @@ Renders the number of the current week.
 
 Top level component for the `Calendar.Months.*` components.
 
-It expects a function as its children, which has the list of the months as a parameter:
+It expects a function as its children, which receives the list of the months to render as a parameter:
 
 ```tsx
 <Calendar.Months.Root>
-  {({ months }) => months.map((month) => <Calendar.Months.Cell value={month} />)}
+  {({ months }) =>
+    months.map((month) => (
+      <Calendar.Months.Cell value={month} key={month.toString()} />
+    ))
+  }
 </Calendar.Months.Root>
 ```
 
@@ -742,11 +776,13 @@ Renders the cell for a single month.
 
 Top level component for the `Calendar.Years.*` components.
 
-It expects a function as its children, which has the list of the years as a parameter:
+It expects a function as its children, which receives the list of years to render as a parameter:
 
 ```tsx
 <Calendar.Years.Root>
-  {({ years }) => years.map((year) => <Calendar.Years.Cell value={year} />)}
+  {({ years }) =>
+    years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
+  }
 </Calendar.Years.Root>
 ```
 

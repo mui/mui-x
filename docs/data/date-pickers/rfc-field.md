@@ -27,7 +27,7 @@ function CustomDateField(props) {
       <PickerField.Content>
         {({ sections }) =>
           sections.map((section) => (
-            <PickerField.Section section={section}>
+            <PickerField.Section section={section} key={section.key}>
               <PickerField.SectionSeparator position="before" />
               <PickerField.SectionContent />
               <PickerField.SectionSeparator position="after" />
@@ -354,12 +354,14 @@ That way, users only have to pass the props specific to the field to the `Picker
 
 It would expend `Field.Control` from `@base-ui-components/react/Field`.
 
-It expects a function as its children, which has the list of sections as a parameter:
+It expects a function as its children, which receives the list of sections to render as a parameter:
 
 ```tsx
 <PickerField.Content>
   {({ sections }) =>
-    sections.map((section) => <PickerField.Section section={section} />)
+    sections.map((section) => (
+      <PickerField.Section value={section} key={section.key} />
+    ))
   }
 </PickerField.Content>
 ```
