@@ -101,19 +101,19 @@ The list includes these transformers
 Renames the Tree View component to Simple Tree View
 
 ```diff
-- import { TreeView } from '@mui/x-tree-view';
-+ import { SimpleTreeView } from '@mui/x-tree-view';
+-import { TreeView } from '@mui/x-tree-view';
++import { SimpleTreeView } from '@mui/x-tree-view';
 
-- import { TreeView } from '@mui/x-tree-view/TreeView';
-+ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+-import { TreeView } from '@mui/x-tree-view/TreeView';
++import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-  return (
--   <TreeView>
-+   <SimpleTreeView>
-      <TreeItem itemId="1" label="First item" />
--   </TreeView>
-+   </SimpleTreeView>
-  );
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
 ```
 
 #### `rename-tree-item-2`
@@ -121,11 +121,11 @@ Renames the Tree View component to Simple Tree View
 Renames the `TreeItem2` component to `TreeItem` (same for any subcomponents or utils like `useTreeItem2` or `TreeItem2Icon`).
 
 ```diff
-- import { TreeItem2 } from '@mui/x-tree-view';
-+ import { TreeItem } from '@mui/x-tree-view';
+-import { TreeItem2 } from '@mui/x-tree-view';
++import { TreeItem } from '@mui/x-tree-view';
 
-- import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
-+ import { TreeItem } from '@mui/x-tree-view/TreeItem';
+-import { TreeItem2 } from '@mui/x-tree-view/TreeItem2';
++import { TreeItem } from '@mui/x-tree-view/TreeItem';
 ```
 
 ### Charts codemods
@@ -151,10 +151,10 @@ The list includes these transformers
 Renames legend props to the corresponding slotProps.
 
 ```diff
-  <LineChart
--   legend={{ hiden: true}}
-+   slotProps={{ legend: { hiden: true} }}
-  />
+ <LineChart
+-  legend={{ hiden: true}}
++  slotProps={{ legend: { hiden: true} }}
+ />
 ```
 
 #### `rename-responsive-chart-container`
@@ -162,14 +162,14 @@ Renames legend props to the corresponding slotProps.
 Renames `ResponsiveChartContainer` and `ResponsiveChartContainerPro` by `ChartContainer` and `ChartContainerPro` which have the same behavior in v8.
 
 ```diff
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
-- <ResponsiveChartContainer>
-+ <ChartContainer>
-    <BarPlot />
-- </ResponsiveChartContainer>
-+ </ChartContainer>
+-<ResponsiveChartContainer>
++<ChartContainer>
+   <BarPlot />
+-</ResponsiveChartContainer>
++</ChartContainer>
 ```
 
 :::warning
@@ -178,8 +178,8 @@ Verify the git diff to remove the duplicate.
 
 ```diff
  import { ChartContainer } from '@mui/x-charts/ChartContainer';
-- import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-+ import { ChartContainer } from '@mui/x-charts/ChartContainer';
+-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
++import { ChartContainer } from '@mui/x-charts/ChartContainer';
 ```
 
 :::
@@ -189,16 +189,16 @@ Verify the git diff to remove the duplicate.
 Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop.
 
 ```diff
-  <ChartsXAxis
--   labelFontSize={18}
-+   labelStyle={{
-+     fontSize: 18
-+   }}
--   tickFontSize={20}
-+   tickStyle={{
-+     fontSize: 20
-+   }}
-  />
+ <ChartsXAxis
+-  labelFontSize={18}
++  labelStyle={{
++    fontSize: 18
++  }}
+-  tickFontSize={20}
++  tickStyle={{
++    fontSize: 20
++  }}
+ />
 ```
 
 ### Data Grid codemods
@@ -222,11 +222,11 @@ The list includes these transformers
 Remove feature flags for stabilized `experimentalFeatures`.
 
 ```diff
-  <DataGridPremium
--   experimentalFeatures={{
--     ariaV8: true,
--   }}
-  />
+ <DataGridPremium
+-  experimentalFeatures={{
+-    ariaV8: true,
+-  }}
+ />
 ```
 
 <!-- #default-branch-switch -->
@@ -256,15 +256,15 @@ The list includes these transformers
 Renames `FieldValueType` to `PickerValueType`.
 
 ```diff
-- import { FieldValueType } from '@mui/x-date-pickers';
-+ import { PickerValueType } from '@mui/x-date-pickers';
+-import { FieldValueType } from '@mui/x-date-pickers';
++import { PickerValueType } from '@mui/x-date-pickers';
 
-  interface MyComponentProps {
--   valueType: FieldValueType;
-+   valueType: PickerValueType;
-    foo: string;
-    bar: number;
-  }
+ interface MyComponentProps {
+-  valueType: FieldValueType;
++  valueType: PickerValueType;
+   foo: string;
+   bar: number;
+ }
 ```
 
 <!-- #default-branch-switch -->
@@ -473,13 +473,13 @@ Renames the Tree View component to Simple Tree View
 -import { TreeView } from '@mui/x-tree-view/TreeView';
 +import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 
-   return (
--    <TreeView>
-+    <SimpleTreeView>
-       <TreeItem itemId="1" label="First item" />
--    </TreeView>
-+    </SimpleTreeView>
-   );
+ return (
+-  <TreeView>
++  <SimpleTreeView>
+     <TreeItem itemId="1" label="First item" />
+-  </TreeView>
++  </SimpleTreeView>
+ );
 ```
 
 #### `rename-use-tree-item`
