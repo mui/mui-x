@@ -21,5 +21,5 @@ afterEach(function beforeEachHook() {
 const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
 packagesContext
   .keys()
-  .filter((key) => !key.includes('x-data-grid'))
+  .filter((key) => key.includes('x-data-grid'))
   .forEach(packagesContext);
