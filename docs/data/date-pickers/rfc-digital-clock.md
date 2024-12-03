@@ -7,29 +7,7 @@ title: DX - Digital Clock
 
 <p class="description">This page describes how people can use time views with Material UI and how they can build custom time views.</p>
 
-## Single section
-
-### Without Material UI
-
-The user can use the `<DigitalClock.Options />` component to list all the time options in a flat list:
-
-```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.Options>
-    {({ options }) =>
-      options.map((option) => (
-        <DigitalClock.Option value={item} key={option.toString()} />
-      ))
-    }
-  </DigitalClock.Options>
-</DigitalClock.Root>
-```
-
-### With Material UI
-
-TODO
-
-## Multi section (no meridiem)
+## Multi section - without meridiem
 
 ### Without Material UI
 
@@ -58,7 +36,7 @@ The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOpti
 
 TODO
 
-## Multi section (meridiem)
+## Multi section - with meridiem
 
 ### Without Material UI
 
@@ -95,7 +73,7 @@ It should be used in combination with the `<DigitalClock.HoursWithMeridiemOption
 
 TODO
 
-## Multi section (seconds)
+## Multi section - with seconds
 
 ### Without Material UI
 
@@ -131,6 +109,36 @@ The user can use the `<DigitalClock.SecondsOptions />` component to add a column
       ))
     }
   </DigitalClock.MeridiemOptions>
+</DigitalClock.Root>
+```
+
+### With Material UI
+
+TODO
+
+## Multi section - custom steps
+
+### Without Material UI
+
+TODO
+
+### With Material UI
+
+TODO
+
+## Single section
+
+### Without Material UI
+
+The user can use the `<DigitalClock.Options />` component to manually list options:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue}>
+  <DigitalClock.Options>
+    <DigitalClock.Option value={dayjs('2025-01-01T15:30')} />
+    <DigitalClock.Option value={dayjs('2025-01-01T17:30')} />
+    <DigitalClock.Option value={dayjs('2025-01-01T20:30')} />
+  </DigitalClock.Options>
 </DigitalClock.Root>
 ```
 
