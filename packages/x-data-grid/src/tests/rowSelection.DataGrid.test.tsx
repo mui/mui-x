@@ -672,7 +672,7 @@ describe('<DataGrid /> - Row selection', () => {
       }).not.toErrorDev();
     });
 
-    it.only('should set the "Select all" checkbox to selected state on clicking even when some rows are not selectable', () => {
+    it('should set the "Select all" checkbox to selected state on clicking even when some rows are not selectable', () => {
       render(
         <TestDataGridSelection checkboxSelection isRowSelectable={({ id }) => id % 2 === 0} />,
       );
