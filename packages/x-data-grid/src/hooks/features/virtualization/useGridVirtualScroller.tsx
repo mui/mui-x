@@ -204,7 +204,7 @@ export const useGridVirtualScroller = () => {
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const focusedVirtualCell = useGridSelector(
+  const focusedVirtualCellBase = useGridSelector(
     apiRef,
     () => {
       const currentRenderContext = gridRenderContextSelector(apiRef);
@@ -213,28 +213,43 @@ export const useGridVirtualScroller = () => {
         return null;
       }
 
-      const rowIndex = currentPage.rows.findIndex((row) => row.id === focusedCell.id);
-      const columnIndex = visibleColumns.findIndex((column) => column.field === focusedCell.field);
+      const rowIndex = currentPage.rows
+        .slice(currentRenderContext.firstRowIndex, currentRenderContext.lastRowIndex)
+        .findIndex((row) => row.id === focusedCell.id);
+      const columnIndex = visibleColumns
+        .slice(currentRenderContext.firstColumnIndex, currentRenderContext.lastColumnIndex)
+        .findIndex((column) => column.field === focusedCell.field);
 
-      if (rowIndex === -1 || columnIndex === -1) {
-        return null;
-      }
-
-      const isFocusedCellInContext =
-        currentRenderContext.firstRowIndex <= rowIndex &&
-        rowIndex <= currentRenderContext.lastRowIndex;
+      const isFocusedCellInContext = rowIndex !== -1 && columnIndex !== -1;
 
       if (isFocusedCellInContext) {
         return null;
       }
       return {
         ...focusedCell,
-        rowIndex,
-        columnIndex,
       };
     },
     objectShallowCompare,
   );
+
+  const focusedVirtualCell = React.useMemo(() => {
+    if (!focusedVirtualCellBase) return focusedVirtualCellBase;
+    const rowIndex = currentPage.rows.findIndex((row) => row.id === focusedVirtualCellBase.id);
+    const columnIndex = visibleColumns.findIndex(
+      (column) => column.field === focusedVirtualCellBase.field,
+    );
+
+    if (rowIndex === -1 || columnIndex === -1) {
+      return null;
+    }
+
+    return {
+      ...focusedVirtualCellBase,
+      rowIndex,
+      columnIndex,
+    };
+  }, [focusedVirtualCellBase, currentPage]);
+
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
