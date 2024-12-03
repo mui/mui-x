@@ -48,7 +48,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     // Can be passed to a hidden <input /> element
     onChange,
     value,
-    // Can be passed to an icon to clear the value
+    // Can be passed to the button that clears the value
     clearable,
     onClear,
     // Can be used to render a custom label

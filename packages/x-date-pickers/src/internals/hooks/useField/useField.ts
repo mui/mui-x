@@ -280,10 +280,15 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText(state.value),
+    [getOpenDialogAriaText, state.value],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
-    openPickerAriaLabel: getOpenDialogAriaText(state.value),
+    openPickerAriaLabel,
   };
 
   return {

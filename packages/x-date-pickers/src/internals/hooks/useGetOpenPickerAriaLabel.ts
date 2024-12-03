@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { usePickerTranslations } from '../../hooks';
 import { AdapterFormats } from '../../models';
 import { PickerValue } from '../models';
@@ -11,9 +12,12 @@ export const useGetOpenDialogAriaText = (params: {
   const translations = usePickerTranslations();
   const { formatKey, translationKey } = params;
 
-  return (value: PickerValue) => {
-    const formattedValue =
-      value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
-    return translations[translationKey](formattedValue);
-  };
+  return React.useCallback(
+    (value: PickerValue) => {
+      const formattedValue =
+        value !== null && utils.isValid(value) ? utils.format(value, formatKey) : null;
+      return translations[translationKey](formattedValue);
+    },
+    [formatKey, translationKey, translations, utils],
+  );
 };

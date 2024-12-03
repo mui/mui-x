@@ -64,7 +64,7 @@ const BrowserTextField = React.forwardRef(
       onChange,
       value,
 
-      // Can be passed to an icon to clear the value
+      // Can be passed to the button that clears the value
       clearable,
       onClear,
 
