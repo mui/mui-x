@@ -92,7 +92,7 @@ export const useTreeItemUtils = <
     instance,
     label,
     store,
-    selection: { multiSelect },
+    selection: { multiSelect, checkboxSelection },
     lazyLoading,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
@@ -149,6 +149,14 @@ export const useTreeItemUtils = <
         // return a boolean if fails/succeeds to check for expansion? might work better
         await instance.fetchItems([itemId]);
         fetchErrors = Boolean(selectorGetTreeItemError(store.value, itemId));
+        if (!fetchErrors && status.selected && checkboxSelection) {
+          instance.selectItem({
+            event,
+            itemId,
+            keepExistingSelection: true,
+            shouldBeSelected: true,
+          });
+        }
       }
 
       if (!fetchErrors) {
