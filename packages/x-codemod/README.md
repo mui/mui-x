@@ -227,12 +227,13 @@ npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeature
 
 ### Pickers codemods
 
-#### `preset-safe` for pickers v8.0.0
+#### `preset-safe` for Pickers v8.0.0
 
-The `preset-safe` codemods for pickers.
+The `preset-safe` codemods for Pickers.
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/pickers/preset-safe <path|folder>
+<!-- #default-branch-switch -->
+npx @mui/x-codemod@next v8.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -256,7 +257,8 @@ Renames `FieldValueType` to `PickerValueType`.
 ```
 
 ```bash
-npx @mui/x-codemod@latest v8.0.0/pickers/rename-and-move-field-value-type <path>
+<!-- #default-branch-switch -->
+npx @mui/x-codemod@next v8.0.0/pickers/rename-and-move-field-value-type <path>
 ```
 
 ## v7.0.0
