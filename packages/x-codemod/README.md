@@ -136,6 +136,7 @@ The list includes these transformers
 
 - [`rename-legend-to-slots-legend`](#rename-legend-to-slots-legend)
 - [`rename-responsive-chart-container`](#rename-responsive-chart-container)
+- [`rename-label-and-tick-font-size`](#rename-label-and-tick-font-size)
 
 #### `rename-legend-to-slots-legend`
 
@@ -174,6 +175,53 @@ Verify the git diff to remove the duplicate.
 ```
 
 :::
+
+#### `rename-label-and-tick-font-size`
+
+Renames `labelFontSize` and `tickFontSize` props to the corresponding `xxxStyle` prop.
+
+```diff
+  <ChartsXAxis
+-   labelFontSize={18}
++   labelStyle={{
++     fontSize: 18
++   }}
+-   tickFontSize={20}
++   tickStyle={{
++     fontSize: 20
++   }}
+  />
+```
+
+### Data Grid codemods
+
+#### `preset-safe` for Data Grid v8.0.0
+
+The `preset-safe` codemods for Data Grid.
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`remove-stabilized-v8-experimentalFeatures`](#remove-stabilized-v8-experimentalFeatures)
+
+#### `remove-stabilized-v8-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGridPremium
+-  experimentalFeatures={{
+-    ariaV8: true,
+-  }}
+ />
+```
+
+```bash
+npx @mui/x-codemod@latest v8.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
 
 ## v7.0.0
 
