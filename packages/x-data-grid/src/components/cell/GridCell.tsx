@@ -38,6 +38,7 @@ import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
+import { attachPinnedStyle } from '../../internals/utils';
 
 export const gridPinnedColumnPositionLookup = {
   [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
@@ -336,9 +337,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     const isRightPinned = pinnedPosition === PinnedColumnPosition.RIGHT;
 
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    if (pinnedSide && pinnedOffset !== undefined) {
-      cellStyle[pinnedSide] = pinnedOffset;
-    }
+    attachPinnedStyle(cellStyle, pinnedSide, pinnedOffset);
 
     if (rowSpan > 1) {
       cellStyle.height = `calc(var(--height) * ${rowSpan})`;

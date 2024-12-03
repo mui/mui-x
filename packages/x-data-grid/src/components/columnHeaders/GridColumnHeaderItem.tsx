@@ -18,6 +18,7 @@ import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -280,11 +281,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const label = colDef.headerName ?? colDef.field;
 
   const style = React.useMemo(() => {
-    let styleProp = props.style;
+    const styleProp = { ...props.style };
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    if (pinnedSide && pinnedOffset !== undefined) {
-      styleProp = { ...styleProp, [pinnedSide]: pinnedOffset };
-    }
+    attachPinnedStyle(styleProp, pinnedSide, pinnedOffset);
     return styleProp;
   }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
 

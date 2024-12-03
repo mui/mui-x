@@ -15,6 +15,7 @@ import { GridColumnGroupHeaderEventLookup } from '../../models/events';
 import { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
+import { attachPinnedStyle } from '../../internals/utils';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -178,11 +179,9 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       : group.headerClassName;
 
   const style = React.useMemo(() => {
-    let styleProp = props.style;
+    const styleProp = { ...props.style };
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    if (pinnedSide && pinnedOffset !== undefined) {
-      styleProp = { ...styleProp, [pinnedSide]: pinnedOffset };
-    }
+    attachPinnedStyle(styleProp, pinnedSide, pinnedOffset);
     return styleProp;
   }, [pinnedPosition, pinnedOffset, props.style, isRtl]);
 

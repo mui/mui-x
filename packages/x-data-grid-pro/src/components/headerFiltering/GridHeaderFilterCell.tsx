@@ -31,6 +31,7 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   rtlFlipSide,
+  attachPinnedStyle,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -323,9 +324,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     };
 
     const pinnedSide = rtlFlipSide(pinnedPosition, isRtl);
-    if (pinnedSide && pinnedOffset !== undefined) {
-      style[pinnedSide] = pinnedOffset;
-    }
+    attachPinnedStyle(style, pinnedSide, pinnedOffset);
 
     return (
       <div

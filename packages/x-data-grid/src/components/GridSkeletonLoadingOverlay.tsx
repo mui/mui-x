@@ -24,6 +24,7 @@ import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/ce
 import { escapeOperandAttributeSelector } from '../utils/domUtils';
 import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
+import { attachPinnedStyle } from '../internals/utils';
 
 const SkeletonOverlay = styled('div', {
   name: 'MuiDataGrid',
@@ -108,17 +109,17 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const sectionIndex = pinnedSide
           ? pinnedColumns[pinnedSide].findIndex((col) => col.field === column.field) // pinned section
           : colIndex - pinnedColumns.left.length; // middle section
-        const pinnedStyle = pinnedSide
-          ? {
-              [pinnedSide]: getPinnedCellOffset(
-                pinnedPosition,
-                column.computedWidth,
-                colIndex,
-                positions,
-                dimensions,
-              ),
-            }
-          : {};
+        const pinnedStyle = attachPinnedStyle(
+          {},
+          pinnedSide,
+          getPinnedCellOffset(
+            pinnedPosition,
+            column.computedWidth,
+            colIndex,
+            positions,
+            dimensions,
+          ),
+        );
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
         const showRightBorder = shouldCellShowRightBorder(
           pinnedPosition,
