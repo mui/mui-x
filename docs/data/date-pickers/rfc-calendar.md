@@ -227,16 +227,7 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
             {({ days }) =>
               days.map((day) => (
                 <Calendar.DaysCell value={day} key={day.toString()} />
-              ))
-            }
-          </Calendar.DaysWeekRow>
-        ))
-      }
-    </Calendar.DaysGridBody>
-  </Calendar.DaysGrid>
-  <Calendar.MonthsList>
-    {({ months }) =>
-      months.map((month) => (
+              ))DaysWeekRow
         <Calendar.MonthsCell value={month} key={month.toString()} />
       ))
     }
