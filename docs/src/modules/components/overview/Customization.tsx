@@ -2,9 +2,12 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { ThemeOptions, ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import SvgIcon from '@mui/material/SvgIcon';
@@ -13,6 +16,7 @@ import AlignVerticalBottomIcon from '@mui/icons-material/AlignVerticalBottom';
 import DensityLargeIcon from '@mui/icons-material/DensityLarge';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import DensitySmallIcon from '@mui/icons-material/DensitySmall';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -118,7 +122,7 @@ function CustomTheme({
     <React.Fragment>
       <CssBaseline />
 
-      <Stack sx={{ minHeight: '600px', justifyContent: 'center' }}>
+      <Stack sx={{ minHeight: { xs: 'fit-content', md: '600px' }, justifyContent: 'center' }}>
         <ThemeProvider theme={getTheme(mode, config, selectedTheme)}>
           {selectedTheme === 'custom' || selectedTheme === 'default' ? (
             <Card sx={{ padding: 0 }} variant="outlined">
@@ -141,20 +145,13 @@ function CustomTheme({
   );
 }
 
-const initialState: Config = {
-  selectedTheme: 'custom',
-  color: 'default',
-  layout: 'horizontal',
-  density: 'medium',
-  corner: 'medium',
-  typography: 'default',
-};
-
-export default function Customization() {
-  const [styleConfig, setStyleConfig] = React.useState<Config>(initialState);
-
-  const brandingTheme = useTheme();
-
+function ThemesConfig({
+  styleConfig,
+  setStyleConfig,
+}: {
+  styleConfig: Config;
+  setStyleConfig: React.Dispatch<React.SetStateAction<Config>>;
+}) {
   const colorScheme = getColorScheme(styleConfig.selectedTheme);
 
   const handleChangeTheme = (_event: React.MouseEvent<HTMLElement>, newTheme: Themes) => {
@@ -195,6 +192,176 @@ export default function Customization() {
   };
 
   return (
+    <Stack
+      justifyContent="flex-start"
+      sx={(theme) => ({
+        borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
+        borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
+        flexBasis: '30%',
+        borderRadius: {
+          xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
+          md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+        },
+        padding: 2,
+        gap: 1.5,
+        background: theme.palette.gradients.linearSubtle,
+        overflow: 'auto',
+      })}
+    >
+      {/* Theme */}
+      <Stack spacing={1}>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          Select Theme
+        </Typography>
+        <ConfigToggleButtons
+          selectedValue={styleConfig.selectedTheme}
+          handleValueSwitch={handleChangeTheme}
+          values={[
+            { key: 'custom', label: 'Custom' },
+            { key: 'md3', label: 'MD3' },
+            { key: 'default', label: 'MD2' },
+          ]}
+        />
+      </Stack>
+      {/* Color */}
+      <Stack spacing={1}>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          Color
+        </Typography>
+        <ConfigToggleButtons
+          selectedValue={styleConfig.color}
+          handleValueSwitch={handleChangeColor}
+          values={Object.keys(colorScheme).map((key) => ({
+            key,
+            icon: <ColorSwatch color={colorScheme[key as keyof typeof colorScheme]} />,
+          }))}
+        />
+      </Stack>
+      {/* Typography */}
+      <Stack spacing={1}>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          Typography
+        </Typography>
+        <ConfigToggleButtons
+          selectedValue={styleConfig.typography}
+          handleValueSwitch={handleChangeTypography}
+          values={[
+            {
+              key: 'default',
+              label: 'Default',
+            },
+            {
+              key: 'Inter',
+              label: 'Inter',
+            },
+            {
+              key: 'Menlo',
+              label: 'Menlo',
+            },
+          ]}
+        />
+      </Stack>
+      {/* Density */}
+      <Stack spacing={1}>
+        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          Density
+        </Typography>
+        <ConfigToggleButtons
+          selectedValue={styleConfig.density}
+          handleValueSwitch={handleChangeDensity}
+          values={[
+            {
+              key: 'compact',
+              icon: <DensitySmallIcon fontSize="small" />,
+            },
+            {
+              key: 'medium',
+              icon: <DensityMediumIcon fontSize="small" />,
+            },
+            {
+              key: 'spacious',
+              icon: <DensityLargeIcon fontSize="small" />,
+            },
+          ]}
+        />
+      </Stack>
+      {/* Corners */}
+      {styleConfig.selectedTheme !== 'default' && (
+        <Stack spacing={1}>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+          <Typography variant="caption" color="text.secondary" gutterBottom>
+            Corners
+          </Typography>
+          <ConfigToggleButtons
+            selectedValue={styleConfig.corner}
+            handleValueSwitch={handleChangeCorner}
+            values={[
+              {
+                key: 'rectangular',
+                icon: <RectangularCornersIcon fontSize="small" />,
+              },
+              {
+                key: 'medium',
+                icon: <MediumCornersIcon fontSize="small" />,
+              },
+              {
+                key: 'rounded',
+                icon: <RoundedCornersIcon fontSize="small" />,
+              },
+            ]}
+          />
+        </Stack>
+      )}
+      {/* Layout */}
+      {styleConfig.selectedTheme !== 'md3' && (
+        <Stack spacing={1}>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+          <Typography variant="caption" color="text.secondary" gutterBottom>
+            Layout
+          </Typography>
+          <ConfigToggleButtons
+            selectedValue={styleConfig.layout}
+            handleValueSwitch={handleChangeLayout}
+            values={[
+              {
+                key: 'horizontal',
+                icon: <AlignHorizontalLeftIcon fontSize="small" />,
+              },
+              {
+                key: 'vertical',
+                icon: <AlignVerticalBottomIcon fontSize="small" />,
+              },
+            ]}
+          />
+        </Stack>
+      )}
+    </Stack>
+  );
+}
+
+const initialState: Config = {
+  selectedTheme: 'custom',
+  color: 'default',
+  layout: 'horizontal',
+  density: 'medium',
+  corner: 'medium',
+  typography: 'default',
+};
+
+export default function Customization() {
+  const [styleConfig, setStyleConfig] = React.useState<Config>(initialState);
+  const brandingTheme = useTheme();
+  const isMd = useMediaQuery(brandingTheme.breakpoints.up('md'));
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpenDrawer(newOpen);
+  };
+
+  return (
     <React.Fragment>
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
@@ -219,10 +386,9 @@ export default function Customization() {
             out-of-the-box elegance and support extensive customization to perfectly align with your
             branding.
           </Typography>
-
           <Stack
-            maxWidth="xl"
             direction={{ xs: 'column', md: 'row' }}
+            maxWidth="xl"
             sx={{
               display: 'flex',
               border: '1px solid',
@@ -235,18 +401,31 @@ export default function Customization() {
               component="div"
               sx={(theme) => ({
                 display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
                 borderRadius: {
-                  xs: `0 0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px`,
+                  xs: `${theme.shape.borderRadius}px`,
                   md: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
                 },
+                py: { xs: 2, md: 0 },
                 flexBasis: '70%',
                 backgroundImage: `radial-gradient(${theme.palette.divider} 0.8px, ${theme.palette.background.paper} 0.8px)`,
                 backgroundSize: '10px 10px',
-                order: { xs: 2, md: 1 },
                 alignItems: 'center',
                 justifyContent: 'center',
               })}
             >
+              {!isMd && (
+                <Button
+                  variant="contained"
+                  onClick={toggleDrawer(true)}
+                  startIcon={<SettingsSuggestIcon />}
+                  /* eslint-disable-next-line material-ui/no-hardcoded-labels */
+                >
+                  Customize
+                </Button>
+              )}
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <CustomTheme
                   selectedTheme={styleConfig.selectedTheme}
@@ -255,156 +434,13 @@ export default function Customization() {
                 />
               </LocalizationProvider>
             </Box>
-            <Stack
-              direction={{ xs: 'row', md: 'column' }}
-              justifyContent="flex-start"
-              sx={(theme) => ({
-                borderLeft: { xs: 0, md: `1px solid ${theme.palette.divider}` },
-                borderBottom: { xs: `1px solid ${theme.palette.divider}`, md: 0 },
-                flexBasis: '30%',
-                borderRadius: {
-                  xs: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-                  md: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
-                },
-                padding: 2,
-                gap: 1.5,
-                background: theme.palette.gradients.linearSubtle,
-                order: { xs: 1, md: 2 },
-                overflow: 'auto',
-              })}
-            >
-              {/* Theme */}
-              <Stack spacing={1}>
-                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Select Theme
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.selectedTheme}
-                  handleValueSwitch={handleChangeTheme}
-                  values={[
-                    { key: 'custom', label: 'Custom' },
-                    { key: 'md3', label: 'MD3' },
-                    { key: 'default', label: 'MD2' },
-                  ]}
-                />
-              </Stack>
-              {/* Color */}
-              <Stack spacing={1}>
-                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Color
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.color}
-                  handleValueSwitch={handleChangeColor}
-                  values={Object.keys(colorScheme).map((key) => ({
-                    key,
-                    icon: <ColorSwatch color={colorScheme[key as keyof typeof colorScheme]} />,
-                  }))}
-                />
-              </Stack>
-              {/* Typography */}
-              <Stack spacing={1}>
-                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Typography
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.typography}
-                  handleValueSwitch={handleChangeTypography}
-                  values={[
-                    {
-                      key: 'default',
-                      label: 'Default',
-                    },
-                    {
-                      key: 'Inter',
-                      label: 'Inter',
-                    },
-                    {
-                      key: 'Menlo',
-                      label: 'Menlo',
-                    },
-                  ]}
-                />
-              </Stack>
-              {/* Density */}
-              <Stack spacing={1}>
-                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Density
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.density}
-                  handleValueSwitch={handleChangeDensity}
-                  values={[
-                    {
-                      key: 'compact',
-                      icon: <DensitySmallIcon fontSize="small" />,
-                    },
-                    {
-                      key: 'medium',
-                      icon: <DensityMediumIcon fontSize="small" />,
-                    },
-                    {
-                      key: 'spacious',
-                      icon: <DensityLargeIcon fontSize="small" />,
-                    },
-                  ]}
-                />
-              </Stack>
-              {/* Corners */}
-              {styleConfig.selectedTheme !== 'default' && (
-                <Stack spacing={1}>
-                  {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Corners
-                  </Typography>
-                  <ConfigToggleButtons
-                    selectedValue={styleConfig.corner}
-                    handleValueSwitch={handleChangeCorner}
-                    values={[
-                      {
-                        key: 'rectangular',
-                        icon: <RectangularCornersIcon fontSize="small" />,
-                      },
-                      {
-                        key: 'medium',
-                        icon: <MediumCornersIcon fontSize="small" />,
-                      },
-                      {
-                        key: 'rounded',
-                        icon: <RoundedCornersIcon fontSize="small" />,
-                      },
-                    ]}
-                  />
-                </Stack>
-              )}
-              {/* Layout */}
-              {styleConfig.selectedTheme !== 'md3' && (
-                <Stack spacing={1}>
-                  {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Layout
-                  </Typography>
-                  <ConfigToggleButtons
-                    selectedValue={styleConfig.layout}
-                    handleValueSwitch={handleChangeLayout}
-                    values={[
-                      {
-                        key: 'horizontal',
-                        icon: <AlignHorizontalLeftIcon fontSize="small" />,
-                      },
-                      {
-                        key: 'vertical',
-                        icon: <AlignVerticalBottomIcon fontSize="small" />,
-                      },
-                    ]}
-                  />
-                </Stack>
-              )}
-            </Stack>
+            {isMd ? (
+              <ThemesConfig styleConfig={styleConfig} setStyleConfig={setStyleConfig} />
+            ) : (
+              <Drawer anchor="bottom" open={openDrawer} onClose={toggleDrawer(false)}>
+                <ThemesConfig styleConfig={styleConfig} setStyleConfig={setStyleConfig} />
+              </Drawer>
+            )}
           </Stack>
         </Stack>
       </Stack>
