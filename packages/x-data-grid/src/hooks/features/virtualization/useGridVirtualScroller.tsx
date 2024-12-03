@@ -207,53 +207,7 @@ export const useGridVirtualScroller = () => {
 
   const focusedVirtualCell = useGridSelector(
     apiRef,
-    () => {
-      const {
-        renderContext: currentRenderContext,
-        focusedCell,
-        visibleColumns: currentVisibleColumns,
-      } = gridFocusedVirtualCellSelector(apiRef.current.state, apiRef.current.instanceId);
-
-      if (!focusedCell) {
-        return null;
-      }
-
-      const row = apiRef.current.getRow(focusedCell.id);
-
-      if (!row) {
-        return null;
-      }
-
-      const rowIndex = currentPage.rowToIndexMap.get(row);
-
-      if (rowIndex === undefined) {
-        return null;
-      }
-
-      const columnIndex = currentVisibleColumns.findIndex(
-        (column) => column.field === focusedCell.field,
-      );
-
-      if (columnIndex === -1) {
-        return null;
-      }
-
-      const isFocusedCellInContext =
-        rowIndex >= currentRenderContext.firstRowIndex &&
-        rowIndex <= currentRenderContext.lastRowIndex &&
-        columnIndex >= currentRenderContext.firstColumnIndex &&
-        columnIndex <= currentRenderContext.lastColumnIndex;
-
-      if (isFocusedCellInContext) {
-        return null;
-      }
-
-      return {
-        ...focusedCell,
-        rowIndex,
-        columnIndex,
-      };
-    },
+    gridFocusedVirtualCellSelector,
     objectShallowCompare,
   );
 

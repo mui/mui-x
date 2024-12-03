@@ -83,6 +83,7 @@ export const useDataGridComponent = (
   useGridInitializeState(dimensionsStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
@@ -92,7 +93,6 @@ export const useDataGridComponent = (
   useGridInitializeState(rowSpanningStateInitializer, apiRef, props);
   useGridInitializeState(densityStateInitializer, apiRef, props);
   useGridInitializeState(columnResizeStateInitializer, apiRef, props);
-  useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);

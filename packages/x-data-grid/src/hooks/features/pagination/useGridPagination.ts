@@ -36,6 +36,7 @@ export const paginationStateInitializer: GridStateInitializer<
   return {
     ...state,
     pagination: {
+      ...state.pagination,
       paginationModel,
       rowCount,
       meta,

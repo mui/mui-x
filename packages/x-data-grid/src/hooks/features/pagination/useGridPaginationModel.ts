@@ -263,6 +263,9 @@ export const useGridPaginationModel = (
       isFirstRender.current = false;
       return;
     }
+    if (!props.pagination) {
+      return;
+    }
     apiRef.current.setState((state) => ({
       ...state,
       pagination: {
@@ -272,11 +275,9 @@ export const useGridPaginationModel = (
           props.signature,
           props.paginationModel,
         ),
-        paginationMode: props.paginationMode,
-        enabled: props.pagination === true,
       },
     }));
-  }, [apiRef, props.paginationModel, props.paginationMode, props.signature, props.pagination]);
+  }, [apiRef, props.paginationModel, props.signature, props.pagination]);
 
   React.useEffect(() => {
     apiRef.current.setState((state) => {

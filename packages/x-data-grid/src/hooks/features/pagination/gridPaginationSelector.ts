@@ -21,8 +21,10 @@ export const gridPaginationSelector = (state: GridStateCommunity) => state.pagin
  *
  * @category Pagination
  */
-export const gridPaginationModeClientEnabled = (state: GridStateCommunity) =>
-  state.pagination.enabled && state.pagination.paginationMode === 'client';
+export const gridPaginationModeClientEnabled = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.enabled && pagination.paginationMode === 'client',
+);
 
 /**
  * Get the pagination model
@@ -92,14 +94,14 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
   gridExpandedSortedRowEntriesSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
   (
-    clientPaginationEnabled,
+    clientSidePaginationEnabled,
     paginationModel,
     rowTree,
     rowTreeDepth,
     visibleSortedRowEntries,
     visibleSortedTopLevelRowEntries,
   ) => {
-    if (!clientPaginationEnabled) {
+    if (!clientSidePaginationEnabled) {
       return null;
     }
 
@@ -212,7 +214,7 @@ export const gridVisibleRowsSelector = createSelectorMemoized(
         rows: paginationRows,
         range: paginationRowRange,
         rowToIndexMap: paginationRows.reduce((lookup, row, index) => {
-          lookup.set(row, index);
+          lookup.set(row.model, index);
           return lookup;
         }, new Map<GridValidRowModel, number>()),
       };

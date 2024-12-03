@@ -3,7 +3,6 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridVisibleRowsSelector } from '../features/pagination/gridPaginationSelector';
 import type { GridApiCommon } from '../../models';
 import { useGridSelector } from '.';
-import { objectShallowCompare } from './useGridSelector';
 
 export const getVisibleRows = <Api extends GridApiCommon>(
   apiRef: React.MutableRefObject<Api>,
@@ -28,5 +27,5 @@ export const useGridVisibleRows = <Api extends GridApiCommon>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   props?: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ) => {
-  return useGridSelector(apiRef, gridVisibleRowsSelector, objectShallowCompare);
+  return useGridSelector(apiRef, gridVisibleRowsSelector);
 };
