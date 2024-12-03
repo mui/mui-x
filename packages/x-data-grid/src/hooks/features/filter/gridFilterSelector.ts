@@ -71,8 +71,9 @@ export const gridExpandedSortedRowEntriesSelector = createSelectorMemoized(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
   gridRowMaximumTreeDepthSelector,
-  (visibleRowsLookup, sortedRows, maxDepth) => {
-    if (maxDepth <= 1) {
+  gridFilterModelSelector,
+  (visibleRowsLookup, sortedRows, maxDepth, filterModel) => {
+    if (maxDepth <= 1 && !filterModel?.items?.length) {
       return sortedRows;
     }
     return sortedRows.filter((row) => visibleRowsLookup[row.id] !== false);
