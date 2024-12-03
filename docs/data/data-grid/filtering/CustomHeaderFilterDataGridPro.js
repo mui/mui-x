@@ -99,7 +99,7 @@ function CustomHeaderFilter(props) {
 }
 
 export default function CustomHeaderFilterDataGridPro() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     rowLength: 100,
   });
@@ -108,6 +108,7 @@ export default function CustomHeaderFilterDataGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={loading}
         initialState={{
           ...data.initialState,
           columns: {

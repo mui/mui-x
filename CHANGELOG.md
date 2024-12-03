@@ -3,6 +3,175 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.23.0
+
+_Nov 29, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Support for a new display mode on the Data Grid with the [List View feature](https://mui.com/x/react-data-grid/list-view/), offering an extremely flexible way to render datasets and enabling developers to adapt how data is displayed across different screen sizes.
+
+  https://github.com/user-attachments/assets/61286adc-03fc-4323-9739-8ca726fcc16c
+
+- ⚛️ React 19 support
+- 📚 Documentation improvements
+- 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
+- 🌍 Improve Dutch locale on the Date and Time Picker components.
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9, @lauri865.
+Following are all team members who have contributed to this release:
+@oliviertassinari, @arminmeh, @KenanYusuf, @flaviendelangle, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.23.0`
+
+- [DataGrid] React 19 support (#15557) @arminmeh
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
+- [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
+- [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
+- [DataGrid] Improve resize performance (#15592) @lauri865
+- [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
+- [DataGrid] Improve `GridCell` performance (#15621) @lauri865
+- [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+
+#### `@mui/x-data-grid-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.23.0`, plus:
+
+- [DataGridPro] Fix header filtering with `boolean` column type (#15640) @k-rajat19
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15643) @zinoroman
+- [DataGridPro] Fix selection propagation issue on initialization (#15593) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@v7.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.23.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v7.23.0`
+
+- [pickers] React 19 support (#15557) @arminmeh
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15653) @flaviendelangle
+- [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15544) @flaviendelangle
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+
+#### `@mui/x-date-pickers-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v7.23.0`.
+
+### Charts
+
+#### `@mui/x-charts@v7.23.0`
+
+- [charts] React 19 support (#15557) @arminmeh
+- [charts] Prevent invalid `releasePointerCapture` (#15609) @alexfauquette
+
+#### `@mui/x-charts-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v7.23.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v7.23.0`
+
+- [TreeView] React 19 support (#15557) @arminmeh
+
+#### `@mui/x-tree-view-pro@7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.23.0`.
+
+### Docs
+
+- [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
+- [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+### Core
+
+- [core] Update @mui/monorepo (#15574) @oliviertassinari
+
+## 7.22.3
+
+_Nov 21, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📊 Charts Pro get stable. The [zoom](https://mui.com/x/react-charts/zoom-and-pan/) and [Heatmap](https://mui.com/x/react-charts/heatmap/) are now stable.
+- 🌍 Improve Chinese, Spanish, Swedish, and Turkish locales on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@CarlosLopezLg, @headironc, @viktormelin, @qerkules, @DungTiger, @hendrikpeilke, @k-rajat19.
+Following are all team members who have contributed to this release:
+@alexfauquette, @LukasTy, @MBilalShafi, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.22.3`
+
+- [DataGrid] Add prop to override search input props in `GridColumnsManagement` (#15476) @k-rajat19
+- [DataGrid] Add test coverage for issues fixed in #15184 @MBilalShafi
+- [DataGrid] Fix memoized selectors with arguments (#15336) @MBilalShafi
+- [DataGrid] Fix right column group header border with virtualization (#15503) @hendrikpeilke
+- [DataGrid] Pass reason to `onPaginationModelChange` (#15402) @DungTiger
+- [DataGrid] Set default overlay height in flex parent layout (#15535) @cherniavskii
+- [l10n] Improve Chinese (zh-CN) locale (#15365) @headironc
+- [l10n] Improve Spanish (es-ES) locale (#15369) @CarlosLopezLg
+- [l10n] Improve Swedish (sv-SE) locale (#15371) @viktormelin
+- [l10n] Improve Turkish (tr-TR) locale (#15414) @qerkules
+
+#### `@mui/x-data-grid-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.22.3`.
+
+#### `@mui/x-data-grid-premium@7.22.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.22.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.22.3`
+
+- [pickers] Always use `props.value` when it changes (#15500) @flaviendelangle
+- [pickers] Ensure internal value timezone is updated (#15491) @LukasTy
+- [pickers] Fix `DateTimeRangePicker` error when using format without time (#15341) @fxnoob
+- [pickers] Fix unused code in `PickersToolbar` component (#15525) @LukasTy
+
+#### `@mui/x-date-pickers-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.22.3`, plus:
+
+- [DateTimeRangePicker] Use time in `referenceDate` when selecting date (#15431) @LukasTy
+
+### Charts
+
+#### `@mui/x-charts@7.22.3`
+
+No changes since `@mui/x-charts@7.22.2`.
+
+#### `@mui/x-charts-pro@7.22.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+- [charts-pro] Fix missing typeOverload (#15400) @alexfauquette
+
+### Docs
+
+- [docs] Add `PickersPopper` component to customization playground (#15397) @LukasTy
+- [docs] Add `next` version links (#15423) @LukasTy
+- [docs] Use the `loading` state in the demos (#15538) @cherniavskii
+
+- [code-infra] Tentative fix for Argos flaky screenshot tests (#15399) @JCQuintas
+- [docs-infra] Transpile `.ts` demo files (#15421) @KenanYusuf
+- [core] Clarify release version bump strategy (#15536) @cherniavskii
+
 ## 7.22.2
 
 _Nov 8, 2024_

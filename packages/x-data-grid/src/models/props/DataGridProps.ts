@@ -396,6 +396,14 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   unstable_rowSpanning: boolean;
+  /**
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
+   * @default false
+   */
+  virtualizeColumnsWithAutoRowHeight: boolean;
 }
 
 /**
@@ -642,7 +650,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (
+    model: GridPaginationModel,
+    details: GridCallbackDetails<'pagination'>,
+  ) => void;
   /**
    * Callback fired when the row count has changed.
    * @param {number} count Updated row count.

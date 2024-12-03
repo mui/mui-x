@@ -587,7 +587,8 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
+    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",
   "imports": [
@@ -1376,6 +1377,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPro-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGridPro-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
       "isGlobal": false
     },
     {

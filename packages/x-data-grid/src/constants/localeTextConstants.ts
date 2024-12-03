@@ -41,6 +41,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnsManagementNoColumns: 'No columns',
   columnsManagementShowHideAllText: 'Show/Hide All',
   columnsManagementReset: 'Reset',
+  columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',

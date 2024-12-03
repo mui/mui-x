@@ -1,6 +1,6 @@
 import type { MuiPage } from 'docs/src/MuiPage';
 
-const apiPages: MuiPage[] = [
+const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/animated-area',
     title: 'AnimatedArea',
@@ -230,4 +230,4 @@ const apiPages: MuiPage[] = [
     title: 'SparkLineChart',
   },
 ];
-export default apiPages;
+export default chartsApiPages;

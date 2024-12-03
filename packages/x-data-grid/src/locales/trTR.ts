@@ -42,6 +42,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Kolon yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -80,9 +81,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Şunu içerir',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'İçermez',
   headerFilterOperatorEquals: 'Şuna eşittir',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Eşit değildir',
   headerFilterOperatorStartsWith: 'Şununla başlar',
   headerFilterOperatorEndsWith: 'Şununla biter',
   headerFilterOperatorIs: 'Eşittir',

@@ -1,8 +1,8 @@
 import type { MuiPage } from 'docs/src/MuiPage';
-import chartsComponentApi from './charts-component-api-pages';
-import dataGridComponentApi from './data-grid-component-api-pages';
-import pickersComponentApi from './date-pickers-component-api-pages';
-import treeViewComponentApi from './tree-view-component-api-pages';
+import chartsComponentApi from './chartsApiPages';
+import dataGridComponentApi from './dataGridApiPages';
+import pickersComponentApi from './datePickersApiPages';
+import treeViewComponentApi from './treeViewApiPages';
 
 const pages: MuiPage[] = [
   {
@@ -56,7 +56,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
           { pathname: '/x/react-data-grid/row-height' },
-          { pathname: '/x/react-data-grid/row-spanning', newFeature: true },
+          { pathname: '/x/react-data-grid/row-spanning', unstable: true },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
@@ -123,8 +123,17 @@ const pages: MuiPage[] = [
         plan: 'pro',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/server-side-data', title: 'Overview', plan: 'pro' },
-          { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
+          {
+            pathname: '/x/react-data-grid/server-side-data',
+            title: 'Overview',
+            plan: 'pro',
+            unstable: true,
+          },
+          {
+            pathname: '/x/react-data-grid/server-side-data/tree-data',
+            plan: 'pro',
+            unstable: true,
+          },
           {
             pathname: '/x/react-data-grid/server-side-data/lazy-loading',
             plan: 'pro',
@@ -138,6 +147,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/server-side-data/row-grouping',
             plan: 'premium',
+            unstable: true,
           },
           {
             pathname: '/x/react-data-grid/server-side-data/aggregation',
@@ -188,6 +198,7 @@ const pages: MuiPage[] = [
               },
 
               { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
+              { pathname: '/x/api/data-grid/grid-list-col-def', title: 'GridListColDef' },
               {
                 pathname: '/x/api/data-grid/grid-export-state-params',
                 title: 'GridExportStateParams',

@@ -154,7 +154,7 @@ export const usePickerValue = <
   TValue,
   TDate extends PickerValidDate,
   TSection extends FieldSection,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TExternalProps extends UsePickerValueProps<TValue, TDate, any>,
 >({
   props,
   valueManager,
@@ -175,10 +175,12 @@ export const usePickerValue = <
     defaultValue: inDefaultValue,
     closeOnSelect = wrapperVariant === 'desktop',
     timezone: timezoneProp,
+    referenceDate,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
   const { current: isControlled } = React.useRef(inValueWithoutRenderTimezone !== undefined);
+  const [previousTimezoneProp, setPreviousTimezoneProp] = React.useState(timezoneProp);
 
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
   if (process.env.NODE_ENV !== 'production') {
@@ -224,6 +226,7 @@ export const usePickerValue = <
     timezone: timezoneProp,
     value: inValueWithoutRenderTimezone,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager,
   });
@@ -242,10 +245,22 @@ export const usePickerValue = <
       draft: initialValue,
       lastPublishedValue: initialValue,
       lastCommittedValue: initialValue,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       hasBeenModifiedSinceMount: false,
     };
   });
+
+  const timezoneFromDraftValue = valueManager.getTimezone(utils, dateState.draft);
+  if (previousTimezoneProp !== timezoneProp) {
+    setPreviousTimezoneProp(timezoneProp);
+
+    if (timezoneProp && timezoneFromDraftValue && timezoneProp !== timezoneFromDraftValue) {
+      setDateState((prev) => ({
+        ...prev,
+        draft: valueManager.setTimezone(utils, timezoneProp, prev.draft),
+      }));
+    }
+  }
 
   const { getValidationErrorForNewValue } = useValidation({
     props,
@@ -309,15 +324,7 @@ export const usePickerValue = <
     }
   });
 
-  if (
-    inValueWithTimezoneToRender !== undefined &&
-    (dateState.lastControlledValue === undefined ||
-      !valueManager.areValuesEqual(
-        utils,
-        dateState.lastControlledValue,
-        inValueWithTimezoneToRender,
-      ))
-  ) {
+  if (dateState.lastControlledValue !== inValueWithoutRenderTimezone) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(
       utils,
       dateState.draft,
@@ -326,7 +333,7 @@ export const usePickerValue = <
 
     setDateState((prev) => ({
       ...prev,
-      lastControlledValue: inValueWithTimezoneToRender,
+      lastControlledValue: inValueWithoutRenderTimezone,
       ...(isUpdateComingFromPicker
         ? {}
         : {
