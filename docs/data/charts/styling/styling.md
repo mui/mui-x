@@ -176,3 +176,11 @@ On both of these examples, it is important to note that since the gradient is de
 The way it is done with CSS variables, allows us to use a fallback color in places the gradient is not defined, like in the tooltip.
 
 {{"demo": "PatternPie.js"}}
+
+#### Using gradients on tooltips
+
+Gradients defined as SVG elements are not directly supported in HTML.
+However you can use the [gradient functions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Functions#gradient_functions) to define a gradient in CSS.
+This gradient can be used in the tooltip by setting the `sx` prop on the tooltip component, instead of the fallback color used in the previous examples.
+
+{{"demo": "GradientTooltip.js"}}

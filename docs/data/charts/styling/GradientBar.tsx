@@ -21,14 +21,7 @@ export default function GradientBar() {
       width={400}
       height={200}
     >
-      <linearGradient
-        id="Gradient"
-        x1="0"
-        y1="90"
-        x2="0"
-        y2="0"
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="Gradient" x1="0" y1="1" x2="0" y2="0">
         <stop offset="0" stopColor="#123456" />
         <stop offset="1" stopColor="#81b2e4" />
       </linearGradient>

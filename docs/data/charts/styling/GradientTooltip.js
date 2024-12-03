@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-export default function GradientBar() {
+export default function GradientTooltip() {
   return (
     <BarChart
       sx={{
-        '--my-custom-gradient': 'url(#Gradient)',
+        '--my-custom-gradient': 'url(#GlobalGradient)',
+      }}
+      slotProps={{
+        tooltip: {
+          sx: {
+            '--my-custom-gradient': 'linear-gradient(0deg, #123456, #81b2e4);',
+          },
+        },
       }}
       series={[
         {
@@ -21,7 +28,7 @@ export default function GradientBar() {
       width={400}
       height={200}
     >
-      <linearGradient id="Gradient" x1="0" y1="1" x2="0" y2="0">
+      <linearGradient id="GlobalGradient" x1="0%" y1="100%" x2="0%" y2="0%">
         <stop offset="0" stopColor="#123456" />
         <stop offset="1" stopColor="#81b2e4" />
       </linearGradient>
