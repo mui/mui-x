@@ -271,6 +271,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
       setTime(event, 'finish');
       isMoving.current = false;
     }
+    event.preventDefault();
   };
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
