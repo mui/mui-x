@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useLicenseVerifier } from '../useLicenseVerifier';
 import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { MuiCommercialPackageName } from '../utils/commercialPackages';
-import { fastMemo } from '@mui/x-internals/fastMemo';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {

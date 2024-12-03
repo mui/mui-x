@@ -22,16 +22,15 @@ import {
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
-import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
-import type {
-  GridRenderContext,
-  GridColumnsRenderContext,
-  GridRowEntry,
-  GridRowId,
+import {
+  type GridRenderContext,
+  type GridColumnsRenderContext,
+  type GridRowEntry,
+  type GridRowId,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
@@ -47,6 +46,7 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -205,29 +205,36 @@ export const useGridVirtualScroller = () => {
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
 
-  const rowIdToIndex = React.useMemo(
-    () => new Map(currentPage.rows.map((row, index) => [row.id, index])),
-    [currentPage.rows],
-  );
-
-  const columnFieldToIndex = React.useMemo(
-    () => new Map(visibleColumns.map((column, index) => [column.field, index])),
-    [visibleColumns],
-  );
-
   const focusedVirtualCell = useGridSelector(
     apiRef,
     () => {
-      const currentRenderContext = gridRenderContextSelector(apiRef);
-      const focusedCell = gridFocusCellSelector(apiRef);
+      const {
+        renderContext: currentRenderContext,
+        focusedCell,
+        visibleColumns: currentVisibleColumns,
+      } = gridFocusedVirtualCellSelector(apiRef.current.state, apiRef.current.instanceId);
+
       if (!focusedCell) {
         return null;
       }
 
-      const rowIndex = rowIdToIndex.get(focusedCell.id);
-      const columnIndex = columnFieldToIndex.get(focusedCell.field);
+      const row = apiRef.current.getRow(focusedCell.id);
 
-      if (!rowIndex || !columnIndex) {
+      if (!row) {
+        return null;
+      }
+
+      const rowIndex = currentPage.rowToIndexMap.get(row);
+
+      if (rowIndex === undefined) {
+        return null;
+      }
+
+      const columnIndex = currentVisibleColumns.findIndex(
+        (column) => column.field === focusedCell.field,
+      );
+
+      if (columnIndex === -1) {
         return null;
       }
 

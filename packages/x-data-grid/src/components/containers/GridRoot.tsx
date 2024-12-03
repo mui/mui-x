@@ -9,6 +9,7 @@ import {
 } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridRootStyles } from './GridRootStyles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -19,7 +20,6 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
 import { GridHeader } from '../GridHeader';
 import { GridBody, GridFooterPlaceholder } from '../base';
-import { fastMemo } from '@mui/x-internals/fastMemo';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

@@ -316,7 +316,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isFilterActive = isApplied || hasFocus;
 
-    let style = {
+    const style = {
       height,
       width,
       ...styleProp,

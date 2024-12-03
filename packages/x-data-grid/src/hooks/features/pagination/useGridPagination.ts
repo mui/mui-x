@@ -20,6 +20,8 @@ export const paginationStateInitializer: GridStateInitializer<
     | 'autoPageSize'
     | 'signature'
     | 'paginationMeta'
+    | 'pagination'
+    | 'paginationMode'
   >
 > = (state, props) => {
   const paginationModel = {
@@ -37,6 +39,8 @@ export const paginationStateInitializer: GridStateInitializer<
       paginationModel,
       rowCount,
       meta,
+      enabled: props.pagination === true,
+      paginationMode: props.paginationMode,
     },
   };
 };
