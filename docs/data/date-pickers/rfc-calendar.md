@@ -81,7 +81,7 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
   <Calendar.Months.Root>
     {({ months }) =>
       months.map((month) => (
-        <Calendar.Months.Cell value={monthValue} key={month.toString()} />
+        <Calendar.Months.Cell value={month} key={month.toString()} />
       ))
     }
   </Calendar.Months.Root>
@@ -119,9 +119,7 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 <Calendar.Root value={value} onChange={setValue}>
   <Calendar.Years.Root>
     {({ years }) =>
-      years.map((year) => (
-        <Calendar.Years.Cell value={yearValue} key={year.toString()} />
-      ))
+      years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
     }
   </Calendar.Years.Root>
 </Calendar.Root>;
@@ -151,49 +149,43 @@ Once the `Calendar.*` unstyled component is ready, the `<YearCalendar />` should
 ### Without Material UI
 
 ```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
 <Calendar.Root value={value} onChange={setValue}>
   <div>{/** See calendar header documentation */}</div>
-  <Calendar.MatchView match="day">
-    <Calendar.Days.Root>
-      <Calendar.Days.Header>
-        {({ days }) =>
-          days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
-        }
-      </Calendar.Days.Header>
-      <Calendar.Days.Content>
-        {({ weeks }) =>
-          weeks.map((week) => (
-            <Calendar.Days.WeekRow value={week} key={week.toString()}>
-              {({ days }) =>
-                days.map((day) => (
-                  <Calendar.Days.Cell value={day} key={day.toString()} />
-                ))
-              }
-            </Calendar.Days.WeekRow>
-          ))
-        }
-      </Calendar.Days.Content>
-    </Calendar.Days.Root>
-  </Calendar.MatchView>
-  <Calendar.MatchView match="month">
-    <Calendar.Months.Root>
-      {({ months }) =>
-        months.map((month) => (
-          <Calendar.Months.Cell value={monthValue} key={month.toString()} />
+  <Calendar.Days.Root>
+    <Calendar.Days.Header>
+      {({ days }) =>
+        days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
+      }
+    </Calendar.Days.Header>
+    <Calendar.Days.Content>
+      {({ weeks }) =>
+        weeks.map((week) => (
+          <Calendar.Days.WeekRow value={week} key={week.toString()}>
+            {({ days }) =>
+              days.map((day) => (
+                <Calendar.Days.Cell value={day} key={day.toString()} />
+              ))
+            }
+          </Calendar.Days.WeekRow>
         ))
       }
-    </Calendar.Months.Root>
-  </Calendar.MatchView>
-  <Calendar.MatchView match="year">
-    <Calendar.Years.Root>
-      {({ years }) =>
-        years.map((year) => (
-          <Calendar.Years.Cell value={yearValue} key={year.toString()} />
-        ))
-      }
-    </Calendar.Years.Root>
-  </Calendar.MatchView>
-</Calendar.Root>
+    </Calendar.Days.Content>
+  </Calendar.Days.Root>
+  <Calendar.Months.Root>
+    {({ months }) =>
+      months.map((month) => (
+        <Calendar.Months.Cell value={month} key={month.toString()} />
+      ))
+    }
+  </Calendar.Months.Root>
+  <Calendar.Years.Root>
+    {({ years }) =>
+      years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
+    }
+  </Calendar.Years.Root>
+</Calendar.Root>;
 ```
 
 ### With Material UI
@@ -223,6 +215,8 @@ The user can use the `<Calendar.GoToMonth />`, `<Calendar.FormattedValue />` and
 #### Very basic header (without month and year views)
 
 ```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
 function CalendarHeader() {
   return (
     <div>
@@ -265,6 +259,8 @@ function CalendarHeader() {
 #### MD3 header
 
 ```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
 function CalendarHeader() {
   const { view } = useCalendarContext();
   return (
@@ -293,6 +289,47 @@ function CalendarHeader() {
         </Calendar.SetView>
         {view === 'day' && <Calendar.GoToYear target="next">▶</Calendar.GoToYear>}
       </div>
+    </div>
+  );
+}
+```
+
+#### Header with dropdown for months and years
+
+The user can create a custom header where the month and the year editing is done through a menu, while the day calendar is always visible below:
+
+```tsx
+import { Menu } from '@base-ui-components/react/menu';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
+function CalendarHeader() {
+  const { view } = useCalendarContext();
+  return (
+    <div>
+      <Menu.Root>
+        <Calendar.FormattedValue format="MMMM" render={<Menu.Trigger />} />
+        <Menu.Positioner>
+          <Calendar.Months.Root alwaysVisible render={<Menu.Popup />}>
+            {({ months }) =>
+              months.map((month) => (
+                <Calendar.Months.Cell value={month} key={month.toString()} />
+              ))
+            }
+          </Calendar.Months.Root>
+        </Menu.Positioner>
+      </Menu.Root>
+      <Menu.Root>
+        <Calendar.FormattedValue format="YYYY" render={<Menu.Trigger />} />
+        <Menu.Positioner>
+          <Calendar.Months.Root alwaysVisible render={<Menu.Popup />}>
+            {({ years }) =>
+              years.map((year) => (
+                <Calendar.Months.Cell value={year} key={year.toString()} />
+              ))
+            }
+          </Calendar.Months.Root>
+        </Menu.Positioner>
+      </Menu.Root>
     </div>
   );
 }
@@ -762,6 +799,8 @@ It expects a function as its children, which receives the list of the months to 
   The MVP could probably not contain any keyboard navigation.
   :::
 
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"month"`.
+
 ### `Calendar.Months.Cell`
 
 Renders the cell for a single month.
@@ -800,6 +839,8 @@ It expects a function as its children, which receives the list of years to rende
   The `yearsPerRow` prop is needed to have a working keyboard navigation.
   See the equivalent prop in `Calendar.Months.Root` for more details.
   :::
+
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"year"`.
 
 ### `Calendar.Years.Cell`
 

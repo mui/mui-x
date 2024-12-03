@@ -20,9 +20,9 @@ This page extends the initial proposal made in [#14718](https://github.com/mui/m
 The user can use the `Picker.*` components in combination with the `Popover.*` components from `@base-ui-components/react` to build a picker:
 
 ```tsx
+import { Popover } from '@base-ui-components/react/popover';
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
-import { Popover } from '@base-ui-components/react/popover';
 
 function CustomDatePicker(props) {
   const manager = useDateManager();

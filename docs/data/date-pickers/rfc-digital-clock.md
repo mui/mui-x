@@ -7,19 +7,21 @@ title: DX - Digital Clock
 
 <p class="description">This page describes how people can use time views with Material UI and how they can build custom time views.</p>
 
-## Usage with single section
+## Single section
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.ContentForSingleSection />` component to list all the time options in a flat list:
+The user can use the `<DigitalClock.Options />` component to list all the time options in a flat list:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.ContentForSingleSection>
-    {({ items }) =>
-      items.map((item) => <DigitalClock.Item value={item} key={item.toString()} />)
+  <DigitalClock.Options>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={item} key={option.toString()} />
+      ))
     }
-  </DigitalClock.ContentForSingleSection>
+  </DigitalClock.Options>
 </DigitalClock.Root>
 ```
 
@@ -27,42 +29,139 @@ The user can use the `<DigitalClock.ContentForSingleSection />` component to lis
 
 TODO
 
-## Usage with multi section
+## Multi section (meridiem)
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.ContentForMultiSection />` component to list all the time options with one column per view:
+The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOptions />` and `<DigitalClock.SecondsOptions />` components to list all the time options with one column per view:
 
 ```tsx
-<DigitalClock.Root value={value} onChange={setValue}>
-  <DigitalClock.ContentForMultiSection>
-    <DigitalClock.HoursList>
-      {(hours) =>
-        hours.map((hour) => <DigitalClock.Item value={hour} key={hour.toString()} />)
-      }
-    </DigitalClock.HoursList>
-    <DigitalClock.MinutesList>
-      {(minutes) =>
-        minutes.map((minute) => (
-          <DigitalClock.Item value={minute} key={minute.toString()} />
-        ))
-      }
-    </DigitalClock.MinutesList>
-    <DigitalClock.SecondsList>
-      {(seconds) =>
-        seconds.map((second) => (
-          <DigitalClock.Item value={second} key={second.toString()} />
-        ))
-      }
-    </DigitalClock.SecondsList>
-    <DigitalClock.MeridiemList>
-      {(meridiems) =>
-        meridiems.map((meridiem) => (
-          <DigitalClock.Item value={meridiem} key={meridiem.toString()} />
-        ))
-      }
-    </DigitalClock.MeridiemList>
-  </DigitalClock.ContentForMultiSection>
+<DigitalClock.Root value={value} onChange={setValue} ampm>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+  <DigitalClock.MeridiemOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MeridiemOptions>
+</DigitalClock.Root>
+```
+
+## Multi section (meridiem)
+
+### Without Material UI
+
+The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOptions />` and `<DigitalClock.SecondsOptions />` components to list all the time options with one column per view:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue} ampm>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+  <DigitalClock.MeridiemOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MeridiemOptions>
+</DigitalClock.Root>
+```
+
+### With Material UI
+
+TODO
+
+## Multi section (no meridiem)
+
+### Without Material UI
+
+The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOptions />`, `<DigitalClock.SecondsOptions />` and `<DigitalClock.MeridiemOptions />` components to list all the time options with one column per view:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue} ampm={false}>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+  <DigitalClock.MeridiemOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MeridiemOptions>
+</DigitalClock.Root>
+```
+
+### With Material UI
+
+TODO
+
+## Multi section (auto meridiem)
+
+### Without Material UI
+
+The user can use the `<DigitalClock.HoursOptions />`, `<DigitalClock.MinutesOptions />`, `<DigitalClock.SecondsOptions />` and `<DigitalClock.MeridiemOptions />` components to list all the time options with one column per view:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue} ampm>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+  <DigitalClock.MeridiemOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MeridiemOptions>
 </DigitalClock.Root>
 ```
 
