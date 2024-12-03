@@ -16,10 +16,6 @@ Unlike the default grid view, the list view makes no assumptions on how data is 
 
 In order to display data in a list view, a `unstable_listColumn` prop must be provided with a `renderCell` function.
 
-:::warning
-This feature is under development and is marked as **unstable**. While you can use the list view feature in production, the API could change in the future.
-:::
-
 ```tsx
 function ListViewCell(params: GridRenderCellParams) {
   return <>{params.row.id}</>;
