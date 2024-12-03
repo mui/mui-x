@@ -27,7 +27,6 @@ export const getFakeContextValue = (
     disableSelection: false,
     selectionPropagation: {},
   },
-  treeId: 'mui-tree-view-1',
   rootRef: {
     current: null,
   },

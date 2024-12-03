@@ -25,10 +25,13 @@ const StyledLayout = styled(PickersLayoutRoot)({
 });
 
 function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
-  const { actionBar, content } = usePickerLayout(props);
+  const { actionBar, content, ownerState } = usePickerLayout(props);
   return (
-    <StyledLayout ownerState={props}>
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+    <StyledLayout ownerState={ownerState}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {content}
         {actionBar}
       </PickersLayoutContentWrapper>
@@ -38,6 +41,7 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
 export default function DigitalClock() {
   return (
     <Card variant="outlined" sx={{ padding: 0.8, height: 'fit-content' }}>
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <Typography variant="subtitle2" sx={{ pt: 1, pb: 2 }}>
         Book now!
       </Typography>
