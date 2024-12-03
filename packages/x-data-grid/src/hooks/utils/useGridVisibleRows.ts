@@ -45,8 +45,14 @@ export const useGridVisibleRows = <Api extends GridApiCommon>(
   return React.useMemo(
     () => ({
       rows: response.rows,
-      range: response.range,
+      range:
+        response.range?.firstRowIndex === undefined || response.range?.lastRowIndex === undefined
+          ? null
+          : {
+              firstRowIndex: response.range?.firstRowIndex ?? 0,
+              lastRowIndex: response.range?.lastRowIndex ?? 0,
+            },
     }),
-    [response.rows, response.range],
+    [response.rows, response.range?.firstRowIndex, response.range?.lastRowIndex],
   );
 };
