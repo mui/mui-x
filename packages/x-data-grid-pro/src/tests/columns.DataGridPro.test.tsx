@@ -166,11 +166,11 @@ describe('<DataGridPro /> - Columns', () => {
       await microtasks();
       expect(onColumnWidthChange.callCount).to.be.at.least(2);
       const widthArgs = onColumnWidthChange.args.map((arg) => arg[0].width);
-      const isWidth114Present = widthArgs.some((width) => width === 114);
-      expect(isWidth114Present).to.equal(true);
+      const isWidth120Present = widthArgs.some((width) => width === 120);
+      expect(isWidth120Present).to.equal(true);
       const colDefWidthArgs = onColumnWidthChange.args.map((arg) => arg[0].colDef.width);
-      const isColDefWidth114Present = colDefWidthArgs.some((width) => width === 114);
-      expect(isColDefWidth114Present).to.equal(true);
+      const isColDefWidth120Present = colDefWidthArgs.some((width) => width === 120);
+      expect(isColDefWidth120Present).to.equal(true);
     });
 
     it('should not affect other cell elements that are not part of the main DataGrid instance', () => {
@@ -546,7 +546,7 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test rows={rows} columns={columns} />);
       await apiRef.current.autosizeColumns();
       await microtasks();
-      expect(getWidths()).to.deep.equal([211, 233]);
+      expect(getWidths()).to.deep.equal([155, 177]);
     });
 
     it('should work through double-clicking the separator', async () => {
@@ -556,14 +556,14 @@ describe('<DataGridPro /> - Columns', () => {
       )[1];
       fireEvent.doubleClick(separator);
       await microtasks();
-      expect(getWidths()).to.deep.equal([100, 233]);
+      expect(getWidths()).to.deep.equal([100, 177]);
     });
 
     it('should work on mount', async () => {
       render(<Test rows={rows} columns={columns} autosizeOnMount />);
       await microtasks(); /* first effect after render */
       await microtasks(); /* async autosize operation */
-      expect(getWidths()).to.deep.equal([211, 233]);
+      expect(getWidths()).to.deep.equal([155, 177]);
     });
 
     describe('options', () => {
@@ -579,7 +579,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
 
       it('.includeHeaders works', async () => {
-        await autosize({ includeHeaders: true }, [211, 233]);
+        await autosize({ includeHeaders: true }, [155, 177]);
       });
 
       it('.includeOutliers works', async () => {
