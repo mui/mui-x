@@ -73,6 +73,62 @@ It should be used in combination with the `<DigitalClock.HoursWithMeridiemOption
 
 TODO
 
+## Multi section - auto meridiem
+
+### Without Material UI
+
+The user can use the `useIs12HourCycleInCurrentLocale()` hook to know if the `ampm` should be enabled based on the current locale and build the UI accordingly:
+
+```tsx
+function App(props) {
+  const defaultAmpm = useIs12HourCycleInCurrentLocale();
+
+  const { ampm = defaultAmpm, ...other } = props;
+
+  return (
+    <DigitalClock.Root {...other}>
+      {ampm ? (
+        <DigitalClock.HoursWithMeridiemOptions>
+          {({ options }) =>
+            options.map((option) => (
+              <DigitalClock.Option value={option} key={option.toString()} />
+            ))
+          }
+        </DigitalClock.HoursWithMeridiemOptions>
+      ) : (
+        <DigitalClock.Hours>
+          {({ options }) =>
+            options.map((option) => (
+              <DigitalClock.Option value={option} key={option.toString()} />
+            ))
+          }
+        </DigitalClock.Hours>
+      )}
+      <DigitalClock.MinutesOptions>
+        {({ options }) =>
+          options.map((option) => (
+            <DigitalClock.Option value={option} key={option.toString()} />
+          ))
+        }
+      </DigitalClock.MinutesOptions>
+      {ampm && (
+        <DigitalClock.MeridiemOptions>
+          {({ options }) =>
+            options.map((option) => (
+              <DigitalClock.Option value={option} key={option.toString()} />
+            ))
+          }
+        </DigitalClock.MeridiemOptions>
+      )}
+    </DigitalClock.Root>
+  );
+}
+```
+
+### With Material UI
+
+TODO
+
 ## Multi section - with seconds
 
 ### Without Material UI
@@ -160,7 +216,7 @@ Top level component that wraps the other components.
 
   Same typing and behavior as today.
 
-- **Validation props**: `maxTime`, `minTime`, `disableFuture`, `disablePast`, `shouldDisableTime`, `timeSteps`.
+- **Validation props**: `maxTime`, `minTime`, `disableFuture`, `disablePast`, `shouldDisableTime`.
 
   Same typing and behavior as today.
 
