@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 const ToggleButton = styled(MuiToggleButton)({
   borderColor: 'transparent',
   padding: '5px 8px',
+  minHeight: 32,
 });
 const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(1),
@@ -16,7 +17,7 @@ const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-type Value<T> = { label?: string; icon?: React.ReactNode; key: T };
+type Value<T extends string> = { label?: string; icon?: React.ReactNode; key: T };
 
 export default function ConfigToggleButtons<T extends string>({
   selectedValue,
@@ -31,7 +32,7 @@ export default function ConfigToggleButtons<T extends string>({
     <Box sx={{ flexGrow: 1 }}>
       <ToggleButtonGroup
         size="small"
-        aria-label="Select language"
+        aria-label={'Select language'}
         value={selectedValue}
         exclusive
         onChange={handleValueSwitch}

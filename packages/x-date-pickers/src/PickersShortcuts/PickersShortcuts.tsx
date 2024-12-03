@@ -57,7 +57,7 @@ export interface PickersShortcutsProps<TValue extends PickerValidValue>
 const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',
   slot: 'Shortcuts',
-  overridesResolver: (_, styles) => [styles.shortcuts],
+  overridesResolver: (_, styles) => styles.shortcuts,
 })({});
 
 /**

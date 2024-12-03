@@ -121,11 +121,14 @@ function CustomTheme({
       <Stack sx={{ minHeight: '600px', justifyContent: 'center' }}>
         <ThemeProvider theme={getTheme(mode, config, selectedTheme)}>
           {selectedTheme === 'custom' || selectedTheme === 'default' ? (
-            <Card elevation={0} sx={{ padding: 0 }} variant="outlined">
+            <Card sx={{ padding: 0 }} variant="outlined">
               <CustomLayoutRangePicker layout={config.layout} />
             </Card>
           ) : (
-            <Card elevation={0} sx={{ padding: 0 }}>
+            <Card
+              elevation={0}
+              sx={{ padding: 0, boxShadow: '1px 2px 8px -1px rgba(0, 0, 0, 0.1)' }}
+            >
               <StaticDatePicker
                 defaultValue={dayjs('2022-04-17')}
                 slotProps={{ layout: { sx: { minWidth: 'initial' } } }}
@@ -196,6 +199,7 @@ export default function Customization() {
       <Divider />
       <Stack spacing={4} py={8} alignItems="center">
         <Stack gap={1} sx={{ maxWidth: { xs: '500px', md: '100%' }, width: '100%' }}>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body2" color="primary" fontWeight="semiBold" textAlign="center">
             Customization
           </Typography>
@@ -205,9 +209,11 @@ export default function Customization() {
             fontWeight="semiBold"
             color="text.primary"
             textAlign="center"
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Highly customizable components
           </Typography>
+          {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
           <Typography variant="body1" color="text.secondary" textAlign="center">
             Easily adaptable to any style, our components leverage Material Design for
             out-of-the-box elegance and support extensive customization to perfectly align with your
@@ -269,6 +275,7 @@ export default function Customization() {
             >
               {/* Theme */}
               <Stack spacing={1}>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Select Theme
                 </Typography>
@@ -282,9 +289,9 @@ export default function Customization() {
                   ]}
                 />
               </Stack>
-
               {/* Color */}
               <Stack spacing={1}>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <Typography variant="caption" color="text.secondary" gutterBottom>
                   Color
                 </Typography>
@@ -297,33 +304,60 @@ export default function Customization() {
                   }))}
                 />
               </Stack>
-
-              {/* Layout */}
-              {styleConfig.selectedTheme !== 'md3' && (
-                <Stack spacing={1}>
-                  <Typography variant="caption" color="text.secondary" gutterBottom>
-                    Layout
-                  </Typography>
-                  <ConfigToggleButtons
-                    selectedValue={styleConfig.layout}
-                    handleValueSwitch={handleChangeLayout}
-                    values={[
-                      {
-                        key: 'horizontal',
-                        icon: <AlignHorizontalLeftIcon fontSize="small" />,
-                      },
-                      {
-                        key: 'vertical',
-                        icon: <AlignVerticalBottomIcon fontSize="small" />,
-                      },
-                    ]}
-                  />
-                </Stack>
-              )}
-
+              {/* Typography */}
+              <Stack spacing={1}>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+                <Typography variant="caption" color="text.secondary" gutterBottom>
+                  Typography
+                </Typography>
+                <ConfigToggleButtons
+                  selectedValue={styleConfig.typography}
+                  handleValueSwitch={handleChangeTypography}
+                  values={[
+                    {
+                      key: 'default',
+                      label: 'Default',
+                    },
+                    {
+                      key: 'Inter',
+                      label: 'Inter',
+                    },
+                    {
+                      key: 'Menlo',
+                      label: 'Menlo',
+                    },
+                  ]}
+                />
+              </Stack>
+              {/* Density */}
+              <Stack spacing={1}>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+                <Typography variant="caption" color="text.secondary" gutterBottom>
+                  Density
+                </Typography>
+                <ConfigToggleButtons
+                  selectedValue={styleConfig.density}
+                  handleValueSwitch={handleChangeDensity}
+                  values={[
+                    {
+                      key: 'compact',
+                      icon: <DensitySmallIcon fontSize="small" />,
+                    },
+                    {
+                      key: 'medium',
+                      icon: <DensityMediumIcon fontSize="small" />,
+                    },
+                    {
+                      key: 'spacious',
+                      icon: <DensityLargeIcon fontSize="small" />,
+                    },
+                  ]}
+                />
+              </Stack>
               {/* Corners */}
               {styleConfig.selectedTheme !== 'default' && (
                 <Stack spacing={1}>
+                  {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                   <Typography variant="caption" color="text.secondary" gutterBottom>
                     Corners
                   </Typography>
@@ -347,55 +381,29 @@ export default function Customization() {
                   />
                 </Stack>
               )}
-
-              {/* Density */}
-              <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Density
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.density}
-                  handleValueSwitch={handleChangeDensity}
-                  values={[
-                    {
-                      key: 'compact',
-                      icon: <DensitySmallIcon fontSize="small" />,
-                    },
-                    {
-                      key: 'medium',
-                      icon: <DensityMediumIcon fontSize="small" />,
-                    },
-                    {
-                      key: 'spacious',
-                      icon: <DensityLargeIcon fontSize="small" />,
-                    },
-                  ]}
-                />
-              </Stack>
-              {/* Typography */}
-              <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary" gutterBottom>
-                  Typography
-                </Typography>
-                <ConfigToggleButtons
-                  selectedValue={styleConfig.typography}
-                  handleValueSwitch={handleChangeTypography}
-                  values={[
-                    {
-                      key: 'default',
-                      label: 'Default',
-                    },
-                    {
-                      key: 'Inter',
-                      label: 'Inter',
-                    },
-                    {
-                      key: 'Menlo',
-                      label: 'Menlo',
-                    },
-                  ]}
-                />
-              </Stack>
+              {/* Layout */}
+              {styleConfig.selectedTheme !== 'md3' && (
+                <Stack spacing={1}>
+                  {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
+                  <Typography variant="caption" color="text.secondary" gutterBottom>
+                    Layout
+                  </Typography>
+                  <ConfigToggleButtons
+                    selectedValue={styleConfig.layout}
+                    handleValueSwitch={handleChangeLayout}
+                    values={[
+                      {
+                        key: 'horizontal',
+                        icon: <AlignHorizontalLeftIcon fontSize="small" />,
+                      },
+                      {
+                        key: 'vertical',
+                        icon: <AlignVerticalBottomIcon fontSize="small" />,
+                      },
+                    ]}
+                  />
+                </Stack>
+              )}
             </Stack>
           </Stack>
         </Stack>

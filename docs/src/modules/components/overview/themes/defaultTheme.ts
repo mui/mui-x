@@ -65,6 +65,11 @@ export function getDefaultTheme(mode: PaletteMode, config: Config): ThemeOptions
       density,
     },
     components: {
+      MuiCard: {
+        styleOverrides: {
+          root: { boxShadow: '1px 2px 8px -1px rgba(0, 0, 0, 0.1)' },
+        },
+      },
       MuiPickersLayout: {
         styleOverrides: {
           shortcuts: ({ theme }) => ({

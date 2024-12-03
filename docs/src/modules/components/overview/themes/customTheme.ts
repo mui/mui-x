@@ -173,7 +173,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
               backgroundColor: theme.palette.background.paper,
               borderRadius: theme.shape.borderRadius,
               border: `1px solid ${alpha(theme.palette.grey[200], 0.5)}`,
-              boxShadow: 'none',
+              boxShadow: '1px 2px 8px -1px rgba(0, 0, 0, 0.1)',
               ...theme.applyStyles('dark', {
                 backgroundColor: theme.palette.grey[800],
                 border: `1px solid ${alpha(theme.palette.grey[700], 0.3)}`,
