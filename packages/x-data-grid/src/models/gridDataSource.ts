@@ -12,7 +12,7 @@ export interface GridGetRowsParams {
   /**
    * Alternate to `start` and `end`, maps to `GridPaginationModel` interface.
    */
-  paginationModel: GridPaginationModel;
+  paginationModel?: GridPaginationModel;
   /**
    * First row index to fetch (number) or cursor information (number | string).
    */
@@ -20,7 +20,7 @@ export interface GridGetRowsParams {
   /**
    * Last row index to fetch.
    */
-  end: number; // last row index to fetch
+  end: number;
   /**
    * List of grouped columns (only applicable with `rowGrouping`).
    */
