@@ -204,7 +204,18 @@ export const useGridVirtualScroller = () => {
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
-  const focusedVirtualCellBase = useGridSelector(
+
+  const rowIdToIndex = React.useMemo(
+    () => new Map(currentPage.rows.map((row, index) => [row.id, index])),
+    [currentPage.rows],
+  );
+
+  const columnFieldToIndex = React.useMemo(
+    () => new Map(visibleColumns.map((column, index) => [column.field, index])),
+    [visibleColumns],
+  );
+
+  const focusedVirtualCell = useGridSelector(
     apiRef,
     () => {
       const currentRenderContext = gridRenderContextSelector(apiRef);
@@ -213,42 +224,31 @@ export const useGridVirtualScroller = () => {
         return null;
       }
 
-      const rowIndex = currentPage.rows
-        .slice(currentRenderContext.firstRowIndex, currentRenderContext.lastRowIndex)
-        .findIndex((row) => row.id === focusedCell.id);
-      const columnIndex = visibleColumns
-        .slice(currentRenderContext.firstColumnIndex, currentRenderContext.lastColumnIndex)
-        .findIndex((column) => column.field === focusedCell.field);
+      const rowIndex = rowIdToIndex.get(focusedCell.id);
+      const columnIndex = columnFieldToIndex.get(focusedCell.field);
 
-      const isFocusedCellInContext = rowIndex !== -1 && columnIndex !== -1;
+      if (!rowIndex || !columnIndex) {
+        return null;
+      }
+
+      const isFocusedCellInContext =
+        rowIndex >= currentRenderContext.firstRowIndex &&
+        rowIndex <= currentRenderContext.lastRowIndex &&
+        columnIndex >= currentRenderContext.firstColumnIndex &&
+        columnIndex <= currentRenderContext.lastColumnIndex;
 
       if (isFocusedCellInContext) {
         return null;
       }
+
       return {
         ...focusedCell,
+        rowIndex,
+        columnIndex,
       };
     },
     objectShallowCompare,
   );
-
-  const focusedVirtualCell = React.useMemo(() => {
-    if (!focusedVirtualCellBase) return focusedVirtualCellBase;
-    const rowIndex = currentPage.rows.findIndex((row) => row.id === focusedVirtualCellBase.id);
-    const columnIndex = visibleColumns.findIndex(
-      (column) => column.field === focusedVirtualCellBase.field,
-    );
-
-    if (rowIndex === -1 || columnIndex === -1) {
-      return null;
-    }
-
-    return {
-      ...focusedVirtualCellBase,
-      rowIndex,
-      columnIndex,
-    };
-  }, [focusedVirtualCellBase, currentPage]);
 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
