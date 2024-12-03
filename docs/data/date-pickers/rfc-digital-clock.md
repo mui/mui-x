@@ -77,7 +77,7 @@ TODO
 
 ### Without Material UI
 
-The user can use the `useIs12HourCycleInCurrentLocale()` hook to know if the `ampm` should be enabled based on the current locale and build the UI accordingly:
+The user can use the `useIs12HourCycleInCurrentLocale()` hook to know if the meridiem should be enabled based on the current locale and build the UI accordingly:
 
 ```tsx
 function App(props) {
@@ -176,7 +176,53 @@ TODO
 
 ### Without Material UI
 
-TODO
+The `<DigitalClock.Hours />`, `<DigitalClock.HoursWithMeridiem />`, `<DigitalClock.Minutes />` and `<DigitalClock.Seconds />` components take a `step` prop that allow to customize the step between two consecutive options.
+By default, the step is of `1` for the hours and 5 for the minutes and seconds:
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue}>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions step={15}>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+</DigitalClock.Root>
+```
+
+```tsx
+<DigitalClock.Root value={value} onChange={setValue}>
+  <DigitalClock.HoursOptions>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.HoursOptions>
+  <DigitalClock.MinutesOptions step={1}>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+  <DigitalClock.MinutesOptions step={10}>
+    {({ options }) =>
+      options.map((option) => (
+        <DigitalClock.Option value={option} key={option.toString()} />
+      ))
+    }
+  </DigitalClock.MinutesOptions>
+</DigitalClock.Root>
+```
 
 ### With Material UI
 
