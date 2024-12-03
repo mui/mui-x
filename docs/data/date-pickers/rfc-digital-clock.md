@@ -183,19 +183,43 @@ That way, users only have to pass the props specific to the calendar to the `Dig
 
 :::
 
-### `DigitalClock.ContentForSingleSection`
+### `DigitalClock.Options`
 
 #### Props
 
 TODO
 
-### `DigitalClock.ContentForMultiSection`
+### `DigitalClock.HoursOptions`
 
 #### Props
 
 TODO
 
-### `DigitalClock.Item`
+### `DigitalClock.HoursWithMeridiemOptions`
+
+#### Props
+
+TODO
+
+### `DigitalClock.MeridiemOptions`
+
+#### Props
+
+TODO
+
+### `DigitalClock.MinutesOptions`
+
+#### Props
+
+TODO
+
+### `DigitalClock.SecondsOptions`
+
+#### Props
+
+TODO
+
+### `DigitalClock.Option`
 
 #### Props
 

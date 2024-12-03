@@ -15,7 +15,7 @@ This page extends the initial proposal made in [#15598](https://github.com/mui/m
 
 ### Without Material UI
 
-The user can use the `Calendar.Days.*` components to create a grid of days:
+The user can use the `<Calendar.Days />`, `<Calendar.DaysHeader />`, `<Calendar.DaysHeaderCell />`, `<Calendar.DaysContent />`, `<Calendar.DaysWeekRow />` and `<Calendar.DaysCell />` components to create a grid of days:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
@@ -26,26 +26,28 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
     <Calendar.FormattedValue format="MMMM YYYY" />
     <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
   </div>
-  <Calendar.Days.Root>
-    <Calendar.Days.Header>
+  <Calendar.Days>
+    <Calendar.DaysHeader>
       {({ days }) =>
-        days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
-      }
-    </Calendar.Days.Header>
-    <Calendar.Days.Content>
-      {({ weeks }) =>
-        weeks.map((week) => (
-          <Calendar.Days.WeekRow value={week}>
-            {({ days }) =>
-              days.map((day) => (
-                <Calendar.Days.Cell value={day} key={day.toString()} />
-              ))
-            }
-          </Calendar.Days.WeekRow>
+        days.map((day) => (
+          <Calendar.DaysHeaderCell value={day} key={day.toString()} />
         ))
       }
-    </Calendar.Days.Content>
-  </Calendar.Days.Root>
+    </Calendar.DaysHeader>
+    <Calendar.DaysContent>
+      {({ weeks }) =>
+        weeks.map((week) => (
+          <Calendar.DaysWeekRow value={week}>
+            {({ days }) =>
+              days.map((day) => (
+                <Calendar.DaysCell value={day} key={day.toString()} />
+              ))
+            }
+          </Calendar.DaysWeekRow>
+        ))
+      }
+    </Calendar.DaysContent>
+  </Calendar.Days>
 </Calendar.Root>;
 ```
 
@@ -67,7 +69,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 ### Without Material UI
 
-The user can use the `Calendar.Months.*` components to create a grid of months and the `Calendar.Header.*` to create a header to navigate across the years:
+The user can use the `<Calendar.Months />` and `<Calendar.MonthsCell />` components to create a grid of months and utility components like `<Calendar.GoToYear />` and `<Calendar.FormattedValue />` to create a header to navigate across the years:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
@@ -78,13 +80,13 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
     <Calendar.FormattedValue format="YYYY" />
     <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
   </div>
-  <Calendar.Months.Root>
+  <Calendar.Months>
     {({ months }) =>
       months.map((month) => (
-        <Calendar.Months.Cell value={month} key={month.toString()} />
+        <Calendar.MonthsCell value={month} key={month.toString()} />
       ))
     }
-  </Calendar.Months.Root>
+  </Calendar.Months>
 </Calendar.Root>;
 ```
 
@@ -111,17 +113,17 @@ Once the `Calendar.*` unstyled component is ready, the `<MonthCalendar />` shoul
 
 ### Without Material UI
 
-The user can use the `Calendar.Years.*` components to create a grid of years:
+The user can use the `<Calendar.Years />` and `<Calendar.YearsCell />` components to create a grid of years:
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
-  <Calendar.Years.Root>
+  <Calendar.Years>
     {({ years }) =>
-      years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
+      years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
     }
-  </Calendar.Years.Root>
+  </Calendar.Years>
 </Calendar.Root>;
 ```
 
@@ -153,38 +155,40 @@ import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 <Calendar.Root value={value} onChange={setValue}>
   <div>{/** See calendar header documentation */}</div>
-  <Calendar.Days.Root>
-    <Calendar.Days.Header>
+  <Calendar.Days>
+    <Calendar.DaysHeader>
       {({ days }) =>
-        days.map((day) => <Calendar.Days.Label value={day} key={day.toString()} />)
-      }
-    </Calendar.Days.Header>
-    <Calendar.Days.Content>
-      {({ weeks }) =>
-        weeks.map((week) => (
-          <Calendar.Days.WeekRow value={week} key={week.toString()}>
-            {({ days }) =>
-              days.map((day) => (
-                <Calendar.Days.Cell value={day} key={day.toString()} />
-              ))
-            }
-          </Calendar.Days.WeekRow>
+        days.map((day) => (
+          <Calendar.DaysHeaderCell value={day} key={day.toString()} />
         ))
       }
-    </Calendar.Days.Content>
-  </Calendar.Days.Root>
-  <Calendar.Months.Root>
+    </Calendar.DaysHeader>
+    <Calendar.DaysContent>
+      {({ weeks }) =>
+        weeks.map((week) => (
+          <Calendar.DaysWeekRow value={week} key={week.toString()}>
+            {({ days }) =>
+              days.map((day) => (
+                <Calendar.DaysCell value={day} key={day.toString()} />
+              ))
+            }
+          </Calendar.DaysWeekRow>
+        ))
+      }
+    </Calendar.DaysContent>
+  </Calendar.Days>
+  <Calendar.Months>
     {({ months }) =>
       months.map((month) => (
-        <Calendar.Months.Cell value={month} key={month.toString()} />
+        <Calendar.MonthsCell value={month} key={month.toString()} />
       ))
     }
-  </Calendar.Months.Root>
-  <Calendar.Years.Root>
+  </Calendar.Months>
+  <Calendar.Years>
     {({ years }) =>
-      years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
+      years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
     }
-  </Calendar.Years.Root>
+  </Calendar.Years>
 </Calendar.Root>;
 ```
 
@@ -309,25 +313,25 @@ function CalendarHeader() {
       <Menu.Root>
         <Calendar.FormattedValue format="MMMM" render={<Menu.Trigger />} />
         <Menu.Positioner>
-          <Calendar.Months.Root alwaysVisible render={<Menu.Popup />}>
+          <Calendar.Months alwaysVisible render={<Menu.Popup />}>
             {({ months }) =>
               months.map((month) => (
-                <Calendar.Months.Cell value={month} key={month.toString()} />
+                <Calendar.MonthsCell value={month} key={month.toString()} />
               ))
             }
-          </Calendar.Months.Root>
+          </Calendar.Months>
         </Menu.Positioner>
       </Menu.Root>
       <Menu.Root>
         <Calendar.FormattedValue format="YYYY" render={<Menu.Trigger />} />
         <Menu.Positioner>
-          <Calendar.Months.Root alwaysVisible render={<Menu.Popup />}>
+          <Calendar.Months alwaysVisible render={<Menu.Popup />}>
             {({ years }) =>
               years.map((year) => (
-                <Calendar.Months.Cell value={year} key={year.toString()} />
+                <Calendar.MonthsCell value={year} key={year.toString()} />
               ))
             }
-          </Calendar.Months.Root>
+          </Calendar.Months>
         </Menu.Positioner>
       </Menu.Root>
     </div>
@@ -462,37 +466,37 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
 
 ### Without Material UI
 
-The user can use the `<Calendar.Days.WeekNumberHeaderCell />` and `<Calendar.Days.WeekNumberCell />` components to add a column to the grid:
+The user can use the `<Calendar.DaysWeekNumberHeaderCell />` and `<Calendar.DaysWeekNumberCell />` components to add a column to the grid:
 
 ```tsx
-<Calendar.Days.Root>
-  <Calendar.Days.Header>
+<Calendar.Days>
+  <Calendar.DaysHeader>
     {({ days }) => (
       <React.Fragment>
-        <Calendar.Days.WeekNumberHeaderCell>#</Calendar.Days.WeekNumberHeaderCell>
+        <Calendar.DaysWeekNumberHeaderCell>#</Calendar.DaysWeekNumberHeaderCell>
         {days.map((day) => (
-          <Calendar.Days.Label value={day} key={day.toString()} />
+          <Calendar.DaysHeaderCell value={day} key={day.toString()} />
         ))}
       </React.Fragment>
     )}
-  </Calendar.Days.Header>
-  <Calendar.Days.Content>
+  </Calendar.DaysHeader>
+  <Calendar.DaysContent>
     {({ weeks }) =>
       weeks.map((week) => (
-        <Calendar.Days.WeekRow value={week} key={week.toString()}>
+        <Calendar.DaysWeekRow value={week} key={week.toString()}>
           {({ days }) => (
             <React.Fragment>
-              <Calendar.Days.WeekNumberCell />
+              <Calendar.DaysWeekNumberCell />
               {days.map((day) => (
-                <Calendar.Days.Cell value={day} key={day.toString()} />
+                <Calendar.DaysCell value={day} key={day.toString()} />
               ))}
             </React.Fragment>
           )}
-        </Calendar.Days.WeekRow>
+        </Calendar.DaysWeekRow>
       ))
     }
-  </Calendar.Days.Content>
-</Calendar.Days.Root>
+  </Calendar.DaysContent>
+</Calendar.Days>
 ```
 
 ### With Material UI
@@ -545,9 +549,7 @@ That way, users only have to pass the props specific to the calendar to the `Cal
   <Popover.Positioner>
     <Popover.Popup>
       <Calendar.Root>
-        <Calendar.Days.Root fixedWeekNumber={6}>
-          {/** See demo above */}
-        </Calendar.Days.Root>
+        <Calendar.Days fixedWeekNumber={6}>{/** See demo above */}</Calendar.Days>
       </Calendar.Root>
     </Popover.Popup>
   </Popover.Positioner>
@@ -640,9 +642,9 @@ Renders a button to set the current visible view.
 
 - `target`: `TView`
 
-### `Calendar.Days.Root`
+### `Calendar.Days`
 
-Top level component for the `Calendar.Days.*` components.
+Top level component for the `"day"` view.
 
 #### Props
 
@@ -650,18 +652,18 @@ Top level component for the `Calendar.Days.*` components.
 
 - `fixedWeekNumber`: `number`
 
-### `Calendar.Days.Header`
+### `Calendar.DaysHeader`
 
 Renders the header of the day grid.
 
 It expects a function as its children, which receives the list of days to render as a parameter:
 
 ```tsx
-<Calendar.Days.Header>
+<Calendar.DaysHeader>
   {({ days }) =>
-    days.map((day) => <Calendar.Days.HeaderCell value={day} key={day.toString()} />)
+    days.map((day) => <Calendar.DaysHeaderCell value={day} key={day.toString()} />)
   }
-</Calendar.Days.Header>
+</Calendar.DaysHeader>
 ```
 
 #### Props
@@ -670,7 +672,7 @@ It expects a function as its children, which receives the list of days to render
 
 - `children`: `(params: { days: PickerValidDate[] }) => React.ReactNode`
 
-### `Calendar.Days.HeaderCell`
+### `Calendar.DaysHeaderCell`
 
 Renders the header of a day in the week.
 
@@ -680,7 +682,7 @@ Renders the header of a day in the week.
 
 - `value`: `PickerValidDate` - **required**.
 
-### `Calendar.Days.WeekNumberHeaderCell`
+### `Calendar.DaysWeekNumberHeaderCell`
 
 Renders the header of the week number column.
 
@@ -688,18 +690,18 @@ Renders the header of the week number column.
 
 - Extends `React.HTMLAttributes<HTMLSpanElement>`
 
-### `Calendar.Days.Content`
+### `Calendar.DaysContent`
 
 Renders the content all the days in a month (it is the DOM element that should contain all the weeks).
 
 It expects a function as its children, which receives the list of weeks to render as a parameter:
 
 ```tsx
-<Calendar.Days.Content>
+<Calendar.DaysContent>
   {({ weeks }) =>
-    weeks.map((week) => <Calendar.Days.WeekRow value={week} key={week.toString()} />)
+    weeks.map((week) => <Calendar.DaysWeekRow value={week} key={week.toString()} />)
   }
-</Calendar.Days.Content>
+</Calendar.DaysContent>
 ```
 
 :::success
@@ -712,18 +714,18 @@ Maybe it should be named `<Calendar.Days.Grid />`.
 
 - `children`: `(params: { weeks: PickerValidDate[] }) => React.ReactNode`
 
-### `Calendar.Days.WeekRow`
+### `Calendar.DaysWeekRow`
 
 Renders the content all the days in a week.
 
 It expects a function as its children, which receives the list of days to render and the week number as a parameter:
 
 ```tsx
-<Calendar.Days.WeekRow>
+<Calendar.DaysWeekRow>
   {({ days }) =>
-    days.map((day) => <Calendar.Days.Cell value={day} key={day.toString()} />)
+    days.map((day) => <Calendar.DaysCell value={day} key={day.toString()} />)
   }
-</Calendar.Days.WeekRow>
+</Calendar.DaysWeekRow>
 ```
 
 #### Props
@@ -734,7 +736,7 @@ It expects a function as its children, which receives the list of days to render
 
 - `children`: `(params: { days: PickerValidDate[], week: PickerValidDate }) => React.ReactNode`
 
-### `Calendar.Days.Cell`
+### `Calendar.DaysCell`
 
 Renders the cell for a single day.
 
@@ -744,26 +746,26 @@ Renders the cell for a single day.
 
 - `value`: `PickerValidDate` - **required**
 
-### `Calendar.Days.WeekNumberCell`
+### `Calendar.DaysWeekNumberCell`
 
 Renders the number of the current week.
 
 - Extends `React.HTMLAttributes<HTMLParagraphElement>`
 
-### `Calendar.Months.Root`
+### `Calendar.Months`
 
-Top level component for the `Calendar.Months.*` components.
+Top level component for the `"month"` view.
 
 It expects a function as its children, which receives the list of the months to render as a parameter:
 
 ```tsx
-<Calendar.Months.Root>
+<Calendar.Months>
   {({ months }) =>
     months.map((month) => (
-      <Calendar.Months.Cell value={month} key={month.toString()} />
+      <Calendar.MonthsCell value={month} key={month.toString()} />
     ))
   }
-</Calendar.Months.Root>
+</Calendar.Months>
 ```
 
 #### Props
@@ -801,7 +803,7 @@ It expects a function as its children, which receives the list of the months to 
 
 - `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"month"`.
 
-### `Calendar.Months.Cell`
+### `Calendar.MonthsCell`
 
 Renders the cell for a single month.
 
@@ -811,18 +813,18 @@ Renders the cell for a single month.
 
 - `value`: `PickerValidDate` - **required**.
 
-### `Calendar.Years.Root`
+### `Calendar.Years`
 
-Top level component for the `Calendar.Years.*` components.
+Top level component for the `"year"` view.
 
 It expects a function as its children, which receives the list of years to render as a parameter:
 
 ```tsx
-<Calendar.Years.Root>
+<Calendar.Years>
   {({ years }) =>
-    years.map((year) => <Calendar.Years.Cell value={year} key={year.toString()} />)
+    years.map((year) => <Calendar.YearsCell value={year} key={year.toString()} />)
   }
-</Calendar.Years.Root>
+</Calendar.Years>
 ```
 
 #### Props
@@ -837,12 +839,12 @@ It expects a function as its children, which receives the list of years to rende
 
   :::success
   The `yearsPerRow` prop is needed to have a working keyboard navigation.
-  See the equivalent prop in `Calendar.Months.Root` for more details.
+  See the equivalent prop in `Calendar.Months` for more details.
   :::
 
 - `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"year"`.
 
-### `Calendar.Years.Cell`
+### `Calendar.YearsCell`
 
 Renders the cell for a single year.
 
