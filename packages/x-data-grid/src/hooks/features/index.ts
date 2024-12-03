@@ -7,6 +7,7 @@ export * from './density';
 export * from './editing';
 export * from './filter';
 export * from './focus';
+export * from './listView';
 export * from './pagination';
 export * from './preferencesPanel';
 export * from './rows';

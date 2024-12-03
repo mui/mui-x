@@ -13,6 +13,9 @@ function sleep(timeoutMS: number | undefined) {
 
 const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 
+// Tests that need a longer timeout.
+const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
+
 const isConsoleWarningIgnored = (msg?: string) => {
   if (
     msg &&
@@ -31,8 +34,11 @@ async function main() {
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
-    args: ['--font-render-hinting=none'],
-    // otherwise the loaded google Roboto font isn't applied
+    args: [
+      // We could add the hide-scrollbars flag, which should improve argos
+      // flaky tests based on the scrollbars.
+      // '--hide-scrollbars',
+    ],
     headless: false,
   });
   // reuse viewport from `vrtest`
@@ -111,6 +117,10 @@ async function main() {
       const pathURL = route.replace(baseUrl, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
+        // Move cursor offscreen to not trigger unwanted hover effects.
+        // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
+        await page.mouse.move(0, 0);
+
         // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
         if (process.env.PWDEBUG) {
           this.timeout(0);
@@ -129,8 +139,6 @@ async function main() {
           await page.reload();
           await navigateToTest(index + 1);
         }
-        // Move cursor offscreen to not trigger unwanted hover effects.
-        await page.mouse.move(0, 0);
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
@@ -160,8 +168,12 @@ async function main() {
           await sleep(10);
         }
 
-        // Wait for the page to settle before taking the screenshot.
-        await page.waitForLoadState('domcontentloaded');
+        if (timeSensitiveSuites.some((suite) => pathURL.includes(suite))) {
+          await sleep(100);
+        }
+
+        // Wait for the page to settle after taking the screenshot.
+        await page.waitForLoadState();
 
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });

@@ -52,6 +52,7 @@ import {
   PickersFilledInputProps,
 } from '../PickersTextField';
 import { PickersSectionListProps } from '../PickersSectionList';
+import { PickerValidValue } from '../internals/models';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps;
@@ -77,10 +78,10 @@ export interface PickersComponentsPropsList {
   MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<unknown, DateOrTimeView>;
+  MuiPickersToolbar: PickersToolbarProps<PickerValidValue, DateOrTimeView>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
-  MuiPickersLayout: PickersLayoutProps<unknown, DateOrTimeView>;
+  MuiPickersLayout: PickersLayoutProps<PickerValidValue, DateOrTimeView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps;
   MuiTimeField: TimeFieldProps<any>;

@@ -17,7 +17,7 @@ function CustomToolbar({ setFilterButtonEl }) {
 }
 
 export default function CustomFilterPanelPosition() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -29,16 +29,13 @@ export default function CustomFilterPanelPosition() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        slots={{
-          toolbar: CustomToolbar,
-        }}
+        loading={loading}
+        slots={{ toolbar: CustomToolbar }}
         slotProps={{
           panel: {
             anchorEl: filterButtonEl,
           },
-          toolbar: {
-            setFilterButtonEl,
-          },
+          toolbar: { setFilterButtonEl },
         }}
       />
     </div>

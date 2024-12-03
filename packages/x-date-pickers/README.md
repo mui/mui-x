@@ -20,13 +20,16 @@ The pickers currently support the following date libraries:
 - [Moment.js](https://momentjs.com/)
 
 ```bash
-// date-fns
+# date-fns
 npm install date-fns
-// or dayjs
+
+# or dayjs
 npm install dayjs
-// or luxon
+
+# or luxon
 npm install luxon
-// or moment
+
+# or moment
 npm install moment
 ```
 
@@ -35,8 +38,8 @@ This component has the following peer dependencies that you need to install as w
 ```json
 "peerDependencies": {
   "@mui/material": "^5.15.14 || ^6.0.0",
-  "react": "^17.0.0 || ^18.0.0",
-  "react-dom": "^17.0.0 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 },
 ```
 

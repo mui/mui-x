@@ -221,6 +221,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     name: 'DateRangeCalendar',
     timezone: timezoneProp,
     value: valueProp,
+    referenceDate,
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
@@ -264,6 +265,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
         rangePosition,
         allowRangeFlip,
         shouldMergeDateAndTime: true,
+        referenceDate,
       });
 
       const isNextSectionAvailable = availableRangePositions.includes(nextSelection);

@@ -31,6 +31,17 @@ const nbNOGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Søk',
   toolbarQuickFilterDeleteIconLabel: 'Slett',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksporter',
   toolbarExportLabel: 'Eksporter',
@@ -43,6 +54,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Ingen kolonner',
   columnsManagementShowHideAllText: 'Vis/skjul alle',
   columnsManagementReset: 'Nullstill',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',

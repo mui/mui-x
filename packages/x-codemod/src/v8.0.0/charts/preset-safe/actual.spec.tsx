@@ -3,6 +3,7 @@ import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 
 // prettier-ignore
 <div>
@@ -11,4 +12,17 @@ import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer
   <ResponsiveChartContainer>
     <BarPlot />
   </ResponsiveChartContainer>
+  <ChartsXAxis labelFontSize={18} tickFontSize={20} />
+  <ChartsXAxis
+    labelFontSize={18}
+    tickFontSize={20}
+    labelStyle={{ fontWeight: 'bold' }}
+    tickStyle={{ fontWeight: 'bold' }}
+  />
+  <ChartsXAxis
+    labelFontSize={18}
+    tickFontSize={20}
+    labelStyle={{ fontWeight: 'bold', fontSize: 10 }}
+    tickStyle={{ fontWeight: 'bold', fontSize: 12 }}
+  />
 </div>;

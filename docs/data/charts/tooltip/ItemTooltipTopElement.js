@@ -4,7 +4,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 function usePointer() {
   const svgRef = useSvgRef();
@@ -51,7 +50,7 @@ function usePointer() {
   return pointer;
 }
 
-export function ItemTooltipTopElement() {
+export function ItemTooltipTopElement({ children }) {
   const tooltipData = useItemTooltip();
   const { isActive } = usePointer();
   // Get xAxis config to access its data array.
@@ -73,7 +72,8 @@ export function ItemTooltipTopElement() {
   if (
     tooltipData.identifier.type !== 'bar' ||
     tooltipData.identifier.dataIndex === undefined ||
-    tooltipData.value === null
+    tooltipData.value === null ||
+    svgRef.current === null
   ) {
     // This demo is only about bar charts
     return null;
@@ -115,7 +115,7 @@ export function ItemTooltipTopElement() {
           }),
         }}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

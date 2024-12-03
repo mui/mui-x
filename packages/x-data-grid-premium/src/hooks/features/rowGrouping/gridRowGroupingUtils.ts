@@ -19,6 +19,7 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   getRowGroupingCriteriaFromGroupingField,
   isGroupingColumn,
+  GridStrategyGroup,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -211,7 +212,7 @@ export const setStrategyAvailability = (
 
   const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
 
-  privateApiRef.current.setStrategyAvailability('rowTree', strategy, isAvailable);
+  privateApiRef.current.setStrategyAvailability(GridStrategyGroup.RowTree, strategy, isAvailable);
 };
 
 export const getCellGroupingCriteria = ({
