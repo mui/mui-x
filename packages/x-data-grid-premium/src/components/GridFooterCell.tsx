@@ -13,7 +13,7 @@ const GridFooterCellRoot = styled('div', {
   overridesResolver: (_, styles) => styles.footerCell,
 })<{ ownerState: OwnerState }>({
   fontWeight: vars.typography.fontWeight.medium,
-  color: 'red', // FIXME: (theme.vars || theme).palette.primary.dark,
+  color: vars.colors.foreground.accent,
 });
 
 interface GridFooterCellProps extends GridRenderCellParams {

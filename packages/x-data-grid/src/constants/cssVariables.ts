@@ -32,6 +32,7 @@ export const vars = {
     foreground: {
       base: '--DataGrid-t-colors-foreground-base',
       muted: '--DataGrid-t-colors-foreground-muted',
+      accent: '--DataGrid-t-colors-foreground-accent',
       disabled: '--DataGrid-t-colors-foreground-disabled',
     },
     background: {

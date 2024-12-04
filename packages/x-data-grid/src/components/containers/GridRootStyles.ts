@@ -145,7 +145,6 @@ export const GridRootStyles = styled('div', {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const borderColor = getBorderColor(t);
-  const radius = t.shape.borderRadius;
 
   const containerBackground = t.vars
     ? t.vars.palette.background.default
@@ -217,8 +216,8 @@ export const GridRootStyles = styled('div', {
   const gridStyle: CSSInterpolation = {
     ...transformMaterialUITheme(t),
 
-    '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
-    '--unstable_DataGrid-headWeight': t.typography.fontWeightMedium,
+    '--unstable_DataGrid-radius': `var(${vars.radius.base})`,
+    '--unstable_DataGrid-headWeight': `var(${vars.typography.fontWeight.medium})`,
     '--unstable_DataGrid-overlayBackground': overlayBackground,
 
     '--DataGrid-containerBackground': containerBackground,
@@ -783,6 +782,7 @@ function transformMaterialUITheme(t: Theme) {
     [vars.colors.background.overlay]: t.palette.background.paper,
     [vars.colors.foreground.base]: t.palette.text.primary,
     [vars.colors.foreground.muted]: t.palette.text.secondary,
+    [vars.colors.foreground.accent]: t.palette.primary.dark,
     [vars.colors.foreground.disabled]: t.palette.text.disabled,
     [vars.colors.interactive.hover]: t.palette.action.hover,
     [vars.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
@@ -794,7 +794,8 @@ function transformMaterialUITheme(t: Theme) {
     [vars.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
     [vars.colors.border.base]: t.palette.divider,
 
-    [vars.radius.base]: t.shape.borderRadius,
+    [vars.radius.base]:
+      typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,
 
     [vars.typography.fontFamily.base]: t.typography.fontFamily,
     [vars.typography.fontWeight.light]: t.typography.fontWeightLight,
