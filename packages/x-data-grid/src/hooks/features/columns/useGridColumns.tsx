@@ -396,6 +396,12 @@ export function useGridColumns(
   ) => {
     if (prevInnerWidth.current !== viewportInnerSize.width) {
       prevInnerWidth.current = viewportInnerSize.width;
+
+      const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
+        (col) => col.flex && col.flex > 0,
+      );
+      if (!hasFlexColumns) return;
+
       setGridColumnsState(
         hydrateColumnsWidth(
           gridColumnsStateSelector(apiRef.current.state),
