@@ -3,6 +3,7 @@ import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 import { PickerOrientation, PickerVariant } from '../models';
+import { UsePickerValueContextValue } from '../hooks/usePicker/usePickerValue.types';
 
 export const PickerContext = React.createContext<PickerContextValue | null>(null);
 
@@ -43,21 +44,7 @@ export interface PickerProviderProps {
   children: React.ReactNode;
 }
 
-export interface PickerContextValue {
-  /**
-   * Open the picker.
-   * @param {React.UIEvent} event The DOM event that triggered the change.
-   */
-  onOpen: (event: React.UIEvent) => void;
-  /**
-   * Close the picker.
-   * @param {React.UIEvent} event The DOM event that triggered the change.
-   */
-  onClose: (event: React.UIEvent) => void;
-  /**
-   * `true` if the picker is open, `false` otherwise.
-   */
-  open: boolean;
+export interface PickerContextValue extends UsePickerValueContextValue {
   /**
    * `true` if the picker is disabled, `false` otherwise.
    */
