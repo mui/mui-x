@@ -51,7 +51,6 @@ export const useGridRowsMeta = (
     | 'pagination'
     | 'paginationMode'
     | 'rowHeight'
-    | 'rowPositionsDebounceMs'
   >,
 ): void => {
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;

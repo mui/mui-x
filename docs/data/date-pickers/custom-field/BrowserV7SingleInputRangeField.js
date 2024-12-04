@@ -87,13 +87,6 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...other } = props;
 
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   const textFieldProps = useSlotProps({
     elementType: 'input',
@@ -106,7 +99,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ...textFieldProps.InputProps,
     endAdornment: (
       <InputAdornment position="end">
-        <IconButton onClick={handleTogglePicker}>
+        <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
           <DateRangeIcon />
         </IconButton>
       </InputAdornment>
