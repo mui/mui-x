@@ -38,11 +38,20 @@ Below are described the steps you need to make to migrate from v7 to v8.
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
   To revert to the previous behavior, pass `rowSelectionPropagation={{ parents: false, descendants: false }}`.
 - The prop `indeterminateCheckboxAction` has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 
 ### Changes to the public API
 
 - The `apiRef.current.resize()` method was removed.
 - The `<GridOverlays />` component is not exported anymore.
+- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
+
+  ```diff
+  -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  -const rowId = idToIdLookup[id]
+  +const rowsLookup = gridRowsLookupSelector(apiRef);
+  +const rowId = apiRef.current.getRowId(rowsLookup[id]);
+  ```
 
 ### Localization
 
