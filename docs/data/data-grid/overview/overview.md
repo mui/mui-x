@@ -7,7 +7,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 # MUI X Data Grid
 
-<p class="description">A fast and extendable React data table and React data grid. It's a feature-rich component available with MIT or commercial licenses.</p>
+<p class="description">A fast and extensible React data table and React data grid, with filtering, sorting, aggregation, and more.</p>
 
 The Data Grid component is built with React and TypeScript to provide a smooth UX for manipulating an unlimited set of data.
 It features an intuitive API for real-time updates as well as theming and custom templates—all with blazing-fast performance.
