@@ -270,8 +270,6 @@ export function useGridDimensions(
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
     }
-
-    apiRef.current.updateRenderContext?.();
   }, [
     apiRef,
     setDimensions,
@@ -309,9 +307,11 @@ export function useGridDimensions(
 
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {
-    if (!root) {
+    if (!root || !dimensionsState.isReady) {
       return;
     }
+    apiRef.current.updateRenderContext?.();
+
     const set = (k: string, v: string) => root.style.setProperty(k, v);
     set('--DataGrid-width', `${dimensionsState.viewportOuterSize.width}px`);
     set('--DataGrid-hasScrollX', `${Number(dimensionsState.hasScrollX)}`);

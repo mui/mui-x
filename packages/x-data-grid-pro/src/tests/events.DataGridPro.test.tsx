@@ -329,7 +329,7 @@ describe('<DataGridPro /> - Events params', () => {
     });
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test() {
+  it('lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled', function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -344,15 +344,44 @@ describe('<DataGridPro /> - Events params', () => {
         rowCount={50}
       />,
     );
+    expect(handleFetchRows.callCount).to.equal(1);
+    console.log();
+    expect(handleFetchRows.lastCall.firstArg).to.contain({
+      firstRowToRender: 3,
+      lastRowToRender: 50,
+    });
+  });
+
+  it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    const handleFetchRows = spy();
+    render(
+      <TestEvents
+        onFetchRows={handleFetchRows}
+        sortingMode="server"
+        filterMode="server"
+        rowsLoadingMode="server"
+        paginationMode="server"
+        rowCount={50}
+      />,
+    );
+    // Since rowheight < viewport height, onmount calls fetchRows directly
+    expect(handleFetchRows.callCount).to.equal(1);
     act(() => {
       apiRef.current.publishEvent('renderedRowsIntervalChange', {
         firstRowIndex: 3,
-        lastRowIndex: 6,
+        lastRowIndex: 10,
         firstColumnIndex: 0,
         lastColumnIndex: 0,
       });
     });
-    expect(handleFetchRows.callCount).to.equal(1);
+    expect(handleFetchRows.callCount).to.equal(2);
+    expect(handleFetchRows.lastCall.firstArg).to.contain({
+      firstRowToRender: 3,
+      lastRowToRender: 10,
+    });
   });
 
   it('should publish "unmount" event when unmounting the Grid', () => {
