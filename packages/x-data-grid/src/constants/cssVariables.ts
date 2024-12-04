@@ -1,8 +1,10 @@
 const spacingUnit = '--DataGrid-t-spacing-unit';
 
+// NOTE: Breakpoints can't come from the theme because we need access to them at
+// initialization time and media-queries can't use CSS variables. For users with
+// custom breakpoints, we might want to provide a way to configure them globally
+// instead of through the theme.
 const breakpoints = {
-  // These come from material-ui, they can't be configured by the theme.
-  // We might want to provide an option to configure them globally.
   values: {
     xs: 0, // phone
     sm: 600, // tablet
@@ -19,6 +21,7 @@ const breakpoints = {
 
 export const vars = {
   /* Helpers */
+  /** @usage `...vars.props(vars.typography.body)` */
   props,
   breakpoints,
   spacing,
