@@ -400,7 +400,9 @@ export function useGridColumns(
       const hasFlexColumns = gridVisibleColumnDefinitionsSelector(apiRef).some(
         (col) => col.flex && col.flex > 0,
       );
-      if (!hasFlexColumns) return;
+      if (!hasFlexColumns) {
+        return;
+      }
 
       setGridColumnsState(
         hydrateColumnsWidth(
