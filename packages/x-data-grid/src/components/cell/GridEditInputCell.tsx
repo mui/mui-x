@@ -28,7 +28,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
 })<{ ownerState: OwnerState }>({
-  ...vars.props(vars.typography.body),
+  ...vars.typography.body,
   padding: '1px 0',
   '& input': {
     padding: '0 16px',

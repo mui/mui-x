@@ -1,4 +1,3 @@
-const spacingUnit = '--DataGrid-t-spacing-unit';
 
 // NOTE: Breakpoints can't come from the theme because we need access to them at
 // initialization time and media-queries can't use CSS variables. For users with
@@ -19,13 +18,8 @@ const breakpoints = {
   },
 };
 
-export const vars = {
-  /* Helpers */
-  /** @usage `...vars.props(vars.typography.body)` */
-  props,
-  breakpoints,
-  spacing,
-  spacingUnit,
+const keys = {
+  spacingUnit: '--DataGrid-t-spacing-unit',
 
   /* Variables */
   colors: {
@@ -103,6 +97,15 @@ export const vars = {
   },
 };
 
+const values = wrap(keys);
+
+export const vars = {
+  breakpoints,
+  spacing,
+  keys,
+  ...values,
+};
+
 function spacing(a?: number, b?: number, c?: number, d?: number) {
   /* eslint-disable prefer-template */
   if (a === undefined) {
@@ -130,10 +133,13 @@ function spacingString(value: number) {
   return `calc(var(--DataGrid-t-spacing-unit) * ${value})`;
 }
 
-function props(input: Record<string, string>) {
-  const result = {} as Record<string, string>;
-  for (const key in input) {
-    result[key] = `var(${input[key]})`;
+function wrap<T>(input: T): T {
+  if (typeof input === 'string') {
+    return `var(${input})` as any;
+  }
+  const result = {} as any;
+  for (const key in (input as any)) {
+    result[key] = wrap((input as any)[key])
   }
   return result;
 }

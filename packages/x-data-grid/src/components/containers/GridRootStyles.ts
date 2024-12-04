@@ -134,13 +134,13 @@ export const GridRootStyles = styled('div', {
   const apiRef = useGridPrivateApiContext();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
-  const baseBackground = `var(${vars.colors.background.base})`;
-  const pinnedBackground = `var(${vars.colors.background.pinned})`;
+  const baseBackground = vars.colors.background.base;
+  const pinnedBackground = vars.colors.background.pinned;
 
-  const hoverColor = `var(${vars.colors.interactive.hover})`;
-  const hoverOpacity = `var(${vars.colors.interactive.hoverOpacity})`;
-  const selectedColor = `var(${vars.colors.interactive.selected})`;
-  const selectedOpacity = `var(${vars.colors.interactive.selectedOpacity})`;
+  const hoverColor = vars.colors.interactive.hover;
+  const hoverOpacity = vars.colors.interactive.hoverOpacity;
+  const selectedColor = vars.colors.interactive.selected;
+  const selectedOpacity = vars.colors.interactive.selectedOpacity;
   const selectedHoverColor = selectedColor;
   const selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`;
 
@@ -186,10 +186,10 @@ export const GridRootStyles = styled('div', {
   const gridStyle: CSSInterpolation = {
     ...transformMaterialUITheme(t),
 
-    '--unstable_DataGrid-radius': `var(${vars.radius.base})`,
-    '--unstable_DataGrid-headWeight': `var(${vars.typography.fontWeight.medium})`,
+    '--unstable_DataGrid-radius': vars.radius.base,
+    '--unstable_DataGrid-headWeight': vars.typography.fontWeight.medium,
 
-    '--DataGrid-rowBorderColor': `var(${vars.colors.border.base})`,
+    '--DataGrid-rowBorderColor': vars.colors.border.base,
 
     '--DataGrid-cellOffsetMultiplier': 2,
     '--DataGrid-width': '0px',
@@ -210,10 +210,10 @@ export const GridRootStyles = styled('div', {
     position: 'relative',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: `var(${vars.colors.border.base})`,
+    borderColor: vars.colors.border.base,
     borderRadius: 'var(--unstable_DataGrid-radius)',
-    color: `var(${vars.colors.foreground.base})`,
-    ...vars.props(vars.typography.body),
+    color: vars.colors.foreground.base,
+    ...vars.typography.body,
     outline: 'none',
     height: '100%',
     display: 'flex',
@@ -376,7 +376,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 4, // Should be above the column separator
-      background: `var(${vars.colors.background.pinned})`,
+      background: vars.colors.background.pinned,
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -387,7 +387,7 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       alignItems: 'center',
       maxWidth: columnSeparatorTargetSize,
-      color: `var(${vars.colors.border.base})`,
+      color: vars.colors.border.base,
     },
     [`& .${c.columnHeaders}`]: {
       width: 'var(--DataGrid-rowWidth)',
@@ -403,7 +403,7 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
-          color: `var(${vars.colors.foreground.accent})`,
+          color: vars.colors.foreground.accent,
         },
       },
     },
@@ -423,7 +423,7 @@ export const GridRootStyles = styled('div', {
       cursor: 'col-resize',
       touchAction: 'none',
       [`&.${c['columnSeparator--resizing']}`]: {
-        color: `var(${vars.colors.foreground.accent})`,
+        color: vars.colors.foreground.accent,
       },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
@@ -431,7 +431,7 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         '&:hover': {
-          color: `var(${vars.colors.foreground.accent})`,
+          color: vars.colors.foreground.accent,
           [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
@@ -501,7 +501,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
       '[role=row]': {
-        background: `var(${vars.colors.background.base})`,
+        background: vars.colors.background.base,
       },
     },
 
@@ -547,9 +547,9 @@ export const GridRootStyles = styled('div', {
       padding: 1,
       display: 'flex',
       boxShadow: t.shadows[2],
-      backgroundColor: `var(${vars.colors.background.overlay})`,
+      backgroundColor: vars.colors.background.overlay,
       '&:focus-within': {
-        outline: `${focusOutlineWidth}px solid var(${vars.colors.foreground.accent})}`,
+        outline: `${focusOutlineWidth}px solid ${vars.colors.foreground.accent}}`,
         outlineOffset: focusOutlineWidth * -1,
       },
     },
@@ -558,7 +558,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['row--editing']} .${c.cell}`]: {
       boxShadow: t.shadows[0],
-      backgroundColor: `var(${vars.colors.background.overlay})`,
+      backgroundColor: vars.colors.background.overlay,
     },
     [`& .${c.editBooleanCell}`]: {
       display: 'flex',
@@ -568,10 +568,10 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${c.booleanCell}[data-value="true"]`]: {
-      color: `var(${vars.colors.foreground.muted})`,
+      color: vars.colors.foreground.muted,
     },
     [`& .${c.booleanCell}[data-value="false"]`]: {
-      color: `var(${vars.colors.foreground.disabled})`,
+      color: vars.colors.foreground.disabled,
     },
     [`& .${c.actionsCell}`]: {
       display: 'inline-flex',
@@ -583,7 +583,7 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
+      opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
@@ -595,7 +595,7 @@ export const GridRootStyles = styled('div', {
       alignItems: 'stretch',
     },
     [`.${c.withBorderColor}`]: {
-      borderColor: `var(${vars.colors.border.base})`,
+      borderColor: vars.colors.border.base,
     },
     [`& .${c['cell--withLeftBorder']}, & .${c['columnHeader--withLeftBorder']}`]: {
       borderLeftColor: 'var(--DataGrid-rowBorderColor)',
@@ -627,7 +627,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 3,
-      background: `var(${vars.colors.background.pinned})`,
+      background: vars.colors.background.pinned,
       '&.Mui-selected': {
         backgroundColor: pinnedSelectedBackground,
       },
@@ -656,16 +656,16 @@ export const GridRootStyles = styled('div', {
       display: 'none',
     },
     [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
-      background: `var(${vars.colors.background.overlay})`,
+      background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
+      opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['row--dragging']}`]: {
-      background: `var(${vars.colors.background.overlay})`,
+      background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
+      opacity: vars.colors.interactive.disabledOpacity,
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
         display: 'flex',
@@ -709,7 +709,7 @@ export const GridRootStyles = styled('div', {
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: `var(${vars.colors.background.pinned})`,
+        backgroundColor: vars.colors.background.pinned,
         position: 'sticky',
         right: 0,
       },
@@ -755,56 +755,58 @@ function transformMaterialUITheme(t: Theme) {
     ? `rgb(${t.vars.palette.primary.mainChannel})`
     : t.palette.primary.main;
 
+  const k = vars.keys;
+
   return {
-    [vars.spacingUnit]: t.spacing(1),
+    [k.spacingUnit]: t.spacing(1),
 
-    [vars.colors.border.base]: borderColor,
-    [vars.colors.background.base]: backgroundBase,
-    [vars.colors.background.pinned]: backgroundPinned,
-    [vars.colors.background.overlay]: t.palette.background.paper,
-    [vars.colors.background.backdrop]: backgroundBackdrop,
-    [vars.colors.foreground.base]: t.palette.text.primary,
-    [vars.colors.foreground.muted]: t.palette.text.secondary,
-    [vars.colors.foreground.accent]: t.palette.primary.dark,
-    [vars.colors.foreground.disabled]: t.palette.text.disabled,
+    [k.colors.border.base]: borderColor,
+    [k.colors.background.base]: backgroundBase,
+    [k.colors.background.pinned]: backgroundPinned,
+    [k.colors.background.overlay]: t.palette.background.paper,
+    [k.colors.background.backdrop]: backgroundBackdrop,
+    [k.colors.foreground.base]: t.palette.text.primary,
+    [k.colors.foreground.muted]: t.palette.text.secondary,
+    [k.colors.foreground.accent]: t.palette.primary.dark,
+    [k.colors.foreground.disabled]: t.palette.text.disabled,
 
-    [vars.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
-    [vars.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [vars.colors.interactive.focus]: removeOpacity(t.palette.action.focus),
-    [vars.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [vars.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
-    [vars.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
-    [vars.colors.interactive.selected]: selectedColor,
-    [vars.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
+    [k.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
+    [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
+    [k.colors.interactive.focus]: removeOpacity(t.palette.action.focus),
+    [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
+    [k.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
+    [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
+    [k.colors.interactive.selected]: selectedColor,
+    [k.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
 
-    [vars.radius.base]:
+    [k.radius.base]:
       typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,
 
-    [vars.typography.fontFamily.base]: t.typography.fontFamily,
-    [vars.typography.fontWeight.light]: t.typography.fontWeightLight,
-    [vars.typography.fontWeight.regular]: t.typography.fontWeightRegular,
-    [vars.typography.fontWeight.medium]: t.typography.fontWeightMedium,
-    [vars.typography.fontWeight.bold]: t.typography.fontWeightBold,
-    [vars.typography.body.fontFamily]: t.typography.body2.fontFamily,
-    [vars.typography.body.fontSize]: t.typography.body2.fontSize,
-    [vars.typography.body.fontWeight]: t.typography.body2.fontWeight,
-    [vars.typography.body.letterSpacing]: t.typography.body2.letterSpacing,
-    [vars.typography.body.lineHeight]: t.typography.body2.lineHeight,
-    [vars.typography.small.fontFamily]: t.typography.caption.fontFamily,
-    [vars.typography.small.fontSize]: t.typography.caption.fontSize,
-    [vars.typography.small.fontWeight]: t.typography.caption.fontWeight,
-    [vars.typography.small.letterSpacing]: t.typography.caption.letterSpacing,
-    [vars.typography.small.lineHeight]: t.typography.caption.lineHeight,
+    [k.typography.fontFamily.base]: t.typography.fontFamily,
+    [k.typography.fontWeight.light]: t.typography.fontWeightLight,
+    [k.typography.fontWeight.regular]: t.typography.fontWeightRegular,
+    [k.typography.fontWeight.medium]: t.typography.fontWeightMedium,
+    [k.typography.fontWeight.bold]: t.typography.fontWeightBold,
+    [k.typography.body.fontFamily]: t.typography.body2.fontFamily,
+    [k.typography.body.fontSize]: t.typography.body2.fontSize,
+    [k.typography.body.fontWeight]: t.typography.body2.fontWeight,
+    [k.typography.body.letterSpacing]: t.typography.body2.letterSpacing,
+    [k.typography.body.lineHeight]: t.typography.body2.lineHeight,
+    [k.typography.small.fontFamily]: t.typography.caption.fontFamily,
+    [k.typography.small.fontSize]: t.typography.caption.fontSize,
+    [k.typography.small.fontWeight]: t.typography.caption.fontWeight,
+    [k.typography.small.letterSpacing]: t.typography.caption.letterSpacing,
+    [k.typography.small.lineHeight]: t.typography.caption.lineHeight,
 
-    [vars.transitions.easing.easeIn]: t.transitions.easing.easeIn,
-    [vars.transitions.easing.easeOut]: t.transitions.easing.easeOut,
-    [vars.transitions.easing.easeInOut]: t.transitions.easing.easeInOut,
-    [vars.transitions.duration.short]: t.transitions.duration.shorter,
-    [vars.transitions.duration.base]: t.transitions.duration.short,
-    [vars.transitions.duration.long]: t.transitions.duration.standard,
+    [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
+    [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
+    [k.transitions.easing.easeInOut]: t.transitions.easing.easeInOut,
+    [k.transitions.duration.short]: t.transitions.duration.shorter,
+    [k.transitions.duration.base]: t.transitions.duration.short,
+    [k.transitions.duration.long]: t.transitions.duration.standard,
 
-    [vars.zIndex.panel]: t.zIndex.modal,
-    [vars.zIndex.menu]: t.zIndex.modal,
+    [k.zIndex.panel]: t.zIndex.modal,
+    [k.zIndex.menu]: t.zIndex.modal,
   };
 }
 

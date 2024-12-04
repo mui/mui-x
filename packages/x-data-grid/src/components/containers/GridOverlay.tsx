@@ -35,7 +35,7 @@ const GridOverlayRoot = styled('div', {
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: `var(${vars.colors.background.backdrop})`,
+  backgroundColor: vars.colors.background.backdrop,
 });
 
 const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
