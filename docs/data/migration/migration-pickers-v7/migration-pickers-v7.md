@@ -408,7 +408,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
 
 ### `usePickerContext`
 
-- The `onOpen` and `onClock` methods have been replaced with a single `setOpen` method.
+- The `onOpen` and `onClose` methods have been replaced with a single `setOpen` method.
   This method no longer takes an event, which was used to prevent the browser default behavior:
 
   ```diff

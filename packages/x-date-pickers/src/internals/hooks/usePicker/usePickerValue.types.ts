@@ -333,13 +333,14 @@ export interface UsePickerValueResponse<TValue extends PickerValidValue, TError>
 
 export interface UsePickerValueContextValue {
   /**
-   * Sets the current opening status of the picker.
+   * Sets the current open state of the Picker.
    * ```ts
    * setOpen(true); // Opens the picker.
    * setOpen(false); // Closes the picker.
-   * setOpen((prevOpen) => !prevOpen); // Toggles the opening status.
+   * setOpen((prevOpen) => !prevOpen); // Toggles the open state.
    * ```
-   * @param {React.SetStateAction<boolean>} action The new opening status of the picker, it can be a function that will receive the previous opening status.
+   * @param {React.SetStateAction<boolean>} action The new open state of the Picker.
+   * It can be a function that will receive the current open state.
    */
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   /**
