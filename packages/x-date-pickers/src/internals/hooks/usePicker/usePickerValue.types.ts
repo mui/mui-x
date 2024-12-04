@@ -337,7 +337,7 @@ export interface UsePickerValueContextValue {
    * ```ts
    * setOpen(true); // Opens the picker.
    * setOpen(false); // Closes the picker.
-   * setOpen((prevOpen) => !prevOpen); // Toggles the opening status.
+   * setOpen((prevOpen) => !prevOpen); // Toggles the open state.
    * ```
    * @param {React.SetStateAction<boolean>} action The new opening status of the picker, it can be a function that will receive the previous opening status.
    */
