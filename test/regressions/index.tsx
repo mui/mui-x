@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router/dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
@@ -29,7 +29,7 @@ const unusedBlacklistPatterns = new Set(blacklist);
 // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
 const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
 
-function excludeTest(suite, name) {
+function excludeTest(suite: string, name: string) {
   return blacklist.some((pattern) => {
     if (typeof pattern === 'string') {
       if (pattern === suite) {
@@ -55,11 +55,19 @@ function excludeTest(suite, name) {
   });
 }
 
-const tests = [];
+interface Test {
+  path: string;
+  suite: string;
+  name: string;
+  case: React.ComponentType;
+}
+
+const tests: Test[] = [];
 
 // Also use some of the demos to avoid code duplication.
+// @ts-ignore
 const requireDocs = require.context('docsx/data', true, /\.js$/);
-requireDocs.keys().forEach((path) => {
+requireDocs.keys().forEach((path: string) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
@@ -85,8 +93,9 @@ requireDocs.keys().forEach((path) => {
   });
 });
 
+// @ts-ignore
 const requireRegressions = require.context('./data-grid', true, /\.js$/);
-requireRegressions.keys().forEach((path) => {
+requireRegressions.keys().forEach((path: string) => {
   // "./DataGridRTLVirtualization.js"
   // "test/regressions/data-grid/DataGridRTLVirtualization.js"
   if (!path.startsWith('./')) {
@@ -137,17 +146,24 @@ function App() {
     };
   }, []);
 
-  function computePath(test) {
+  function computePath(test: Test) {
     return `/${test.suite}/${test.name}`;
   }
 
-  const suiteTestsMap = React.useMemo(() => tests.reduce((acc, test) => {
-    if (!acc[test.suite]) {
-      acc[test.suite] = [];
-    }
-    acc[test.suite].push(test);
-    return acc;
-  }, {}), []);
+  const suiteTestsMap = React.useMemo(
+    () =>
+      tests.reduce(
+        (acc, test) => {
+          if (!acc[test.suite]) {
+            acc[test.suite] = [];
+          }
+          acc[test.suite].push(test);
+          return acc;
+        },
+        {} as Record<string, Test[]>,
+      ),
+    [],
+  );
 
   if (!suiteTestsMap) {
     return null;
@@ -156,12 +172,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        {suiteTestsMap.keys(suite => {
+        {Object.keys(suiteTestsMap).map((suite) => {
           return (
-            <Route
-              key={suite}
-              path={suite}
-            >
+            <Route key={suite} path={suite}>
               {suiteTestsMap[suite].map((test) => {
                 const TestCase = test.case;
                 if (TestCase === undefined) {
@@ -169,7 +182,8 @@ function App() {
                   return null;
                 }
 
-                const isDataGridTest = suite.indexOf('/docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+                const isDataGridTest =
+                  suite.indexOf('/docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
                 return (
                   <Route
                     key={test.name}
@@ -213,4 +227,4 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById('react-root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
