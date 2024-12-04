@@ -14,6 +14,9 @@ import {
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
 
+/**
+ * @ignore - internal hook.
+ */
 export function useMultiInputRangeFieldTextFieldProps<TManager extends PickerAnyRangeManager>(
   parameters: UseMultiInputRangeFieldTextFieldProps<TManager>,
 ): TextFieldProps {
