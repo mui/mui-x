@@ -4,15 +4,13 @@ import 'dayjs/locale/ro';
 import 'dayjs/locale/zh-cn';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { styled, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import SectionHeadline from 'docs/src/components/typography/SectionHeadline';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import MuiToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
-import MuiToggleButton from '@mui/material/ToggleButton';
 import Typography from '@mui/material/Typography';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
@@ -25,6 +23,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvid
 import { roRO, enUS, zhCN } from '@mui/x-date-pickers-pro/locales';
 import InfoCard from './InfoCard';
 import WorldMapSvg, { ContinentClickHandler } from './WorldMapSvg';
+import ConfigToggleButtons from './ConfigToggleButtons';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -162,50 +161,25 @@ const locales = {
   'zh-cn': zhCN,
 };
 
-const ToggleButton = styled(MuiToggleButton)({
-  borderColor: 'transparent',
-  padding: '5px 8px',
-});
-const ToggleButtonGroup = styled(MuiToggleButtonGroup)(({ theme }) => ({
-  gap: theme.spacing(1),
-  [`& .${toggleButtonGroupClasses.firstButton}, & .${toggleButtonGroupClasses.lastButton},& .${toggleButtonGroupClasses.middleButton} `]:
-    {
-      borderRadius: theme.shape.borderRadius,
-    },
-}));
+type LanguageValue = {
+  label: string;
+  key: Languages;
+};
 
-function Controls({
-  selectedLanguage,
-  handleLanguageSwitch,
-}: {
-  selectedLanguage: Languages;
-  handleLanguageSwitch: (event: React.MouseEvent<HTMLElement>, newLanguage: Languages) => void;
-}) {
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <ToggleButtonGroup
-        size="small"
-        // eslint-disable-next-line material-ui/no-hardcoded-labels
-        aria-label="Select language"
-        value={selectedLanguage}
-        exclusive
-        onChange={handleLanguageSwitch}
-      >
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-        <ToggleButton value="ro" key="ro">
-          Română
-        </ToggleButton>
-        {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-        <ToggleButton value="en" key="en">
-          English
-        </ToggleButton>
-        <ToggleButton value="zh-cn" key="zh-cn">
-          日本語
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </Box>
-  );
-}
+const languages: LanguageValue[] = [
+  {
+    label: 'Română',
+    key: 'ro',
+  },
+  {
+    label: 'English',
+    key: 'en',
+  },
+  {
+    label: '日本語',
+    key: 'zh-cn',
+  },
+];
 
 function LanguagesDemo() {
   const brandingTheme = useTheme();
@@ -229,9 +203,10 @@ function LanguagesDemo() {
     >
       <DemoWrapper
         controls={
-          <Controls
-            handleLanguageSwitch={handleLanguageSwitch}
-            selectedLanguage={selectedLanguage}
+          <ConfigToggleButtons
+            handleValueSwitch={handleLanguageSwitch}
+            selectedValue={selectedLanguage}
+            values={languages}
           />
         }
         link="/x/react-date-pickers/localization/"
