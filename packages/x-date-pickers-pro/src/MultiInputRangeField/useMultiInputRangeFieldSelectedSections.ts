@@ -1,4 +1,3 @@
-'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -17,6 +16,9 @@ interface UseMultiInputRangeFieldSelectedSectionsParameters
     >,
     MultiInputFieldRefs {}
 
+/**
+ * @ignore - internal hook.
+ */
 export const useMultiInputRangeFieldSelectedSections = (
   parameters: UseMultiInputRangeFieldSelectedSectionsParameters,
 ) => {
