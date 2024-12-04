@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type { ExportedUseClearableFieldProps } from '../hooks/useClearableField';
+import type {
+  ExportedUseClearableFieldProps,
+  UseClearableFieldResponse,
+} from '../hooks/useClearableField';
 import { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
@@ -157,14 +160,13 @@ export type PickerFieldSlotProps<
   };
 
 /**
- * Props the text field receives when used with inside single input picker.
+ * Props the text field receives when used with a single input picker.
  * Only contains what the MUI components are passing to the text field, not what users can pass using the `props.slotProps.field` and `props.slotProps.textField`.
  */
 export type BaseSingleInputPickersTextFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> = Omit<
-  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>,
-  'slots' | 'slotProps' | 'clearable' | 'onClear'
+> = UseClearableFieldResponse<
+  UseFieldResponse<TEnableAccessibleFieldDOMStructure, BaseForwardedSingleInputFieldProps>
 >;
 
 /**
