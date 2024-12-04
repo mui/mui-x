@@ -1,11 +1,7 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import {
-  PickerValueType,
-  useDateManager,
-  useDateTimeManager,
-  useTimeManager,
-} from '@mui/x-date-pickers';
+import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
+import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
   convertFieldResponseIntoMuiTextFieldProps,
   PickerAnyRangeManager,
