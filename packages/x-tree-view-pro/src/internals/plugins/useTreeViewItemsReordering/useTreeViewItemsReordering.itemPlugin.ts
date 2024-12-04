@@ -6,8 +6,8 @@ import {
   UseTreeViewItemsSignature,
   isTargetInDescendants,
   useSelector,
+  selectorIsItemBeingEdited,
 } from '@mui/x-tree-view/internals';
-import { selectorIsItemBeingEdited } from '@mui/x-tree-view/internals/plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 import {
   UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
   UseTreeItemRootSlotPropsFromItemsReordering,
@@ -38,7 +38,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
   const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
   const draggedItemId = useSelector(store, selectorDraggedItem);
 
-  const isBeingEdited = useSelector(store, selectorIsItemBeingEdited, draggedItemId as string);
+  const isBeingEdited = useSelector(store, selectorIsItemBeingEdited, draggedItemId);
 
   return {
     propsEnhancers: {

@@ -44,11 +44,11 @@ export const selectorItemsReorderingDraggedItemProperties = createSelector(
 /**
  * Get the id of the item that is currently being dragged.
  * @param {TreeViewState<[UseTreeViewItemsReorderingSignature]>} state The state of the tree view.
- * @returns {string} The id of the currently dragged item.
+ * @returns {string | null} The id of the currently dragged item.
  */
 export const selectorDraggedItem = createSelector(
   [selectorItemsReordering],
-  (itemsReordering) => itemsReordering && itemsReordering.draggedItemId,
+  (itemsReordering) => itemsReordering?.draggedItemId,
 );
 /**
  * Check if the current item is a valid target for the dragged item.

@@ -34,6 +34,6 @@ export const selectorIsItemEditable = createSelector(
  * @returns {boolean} `true` if the item is being edited, `false` otherwise.
  */
 export const selectorIsItemBeingEdited = createSelector(
-  [selectorTreeViewLabelState, (_, itemId: string) => itemId],
-  (labelState, itemId) => labelState.editedItemId === itemId,
+  [selectorTreeViewLabelState, (_, itemId: string | null) => itemId],
+  (labelState, itemId) => (itemId ? labelState.editedItemId === itemId : false),
 );

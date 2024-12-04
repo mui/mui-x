@@ -67,6 +67,7 @@ export type {
   UseTreeViewItemsState,
 } from './plugins/useTreeViewItems';
 export { useTreeViewLabel } from './plugins/useTreeViewLabel';
+export { selectorIsItemBeingEdited } from './plugins/useTreeViewLabel/useTreeViewLabel.selectors';
 export type {
   UseTreeViewLabelSignature,
   UseTreeViewLabelParameters,
