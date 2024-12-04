@@ -212,8 +212,8 @@ export const GridRootStyles = styled('div', {
     borderStyle: 'solid',
     borderColor: `var(${vars.colors.border.base})`,
     borderRadius: 'var(--unstable_DataGrid-radius)',
-    color: (t.vars || t).palette.text.primary,
-    ...t.typography.body2,
+    color: `var(${vars.colors.foreground.base})`,
+    ...vars.props(vars.typography.body),
     outline: 'none',
     height: '100%',
     display: 'flex',
@@ -371,7 +371,7 @@ export const GridRootStyles = styled('div', {
       marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
-      backgroundColor: (t.vars || t).palette.action.hover,
+      backgroundColor: hoverBackground,
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
@@ -403,7 +403,7 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
-          color: (t.vars || t).palette.primary.main,
+          color: `var(${vars.colors.foreground.accent})`,
         },
       },
     },
@@ -423,7 +423,7 @@ export const GridRootStyles = styled('div', {
       cursor: 'col-resize',
       touchAction: 'none',
       [`&.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
+        color: `var(${vars.colors.foreground.accent})`,
       },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
@@ -431,7 +431,7 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         '&:hover': {
-          color: (t.vars || t).palette.primary.main,
+          color: `var(${vars.colors.foreground.accent})`,
           [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
@@ -547,9 +547,9 @@ export const GridRootStyles = styled('div', {
       padding: 1,
       display: 'flex',
       boxShadow: t.shadows[2],
-      backgroundColor: (t.vars || t).palette.background.paper,
+      backgroundColor: `var(${vars.colors.background.overlay})`,
       '&:focus-within': {
-        outline: `${focusOutlineWidth}px solid ${(t.vars || t).palette.primary.main}`,
+        outline: `${focusOutlineWidth}px solid var(${vars.colors.foreground.accent})}`,
         outlineOffset: focusOutlineWidth * -1,
       },
     },
@@ -558,7 +558,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['row--editing']} .${c.cell}`]: {
       boxShadow: t.shadows[0],
-      backgroundColor: (t.vars || t).palette.background.paper,
+      backgroundColor: `var(${vars.colors.background.overlay})`,
     },
     [`& .${c.editBooleanCell}`]: {
       display: 'flex',
@@ -568,10 +568,10 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${c.booleanCell}[data-value="true"]`]: {
-      color: (t.vars || t).palette.text.secondary,
+      color: `var(${vars.colors.foreground.muted})`,
     },
     [`& .${c.booleanCell}[data-value="false"]`]: {
-      color: (t.vars || t).palette.text.disabled,
+      color: `var(${vars.colors.foreground.disabled})`,
     },
     [`& .${c.actionsCell}`]: {
       display: 'inline-flex',
@@ -583,7 +583,7 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
     },
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
@@ -656,16 +656,16 @@ export const GridRootStyles = styled('div', {
       display: 'none',
     },
     [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
-      background: (t.vars || t).palette.background.paper,
+      background: `var(${vars.colors.background.overlay})`,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
     },
     [`& .${c['row--dragging']}`]: {
-      background: (t.vars || t).palette.background.paper,
+      background: `var(${vars.colors.background.overlay})`,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: `var(${vars.colors.interactive.disabledOpacity})`,
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
         display: 'flex',
