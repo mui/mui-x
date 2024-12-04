@@ -165,8 +165,8 @@ export function useGridDimensions(
 
     const scrollbarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
-    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
+    const topContainerHeight = headersTotalHeight + (rowsMeta.pinnedTopRowsTotalHeight ?? 0);
+    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight ?? 0;
 
     const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
 
