@@ -21,19 +21,21 @@ class IncludeManager implements SelectionManager {
     this.data = model.ids;
   }
 
-  has: SelectionManager['has'] = (id) => this.data.has(id);
+  has(id: GridRowId) {
+    return this.data.has(id);
+  }
 
-  select: SelectionManager['select'] = (id) => {
+  select(id: GridRowId) {
     this.data.add(id);
-  };
+  }
 
-  unselect: SelectionManager['unselect'] = (id) => {
+  unselect(id: GridRowId) {
     this.data.delete(id);
-  };
+  }
 
-  size: SelectionManager['size'] = () => {
+  size() {
     return this.data.size;
-  };
+  }
 }
 class ExcludeManager implements SelectionManager {
   data: SelectionManager['data'];
@@ -42,19 +44,21 @@ class ExcludeManager implements SelectionManager {
     this.data = model.ids;
   }
 
-  has: SelectionManager['has'] = (id) => !this.data.has(id);
+  has(id: GridRowId) {
+    return !this.data.has(id);
+  }
 
-  select: SelectionManager['select'] = (id) => {
+  select(id: GridRowId) {
     this.data.delete(id);
-  };
+  }
 
-  unselect: SelectionManager['unselect'] = (id) => {
+  unselect(id: GridRowId) {
     this.data.add(id);
-  };
+  }
 
-  size: SelectionManager['size'] = () => {
+  size() {
     return this.data.size;
-  };
+  }
 }
 
 export const createSelectionManager = (model: GridRowSelectionModel): SelectionManager => {
