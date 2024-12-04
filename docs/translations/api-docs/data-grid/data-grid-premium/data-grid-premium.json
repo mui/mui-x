@@ -608,9 +608,6 @@
     "rowGroupingModel": { "description": "Set the row grouping model of the grid." },
     "rowHeight": { "description": "Sets the height in pixel of a row in the Data Grid." },
     "rowModesModel": { "description": "Controls the modes of the rows." },
-    "rowPositionsDebounceMs": {
-      "description": "The milliseconds delay to wait after measuring the row height before recalculating row positions. Setting it to a lower value could be useful when using dynamic row height, but might reduce performance when displaying a large number of rows."
-    },
     "rowReordering": { "description": "If <code>true</code>, the reordering of rows is enabled." },
     "rows": { "description": "Set of rows of type GridRowsProp." },
     "rowSelection": { "description": "If <code>false</code>, the row selection mode is disabled." },
