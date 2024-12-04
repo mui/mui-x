@@ -1,5 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 import {
   randomInt,
   randomName,
@@ -15,24 +17,51 @@ type ItemType = TreeViewBaseItem<{
   childrenCount?: number;
 }>;
 
-const fetchData = async (): Promise<ItemType[]> => {
-  const length: number = randomInt(2, 10);
-  const rows = Array.from({ length }, () => ({
-    id: randomId(),
-    label: randomName({}, {}),
-    ...(randomBoolean() ? { childrenCount: length } : {}),
-  }));
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(rows);
-    }, 1000);
-  });
-};
+function valuetext(value: number) {
+  return `${value}°C`;
+}
 
 export default function BasicLazyLoading() {
+  const [latency, setLatency] = React.useState(1000);
+
+  const handleSliderChange = (_event: Event, newLatency: number | number[]) => {
+    setLatency(newLatency as number);
+  };
+
+  const fetchData = async (): Promise<ItemType[]> => {
+    const length: number = randomInt(5, 10);
+    const rows = Array.from({ length }, () => ({
+      id: randomId(),
+      label: randomName({}, {}),
+      ...(randomBoolean() ? { childrenCount: length } : {}),
+    }));
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(rows);
+      }, latency);
+    });
+  };
+
   return (
     <Box sx={{ width: '300px' }}>
+      <Box sx={{ width: 250 }}>
+        <Typography id="latency-slider" gutterBottom>
+          Loading latency: {latency} (ms)
+        </Typography>
+        <Slider
+          value={latency}
+          onChange={handleSliderChange}
+          aria-labelledby="latency-slider"
+          min={500}
+          max={10000}
+          shiftStep={1000}
+          step={500}
+          marks
+          getAriaValueText={valuetext}
+          valueLabelDisplay="auto"
+        />
+      </Box>
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}

@@ -29,7 +29,7 @@ export default function BasicLazyLoading() {
       <RichTreeView
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}
-        treeViewDataSource={{
+        dataSource={{
           getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchData,
         }}

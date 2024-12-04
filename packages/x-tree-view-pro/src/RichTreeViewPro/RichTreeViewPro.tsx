@@ -147,7 +147,7 @@ RichTreeViewPro.propTypes = {
   dataSource: PropTypes.shape({
     getChildrenCount: PropTypes.func,
     getTreeItems: PropTypes.func,
-  }).isRequired,
+  }),
   dataSourceCache: PropTypes.shape({
     clear: PropTypes.func.isRequired,
     get: PropTypes.func.isRequired,

@@ -35,9 +35,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   params,
   store,
 }) => {
-  instance.preventItemUpdates();
-
-  const isLazyLoadingEnabled = params.dataSource !== undefined;
+  const isLazyLoadingEnabled = params.dataSource?.getChildrenCount !== undefined;
+  const firstRenderRef = React.useRef(true);
 
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(instance),
@@ -202,11 +201,14 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   React.useEffect(() => {
-    if (params.items.length) {
-      const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
-      instance.addItems({ items: params.items, depth: 0, getChildrenCount });
-    } else {
-      instance.fetchItems();
+    if (firstRenderRef.current) {
+      if (params.items.length) {
+        firstRenderRef.current = false;
+        const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
+        instance.addItems({ items: params.items, depth: 0, getChildrenCount });
+      } else {
+        instance.fetchItems();
+      }
     }
   }, [instance, params.items, params.dataSource]);
 
@@ -214,6 +216,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     () => ({ lazyLoading: params.dataSource !== undefined }),
     [params.dataSource],
   );
+
+  if (!isLazyLoadingEnabled) {
+    return {} as UseTreeViewLazyLoadingSignature;
+  }
+  instance.preventItemUpdates();
+
   return {
     instance: {
       fetchItemChildren,
