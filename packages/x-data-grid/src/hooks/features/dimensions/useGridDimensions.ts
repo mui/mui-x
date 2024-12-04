@@ -326,7 +326,7 @@ export function useGridDimensions(
     set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
     set('--height', `${dimensionsState.rowHeight}px`);
-  }, [root, dimensionsState]);
+  }, [apiRef, root, dimensionsState]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {

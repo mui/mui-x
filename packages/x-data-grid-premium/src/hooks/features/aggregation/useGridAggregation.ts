@@ -3,10 +3,10 @@ import {
   gridColumnLookupSelector,
   useGridApiEventHandler,
   useGridApiMethod,
-  useGridApiOptionHandler,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
@@ -17,7 +17,6 @@ import {
   areAggregationRulesEqual,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
