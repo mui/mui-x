@@ -63,6 +63,7 @@ export const useGridAggregation = (
       const currentModel = gridAggregationModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithAggregationModel(model));
+        apiRef.current.updateColumns([]);
         apiRef.current.forceUpdate();
       }
     },
