@@ -18,29 +18,81 @@ const breakpoints = {
 };
 
 export const vars = {
+  /* Helpers */
+  props,
+  breakpoints,
   spacing,
   spacingUnit,
 
-  breakpoints,
-
-  palette: {
-    background: {
-      default: '--DataGrid-t-palette-background-default',
-      /** Equivalent to "paper", used for elements floating above other ones. */
-      elevated: '--DataGrid-t-palette-background-elevated',
+  /* Variables */
+  colors: {
+    foreground: {
+      base: '--DataGrid-t-colors-foreground-base',
+      muted: '--DataGrid-t-colors-foreground-muted',
+      disabled: '--DataGrid-t-colors-foreground-disabled',
     },
-    divider: '--DataGrid-t-palette-divider',
+    background: {
+      base: '--DataGrid-t-colors-background-base',
+      overlay: '--DataGrid-t-colors-background-overlay',
+    },
+    interactive: {
+      hover: '--DataGrid-t-colors-interactive-hover',
+      hoverOpacity: '--DataGrid-t-colors-interactive-hover-opacity',
+      focus: '--DataGrid-t-colors-interactive-focus',
+      focusOpacity: '--DataGrid-t-colors-interactive-focus-opacity',
+      disabled: '--DataGrid-t-colors-interactive-disabled',
+      disabledOpacity: '--DataGrid-t-colors-interactive-disabled-opacity',
+      selected: '--DataGrid-t-colors-interactive-selected',
+      selectedOpacity: '--DataGrid-t-colors-interactive-selected-opacity',
+    },
+    border: {
+      base: '--DataGrid-t-colors-border-base',
+    },
   },
-
+  radius: {
+    base: '--DataGrid-t-radius-base',
+  },
+  typography: {
+    fontFamily: {
+      base: '--DataGrid-t-typography-font-family-base',
+    },
+    fontWeight: {
+      light: '--DataGrid-t-typography-font-weight-light',
+      regular: '--DataGrid-t-typography-font-weight-regular',
+      medium: '--DataGrid-t-typography-font-weight-medium',
+      bold: '--DataGrid-t-typography-font-weight-bold',
+    },
+    body: {
+      fontFamily: '--DataGrid-t-typography-body-font-family',
+      fontSize: '--DataGrid-t-typography-body-font-size',
+      fontWeight: '--DataGrid-t-typography-body-font-weight',
+      letterSpacing: '--DataGrid-t-typography-body-letter-spacing',
+      lineHeight: '--DataGrid-t-typography-body-line-height',
+    },
+    small: {
+      fontFamily: '--DataGrid-t-typography-small-font-family',
+      fontSize: '--DataGrid-t-typography-small-font-size',
+      fontWeight: '--DataGrid-t-typography-small-font-weight',
+      letterSpacing: '--DataGrid-t-typography-small-letter-spacing',
+      lineHeight: '--DataGrid-t-typography-small-line-height',
+    },
+  },
+  transitions: {
+    easing: {
+      easeIn: '--DataGrid-t-transitions-easing-ease-in',
+      easeOut: '--DataGrid-t-transitions-easing-ease-out',
+      easeInOut: '--DataGrid-t-transitions-easing-ease-in-out',
+    },
+    duration: {
+      short: '--DataGrid-t-transitions-duration-short',
+      base: '--DataGrid-t-transitions-duration-base',
+      long: '--DataGrid-t-transitions-duration-long',
+    },
+  },
   zIndex: {
-    modal: '--DataGrid-t-zIndex-modal',
+    panel: '--DataGrid-t-z-index-panel',
+    menu: '--DataGrid-t-z-index-menu',
   },
-
-  // fontFamily : "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif"
-  // fontSize : "0.875rem"
-  // fontWeight : 400
-  // lineHeight : 1.43
-  // letterSpacing : "0.01071em"
 };
 
 function spacing(a?: number, b?: number, c?: number, d?: number) {
@@ -68,4 +120,12 @@ function spacingString(value: number) {
     return '0';
   }
   return `calc(var(--DataGrid-t-spacing-unit) * ${value})`;
+}
+
+function props(input: Record<string, string>) {
+  const result = {} as Record<string, string>;
+  for (const key in input) {
+    result[key] = `var(${input[key]})`;
+  }
+  return result;
 }

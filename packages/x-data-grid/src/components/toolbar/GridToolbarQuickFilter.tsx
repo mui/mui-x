@@ -38,7 +38,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     marginLeft: vars.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${vars.palette.divider}`,
+    borderBottom: `1px solid ${vars.colors.border.base}`,
   },
   [`& input[type="search"]::-webkit-search-decoration,
     & input[type="search"]::-webkit-search-cancel-button,

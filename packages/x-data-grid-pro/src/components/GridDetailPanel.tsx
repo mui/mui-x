@@ -16,7 +16,7 @@ const DetailPanel = styled('div', {
 })<{ ownerState: OwnerState }>({
   width:
     'calc(var(--DataGrid-rowWidth) - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
-  backgroundColor: vars.palette.background.default,
+  backgroundColor: vars.colors.background.base,
   overflow: 'auto',
 });
 

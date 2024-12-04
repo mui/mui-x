@@ -49,7 +49,7 @@ const GridMenuRoot = styled(Popper, {
   slot: 'Menu',
   overridesResolver: (_, styles) => styles.menu,
 })<{ ownerState: OwnerState }>({
-  zIndex: vars.zIndex.modal,
+  zIndex: vars.zIndex.menu,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
   },

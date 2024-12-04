@@ -39,7 +39,7 @@ const GridPanelRoot = styled(Popper, {
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
 })<{ ownerState: OwnerState }>({
-  zIndex: vars.zIndex.modal,
+  zIndex: vars.zIndex.panel,
 });
 
 const GridPaperRoot = styled(Paper, {
@@ -47,7 +47,7 @@ const GridPaperRoot = styled(Paper, {
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
 })<{ ownerState: OwnerState }>({
-  backgroundColor: vars.palette.background.elevated,
+  backgroundColor: vars.colors.background.overlay,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',

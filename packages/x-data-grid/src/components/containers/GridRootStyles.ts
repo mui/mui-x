@@ -775,15 +775,52 @@ export const GridRootStyles = styled('div', {
   return gridStyle;
 });
 
-function transformMaterialUITheme(theme: Theme) {
+function transformMaterialUITheme(t: Theme) {
   return {
-    [vars.spacingUnit]: theme.spacing(1),
+    [vars.spacingUnit]: t.spacing(1),
 
-    [vars.palette.background.default]: (theme.vars || theme).palette.background.default,
-    [vars.palette.background.elevated]: (theme.vars || theme).palette.background.paper,
-    [vars.palette.divider]: (theme.vars || theme).palette.divider,
+    [vars.colors.background.base]: t.palette.background.default,
+    [vars.colors.background.overlay]: t.palette.background.paper,
+    [vars.colors.foreground.base]: t.palette.text.primary,
+    [vars.colors.foreground.muted]: t.palette.text.secondary,
+    [vars.colors.foreground.disabled]: t.palette.text.disabled,
+    [vars.colors.interactive.hover]: t.palette.action.hover,
+    [vars.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
+    [vars.colors.interactive.focus]: t.palette.action.focus,
+    [vars.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
+    [vars.colors.interactive.disabled]: t.palette.action.disabled,
+    [vars.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
+    [vars.colors.interactive.selected]: t.palette.action.selected,
+    [vars.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
+    [vars.colors.border.base]: t.palette.divider,
 
-    [vars.zIndex.modal]: theme.zIndex.modal,
+    [vars.radius.base]: t.shape.borderRadius,
+
+    [vars.typography.fontFamily.base]: t.typography.fontFamily,
+    [vars.typography.fontWeight.light]: t.typography.fontWeightLight,
+    [vars.typography.fontWeight.regular]: t.typography.fontWeightRegular,
+    [vars.typography.fontWeight.medium]: t.typography.fontWeightMedium,
+    [vars.typography.fontWeight.bold]: t.typography.fontWeightBold,
+    [vars.typography.body.fontFamily]: t.typography.body2.fontFamily,
+    [vars.typography.body.fontSize]: t.typography.body2.fontSize,
+    [vars.typography.body.fontWeight]: t.typography.body2.fontWeight,
+    [vars.typography.body.letterSpacing]: t.typography.body2.letterSpacing,
+    [vars.typography.body.lineHeight]: t.typography.body2.lineHeight,
+    [vars.typography.small.fontFamily]: t.typography.caption.fontFamily,
+    [vars.typography.small.fontSize]: t.typography.caption.fontSize,
+    [vars.typography.small.fontWeight]: t.typography.caption.fontWeight,
+    [vars.typography.small.letterSpacing]: t.typography.caption.letterSpacing,
+    [vars.typography.small.lineHeight]: t.typography.caption.lineHeight,
+
+    [vars.transitions.easing.easeIn]: t.transitions.easing.easeIn,
+    [vars.transitions.easing.easeOut]: t.transitions.easing.easeOut,
+    [vars.transitions.easing.easeInOut]: t.transitions.easing.easeInOut,
+    [vars.transitions.duration.short]: t.transitions.duration.shorter,
+    [vars.transitions.duration.base]: t.transitions.duration.short,
+    [vars.transitions.duration.long]: t.transitions.duration.standard,
+
+    [vars.zIndex.panel]: t.zIndex.modal,
+    [vars.zIndex.menu]: t.zIndex.modal,
   };
 }
 
