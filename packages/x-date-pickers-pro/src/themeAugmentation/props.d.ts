@@ -1,5 +1,4 @@
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
-import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
 import { DateRangePickerProps } from '../DateRangePicker';
@@ -7,6 +6,7 @@ import { ExportedDateRangePickerToolbarProps } from '../DateRangePicker/DateRang
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
 import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
+import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField';
 import { MultiInputDateTimeRangeFieldProps } from '../MultiInputDateTimeRangeField';
 import { MultiInputTimeRangeFieldProps } from '../MultiInputTimeRangeField';
 import { SingleInputDateTimeRangeFieldProps } from '../SingleInputDateTimeRangeField';

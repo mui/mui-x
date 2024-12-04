@@ -1,7 +1,7 @@
 import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
 import { DateRangeCalendarClassKey } from '../DateRangeCalendar';
 import { DateRangePickerToolbarClassKey } from '../DateRangePicker';
-import { MultiInputRangeFieldClassKey } from '../models';
+import { MultiInputRangeFieldClassKey } from '../internals/components/MultiInputRangeField';
 import {
   DateTimeRangePickerTabsClassKey,
   DateTimeRangePickerToolbarClassKey,

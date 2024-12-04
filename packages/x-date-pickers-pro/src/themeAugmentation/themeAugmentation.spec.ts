@@ -2,9 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { dateRangeCalendarClasses } from '../DateRangeCalendar';
 import { dateRangePickerToolbarClasses } from '../DateRangePicker';
 import { dateRangePickerDayClasses } from '../DateRangePickerDay';
-import { multiInputDateRangeFieldClasses } from '../MultiInputDateRangeField';
-import { multiInputDateTimeRangeFieldClasses } from '../MultiInputDateTimeRangeField';
-import { multiInputTimeRangeFieldClasses } from '../MultiInputTimeRangeField';
+import { multiInputRangeFieldClasses } from '../internals/components/MultiInputRangeField';
 import {
   dateTimeRangePickerTabsClasses,
   dateTimeRangePickerToolbarClasses,
@@ -122,7 +120,7 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${multiInputDateRangeFieldClasses.separator}`]: {
+          [`.${multiInputRangeFieldClasses.separator}`]: {
             backgroundColor: 'green',
           },
         },
@@ -142,7 +140,7 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${multiInputDateTimeRangeFieldClasses.separator}`]: {
+          [`.${multiInputRangeFieldClasses.separator}`]: {
             backgroundColor: 'green',
           },
         },
@@ -162,7 +160,7 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${multiInputTimeRangeFieldClasses.separator}`]: {
+          [`.${multiInputRangeFieldClasses.separator}`]: {
             backgroundColor: 'green',
           },
         },
