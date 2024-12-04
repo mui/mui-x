@@ -51,7 +51,7 @@ export function useCharts<
 
   const defaultChartId = useId();
 
-  const pluginParams = {}; // To generate when plugins use params.
+  const pluginParams = { id: defaultChartId }; // To generate when plugins use params.
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
