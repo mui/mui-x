@@ -1,3 +1,4 @@
+import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { ChartsTextStyle } from '../ChartsText';
 import { PieItemId } from '../models';
 import { SeriesId } from '../models/seriesType/common';
@@ -22,6 +23,7 @@ export interface LegendItemParams
    * Used for internal purpose such as `key` props
    */
   id: number | string;
+  type: ChartsLabelMarkProps['type'];
 }
 
 export interface SeriesLegendItemContext extends LegendItemContextBase {
