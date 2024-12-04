@@ -1,8 +1,9 @@
-import { SlotComponentProps } from '@mui/utils';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import type { TypographyProps } from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import type { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
+import { FieldOwnerState } from '@mui/x-date-pickers/models';
 import {
   PickerAnyRangeManager,
   PickerManagerFieldInternalProps,
@@ -49,7 +50,7 @@ export interface MultiInputRangeFieldSlots {
   /**
    * Form control with an input to render a date.
    * It is rendered twice: once for the start date and once for the end date.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
   /**
@@ -60,13 +61,13 @@ export interface MultiInputRangeFieldSlots {
 }
 
 export interface MultiInputRangeFieldSlotProps {
-  root?: SlotComponentProps<typeof Stack, {}, PickerOwnerState>;
-  textField?: SlotComponentProps<
-    typeof TextField,
+  root?: SlotComponentPropsFromProps<StackProps, {}, FieldOwnerState>;
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    PickerOwnerState & {
+    FieldOwnerState & {
       position: RangePosition;
     }
   >;
-  separator?: SlotComponentProps<typeof Typography, {}, PickerOwnerState>;
+  separator?: SlotComponentPropsFromProps<TypographyProps, {}, FieldOwnerState>;
 }

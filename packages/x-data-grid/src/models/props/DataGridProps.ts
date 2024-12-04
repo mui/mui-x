@@ -252,14 +252,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   ignoreDiacritics: boolean;
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: 'select' | 'deselect';
-  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -863,7 +855,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**

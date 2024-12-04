@@ -6,7 +6,12 @@ import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { FieldSelectedSections, FieldRef, PickerOwnerState } from '@mui/x-date-pickers/models';
+import {
+  FieldSelectedSections,
+  FieldRef,
+  PickerOwnerState,
+  FieldOwnerState,
+} from '@mui/x-date-pickers/models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
@@ -60,12 +65,12 @@ export interface RangePickerFieldSlotProps<TEnableAccessibleFieldDOMStructure ex
     {},
     PickerOwnerState
   >;
-  fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
-  fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
+  fieldRoot?: SlotComponentProps<typeof Stack, {}, FieldOwnerState>;
+  fieldSeparator?: SlotComponentProps<typeof Typography, {}, FieldOwnerState>;
   textField?: SlotComponentProps<
     typeof PickersTextField,
     {},
-    PickerOwnerState & { position?: RangePosition }
+    FieldOwnerState & { position?: RangePosition }
   >;
 }
 

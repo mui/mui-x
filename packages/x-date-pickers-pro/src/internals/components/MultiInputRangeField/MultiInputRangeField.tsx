@@ -17,7 +17,7 @@ import {
   PickerValue,
   useControlledValueWithTimezone,
   useFieldInternalPropsWithDefaults,
-  usePickerPrivateContext,
+  useFieldOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -155,7 +155,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     unstableEndFieldRef,
   });
 
-  const { ownerState } = usePickerPrivateContext();
+  const ownerState = useFieldOwnerState(internalProps);
   const classes = useUtilityClasses(classesProp);
 
   const Root = slots?.root ?? MultiInputRangeFieldRoot;
