@@ -1278,15 +1278,14 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
 
     expect(() => {
+      const columns = [
+        { field: 'id', flex: 1 },
+        { field: 'id', flex: 1 },
+      ];
+      const rows = [{ id: 1 }];
       render(
         <div style={{ height: 200, width: 400 }}>
-          <DataGrid
-            rows={[{ id: 1 }]}
-            columns={[
-              { field: 'id', flex: 1 },
-              { field: 'id', flex: 1 },
-            ]}
-          />
+          <DataGrid rows={rows} columns={columns} />
         </div>,
       );
     }).toErrorDev([

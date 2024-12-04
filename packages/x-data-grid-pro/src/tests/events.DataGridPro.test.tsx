@@ -344,7 +344,14 @@ describe('<DataGridPro /> - Events params', () => {
         rowCount={50}
       />,
     );
-    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
+    act(() => {
+      apiRef.current.publishEvent('renderedRowsIntervalChange', {
+        firstRowIndex: 3,
+        lastRowIndex: 6,
+        firstColumnIndex: 0,
+        lastColumnIndex: 0,
+      });
+    });
     expect(handleFetchRows.callCount).to.equal(1);
   });
 

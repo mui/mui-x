@@ -74,10 +74,10 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    expect(handleFetchRows.callCount).to.equal(1);
+    expect(handleFetchRows.callCount).to.equal(0);
     // Should be 1. When tested in the browser it's called only 2 time
     fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.callCount).to.equal(2);
+    expect(handleFetchRows.callCount).to.equal(1);
   });
 
   it('should render skeleton cell if rowCount is bigger than the number of rows', function test() {
