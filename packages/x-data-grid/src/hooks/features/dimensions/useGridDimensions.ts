@@ -96,6 +96,7 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const isFirstSizing = React.useRef(true);
   const validRowHeight = React.useMemo(
     () =>
       getValidRowHeight(
@@ -160,6 +161,10 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
+    // No need to calculate dimension until we have the root size
+    if (isFirstSizing.current) {
+      return;
+    }
     const rootElement = apiRef.current.rootElementRef.current;
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
@@ -323,7 +328,6 @@ export function useGridDimensions(
     set('--height', `${dimensionsState.rowHeight}px`);
   }, [root, dimensionsState]);
 
-  const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
       rootDimensionsRef.current = size;
@@ -367,8 +371,6 @@ export function useGridDimensions(
     },
     [props.autoHeight, debouncedSetSavedSize, logger],
   );
-
-  useEnhancedEffect(updateDimensions, [updateDimensions]);
 
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateDimensions);
   useGridApiOptionHandler(apiRef, 'paginationModelChange', updateDimensions);

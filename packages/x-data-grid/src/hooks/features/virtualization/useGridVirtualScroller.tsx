@@ -146,8 +146,8 @@ export const useGridVirtualScroller = () => {
 
       const initialRect = node.getBoundingClientRect();
       let lastSize = {
-        width: initialRect.width,
-        height: initialRect.height,
+        width: roundToSubPixel(initialRect.width),
+        height: roundToSubPixel(initialRect.height),
       };
 
       apiRef.current.publishEvent('resize', lastSize);
@@ -163,8 +163,8 @@ export const useGridVirtualScroller = () => {
         }
 
         const newSize = {
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
+          width: roundToSubPixel(entry.contentRect.width),
+          height: roundToSubPixel(entry.contentRect.height),
         };
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
@@ -1103,4 +1103,8 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
+}
+
+function roundToSubPixel(value: number) {
+  return Math.round(value * 10) / 10;
 }

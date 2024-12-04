@@ -110,12 +110,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const offsetLeft = computeOffsetLeft(columnPositions, renderContext, pinnedColumns.left.length);
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
 
-  React.useEffect(() => {
-    if (apiRef.current.columnHeadersContainerRef.current) {
-      apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-    }
-  }, [apiRef]);
-
   const handleColumnResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     (params) => setResizeCol(params.field),
     [],
