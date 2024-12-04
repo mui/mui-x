@@ -128,7 +128,7 @@ function PieArc(props: PieArcProps) {
       opacity={ownerState.isFaded ? 0.3 : 1}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
       strokeWidth={1}
-      strokeLinejoin={'round'}
+      strokeLinejoin='round'
       {...other}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}
     />
