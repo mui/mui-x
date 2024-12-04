@@ -65,13 +65,6 @@ const BrowserTextField = React.forwardRef((props, ref) => {
   const handleRef = useForkRef(InputPropsRef, ref);
 
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   return (
     <BrowserFieldRoot ref={handleRef} {...other}>
@@ -91,7 +84,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
       </BrowserFieldContent>
       {endAdornment}
       <InputAdornment position="end">
-        <IconButton onClick={handleTogglePicker}>
+        <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
           <DateRangeIcon />
         </IconButton>
       </InputAdornment>

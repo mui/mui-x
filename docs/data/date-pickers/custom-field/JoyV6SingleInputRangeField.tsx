@@ -93,7 +93,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
       enableAccessibleFieldDOMStructure: false,
     });
 
-    return <JoyField ref={ref} {...fieldResponse} />;
+    return <JoyField {...fieldResponse} ref={ref} />;
   },
 ) as JoySingleInputDateRangeFieldComponent;
 
