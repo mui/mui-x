@@ -30,7 +30,7 @@
     "@types/d3-interpolate": "^3.0.4",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-shape": "^3.1.6",
-    "@types/d3-time": "^3.0.3",
+    "@types/d3-time": "^3.0.4",
     "d3-color": "^3.1.0",
     "d3-delaunay": "^6.0.4",
     "d3-interpolate": "^3.0.1",

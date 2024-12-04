@@ -32,15 +32,16 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
+  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
+  toolbarPromptControlLabel: 'Prompteingabe',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
+  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
+  toolbarPromptControlSendActionLabel: 'Senden',
+  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
+  toolbarPromptControlErrorMessage:
+    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
@@ -54,7 +55,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Löschen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
