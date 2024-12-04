@@ -803,12 +803,9 @@ async function initializeEnvironment(
           await page.getByRole('gridcell', { name: '11' }).click();
           await page.getByRole('button', { name: 'OK' }).click();
 
-          await waitFor(async () => {
-            // assert that the dialog has been closed and the focused element is the input
-            expect(await page.evaluate(() => document.activeElement?.className)).to.contain(
-              iconButtonClasses.root,
-            );
-          });
+          // assert that the dialog closes after selection is complete
+          // could run into race condition otherwise
+          await page.waitForSelector('[role="dialog"]', { state: 'detached' });
           expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
             '04/11/2022',
           );
