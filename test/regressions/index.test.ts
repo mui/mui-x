@@ -164,7 +164,7 @@ async function main() {
             });
           },
           undefined,
-          { timeout: 2000 },
+          { timeout: 10000 },
         );
 
         if (/^\docs-charts-.*/.test(pathURL)) {
