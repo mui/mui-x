@@ -23,7 +23,7 @@ export interface LegendItemParams
    * Used for internal purpose such as `key` props
    */
   id: number | string;
-  type: ChartsLabelMarkProps['type'];
+  markType: ChartsLabelMarkProps['type'];
 }
 
 export interface SeriesLegendItemContext extends LegendItemContextBase {

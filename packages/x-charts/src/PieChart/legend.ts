@@ -13,7 +13,7 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
       }
 
       acc.push({
-        type: 'circle',
+        markType: 'circle',
         id: item.id,
         seriesId,
         color: item.color,
