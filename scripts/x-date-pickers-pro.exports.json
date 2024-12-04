@@ -403,6 +403,7 @@
   { "name": "Unstable_PickersSectionListSectionSeparator", "kind": "Variable" },
   { "name": "unstable_useDateField", "kind": "Variable" },
   { "name": "unstable_useDateTimeField", "kind": "Variable" },
+  { "name": "unstable_useMultiInputRangeField", "kind": "Function" },
   { "name": "unstable_useSingleInputDateRangeField", "kind": "Variable" },
   { "name": "unstable_useSingleInputDateTimeRangeField", "kind": "Variable" },
   { "name": "unstable_useSingleInputTimeRangeField", "kind": "Variable" },

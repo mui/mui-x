@@ -79,11 +79,11 @@ export const useSplitFieldProps = <
   }, [props, valueType]);
 };
 
-type KeysMatching<T extends object, V> = {
-  [K in keyof T]-?: T[K] extends V ? K : never;
-}[keyof T];
-
+/**
+ * Extract the internal props from the props received by the field component.
+ * Makes sure that internal props not defined in the props are not present in the result.
+ */
 type ExtractInternalProps<
   TValueType extends PickerValueType,
   TProps extends { [key in InternalPropNames<TValueType>]?: any },
-> = Pick<TProps, KeysMatching<TProps, InternalPropNames<TValueType>>>;
+> = { [K in keyof TProps]: K extends InternalPropNames<TValueType> ? TProps[K] : never };
