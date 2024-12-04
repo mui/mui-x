@@ -2,6 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "utils.is12HourCycleInCurrentLocale()" },
     "autoFocus": { "type": { "name": "bool" }, "default": "false" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dateSeparator": { "type": { "name": "string" }, "default": "\"–\"" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "direction": {
@@ -113,7 +114,20 @@
     "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';",
     "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiMultiInputDateTimeRangeField-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "separator",
+      "className": "MuiMultiInputDateTimeRangeField-separator",
+      "description": "Styles applied to the separator element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiMultiInputDateTimeRangeField",

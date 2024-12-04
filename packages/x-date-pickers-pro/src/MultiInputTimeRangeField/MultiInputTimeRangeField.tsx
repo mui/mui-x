@@ -3,12 +3,21 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTimeRangeManager, UseTimeRangeManagerReturnValue } from '../managers';
 import { MultiInputRangeField } from '../internals/components/MultiInputRangeField/MultiInputRangeField';
-import { ExportedMultiInputRangeFieldProps } from '../internals/components/MultiInputRangeField';
+import {
+  ExportedMultiInputRangeFieldProps,
+  MultiInputRangeFieldClasses,
+} from '../internals/components/MultiInputRangeField';
 
 export interface MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends ExportedMultiInputRangeFieldProps<
     UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-  > {}
+  > {
+  // We need to redefine the classes here, otherwise we don't have the doc generation.
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
+}
 
 type MultiInputTimeRangeFieldComponent = (<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
@@ -53,6 +62,10 @@ MultiInputTimeRangeField.propTypes = {
    * @default false
    */
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**
