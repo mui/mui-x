@@ -25,7 +25,7 @@ import { gridDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
-import { gridPinnedRowsHeightSelector, gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -92,7 +92,6 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const pinnedRowsHeight = useGridSelector(apiRef, gridPinnedRowsHeightSelector);
   const isFirstSizing = React.useRef(true);
   const validRowHeight = React.useMemo(
     () =>
@@ -166,8 +165,8 @@ export function useGridDimensions(
 
     const scrollbarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
-    const topContainerHeight = headersTotalHeight + pinnedRowsHeight.top;
-    const bottomContainerHeight = pinnedRowsHeight.bottom;
+    const topContainerHeight = headersTotalHeight + rowsMeta.pinnedTopRowsTotalHeight;
+    const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight;
 
     const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
 
@@ -272,6 +271,8 @@ export function useGridDimensions(
     props.scrollbarSize,
     props.autoHeight,
     rowsMeta.currentPageTotalHeight,
+    rowsMeta.pinnedTopRowsTotalHeight,
+    rowsMeta.pinnedBottomRowsTotalHeight,
     rowHeight,
     headerHeight,
     groupHeaderHeight,
@@ -280,7 +281,6 @@ export function useGridDimensions(
     headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
-    pinnedRowsHeight,
   ]);
 
   const apiPublic: GridDimensionsApi = {
