@@ -8,7 +8,6 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
-  styled,
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
@@ -70,32 +69,12 @@ const JoyField = React.forwardRef((props, ref) => {
   );
 });
 
-const MultiInputJoyDateRangeFieldRoot = styled(
-  React.forwardRef((props, ref) => (
-    <Stack
-      ref={ref}
-      spacing={2}
-      direction="row"
-      alignItems="center"
-      overflow="auto"
-      {...props}
-    />
-  )),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Root',
-    overridesResolver: (props, styles) => styles.root,
-  },
-)({});
-
 const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const manager = useDateRangeManager({
     enableAccessibleFieldDOMStructure: false,
   });
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-
-  const { slotProps, className, unstableStartFieldRef, unstableEndFieldRef } =
-    forwardedProps;
+  const { slotProps, slots, ownerState, ...otherForwardedProps } = forwardedProps;
 
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
@@ -114,18 +93,23 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
     startForwardedProps: startTextFieldProps,
     endForwardedProps: endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
   });
 
   return (
-    <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
+    <Stack
+      ref={ref}
+      spacing={2}
+      overflow="auto"
+      direction="row"
+      alignItems="center"
+      {...otherForwardedProps}
+    >
       <JoyField {...fieldResponse.startDate} />
       <FormControl>
         <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
       </FormControl>
       <JoyField {...fieldResponse.endDate} />
-    </MultiInputJoyDateRangeFieldRoot>
+    </Stack>
   );
 });
 

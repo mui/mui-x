@@ -8,12 +8,11 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
-  styled,
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
 import Input, { InputProps } from '@mui/joy/Input';
-import Stack, { StackProps } from '@mui/joy/Stack';
+import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
@@ -96,24 +95,6 @@ const JoyField = React.forwardRef(
   },
 ) as JoyFieldComponent;
 
-const MultiInputJoyDateRangeFieldRoot = styled(
-  React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack
-      ref={ref}
-      spacing={2}
-      direction="row"
-      alignItems="center"
-      overflow="auto"
-      {...props}
-    />
-  )),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Root',
-    overridesResolver: (props, styles) => styles.root,
-  },
-)({});
-
 interface JoyMultiInputDateRangeFieldProps
   extends Omit<
       DateRangePickerFieldProps<false>,
@@ -131,9 +112,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       enableAccessibleFieldDOMStructure: false,
     });
     const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-
-    const { slotProps, className, unstableStartFieldRef, unstableEndFieldRef } =
-      forwardedProps;
+    const { slotProps, slots, ownerState, ...otherForwardedProps } = forwardedProps;
 
     const startTextFieldProps = useSlotProps({
       elementType: 'input',
@@ -152,18 +131,23 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
       startForwardedProps: startTextFieldProps,
       endForwardedProps: endTextFieldProps,
-      unstableStartFieldRef,
-      unstableEndFieldRef,
     });
 
     return (
-      <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
+      <Stack
+        ref={ref}
+        spacing={2}
+        overflow="auto"
+        direction="row"
+        alignItems="center"
+        {...otherForwardedProps}
+      >
         <JoyField {...fieldResponse.startDate} />
         <FormControl>
           <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
         </FormControl>
         <JoyField {...fieldResponse.endDate} />
-      </MultiInputJoyDateRangeFieldRoot>
+      </Stack>
     );
   },
 ) as JoyMultiInputDateRangeFieldComponent;

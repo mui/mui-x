@@ -82,9 +82,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const manager = useDateRangeManager();
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
-
-  const { slotProps, className, unstableStartFieldRef, unstableEndFieldRef } =
-    forwardedProps;
+  const { slotProps, slots, ...otherForwardedProps } = forwardedProps;
 
   const startTextFieldProps = useSlotProps({
     elementType: 'input',
@@ -103,8 +101,6 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     internalProps,
     startForwardedProps: startTextFieldProps,
     endForwardedProps: endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
   });
 
   return (
@@ -113,7 +109,7 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
       spacing={2}
       direction="row"
       overflow="auto"
-      className={className}
+      {...otherForwardedProps}
     >
       <BrowserTextField {...fieldResponse.startDate} />
       <span>{' – '}</span>

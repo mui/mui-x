@@ -20,6 +20,8 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
+  'unstableStartFieldRef',
+  'unstableEndFieldRef',
   'enableAccessibleFieldDOMStructure',
   'disabled',
   'readOnly',

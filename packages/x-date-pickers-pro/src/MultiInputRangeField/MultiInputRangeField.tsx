@@ -70,8 +70,6 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
   const {
     slots,
     slotProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
     className,
     classes: classesProp,
     ...otherForwardedProps
@@ -106,13 +104,11 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const { startDate, endDate, dateSeparator } = useMultiInputRangeField({
+  const { startDate, endDate } = useMultiInputRangeField({
     manager,
     internalProps,
     startForwardedProps: startTextFieldProps,
     endForwardedProps: endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
   });
 
   const Separator = slots?.separator ?? MultiInputRangeFieldSeparator;
@@ -120,7 +116,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     elementType: Separator,
     externalSlotProps: slotProps?.separator,
     additionalProps: {
-      children: ` ${dateSeparator ?? '–'} `,
+      children: ` ${(internalProps as any).dateSeparator ?? '–'} `,
     },
     ownerState,
     className: classes.separator,
