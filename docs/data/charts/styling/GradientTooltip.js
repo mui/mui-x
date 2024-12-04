@@ -8,7 +8,7 @@ export default function GradientTooltip() {
         '--my-custom-gradient': 'url(#GlobalGradient)',
       }}
       slotProps={{
-        tooltip: {
+        popper: {
           sx: {
             '--my-custom-gradient': 'linear-gradient(0deg, #123456, #81b2e4);',
           },
