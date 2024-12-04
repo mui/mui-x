@@ -3,20 +3,20 @@ import { styled } from '@mui/material/styles';
 import ChartsLabel, { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
 import ChartsLabelMark, { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 
-export interface ChartsLegendItemProps extends ChartsLabelProps {
+interface ChartsLegendItemProps extends ChartsLabelProps {
   mark: ChartsLabelMarkProps;
-  gap: number;
+  gap?: number;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const RootDiv = styled(
   'div',
   {},
-)<{ ownerState: Pick<ChartsLegendItemProps, 'gap'> }>(({ ownerState, onClick }) => ({
+)<{ ownerState: Pick<ChartsLegendItemProps, 'gap'> }>(({ ownerState, onClick, theme }) => ({
   cursor: onClick ? 'pointer' : 'unset',
   display: 'flex',
   alignItems: 'center',
-  gap: ownerState.gap,
+  gap: ownerState.gap ?? theme.spacing(1),
 }));
 
 /**

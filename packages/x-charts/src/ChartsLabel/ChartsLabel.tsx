@@ -6,11 +6,11 @@ import { styled } from '@mui/material/styles';
 export interface ChartsLabelProps {
   /**
    * Style applied to legend labels.
-   * @default theme.typography.subtitle1
+   * @default theme.typography.caption
    */
   // eslint-disable-next-line react/no-unused-prop-types
   labelStyle?: React.CSSProperties;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const Root = styled('div', {
