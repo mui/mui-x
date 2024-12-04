@@ -652,24 +652,26 @@ export const useGridRowSelection = (
 
   const toggleAllRows = React.useCallback(
     (value: boolean) => {
-      if (value) {
-        const filterModel = gridFilterModelSelector(apiRef);
-        const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
-        const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
-        if (
-          !props.isRowSelectable &&
-          !props.checkboxSelectionVisibleOnly &&
-          applyAutoSelection &&
-          !hasFilters
-        ) {
-          apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, value, true);
-        } else {
-          const rowsToBeSelected = getRowsToBeSelected();
-          apiRef.current.selectRows({ type: 'include', ids: new Set(rowsToBeSelected) }, value);
-        }
-      } else {
+      if (!value) {
         apiRef.current.selectRows({ type: 'include', ids: new Set() }, value, true);
+        return;
       }
+
+      const filterModel = gridFilterModelSelector(apiRef);
+      const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
+      const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
+      let selectionModel: GridRowSelectionModel;
+      if (
+        !props.isRowSelectable &&
+        !props.checkboxSelectionVisibleOnly &&
+        applyAutoSelection &&
+        !hasFilters
+      ) {
+        selectionModel = { type: 'exclude', ids: new Set() };
+      } else {
+        selectionModel = { type: 'include', ids: new Set(getRowsToBeSelected()) };
+      }
+      apiRef.current.selectRows(selectionModel, value, true);
     },
     [
       apiRef,
