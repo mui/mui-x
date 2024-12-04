@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils';
-import { MakeOptional } from '@mui/x-internals/types';
-import TextField from '@mui/material/TextField';
-import { DateTimeValidationError, BuiltInFieldTextFieldProps } from '../models';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { TextFieldProps } from '@mui/material/TextField';
+import { DateTimeValidationError, BuiltInFieldTextFieldProps, FieldOwnerState } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   ExportedUseClearableFieldProps,
@@ -12,6 +11,7 @@ import {
 import { ExportedValidateDateTimeProps } from '../validation/validateDateTime';
 import { AmPmProps } from '../internals/models/props/time';
 import { PickerValue } from '../internals/models';
+import { PickersTextFieldProps } from '../PickersTextField';
 
 export interface UseDateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends MakeOptional<
@@ -43,25 +43,21 @@ export type DateTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolea
        * The props used for each component slot.
        * @default {}
        */
-      slotProps?: DateTimeFieldSlotProps<TEnableAccessibleFieldDOMStructure>;
+      slotProps?: DateTimeFieldSlotProps;
     };
-
-export type DateTimeFieldOwnerState<TEnableAccessibleFieldDOMStructure extends boolean> =
-  DateTimeFieldProps<TEnableAccessibleFieldDOMStructure>;
 
 export interface DateTimeFieldSlots extends UseClearableFieldSlots {
   /**
    * Form control with an input to render the value.
-   * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
+   * @default <PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.
    */
   textField?: React.ElementType;
 }
 
-export interface DateTimeFieldSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends UseClearableFieldSlotProps {
-  textField?: SlotComponentProps<
-    typeof TextField,
+export interface DateTimeFieldSlotProps extends UseClearableFieldSlotProps {
+  textField?: SlotComponentPropsFromProps<
+    PickersTextFieldProps | TextFieldProps,
     {},
-    DateTimeFieldOwnerState<TEnableAccessibleFieldDOMStructure>
+    FieldOwnerState
   >;
 }

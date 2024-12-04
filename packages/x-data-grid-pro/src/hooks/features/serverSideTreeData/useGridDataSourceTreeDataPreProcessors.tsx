@@ -11,6 +11,7 @@ import {
 import {
   GridPipeProcessor,
   GridRowsPartialUpdates,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -51,7 +52,7 @@ export const useGridDataSourceTreeDataPreProcessors = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
+      GridStrategyGroup.RowTree,
       TreeDataStrategy.DataSource,
       props.treeData && props.unstable_dataSource ? () => true : () => false,
     );
