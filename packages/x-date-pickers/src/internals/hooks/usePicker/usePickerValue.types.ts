@@ -17,6 +17,7 @@ import {
   PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
 import { InferNonNullablePickerValue, PickerValidValue } from '../../models';
+import React from 'react';
 
 export interface PickerValueManager<TValue extends PickerValidValue, TError> {
   /**
@@ -313,10 +314,27 @@ export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue>
   isValid: (value: TValue) => boolean;
 }
 
+/**
+ * Params passed to `usePickerProvider`.
+ */
+export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
+  value: TValue;
+  contextValue: UsePickerValueContextValue;
+}
+
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
+  provider: UsePickerValueProviderParams<TValue>;
+}
+
+export interface UsePickerValueContextValue {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  /**
+   * `true` if the picker is open, `false` otherwise.
+   */
+  open: boolean;
 }

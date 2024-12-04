@@ -38,7 +38,7 @@ function ReadOnlyDateField(props) {
         sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
       }}
       error={hasValidationError}
-      onClick={pickerContext.onToggleOpening}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     />
   );
 }

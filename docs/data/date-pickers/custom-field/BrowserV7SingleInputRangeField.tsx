@@ -127,7 +127,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ...textFieldProps.InputProps,
       endAdornment: (
         <InputAdornment position="end">
-          <IconButton onClick={pickerContext.onToggleOpening}>
+          <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
             <DateRangeIcon />
           </IconButton>
         </InputAdornment>

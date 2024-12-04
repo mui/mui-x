@@ -98,7 +98,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       ref={ref}
       endDecorator={
         <IconButton
-          onClick={pickerContext.onToggleOpening}
+          onClick={() => pickerContext.setOpen((prev) => !prev)}
           variant="plain"
           color="neutral"
           sx={{ marginLeft: 2.5 }}

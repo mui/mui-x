@@ -58,7 +58,7 @@ function ButtonDateTimeField(props: DateTimePickerFieldProps) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={pickerContext.onToggleOpening}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}
     </Button>
