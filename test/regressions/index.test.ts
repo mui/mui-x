@@ -25,7 +25,9 @@ const isConsoleWarningIgnored = (msg?: string) => {
 
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
-  if (isMuiV6Error || isReactRouterFlagsError) {
+  const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
+
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute) {
     return true;
   }
   return false;
