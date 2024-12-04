@@ -650,11 +650,9 @@ export const useGridRowSelection = (
     [apiRef, expandMouseRowRangeSelection, canHaveMultipleSelection],
   );
 
-  const handleHeaderSelectionCheckboxChange = React.useCallback<
-    GridEventListener<'headerSelectionCheckboxChange'>
-  >(
-    (params) => {
-      if (params.value) {
+  const toggleAllRows = React.useCallback(
+    (value: boolean) => {
+      if (value) {
         const filterModel = gridFilterModelSelector(apiRef);
         const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
         const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
@@ -664,25 +662,31 @@ export const useGridRowSelection = (
           applyAutoSelection &&
           !hasFilters
         ) {
-          apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
+          apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, value, true);
         } else {
           const rowsToBeSelected = getRowsToBeSelected();
-          apiRef.current.selectRows(
-            { type: 'include', ids: new Set(rowsToBeSelected) },
-            params.value,
-          );
+          apiRef.current.selectRows({ type: 'include', ids: new Set(rowsToBeSelected) }, value);
         }
       } else {
-        apiRef.current.selectRows({ type: 'include', ids: new Set() }, params.value, true);
+        apiRef.current.selectRows({ type: 'include', ids: new Set() }, value, true);
       }
     },
     [
       apiRef,
-      props.isRowSelectable,
-      props.checkboxSelectionVisibleOnly,
       applyAutoSelection,
       getRowsToBeSelected,
+      props.checkboxSelectionVisibleOnly,
+      props.isRowSelectable,
     ],
+  );
+
+  const handleHeaderSelectionCheckboxChange = React.useCallback<
+    GridEventListener<'headerSelectionCheckboxChange'>
+  >(
+    (params) => {
+      toggleAllRows(params.value);
+    },
+    [toggleAllRows],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
@@ -759,10 +763,10 @@ export const useGridRowSelection = (
 
       if (String.fromCharCode(event.keyCode) === 'A' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        selectRows({ type: 'exclude', ids: new Set() }, true);
+        toggleAllRows(true);
       }
     },
-    [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
+    [apiRef, canHaveMultipleSelection, visibleRows.rows, handleSingleRowSelection, toggleAllRows],
   );
 
   useGridApiEventHandler(
