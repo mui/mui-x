@@ -18,16 +18,6 @@ import { gridDimensionsSelector } from '../../hooks/features/dimensions/gridDime
 
 export type OwnerState = DataGridProcessedProps;
 
-function getBorderColor(theme: Theme) {
-  if (theme.vars) {
-    return theme.vars.palette.TableCell.border;
-  }
-  if (theme.palette.mode === 'light') {
-    return lighten(alpha(theme.palette.divider, 1), 0.88);
-  }
-  return darken(alpha(theme.palette.divider, 1), 0.68);
-}
-
 const columnHeaderStyles = {
   [`& .${c.iconButtonContainer}`]: {
     visibility: 'visible',
@@ -144,63 +134,43 @@ export const GridRootStyles = styled('div', {
   const apiRef = useGridPrivateApiContext();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
-  const borderColor = getBorderColor(t);
+  const baseBackground = `var(${vars.colors.background.base})`;
+  const pinnedBackground = `var(${vars.colors.background.pinned})`;
 
-  const containerBackground = t.vars
-    ? t.vars.palette.background.default
-    : (t.mixins.MuiDataGrid?.containerBackground ?? t.palette.background.default);
+  const hoverColor = `var(${vars.colors.interactive.hover})`;
+  const hoverOpacity = `var(${vars.colors.interactive.hoverOpacity})`;
+  const selectedColor = `var(${vars.colors.interactive.selected})`;
+  const selectedOpacity = `var(${vars.colors.interactive.selectedOpacity})`;
+  const selectedHoverColor = selectedColor;
+  const selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`;
 
-  const pinnedBackground = t.mixins.MuiDataGrid?.pinnedBackground ?? containerBackground;
+  const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity);
+  const selectedBackground = mix(baseBackground, selectedColor, selectedOpacity);
+  const selectedHoverBackground = mix(baseBackground, selectedHoverColor, selectedHoverOpacity);
 
-  const overlayBackground = t.vars
-    ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
-    : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
-
-  const hoverOpacity = (t.vars || t).palette.action.hoverOpacity;
-  const hoverColor = (t.vars || t).palette.action.hover;
-
-  const selectedOpacity = (t.vars || t).palette.action.selectedOpacity;
-  const selectedHoverOpacity = t.vars
-    ? (`calc(${hoverOpacity} + ${selectedOpacity})` as unknown as number) // TODO: Improve type
-    : hoverOpacity + selectedOpacity;
-  const selectedBackground = t.vars
-    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedOpacity})`
-    : alpha(t.palette.primary.main, selectedOpacity);
-
-  const selectedHoverBackground = t.vars
-    ? `rgba(${t.vars.palette.primary.mainChannel} / ${selectedHoverOpacity})`
-    : alpha(t.palette.primary.main, selectedHoverOpacity);
-
-  const blendFn = t.vars ? blendCssVars : blend;
+  const pinnedHoverBackground = mix(pinnedBackground, hoverColor, hoverOpacity);
+  const pinnedSelectedBackground = mix(pinnedBackground, selectedColor, selectedOpacity);
+  const pinnedSelectedHoverBackground = mix(
+    pinnedBackground,
+    selectedHoverColor,
+    selectedHoverOpacity,
+  );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: blendFn(backgroundColor, selectedBackground, selectedOpacity),
+        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity),
         '&:hover': {
-          backgroundColor: blendFn(backgroundColor, selectedBackground, selectedHoverOpacity),
+          backgroundColor: mix(backgroundColor, selectedHoverBackground, selectedHoverOpacity),
         },
       },
     },
   });
 
-  const pinnedBackgroundColor = blendFn(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedBackgroundColor);
-
-  const pinnedSelectedBackgroundColor = blendFn(
-    pinnedBackground,
-    selectedBackground,
-    selectedOpacity,
-  );
-  const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackgroundColor);
-
-  const pinnedSelectedHoverBackgroundColor = blendFn(
-    pinnedBackground,
-    selectedHoverBackground,
-    selectedHoverOpacity,
-  );
-  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackgroundColor);
+  const pinnedHoverStyles = getPinnedBackgroundStyles(pinnedHoverBackground);
+  const pinnedSelectedStyles = getPinnedBackgroundStyles(pinnedSelectedBackground);
+  const pinnedSelectedHoverStyles = getPinnedBackgroundStyles(pinnedSelectedHoverBackground);
 
   const selectedStyles = {
     backgroundColor: selectedBackground,
@@ -218,11 +188,8 @@ export const GridRootStyles = styled('div', {
 
     '--unstable_DataGrid-radius': `var(${vars.radius.base})`,
     '--unstable_DataGrid-headWeight': `var(${vars.typography.fontWeight.medium})`,
-    '--unstable_DataGrid-overlayBackground': overlayBackground,
 
-    '--DataGrid-containerBackground': containerBackground,
-    '--DataGrid-pinnedBackground': pinnedBackground,
-    '--DataGrid-rowBorderColor': borderColor,
+    '--DataGrid-rowBorderColor': `var(${vars.colors.border.base})`,
 
     '--DataGrid-cellOffsetMultiplier': 2,
     '--DataGrid-width': '0px',
@@ -243,7 +210,7 @@ export const GridRootStyles = styled('div', {
     position: 'relative',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor,
+    borderColor: `var(${vars.colors.border.base})`,
     borderRadius: 'var(--unstable_DataGrid-radius)',
     color: (t.vars || t).palette.text.primary,
     ...t.typography.body2,
@@ -409,7 +376,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 4, // Should be above the column separator
-      background: 'var(--DataGrid-pinnedBackground)',
+      background: `var(${vars.colors.background.pinned})`,
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -420,7 +387,7 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       alignItems: 'center',
       maxWidth: columnSeparatorTargetSize,
-      color: borderColor,
+      color: `var(${vars.colors.border.base})`,
     },
     [`& .${c.columnHeaders}`]: {
       width: 'var(--DataGrid-rowWidth)',
@@ -521,7 +488,7 @@ export const GridRootStyles = styled('div', {
       },
 
       '&:hover': {
-        backgroundColor: (t.vars || t).palette.action.hover,
+        backgroundColor: hoverBackground,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           backgroundColor: 'transparent',
@@ -534,7 +501,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['container--top']}, & .${c['container--bottom']}`]: {
       '[role=row]': {
-        background: 'var(--DataGrid-containerBackground)',
+        background: `var(${vars.colors.background.base})`,
       },
     },
 
@@ -628,7 +595,7 @@ export const GridRootStyles = styled('div', {
       alignItems: 'stretch',
     },
     [`.${c.withBorderColor}`]: {
-      borderColor,
+      borderColor: `var(${vars.colors.border.base})`,
     },
     [`& .${c['cell--withLeftBorder']}, & .${c['columnHeader--withLeftBorder']}`]: {
       borderLeftColor: 'var(--DataGrid-rowBorderColor)',
@@ -660,9 +627,9 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 3,
-      background: 'var(--DataGrid-pinnedBackground)',
+      background: `var(${vars.colors.background.pinned})`,
       '&.Mui-selected': {
-        backgroundColor: pinnedSelectedBackgroundColor,
+        backgroundColor: pinnedSelectedBackground,
       },
     },
     [`& .${c.virtualScrollerContent} .${c.row}`]: {
@@ -742,7 +709,7 @@ export const GridRootStyles = styled('div', {
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: 'var(--DataGrid-pinnedBackground)',
+        backgroundColor: `var(${vars.colors.background.pinned})`,
         position: 'sticky',
         right: 0,
       },
@@ -775,24 +742,40 @@ export const GridRootStyles = styled('div', {
 });
 
 function transformMaterialUITheme(t: Theme) {
+  const borderColor = getBorderColor(t);
+
+  const backgroundBase =
+    t.mixins.MuiDataGrid?.containerBackground ?? (t.vars || t).palette.background.default;
+  const backgroundPinned = t.mixins.MuiDataGrid?.pinnedBackground ?? backgroundBase;
+  const backgroundBackdrop = t.vars
+    ? `rgba(${t.vars.palette.background.defaultChannel} / ${t.vars.palette.action.disabledOpacity})`
+    : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
+
+  const selectedColor = t.vars
+    ? `rgb(${t.vars.palette.primary.mainChannel})`
+    : t.palette.primary.main;
+
   return {
     [vars.spacingUnit]: t.spacing(1),
 
-    [vars.colors.background.base]: t.palette.background.default,
+    [vars.colors.border.base]: borderColor,
+    [vars.colors.background.base]: backgroundBase,
+    [vars.colors.background.pinned]: backgroundPinned,
     [vars.colors.background.overlay]: t.palette.background.paper,
+    [vars.colors.background.backdrop]: backgroundBackdrop,
     [vars.colors.foreground.base]: t.palette.text.primary,
     [vars.colors.foreground.muted]: t.palette.text.secondary,
     [vars.colors.foreground.accent]: t.palette.primary.dark,
     [vars.colors.foreground.disabled]: t.palette.text.disabled,
-    [vars.colors.interactive.hover]: t.palette.action.hover,
+
+    [vars.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
     [vars.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [vars.colors.interactive.focus]: t.palette.action.focus,
+    [vars.colors.interactive.focus]: removeOpacity(t.palette.action.focus),
     [vars.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
-    [vars.colors.interactive.disabled]: t.palette.action.disabled,
+    [vars.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
     [vars.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
-    [vars.colors.interactive.selected]: t.palette.action.selected,
+    [vars.colors.interactive.selected]: selectedColor,
     [vars.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
-    [vars.colors.border.base]: t.palette.divider,
 
     [vars.radius.base]:
       typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,
@@ -825,30 +808,20 @@ function transformMaterialUITheme(t: Theme) {
   };
 }
 
-/**
- * Blend a transparent overlay color with a background color, resulting in a single
- * RGB color.
- */
-function blend(background: string, overlay: string, opacity: number, gamma: number = 1) {
-  const f = (b: number, o: number) =>
-    Math.round((b ** (1 / gamma) * (1 - opacity) + o ** (1 / gamma) * opacity) ** gamma);
-
-  const backgroundColor = decomposeColor(background);
-  const overlayColor = decomposeColor(overlay);
-
-  const rgb = [
-    f(backgroundColor.values[0], overlayColor.values[0]),
-    f(backgroundColor.values[1], overlayColor.values[1]),
-    f(backgroundColor.values[2], overlayColor.values[2]),
-  ] as const;
-
-  return recomposeColor({
-    type: 'rgb',
-    values: rgb as any,
-  });
+function getBorderColor(theme: Theme) {
+  if (theme.vars) {
+    return theme.vars.palette.TableCell.border;
+  }
+  if (theme.palette.mode === 'light') {
+    return lighten(alpha(theme.palette.divider, 1), 0.88);
+  }
+  return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
-const removeOpacity = (color: string) => `rgb(from ${color} r g b / 1)`;
-function blendCssVars(background: string, overlay: string, opacity: string | number) {
-  return `color-mix(in srgb,${background}, ${removeOpacity(overlay)} calc(${opacity} * 100%))`;
+function removeOpacity(color: string) {
+  return `rgb(from ${color} r g b / 1)`;
+}
+
+function mix(background: string, overlay: string, opacity: number | string) {
+  return `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`;
 }

@@ -29,6 +29,9 @@ export const vars = {
 
   /* Variables */
   colors: {
+    border: {
+      base: '--DataGrid-t-colors-border-base',
+    },
     foreground: {
       base: '--DataGrid-t-colors-foreground-base',
       muted: '--DataGrid-t-colors-foreground-muted',
@@ -37,7 +40,11 @@ export const vars = {
     },
     background: {
       base: '--DataGrid-t-colors-background-base',
+      // FIXME(kenan): validate `pinned`
+      pinned: '--DataGrid-t-colors-background-pinned',
+      // FIXME(kenan): validate `overlay` and `backdrop`
       overlay: '--DataGrid-t-colors-background-overlay',
+      backdrop: '--DataGrid-t-colors-background-backdrop',
     },
     interactive: {
       hover: '--DataGrid-t-colors-interactive-hover',
@@ -48,9 +55,6 @@ export const vars = {
       disabledOpacity: '--DataGrid-t-colors-interactive-disabled-opacity',
       selected: '--DataGrid-t-colors-interactive-selected',
       selectedOpacity: '--DataGrid-t-colors-interactive-selected-opacity',
-    },
-    border: {
-      base: '--DataGrid-t-colors-border-base',
     },
   },
   radius: {
