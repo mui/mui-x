@@ -3,6 +3,8 @@ import {
   gridColumnLookupSelector,
   useGridApiEventHandler,
   useGridApiMethod,
+  useGridApiOptionHandler,
+  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -15,6 +17,7 @@ import {
   areAggregationRulesEqual,
 } from './gridAggregationUtils';
 import { createAggregationLookup } from './createAggregationLookup';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
@@ -63,8 +66,6 @@ export const useGridAggregation = (
       const currentModel = gridAggregationModelSelector(apiRef);
       if (currentModel !== model) {
         apiRef.current.setState(mergeStateWithAggregationModel(model));
-        apiRef.current.updateColumns([]);
-        apiRef.current.forceUpdate();
       }
     },
     [apiRef],
@@ -123,14 +124,16 @@ export const useGridAggregation = (
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
 
-  useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', applyAggregation);
 
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
+  const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
+  useEnhancedEffect(checkAggregationRulesDiff, [checkAggregationRulesDiff, aggregationModel]);
+
+  React.useLayoutEffect(() => {
     if (props.aggregationModel !== undefined) {
       apiRef.current.setAggregationModel(props.aggregationModel);
     }
