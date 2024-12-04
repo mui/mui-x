@@ -157,8 +157,15 @@ export const useGridRowsMeta = (
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    pinnedRows.top.forEach(processHeightEntry);
-    pinnedRows.bottom.forEach(processHeightEntry);
+    const pinnedTopRowsTotalHeight = pinnedRows.top.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
+
+    const pinnedBottomRowsTotalHeight = pinnedRows.bottom.reduce((acc, row) => {
+      const entry = processHeightEntry(row);
+      return acc + entry.content + entry.spacingTop + entry.spacingBottom + entry.detail;
+    }, 0);
 
     const positions: number[] = [];
     const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
@@ -181,6 +188,8 @@ export const useGridRowsMeta = (
         rowsMeta: {
           currentPageTotalHeight,
           positions,
+          pinnedTopRowsTotalHeight,
+          pinnedBottomRowsTotalHeight,
         },
       };
     });

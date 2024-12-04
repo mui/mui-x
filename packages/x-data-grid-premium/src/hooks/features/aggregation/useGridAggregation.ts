@@ -132,7 +132,7 @@ export const useGridAggregation = (
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
   useEnhancedEffect(checkAggregationRulesDiff, [checkAggregationRulesDiff, aggregationModel]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (props.aggregationModel !== undefined) {
       apiRef.current.setAggregationModel(props.aggregationModel);
     }

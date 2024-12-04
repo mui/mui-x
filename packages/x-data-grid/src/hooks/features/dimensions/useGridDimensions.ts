@@ -25,12 +25,8 @@ import { gridDensityFactorSelector } from '../density';
 import { gridRenderContextSelector } from '../virtualization';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
-import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import {
-  calculatePinnedRowsHeight,
-  getValidRowHeight,
-  rowHeightWarning,
-} from '../rows/gridRowsUtils';
+import { gridPinnedRowsHeightSelector, gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
@@ -96,6 +92,7 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const pinnedColumns = useGridSelector(apiRef, gridVisiblePinnedColumnDefinitionsSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const pinnedRowsHeight = useGridSelector(apiRef, gridPinnedRowsHeightSelector);
   const isFirstSizing = React.useRef(true);
   const validRowHeight = React.useMemo(
     () =>
@@ -166,7 +163,6 @@ export function useGridDimensions(
       return;
     }
     const rootElement = apiRef.current.rootElementRef.current;
-    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     const scrollbarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
 
@@ -284,6 +280,7 @@ export function useGridDimensions(
     headersTotalHeight,
     leftPinnedWidth,
     rightPinnedWidth,
+    pinnedRowsHeight,
   ]);
 
   const apiPublic: GridDimensionsApi = {

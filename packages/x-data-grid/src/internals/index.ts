@@ -110,7 +110,6 @@ export {
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
 } from '../hooks/features/headerFiltering/useGridHeaderFiltering';
-export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridRowSelection,
   rowSelectionStateInitializer,
