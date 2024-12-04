@@ -24,6 +24,8 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   gridExpandedSortedRowIdsSelector,
   gridFilteredRowsLookupSelector,
+  gridFilterModelSelector,
+  gridQuickFilterValuesSelector,
 } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
@@ -639,7 +641,15 @@ export const useGridRowSelection = (
   >(
     (params) => {
       if (params.value) {
-        if (!props.isRowSelectable && !props.checkboxSelectionVisibleOnly && applyAutoSelection) {
+        const filterModel = gridFilterModelSelector(apiRef);
+        const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
+        const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
+        if (
+          !props.isRowSelectable &&
+          !props.checkboxSelectionVisibleOnly &&
+          applyAutoSelection &&
+          !hasFilters
+        ) {
           apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
         } else {
           const rowsToBeSelected =
