@@ -9,7 +9,7 @@ import { validateDateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { useDefaultizedDateTimeField } from '../internals/hooks/defaultizedFieldProps';
 import { PickerValue } from '../internals/models';
-import { useGetOpenDialogAriaText } from '../internals/hooks/useGetOpenPickerAriaLabel';
+import { useGetOpenDialogAriaLabel } from '../internals/hooks/useGetOpenDialogAriaLabel';
 
 export const useDateTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -24,7 +24,7 @@ export const useDateTimeField = <
 
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date-time');
 
-  const getOpenDialogAriaText = useGetOpenDialogAriaText({
+  const getOpenDialogAriaLabel = useGetOpenDialogAriaLabel({
     formatKey: 'fullDate',
     translationKey: 'openDatePickerDialogue',
   });
@@ -41,6 +41,6 @@ export const useDateTimeField = <
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDateTime,
     valueType: 'date-time',
-    getOpenDialogAriaText,
+    getOpenDialogAriaLabel,
   });
 };

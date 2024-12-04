@@ -34,7 +34,7 @@ export interface UseFieldParams<
   fieldValueManager: FieldValueManager<TValue>;
   validator: Validator<TValue, InferError<TInternalProps>, TInternalProps>;
   valueType: PickerValueType;
-  getOpenDialogAriaText: (value: TValue) => string;
+  getOpenDialogAriaLabel: (value: TValue) => string;
 }
 
 export interface UseFieldInternalProps<

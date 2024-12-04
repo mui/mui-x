@@ -52,7 +52,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
-    getOpenDialogAriaText,
+    getOpenDialogAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();

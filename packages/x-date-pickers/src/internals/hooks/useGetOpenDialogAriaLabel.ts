@@ -4,7 +4,7 @@ import { AdapterFormats } from '../../models';
 import { PickerValue } from '../models';
 import { useUtils } from './useUtils';
 
-export const useGetOpenDialogAriaText = (params: {
+export const useGetOpenDialogAriaLabel = (params: {
   formatKey: keyof AdapterFormats;
   translationKey: 'openDatePickerDialogue' | 'openTimePickerDialogue';
 }) => {

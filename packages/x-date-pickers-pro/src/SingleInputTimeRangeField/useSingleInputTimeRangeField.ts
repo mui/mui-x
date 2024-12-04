@@ -37,6 +37,6 @@ export const useSingleInputTimeRangeField = <
     validator: validateTimeRange,
     valueType: 'time',
     // TODO v8: Add a real aria label before enabling the button.
-    getOpenDialogAriaText: () => '',
+    getOpenDialogAriaLabel: () => '',
   });
 };

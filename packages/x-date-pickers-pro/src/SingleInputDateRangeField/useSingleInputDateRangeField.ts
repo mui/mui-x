@@ -37,6 +37,6 @@ export const useSingleInputDateRangeField = <
     validator: validateDateRange,
     valueType: 'date',
     // TODO v8: Add a real aria label before enabling the button.
-    getOpenDialogAriaText: () => '',
+    getOpenDialogAriaLabel: () => '',
   });
 };
