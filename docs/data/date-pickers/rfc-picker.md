@@ -11,7 +11,7 @@ title: DX - Picker
 This page extends the initial proposal made in [#14718](https://github.com/mui/mui-x/issues/14718)
 :::
 
-## Basic usage in a Popover
+## Usage in a Popover
 
 ### Without Material UI
 
@@ -24,7 +24,7 @@ import { Popover } from '@base-ui-components/react/popover';
 import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
-function CustomDatePicker(props) {
+function DesktopDatePicker(props) {
   const manager = useDateManager();
 
   return (
@@ -47,7 +47,7 @@ function CustomDatePicker(props) {
   );
 }
 
-<CustomDatePicker value={value} onChange={setValue} />;
+<DesktopDatePicker value={value} onChange={setValue} />;
 ```
 
 #### With React Aria `<Popover />` components
@@ -59,7 +59,7 @@ import { useDateManager } from '@base-ui-components/react-x-date-pickers/manager
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Dialog, DialogTrigger, Button, Popover } from 'react-aria-components';
 
-function CustomDatePicker(props) {
+function DesktopDatePicker(props) {
   const manager = useDateManager();
 
   return (
@@ -81,7 +81,7 @@ function CustomDatePicker(props) {
   );
 }
 
-<CustomDatePicker value={value} onChange={setValue} />;
+<DesktopDatePicker value={value} onChange={setValue} />;
 ```
 
 ### With Material UI
@@ -98,7 +98,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 This component could be renamed `<PopoverDatePicker />` to better match its behavior.
 :::
 
-## Basic usage in a Dialog
+## Usage in a Dialog
 
 ### Without Material UI
 
@@ -111,7 +111,7 @@ import { useDateManager } from '@base-ui-components/react-x-date-pickers/manager
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Dialog } from '@base-ui-components/react/dialog';
 
-function CustomDatePicker(props) {
+function MobileDatePicker(props) {
   const manager = useDateManager();
 
   return (
@@ -132,7 +132,7 @@ function CustomDatePicker(props) {
   );
 }
 
-<CustomDatePicker value={value} onChange={setValue} />;
+<MobileDatePicker value={value} onChange={setValue} />;
 ```
 
 #### With Mantine `<Modal />` component
@@ -144,7 +144,7 @@ import { useDateManager } from '@base-ui-components/react-x-date-pickers/manager
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Modal, Button } from '@mantine/core';
 
-function CustomDatePicker(props) {
+function MobileDatePicker(props) {
   const manager = useDateManager();
 
   return (
@@ -166,7 +166,7 @@ function CustomDatePicker(props) {
   );
 }
 
-<CustomDatePicker value={value} onChange={setValue} />;
+<MobileDatePicker value={value} onChange={setValue} />;
 ```
 
 ### With Material UI
@@ -181,7 +181,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 This component could be renamed `<DialogDatePicker />` to better match its behavior.
 :::
 
-## Basic responsive usage
+## Responsive usage
 
 ### Without Material UI
 
@@ -194,7 +194,7 @@ import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
 import { Dialog } from '@base-ui-components/react/dialog';
 
-function CustomDatePicker(props) {
+function DatePicker(props) {
   const manager = useDateManager();
   const isDesktop = useMediaQuery('@media (pointer: fine)', {
     defaultMatches: true,
@@ -241,6 +241,8 @@ function CustomDatePicker(props) {
     </Picker.Root>
   );
 }
+
+<DatePicker value={value} onChange={setValue}>
 ```
 
 ### With Material UI
@@ -252,6 +254,37 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 <DatePicker value={value} onChange={setValue} />;
 ```
+
+## Static usage
+
+### Without Material UI
+
+The user can use the `<Picker.StaticRoot />` component to create a static picker.
+Most of the time, the user can use directly components such as `Calendar.*`, but the static picker can be useful in the following scenarios:
+
+- several view components are used together (the main use case is to create a Date Time Picker). The static picker will make sure the value is correctly handled between those components.
+- the user wants to add UI elements like a shortcut panel using utility components like `<Picker.SetValue />`.
+
+```tsx
+import { useDateManager } from '@base-ui-components/react-x-date-pickers/managers';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+
+function StaticDatePicker(props) {
+  const manager = useDateManager();
+
+  return (
+    <Picker.StaticRoot manager={manager} {...props}>
+      <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+    </Picker.StaticRoot>
+  );
+}
+
+<StaticDatePicker value={value} onChange={setValue} />;
+```
+
+### With Material UI
+
+TODO
 
 ## Usage with date and time views
 
@@ -269,9 +302,7 @@ import { Popover } from '@base-ui-components/react/popover';
     <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
   </Picker.MatchView>
   <Picker.MatchView match={['hours', 'minutes', 'seconds', 'meridiem']}>
-    <DigitalClock.Root>
-      {/** See digital clock documentation (not available yet) */}
-    </DigitalClock.Root>
+    <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
   </Picker.MatchView>
 </Popover.Popup>;
 ```
@@ -487,6 +518,38 @@ It expects a function as its children, which receives the context value as a par
 - **Form props**: `disabled`, `readOnly`.
 
   Same typing and behavior as today.
+
+- **Open props**: `open`, `onOpenChange`
+
+  The `onOpenChange` replaces the `onOpen` and `onClose` props in the current implementation
+
+#### `Picker.StaticRoot`
+
+Top level component that wraps the other components when there is not field UI but only views.
+
+- `manager`: `PickerManager` - **required**
+
+  :::success
+  See [#15395](https://github.com/mui/mui-x/issues/15395) for context.
+  :::
+
+- `children`: `(contextValue: PickerContextValue) => React.ReactNode`
+
+- **Value props**: `value`, `defaultValue`, `referenceDate`, `onChange`, `onError` and `timezone`.
+
+  Same typing and behavior as today.
+
+- **Validation props**: list based on the `manager` prop
+
+  For `useDateManager()` it would be `maxDate`, `minDate`, `disableFuture`, `disablePast`, `shouldDisableDate`, `shouldDisableMonth`, `shouldDisableYear`.
+
+  Same typing and behavior as today.
+
+- **Form props**: `disabled`, `readOnly`.
+
+  Same typing and behavior as today.
+
+#### Props
 
 ### `Picker.FormattedValue`
 
