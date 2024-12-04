@@ -606,16 +606,6 @@ export const useGridVirtualScroller = () => {
   }, [apiRef, contentSize]);
 
   useEnhancedEffect(() => {
-    // TODO a scroll reset should not be necessary
-    if (enabledForColumns) {
-      scrollerRef.current!.scrollLeft = 0;
-    }
-    if (enabledForRows) {
-      scrollerRef.current!.scrollTop = 0;
-    }
-  }, [enabledForColumns, enabledForRows, gridRootRef, scrollerRef]);
-
-  useEnhancedEffect(() => {
     if (listView) {
       scrollerRef.current!.scrollLeft = 0;
     }

@@ -7,10 +7,11 @@ import {
 } from '@mui/utils';
 import { useOnMount } from '../../hooks/utils/useOnMount';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { gridDimensionsSelector, useGridSelector } from '../../hooks';
+import { gridDimensionsSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
@@ -75,12 +76,15 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
-    const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
+    const hasScroll = props.position === 'vertical' ? dimensions.hasScrollX : dimensions.hasScrollY;
 
-    const contentSize = dimensions.minimumSize[propertyDimension];
+    const contentSize =
+      dimensions.minimumSize[propertyDimension] + (hasScroll ? dimensions.scrollbarSize : 0);
+    console.log(props.position, dimensions.hasScrollX, dimensions.hasScrollY, dimensions);
 
     const scrollbarSize =
       props.position === 'vertical'
