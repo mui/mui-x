@@ -22,7 +22,13 @@ import { createRenderer, fireEvent, screen, act, within } from '@mui/internal-te
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues, getSelectInput, grid } from 'test/utils/helperFn';
+import {
+  getColumnHeaderCell,
+  getColumnValues,
+  getSelectInput,
+  grid,
+  includeRowSelection,
+} from 'test/utils/helperFn';
 
 const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PRO_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
@@ -617,7 +623,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
+    expect(apiRef.current.state.rowSelection).to.deep.equal(includeRowSelection([1]));
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
