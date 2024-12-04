@@ -44,8 +44,8 @@ function ChartsAxisTooltipContent(props: ChartsAxisTooltipContentProps) {
       <ChartsTooltipTable className={classes.table}>
         {axisValue != null && !axis.hideTooltip && (
           <thead>
-            <ChartsTooltipRow>
-              <ChartsTooltipCell colSpan={3}>
+            <ChartsTooltipRow className={classes.row}>
+              <ChartsTooltipCell colSpan={3} className={clsx(classes.cell, classes.axisValueCell)}>
                 <Typography>{axisFormattedValue}</Typography>
               </ChartsTooltipCell>
             </ChartsTooltipRow>
