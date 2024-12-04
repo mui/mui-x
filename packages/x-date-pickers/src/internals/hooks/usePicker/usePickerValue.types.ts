@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
 import { PickerVariant } from '../../models/common';
@@ -313,10 +314,36 @@ export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue>
   isValid: (value: TValue) => boolean;
 }
 
+/**
+ * Params passed to `usePickerProvider`.
+ */
+export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
+  value: TValue;
+  contextValue: UsePickerValueContextValue;
+}
+
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
+  provider: UsePickerValueProviderParams<TValue>;
+}
+
+export interface UsePickerValueContextValue {
+  /**
+   * Sets the current opening status of the picker.
+   * ```ts
+   * setOpen(true); // Opens the picker.
+   * setOpen(false); // Closes the picker.
+   * setOpen((prevOpen) => !prevOpen); // Toggles the opening status.
+   * ```
+   * @param {React.SetStateAction<boolean>} action The new opening status of the picker, it can be a function that will receive the previous opening status.
+   */
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  /**
+   * `true` if the picker is open, `false` otherwise.
+   */
+  open: boolean;
 }

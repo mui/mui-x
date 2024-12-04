@@ -28,14 +28,6 @@ function ButtonDateRangeField(props) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
   const formattedValue = (value ?? [null, null])
     .map((date) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
@@ -46,7 +38,7 @@ function ButtonDateRangeField(props) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={pickerContext.triggerRef}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>

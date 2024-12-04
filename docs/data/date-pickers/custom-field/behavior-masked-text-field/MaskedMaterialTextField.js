@@ -50,13 +50,6 @@ function MaskedDateField(props) {
 
   const parsedFormat = useParsedFormat(internalProps);
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -146,7 +139,11 @@ function MaskedDateField(props) {
         ref: pickerContext.triggerRef,
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={handleTogglePicker} size="small" edge="end">
+            <IconButton
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
+              size="small"
+              edge="end"
+            >
               <CalendarIcon />
             </IconButton>
           </InputAdornment>

@@ -26,13 +26,6 @@ function AutocompleteField(props) {
   } = forwardedProps;
 
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     validator: validateDate,
@@ -60,7 +53,10 @@ function AutocompleteField(props) {
               endAdornment: React.cloneElement(endAdornment, {
                 children: (
                   <React.Fragment>
-                    <IconButton onClick={handleTogglePicker} size="small">
+                    <IconButton
+                      onClick={() => pickerContext.setOpen((prev) => !prev)}
+                      size="small"
+                    >
                       <CalendarIcon />
                     </IconButton>
                     {endAdornment.props.children}

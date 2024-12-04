@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import MuiTextField, { TextFieldProps } from '@mui/material/TextField';
 import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
 import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
@@ -97,17 +98,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   } = cleanFieldResponse(fieldResponse);
   const ownerState = useFieldOwnerState(textFieldProps);
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (!pickerContext) {
-      return;
-    }
-
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
+  const handleTogglePicker = useEventCallback(() => pickerContext?.setOpen((prev) => !prev));
 
   const clearButtonPosition = clearable ? clearButtonPositionProp : null;
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;

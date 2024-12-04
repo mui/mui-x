@@ -53,13 +53,6 @@ const JoyField = React.forwardRef((props, ref) => {
   } = props;
 
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   return (
     <FormControl ref={ref}>
@@ -70,7 +63,7 @@ const JoyField = React.forwardRef((props, ref) => {
         endDecorator={
           <React.Fragment>
             <IconButton
-              onClick={handleTogglePicker}
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
               aria-label={openPickerAriaLabel}
             >
               <CalendarIcon size="md" />

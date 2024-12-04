@@ -83,13 +83,6 @@ const BrowserTextField = React.forwardRef(
     } = props;
 
     const pickerContext = usePickerContext();
-    const handleTogglePicker = (event: React.UIEvent) => {
-      if (pickerContext.open) {
-        pickerContext.onClose(event);
-      } else {
-        pickerContext.onOpen(event);
-      }
-    };
 
     const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
@@ -109,7 +102,7 @@ const BrowserTextField = React.forwardRef(
           />
         </BrowserFieldContent>
         <IconButton
-          onClick={handleTogglePicker}
+          onClick={() => pickerContext.setOpen((prev) => !prev)}
           sx={{ marginLeft: 1.5 }}
           aria-label={openPickerAriaLabel}
         >

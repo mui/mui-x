@@ -55,12 +55,11 @@ export const usePicker = <
 
   const providerProps = usePickerProvider({
     props,
-    pickerValueResponse,
     localeText,
     valueManager,
     variant,
-    views: pickerViewsResponse.views,
-    hasUIView: pickerViewsResponse.hasUIView,
+    paramsFromUsePickerValue: pickerValueResponse.provider,
+    paramsFromUsePickerViews: pickerViewsResponse.provider,
   });
 
   return {
