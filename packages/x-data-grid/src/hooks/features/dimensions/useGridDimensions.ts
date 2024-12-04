@@ -163,7 +163,7 @@ export function useGridDimensions(
     }
     const rootElement = apiRef.current.rootElementRef.current;
 
-    const scrollbarSize = measureScrollbarSize(rootElement, columnsTotalWidth, props.scrollbarSize);
+    const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
 
     const topContainerHeight = headersTotalHeight + (rowsMeta.pinnedTopRowsTotalHeight ?? 0);
     const bottomContainerHeight = rowsMeta.pinnedBottomRowsTotalHeight ?? 0;
@@ -377,11 +377,7 @@ export function useGridDimensions(
 }
 
 const scrollbarSizeCache = new WeakMap<Element, number>();
-function measureScrollbarSize(
-  rootElement: Element | null,
-  columnsTotalWidth: number,
-  scrollbarSize: number | undefined,
-) {
+function measureScrollbarSize(rootElement: Element | null, scrollbarSize: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
   }
