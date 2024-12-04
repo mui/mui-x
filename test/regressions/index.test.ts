@@ -17,13 +17,15 @@ const isMaterialUIv6 = materialPackageJson.version.startsWith('6.');
 const timeSensitiveSuites = ['ColumnAutosizingAsync', 'DensitySelectorGrid'];
 
 const isConsoleWarningIgnored = (msg?: string) => {
-  if (
-    msg &&
+  const isMuiV6Error =
     isMaterialUIv6 &&
-    msg.startsWith(
+    msg?.startsWith(
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    )
-  ) {
+    );
+
+  const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
+
+  if (isMuiV6Error || isReactRouterFlagsError) {
     return true;
   }
   return false;

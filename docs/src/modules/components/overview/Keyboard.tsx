@@ -471,7 +471,7 @@ export default function Keyboard() {
             sx={{ width: 'fit-content' }}
             // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
-            More info
+            More about accessibility
           </Button>
         </Stack>
         <Stack spacing={2} sx={{ width: '100%', maxWidth: '500px' }}>
