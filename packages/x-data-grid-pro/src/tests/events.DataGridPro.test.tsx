@@ -345,7 +345,6 @@ describe('<DataGridPro /> - Events params', () => {
       />,
     );
     expect(handleFetchRows.callCount).to.equal(1);
-    console.log();
     expect(handleFetchRows.lastCall.firstArg).to.contain({
       firstRowToRender: 3,
       lastRowToRender: 50,
