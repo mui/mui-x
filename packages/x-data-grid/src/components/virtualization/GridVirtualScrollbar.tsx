@@ -79,10 +79,8 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
-    const hasScroll = props.position === 'vertical' ? dimensions.hasScrollY : dimensions.hasScrollX;
 
-    const contentSize =
-      dimensions.minimumSize[propertyDimension] + (hasScroll ? dimensions.scrollbarSize : 0);
+    const contentSize = dimensions.minimumSize[propertyDimension];
 
     const scrollbarSize =
       props.position === 'vertical'
