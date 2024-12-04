@@ -170,8 +170,6 @@ From here, you can target any subcomponents with its class name.
 It is possible to use gradients and patterns to fill the charts.
 This can be done by passing your gradient or pattern definition as children of the chart component.
 
-{{"demo": "GradientBar.js"}}
-
 Note that the gradient or pattern defined that way is only usable for SVG.
 So a direct definition like `color: "url(#Pattern)'` would cause undefined colors in HTML elements such as the tooltip.
 The demo solves this issue by using a CSS variable ` '--my-custom-pattern': 'url(#Pattern)'` to specify fallback color with `color: 'var(--my-custom-pattern, #123456)'`.
