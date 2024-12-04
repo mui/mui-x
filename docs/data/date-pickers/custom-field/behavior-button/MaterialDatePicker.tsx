@@ -38,14 +38,6 @@ function ButtonDateField(props: DatePickerFieldProps) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
   const valueStr = value == null ? parsedFormat : value.format(format);
 
   return (
@@ -54,7 +46,7 @@ function ButtonDateField(props: DatePickerFieldProps) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}
     </Button>
