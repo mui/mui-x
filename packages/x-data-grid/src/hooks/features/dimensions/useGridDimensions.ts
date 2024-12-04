@@ -376,6 +376,7 @@ export function useGridDimensions(
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }
 
+const scrollbarSizeCache = new WeakMap<Element, number>();
 function measureScrollbarSize(
   rootElement: Element | null,
   columnsTotalWidth: number,
@@ -385,7 +386,12 @@ function measureScrollbarSize(
     return scrollbarSize;
   }
 
-  if (rootElement === null || columnsTotalWidth === 0) {
+  const cachedSize = scrollbarSizeCache.get(rootElement!);
+  if (cachedSize !== undefined) {
+    return cachedSize;
+  }
+
+  if (rootElement === null) {
     return 0;
   }
 
@@ -399,6 +405,9 @@ function measureScrollbarSize(
   rootElement.appendChild(scrollDiv);
   const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
   rootElement.removeChild(scrollDiv);
+
+  scrollbarSizeCache.set(rootElement, size);
+
   return size;
 }
 
