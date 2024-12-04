@@ -168,7 +168,7 @@ From here, you can target any subcomponents with its class name.
 ### Gradients and patterns
 
 It is possible to use gradients and patterns to fill the charts.
-This can be done by using the `sx` prop in conjunction with passing your gradient or pattern definition as children of the chart component.
+This can be done by passing your gradient or pattern definition as children of the chart component.
 
 {{"demo": "GradientBar.js"}}
 
