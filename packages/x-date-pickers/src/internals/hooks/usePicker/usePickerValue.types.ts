@@ -333,7 +333,7 @@ export interface UsePickerValueResponse<TValue extends PickerValidValue, TError>
 
 export interface UsePickerValueContextValue {
   /**
-   * Sets the current opening status of the picker.
+   * Sets the current open state of the Picker.
    * ```ts
    * setOpen(true); // Opens the picker.
    * setOpen(false); // Closes the picker.
