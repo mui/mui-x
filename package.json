@@ -92,7 +92,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^5.16.8",
     "@mui/internal-babel-plugin-resolve-imports": "1.0.18",
-    "@mui/internal-markdown": "^1.0.21",
+    "@mui/internal-markdown": "^1.0.22",
     "@mui/internal-test-utils": "^1.0.22",
     "@mui/material": "^5.16.8",
     "@mui/monorepo": "github:mui/material-ui#617a4e075d0e26ec44df0ac5fedfae89d1541240",
