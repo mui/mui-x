@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router/dom';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 import { Globals } from '@react-spring/web';
@@ -141,32 +141,49 @@ function App() {
     return `/${test.suite}/${test.name}`;
   }
 
+  const suiteTestsMap = React.useMemo(() => tests.reduce((acc, test) => {
+    if (!acc[test.suite]) {
+      acc[test.suite] = [];
+    }
+    acc[test.suite].push(test);
+    return acc;
+  }, {}), []);
+
+  if (!suiteTestsMap) {
+    return null;
+  }
+
   return (
     <Router>
       <Routes>
-        {tests.map((test) => {
-          const path = computePath(test);
-          const TestCase = test.case;
-          if (TestCase === undefined) {
-            console.warn('Missing test.case for ', test);
-            return null;
-          }
-
-          const isDataGridTest =
-            path.indexOf('/docs-data-grid') === 0 ||
-            path.indexOf('test-regressions-data-grid') !== -1;
-
+        {suiteTestsMap.keys(suite => {
           return (
             <Route
-              key={path}
-              exact
-              path={path}
-              element={
-                <TestViewer isDataGridTest={isDataGridTest}>
-                  <TestCase />
-                </TestViewer>
-              }
-            />
+              key={suite}
+              path={suite}
+            >
+              {suiteTestsMap[suite].map((test) => {
+                const TestCase = test.case;
+                if (TestCase === undefined) {
+                  console.warn('Missing test.case for ', test);
+                  return null;
+                }
+
+                const isDataGridTest = suite.indexOf('/docs-data-grid') === 0 || suite === 'test-regressions-data-grid';
+                return (
+                  <Route
+                    key={test.name}
+                    // exact
+                    path={test.name}
+                    element={
+                      <TestViewer isDataGridTest={isDataGridTest}>
+                        <TestCase />
+                      </TestViewer>
+                    }
+                  />
+                );
+              })}
+            </Route>
           );
         })}
       </Routes>
@@ -196,6 +213,4 @@ function App() {
   );
 }
 
-const container = document.getElementById('react-root');
-const root = ReactDOM.createRoot(container);
-root.render(<App />);
+ReactDOM.createRoot(document.getElementById('react-root')).render(<App />);
