@@ -1,9 +1,7 @@
-import { TextFieldProps } from '@mui/material/TextField';
 import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
-  convertFieldResponseIntoMuiTextFieldProps,
   PickerAnyRangeManager,
   PickerAnyManager,
   PickerManagerEnableAccessibleFieldDOMStructure,
@@ -17,9 +15,10 @@ import {
 /**
  * @ignore - internal hook.
  */
-export function useMultiInputRangeFieldTextFieldProps<TManager extends PickerAnyRangeManager>(
-  parameters: UseMultiInputRangeFieldTextFieldProps<TManager>,
-): TextFieldProps {
+export function useMultiInputRangeFieldTextFieldProps<
+  TManager extends PickerAnyRangeManager,
+  TForwardedProps extends { [key: string]: any },
+>(parameters: UseMultiInputRangeFieldTextFieldProps<TManager>) {
   type TEnableAccessibleFieldDOMStructure =
     PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
@@ -70,9 +69,9 @@ export function useMultiInputRangeFieldTextFieldProps<TManager extends PickerAny
     fieldValueManager: manager.internal_fieldValueManager,
     validator: manager.validator,
     valueType: manager.valueType,
-  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TextFieldProps>;
+  }) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TForwardedProps>;
 
-  return convertFieldResponseIntoMuiTextFieldProps(fieldResponse as any);
+  return fieldResponse;
 }
 
 interface UseMultiInputRangeFieldTextFieldProps<TManager extends PickerAnyRangeManager> {

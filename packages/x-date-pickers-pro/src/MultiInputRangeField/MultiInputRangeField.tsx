@@ -6,29 +6,20 @@ import MuiTextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import useEventCallback from '@mui/utils/useEventCallback';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
-  FieldChangeHandler,
-  FieldChangeHandlerContext,
+  convertFieldResponseIntoMuiTextFieldProps,
   PickerAnyRangeManager,
-  PickerManagerError,
-  PickerRangeValue,
-  PickerValue,
-  useControlledValueWithTimezone,
-  useFieldInternalPropsWithDefaults,
   useFieldOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { useValidation } from '@mui/x-date-pickers/validation';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { MultiInputRangeFieldProps } from './MultiInputRangeField.types';
 import {
   getMultiInputRangeFieldUtilityClass,
   MultiInputRangeFieldClasses,
 } from './multiInputRangeFieldClasses';
-import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
-import { useMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeFieldTextFieldProps';
+import { useMultiInputRangeField } from './useMultiInputRangeField';
 
 const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undefined) => {
   const slots = {
@@ -68,8 +59,6 @@ type MultiInputRangeFieldComponent = (<TManager extends PickerAnyRangeManager>(
 export const MultiInputRangeField = React.forwardRef(function MultiInputRangeField<
   TManager extends PickerAnyRangeManager,
 >(inProps: MultiInputRangeFieldProps<TManager>, ref: React.Ref<HTMLDivElement>) {
-  type TError = PickerManagerError<TManager>;
-
   const { manager, ...props } = inProps;
   const themeProps = useThemeProps({
     props,
@@ -77,28 +66,6 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
   });
 
   const { internalProps, forwardedProps } = useSplitFieldProps(themeProps, manager.valueType);
-
-  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
-    manager,
-    internalProps,
-  });
-
-  const {
-    value: valueProp,
-    defaultValue,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    onChange,
-    disabled,
-    readOnly,
-    selectedSections,
-    onSelectedSectionsChange,
-    timezone: timezoneProp,
-    enableAccessibleFieldDOMStructure,
-    autoFocus,
-    referenceDate,
-  } = internalPropsWithDefaults;
 
   const {
     slots,
@@ -110,51 +77,8 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     ...otherForwardedProps
   } = forwardedProps;
 
-  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'useMultiInputDateRangeField',
-    timezone: timezoneProp,
-    value: valueProp,
-    defaultValue,
-    referenceDate,
-    onChange,
-    valueManager: manager.internal_valueManager,
-  });
-
-  const { validationError, getValidationErrorForNewValue } = useValidation({
-    props: internalPropsWithDefaults,
-    value,
-    timezone,
-    validator: manager.validator,
-    onError: internalPropsWithDefaults.onError,
-  });
-
-  // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
-  const buildChangeHandler = (index: 0 | 1): FieldChangeHandler<PickerValue, unknown> => {
-    return (newDate, rawContext) => {
-      const newDateRange: PickerRangeValue =
-        index === 0 ? [newDate, value[1]] : [value[0], newDate];
-
-      const context: FieldChangeHandlerContext<TError> = {
-        ...rawContext,
-        validationError: getValidationErrorForNewValue(newDateRange),
-      };
-
-      handleValueChange(newDateRange, context);
-    };
-  };
-
-  const handleStartDateChange = useEventCallback(buildChangeHandler(0));
-  const handleEndDateChange = useEventCallback(buildChangeHandler(1));
-
-  const selectedSectionsResponse = useMultiInputRangeFieldSelectedSections({
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-  });
-
-  const ownerState = useFieldOwnerState(internalProps);
   const classes = useUtilityClasses(classesProp);
+  const ownerState = useFieldOwnerState(internalProps);
 
   const Root = slots?.root ?? MultiInputRangeFieldRoot;
   const rootProps = useSlotProps({
@@ -182,61 +106,34 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     ownerState: { ...ownerState, position: 'end' },
   });
 
+  const { startDate, endDate, dateSeparator } = useMultiInputRangeField({
+    manager,
+    internalProps,
+    startForwardedProps: startTextFieldProps,
+    endForwardedProps: endTextFieldProps,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+  });
+
   const Separator = slots?.separator ?? MultiInputRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
     externalSlotProps: slotProps?.separator,
     additionalProps: {
-      children: ` ${internalProps.dateSeparator ?? '–'} `,
+      children: ` ${dateSeparator ?? '–'} `,
     },
     ownerState,
     className: classes.separator,
   });
 
-  const startDateProps = useMultiInputRangeFieldTextFieldProps({
-    valueType: manager.valueType,
-    fieldProps: {
-      error: !!validationError[0],
-      ...startTextFieldProps,
-      ...selectedSectionsResponse.start,
-      disabled,
-      readOnly,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      timezone,
-      value: valueProp === undefined ? undefined : valueProp[0],
-      defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
-      onChange: handleStartDateChange,
-      enableAccessibleFieldDOMStructure,
-      autoFocus, // Do not add on end field.
-    },
-  });
-
-  const endDateProps = useMultiInputRangeFieldTextFieldProps({
-    valueType: manager.valueType,
-    fieldProps: {
-      error: !!validationError[1],
-      ...endTextFieldProps,
-      ...selectedSectionsResponse.end,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      disabled,
-      readOnly,
-      timezone,
-      value: valueProp === undefined ? undefined : valueProp[1],
-      defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
-      onChange: handleEndDateChange,
-      enableAccessibleFieldDOMStructure,
-    },
-  });
+  const cleanStartDate = convertFieldResponseIntoMuiTextFieldProps(startDate);
+  const cleanEndDate = convertFieldResponseIntoMuiTextFieldProps(endDate);
 
   return (
     <Root {...rootProps}>
-      <TextField fullWidth {...startDateProps} />
+      <TextField fullWidth {...cleanStartDate} />
       <Separator {...separatorProps} />
-      <TextField fullWidth {...endDateProps} />
+      <TextField fullWidth {...cleanEndDate} />
     </Root>
   );
 } as any) as MultiInputRangeFieldComponent;

@@ -4,6 +4,9 @@ export type {
   MultiInputRangeFieldSlots,
   MultiInputRangeFieldSlotProps,
 } from './MultiInputRangeField.types';
+
+export { useMultiInputRangeField as unstable_useMultiInputRangeField } from './useMultiInputRangeField';
+
 export {
   multiInputRangeFieldClasses,
   getMultiInputRangeFieldUtilityClass,

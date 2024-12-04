@@ -5,12 +5,14 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import {
   DateRangePicker,
   DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
+import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/MultiInputRangeField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import {
   MultiInputFieldSlotTextFieldProps,
@@ -114,24 +116,11 @@ type BrowserMultiInputDateRangeFieldComponent = ((
 
 const BrowserMultiInputDateRangeField = React.forwardRef(
   (props: BrowserMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      slotProps,
-      value,
-      format,
-      onChange,
-      readOnly,
-      disabled,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      className,
-      unstableStartFieldRef,
-      unstableEndFieldRef,
-    } = props;
+    const manager = useDateRangeManager();
+    const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+
+    const { slotProps, className, unstableStartFieldRef, unstableEndFieldRef } =
+      forwardedProps;
 
     const startTextFieldProps = useSlotProps({
       elementType: 'input',
@@ -145,27 +134,11 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const fieldResponse = useMultiInputDateRangeField<
-      true,
-      MultiInputFieldSlotTextFieldProps
-    >({
-      sharedProps: {
-        value,
-        format,
-        onChange,
-        readOnly,
-        disabled,
-        shouldDisableDate,
-        minDate,
-        maxDate,
-        disableFuture,
-        disablePast,
-        selectedSections,
-        onSelectedSectionsChange,
-        enableAccessibleFieldDOMStructure: true,
-      },
-      startTextFieldProps,
-      endTextFieldProps,
+    const fieldResponse = useMultiInputRangeField({
+      manager,
+      internalProps,
+      startForwardedProps: startTextFieldProps,
+      endForwardedProps: endTextFieldProps,
       unstableStartFieldRef,
       unstableEndFieldRef,
     });
@@ -178,9 +151,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
         overflow="auto"
         className={className}
       >
-        <BrowserTextField {...fieldResponse.startDate} />
-        <span> — </span>
-        <BrowserTextField {...fieldResponse.endDate} />
+        <BrowserTextField {...(fieldResponse.startDate as BrowserTextFieldProps)} />
+        <span>{' – '}</span>
+        <BrowserTextField {...(fieldResponse.endDate as BrowserTextFieldProps)} />
       </Stack>
     );
   },

@@ -51,7 +51,7 @@ export const useSplitFieldProps = <
 ) => {
   return React.useMemo(() => {
     const forwardedProps = { ...props } as Omit<TProps, InternalPropNames<TValueType>>;
-    const internalProps = {} as Pick<TProps, InternalPropNames<TValueType>>;
+    const internalProps = {} as ExtractInternalProps<TValueType, TProps>;
 
     const extractProp = (propName: string) => {
       if (forwardedProps.hasOwnProperty(propName)) {
@@ -76,3 +76,12 @@ export const useSplitFieldProps = <
     return { forwardedProps, internalProps };
   }, [props, valueType]);
 };
+
+type KeysMatching<T extends object, V> = {
+  [K in keyof T]-?: T[K] extends V ? K : never;
+}[keyof T];
+
+type ExtractInternalProps<
+  TValueType extends PickerValueType,
+  TProps extends { [key in InternalPropNames<TValueType>]?: any },
+> = Pick<TProps, KeysMatching<TProps, InternalPropNames<TValueType>>>;

@@ -18,9 +18,11 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { useDateRangeManager } from '@mui/x-date-pickers-pro/managers';
+import { unstable_useMultiInputRangeField as useMultiInputRangeField } from '@mui/x-date-pickers-pro/MultiInputRangeField';
 
 const joyTheme = extendJoyTheme();
 
@@ -86,71 +88,32 @@ const MultiInputJoyDateRangeFieldRoot = styled(
   },
 )({});
 
-const MultiInputJoyDateRangeFieldSeparator = styled(
-  (props) => (
-    <FormControl>
-      {/* Ensure that the separator is correctly aligned */}
-      <span />
-      <Typography {...props}>{props.children ?? ' — '}</Typography>
-    </FormControl>
-  ),
-  {
-    name: 'MuiMultiInputDateRangeField',
-    slot: 'Separator',
-    overridesResolver: (props, styles) => styles.separator,
-  },
-)({ marginTop: '25px' });
-
 const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
-  const {
-    slotProps,
-    value,
-    format,
-    onChange,
-    readOnly,
-    disabled,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    className,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-  } = props;
+  const manager = useDateRangeManager({
+    enableAccessibleFieldDOMStructure: false,
+  });
+  const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
+
+  const { slotProps, className, unstableStartFieldRef, unstableEndFieldRef } =
+    forwardedProps;
 
   const startTextFieldProps = useSlotProps({
-    elementType: FormControl,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
   const endTextFieldProps = useSlotProps({
-    elementType: FormControl,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });
 
-  const fieldResponse = useMultiInputDateRangeField({
-    sharedProps: {
-      value,
-      format,
-      onChange,
-      readOnly,
-      disabled,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      enableAccessibleFieldDOMStructure: false,
-    },
-    startTextFieldProps,
-    endTextFieldProps,
+  const fieldResponse = useMultiInputRangeField({
+    manager,
+    internalProps: { ...internalProps, enableAccessibleFieldDOMStructure: false },
+    startForwardedProps: startTextFieldProps,
+    endForwardedProps: endTextFieldProps,
     unstableStartFieldRef,
     unstableEndFieldRef,
   });
@@ -158,7 +121,9 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   return (
     <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
       <JoyField {...fieldResponse.startDate} />
-      <MultiInputJoyDateRangeFieldSeparator />
+      <FormControl>
+        <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
+      </FormControl>
       <JoyField {...fieldResponse.endDate} />
     </MultiInputJoyDateRangeFieldRoot>
   );
