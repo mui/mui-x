@@ -60,7 +60,7 @@ A function can also be passed to the `render` prop, giving you control over the 
 />
 ```
 
-Some grid components also provide internal state that can be used to control what is rendered by the `render` function:
+Some grid components also provide internal state that can be used to control what is returned by the `render` function:
 
 ```tsx
 <Grid.FilterPanel.Trigger
