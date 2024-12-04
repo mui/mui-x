@@ -165,10 +165,6 @@ function App() {
     [],
   );
 
-  if (!suiteTestsMap) {
-    return null;
-  }
-
   return (
     <Router>
       <Routes>
