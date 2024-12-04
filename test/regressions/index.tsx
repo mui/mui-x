@@ -187,7 +187,6 @@ function App() {
                 return (
                   <Route
                     key={test.name}
-                    // exact
                     path={test.name}
                     element={
                       <TestViewer isDataGridTest={isDataGridTest}>
@@ -203,7 +202,7 @@ function App() {
       </Routes>
       <div hidden={!isDev}>
         <p>
-          Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by
+          Devtools can be enabled by appending <code>#dev</code> in the address bar or disabled by
           appending <code>#no-dev</code>.
         </p>
         <a href="#no-dev">Hide devtools</a>
