@@ -11,7 +11,6 @@ import { gridDimensionsSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;
@@ -84,7 +83,6 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
 
     const contentSize =
       dimensions.minimumSize[propertyDimension] + (hasScroll ? dimensions.scrollbarSize : 0);
-    console.log(props.position, dimensions.hasScrollX, dimensions.hasScrollY, dimensions);
 
     const scrollbarSize =
       props.position === 'vertical'

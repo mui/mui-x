@@ -127,7 +127,6 @@ export const useGridVirtualScroller = () => {
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const gridRootRef = apiRef.current.rootElementRef;
   const mainRef = apiRef.current.mainElementRef;
   const scrollerRef = apiRef.current.virtualScrollerRef;
   const scrollbarVerticalRef = apiRef.current.virtualScrollbarVerticalRef;
