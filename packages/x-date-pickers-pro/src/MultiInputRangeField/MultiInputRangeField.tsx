@@ -176,26 +176,12 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
   const TextField =
     slots?.textField ??
     (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-  const startTextFieldProps = useSlotProps<
-    typeof TextField,
-    MultiInputRangeFieldSlotProps['textField'],
-    {},
-    PickerOwnerState & {
-      position: RangePosition;
-    }
-  >({
+  const startTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
-  const endTextFieldProps = useSlotProps<
-    typeof TextField,
-    MultiInputRangeFieldSlotProps['textField'],
-    {},
-    PickerOwnerState & {
-      position: RangePosition;
-    }
-  >({
+  const endTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
