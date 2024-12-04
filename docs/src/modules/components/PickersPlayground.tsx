@@ -104,8 +104,11 @@ function TriBooleanGroupControl({
             color="primary"
             fullWidth
           >
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={''}>Undefined</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value>True</ToggleButton>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <ToggleButton value={false}>False</ToggleButton>
           </ToggleButtonGroup>
         }
@@ -270,6 +273,7 @@ function ViewSwitcher({
 
   return (
     <FormControl component="fieldset" variant="standard">
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <FormLabel id="views-label" component="legend">
         Available views
       </FormLabel>
@@ -544,6 +548,7 @@ export default function PickersPlayground() {
       >
         <ComponentSection sx={{ width: { xs: '100%', md: '60%' }, padding: { xs: 2, md: 4 } }}>
           <FormControl fullWidth>
+            {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
               labelId="selected-component-family-label"
@@ -657,6 +662,7 @@ export default function PickersPlayground() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
+            // eslint-disable-next-line material-ui/no-hardcoded-labels
           >
             Playground
           </Typography>

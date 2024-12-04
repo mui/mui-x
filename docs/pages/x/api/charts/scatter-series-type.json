@@ -1,6 +1,9 @@
 {
   "name": "ScatterSeriesType",
-  "imports": ["import { ScatterSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { ScatterSeriesType } from '@mui/x-charts-pro'",
+    "import { ScatterSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },

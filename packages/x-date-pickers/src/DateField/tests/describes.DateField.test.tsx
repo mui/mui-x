@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   expectFieldValueV7,
@@ -30,7 +31,7 @@ describe('<DateField /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
-  describeValue(DateField, () => ({
+  describeValue<PickerValue, 'field'>(DateField, () => ({
     render,
     componentFamily: 'field',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],

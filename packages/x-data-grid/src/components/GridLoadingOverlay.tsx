@@ -12,12 +12,12 @@ export type GridLoadingOverlayVariant = 'circular-progress' | 'linear-progress' 
 export interface GridLoadingOverlayProps extends GridOverlayProps {
   /**
    * The variant of the overlay.
-   * @default 'circular-progress'
+   * @default 'linear-progress'
    */
   variant?: GridLoadingOverlayVariant;
   /**
    * The variant of the overlay when no rows are displayed.
-   * @default 'circular-progress'
+   * @default 'skeleton'
    */
   noRowsVariant?: GridLoadingOverlayVariant;
 }
@@ -45,12 +45,7 @@ const LOADING_VARIANTS: Record<
 
 const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   function GridLoadingOverlay(props, ref) {
-    const {
-      variant = 'circular-progress',
-      noRowsVariant = 'circular-progress',
-      style,
-      ...other
-    } = props;
+    const { variant = 'linear-progress', noRowsVariant = 'skeleton', style, ...other } = props;
     const apiRef = useGridApiContext();
     const rowsCount = useGridSelector(apiRef, gridRowCountSelector);
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
@@ -70,7 +65,7 @@ GridLoadingOverlay.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The variant of the overlay when no rows are displayed.
-   * @default 'circular-progress'
+   * @default 'skeleton'
    */
   noRowsVariant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
   sx: PropTypes.oneOfType([
@@ -80,7 +75,7 @@ GridLoadingOverlay.propTypes = {
   ]),
   /**
    * The variant of the overlay.
-   * @default 'circular-progress'
+   * @default 'linear-progress'
    */
   variant: PropTypes.oneOf(['circular-progress', 'linear-progress', 'skeleton']),
 } as any;

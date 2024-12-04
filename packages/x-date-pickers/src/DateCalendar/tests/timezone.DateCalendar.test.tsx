@@ -20,7 +20,7 @@ describe('<DateCalendar /> - Timezone', () => {
       fireEvent.click(screen.getByRole('gridcell', { name: '25' }));
       const expectedDate = adapter.setDate(adapter.date(undefined, 'default'), 25);
 
-      // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
+      // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
 
       // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
@@ -70,6 +70,12 @@ describe('<DateCalendar /> - Timezone', () => {
           name: (_, element) => element.nodeName === 'BUTTON',
         }).length,
       ).to.equal(30);
+    });
+
+    // See https://github.com/mui/mui-x/issues/14730
+    it('should not render duplicate days when leaving DST in America/Asuncion', () => {
+      render(<DateCalendar timezone="America/Asuncion" value={adapter.date('2024-10-10')} />);
+      expect(screen.getAllByRole('gridcell', { name: '5' })).to.have.length(1);
     });
 
     TIMEZONE_TO_TEST.forEach((timezone) => {
