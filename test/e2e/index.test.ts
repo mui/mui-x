@@ -13,7 +13,6 @@ import {
   WebError,
   Locator,
 } from '@playwright/test';
-import { iconButtonClasses } from '@mui/material/IconButton';
 import { pickersSectionListClasses } from '@mui/x-date-pickers/PickersSectionList';
 
 function sleep(timeoutMS: number): Promise<void> {
