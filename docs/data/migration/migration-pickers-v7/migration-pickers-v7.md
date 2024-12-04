@@ -404,6 +404,46 @@ The following variables and types have been renamed to have a coherent `Picker` 
   +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
   ```
 
+## Hooks breaking changes
+
+### `usePickerContext`
+
+- The `onOpen` and `onClose` methods have been replaced with a single `setOpen` method.
+  This method no longer takes an event, which was used to prevent the browser default behavior:
+
+  ```diff
+   const pickerContext = usePickerContext();
+
+  -<button onClick={pickerContext.onOpen}>Open</button>
+  +<button onClick={() => pickerContext.setOpen(true)}>Open</button>
+
+  -<button onClick={pickerContext.onClose}>Close</button>
+  +<button onClick={() => pickerContext.setOpen(false)}>Open</button>
+
+  -<button
+  -  onClick={(event) =>
+  -    pickerContext.open ? pickerContext.onClose(event) : pickerContext.onOpen(event)
+  -  }
+  ->
+  -  Toggle
+  -</button>
+  +<button onClick={() => pickerContext.setOpen(prev => !prev)}>Toggle</button>
+  ```
+
+  If you want to prevent the default behavior, you now have to do it manually:
+
+  ```diff
+     <div
+     onKeyDown={(event) => {
+       if (event.key === 'Escape') {
+  -      pickerContext.onClose();
+  +      event.preventDefault();
+  +      pickerContext.setOpen(false);
+       }
+     }}
+   />
+  ```
+
 ## Typing breaking changes
 
 ### Do not pass the date object as a generic

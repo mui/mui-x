@@ -72,13 +72,6 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...other } = props;
 
   const pickerContext = usePickerContext();
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
 
   const textFieldProps = useSlotProps({
     elementType: FormControl,
@@ -105,7 +98,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       ref={ref}
       endDecorator={
         <IconButton
-          onClick={handleTogglePicker}
+          onClick={() => pickerContext.setOpen((prev) => !prev)}
           variant="plain"
           color="neutral"
           sx={{ marginLeft: 2.5 }}
