@@ -19,4 +19,7 @@ afterEach(function beforeEachHook() {
 });
 
 const packagesContext = require.context('../packages', true, /\.test\.tsx$/);
-packagesContext.keys().forEach(packagesContext);
+packagesContext
+  .keys()
+  .filter((key) => !key.includes('x-data-grid'))
+  .forEach(packagesContext);

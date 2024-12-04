@@ -17,6 +17,7 @@ export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtil
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
+  GridStrategyGroup,
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../hooks/core/strategyProcessing';
