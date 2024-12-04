@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -144,6 +145,14 @@ export const useGridRowSelection = (
     },
     [apiRef],
   );
+
+  const getRowsToBeSelected = useEventCallback(() => {
+    const rowsToBeSelected =
+      props.pagination && props.checkboxSelectionVisibleOnly && props.paginationMode === 'client'
+        ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
+        : gridExpandedSortedRowIdsSelector(apiRef);
+    return rowsToBeSelected;
+  });
 
   /*
    * API METHODS
@@ -483,7 +492,7 @@ export const useGridRowSelection = (
         return filteredRowsLookup[id] !== true;
       };
 
-      const newSelectionModel = { type: currentSelection.type, ids: new Set(currentSelection.ids) };
+      let newSelectionModel = { type: currentSelection.type, ids: new Set(currentSelection.ids) };
       const selectionManager = createSelectionManager(newSelectionModel);
 
       let hasChanged = false;
@@ -526,6 +535,10 @@ export const useGridRowSelection = (
 
       if (hasChanged || (shouldReapplyPropagation && !sortModelUpdated)) {
         if (shouldReapplyPropagation) {
+          if (newSelectionModel.type === 'exclude') {
+            const rowsToBeSelected = getRowsToBeSelected();
+            newSelectionModel = { type: 'include', ids: new Set(rowsToBeSelected) };
+          }
           apiRef.current.selectRows(newSelectionModel, true, true);
         } else {
           apiRef.current.setRowSelectionModel(newSelectionModel);
@@ -539,6 +552,7 @@ export const useGridRowSelection = (
       props.keepNonExistentRowsSelected,
       props.filterMode,
       tree,
+      getRowsToBeSelected,
     ],
   );
 
@@ -652,12 +666,7 @@ export const useGridRowSelection = (
         ) {
           apiRef.current.selectRows({ type: 'exclude', ids: new Set() }, params.value, true);
         } else {
-          const rowsToBeSelected =
-            props.pagination &&
-            props.checkboxSelectionVisibleOnly &&
-            props.paginationMode === 'client'
-              ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-              : gridExpandedSortedRowIdsSelector(apiRef);
+          const rowsToBeSelected = getRowsToBeSelected();
           apiRef.current.selectRows(
             { type: 'include', ids: new Set(rowsToBeSelected) },
             params.value,
@@ -669,11 +678,10 @@ export const useGridRowSelection = (
     },
     [
       apiRef,
-      applyAutoSelection,
-      props.checkboxSelectionVisibleOnly,
-      props.pagination,
-      props.paginationMode,
       props.isRowSelectable,
+      props.checkboxSelectionVisibleOnly,
+      applyAutoSelection,
+      getRowsToBeSelected,
     ],
   );
 
