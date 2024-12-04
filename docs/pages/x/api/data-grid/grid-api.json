@@ -280,7 +280,7 @@
     },
     "selectRows": {
       "type": {
-        "description": "(selectionModel: GridRowSelectionModel, isSelected?: boolean, resetSelection?: boolean) =&gt; void"
+        "description": "(selectionModel: GridRowId[], isSelected?: boolean, resetSelection?: boolean) =&gt; void"
       },
       "required": true,
       "isProPlan": true

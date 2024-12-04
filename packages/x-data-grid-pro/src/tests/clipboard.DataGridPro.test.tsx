@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
         writeText = spy(navigator.clipboard, 'writeText');
 
-        act(() => apiRef.current.selectRows(includeRowSelection([0, 1])));
+        act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
@@ -93,7 +93,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
       writeText = spy(navigator.clipboard, 'writeText');
 
-      act(() => apiRef.current.selectRows(includeRowSelection([0, 1])));
+      act(() => apiRef.current.selectRows([0, 1]));
       const cell = getCell(0, 0);
       fireUserEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });

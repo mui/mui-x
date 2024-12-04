@@ -313,29 +313,26 @@ export const useGridRowSelection = (
   );
 
   const selectRows = React.useCallback<GridRowMultiSelectionApi['selectRows']>(
-    (selectionModel: GridRowSelectionModel, isSelected = true, resetSelection = false) => {
+    (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
 
       if (props.rowSelection === false) {
         return;
       }
 
-      let selectableIds = new Set<GridRowId>();
+      const selectableIds = new Set<GridRowId>();
 
-      if (selectionModel.type === 'include') {
-        for (const id of selectionModel.ids) {
-          if (apiRef.current.isRowSelectable(id)) {
-            selectableIds.add(id);
-          }
+      for (let i = 0; i < ids.length; i += 1) {
+        const id = ids[i];
+        if (apiRef.current.isRowSelectable(id)) {
+          selectableIds.add(id);
         }
-      } else {
-        selectableIds = new Set(selectionModel.ids);
       }
 
       const currentSelectionModel = gridRowSelectionStateSelector(apiRef.current.state);
       let newSelectionModel: GridRowSelectionModel | undefined;
       if (resetSelection) {
-        newSelectionModel = { type: selectionModel.type, ids: selectableIds };
+        newSelectionModel = { type: 'include', ids: selectableIds };
         if (isSelected) {
           const selectionManager = createSelectionManager(newSelectionModel);
           if (applyAutoSelection) {
@@ -447,11 +444,7 @@ export const useGridRowSelection = (
       const startIndex = allPagesRowIds.indexOf(startId);
       const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      const rowSelectionModel = {
-        type: 'include',
-        ids: new Set(allPagesRowIds.slice(start, end + 1)),
-      } as const;
-      apiRef.current.selectRows(rowSelectionModel, isSelected, resetSelection);
+      apiRef.current.selectRows(allPagesRowIds.slice(start, end + 1), isSelected, resetSelection);
     },
     [apiRef, logger],
   );
@@ -492,7 +485,15 @@ export const useGridRowSelection = (
         return filteredRowsLookup[id] !== true;
       };
 
-      let newSelectionModel = { type: currentSelection.type, ids: new Set(currentSelection.ids) };
+      if (currentSelection.type === 'exclude') {
+        apiRef.current.selectRows(getRowsToBeSelected(), true, true);
+        return;
+      }
+
+      const newSelectionModel = {
+        type: currentSelection.type,
+        ids: new Set(currentSelection.ids),
+      };
       const selectionManager = createSelectionManager(newSelectionModel);
 
       let hasChanged = false;
@@ -528,18 +529,11 @@ export const useGridRowSelection = (
       // not empty, we need to re-run scanning of the tree to propagate the selection changes
       // Example: A parent whose de-selected children are filtered out should now be selected
       const shouldReapplyPropagation =
-        isNestedData &&
-        props.rowSelectionPropagation?.parents &&
-        ((newSelectionModel.type === 'include' && newSelectionModel.ids.size > 0) ||
-          newSelectionModel.type === 'exclude');
+        isNestedData && props.rowSelectionPropagation?.parents && newSelectionModel.ids.size > 0;
 
       if (hasChanged || (shouldReapplyPropagation && !sortModelUpdated)) {
         if (shouldReapplyPropagation) {
-          if (newSelectionModel.type === 'exclude') {
-            const rowsToBeSelected = getRowsToBeSelected();
-            newSelectionModel = { type: 'include', ids: new Set(rowsToBeSelected) };
-          }
-          apiRef.current.selectRows(newSelectionModel, true, true);
+          apiRef.current.selectRows(Array.from(newSelectionModel.ids), true, true);
         } else {
           apiRef.current.setRowSelectionModel(newSelectionModel);
         }
@@ -652,26 +646,22 @@ export const useGridRowSelection = (
 
   const toggleAllRows = React.useCallback(
     (value: boolean) => {
-      if (!value) {
-        apiRef.current.selectRows({ type: 'include', ids: new Set() }, value, true);
-        return;
-      }
-
       const filterModel = gridFilterModelSelector(apiRef);
       const quickFilterModel = gridQuickFilterValuesSelector(apiRef);
       const hasFilters = filterModel.items.length > 0 || (quickFilterModel?.length || 0) > 0;
-      let selectionModel: GridRowSelectionModel;
       if (
         !props.isRowSelectable &&
         !props.checkboxSelectionVisibleOnly &&
         applyAutoSelection &&
         !hasFilters
       ) {
-        selectionModel = { type: 'exclude', ids: new Set() };
+        apiRef.current.setRowSelectionModel({
+          type: value ? 'exclude' : 'include',
+          ids: new Set(),
+        });
       } else {
-        selectionModel = { type: 'include', ids: new Set(getRowsToBeSelected()) };
+        apiRef.current.selectRows(getRowsToBeSelected(), value);
       }
-      apiRef.current.selectRows(selectionModel, value, true);
     },
     [
       apiRef,
@@ -745,14 +735,11 @@ export const useGridRowSelection = (
             }
           }
 
-          const rowsBetweenStartAndEnd = new Set<GridRowId>();
+          const rowsBetweenStartAndEnd: GridRowId[] = [];
           for (let i = start; i <= end; i += 1) {
-            rowsBetweenStartAndEnd.add(visibleRows.rows[i].id);
+            rowsBetweenStartAndEnd.push(visibleRows.rows[i].id);
           }
-          apiRef.current.selectRows(
-            { type: 'include', ids: rowsBetweenStartAndEnd },
-            !isNextRowSelected,
-          );
+          apiRef.current.selectRows(rowsBetweenStartAndEnd, !isNextRowSelected);
           return;
         }
       }

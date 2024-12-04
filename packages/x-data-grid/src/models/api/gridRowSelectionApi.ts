@@ -44,11 +44,7 @@ export interface GridRowMultiSelectionApi {
    * @param {boolean} isSelected The new selection state. Default is `true`.
    * @param {boolean} resetSelection Whether to reset the already selected rows or not. Default is `false`.
    */
-  selectRows: (
-    selectionModel: GridRowSelectionModel,
-    isSelected?: boolean,
-    resetSelection?: boolean,
-  ) => void;
+  selectRows: (selectionModel: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void;
   /**
    * Change the selection state of all the selectable rows in a range.
    * @param {Object} range The range of rows to select.

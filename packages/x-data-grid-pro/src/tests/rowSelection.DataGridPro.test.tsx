@@ -958,23 +958,23 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      act(() => apiRef.current.selectRows(includeRowSelection([1, 2])));
+      act(() => apiRef.current.selectRows([1, 2]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([1, 2]),
       );
 
-      act(() => apiRef.current.selectRows(includeRowSelection([3])));
+      act(() => apiRef.current.selectRows([3]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([1, 2, 3]),
       );
 
-      act(() => apiRef.current.selectRows(includeRowSelection([1, 2]), false));
+      act(() => apiRef.current.selectRows([1, 2], false));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3]),
       );
 
       // Deselect others
-      act(() => apiRef.current.selectRows(includeRowSelection([4, 5]), true, true));
+      act(() => apiRef.current.selectRows([4, 5], true, true));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([4, 5]),
       );
@@ -988,7 +988,7 @@ describe('<DataGridPro /> - Row selection', () => {
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
-      act(() => apiRef.current.selectRows(includeRowSelection([0, 1, 2])));
+      act(() => apiRef.current.selectRows([0, 1, 2]));
       expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([1, 2]),
       );
@@ -997,7 +997,7 @@ describe('<DataGridPro /> - Row selection', () => {
     it('should not select a range of several elements when disableMultipleRowSelection = true', () => {
       render(<TestDataGridSelection disableMultipleRowSelection />);
 
-      act(() => apiRef.current.selectRows(includeRowSelection([0, 1, 2]), true));
+      act(() => apiRef.current.selectRows([0, 1, 2], true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
