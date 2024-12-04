@@ -20,14 +20,9 @@ import {
   useFieldOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import { RangePosition } from '../models';
-import {
-  MultiInputRangeFieldProps,
-  MultiInputRangeFieldSlotProps,
-} from './MultiInputRangeField.types';
+import { MultiInputRangeFieldProps } from './MultiInputRangeField.types';
 import {
   getMultiInputRangeFieldUtilityClass,
   MultiInputRangeFieldClasses,
