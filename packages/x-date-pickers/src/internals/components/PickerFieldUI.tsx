@@ -80,6 +80,7 @@ export const cleanFieldResponse = <
 };
 
 /**
+ * Adds the button to open the picker and the button to clear the value of the field.
  * @ignore - internal component.
  */
 export function PickerFieldUI(props: PickerFieldUIProps) {
@@ -126,6 +127,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   });
 
   const OpenPickerButton = slots.openPickerButton ?? MuiIconButton;
+  // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const {
     ownerState: openPickerButtonOwnerState,
     ...openPickerButtonProps
@@ -152,7 +154,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
   });
 
   const ClearButton = slots.clearButton ?? MuiIconButton;
-  // The spread is here to avoid this bug mui/material-ui#34056
+  // We don't want to forward the `ownerState` to the `<IconButton />` component, see mui/material-ui#34056
   const { ownerState: clearButtonOwnerState, ...clearButtonProps } = useSlotProps({
     elementType: ClearButton,
     externalSlotProps: slotProps?.clearButton,
@@ -168,6 +170,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
     },
     ownerState,
   });
+
   const ClearIcon = slots.clearIcon ?? MuiClearIcon;
   const clearIconProps = useSlotProps({
     elementType: ClearIcon,
