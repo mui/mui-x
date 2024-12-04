@@ -49,7 +49,14 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   } = fieldResponse;
 
   return (
-    <FormControl disabled={disabled} id={id} ref={ref}>
+    <FormControl
+      disabled={disabled}
+      id={id}
+      ref={ref}
+      style={{
+        minWidth: 300,
+      }}
+    >
       <FormLabel>{label}</FormLabel>
       <Input
         ref={ref}
