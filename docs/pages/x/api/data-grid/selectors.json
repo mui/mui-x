@@ -434,12 +434,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowsDataRowIdToIdLookupSelector",
-    "returnType": "GridRowIdToIdLookup",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridRowsLoadingSelector",
     "returnType": "boolean | undefined",
     "description": "",

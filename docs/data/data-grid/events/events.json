@@ -227,7 +227,7 @@
   {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],
     "name": "fetchRows",
-    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object.",
+    "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object. Used to trigger <code>onFetchRows</code>.",
     "params": "GridFetchRowsParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onFetchRows"

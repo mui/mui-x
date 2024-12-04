@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
+  GridStrategyGroup,
   GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
@@ -51,7 +52,7 @@ export const useGridTreeDataPreProcessors = (
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
-      'rowTree',
+      GridStrategyGroup.RowTree,
       TreeDataStrategy.Default,
       props.treeData && !props.unstable_dataSource ? () => true : () => false,
     );

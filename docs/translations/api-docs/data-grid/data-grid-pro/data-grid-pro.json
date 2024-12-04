@@ -561,7 +561,7 @@
       "description": "When <code>rowSelectionPropagation.descendants</code> is set to <code>true</code>. - Selecting a parent selects all its filtered descendants automatically. - Deselecting a parent row deselects all its filtered descendants automatically.<br>When <code>rowSelectionPropagation.parents</code> is set to <code>true</code> - Selecting all the filtered descendants of a parent selects the parent automatically. - Deselecting a descendant of a selected parent deselects the parent automatically.<br>Works with tree data and row grouping on the client-side only."
     },
     "rowsLoadingMode": {
-      "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;"
+      "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading."
     },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
@@ -570,7 +570,7 @@
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
     "scrollEndThreshold": {
-      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called."
+      "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>unstable_lazyLoading</code>, it defines the area where the next data request is triggered."
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."
@@ -595,6 +595,12 @@
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    },
+    "unstable_lazyLoading": {
+      "description": "Used together with <code>unstable_dataSource</code> to enable lazy loading. If enabled, the grid stops adding <code>paginationModel</code> to the data requests (<code>getRows</code>) and starts sending <code>start</code> and <code>end</code> values depending on the loading mode and the scroll position."
+    },
+    "unstable_lazyLoadingRequestThrottleMs": {
+      "description": "If positive, the Data Grid will throttle data source requests on rendered rows interval change."
     },
     "unstable_listColumn": {
       "description": "Definition of the column rendered when the <code>unstable_listView</code> prop is enabled."

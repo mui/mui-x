@@ -24,11 +24,6 @@ export const gridRowsLookupSelector = createSelector(
   (rows) => rows.dataRowIdToModelLookup,
 );
 
-export const gridRowsDataRowIdToIdLookupSelector = createSelector(
-  gridRowsStateSelector,
-  (rows) => rows.dataRowIdToIdLookup,
-);
-
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
 export const gridRowGroupsToFetchSelector = createSelector(

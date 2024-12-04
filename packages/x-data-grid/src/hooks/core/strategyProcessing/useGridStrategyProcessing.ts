@@ -4,7 +4,7 @@ import {
   GridStrategyProcessor,
   GridStrategyProcessorName,
   GridStrategyProcessingApi,
-  GridStrategyProcessingLookup,
+  GridStrategyGroupValue,
   GridStrategyGroup,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -12,12 +12,13 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 export const GRID_DEFAULT_STRATEGY = 'none';
 
 export const GRID_STRATEGIES_PROCESSORS: {
-  [P in GridStrategyProcessorName]: GridStrategyProcessingLookup[P]['group'];
+  [P in GridStrategyProcessorName]: GridStrategyGroupValue;
 } = {
-  rowTreeCreation: 'rowTree',
-  filtering: 'rowTree',
-  sorting: 'rowTree',
-  visibleRowsLookupCreation: 'rowTree',
+  dataSourceRowsUpdate: GridStrategyGroup.DataSource,
+  rowTreeCreation: GridStrategyGroup.RowTree,
+  filtering: GridStrategyGroup.RowTree,
+  sorting: GridStrategyGroup.RowTree,
+  visibleRowsLookupCreation: GridStrategyGroup.RowTree,
 };
 
 type UntypedStrategyProcessors = {
@@ -59,14 +60,11 @@ type UntypedStrategyProcessors = {
  * =====================================================================================================================
  *
  * Each processor name is part of a strategy group which can only have one active strategy at the time.
- * For now, there is only one strategy group named `rowTree` which customize
- * - row tree creation algorithm.
- * - sorting algorithm.
- * - filtering algorithm.
+ * There are two active groups named `rowTree` and `dataSource`.
  */
 export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
-    new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
+    new Map<string, { group: GridStrategyGroupValue; isAvailable: () => boolean }>(),
   );
   const strategiesCache = React.useRef<{
     [P in GridStrategyProcessorName]?: { [strategyName: string]: GridStrategyProcessor<any> };

@@ -5,7 +5,6 @@ export {
   gridRowsLoadingSelector,
   gridTopLevelRowCountSelector,
   gridRowsLookupSelector,
-  gridRowsDataRowIdToIdLookupSelector,
   gridRowTreeSelector,
   gridRowGroupingNameSelector,
   gridRowTreeDepthsSelector,
