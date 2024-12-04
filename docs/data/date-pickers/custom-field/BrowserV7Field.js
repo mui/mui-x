@@ -5,7 +5,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -26,7 +25,9 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserTextField = React.forwardRef((props, ref) => {
+const BrowserDateField = React.forwardRef((props, ref) => {
+  const fieldResponse = useDateField(props);
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -57,7 +58,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
-  } = props;
+  } = fieldResponse;
 
   const handleRef = useForkRef(InputPropsRef, ref);
 
@@ -80,12 +81,6 @@ const BrowserTextField = React.forwardRef((props, ref) => {
       {endAdornment}
     </BrowserFieldRoot>
   );
-});
-
-const BrowserDateField = React.forwardRef((props, ref) => {
-  const fieldResponse = useDateField(props);
-
-  return <BrowserTextField ref={ref} {...fieldResponse} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {

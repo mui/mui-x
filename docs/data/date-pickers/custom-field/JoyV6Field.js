@@ -20,7 +20,12 @@ import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateF
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+const JoyDateField = React.forwardRef((props, ref) => {
+  const fieldResponse = useDateField({
+    ...props,
+    enableAccessibleFieldDOMStructure: false,
+  });
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -31,13 +36,11 @@ const JoyField = React.forwardRef((props, ref) => {
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
-    endDecorator,
-    startDecorator,
     inputRef,
     slots,
     slotProps,
     ...other
-  } = props;
+  } = fieldResponse;
 
   return (
     <FormControl disabled={disabled} id={id} ref={ref}>
@@ -45,18 +48,8 @@ const JoyField = React.forwardRef((props, ref) => {
       <Input
         ref={ref}
         disabled={disabled}
-        startDecorator={
-          <React.Fragment>
-            {startAdornment}
-            {startDecorator}
-          </React.Fragment>
-        }
-        endDecorator={
-          <React.Fragment>
-            {endAdornment}
-            {endDecorator}
-          </React.Fragment>
-        }
+        startDecorator={startAdornment}
+        endDecorator={endAdornment}
         slotProps={{
           root: { ref: containerRef },
           input: { ref: inputRef },
@@ -65,15 +58,6 @@ const JoyField = React.forwardRef((props, ref) => {
       />
     </FormControl>
   );
-});
-
-const JoyDateField = React.forwardRef((props, ref) => {
-  const fieldResponse = useDateField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
-
-  return <JoyField ref={ref} {...fieldResponse} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {

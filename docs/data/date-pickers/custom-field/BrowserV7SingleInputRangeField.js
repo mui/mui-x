@@ -29,7 +29,9 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserTextField = React.forwardRef((props, ref) => {
+const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
+  const fieldResponse = useSingleInputDateRangeField(props);
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -60,14 +62,20 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     InputProps: { ref: InputPropsRef, startAdornment, endAdornment } = {},
     // The rest can be passed to the root element
     ...other
-  } = props;
+  } = fieldResponse;
 
   const handleRef = useForkRef(InputPropsRef, ref);
 
   const pickerContext = usePickerContext();
 
   return (
-    <BrowserFieldRoot ref={handleRef} {...other}>
+    <BrowserFieldRoot
+      ref={handleRef}
+      {...other}
+      style={{
+        minWidth: 300,
+      }}
+    >
       {startAdornment}
       <BrowserFieldContent>
         <PickersSectionList
@@ -89,20 +97,6 @@ const BrowserTextField = React.forwardRef((props, ref) => {
         </IconButton>
       </InputAdornment>
     </BrowserFieldRoot>
-  );
-});
-
-const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const fieldResponse = useSingleInputDateRangeField(props);
-
-  return (
-    <BrowserTextField
-      {...fieldResponse}
-      ref={ref}
-      style={{
-        minWidth: 300,
-      }}
-    />
   );
 });
 

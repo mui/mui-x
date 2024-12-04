@@ -26,7 +26,12 @@ export const DateRangeIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
+  const fieldResponse = useSingleInputDateRangeField({
+    ...props,
+    enableAccessibleFieldDOMStructure: false,
+  });
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -37,13 +42,11 @@ const JoyField = React.forwardRef((props, ref) => {
     id,
     label,
     InputProps: { ref: containerRef } = {},
-    endDecorator,
-    startDecorator,
     inputRef,
     slots,
     slotProps,
     ...other
-  } = props;
+  } = fieldResponse;
 
   return (
     <FormControl disabled={disabled} id={id} ref={ref}>
@@ -51,13 +54,7 @@ const JoyField = React.forwardRef((props, ref) => {
       <Input
         ref={ref}
         disabled={disabled}
-        startDecorator={<React.Fragment>{startDecorator}</React.Fragment>}
-        endDecorator={
-          <React.Fragment>
-            <DateRangeIcon size="md" />
-            {endDecorator}
-          </React.Fragment>
-        }
+        endDecorator={<DateRangeIcon size="md" />}
         slotProps={{
           root: { ref: containerRef },
           input: { ref: inputRef },
@@ -66,15 +63,6 @@ const JoyField = React.forwardRef((props, ref) => {
       />
     </FormControl>
   );
-});
-
-const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
-  const fieldResponse = useSingleInputDateRangeField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
-
-  return <JoyField {...fieldResponse} ref={ref} />;
 });
 
 JoySingleInputDateRangeField.fieldType = 'single-input';

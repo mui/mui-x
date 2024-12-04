@@ -11,7 +11,7 @@ import {
   THEME_ID,
 } from '@mui/joy/styles';
 import { createSvgIcon } from '@mui/joy/utils';
-import Input, { InputProps } from '@mui/joy/Input';
+import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -23,7 +23,6 @@ import {
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 export const DateRangeIcon = createSvgIcon(
   <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" />,
@@ -31,56 +30,6 @@ export const DateRangeIcon = createSvgIcon(
 );
 
 const joyTheme = extendJoyTheme();
-
-interface JoyFieldProps
-  extends BaseSingleInputPickersFieldHooksReturnValue<false>,
-    Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>> {}
-
-const JoyField = React.forwardRef(
-  (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const {
-      // Should be ignored
-      enableAccessibleFieldDOMStructure,
-
-      // Can be passed to the button that clears the value
-      clearable,
-      onClear,
-
-      disabled,
-      id,
-      label,
-      InputProps: { ref: containerRef } = {},
-      endDecorator,
-      startDecorator,
-      inputRef,
-      slots,
-      slotProps,
-      ...other
-    } = props;
-
-    return (
-      <FormControl disabled={disabled} id={id} ref={ref}>
-        <FormLabel>{label}</FormLabel>
-        <Input
-          ref={ref}
-          disabled={disabled}
-          startDecorator={<React.Fragment>{startDecorator}</React.Fragment>}
-          endDecorator={
-            <React.Fragment>
-              <DateRangeIcon size="md" />
-              {endDecorator}
-            </React.Fragment>
-          }
-          slotProps={{
-            root: { ref: containerRef },
-            input: { ref: inputRef },
-          }}
-          {...other}
-        />
-      </FormControl>
-    );
-  },
-);
 
 type JoySingleInputDateRangeFieldComponent = ((
   props: DateRangePickerFieldProps<false> & React.RefAttributes<HTMLDivElement>,
@@ -93,7 +42,39 @@ const JoySingleInputDateRangeField = React.forwardRef(
       enableAccessibleFieldDOMStructure: false,
     });
 
-    return <JoyField {...fieldResponse} ref={ref} />;
+    const {
+      // Should be ignored
+      enableAccessibleFieldDOMStructure,
+
+      // Can be passed to the button that clears the value
+      clearable,
+      onClear,
+
+      disabled,
+      id,
+      label,
+      InputProps: { ref: containerRef } = {},
+      inputRef,
+      slots,
+      slotProps,
+      ...other
+    } = fieldResponse;
+
+    return (
+      <FormControl disabled={disabled} id={id} ref={ref}>
+        <FormLabel>{label}</FormLabel>
+        <Input
+          ref={ref}
+          disabled={disabled}
+          endDecorator={<DateRangeIcon size="md" />}
+          slotProps={{
+            root: { ref: containerRef },
+            input: { ref: inputRef },
+          }}
+          {...other}
+        />
+      </FormControl>
+    );
   },
 ) as JoySingleInputDateRangeFieldComponent;
 
