@@ -1,16 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useThemeProps from '@mui/system/useThemeProps';
 import { useDateRangeManager, UseDateRangeManagerReturnValue } from '../managers';
-import { MultiInputRangeField } from '../internals/components/MultiInputRangeField/MultiInputRangeField';
-import {
-  ExportedMultiInputRangeFieldProps,
-  MultiInputRangeFieldClasses,
-} from '../internals/components/MultiInputRangeField';
+import { MultiInputRangeField } from '../MultiInputRangeField/MultiInputRangeField';
+import { MultiInputRangeFieldProps, MultiInputRangeFieldClasses } from '../MultiInputRangeField';
 
 export interface MultiInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends ExportedMultiInputRangeFieldProps<
-    UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+  extends Omit<
+    MultiInputRangeFieldProps<UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>>,
+    'manager'
   > {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
@@ -44,7 +43,12 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 ) {
   const manager = useDateRangeManager(props);
 
-  return <MultiInputRangeField {...props} manager={manager} ref={ref} />;
+  const themeProps = useThemeProps({
+    props,
+    name: 'MuiMultiInputDateRangeField',
+  });
+
+  return <MultiInputRangeField {...themeProps} manager={manager} ref={ref} />;
 }) as MultiInputDateRangeFieldComponent;
 
 MultiInputDateRangeField.propTypes = {

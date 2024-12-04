@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { dateRangeCalendarClasses } from '../DateRangeCalendar';
 import { dateRangePickerToolbarClasses } from '../DateRangePicker';
 import { dateRangePickerDayClasses } from '../DateRangePickerDay';
-import { multiInputRangeFieldClasses } from '../internals/components/MultiInputRangeField';
+import { multiInputRangeFieldClasses } from '../MultiInputRangeField';
 import {
   dateTimeRangePickerTabsClasses,
   dateTimeRangePickerToolbarClasses,

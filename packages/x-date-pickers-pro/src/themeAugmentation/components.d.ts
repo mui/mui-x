@@ -26,17 +26,18 @@ export interface PickersProComponents<Theme = unknown> {
   };
 
   // Multi input range fields
+  MuiMultiInputRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputRangeField'];
+  };
   MuiMultiInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateRangeField'];
   };
   MuiMultiInputDateTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputDateTimeRangeField'];
   };
   MuiMultiInputTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputTimeRangeField'];
   };
 
   // Single input range fields

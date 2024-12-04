@@ -1,14 +1,15 @@
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
-import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
 import { DateRangePickerProps } from '../DateRangePicker';
 import { ExportedDateRangePickerToolbarProps } from '../DateRangePicker/DateRangePickerToolbar';
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
 import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
+import { MultiInputRangeFieldProps } from '../MultiInputRangeField';
 import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField';
 import { MultiInputDateTimeRangeFieldProps } from '../MultiInputDateTimeRangeField';
 import { MultiInputTimeRangeFieldProps } from '../MultiInputTimeRangeField';
+import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
 import { SingleInputDateTimeRangeFieldProps } from '../SingleInputDateTimeRangeField';
 import { SingleInputTimeRangeFieldProps } from '../SingleInputTimeRangeField';
 import { DateTimeRangePickerProps } from '../DateTimeRangePicker';
@@ -27,6 +28,7 @@ export interface PickersProComponentsPropsList {
   MuiPickersRangeCalendarHeader: ExportedPickersRangeCalendarHeaderProps;
 
   // Multi input range fields
+  MuiMultiInputRangeField: MultiInputRangeFieldProps<any>;
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<any>;
   MuiMultiInputDateTimeRangeField: MultiInputDateTimeRangeFieldProps<any>;
   MuiMultiInputTimeRangeField: MultiInputTimeRangeFieldProps<any>;

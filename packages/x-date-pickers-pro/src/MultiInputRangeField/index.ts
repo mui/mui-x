@@ -1,7 +1,6 @@
-export { MultiInputRangeField } from './MultiInputRangeField';
+export { MultiInputRangeField as Unstable_MultiInputRangeField } from './MultiInputRangeField';
 export type {
   MultiInputRangeFieldProps,
-  ExportedMultiInputRangeFieldProps,
   MultiInputRangeFieldSlots,
   MultiInputRangeFieldSlotProps,
 } from './MultiInputRangeField.types';

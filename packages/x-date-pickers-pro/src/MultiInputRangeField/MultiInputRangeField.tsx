@@ -23,7 +23,7 @@ import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import { RangePosition } from '../../../models';
+import { RangePosition } from '../models';
 import {
   MultiInputRangeFieldProps,
   MultiInputRangeFieldSlotProps,
@@ -67,6 +67,9 @@ type MultiInputRangeFieldComponent = (<TManager extends PickerAnyRangeManager>(
   props: MultiInputRangeFieldProps<TManager> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+/**
+ * @ignore - do not document.
+ */
 export const MultiInputRangeField = React.forwardRef(function MultiInputRangeField<
   TManager extends PickerAnyRangeManager,
 >(inProps: MultiInputRangeFieldProps<TManager>, ref: React.Ref<HTMLDivElement>) {

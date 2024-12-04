@@ -8,14 +8,22 @@ import {
   PickerAnyRangeManager,
   PickerManagerFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../../../models';
+import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../models';
 import { MultiInputRangeFieldClasses } from './multiInputRangeFieldClasses';
 
-export type ExportedMultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
+export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &
     RangeFieldSeparatorProps &
     Omit<PickerManagerFieldInternalProps<TManager>, 'unstableFieldRef' | 'clearable' | 'onClear'> &
     Omit<StackProps, 'position' | keyof PickerManagerFieldInternalProps<TManager>> & {
+      /**
+       * The manager for the used value type.
+       */
+      manager: TManager;
+      /**
+       * If `true`, the field is focused during the first mount.
+       * @default false
+       */
       autoFocus?: boolean;
       /**
        * Override or extend the styles applied to the component.
@@ -32,14 +40,6 @@ export type ExportedMultiInputRangeFieldProps<TManager extends PickerAnyRangeMan
        */
       slotProps?: MultiInputRangeFieldSlotProps;
     };
-
-export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
-  ExportedMultiInputRangeFieldProps<TManager> & {
-    /**
-     * The manager for the used value type.
-     */
-    manager: TManager;
-  };
 
 export interface MultiInputRangeFieldSlots {
   /**
