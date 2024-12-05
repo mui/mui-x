@@ -1,9 +1,6 @@
 import type { PickerManager } from '../../models';
-import { PickerRangeValue } from './value';
 
 export type PickerAnyManager = PickerManager<any, any, any, any, any>;
-
-export type PickerAnyRangeManager = PickerManager<PickerRangeValue, any, any, any, any>;
 
 type PickerManagerProperties<TManager extends PickerAnyManager> =
   TManager extends PickerManager<

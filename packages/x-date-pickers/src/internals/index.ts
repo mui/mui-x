@@ -100,7 +100,6 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type {
   PickerAnyManager,
-  PickerAnyRangeManager,
   PickerManagerFieldInternalProps,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,

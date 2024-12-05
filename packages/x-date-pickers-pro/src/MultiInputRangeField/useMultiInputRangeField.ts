@@ -3,7 +3,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  PickerAnyRangeManager,
   PickerManagerError,
   PickerManagerFieldInternalProps,
   PickerRangeValue,
@@ -14,6 +13,7 @@ import {
 import { useValidation } from '@mui/x-date-pickers/validation';
 import { useMultiInputRangeFieldTextFieldProps } from './useMultiInputRangeFieldTextFieldProps';
 import { useMultiInputRangeFieldSelectedSections } from './useMultiInputRangeFieldSelectedSections';
+import { PickerAnyRangeManager } from '../internals/models/managers';
 
 /**
  * Basic example:

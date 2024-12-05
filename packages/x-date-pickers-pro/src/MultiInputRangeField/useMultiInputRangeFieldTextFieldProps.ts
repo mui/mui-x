@@ -2,7 +2,6 @@ import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
-  PickerAnyRangeManager,
   PickerAnyManager,
   PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerFieldInternalProps,
@@ -11,6 +10,7 @@ import {
   useFieldInternalPropsWithDefaults,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import { PickerAnyRangeManager } from '../internals/models/managers';
 
 /**
  * @ignore - internal hook.
@@ -27,7 +27,7 @@ export function useMultiInputRangeFieldTextFieldProps<
   let useManager: ({
     enableAccessibleFieldDOMStructure,
   }: {
-    enableAccessibleFieldDOMStructure: boolean;
+    enableAccessibleFieldDOMStructure: boolean | undefined;
   }) => PickerAnyManager;
   switch (valueType) {
     case 'date': {

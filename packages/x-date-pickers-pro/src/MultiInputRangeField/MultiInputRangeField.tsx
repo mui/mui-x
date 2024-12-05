@@ -9,7 +9,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import {
   convertFieldResponseIntoMuiTextFieldProps,
-  PickerAnyRangeManager,
   useFieldOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
@@ -20,6 +19,7 @@ import {
   MultiInputRangeFieldClasses,
 } from './multiInputRangeFieldClasses';
 import { useMultiInputRangeField } from './useMultiInputRangeField';
+import { PickerAnyRangeManager } from '../internals/models/managers';
 
 const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undefined) => {
   const slots = {

@@ -4,12 +4,10 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
-import {
-  PickerAnyRangeManager,
-  PickerManagerFieldInternalProps,
-} from '@mui/x-date-pickers/internals';
+import { PickerManagerFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { MultiInputFieldRefs, RangeFieldSeparatorProps, RangePosition } from '../models';
 import { MultiInputRangeFieldClasses } from './multiInputRangeFieldClasses';
+import { PickerAnyRangeManager } from '../internals/models/managers';
 
 export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
   MultiInputFieldRefs &
