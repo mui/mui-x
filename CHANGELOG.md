@@ -58,7 +58,7 @@ Same changes as in `@mui/x-data-grid@8.0.0-alpha.3`, plus:
 
 Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
 
-- [DataGridPremium] Remove the ariaV8 experimental flag (#15694) @arminmeh
+- [DataGridPremium] Remove the `ariaV8` experimental flag (#15694) @arminmeh
 
 ### Date and Time Pickers
 
