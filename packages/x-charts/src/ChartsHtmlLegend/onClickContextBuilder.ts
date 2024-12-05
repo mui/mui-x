@@ -1,4 +1,4 @@
-import { LegendItemParams, SeriesLegendItemContext } from './legend.types';
+import { LegendItemParams, SeriesLegendItemContext } from './legendContext.types';
 
 export const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
   ({
