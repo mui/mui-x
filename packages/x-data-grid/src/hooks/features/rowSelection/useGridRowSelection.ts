@@ -444,7 +444,8 @@ export const useGridRowSelection = (
       const startIndex = allPagesRowIds.indexOf(startId);
       const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
-      apiRef.current.selectRows(allPagesRowIds.slice(start, end + 1), isSelected, resetSelection);
+      const rowsBetweenStartAndEnd = allPagesRowIds.slice(start, end + 1);
+      apiRef.current.selectRows(rowsBetweenStartAndEnd, isSelected, resetSelection);
     },
     [apiRef, logger],
   );
