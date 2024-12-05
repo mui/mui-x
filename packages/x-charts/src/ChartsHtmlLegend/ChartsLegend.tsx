@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
-import { ChartsLegendPlacement } from './legend.types';
+import type { ChartsLegendPlacement, ChartsLegendSlotExtension } from './legend.types';
 import { SeriesLegendItemContext } from './legendContext.types';
 import { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
@@ -55,8 +55,8 @@ const RootDiv = styled('div', {
   gap: ownerState.gap ?? theme.spacing(2),
 }));
 
-const ChartsLegend = React.forwardRef(function BarChart(
-  props: ChartsLegendProps,
+const ChartsLegend = React.forwardRef(function ChartsLegend(
+  props: ChartsLegendProps & ChartsLegendSlotExtension,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const data = useLegend();
