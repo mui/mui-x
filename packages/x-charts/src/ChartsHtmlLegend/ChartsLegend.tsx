@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
+import PropTypes from 'prop-types';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
 import type { ChartsLegendPlacement, ChartsLegendSlotExtension } from './legend.types';
@@ -114,5 +115,53 @@ const ChartsLegend = consumeSlots(
     );
   },
 );
+
+ChartsLegend.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction: PropTypes.oneOf(['column', 'row']),
+  /**
+   * Space between two legend items (in px).
+   * @default theme.spacing(2)
+   */
+  gap: PropTypes.number,
+  /**
+   * Style applied to legend labels.
+   * @default theme.typography.caption
+   */
+  labelStyle: PropTypes.object,
+  /**
+   * Space between the mark and the label (in px).
+   * @default theme.spacing(1)
+   */
+  markGap: PropTypes.number,
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {SeriesLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
 
 export { ChartsLegend };

@@ -34,7 +34,7 @@ const Root = styled('div', {
 /**
  * Generates the label mark for the tooltip and legend.
  */
-export default function ChartsLabel(props: ChartsLabelProps) {
+function ChartsLabel(props: ChartsLabelProps) {
   const { children } = props;
 
   const classes = useUtilityClasses(props);

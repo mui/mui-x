@@ -128,18 +128,6 @@ DefaultChartsLegend.propTypes = {
     horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
     vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
   }).isRequired,
-  series: PropTypes.object.isRequired,
-  seriesToDisplay: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string.isRequired,
-      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      itemId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string.isRequired,
-      maxValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minValue: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    }),
-  ).isRequired,
 } as any;
 
 export { DefaultChartsLegend };
