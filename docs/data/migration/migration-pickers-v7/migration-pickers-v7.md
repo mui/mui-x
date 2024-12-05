@@ -259,6 +259,83 @@ const theme = createTheme({
 
 ## Slots breaking changes
 
+### Slot: `field`
+
+- The component passed to the `field` slot no longer receives `InputProps` and `inputProps` props. You now need to manually add the UI to open the picker using the `usePickerContext` hook:
+
+  ```diff
+   import { unstable_useDateField } from '@mui/x-date-pickers/DateField';
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const pickerContext = usePickerContext();
+
+     return (
+      <TextField 
+        {...customProps}
+  -      aria-label={props.inputProps?.['aria-label]}
+  +      aria-label={fieldResponse.openPickerAriaLabel}
+  -      InputProps={props.InputProps}
+  +      InputProps={{
+  +        ref: pickerContext.triggerRef,
+  +        endAdornment: (
+  +          <InputAdornment position="end">
+  +            <IconButton
+  +              onClick={() => pickerContext.setOpen((prev) => !prev)}
+  +              edge="end"
+  +            >
+  +              <CalendarIcon />
+  +            </IconButton>
+  +          </InputAdornment>
+  +        ),
+  +      }}      
+      />
+     );
+   }
+  ```
+
+  If you are extracting the `ref` from `InputProps` to pass it to another trigger component, you can replace it with `pickerContext.triggerRef`:
+
+  ```diff
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const pickerContext = usePickerContext();
+
+     return (
+      <button 
+        {...customProps}
+  -      ref={props.InputProps?.ref}  
+  +      ref={pickerContext.triggerRef}  
+      >
+        Open picker
+      </button>  
+     );
+   }
+  ```
+  
+  If you are using a custom editing behavior, instead of using the `openPickerAriaLabel` property returned by the `useXXXField` hooks, you can generate it manually:
+  
+  ```diff
+  +import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
+
+   function CustomField(props) {
+  +  const translations = usePickerTranslations();
+  +  const formattedValue = props.value?.isValid() ? value.format('ll') : null;
+  +  const ariaLabel = translations.openDatePickerDialogue(formattedValue);
+
+     return (
+      <button 
+        {...customProps}
+  -      ref={props.InputProps?.ref}  
+  +      ref={pickerContext.triggerRef}  
+      >
+        Open picker
+      </button>  
+     );
+   }
+  ```
+
 ### Slot: `inputAdornment`
 
 - The `position` props passed to the `inputAdornment` slot props no longer sets the position of the opening button. This allow to define the position of the opening button and of the clear button independently. Instead you can use the `openPickerButtonPosition` prop:
