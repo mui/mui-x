@@ -23,7 +23,6 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.23.1`
 
-- [DataGrid] Improve SEO titles (#15695) @MBilalShafi
 - [DataGrid] Make column autosizing work with flex columns (#15712) @cherniavskii
 - [l10n] Improve German (de-DE) locale (#15641) @lhilgert9
 
@@ -68,6 +67,7 @@ No changes since `@mui/x-tree-view@v7.23.0`.
 - [docs] Fix Pickers theme augmentation example (#15675) @LukasTy
 - [docs] Remove duplicated warning (#15715) @cherniavskii
 - [test] Force hover in headless Chrome (#15711) @cherniavskii
+- [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
 ## 7.23.0
 
