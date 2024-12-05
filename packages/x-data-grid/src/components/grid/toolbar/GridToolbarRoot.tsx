@@ -28,11 +28,12 @@ const StyledGridToolbarRoot = styled('div', {
   slot: 'ToolbarRoot',
   overridesResolver: (_, styles) => styles.toolbarRoot,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
+  flex: 0,
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(0.25),
   padding: theme.spacing(0.5),
-  minHeight: 45,
+  height: 45,
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
