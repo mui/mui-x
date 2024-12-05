@@ -70,6 +70,10 @@ No changes since `@mui/x-tree-view@v7.23.0`.
 - [docs-infra] Bump `@mui/internal-markdown` to support nested demo imports (#15738) @alexfauquette
 - [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
+### Core
+
+- [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
+
 ## 7.23.0
 
 _Nov 29, 2024_
