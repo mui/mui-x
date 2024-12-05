@@ -93,12 +93,14 @@ async function main() {
   // prepare screenshots
   await fse.emptyDir(screenshotDir);
 
-  async function navigateToTest(pathUrl: string) {
+  async function navigateToTest(testIndex: number) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
     // Could become an issue with test isolation.
     // If tests are flaky due to global pollution switch to page.goto(route);
     // puppeteers built-in click() times out
-    return page.goto(pathUrl);
+    return page.$eval(`#tests li:nth-of-type(${testIndex}) a`, (link) => {
+      (link as HTMLAnchorElement).click();
+    });
   }
 
   describe('visual regressions', () => {
@@ -115,7 +117,7 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    routes.forEach((route) => {
+    routes.forEach((route, index) => {
       const pathURL = route.replace(baseUrl, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
@@ -133,13 +135,13 @@ async function main() {
         }
 
         try {
-          await navigateToTest(route);
+          await navigateToTest(index + 1);
         } catch (error) {
           // When one demo crashes, the page becomes empty and there are no links to demos,
           // so navigation to the next demo throws an error.
           // Reloading the page fixes this.
           await page.reload();
-          await navigateToTest(route);
+          await navigateToTest(index + 1);
         }
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
