@@ -59,7 +59,7 @@ export default function ListViewMediaQuery() {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        maxHeight: 400,
+        height: 400,
       }}
     >
       <DataGridPro
