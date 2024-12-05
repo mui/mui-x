@@ -5,6 +5,113 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.3
+_Dec 5, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@ihsanberkozcan, @k-rajat19, @perezShaked.
+Following are all team members who have contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+### Breaking changes
+
+- The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
+- The `rowPositionsDebounceMs` prop was removed.
+  From https://github.com/mui/mui-x/pull/15698
+- `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
+  ```diff
+  -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  -const rowId = idToIdLookup[id]
+  +const rowsLookup = gridRowsLookupSelector(apiRef);
+  +const rowId = apiRef.current.getRowId(rowsLookup[id])
+  ```
+- The Grid is more aligned with the WAI-ARIA authoring practices and sets the `role` attribute to `treegrid` if the Data Grid is used with row grouping feature.
+- 💫 Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid. Use [data source](https://mui.com/x/react-data-grid/server-side-data/#data-source) to fetch a range of rows on demand and update the rows in the same way as described in [Infinite loading](https://mui.com/x/react-data-grid/row-updates/#infinite-loading) and [Lazy loading](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) without the need to use any additional event listeners and callbacks.
+- 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching). Check out our [recommendations](https://mui.com/x/react-data-grid/server-side-data/#improving-the-cache-hit-rate) for improving the cache hit rate.
+
+#### `@mui/x-data-grid@8.0.0-alpha.3`
+
+- [DataGrid] Fix deselection not working with `isRowSelectable` (#15692) @MBilalShafi
+- [DataGrid] Improve SEO titles (#15679) @MBilalShafi
+- [DataGrid] Make column autosizing work with flex columns (#15465) @cherniavskii
+- [DataGrid] Remove `dataRowIdToIdLookup` selector (#15698) @arminmeh
+- [DataGrid] Remove `rowPositionsDebounceMs` prop (#15482) @k-rajat19
+- [l10n] Improve Hebrew (he-IL) locale (#15699) @perezShaked
+- [l10n] Improve Turkish (tr-TR) locale (#15734) @ihsanberkozcan
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.3`, plus:
+
+- [DataGridPro] Cleanup pinned rows on removal (#15697) @cherniavskii
+- [DataGridPro] Server side data source lazy loading (#13878) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
+
+- [DataGridPremium] Remove the ariaV8 experimental flag (#15694) @arminmeh
+
+### Date and Time Pickers
+
+### Breaking changes
+
+- The `onOpen` and `onClose` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
+
+#### `@mui/x-date-pickers@8.0.0-alpha.3`
+
+- [pickers] Replace the `onOpen()` and `onClose()` methods of `usePickerContext()` with a single `setOpen()` method. (#15701) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.3`
+
+- [charts] Improve SVG `pattern` and `gradient` support (#15720) @JCQuintas
+
+#### `@mui/x-charts-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.3`
+
+No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.2`.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
+
+### `@mui/x-codemod@8.0.0-alpha.3`
+
+- [codemod] Add missing `preset-safe` for the Data Grid (#15709) @arminmeh
+
+### Docs
+
+- [docs] Customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
+- [docs] Fix typo in charts axis documentation (#15743) @JCQuintas
+
+### Core
+
+- [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15316) @flaviendelangle
+- [code-infra] Lock file maintenance (#11894)
+- [code-infra] Check if `preset-safe` folder exists in codemod test (#15703) @JCQuintas
+- [code-infra] Import Pickers `preset-safe` into global codemod config (#15659) @JCQuintas
+- [code-infra] Playwright 1.49 (#15493) @JCQuintas
+- [test] Force hover in headless Chrome (#15710) @cherniavskii
+
 ## v8.0.0-alpha.2
 
 _Nov 29, 2024_
