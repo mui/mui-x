@@ -71,7 +71,7 @@ export interface GridVirtualScrollerProps {
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const dimensions = gridDimensionsSelector(apiRef.current.state);
+  const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
   const { getOverlay, overlaysProps } = useGridOverlays();
   const classes = useUtilityClasses(rootProps, dimensions, overlaysProps.loadingOverlayVariant);
 

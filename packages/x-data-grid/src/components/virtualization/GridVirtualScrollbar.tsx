@@ -76,7 +76,7 @@ const GridVirtualScrollbar = React.forwardRef<HTMLDivElement, GridVirtualScrollb
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const classes = useUtilityClasses(rootProps, props.position);
-    const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
+    const dimensions = gridDimensionsSelector(apiRef.current.state);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';
     const propertyScroll = props.position === 'vertical' ? 'scrollTop' : 'scrollLeft';
