@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
@@ -46,15 +46,23 @@ export interface ChartsLegendProps
   ) => void;
 }
 
+const RootDiv = styled(
+  'div',
+  {},
+)<{ ownerState: Pick<ChartsLegendProps, 'gap' | 'direction'> }>(({ ownerState, theme }) => ({
+  display: 'flex',
+  flexDirection: ownerState.direction ?? 'row',
+  gap: ownerState.gap ?? theme.spacing(2),
+}));
+
 const ChartsLegend = React.forwardRef(function BarChart(
   props: ChartsLegendProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const data = useLegend();
-  const theme = useTheme();
   const {
-    direction = 'row',
-    gap = theme.spacing(2),
+    direction,
+    gap,
     labelStyle,
     markGap,
     markBorderRadius,
@@ -65,7 +73,7 @@ const ChartsLegend = React.forwardRef(function BarChart(
   } = props;
 
   return (
-    <div style={{ display: 'flex', flexDirection: direction, gap }} ref={ref}>
+    <RootDiv ownerState={{ direction, gap }} ref={ref}>
       {data.itemsToDisplay.map((item, i) => {
         return (
           <ChartsLegendItem
@@ -87,7 +95,7 @@ const ChartsLegend = React.forwardRef(function BarChart(
           </ChartsLegendItem>
         );
       })}
-    </div>
+    </RootDiv>
   );
 });
 
