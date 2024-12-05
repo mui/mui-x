@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
@@ -18,14 +19,14 @@ export interface GridColumnsPanelTriggerState {
   open: boolean;
 }
 
-export interface GridColumnsPanelTriggerProps extends ButtonProps {
-  // eslint-disable-next-line react/no-unused-prop-types
+export interface GridColumnsPanelTriggerProps extends Omit<ButtonProps, 'className'> {
   render?: RenderProp<GridColumnsPanelTriggerState>;
+  className?: string | ((state: GridColumnsPanelTriggerState) => string);
 }
 
 const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsPanelTriggerProps>(
   function GridColumnsPanelTrigger(props, ref) {
-    const { render, ...other } = props;
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
@@ -33,13 +34,17 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
     const panelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const open =
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.columns;
+    const state = { open };
+    const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-    const toggleColumnsPanel = () => {
+    const toggleColumnsPanel = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
         apiRef.current.hidePreferences();
       } else {
         apiRef.current.showPreferences(GridPreferencePanelsValue.columns, panelId, buttonId);
       }
+
+      onClick?.(event);
     };
 
     const { renderElement } = useGridComponentRenderer({
@@ -52,12 +57,11 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: toggleColumnsPanel,
+        className: resolvedClassName,
         ...rootProps.slotProps?.baseButton,
         ...other,
       },
-      state: {
-        open,
-      },
+      state,
     });
 
     return renderElement();

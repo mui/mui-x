@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
@@ -20,13 +21,14 @@ export interface GridFilterPanelTriggerState {
   filterCount: number;
 }
 
-export interface GridFilterPanelTriggerProps extends ButtonProps {
+export interface GridFilterPanelTriggerProps extends Omit<ButtonProps, 'className'> {
   render?: RenderProp<GridFilterPanelTriggerState>;
+  className?: string | ((state: GridFilterPanelTriggerState) => string);
 }
 
 const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPanelTriggerProps>(
   function GridFilterPanelTrigger(props, ref) {
-    const { render, ...other } = props;
+    const { render, className, onClick, ...other } = props;
     const rootProps = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
@@ -36,13 +38,17 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
       panelState.open && panelState.openedPanelValue === GridPreferencePanelsValue.filters;
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const filterCount = activeFilters.length;
+    const state = { open, filterCount };
+    const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-    const toggleFilterPanel = () => {
+    const toggleFilterPanel = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
         apiRef.current.hidePreferences();
       } else {
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters, panelId, buttonId);
       }
+
+      onClick?.(event);
     };
 
     const { renderElement } = useGridComponentRenderer({
@@ -55,13 +61,11 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
         onClick: toggleFilterPanel,
+        className: resolvedClassName,
         ...rootProps.slotProps?.baseButton,
         ...other,
       },
-      state: {
-        open,
-        filterCount,
-      },
+      state,
     });
 
     return renderElement();
