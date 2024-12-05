@@ -14,7 +14,6 @@ import {
   gridRowGroupingNameSelector,
   gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
-  gridRowsDataRowIdToIdLookupSelector,
   gridRowMaximumTreeDepthSelector,
   gridRowGroupsToFetchSelector,
 } from './gridRowsSelector';
@@ -418,7 +417,6 @@ export const useGridRows = (
 
       const tree = { ...gridRowTreeSelector(apiRef) };
       const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
-      const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
       const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
       const rootGroupChildren = [...rootGroup.children];
       const seenIds = new Set<GridRowId>();
@@ -435,7 +433,6 @@ export const useGridRows = (
 
         if (!seenIds.has(removedRowId)) {
           delete dataRowIdToModelLookup[removedRowId];
-          delete dataRowIdToIdLookup[removedRowId];
           delete tree[removedRowId];
         }
 
@@ -447,7 +444,6 @@ export const useGridRows = (
           groupingKey: null,
         };
         dataRowIdToModelLookup[rowId] = rowModel;
-        dataRowIdToIdLookup[rowId] = rowId;
         tree[rowId] = rowTreeNodeConfig;
 
         seenIds.add(rowId);
@@ -459,7 +455,6 @@ export const useGridRows = (
       const dataRowIds = rootGroupChildren.filter((childId) => tree[childId]?.type === 'leaf');
 
       apiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
-      apiRef.current.caches.rows.dataRowIdToIdLookup = dataRowIdToIdLookup;
 
       apiRef.current.setState((state) => ({
         ...state,
@@ -468,7 +463,6 @@ export const useGridRows = (
           loading: props.loading,
           totalRowCount: Math.max(props.rowCount || 0, rootGroupChildren.length),
           dataRowIdToModelLookup,
-          dataRowIdToIdLookup,
           dataRowIds,
           tree,
         },
@@ -583,7 +577,6 @@ export const useGridRows = (
         treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
         dataRowIds: gridDataRowIdsSelector(state, apiRef.current.instanceId),
         dataRowIdToModelLookup: gridRowsLookupSelector(state, apiRef.current.instanceId),
-        dataRowIdToIdLookup: gridRowsDataRowIdToIdLookupSelector(state, apiRef.current.instanceId),
       });
 
       return {
