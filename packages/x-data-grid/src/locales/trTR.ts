@@ -30,18 +30,6 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Bir istem yazın…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Bir istem yazın veya kaydedin…',
-  toolbarPromptControlRecordingPlaceholder: 'İstem dinleniyor…',
-  toolbarPromptControlLabel: 'İstem girişi',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Kaydet',
-  toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
-  toolbarPromptControlSendActionLabel: 'Gönder',
-  toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
-  toolbarPromptControlErrorMessage:
-    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
-
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
