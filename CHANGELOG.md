@@ -40,7 +40,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Fix deselection not working with `isRowSelectable` (#15692) @MBilalShafi
 - [DataGrid] Make column autosizing work with flex columns (#15465) @cherniavskii
-- [DataGrid] Remove `dataRowIdToIdLookup` selector (#15698) @arminmeh
+- [DataGrid] Remove `gridRowsDataRowIdToIdLookupSelector` selector (#15698) @arminmeh
 - [DataGrid] Remove `rowPositionsDebounceMs` prop (#15482) @k-rajat19
 - [l10n] Improve Hebrew (he-IL) locale (#15699) @perezShaked
 - [l10n] Improve Turkish (tr-TR) locale (#15734) @ihsanberkozcan
