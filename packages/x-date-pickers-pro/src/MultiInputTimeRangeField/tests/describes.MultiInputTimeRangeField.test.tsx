@@ -17,7 +17,7 @@ describe('<MultiInputTimeRangeField />', () => {
     render,
     muiName: 'MuiMultiInputTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 
   describeRangeValidation(MultiInputTimeRangeField, () => ({
