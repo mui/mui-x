@@ -32,7 +32,6 @@ function AutocompleteField(props: AutocompleteFieldProps) {
     focused,
     name,
     options = [],
-    inputProps,
     ...other
   } = forwardedProps;
 
@@ -58,7 +57,6 @@ function AutocompleteField(props: AutocompleteFieldProps) {
             {...params}
             error={hasValidationError}
             label={label}
-            inputProps={{ ...params.inputProps, ...inputProps }}
             InputProps={{
               ...params.InputProps,
               endAdornment: React.cloneElement(endAdornment, {
