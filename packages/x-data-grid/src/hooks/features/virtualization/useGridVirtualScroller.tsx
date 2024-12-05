@@ -610,19 +610,6 @@ export const useGridVirtualScroller = () => {
     }
   }, [listView, scrollerRef]);
 
-  useRunOnce(outerSize.width !== 0, () => {
-    const inputs = inputsSelector(apiRef, rootProps, enabledForRows, enabledForColumns);
-
-    const initialRenderContext = computeRenderContext(inputs, scrollPosition.current, scrollCache);
-    updateRenderContext(initialRenderContext);
-
-    apiRef.current.publishEvent('scrollPositionChange', {
-      top: scrollPosition.current.top,
-      left: scrollPosition.current.left,
-      renderContext: initialRenderContext,
-    });
-  });
-
   apiRef.current.register('private', {
     updateRenderContext: forceUpdateRenderContext,
   });

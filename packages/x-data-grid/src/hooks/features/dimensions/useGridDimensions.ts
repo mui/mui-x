@@ -237,7 +237,7 @@ export function useGridDimensions(
     };
 
     const newDimensions: GridDimensions = {
-      isReady: true,
+      isReady: !isFirstSizing.current,
       root: rootDimensionsRef.current,
       viewportOuterSize,
       viewportInnerSize,
@@ -264,6 +264,10 @@ export function useGridDimensions(
 
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
+    }
+
+    if (prevDimensions.isReady) {
+      apiRef.current.updateRenderContext?.();
     }
   }, [
     apiRef,
@@ -302,12 +306,18 @@ export function useGridDimensions(
     }
   }, [apiRef, savedSize, updateDimensions]);
 
+  useEnhancedEffect(() => {
+    if (!dimensionsState.isReady) {
+      return;
+    }
+    apiRef.current.updateRenderContext?.();
+  }, [apiRef, dimensionsState.isReady]);
+
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {
     if (!root) {
       return;
     }
-    apiRef.current.updateRenderContext?.();
 
     const set = (k: string, v: string) => root.style.setProperty(k, v);
     set('--DataGrid-width', `${dimensionsState.viewportOuterSize.width}px`);
@@ -323,7 +333,7 @@ export function useGridDimensions(
     set('--DataGrid-topContainerHeight', `${dimensionsState.topContainerHeight}px`);
     set('--DataGrid-bottomContainerHeight', `${dimensionsState.bottomContainerHeight}px`);
     set('--height', `${dimensionsState.rowHeight}px`);
-  }, [apiRef, root, dimensionsState]);
+  }, [root, dimensionsState]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
