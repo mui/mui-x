@@ -38,7 +38,6 @@ Following are all team members who have contributed to this release:
 #### `@mui/x-data-grid@8.0.0-alpha.3`
 
 - [DataGrid] Fix deselection not working with `isRowSelectable` (#15692) @MBilalShafi
-- [DataGrid] Improve SEO titles (#15679) @MBilalShafi
 - [DataGrid] Make column autosizing work with flex columns (#15465) @cherniavskii
 - [DataGrid] Remove `dataRowIdToIdLookup` selector (#15698) @arminmeh
 - [DataGrid] Remove `rowPositionsDebounceMs` prop (#15482) @k-rajat19
@@ -96,6 +95,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
 
 - [docs] Add a customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
 - [docs] Fix typo in charts axis documentation (#15743) @JCQuintas
+- [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
 ### Core
 
