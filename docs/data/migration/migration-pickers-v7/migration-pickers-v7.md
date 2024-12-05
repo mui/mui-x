@@ -313,9 +313,9 @@ const theme = createTheme({
      );
    }
   ```
-  
+
   If you are using a custom editing behavior, instead of using the `openPickerAriaLabel` property returned by the `useXXXField` hooks, you can generate it manually:
-  
+
   ```diff
   +import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
