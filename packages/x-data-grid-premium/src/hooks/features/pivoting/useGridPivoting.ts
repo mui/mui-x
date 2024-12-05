@@ -142,7 +142,8 @@ const getPivotedData = ({
       aggregationModel[pivotValue.field] = pivotValue.aggFunc;
     });
   } else {
-    rows.forEach((row) => {
+    for (let i = 0; i < rows.length; i += 1) {
+      const row = rows[i];
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
@@ -180,15 +181,16 @@ const getPivotedData = ({
       });
 
       newRows.push(newRow);
-    });
+    }
 
     sortColumnGroups(columnGroupingModel, pivotModel.columns);
   }
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
-    columnGroups.forEach((columnGroup) => {
+    for (let i = 0; i < columnGroups.length; i += 1) {
+      const columnGroup = columnGroups[i];
       if (isLeaf(columnGroup)) {
-        return;
+        continue;
       }
       const isLastColumnGroupLevel = depth === pivotModel.columns.length - 1;
       if (isLastColumnGroupLevel) {
@@ -211,7 +213,7 @@ const getPivotedData = ({
       } else {
         createColumns(columnGroup.children, depth + 1);
       }
-    });
+    }
   }
 
   createColumns(columnGroupingModel);
