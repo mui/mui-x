@@ -224,7 +224,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const heightEntry = useGridSelector(
     apiRef,
     () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
-    objectShallowCompare,
+    undefined,
+    objectShallowCompare as (a: unknown, b: unknown) => boolean,
   );
 
   const style = React.useMemo(() => {

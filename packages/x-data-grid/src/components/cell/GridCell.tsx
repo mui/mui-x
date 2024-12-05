@@ -37,7 +37,6 @@ import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
-import type { GridApiCommon } from '../../models/api/gridApiCommon';
 
 export enum PinnedPosition {
   NONE,
