@@ -20,9 +20,9 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
-export const CalendarIcon = createSvgIcon(
-  <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />,
-  'Calendar',
+const DateRangeIcon = createSvgIcon(
+  <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" />,
+  'DateRange',
 );
 
 const joyTheme = extendJoyTheme();
@@ -61,7 +61,7 @@ const JoyField = React.forwardRef((props, ref) => {
         disabled={disabled}
         endDecorator={
           <React.Fragment>
-            <CalendarIcon size="md" />
+            <DateRangeIcon size="md" />
             {endDecorator}
           </React.Fragment>
         }
