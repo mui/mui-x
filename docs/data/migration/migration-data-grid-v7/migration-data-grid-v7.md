@@ -1,4 +1,5 @@
 ---
+title: React Data Grid - Migration from v7 to v8
 productId: x-data-grid
 ---
 
@@ -44,6 +45,13 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The `apiRef.current.resize()` method was removed.
 - The `<GridOverlays />` component is not exported anymore.
+- The feature row spanning is now stable and the prop is no longer prefixed with `unstable_`.
+  ```diff
+   <DataGrid
+  -  unstable_rowSpanning
+  +  rowSpanning
+   />
+  ```
 
 ### Localization
 
