@@ -49,7 +49,7 @@ Following are all team members who have contributed to this release:
 Same changes as in `@mui/x-data-grid@8.0.0-alpha.3`, plus:
 
 - [DataGridPro] Cleanup pinned rows on removal (#15697) @cherniavskii
-- [DataGridPro] Server side data source lazy loading (#13878) @arminmeh
+- [DataGridPro] Server-side lazy loading (#13878) @arminmeh
 
 #### `@mui/x-data-grid-premium@8.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
