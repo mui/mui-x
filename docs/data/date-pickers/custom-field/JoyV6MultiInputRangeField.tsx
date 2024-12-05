@@ -144,7 +144,7 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       >
         <JoyField {...fieldResponse.startDate} />
         <FormControl>
-          <Typography sx={{ marginTop: '25px' }}>{' – '}</Typography>
+          <Typography sx={{ marginTop: '25px' }}> – </Typography>
         </FormControl>
         <JoyField {...fieldResponse.endDate} />
       </Stack>
