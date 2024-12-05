@@ -113,21 +113,11 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       if (filteredSelection.ids.size === 0) {
         return false;
       }
-      if (filteredSelection?.type === 'include') {
-        for (const rowId of selectionCandidates) {
-          if (!filteredSelection.ids.has(rowId)) {
-            return true;
-          }
+      const selectionManager = createSelectionManager(filteredSelection);
+      for (const rowId of selectionCandidates) {
+        if (!selectionManager.has(rowId)) {
+          return true;
         }
-        return false;
-      }
-      if (filteredSelection?.type === 'exclude') {
-        for (const rowId of selectionCandidates) {
-          if (filteredSelection.ids.has(rowId)) {
-            return true;
-          }
-        }
-        return false;
       }
       return false;
     }, [filteredSelection, selectionCandidates]);
