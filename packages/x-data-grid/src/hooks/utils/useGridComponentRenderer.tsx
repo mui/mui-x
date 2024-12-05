@@ -2,17 +2,13 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 
-type ExtendedHTMLAttributes = React.HTMLAttributes<any> & {
-  [key: `data-${string}`]: string | undefined;
-};
-
 export type ComponentRenderFn<Props, State> = (
   props: Props,
   state: State,
 ) => React.ReactElement<unknown>;
 
 export type RenderProp<State> =
-  | ComponentRenderFn<ExtendedHTMLAttributes, State>
+  | ComponentRenderFn<React.HTMLAttributes<any>, State>
   | React.ReactElement;
 
 type GridComponentRendererOptions<Props, State> = {
@@ -28,7 +24,7 @@ type GridComponentRendererOptions<Props, State> = {
  * @ignore - internal hook.
  */
 export function useGridComponentRenderer<
-  Props extends ExtendedHTMLAttributes,
+  Props extends React.HTMLAttributes<any>,
   State extends Record<string, any>,
 >({
   defaultElement,
