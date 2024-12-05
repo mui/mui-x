@@ -211,9 +211,9 @@
     "languageTag": "ro-RO",
     "importName": "roRO",
     "localeName": "Romanian",
-    "missingKeysCount": 9,
-    "totalKeysCount": 123,
-    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/roRO.ts"
+    "missingKeysCount": 0,
+    "totalKeysCount": 132,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/roRO.ts"
   },
   {
     "languageTag": "ru-RU",
