@@ -3,10 +3,8 @@ import {
   gridColumnLookupSelector,
   useGridApiEventHandler,
   useGridApiMethod,
-  useGridSelector,
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
@@ -118,20 +116,17 @@ export const useGridAggregation = (
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (!areAggregationRulesEqual(rulesOnLastColumnHydration, aggregationRules)) {
-      apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
 
+  useGridApiEventHandler(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'columnsChange', checkAggregationRulesDiff);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', applyAggregation);
 
   /**
    * EFFECTS
    */
-  const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
-  useEnhancedEffect(checkAggregationRulesDiff, [checkAggregationRulesDiff, aggregationModel]);
-
   React.useEffect(() => {
     if (props.aggregationModel !== undefined) {
       apiRef.current.setAggregationModel(props.aggregationModel);
