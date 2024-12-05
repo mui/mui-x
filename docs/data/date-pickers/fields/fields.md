@@ -27,9 +27,14 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## Accessible DOM structure
 
-By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component, but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+By default, the fields' DOM structure consists of an `<input />`, which holds the whole value for the component.
+Unfortunately it presents accessibility limitations, which are impossible to resolve.
 
-From v7 version, you can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
+Starting with version `v7.x`, we have introduced a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience on screen readers.
+You can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
+This approach is recommended in [W3C ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) example and is also used by native date HTML input element under the hood.
+
+Starting with version `v8.x`, the new DOM structure will be the default for all fields.
 
 ```tsx
 <DateField enableAccessibleFieldDOMStructure />
