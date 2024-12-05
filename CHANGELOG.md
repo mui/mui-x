@@ -67,6 +67,7 @@ No changes since `@mui/x-tree-view@v7.23.0`.
 - [docs] Fix Pickers theme augmentation example (#15675) @LukasTy
 - [docs] Remove duplicated warning (#15715) @cherniavskii
 - [test] Force hover in headless Chrome (#15711) @cherniavskii
+- [docs-infra] Bump `@mui/internal-markdown` to support nested demo imports (#15738) @alexfauquette
 - [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
 ## 7.23.0
