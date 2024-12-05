@@ -26,7 +26,7 @@ Following are all team members who have contributed to this release:
 
 - The "Select all" checkbox is now checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - The `rowPositionsDebounceMs` prop was removed.
-- The `gridRowsDataRowIdToIdLookupSelector` selector was removed. Use the `gridRowsLookupSelector selector` in combination with the `getRowId()` API method instead.
+- The `gridRowsDataRowIdToIdLookupSelector` selector was removed. Use the `gridRowsLookupSelector` selector in combination with the `getRowId()` API method instead.
   ```diff
   -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
   -const rowId = idToIdLookup[id]
