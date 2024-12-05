@@ -83,7 +83,7 @@ export function useMultiInputRangeField<
   } = internalPropsWithDefaults;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'useMultiInputDateRangeField',
+    name: 'useMultiInputRangeField',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
@@ -101,16 +101,16 @@ export function useMultiInputRangeField<
   });
 
   const buildChangeHandler = (index: 0 | 1): FieldChangeHandler<PickerValue, unknown> => {
-    return (newDate, rawContext) => {
-      const newDateRange: PickerRangeValue =
-        index === 0 ? [newDate, value[1]] : [value[0], newDate];
+    return (newSingleValue, rawContext) => {
+      const newRange: PickerRangeValue =
+        index === 0 ? [newSingleValue, value[1]] : [value[0], newSingleValue];
 
       const context: FieldChangeHandlerContext<TError> = {
         ...rawContext,
-        validationError: getValidationErrorForNewValue(newDateRange),
+        validationError: getValidationErrorForNewValue(newRange),
       };
 
-      handleValueChange(newDateRange, context);
+      handleValueChange(newRange, context);
     };
   };
 
@@ -124,22 +124,26 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   });
 
+  const sharedProps = {
+    disabled,
+    readOnly,
+    timezone,
+    format,
+    formatDensity,
+    shouldRespectLeadingZeros,
+    enableAccessibleFieldDOMStructure,
+  };
+
   const startDateProps = useMultiInputRangeFieldTextFieldProps<TManager, TForwardedProps>({
     valueType: manager.valueType,
     fieldProps: {
       error: !!validationError[0],
       ...startForwardedProps,
       ...selectedSectionsResponse.start,
-      disabled,
-      readOnly,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      timezone,
+      ...sharedProps,
       value: valueProp === undefined ? undefined : valueProp[0],
       defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
       onChange: handleStartDateChange,
-      enableAccessibleFieldDOMStructure,
       autoFocus, // Do not add on end field.
     },
   });
@@ -150,16 +154,10 @@ export function useMultiInputRangeField<
       error: !!validationError[1],
       ...endForwardedProps,
       ...selectedSectionsResponse.end,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      disabled,
-      readOnly,
-      timezone,
+      ...sharedProps,
       value: valueProp === undefined ? undefined : valueProp[1],
       defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
       onChange: handleEndDateChange,
-      enableAccessibleFieldDOMStructure,
     },
   });
 
