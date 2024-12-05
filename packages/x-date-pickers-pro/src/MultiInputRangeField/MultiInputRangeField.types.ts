@@ -23,6 +23,7 @@ export type MultiInputRangeFieldProps<TManager extends PickerAnyRangeManager> =
        * @default false
        */
       autoFocus?: boolean;
+      className?: string;
       /**
        * Override or extend the styles applied to the component.
        */

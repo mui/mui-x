@@ -1,4 +1,11 @@
-import { useDateManager, useDateTimeManager, useTimeManager } from '@mui/x-date-pickers/managers';
+import {
+  useDateManager,
+  UseDateManagerReturnValue,
+  useDateTimeManager,
+  UseDateTimeManagerReturnValue,
+  useTimeManager,
+  UseTimeManagerReturnValue,
+} from '@mui/x-date-pickers/managers';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickerValueType } from '@mui/x-date-pickers/models';
 import {
@@ -11,6 +18,11 @@ import {
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import { PickerAnyRangeManager } from '../internals/models/managers';
+import {
+  UseDateRangeManagerReturnValue,
+  UseDateTimeRangeManagerReturnValue,
+  UseTimeRangeManagerReturnValue,
+} from '../managers';
 
 /**
  * @ignore - internal hook.
@@ -76,5 +88,16 @@ export function useMultiInputRangeFieldTextFieldProps<
 
 interface UseMultiInputRangeFieldTextFieldProps<TManager extends PickerAnyRangeManager> {
   valueType: PickerValueType;
-  fieldProps: PickerManagerFieldInternalProps<TManager>;
+  fieldProps: PickerManagerFieldInternalProps<GetDerivedManager<TManager>>;
 }
+
+type GetDerivedManager<TManager extends PickerAnyRangeManager> =
+  TManager extends UseDateRangeManagerReturnValue<infer TEnableAccessibleFieldDOMStructure>
+    ? UseDateManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+    : TManager extends UseTimeRangeManagerReturnValue<infer TEnableAccessibleFieldDOMStructure>
+      ? UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+      : TManager extends UseDateTimeRangeManagerReturnValue<
+            infer TEnableAccessibleFieldDOMStructure
+          >
+        ? UseDateTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+        : never;

@@ -111,10 +111,10 @@ createTheme({
     },
 
     // Multi input range fields
-    MuiMultiInputDateRangeField: {
+    MuiMultiInputRangeField: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiMultiInputDateRangeField prop
+        // @ts-expect-error invalid MuiMultiInputRangeField prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -125,46 +125,6 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiMultiInputDateRangeField class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
-
-    MuiMultiInputDateTimeRangeField: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiMultiInputDateTimeRangeField prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${multiInputRangeFieldClasses.separator}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiMultiInputDateTimeRangeField class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
-
-    MuiMultiInputTimeRangeField: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiMultiInputTimeRangeField prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${multiInputRangeFieldClasses.separator}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiMultiInputTimeRangeField class key
         content: {
           backgroundColor: 'blue',
         },

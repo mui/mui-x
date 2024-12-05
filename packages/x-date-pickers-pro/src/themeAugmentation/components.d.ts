@@ -25,21 +25,6 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersRangeCalendarHeader'];
   };
 
-  // Multi input range fields
-  MuiMultiInputRangeField?: {
-    defaultProps?: ComponentsProps['MuiMultiInputRangeField'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputRangeField'];
-  };
-  MuiMultiInputDateRangeField?: {
-    defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
-  };
-  MuiMultiInputDateTimeRangeField?: {
-    defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
-  };
-  MuiMultiInputTimeRangeField?: {
-    defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
-  };
-
   // Single input range fields
   MuiSingleInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
@@ -49,6 +34,10 @@ export interface PickersProComponents<Theme = unknown> {
   };
   MuiSingleInputTimeRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputTimeRangeField'];
+  };
+  MuiMultiInputRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputRangeField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiInputRangeField'];
   };
 
   // Date Range Pickers

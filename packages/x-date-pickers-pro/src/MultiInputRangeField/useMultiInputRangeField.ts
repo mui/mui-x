@@ -52,7 +52,7 @@ import { PickerAnyRangeManager } from '../internals/models/managers';
  */
 export function useMultiInputRangeField<
   TManager extends PickerAnyRangeManager,
-  TForwardedProps extends {},
+  TForwardedProps extends { [key: string]: any },
 >(parameters: UseMultiInputRangeFieldParameters<TManager, TForwardedProps>) {
   type TError = PickerManagerError<TManager>;
 
@@ -124,7 +124,7 @@ export function useMultiInputRangeField<
     unstableEndFieldRef,
   });
 
-  const startDateProps = useMultiInputRangeFieldTextFieldProps({
+  const startDateProps = useMultiInputRangeFieldTextFieldProps<TManager, TForwardedProps>({
     valueType: manager.valueType,
     fieldProps: {
       error: !!validationError[0],
@@ -144,7 +144,7 @@ export function useMultiInputRangeField<
     },
   });
 
-  const endDateProps = useMultiInputRangeFieldTextFieldProps({
+  const endDateProps = useMultiInputRangeFieldTextFieldProps<TManager, TForwardedProps>({
     valueType: manager.valueType,
     fieldProps: {
       error: !!validationError[1],

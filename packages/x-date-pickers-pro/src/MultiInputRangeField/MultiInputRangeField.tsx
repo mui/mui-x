@@ -76,7 +76,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
   } = forwardedProps;
 
   const classes = useUtilityClasses(classesProp);
-  const ownerState = useFieldOwnerState(internalProps);
+  const ownerState = useFieldOwnerState(internalProps as any);
 
   const Root = slots?.root ?? MultiInputRangeFieldRoot;
   const rootProps = useSlotProps({
