@@ -15,7 +15,7 @@ Special thanks go out to the community contributors who have helped make this re
 @lhilgert9.
 
 Following are all team members who have contributed to this release:
-@arthurbalduini, @cherniavskii, @JCQuintas, @LukasTy and @MBilalShafi.
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy and @MBilalShafi.
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
