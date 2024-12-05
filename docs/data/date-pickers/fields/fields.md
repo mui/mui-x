@@ -32,7 +32,6 @@ Unfortunately it presents accessibility limitations, which are impossible to res
 
 Starting with version `v7.x`, we have introduced a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience on screen readers.
 You can opt-in for a new and experimental DOM structure on any field or picker component using the `enableAccessibleFieldDOMStructure` prop.
-This approach is recommended in [W3C ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) example and is also used by native date HTML input element under the hood.
 
 Starting with version `v8.x`, the new DOM structure will be the default for all fields.
 
@@ -42,7 +41,7 @@ Starting with version `v8.x`, the new DOM structure will be the default for all 
 <DateRangePicker enableAccessibleFieldDOMStructure />
 ```
 
-This new feature allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+This approach is recommended in [W3C ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) example and is also used by native date HTML input element under the hood.
 
 {{"demo": "BasicV7DOMStructure.js", "defaultCodeOpen": false }}
 
