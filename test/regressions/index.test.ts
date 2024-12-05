@@ -151,19 +151,21 @@ async function main() {
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
 
-        const images = await page.evaluate(() => document.querySelectorAll('img'));
-        if (images.length > 0) {
-          images.forEach((img) => {
-            if (!img.complete && img.loading === 'lazy') {
-              // Force lazy-loaded images to load
-              img.setAttribute('loading', 'eager');
-            }
-          });
-          // Wait for the flags to load
-          await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
-            timeout: 1000,
-          });
-        }
+        // Wait for the flags to load
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.querySelectorAll('img'));
+            return images.every((img) => {
+              if (!img.complete && img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              return img.complete;
+            });
+          },
+          undefined,
+          { timeout: 1000 },
+        );
 
         if (/^\docs-charts-.*/.test(pathURL)) {
           // Run one tick of the clock to get the final animation state
