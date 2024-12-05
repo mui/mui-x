@@ -452,7 +452,9 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} />}
+      {scrollbarWidth !== 0 && (
+        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
+      )}
     </div>
   );
 });
