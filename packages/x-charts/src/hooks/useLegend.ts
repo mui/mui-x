@@ -1,3 +1,4 @@
+'use client';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { LegendGetter } from '../context/PluginProvider';

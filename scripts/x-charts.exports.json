@@ -164,7 +164,6 @@
   { "name": "getPieArcUtilityClass", "kind": "Function" },
   { "name": "getPieCoordinates", "kind": "Function" },
   { "name": "getReferenceLineUtilityClass", "kind": "Function" },
-  { "name": "getSeriesToDisplay", "kind": "Function" },
   { "name": "getValueToPositionMapper", "kind": "Function" },
   { "name": "HighlightedContext", "kind": "Variable" },
   { "name": "HighlightedProvider", "kind": "Function" },
