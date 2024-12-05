@@ -1,7 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  DataGridPremiumProps,
   gridClasses,
+  GridColDef,
+  GridEventListener,
+  GridRenderCellParams,
+  GridRowParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
   useGridApiRef,
@@ -36,7 +41,18 @@ import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
 
-export const featuresSet = [
+type Row = {
+  id: number;
+  name: string;
+  description: string;
+  plan: string;
+  detailPage: string;
+  demo: React.JSX.Element;
+  newBadge?: boolean;
+  linkToCode?: string;
+};
+
+export const featuresSet: Row[] = [
   {
     id: 1,
     name: 'Master detail',
@@ -230,7 +246,7 @@ export const featuresSet = [
   },
 ];
 
-function getChipProperties(plan) {
+function getChipProperties(plan: string) {
   switch (plan) {
     case 'Premium':
       return { avatarLink: '/static/x/premium.svg' };
@@ -241,13 +257,12 @@ function getChipProperties(plan) {
   }
 }
 
-function PlanTag(props) {
+function PlanTag(props: { plan: string }) {
   const theme = useTheme();
   const chipProperties = getChipProperties(props.plan);
   const avatar = !chipProperties.avatarLink ? undefined : (
     <img src={chipProperties.avatarLink} width={21} height={24} alt="" />
   );
-
   return (
     <Chip
       variant="outlined"
@@ -303,7 +318,7 @@ function CustomToolbar() {
   );
 }
 
-function RowDemo(props) {
+function RowDemo(props: { row: Row }) {
   const { row } = props;
   const theme = useTheme();
 
@@ -352,7 +367,7 @@ function RowDemo(props) {
   );
 }
 
-function CustomSizeAggregationFooter(props) {
+function CustomSizeAggregationFooter(props: { value: string | undefined }) {
   return (
     <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
       Total: {props.value}
@@ -360,7 +375,7 @@ function CustomSizeAggregationFooter(props) {
   );
 }
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Feature name',
@@ -432,7 +447,7 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     display: 'flex',
-    renderCell: (params) => {
+    renderCell: (params: GridRenderCellParams<any, string>) => {
       if (params.aggregation) {
         return <CustomSizeAggregationFooter value={params.formattedValue} />;
       }
@@ -442,7 +457,7 @@ const columns = [
       return <PlanTag plan={params.value} />;
     },
     sortComparator: (p1, p2) => {
-      function getSortingValue(plan) {
+      function getSortingValue(plan: string) {
         switch (plan) {
           case 'Pro':
             return 1;
@@ -459,17 +474,23 @@ const columns = [
   },
 ];
 
-export default function PopularFeaturesDemo() {
+export default function FeaturesDemo() {
   const apiRef = useGridApiRef();
 
-  const getDetailPanelContent = React.useCallback((params) => {
+  const getDetailPanelContent = React.useCallback<
+    NonNullable<DataGridPremiumProps['getDetailPanelContent']>
+  >((params: GridRowParams) => {
     return <RowDemo row={params.row} />;
   }, []);
 
-  const getRowHeight = React.useCallback(() => 'auto', []);
-  const getDetailPanelHeight = React.useCallback(() => 'auto', []);
+  const getRowHeight = React.useCallback<
+    NonNullable<DataGridPremiumProps['getRowHeight']>
+  >(() => 'auto', []);
+  const getDetailPanelHeight = React.useCallback<
+    NonNullable<DataGridPremiumProps['getDetailPanelHeight']>
+  >(() => 'auto', []);
 
-  const onRowClick = React.useCallback(
+  const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
       const rowNode = apiRef.current.getRowNode(params.id);
       if (rowNode && rowNode.type === 'group') {
