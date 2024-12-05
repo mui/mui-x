@@ -93,10 +93,6 @@ No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.2`.
 
 Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
 
-### `@mui/x-codemod@8.0.0-alpha.3`
-
-- [codemod] Add missing `preset-safe` for the Data Grid (#15709) @arminmeh
-
 ### Docs
 
 - [docs] Add a customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
