@@ -39,7 +39,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarPromptControlRecordButtonActiveLabel: 'Kaydı durdur',
   toolbarPromptControlSendActionLabel: 'Gönder',
   toolbarPromptControlSendActionAriaLabel: 'İstemi gönder',
-  toolbarPromptControlErrorMessage: 'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
+  toolbarPromptControlErrorMessage:
+    'İstek işlenirken bir hata oluştu. Lütfen farklı bir istemle tekrar deneyin.',
 
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
