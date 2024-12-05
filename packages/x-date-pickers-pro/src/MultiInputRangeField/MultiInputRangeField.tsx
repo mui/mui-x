@@ -116,7 +116,7 @@ export const MultiInputRangeField = React.forwardRef(function MultiInputRangeFie
     elementType: Separator,
     externalSlotProps: slotProps?.separator,
     additionalProps: {
-      children: ` ${(internalProps as any).dateSeparator ?? '–'} `,
+      children: (internalProps as any).dateSeparator ?? '–',
     },
     ownerState,
     className: classes.separator,
