@@ -19,6 +19,7 @@ export type ChartsLabelMarkClassKey = keyof ChartsLabelMarkClasses;
 export function getLabelMarkUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelMark', slot);
 }
+
 export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
   'MuiChartsLabelMark',
   ['root', 'line', 'square', 'circle'],
@@ -30,5 +31,5 @@ export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
     root: ['root', type],
   };
 
-  return composeClasses(slots, getLabelMarkUtilityClass);
+  return composeClasses(slots, getLabelMarkUtilityClass, props.classes);
 };

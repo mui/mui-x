@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { ChartsLabelClasses, useUtilityClasses } from './labelClasses';
 // import { labelClasses, useUtilityClasses } from './labelClasses';
 
 export interface ChartsLabelProps {
@@ -10,6 +11,11 @@ export interface ChartsLabelProps {
    */
   // eslint-disable-next-line react/no-unused-prop-types
   labelStyle?: React.CSSProperties;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  classes?: Partial<ChartsLabelClasses>;
   children?: React.ReactNode;
 }
 
@@ -31,7 +37,13 @@ const Root = styled('div', {
 export default function ChartsLabel(props: ChartsLabelProps) {
   const { children } = props;
 
-  return <Root ownerState={props}>{children}</Root>;
+  const classes = useUtilityClasses(props);
+
+  return (
+    <Root className={classes.root} ownerState={props}>
+      {children}
+    </Root>
+  );
 }
 
 export { ChartsLabel };

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
+import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
 
 export interface ChartsLabelMarkProps {
   /**
@@ -42,6 +42,11 @@ export interface ChartsLabelMarkProps {
    */
   // eslint-disable-next-line react/no-unused-prop-types
   borderRadius?: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  classes?: Partial<ChartsLabelMarkClasses>;
 }
 
 const sizeMap = {
