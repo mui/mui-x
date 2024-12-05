@@ -27,9 +27,22 @@ If you want to dynamically load all items of the Tree View, you can pass and emp
 
 {{"demo": "BasicLazyLoading.js"}}
 
+### Using react-query
+
+The following demo uses `fetchQuery` from `react-query` to load data.
+
+{{"demo": "FetchingWithReactQuery.js"}}
+
 ## Data caching
 
 ### Custom cache
+
+To provide a custom cache, use `dataSourceCache` prop, which could be either written from scratch or based on another cache library.
+This prop accepts a generic interface of type `DataSourceCache`.
+
+The following demo uses `QueryClient` from `react-query` as a data source cache.
+
+{{"demo": "ReactQueryCache.js"}}
 
 ### Customize the cache lifetime
 
