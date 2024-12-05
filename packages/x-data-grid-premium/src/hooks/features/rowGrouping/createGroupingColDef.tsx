@@ -7,6 +7,7 @@ import {
   GridGroupingColDefOverride,
   GridGroupNode,
   GridTreeNodeWithRender,
+  GridValueFormatter,
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -94,10 +95,19 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   },
 });
 
+const groupedByColValueFormatter: (
+  groupedByColDef: GridColDef,
+) => GridValueFormatter<any, any, any, never> =
+  (groupedByColDef: GridColDef) => (value, row, _, apiRef) =>
+    groupedByColDef.valueFormatter!(value, row, groupedByColDef, apiRef);
+
 const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
+    valueFormatter: groupedByColDef.valueFormatter
+      ? groupedByColValueFormatter(groupedByColDef)
+      : undefined,
     valueOptions: isSingleSelectColDef(groupedByColDef) ? groupedByColDef.valueOptions : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
