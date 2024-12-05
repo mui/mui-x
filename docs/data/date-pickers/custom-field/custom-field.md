@@ -30,20 +30,9 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 ### Customize the `start` and `end` fields differently [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-You can pass conditional props to the `textField` slot to customize the input styling based on the `position`.
-
-{{"demo": "MultiInputFieldTextFieldProps.js"}}
-
-### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-You can pass the single input fields to the range picker to use it for keyboard editing:
-
-{{"demo": "SingleInputDateRangePicker.js"}}
-
-If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
-Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
-
-{{"demo": "SingleInputDateRangePickerWrapped.js", "defaultCodeOpen": false}}
+TO V8
+Breaking changes: Data Grid
+Breaking ch
 
 You can manually add an `endAdornment` if you want your range picker to look exactly like on a simple picker:
 
@@ -143,6 +132,12 @@ If you want users to select a value exclusively through the views
 but you still want the UI to look like a Text Field, you can replace the field with a read-only [Text Field](/material-ui/react-text-field/) component:
 
 {{"demo": "behavior-read-only-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
+
+### Using a read-only Text Field on mobile
+
+If you want to keep the default behavior on desktop but you want to have a read-only TextField on mobile, you can conditionally render the custom field presented in the previous doc section and the default Date Field:
+
+{{"demo": "behavior-read-only-mobile-text-field/MaterialDatePicker.js", "defaultCodeOpen": false}}
 
 ### Using a Button
 

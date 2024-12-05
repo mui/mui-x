@@ -257,6 +257,20 @@ const theme = createTheme({
 });
 ```
 
+## Enable field editing on mobile
+
+The field are now editable when used inside a mobile picker.
+Before v8, when rendered inside a mobile picker, the field were read-only and clicking anywhere on them would open the piker.
+The behavior is now the same as inside a desktop picker:
+
+- clicking on the field value allows to edit it
+- clicking on the field end adornment opens the picker
+
+:::success
+If you prefer the old behavior, you can create a custom field that renders a read-only Text Field on mobile.
+See [Custom field—Using a read-only Text Field on mobile](/x/react-date-pickers/custom-field/#using-a-read-only-text-field-on-mobile) to learn more.
+:::
+
 ## Slots breaking changes
 
 ### Slot: `field`
