@@ -26,9 +26,6 @@ export interface BaseForwardedSingleInputFieldProps
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
   inputRef?: React.Ref<HTMLInputElement>;
-  inputProps?: {
-    'aria-label'?: string;
-  };
   slots?: ExportedPickerFieldUISlots;
   slotProps?: PickerFieldUISlotProps & {
     textField?: {};
