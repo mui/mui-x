@@ -988,6 +988,7 @@ DataGridProRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   unstable_dataSource: PropTypes.shape({
+    getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,

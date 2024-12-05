@@ -8,6 +8,7 @@ import {
   gridPaginationModelSelector,
   GRID_ROOT_GROUP_ID,
   GridEventListener,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import {
   GridGetRowsResponse,
@@ -91,6 +92,7 @@ export const useGridDataSource = (
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
   const lastRequestId = React.useRef<number>(0);
+  const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const onError = props.unstable_onDataSourceError;
 
@@ -344,6 +346,11 @@ export const useGridDataSource = (
         apiRef.current.setRowCount(response.rowCount);
       }
       apiRef.current.setRows(response.rows);
+      // TODO: Call the following lines only when needed
+      if (response.aggregateRow) {
+        aggregateRowRef.current = response.aggregateRow;
+      }
+      apiRef.current.unstable_applyPipeProcessors('reapplyAggregation', true);
     },
     [apiRef],
   );
@@ -357,6 +364,19 @@ export const useGridDataSource = (
     });
   }, [apiRef]);
 
+  const getAggregatedValue = React.useCallback<
+    GridDataSourcePrivateApi['internal_getAggregatedValue']
+  >(
+    (groupId, field) => {
+      if (groupId === GRID_ROOT_GROUP_ID) {
+        return props.unstable_dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
+      }
+      const row = apiRef.current.getRow(groupId);
+      return props.unstable_dataSource?.getAggregatedValue?.(row, field);
+    },
+    [apiRef, props.unstable_dataSource],
+  );
+
   const dataSourceApi: GridDataSourceApi = {
     unstable_dataSource: {
       setChildrenLoading,
@@ -369,6 +389,8 @@ export const useGridDataSource = (
   const dataSourcePrivateApi: GridDataSourcePrivateApi = {
     fetchRowChildren,
     resetDataSourceState,
+    // TODO: Revisit naming
+    internal_getAggregatedValue: getAggregatedValue,
   };
 
   useGridApiMethod(apiRef, dataSourceApi, 'public');

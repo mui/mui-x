@@ -74,6 +74,40 @@ export interface GridAggregationFunction<V = any, AV = V> {
   getCellValue?: (params: GridAggregationGetCellValueParams) => V;
 }
 
+export interface GridAggregationFunctionDataSource {
+  /**
+   * Label of the aggregation function.
+   * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
+   * @default apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})
+   */
+  label?: string;
+  /**
+   * Column types supported by this aggregation function.
+   * If not defined, all types are supported (in most cases this property should be defined).
+   */
+  columnTypes?: string[];
+  /**
+   * Function that allows to apply a formatter to the aggregated value.
+   * If not defined, the grid will use the formatter of the column.
+   */
+  valueFormatter?: GridValueFormatter;
+  /**
+   * Indicates if the aggregated value have the same unit as the cells used to generate it.
+   * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
+   * @default true
+   */
+  hasCellUnit?: boolean;
+  /**
+   * Function that allows to transform the value of the cell passed to the aggregation function applier.
+   * Useful for aggregating data from multiple row fields.
+   * @demo https://mui.com/x/react-data-grid/aggregation/#aggregating-data-from-multiple-row-fields
+   * @param {GridAggregationGetCellValueParams} params The params of the current cell
+   * @returns {V} The value of the cell that will be passed to the aggregation `apply` function
+   */
+  // TODO: See if we can support it
+  // getCellValue?: (params: GridAggregationGetCellValueParams) => V;
+}
+
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
   groupId: GridRowId;
@@ -115,7 +149,7 @@ export interface GridAggregationHeaderMeta {
 
 export interface GridAggregationRule {
   aggregationFunctionName: string;
-  aggregationFunction: GridAggregationFunction;
+  aggregationFunction: GridAggregationFunction | GridAggregationFunctionDataSource;
 }
 
 /**

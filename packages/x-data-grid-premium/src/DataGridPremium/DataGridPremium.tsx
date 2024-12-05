@@ -79,7 +79,8 @@ DataGridPremiumRaw.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided
+   * @default {} when `unstable_dataSource` is provided
    */
   aggregationFunctions: PropTypes.object,
   /**
@@ -1088,6 +1089,7 @@ DataGridPremiumRaw.propTypes = {
    */
   treeData: PropTypes.bool,
   unstable_dataSource: PropTypes.shape({
+    getAggregatedValue: PropTypes.func,
     getChildrenCount: PropTypes.func,
     getGroupKey: PropTypes.func,
     getRows: PropTypes.func.isRequired,
