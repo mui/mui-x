@@ -127,8 +127,8 @@ const getPivotedData = ({
   const aggregationModel: GridAggregationModel = {};
 
   const columnGroupingModel: GridColumnGroupingModel = [];
-  // Use lookup for faster access to column groups
-  const columnGroupingModelLookup: Record<string, GridColumnGroup> = {};
+  // Lookup for faster access to column groups
+  const columnGroupingModelLookup = new Map<string, GridColumnGroup>();
 
   let newRows: GridRowModel[] = [];
 
@@ -155,19 +155,21 @@ const getPivotedData = ({
         columnGroupPath.push(String(colValue));
         const groupId = columnGroupPath.join('-');
 
-        if (!columnGroupingModelLookup[groupId]) {
+        if (!columnGroupingModelLookup.has(groupId)) {
           const columnGroup: GridColumnGroupingModel[number] = {
             groupId,
             headerName: String(colValue),
             children: [],
           };
-          columnGroupingModelLookup[groupId] = columnGroup;
+          columnGroupingModelLookup.set(groupId, columnGroup);
           if (depth === 0) {
             columnGroupingModel.push(columnGroup);
           } else {
             const parentGroupId = columnGroupPath.slice(0, -1).join('-');
-            const parentGroup = columnGroupingModelLookup[parentGroupId];
-            parentGroup.children.push(columnGroup);
+            const parentGroup = columnGroupingModelLookup.get(parentGroupId);
+            if (parentGroup) {
+              parentGroup.children.push(columnGroup);
+            }
           }
         }
 
