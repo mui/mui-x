@@ -56,12 +56,6 @@ Same changes as in `@mui/x-date-pickers@7.23.1`.
 
 Same changes as in `@mui/x-charts@7.23.1`.
 
-### Tree View
-
-#### `@mui/x-tree-view@7.23.1`
-
-No changes since `@mui/x-tree-view@v7.23.0`.
-
 ### Docs
 
 - [docs] Fix Pickers theme augmentation example (#15675) @LukasTy
