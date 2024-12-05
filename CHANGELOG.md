@@ -62,7 +62,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
 
 ### Breaking changes
 
-- The `onOpen` and `onClose` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
+- The `onOpen()` and `onClose()` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
 
 #### `@mui/x-date-pickers@8.0.0-alpha.3`
 
