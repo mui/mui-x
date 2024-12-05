@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { GridApiCommon } from '../../models/api/gridApiCommon';
 import type { OutputSelector, OutputSelectorV8 } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
-import { useOnMount } from './useOnMount';
 import type { GridCoreApi } from '../../models/api/gridCoreApi';
 
 function isOutputSelector<Api extends GridApiCommon, T>(
@@ -97,7 +97,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   refs.current.equals = equals;
   refs.current.selector = selector;
 
-  useOnMount(() => {
+  useEnhancedEffect(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelector(apiRef, refs.current.selector);
       if (!refs.current.equals(refs.current.state, newState)) {
@@ -105,7 +105,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
         setState(newState);
       }
     });
-  });
+  }, [apiRef, refs]);
 
   return state;
 };
@@ -161,7 +161,7 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
     }
   }
 
-  useOnMount(() => {
+  useEnhancedEffect(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelectorV8(
         apiRef,
@@ -174,7 +174,7 @@ export const useGridSelectorV8 = <Api extends GridApiCommon, Args, T>(
         setState(newState);
       }
     });
-  });
+  }, [apiRef, refs]);
 
   return state;
 };
