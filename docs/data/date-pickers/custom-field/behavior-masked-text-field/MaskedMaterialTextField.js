@@ -141,7 +141,6 @@ function MaskedDateField(props) {
           <InputAdornment position="end">
             <IconButton
               onClick={() => pickerContext.setOpen((prev) => !prev)}
-              size="small"
               edge="end"
             >
               <CalendarIcon />
