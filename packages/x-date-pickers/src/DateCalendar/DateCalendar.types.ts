@@ -25,6 +25,8 @@ import {
   MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
 import { ExportedValidateDateProps } from '../validation/validateDate';
+import { FormProps } from '../internals/models/formProps';
+import { PickerValue } from '../internals/models';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots,
@@ -52,17 +54,8 @@ export interface ExportedDateCalendarProps
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     ExportedValidateDateProps,
-    TimezoneProps {
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
+    TimezoneProps,
+    FormProps {
   /**
    * If `true`, disable heavy animations.
    * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
@@ -88,7 +81,7 @@ export interface ExportedDateCalendarProps
 
 export interface DateCalendarProps
   extends ExportedDateCalendarProps,
-    ExportedUseViewsOptions<PickerValidDate | null, DateView> {
+    ExportedUseViewsOptions<PickerValue, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.

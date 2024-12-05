@@ -12,7 +12,10 @@ import {
   unstable_generateUtilityClass as generateUtilityClass,
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
-import { convertFieldResponseIntoMuiTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  convertFieldResponseIntoMuiTextFieldProps,
+  useFieldOwnerState,
+} from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
@@ -28,8 +31,7 @@ export const multiInputDateTimeRangeFieldClasses: MultiInputRangeFieldClasses =
 export const getMultiInputDateTimeRangeFieldUtilityClass = (slot: string) =>
   generateUtilityClass('MuiMultiInputDateTimeRangeField', slot);
 
-const useUtilityClasses = (ownerState: MultiInputDateTimeRangeFieldProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undefined) => {
   const slots = {
     root: ['root'],
     separator: ['separator'],
@@ -93,11 +95,12 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     unstableStartFieldRef,
     unstableEndFieldRef,
     className,
+    classes: classesProp,
     ...otherForwardedProps
   } = forwardedProps;
 
-  const ownerState = themeProps;
-  const classes = useUtilityClasses(ownerState);
+  const ownerState = useFieldOwnerState(themeProps);
+  const classes = useUtilityClasses(classesProp);
 
   const Root = slots?.root ?? MultiInputDateTimeRangeFieldRoot;
   const rootProps = useSlotProps({
@@ -116,7 +119,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
   const startTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateTimeRangeFieldSlotProps['textField'],
     {},
     MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
@@ -128,7 +131,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
   const endTextFieldProps = useSlotProps<
     typeof TextField,
-    MultiInputDateTimeRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>['textField'],
+    MultiInputDateTimeRangeFieldSlotProps['textField'],
     {},
     MultiInputDateTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
       position: RangePosition;
@@ -214,6 +217,7 @@ MultiInputDateTimeRangeField.propTypes = {
   ]),
   /**
    * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -307,8 +311,8 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -360,10 +364,10 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
-   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   * If `true`, the format will respect the leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (for example on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *
-   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (for example "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
    *
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.

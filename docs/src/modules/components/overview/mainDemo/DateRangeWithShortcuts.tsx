@@ -60,11 +60,11 @@ interface CustomLayoutProps extends PickersLayoutProps<DateRange<Dayjs>, 'day'> 
 }
 function CustomLayout(props: CustomLayoutProps) {
   const { isHorizontal, ...other } = props;
-  const { tabs, content, shortcuts } = usePickerLayout(other);
+  const { tabs, content, shortcuts, ownerState } = usePickerLayout(other);
 
   return (
     <PickersLayoutRoot
-      ownerState={props}
+      ownerState={ownerState}
       sx={{
         overflow: 'auto',
         [`.${pickersLayoutClasses.shortcuts}`]: isHorizontal
@@ -75,7 +75,11 @@ function CustomLayout(props: CustomLayoutProps) {
               flexGrow: 1,
               maxWidth: '100%',
             }
-          : {},
+          : {
+              '& li': {
+                px: 1,
+              },
+            },
         [`.${pickersLayoutClasses.contentWrapper}`]: {
           flexGrow: 1,
           alignItems: 'center',
@@ -83,7 +87,10 @@ function CustomLayout(props: CustomLayoutProps) {
       }}
     >
       {shortcuts}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {tabs}
         {content}
       </PickersLayoutContentWrapper>

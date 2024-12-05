@@ -6,8 +6,8 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useRtl } from '@mui/system/RtlProvider';
+import reactMajor from '@mui/x-internals/reactMajor';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -33,6 +33,7 @@ import type {
   GridRowEntry,
   GridRowId,
 } from '../../../models';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
@@ -91,7 +92,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 let isJSDOM = false;
 try {
   if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
   }
 } catch (_) {
   /* ignore */
@@ -135,7 +136,57 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  useResizeObserver(mainRef, () => apiRef.current.resize());
+  const mainRefCallback = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      mainRef.current = node;
+
+      if (!node) {
+        return undefined;
+      }
+
+      const initialRect = node.getBoundingClientRect();
+      let lastSize = {
+        width: initialRect.width,
+        height: initialRect.height,
+      };
+
+      apiRef.current.publishEvent('resize', lastSize);
+
+      if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
+
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) {
+          return;
+        }
+
+        const newSize = {
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        };
+
+        if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
+          return;
+        }
+
+        apiRef.current.publishEvent('resize', newSize);
+        lastSize = newSize;
+      });
+
+      observer.observe(node);
+
+      if (reactMajor >= 19) {
+        return () => {
+          mainRef.current = null;
+          observer.disconnect();
+        };
+      }
+      return undefined;
+    },
+    [apiRef, mainRef],
+  );
 
   /*
    * Scroll context logic
@@ -216,9 +267,14 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
     const newScroll = {
-      top: scrollerRef.current!.scrollTop,
-      left: scrollerRef.current!.scrollLeft,
+      top: scroller.scrollTop,
+      left: scroller.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -550,11 +606,6 @@ export const useGridVirtualScroller = () => {
   }, [apiRef, contentSize]);
 
   useEnhancedEffect(() => {
-    // FIXME: Is this really necessary?
-    apiRef.current.resize();
-  }, [apiRef, rowsMeta.currentPageTotalHeight]);
-
-  useEnhancedEffect(() => {
     // TODO a scroll reset should not be necessary
     if (enabledForColumns) {
       scrollerRef.current!.scrollLeft = 0;
@@ -596,7 +647,7 @@ export const useGridVirtualScroller = () => {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: mainRef,
+      ref: mainRefCallback,
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
@@ -640,6 +691,7 @@ type RenderContextInputs = {
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
   hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
   listView: boolean;
+  virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 };
 
 function inputsSelector(
@@ -677,6 +729,7 @@ function inputsSelector(
     visibleColumns,
     hiddenCellsOriginMap,
     listView: rootProps.unstable_listView ?? false,
+    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }
 
@@ -740,12 +793,14 @@ function computeRenderContext(
       lastSize: inputs.lastRowHeight,
     });
 
-    for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
-      const row = inputs.rows[i];
-      hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+    if (!inputs.virtualizeColumnsWithAutoRowHeight) {
+      for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
+        const row = inputs.rows[i];
+        hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+      }
     }
 
-    if (!hasRowWithAutoHeight) {
+    if (!hasRowWithAutoHeight || inputs.virtualizeColumnsWithAutoRowHeight) {
       firstColumnIndex = binarySearch(realLeft, inputs.columnPositions, {
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,

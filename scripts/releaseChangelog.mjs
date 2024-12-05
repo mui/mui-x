@@ -223,6 +223,7 @@ async function main(argv) {
       case 'TreeView':
       case 'RichTreeView':
       case 'tree view':
+      case 'TreeItem':
         treeViewCommits.push(commitItem);
         break;
       case 'RichTreeViewPro':
@@ -366,7 +367,7 @@ ${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' :
 
 ${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
 
-#### \`@mui/x-charts-pro@__VERSION-ALPHA__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### \`@mui/x-charts-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}

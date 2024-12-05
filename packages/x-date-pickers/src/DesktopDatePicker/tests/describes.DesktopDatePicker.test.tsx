@@ -10,6 +10,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<DesktopDatePicker /> - Describes', () => {
@@ -41,7 +42,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(DesktopDatePicker, () => ({
+  describeValue<PickerValue, 'picker'>(DesktopDatePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date',

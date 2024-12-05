@@ -17,13 +17,14 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValue, PickerVariant } from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -34,8 +35,8 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
-    MakeOptional<BaseToolbarProps<PickerValidDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
-  toolbarVariant?: WrapperVariant;
+    MakeOptional<BaseToolbarProps<PickerValue, DateOrTimeViewWithMeridiem>, 'view'> {
+  toolbarVariant?: PickerVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -243,8 +244,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    disabled,
-    readOnly,
     toolbarVariant = 'mobile',
     toolbarTitle: inToolbarTitle,
     className,
@@ -252,6 +251,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   } = props;
 
   const isRtl = useRtl();
+  const { disabled, readOnly } = usePickerContext();
   const ownerState: DateTimePickerToolbarOwnerState = { ...props, isRtl };
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -412,7 +412,6 @@ DateTimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -426,7 +425,6 @@ DateTimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

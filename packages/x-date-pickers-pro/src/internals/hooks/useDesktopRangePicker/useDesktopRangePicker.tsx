@@ -11,21 +11,20 @@ import {
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickerProvider,
+  PickerValue,
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
-import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
-  UseDesktopRangePickerSlotProps,
 } from './useDesktopRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -70,15 +69,25 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
-  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const singleInputFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
   const initialView = React.useRef<TView | null>(props.openTo ?? null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const { rangePosition, onRangePositionChange } = useRangePosition(
     props,
-    fieldType === 'single-input' ? startFieldRef : undefined,
+    fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
+
+  let fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
+  if (fieldType === 'single-input') {
+    fieldRef = singleInputFieldRef;
+  } else if (rangePosition === 'start') {
+    fieldRef = startFieldRef;
+  } else {
+    fieldRef = endFieldRef;
+  }
 
   const {
     open,
@@ -89,18 +98,12 @@ export const useDesktopRangePicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<
-    PickerRangeValue,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    DesktopRangePickerAdditionalViewProps
-  >({
+  } = usePicker<PickerRangeValue, TView, TExternalProps, DesktopRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     autoFocusView: false,
-    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    fieldRef,
     localeText,
     additionalViewProps: {
       rangePosition,
@@ -129,24 +132,18 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseDesktopRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
-    RangePickerPropsForFieldSlot<
-      boolean,
-      TEnableAccessibleFieldDOMStructure,
-      InferError<TExternalProps>
-    >,
-    PickerOwnerState
-  >({
+
+  const fieldProps: RangePickerPropsForFieldSlot<
+    boolean,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
+      // Internal props
       readOnly,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
@@ -154,8 +151,14 @@ export const useDesktopRangePicker = <
       onSelectedSectionsChange,
       timezone,
       autoFocus: autoFocus && !props.open,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
+      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
+      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -165,7 +168,7 @@ export const useDesktopRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
     fieldType,
     open,
     actions,
@@ -182,6 +185,7 @@ export const useDesktopRangePicker = <
     anchorRef,
     startFieldRef,
     endFieldRef,
+    singleInputFieldRef,
     currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
     initialView: initialView.current ?? undefined,
     onViewChange: layoutProps.onViewChange,

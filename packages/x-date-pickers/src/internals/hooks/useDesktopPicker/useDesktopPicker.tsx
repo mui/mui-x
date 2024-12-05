@@ -5,22 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import {
-  UseDesktopPickerParams,
-  UseDesktopPickerProps,
-  UseDesktopPickerSlotProps,
-} from './useDesktopPicker.types';
+import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
-import {
-  FieldSection,
-  PickerValidDate,
-  FieldRef,
-  BaseSingleInputFieldProps,
-  InferError,
-  PickerOwnerState,
-} from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { FieldRef, InferError } from '../../../models';
+import { DateOrTimeViewWithMeridiem, BaseSingleInputFieldProps, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 
 /**
@@ -65,7 +54,7 @@ export const useDesktopPicker = <
   } = props;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+  const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
@@ -80,14 +69,14 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<PickerValidDate | null, TView, FieldSection, TExternalProps, {}>({
+  } = usePicker<PickerValue, TView, TExternalProps, {}>({
     ...pickerParams,
     props,
     fieldRef,
     localeText,
     autoFocusView: true,
     additionalViewProps: {},
-    wrapperVariant: 'desktop',
+    variant: 'desktop',
   });
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
@@ -121,39 +110,34 @@ export const useDesktopPicker = <
   });
 
   const Field = slots.field;
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
-    Partial<
-      BaseSingleInputFieldProps<
-        PickerValidDate | null,
-        FieldSection,
-        TEnableAccessibleFieldDOMStructure,
-        InferError<TExternalProps>
-      >
-    >,
-    PickerOwnerState
-  >({
+  const fieldProps: BaseSingleInputFieldProps<
+    PickerValue,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
-      ...(isToolbarHidden && { id: labelId }),
+      // Internal props
       readOnly,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      autoFocus: autoFocus && !props.open,
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
       label,
       name,
-      autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
-      ...(inputRef ? { inputRef } : {}),
+      ...(isToolbarHidden && { id: labelId }),
+      ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });

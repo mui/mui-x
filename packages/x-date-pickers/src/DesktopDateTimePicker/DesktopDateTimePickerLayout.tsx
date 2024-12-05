@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useRtl } from '@mui/system/RtlProvider';
 import Divider from '@mui/material/Divider';
 import {
   PickersLayoutContentWrapper,
@@ -11,8 +10,13 @@ import {
   usePickerLayout,
 } from '../PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
+import { usePickerContext } from '../hooks/usePickerContext';
+import { PickerValidValue } from '../internals/models';
 
-type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+type DesktopDateTimePickerLayoutComponent = (<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -20,14 +24,13 @@ type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeVi
  * @ignore - internal component.
  */
 const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
-  const isRtl = useRtl();
-  const { toolbar, tabs, content, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, classes } = props;
+  const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
+  const { orientation } = usePickerContext();
+  const { sx, className, classes } = props;
   const isActionBarVisible = actionBar && (actionBar.props.actions?.length ?? 0) > 0;
-  const ownerState = { ...props, isRtl };
 
   return (
     <PickersLayoutRoot
@@ -42,10 +45,11 @@ const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePic
       ]}
       ownerState={ownerState}
     >
-      {isLandscape ? shortcuts : toolbar}
-      {isLandscape ? toolbar : shortcuts}
+      {orientation === 'landscape' ? shortcuts : toolbar}
+      {orientation === 'landscape' ? toolbar : shortcuts}
       <PickersLayoutContentWrapper
         className={clsx(pickersLayoutClasses.contentWrapper, classes?.contentWrapper)}
+        ownerState={ownerState}
         sx={{ display: 'grid' }}
       >
         {content}
@@ -68,12 +72,6 @@ DesktopDateTimePickerLayout.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  /**
-   * `true` if the application is in right-to-left direction.
-   */
-  isRtl: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -85,11 +83,6 @@ DesktopDateTimePickerLayout.propTypes = {
   onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  readOnly: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -108,12 +101,11 @@ DesktopDateTimePickerLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DesktopDateTimePickerLayout };

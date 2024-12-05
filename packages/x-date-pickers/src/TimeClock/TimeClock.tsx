@@ -55,7 +55,7 @@ type TimeClockComponent = ((
   props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
+const TIME_CLOCK_DEFAULT_VIEWS: readonly TimeView[] = ['hours', 'minutes'];
 
 /**
  * Demos:
@@ -68,7 +68,7 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
 export const TimeClock = React.forwardRef(function TimeClock(
-  inProps: TimeClockProps,
+  inProps: TimeClockProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
@@ -114,6 +114,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -423,7 +424,8 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -490,7 +492,8 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,

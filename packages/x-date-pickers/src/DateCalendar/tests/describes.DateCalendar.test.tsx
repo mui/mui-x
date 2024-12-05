@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -30,7 +31,7 @@ describe('<DateCalendar /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(DateCalendar, () => ({
+  describeValue<PickerValue, 'calendar'>(DateCalendar, () => ({
     render,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-02')],

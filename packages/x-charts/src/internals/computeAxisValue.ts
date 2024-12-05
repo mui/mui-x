@@ -13,7 +13,7 @@ import { CartesianChartSeriesType } from '../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from './colorScale';
 import { getTickNumber } from '../hooks/useTicks';
 import { getScale } from './getScale';
-import { DrawingArea } from '../context/DrawingProvider';
+import { DrawingAreaState } from '../context/DrawingAreaProvider';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { zoomScaleRange } from '../context/CartesianProvider/zoom';
 import { ExtremumGetter } from '../context/PluginProvider';
@@ -26,7 +26,7 @@ import {
 import { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 
 function getRange(
-  drawingArea: DrawingArea,
+  drawingArea: DrawingAreaState,
   axisDirection: 'x' | 'y' | 'radius' | 'rotation',
   axis: AxisConfig<
     ScaleName,
@@ -79,7 +79,7 @@ type ComputeResult<T extends ChartsAxisProps> = {
 };
 
 type ComputeCommonParams = {
-  drawingArea: DrawingArea;
+  drawingArea: DrawingAreaState;
   formattedSeries: FormattedSeries;
   extremumGetters: { [K in CartesianChartSeriesType]?: ExtremumGetter<K> };
   zoomData?: ZoomData[];
@@ -198,22 +198,31 @@ export function computeAxisValue({
 
     const scaleType = axis.scaleType ?? ('linear' as const);
 
+    const domainLimit = axis.domainLimit ?? 'nice';
+
     const axisExtremums = [axis.min ?? minData, axis.max ?? maxData];
+
+    if (typeof domainLimit === 'function') {
+      const { min, max } = domainLimit(minData, maxData);
+      axisExtremums[0] = min;
+      axisExtremums[1] = max;
+    }
+
     const rawTickNumber = getTickNumber({ ...axis, range, domain: axisExtremums });
     const tickNumber = rawTickNumber / ((zoomRange[1] - zoomRange[0]) / 100);
 
     const zoomedRange = zoomScaleRange(range, zoomRange);
 
-    // TODO: move nice to prop? Disable when there is zoom?
-    const scale = getScale(scaleType, axisExtremums, zoomedRange).nice(rawTickNumber);
-    const [minDomain, maxDomain] = scale.domain();
+    const scale = getScale(scaleType, axisExtremums, zoomedRange);
+    const finalScale = domainLimit === 'nice' ? scale.nice(rawTickNumber) : scale;
+    const [minDomain, maxDomain] = finalScale.domain();
     const domain = [axis.min ?? minDomain, axis.max ?? maxDomain];
 
     completeAxis[axis.id] = {
       ...axis,
       data,
       scaleType: scaleType as any,
-      scale: scale.domain(domain) as any,
+      scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
     };

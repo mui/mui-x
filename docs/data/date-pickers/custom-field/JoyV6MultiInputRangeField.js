@@ -19,7 +19,6 @@ import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 
@@ -106,12 +105,10 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     slotProps,
     value,
-    defaultValue,
     format,
     onChange,
     readOnly,
     disabled,
-    onError,
     shouldDisableDate,
     minDate,
     maxDate,
@@ -120,6 +117,8 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     selectedSections,
     onSelectedSectionsChange,
     className,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   } = props;
 
   const startTextFieldProps = useSlotProps({
@@ -137,12 +136,10 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const fieldResponse = useMultiInputDateRangeField({
     sharedProps: {
       value,
-      defaultValue,
       format,
       onChange,
       readOnly,
       disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
@@ -154,6 +151,8 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
     },
     startTextFieldProps,
     endTextFieldProps,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
   });
 
   return (

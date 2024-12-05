@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { shouldForwardProp } from '@mui/system';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { chartsTooltipClasses } from './chartsTooltipClasses';
 
 /**
@@ -85,7 +85,7 @@ export const ChartsTooltipMark = styled('div', {
   height: theme.spacing(1),
   borderRadius: '50%',
   boxShadow: theme.shadows[1],
-  backgroundColor: color,
+  background: color,
   borderColor: (theme.vars || theme).palette.background.paper,
   border: `solid ${(theme.vars || theme).palette.background.paper} ${theme.spacing(0.25)}`,
   boxSizing: 'content-box',

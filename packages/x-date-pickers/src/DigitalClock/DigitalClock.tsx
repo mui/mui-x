@@ -16,7 +16,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -163,6 +163,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -197,7 +198,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
-  const { setValueAndGoToNextView } = useViews<PickerValidDate | null, Extract<TimeView, 'hours'>>({
+  const { setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
@@ -400,7 +401,8 @@ DigitalClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -467,7 +469,8 @@ DigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,

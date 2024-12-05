@@ -11,6 +11,7 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
@@ -23,9 +24,6 @@
       "typeDescriptions": { "highlightedItem": "The newly highlighted item." }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series-type/'>PieSeriesType</a> objects."
     },
@@ -34,10 +32,6 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -50,13 +44,11 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "axisContent": "Custom component for displaying tooltip content when triggered by axis event.",
-    "itemContent": "Custom component for displaying tooltip content when triggered by item event.",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "pieArc": "",
     "pieArcLabel": "",
-    "popper": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper."
   }
 }

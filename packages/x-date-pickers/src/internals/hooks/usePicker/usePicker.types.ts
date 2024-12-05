@@ -10,46 +10,48 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection, PickerOwnerState } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
-import { UsePickerProviderParameters, UsePickerProviderReturnValue } from './usePickerProvider';
+import { PickerOwnerState } from '../../../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
+import {
+  UsePickerProviderParameters,
+  UsePickerProviderProps,
+  UsePickerProviderReturnValue,
+} from './usePickerProvider';
 
 /**
  * Props common to all picker headless implementations.
  */
 export interface UsePickerBaseProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerProviderProps {}
 
 export interface UsePickerProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerLayoutProps {}
+    UsePickerProviderProps {}
 
 export interface UsePickerParams<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TExternalProps>,
-      'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
+      'valueManager' | 'valueType' | 'variant' | 'validator'
     >,
     Pick<
-      UsePickerViewParams<TValue, TView, TSection, TExternalProps, TAdditionalProps>,
+      UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
       'additionalViewProps' | 'autoFocusView' | 'rendererInterceptor' | 'fieldRef'
     >,
     Pick<UsePickerProviderParameters<TValue>, 'localeText'> {
@@ -57,13 +59,13 @@ export interface UsePickerParams<
 }
 
 export interface UsePickerResponse<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TError,
-> extends Omit<UsePickerValueResponse<TValue, TSection, TError>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
-    UsePickerLayoutPropsResponse<TValue, TView> {
+> extends Pick<UsePickerValueResponse<TValue, TError>, 'open' | 'actions' | 'fieldProps'>,
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps' | 'views'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
+  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &
+    UsePickerViewsResponse<TView>['layoutProps'];
 }

@@ -4,9 +4,8 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
-import { ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import { ChartContainerProps } from '../ChartContainer';
 import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
@@ -24,10 +23,10 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     yAxis,
     zAxis,
     series,
-    tooltip,
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
+    hideLegend,
     width,
     height,
     margin,
@@ -49,7 +48,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...other
   } = props;
 
-  const chartContainerProps: ResponsiveChartContainerProps = {
+  const chartContainerProps: ChartContainerProps = {
     ...other,
     series: series.map((s) => ({ type: 'scatter' as const, ...s })),
     width,
@@ -107,13 +106,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps<'scatter'> = {
-    trigger: 'item' as const,
-    ...tooltip,
-    slots,
-    slotProps,
-  };
-
   return {
     chartContainerProps,
     zAxisProps,
@@ -124,7 +116,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   };
 };

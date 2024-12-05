@@ -6,6 +6,7 @@ import {
   act,
   ErrorBoundary,
   waitFor,
+  reactMajor,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
@@ -254,8 +255,8 @@ describe('<DataGrid /> - Rows', () => {
         );
       }).toErrorDev([
         'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        'The above error occurred in the <GridActionsCell> component',
+        reactMajor < 19 && 'MUI X: Missing the `getActions` property in the `GridColDef`.',
+        reactMajor < 19 && 'The above error occurred in the <GridActionsCell> component',
       ]);
     });
 

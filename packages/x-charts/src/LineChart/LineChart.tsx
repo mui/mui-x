@@ -5,19 +5,12 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
 import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
-import {
-  ResponsiveChartContainer,
-  ResponsiveChartContainerProps,
-} from '../ResponsiveChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
@@ -47,8 +40,8 @@ export interface LineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'line'>,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 export interface LineChartSlotProps
   extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
@@ -56,11 +49,11 @@ export interface LineChartSlotProps
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'line'>,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface LineChartProps
-  extends Omit<ResponsiveChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
@@ -70,21 +63,19 @@ export interface LineChartProps
    */
   series: MakeOptional<LineSeriesType, 'type'>[];
   /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip?: ChartsTooltipProps<'line'>;
-  /**
    * Option to display a cartesian grid in the background.
    */
   grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight?: ChartsAxisHighlightProps;
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend?: boolean;
   /**
    * If `true`, render the line highlight item.
    */
@@ -132,7 +123,10 @@ export interface LineChartProps
  *
  * - [LineChart API](https://mui.com/x/api/charts/line-chart/)
  */
-const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, ref) {
+const LineChart = React.forwardRef(function LineChart(
+  inProps: LineChartProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChart' });
   const {
     chartContainerProps,
@@ -148,12 +142,13 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
     axisHighlightProps,
     lineHighlightPlotProps,
     legendProps,
-    tooltipProps,
     children,
   } = useLineChartProps(props);
 
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
+
   return (
-    <ResponsiveChartContainer ref={ref} {...chartContainerProps}>
+    <ChartContainer ref={ref} {...chartContainerProps}>
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
@@ -168,11 +163,11 @@ const LineChart = React.forwardRef(function LineChart(inProps: LineChartProps, r
         <MarkPlot {...markPlotProps} />
       </g>
       <LineHighlightPlot {...lineHighlightPlotProps} />
-      <ChartsLegend {...legendProps} />
-      {!props.loading && <ChartsTooltip {...tooltipProps} />}
+      {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       <ChartsClipPath {...clipPathProps} />
       {children}
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 });
 
@@ -183,7 +178,7 @@ LineChart.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'line' }
    */
   axisHighlight: PropTypes.shape({
@@ -233,6 +228,10 @@ LineChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * If `true`, the legend is not rendered.
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The item currently highlighted. Turns highlighting into a controlled prop.
    */
@@ -289,16 +288,6 @@ LineChart.propTypes = {
    */
   onMarkClick: PropTypes.func,
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -331,30 +320,11 @@ LineChart.propTypes = {
   ]),
   title: PropTypes.string,
   /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
-  /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -398,11 +368,11 @@ LineChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -417,7 +387,6 @@ LineChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -473,11 +442,11 @@ LineChart.propTypes = {
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
+      domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       fill: PropTypes.string,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -492,7 +461,6 @@ LineChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { ScaleLinear } from 'd3-scale';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 
@@ -56,7 +56,7 @@ function CartesianAxis() {
 }
 export default function OriginDemo() {
   return (
-    <ResponsiveChartContainer
+    <ChartContainer
       margin={{ top: 5, left: 5, right: 5, bottom: 5 }}
       height={300}
       series={[
@@ -75,6 +75,6 @@ export default function OriginDemo() {
     >
       <CartesianAxis />
       <LinePlot />
-    </ResponsiveChartContainer>
+    </ChartContainer>
   );
 }

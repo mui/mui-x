@@ -1,8 +1,8 @@
-import { RangeFieldSection } from '../../models';
+import { FieldRangeSection } from '@mui/x-date-pickers/internals';
 
-export const splitDateRangeSections = (sections: RangeFieldSection[]) => {
-  const startDateSections: RangeFieldSection[] = [];
-  const endDateSections: RangeFieldSection[] = [];
+export const splitDateRangeSections = (sections: FieldRangeSection[]) => {
+  const startDateSections: FieldRangeSection[] = [];
+  const endDateSections: FieldRangeSection[] = [];
   sections.forEach((section) => {
     if (section.dateName === 'start') {
       startDateSections.push(section);
@@ -14,7 +14,7 @@ export const splitDateRangeSections = (sections: RangeFieldSection[]) => {
   return { startDate: startDateSections, endDate: endDateSections };
 };
 
-export const removeLastSeparator = (dateSections: RangeFieldSection[]) =>
+export const removeLastSeparator = (dateSections: FieldRangeSection[]) =>
   dateSections.map((section, sectionIndex) => {
     if (sectionIndex === dateSections.length - 1) {
       return { ...section, separator: null };

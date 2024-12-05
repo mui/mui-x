@@ -358,7 +358,7 @@ apiRef.current.exportDataAsExcel({
 ```
 
 :::info
-If you are using Next.js or Webpack 5, use the following syntax instead.
+If you are using Next.js or webpack 5, use the following syntax instead.
 Make sure to pass the **relative path**, considering the current file, to the worker script.
 
 ```tsx
@@ -375,7 +375,7 @@ apiRef.current.exportDataAsExcel({
 });
 ```
 
-It is not necessary to make the script public because [Webpack](https://webpack.js.org/guides/web-workers/) will handle that automatically for you.
+It is not necessary to make the script public because [webpack](https://webpack.js.org/guides/web-workers/) will handle that automatically for you.
 :::
 
 Since the main thread is not locked while the data is exported, it is important to give feedback for users that something is in progress.
