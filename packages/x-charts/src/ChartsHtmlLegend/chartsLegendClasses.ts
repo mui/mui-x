@@ -2,6 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { ChartsLegendProps } from './ChartsLegend';
+import { ChartsLegendSlotExtension } from './legend.types';
 
 export interface ChartsLegendClasses {
   /** Styles applied to the root element. */
@@ -24,7 +25,7 @@ function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLegend', slot);
 }
 
-export const useUtilityClasses = (props: ChartsLegendProps) => {
+export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExtension) => {
   const { classes, direction } = props;
   const slots = {
     root: ['root', direction],

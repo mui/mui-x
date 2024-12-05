@@ -10,6 +10,7 @@ import { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
+import { consumeSlots } from '../internals/consumeSlots';
 
 export interface ChartsLegendProps
   extends ChartsLegendPlacement,
@@ -55,51 +56,63 @@ const RootDiv = styled('div', {
   gap: ownerState.gap ?? theme.spacing(2),
 }));
 
-const ChartsLegend = React.forwardRef(function ChartsLegend(
-  props: ChartsLegendProps & ChartsLegendSlotExtension,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const data = useLegend();
-  const {
-    direction,
-    gap,
-    labelStyle,
-    markGap,
-    markBorderRadius,
-    markLineWidth,
-    markSize,
-    markType,
-    onItemClick,
-  } = props;
+const defaultProps: Partial<ChartsLegendProps> = { direction: 'row' };
 
-  const classes = useUtilityClasses(props);
+const ChartsLegend = consumeSlots(
+  'MuiChartsLegend',
+  'legend',
+  {
+    defaultProps,
+    classesResolver: useUtilityClasses,
+  },
+  React.forwardRef(function ChartsLegend(
+    props: ChartsLegendProps & ChartsLegendSlotExtension,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
+    const data = useLegend();
+    const {
+      direction,
+      gap,
+      labelStyle,
+      markGap,
+      markBorderRadius,
+      markLineWidth,
+      markSize,
+      markType,
+      onItemClick,
+    } = props;
 
-  return (
-    <RootDiv className={classes.root} ownerState={{ direction, gap }} ref={ref}>
-      {data.itemsToDisplay.map((item, i) => {
-        return (
-          <ChartsLegendItem
-            key={item.id}
-            labelStyle={labelStyle}
-            gap={markGap}
-            classes={classes}
-            onClick={
-              onItemClick ? (event) => onItemClick(event, seriesContextBuilder(item), i) : undefined
-            }
-            mark={{
-              color: item.color,
-              type: markType ?? item.markType,
-              borderRadius: markBorderRadius,
-              lineWidth: markLineWidth,
-              size: markSize,
-            }}
-          >
-            {item.label}
-          </ChartsLegendItem>
-        );
-      })}
-    </RootDiv>
-  );
-});
+    const classes = useUtilityClasses(props);
+
+    return (
+      <RootDiv className={classes.root} ownerState={{ direction, gap }} ref={ref}>
+        {data.itemsToDisplay.map((item, i) => {
+          return (
+            <ChartsLegendItem
+              key={item.id}
+              labelStyle={labelStyle}
+              gap={markGap}
+              classes={classes}
+              onClick={
+                onItemClick
+                  ? (event) => onItemClick(event, seriesContextBuilder(item), i)
+                  : undefined
+              }
+              mark={{
+                color: item.color,
+                type: markType ?? item.markType,
+                borderRadius: markBorderRadius,
+                lineWidth: markLineWidth,
+                size: markSize,
+              }}
+            >
+              {item.label}
+            </ChartsLegendItem>
+          );
+        })}
+      </RootDiv>
+    );
+  }),
+);
 
 export { ChartsLegend };
