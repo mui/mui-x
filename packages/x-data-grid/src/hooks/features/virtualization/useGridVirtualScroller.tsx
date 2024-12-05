@@ -12,7 +12,6 @@ import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommuni
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { useRunOnce } from '../../utils/useRunOnce';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,

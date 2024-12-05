@@ -157,10 +157,6 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const updateDimensions = React.useCallback(() => {
-    // No need to calculate dimension until we have the root size
-    if (isFirstSizing.current) {
-      return;
-    }
     const rootElement = apiRef.current.rootElementRef.current;
 
     const scrollbarSize = measureScrollbarSize(rootElement, props.scrollbarSize);
@@ -237,7 +233,7 @@ export function useGridDimensions(
     };
 
     const newDimensions: GridDimensions = {
-      isReady: !isFirstSizing.current,
+      isReady: true,
       root: rootDimensionsRef.current,
       viewportOuterSize,
       viewportInnerSize,
@@ -264,10 +260,6 @@ export function useGridDimensions(
 
     if (!areElementSizesEqual(newDimensions.viewportInnerSize, prevDimensions.viewportInnerSize)) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newDimensions.viewportInnerSize);
-    }
-
-    if (prevDimensions.isReady) {
-      apiRef.current.updateRenderContext?.();
     }
   }, [
     apiRef,
@@ -311,7 +303,7 @@ export function useGridDimensions(
       return;
     }
     apiRef.current.updateRenderContext?.();
-  }, [apiRef, dimensionsState.isReady]);
+  }, [apiRef, dimensionsState]);
 
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {
@@ -379,8 +371,14 @@ export function useGridDimensions(
     [props.autoHeight, debouncedSetSavedSize, logger],
   );
 
+  const handlePaginationModelChange = React.useCallback(() => {
+    updateDimensions();
+    // Update render context directly, since we're not immediately dependent on the dimensions
+    apiRef.current.updateRenderContext?.();
+  }, [apiRef, updateDimensions]);
+
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateDimensions);
-  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateDimensions);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateDimensions);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);

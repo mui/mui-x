@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -334,7 +335,7 @@ export const useGridRowSpanning = (
   const prevRenderContext = React.useRef(renderContext);
   const isFirstRender = React.useRef(true);
   const shouldResetState = React.useRef(false);
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const firstRender = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
