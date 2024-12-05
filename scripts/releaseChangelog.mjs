@@ -182,6 +182,7 @@ async function main(argv) {
   const chartsCommits = [];
   const chartsProCommits = [];
   const treeViewCommits = [];
+  const treeViewProCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -220,9 +221,14 @@ async function main(argv) {
         chartsCommits.push(commitItem);
         break;
       case 'TreeView':
+      case 'RichTreeView':
       case 'tree view':
       case 'TreeItem':
         treeViewCommits.push(commitItem);
+        break;
+      case 'RichTreeViewPro':
+      case 'tree view pro':
+        treeViewProCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -367,9 +373,13 @@ Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? 
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
 
-#### \`@mui/x-tree-view@__VERSION__\`
+#### \`@mui/x-tree-view@__VERSION__\` 
+${logChangelogSection(treeViewProCommits) || `No changes since \`@mui/x-tree-view-pro@${lastRelease}\`.`}
 
-${logChangelogSection(treeViewCommits) || `No changes since \`@mui/x-tree-view@${lastRelease}\`.`}
+#### \`@mui/x-tree-view-pro@__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in \`@mui/x-tree-view@__VERSION__\`${treeViewProCommits.length > 0 ? ', plus:\n' : '.'}
+${logChangelogSection(treeViewProCommits)}${treeViewProCommits.length > 0 ? '\n' : ''}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
