@@ -37,6 +37,7 @@ import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
+import type { GridApiCommon } from '../../models/api/gridApiCommon';
 
 export enum PinnedPosition {
   NONE,
@@ -208,7 +209,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       return result;
     },
     undefined,
-    objectShallowCompare,
+    objectShallowCompare as (a: unknown, b: unknown) => boolean,
   );
 
   const isSelected = useGridSelector(apiRef, () =>
