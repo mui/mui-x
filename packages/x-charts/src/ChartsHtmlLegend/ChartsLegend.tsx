@@ -65,7 +65,7 @@ const ChartsLegend = consumeSlots(
     defaultProps,
     classesResolver: useUtilityClasses,
   },
-  React.forwardRef(function ChartsLegend(
+  function ChartsLegend(
     props: ChartsLegendProps & ChartsLegendSlotExtension,
     ref: React.Ref<HTMLDivElement>,
   ) {
@@ -112,7 +112,7 @@ const ChartsLegend = consumeSlots(
         })}
       </RootDiv>
     );
-  }),
+  },
 );
 
 export { ChartsLegend };

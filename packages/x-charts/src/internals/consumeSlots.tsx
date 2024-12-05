@@ -2,6 +2,7 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import deepmerge from '@mui/utils/deepmerge';
 import useSlotProps from '@mui/utils/useSlotProps';
 import * as React from 'react';
+import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes a slot from the props and renders the component provided in the slot.
@@ -39,7 +40,11 @@ export const consumeSlots = <
     const theme = useTheme();
     const classes = options.classesResolver?.(defaultizedProps, theme);
 
-    const OutComponent = slots?.[slotPropName] ?? InComponent;
+    const Component = slots?.[slotPropName] ?? InComponent;
+
+    const OutComponent = ReactIs.isForwardRef(Component)
+      ? (Component as unknown as React.ElementType)
+      : React.forwardRef(Component);
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 

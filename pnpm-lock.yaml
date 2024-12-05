@@ -769,6 +769,9 @@ importers:
       react-dom:
         specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 18.3.1(react@18.3.1)
+      react-is:
+        specifier: ^18.3.1
+        version: 18.3.1
       reselect:
         specifier: ^5.1.1
         version: 5.1.1
@@ -794,6 +797,9 @@ importers:
       '@types/prop-types':
         specifier: ^15.7.13
         version: 15.7.13
+      '@types/react-is':
+        specifier: ^18.3.0
+        version: 18.3.0
       '@types/use-sync-external-store':
         specifier: ^0.0.6
         version: 0.0.6
@@ -4243,6 +4249,9 @@ packages:
 
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
+
+  '@types/react-is@18.3.0':
+    resolution: {integrity: sha512-KZJpHUkAdzyKj/kUHJDc6N7KyidftICufJfOFpiG6haL/BDQNQt5i4n1XDUL/nDZAtGLHDSWRYpLzKTAKSvX6w==}
 
   '@types/react-router-dom@5.3.3':
     resolution: {integrity: sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==}
@@ -13360,6 +13369,10 @@ snapshots:
   '@types/range-parser@1.2.7': {}
 
   '@types/react-dom@18.3.1':
+    dependencies:
+      '@types/react': 18.3.12
+
+  '@types/react-is@18.3.0':
     dependencies:
       '@types/react': 18.3.12
 
