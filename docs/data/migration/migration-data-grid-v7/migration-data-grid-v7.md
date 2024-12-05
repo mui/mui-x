@@ -54,6 +54,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
   +const rowsLookup = gridRowsLookupSelector(apiRef);
   +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
+
 - The feature row spanning is now stable and the prop is no longer prefixed with `unstable_`.
 
   ```diff
