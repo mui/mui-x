@@ -100,7 +100,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
 
 ### Docs
 
-- [docs] Customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
+- [docs] Add a customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
 - [docs] Fix typo in charts axis documentation (#15743) @JCQuintas
 
 ### Core
