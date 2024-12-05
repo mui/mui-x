@@ -32,7 +32,7 @@ It includes all of the main features listed in the navigation menu, such as edit
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Pro plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+## Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The Pro plan expands on the Community version to support more complex use cases with features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle larger datasets.
 Pro features are denoted by the blue cube icon (<span class="plan-pro"></span>) throughout the documentation.
@@ -41,7 +41,7 @@ The demo below displays 31 columns and 100,000 rows—over three million cells i
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-## Premium plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## Premium version [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The Premium plan includes all Pro features as well as more advanced features for data analysis and large dataset management, such as row grouping with aggregation functions (like sum and average) and the ability to export to Excel files.
 Premium features are denoted by the golden cube icon (<span class="plan-premium"></span>) throughout the documentation.
