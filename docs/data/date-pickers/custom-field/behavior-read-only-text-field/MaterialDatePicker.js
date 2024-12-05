@@ -34,7 +34,7 @@ function ReadOnlyDateField(props) {
       InputProps={{
         ref: pickerContext.triggerRef,
         readOnly: true,
-        endAdornment: <CalendarIcon color="action" sx={{ marginRight: '-2px' }} />,
+        endAdornment: <CalendarIcon color="action" sx={{ marginRight: 0 }} />,
         sx: { cursor: 'pointer', '& *': { cursor: 'inherit' } },
       }}
       error={hasValidationError}

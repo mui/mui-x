@@ -271,7 +271,7 @@ const theme = createTheme({
   +  const pickerContext = usePickerContext();
 
      return (
-      <TextField 
+      <TextField
         {...customProps}
   -      aria-label={props.inputProps?.['aria-label]}
   +      aria-label={fieldResponse.openPickerAriaLabel}
@@ -288,7 +288,7 @@ const theme = createTheme({
   +            </IconButton>
   +          </InputAdornment>
   +        ),
-  +      }}      
+  +      }}
       />
      );
    }
@@ -303,13 +303,13 @@ const theme = createTheme({
   +  const pickerContext = usePickerContext();
 
      return (
-      <button 
+      <button
         {...customProps}
-  -      ref={props.InputProps?.ref}  
-  +      ref={pickerContext.triggerRef}  
+  -      ref={props.InputProps?.ref}
+  +      ref={pickerContext.triggerRef}
       >
         Open picker
-      </button>  
+      </button>
      );
    }
   ```
@@ -325,13 +325,13 @@ const theme = createTheme({
   +  const ariaLabel = translations.openDatePickerDialogue(formattedValue);
 
      return (
-      <button 
+      <button
         {...customProps}
-  -      ref={props.InputProps?.ref}  
-  +      ref={pickerContext.triggerRef}  
+  -      ref={props.InputProps?.ref}
+  +      ref={pickerContext.triggerRef}
       >
         Open picker
-      </button>  
+      </button>
      );
    }
   ```
