@@ -23,7 +23,7 @@ See [MUI X Licensing](/x/introduction/licensing/) for complete details.
 
 The demo below uses the Data Grid to both list and illustrate the key features available in each version:
 
-{{"demo": "FeaturesDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "PopularFeaturesDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Community version
 
