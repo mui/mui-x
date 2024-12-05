@@ -486,7 +486,7 @@ importers:
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/query-core':
-        specifier: ^5.60.5
+        specifier: ^5.62.2
         version: 5.62.2
       ast-types:
         specifier: ^0.14.2
