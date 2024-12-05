@@ -4,18 +4,11 @@ import { styled } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
-import { ChartsLegendPlacement, LegendItemParams, SeriesLegendItemContext } from './legend.types';
+import { ChartsLegendPlacement, SeriesLegendItemContext } from './legend.types';
 import { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-
-const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
-  ({
-    type: 'series',
-    color: context.color,
-    label: context.label,
-    seriesId: context.seriesId!,
-    itemId: context.itemId,
-  }) as const;
+import { seriesContextBuilder } from './onClickContextBuilder';
+import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 
 export interface ChartsLegendProps
   extends ChartsLegendPlacement,
@@ -44,12 +37,18 @@ export interface ChartsLegendProps
     legendItem: SeriesLegendItemContext,
     index: number,
   ) => void;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  classes?: Partial<ChartsLegendClasses>;
 }
 
-const RootDiv = styled(
-  'div',
-  {},
-)<{ ownerState: Pick<ChartsLegendProps, 'gap' | 'direction'> }>(({ ownerState, theme }) => ({
+const RootDiv = styled('div', {
+  name: 'MuiChartsLegend',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: Pick<ChartsLegendProps, 'gap' | 'direction'> }>(({ ownerState, theme }) => ({
   display: 'flex',
   flexDirection: ownerState.direction ?? 'row',
   gap: ownerState.gap ?? theme.spacing(2),
@@ -72,14 +71,17 @@ const ChartsLegend = React.forwardRef(function BarChart(
     onItemClick,
   } = props;
 
+  const classes = useUtilityClasses(props);
+
   return (
-    <RootDiv ownerState={{ direction, gap }} ref={ref}>
+    <RootDiv className={classes.root} ownerState={{ direction, gap }} ref={ref}>
       {data.itemsToDisplay.map((item, i) => {
         return (
           <ChartsLegendItem
             key={item.id}
             labelStyle={labelStyle}
             gap={markGap}
+            classes={classes}
             onClick={
               onItemClick ? (event) => onItemClick(event, seriesContextBuilder(item), i) : undefined
             }
