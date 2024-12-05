@@ -11,7 +11,7 @@ import reactMajor from '@mui/x-internals/reactMajor';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import { objectShallowCompare, useGridSelector } from '../../utils/useGridSelector';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { useRunOnce } from '../../utils/useRunOnce';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -205,11 +205,7 @@ export const useGridVirtualScroller = () => {
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
 
-  const focusedVirtualCell = useGridSelector(
-    apiRef,
-    gridFocusedVirtualCellSelector,
-    objectShallowCompare,
-  );
+  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
 
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
@@ -419,12 +415,15 @@ export const useGridVirtualScroller = () => {
       ? range(0, params.rows.length)
       : range(firstRowToRender, lastRowToRender);
 
+    let virtualRowIndex = -1;
     if (!isPinnedSection && focusedVirtualCell) {
       if (focusedVirtualCell.rowIndex < firstRowToRender) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedVirtualCell.rowIndex >= lastRowToRender) {
+      if (focusedVirtualCell.rowIndex > lastRowToRender) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
     }
 
@@ -498,9 +497,6 @@ export const useGridVirtualScroller = () => {
         }
       }
 
-      const isVirtualFocusRow =
-        focusedVirtualCell !== null && rowIndexInPage === focusedVirtualCell.rowIndex;
-
       let currentRenderContext = baseRenderContext;
       if (
         !isPinnedSection &&
@@ -510,6 +506,9 @@ export const useGridVirtualScroller = () => {
       ) {
         currentRenderContext = frozenContext.current;
       }
+
+      const isVirtualFocusRow = rowIndexInPage === virtualRowIndex;
+      const isVirtualFocusColumn = focusedVirtualCell?.rowIndex === rowIndex;
 
       const offsetLeft = computeOffsetLeft(
         columnPositions,
@@ -533,7 +532,7 @@ export const useGridVirtualScroller = () => {
           visibleColumns={visibleColumns}
           firstColumnIndex={currentRenderContext.firstColumnIndex}
           lastColumnIndex={currentRenderContext.lastColumnIndex}
-          focusedColumnIndex={isVirtualFocusRow ? focusedVirtualCell!.columnIndex : undefined}
+          focusedColumnIndex={isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
           isNotVisible={isVirtualFocusRow}
