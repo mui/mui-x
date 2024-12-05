@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { FieldSection, PickerOwnerState } from '../../../models';
-import { PickerValueManager, UsePickerValueResponse } from './usePickerValue.types';
+import { PickerOwnerState } from '../../../models';
+import { PickerValueManager, UsePickerValueProviderParams } from './usePickerValue.types';
 import {
   PickerProviderProps,
   PickerContextValue,
@@ -12,6 +12,7 @@ import {
   DateOrTimeViewWithMeridiem,
   FormProps,
   PickerOrientation,
+  PickerValidValue,
   PickerVariant,
 } from '../../models';
 import { useUtils } from '../useUtils';
@@ -58,10 +59,10 @@ export const usePickerOrientation = (
   return customOrientation ?? orientation;
 };
 
-export function usePickerProvider<TValue>(
+export function usePickerProvider<TValue extends PickerValidValue>(
   parameters: UsePickerProviderParameters<TValue>,
 ): UsePickerProviderReturnValue {
-  const { props, pickerValueResponse, valueManager, localeText, variant, views } = parameters;
+  const { props, valueManager, localeText, variant, views, paramsFromUsePickerValue } = parameters;
 
   const utils = useUtils();
   const orientation = usePickerOrientation(views, props.orientation);
@@ -70,10 +71,10 @@ export function usePickerProvider<TValue>(
     () => ({
       isPickerValueEmpty: valueManager.areValuesEqual(
         utils,
-        pickerValueResponse.viewProps.value,
+        paramsFromUsePickerValue.value,
         valueManager.emptyValue,
       ),
-      isPickerOpen: pickerValueResponse.open,
+      isPickerOpen: paramsFromUsePickerValue.contextValue.open,
       isPickerDisabled: props.disabled ?? false,
       isPickerReadOnly: props.readOnly ?? false,
       pickerOrientation: orientation,
@@ -82,8 +83,8 @@ export function usePickerProvider<TValue>(
     [
       utils,
       valueManager,
-      pickerValueResponse.viewProps.value,
-      pickerValueResponse.open,
+      paramsFromUsePickerValue.value,
+      paramsFromUsePickerValue.contextValue.open,
       orientation,
       variant,
       props.disabled,
@@ -93,23 +94,13 @@ export function usePickerProvider<TValue>(
 
   const contextValue = React.useMemo<PickerContextValue>(
     () => ({
-      onOpen: pickerValueResponse.actions.onOpen,
-      onClose: pickerValueResponse.actions.onClose,
-      open: pickerValueResponse.open,
+      ...paramsFromUsePickerValue.contextValue,
       disabled: props.disabled ?? false,
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
     }),
-    [
-      pickerValueResponse.actions.onOpen,
-      pickerValueResponse.actions.onClose,
-      pickerValueResponse.open,
-      variant,
-      orientation,
-      props.disabled,
-      props.readOnly,
-    ],
+    [paramsFromUsePickerValue.contextValue, variant, orientation, props.disabled, props.readOnly],
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
@@ -124,13 +115,13 @@ export function usePickerProvider<TValue>(
   };
 }
 
-export interface UsePickerProviderParameters<TValue>
+export interface UsePickerProviderParameters<TValue extends PickerValidValue>
   extends Pick<PickerProviderProps, 'localeText'> {
   props: UsePickerProps<TValue, any, any, any, any>;
-  pickerValueResponse: UsePickerValueResponse<TValue, FieldSection, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   views: readonly DateOrTimeViewWithMeridiem[];
+  paramsFromUsePickerValue: UsePickerValueProviderParams<TValue>;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}

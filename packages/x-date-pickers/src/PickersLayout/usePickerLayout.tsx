@@ -8,11 +8,11 @@ import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './Pic
 import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 
-function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
+function toolbarHasView<TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
@@ -36,16 +36,11 @@ const useUtilityClasses = (
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends PickersLayoutProps<TValue, TView> {
-  value: TValue;
-}
-
-interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {
+interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubComponents<TValue> {
   ownerState: PickerLayoutOwnerState;
 }
 
-const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
+const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
@@ -72,7 +67,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeViewWithMeridiem>(
     // The true type should be
     // - For pickers value: PickerValidDate | null
     // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
-  } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
+  } = props;
 
   const ownerState: PickerLayoutOwnerState = { ...pickerOwnerState, isRtl };
   const classes = useUtilityClasses(classesProp, ownerState);

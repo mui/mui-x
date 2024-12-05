@@ -366,14 +366,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   clipboardCopyCellDelimiter: string;
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
-  /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
    */
@@ -855,7 +847,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
