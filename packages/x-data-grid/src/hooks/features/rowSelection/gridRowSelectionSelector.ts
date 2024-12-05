@@ -13,7 +13,7 @@ export const selectedGridRowsCountSelector = createSelector(
     if (selection.type === 'include') {
       return selection.ids.size;
     }
-    // TODO: is this correct?
+    // In exclude selection, all rows are selectable.
     return filteredRowCount - selection.ids.size;
   },
 );
