@@ -35,7 +35,7 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarPromptControlPlaceholder: 'Scrie un prompt…',
   toolbarPromptControlWithRecordingPlaceholder: 'Scrie sau înregistrează un prompt…',
   toolbarPromptControlRecordingPlaceholder: 'Ascultare prompt…',
-  toolbarPromptControlLabel: 'Introducere Prompt',
+  toolbarPromptControlLabel: 'Introducere prompt',
   toolbarPromptControlRecordButtonDefaultLabel: 'Înregistrează',
   toolbarPromptControlRecordButtonActiveLabel: 'Oprește înregistrare',
   toolbarPromptControlSendActionLabel: 'Trimite',
