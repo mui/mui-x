@@ -33,7 +33,6 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/faq', title: 'FAQs' },
       {
         pathname: '/x/react-data-grid/main-features',
