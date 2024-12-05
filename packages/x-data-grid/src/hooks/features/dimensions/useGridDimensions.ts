@@ -167,8 +167,8 @@ export function useGridDimensions(
     const nonPinnedColumnsTotalWidth = columnsTotalWidth - leftPinnedWidth - rightPinnedWidth;
 
     const contentSize = {
-      width: nonPinnedColumnsTotalWidth,
-      height: rowsMeta.currentPageTotalHeight,
+      width: roundToDecimalPlaces(nonPinnedColumnsTotalWidth, 1),
+      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
     };
 
     let viewportOuterSize: ElementSize;
