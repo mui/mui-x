@@ -31,18 +31,6 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Căutare',
   toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 
-  // Prompt toolbar field
-  toolbarPromptControlPlaceholder: 'Scrie un prompt…',
-  toolbarPromptControlWithRecordingPlaceholder: 'Scrie sau înregistrează un prompt…',
-  toolbarPromptControlRecordingPlaceholder: 'Ascultare prompt…',
-  toolbarPromptControlLabel: 'Introducere prompt',
-  toolbarPromptControlRecordButtonDefaultLabel: 'Înregistrează',
-  toolbarPromptControlRecordButtonActiveLabel: 'Oprește înregistrare',
-  toolbarPromptControlSendActionLabel: 'Trimite',
-  toolbarPromptControlSendActionAriaLabel: 'Trimite prompt',
-  toolbarPromptControlErrorMessage:
-    'A apărut o eroare la procesare. Încercați din nou cu un alt prompt.',
-
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
