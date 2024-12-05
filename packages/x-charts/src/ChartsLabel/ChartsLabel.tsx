@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsLabelClasses, useUtilityClasses } from './labelClasses';
 // import { labelClasses, useUtilityClasses } from './labelClasses';
@@ -45,5 +46,22 @@ function ChartsLabel(props: ChartsLabelProps) {
     </Root>
   );
 }
+
+ChartsLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * Style applied to legend labels.
+   * @default theme.typography.caption
+   */
+  labelStyle: PropTypes.object,
+} as any;
 
 export { ChartsLabel };

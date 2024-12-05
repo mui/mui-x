@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
 
@@ -77,12 +78,10 @@ const Root = styled('div', {
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-
     [`&.${labelMarkClasses.line}`]: {
       width: size,
       display: 'flex',
       alignItems: 'center',
-
       '> div': {
         height: ownerState.lineWidth ?? defaultLineWidth,
         width: '100%',
@@ -90,14 +89,12 @@ const Root = styled('div', {
         overflow: 'hidden',
       },
     },
-
     [`&.${labelMarkClasses.square}, &.${labelMarkClasses.circle}`]: {
       height: size,
       width: size,
       borderRadius,
       overflow: 'hidden',
     },
-
     svg: {
       display: 'block',
     },
@@ -127,5 +124,49 @@ function ChartsLabelMark(props: ChartsLabelMarkProps) {
     </Root>
   );
 }
+
+ChartsLabelMark.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The border radius of the mark.
+   *
+   * @default type='square': 2
+   * @default type='circle': '50%'
+   * @default type='line': 1
+   */
+  borderRadius: PropTypes.number,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The color of the mark.
+   */
+  color: PropTypes.string,
+  /**
+   * The width of the line.
+   * @default 4
+   */
+  lineWidth: PropTypes.number,
+  /**
+   * Defines the max size of the mark.
+   *
+   * For the `line` type, the size is the length of the line.
+   * For all other types, the size is the width and height of the mark.
+   *
+   * @default type='square': 13
+   * @default type='line': 16
+   * @default type='circle': 15
+   */
+  size: PropTypes.number,
+  /**
+   * The type of the mark.
+   * @default 'square'
+   */
+  type: PropTypes.oneOf(['circle', 'line', 'square']),
+} as any;
 
 export { ChartsLabelMark };
