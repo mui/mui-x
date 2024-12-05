@@ -3,7 +3,9 @@ export const attachPinnedStyle = (
   position: 'left' | 'right' | undefined,
   pinnedOffset?: number,
 ) => {
-  if (!position || pinnedOffset === undefined) return style;
+  if (!position || pinnedOffset === undefined) {
+    return style;
+  }
   style[position] = pinnedOffset;
   return style;
 };
