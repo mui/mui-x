@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import ChartsLabel, { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
-import ChartsLabelMark, { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import {
+  ChartsLabel,
+  ChartsLabelProps,
+  ChartsLabelMark,
+  ChartsLabelMarkProps,
+} from '../ChartsLabel';
 import { ChartsLegendClasses } from './chartsLegendClasses';
 
 interface ChartsLegendItemProps extends Omit<ChartsLabelProps, 'classes'> {
