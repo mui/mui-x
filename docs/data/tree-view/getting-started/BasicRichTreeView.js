@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
+const MUI_X_PRODUCTS = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -24,12 +24,18 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
     id: 'charts',
     label: 'Charts',
-    children: [{ id: 'charts-community', label: '@mui/x-charts' }],
+    children: [
+      { id: 'charts-community', label: '@mui/x-charts' },
+      { id: 'charts-pro', label: '@mui/charts-pro' },
+    ],
   },
   {
     id: 'tree-view',
     label: 'Tree View',
-    children: [{ id: 'tree-view-community', label: '@mui/x-tree-view' }],
+    children: [
+      { id: 'tree-view-community', label: '@mui/x-tree-view' },
+      { id: 'tree-view-pro', label: '@mui/x-tree-view-pro' },
+    ],
   },
 ];
 

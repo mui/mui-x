@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export default function FirstComponent() {
+export default function TreeViewOverviewDemo() {
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
       <SimpleTreeView>
@@ -18,9 +18,11 @@ export default function FirstComponent() {
         </TreeItem>
         <TreeItem itemId="charts" label="Charts">
           <TreeItem itemId="charts-community" label="@mui/x-charts" />
+          <TreeItem itemId="charts-pro" label="@mui/x-charts-pro" />
         </TreeItem>
         <TreeItem itemId="tree-view" label="Tree View">
           <TreeItem itemId="tree-view-community" label="@mui/x-tree-view" />
+          <TreeItem itemId="tree-view-pro" label="@mui/x-tree-view-pro" />
         </TreeItem>
       </SimpleTreeView>
     </Box>
