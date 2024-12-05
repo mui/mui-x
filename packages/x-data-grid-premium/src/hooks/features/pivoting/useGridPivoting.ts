@@ -85,21 +85,15 @@ const getPivotedData = ({
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
 
-  // Returns the column definition from the initial columns array before pivoting
-  const getInitialColumn = (() => {
-    const initialColumnsLookup: Record<string, GridColDef | null> = {};
-
-    return (field: string) => {
-      if (typeof initialColumnsLookup[field] === 'undefined') {
-        initialColumnsLookup[field] = columns.find((column) => column.field === field) || null;
-      }
-      return initialColumnsLookup[field];
-    };
-  })();
+  const initialColumns = new Map<string, GridColDef>();
+  for (let i = 0; i < columns.length; i += 1) {
+    const column = columns[i];
+    initialColumns.set(column.field, column);
+  }
 
   const getAttributesFromInitialColumn = (field: string) => {
     const attributes: Partial<GridColDef> = {};
-    const initialColumn = getInitialColumn(field);
+    const initialColumn = initialColumns.get(field);
     if (!initialColumn) {
       return attributes;
     }
