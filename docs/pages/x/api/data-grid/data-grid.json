@@ -450,6 +450,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -476,7 +477,6 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
