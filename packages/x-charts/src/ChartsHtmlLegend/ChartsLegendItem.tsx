@@ -23,12 +23,12 @@ const RootDiv = styled(
  * @ignore - internal component.
  */
 function ChartsLegendItem(props: ChartsLegendItemProps) {
-  const { children, mark, gap, onClick } = props;
+  const { children, mark, gap, onClick, labelStyle } = props;
 
   return (
     <RootDiv onClick={onClick} ownerState={{ gap }}>
       <ChartsLabelMark {...mark} />
-      <ChartsLabel>{children}</ChartsLabel>
+      <ChartsLabel labelStyle={labelStyle}>{children}</ChartsLabel>
     </RootDiv>
   );
 }
