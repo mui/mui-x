@@ -7,6 +7,35 @@ import * as ReactIs from 'react-is';
 /**
  * A higher order component that consumes a slot from the props and renders the component provided in the slot.
  *
+ * This HOC will wrap a single component, and will render the component provided in the slot, if it exists.
+ *
+ * If you need to render multiple components, you can manually consume the slots from the props and render them in your component instead of using this HOC.
+ *
+ * In the example below, `MyComponent` will render the component provided in `mySlot` slot, if it exists. Otherwise, it will render the `DefaultComponent`.
+ *
+ * @example
+ *
+ * ```tsx
+ * type MyComponentProps = {
+ *   direction: 'row' | 'column';
+ *   slots?: {
+ *     mySlot?: React.JSXElementConstructor<{ direction: 'row' | 'column' }>;
+ *   }
+ * };
+ *
+ * const MyComponent = consumeSlots(
+ *   'MuiMyComponent',
+ *   'mySlot',
+ *   function DefaultComponent(props: MyComponentProps) {
+ *     return (
+ *       <div className={props.classes.root}>
+ *         {props.direction}
+ *       </div>
+ *     );
+ *   }
+ * );
+ * ```
+ *
  * @param {string} name The mui component name.
  * @param {string} slotPropName The name of the prop to retrieve the slot from.
  * @param {object} options Options for the HOC.
@@ -41,6 +70,10 @@ export const consumeSlots = <
     const classes = options.classesResolver?.(defaultizedProps, theme);
 
     const Component = slots?.[slotPropName] ?? InComponent;
+
+    if (process.env.NODE_ENV !== 'production') {
+      Component.displayName = `${name}.slots.${slotPropName}`;
+    }
 
     const OutComponent = ReactIs.isForwardRef(Component)
       ? (Component as unknown as React.ElementType)
