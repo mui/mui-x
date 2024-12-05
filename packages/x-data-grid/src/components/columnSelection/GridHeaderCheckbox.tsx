@@ -65,8 +65,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
           continue;
         }
 
-        const isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
-        if (isSelectable) {
+        if (isRowSelectable(apiRef.current.getRowParams(id))) {
           selectionModel.ids.add(id);
         }
       }
