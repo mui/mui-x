@@ -304,7 +304,7 @@ export function useGridDimensions(
 
   const root = apiRef.current.rootElementRef.current;
   useEnhancedEffect(() => {
-    if (!root || !dimensionsState.isReady) {
+    if (!root) {
       return;
     }
     apiRef.current.updateRenderContext?.();

@@ -98,7 +98,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   refs.current.selector = selector;
 
   useOnMount(() => {
-    return apiRef.current.store.subscribe(() => {
+    return apiRef.current.store.subscribe((state) => {
       const newState = applySelector(apiRef, refs.current.selector);
       if (!refs.current.equals(refs.current.state, newState)) {
         refs.current.state = newState;
