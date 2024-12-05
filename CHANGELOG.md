@@ -25,7 +25,6 @@ Following are all team members who have contributed to this release:
 
 - The "Select all" checkbox would now be checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - The `rowPositionsDebounceMs` prop was removed.
-  From https://github.com/mui/mui-x/pull/15698
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
   ```diff
   -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
