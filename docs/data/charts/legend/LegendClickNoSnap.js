@@ -8,7 +8,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
 const pieSeries = [
   {
@@ -63,7 +63,7 @@ export default function LegendClickNoSnap() {
     >
       <Box sx={{ flexGrow: 1 }}>
         <Typography>Chart Legend</Typography>
-        <ResponsiveChartContainer series={barSeries} width={400} height={60}>
+        <ChartContainer series={barSeries} width={400} height={60}>
           <ChartsLegend
             direction="row"
             position={{
@@ -72,9 +72,9 @@ export default function LegendClickNoSnap() {
             }}
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ResponsiveChartContainer>
+        </ChartContainer>
         <Typography>Pie Chart Legend</Typography>
-        <ResponsiveChartContainer series={pieSeries} width={400} height={60}>
+        <ChartContainer series={pieSeries} width={400} height={60}>
           <ChartsLegend
             direction="row"
             position={{
@@ -83,9 +83,9 @@ export default function LegendClickNoSnap() {
             }}
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ResponsiveChartContainer>
+        </ChartContainer>
         <Typography>Pie Chart Legend</Typography>
-        <ResponsiveChartContainer
+        <ChartContainer
           series={lineSeries}
           width={400}
           height={60}
@@ -111,7 +111,7 @@ export default function LegendClickNoSnap() {
             axisDirection="x"
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ResponsiveChartContainer>
+        </ChartContainer>
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>

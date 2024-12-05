@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedSeries } from '../context/SeriesProvider';
 import { LegendPerItem, LegendPerItemProps } from './LegendPerItem';
-import { DrawingArea } from '../context/DrawingProvider';
 import { LegendItemParams, SeriesLegendItemContext } from './chartsLegend.types';
 
 const seriesContextBuilder = (context: LegendItemParams): SeriesLegendItemContext =>
@@ -19,10 +18,6 @@ export interface LegendRendererProps
   extends Omit<LegendPerItemProps, 'itemsToDisplay' | 'onItemClick'> {
   series: FormattedSeries;
   seriesToDisplay: LegendPerItemProps['itemsToDisplay'];
-  /**
-   * @deprecated Use the `useDrawingArea()` hook instead.
-   */
-  drawingArea: Omit<DrawingArea, 'isPointInside'>;
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<SVGRectElement, MouseEvent>} event The click event.
@@ -42,7 +37,7 @@ export interface LegendRendererProps
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { drawingArea, seriesToDisplay, hidden, onItemClick, ...other } = props;
+  const { seriesToDisplay, hidden, onItemClick, ...other } = props;
 
   if (hidden) {
     return null;
@@ -75,17 +70,6 @@ DefaultChartsLegend.propTypes = {
    * The default depends on the chart.
    */
   direction: PropTypes.oneOf(['column', 'row']).isRequired,
-  /**
-   * @deprecated Use the `useDrawingArea()` hook instead.
-   */
-  drawingArea: PropTypes.shape({
-    bottom: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
-    right: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
-  }).isRequired,
   /**
    * Set to true to hide the legend.
    * @default false

@@ -5,10 +5,11 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
+import { MakeOptional } from '@mui/x-internals/types';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
@@ -16,14 +17,14 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValue, PickerVariant } from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { MakeOptional } from '../internals/models/helpers';
 import { pickersToolbarTextClasses } from '../internals/components/pickersToolbarTextClasses';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
+import { usePickerContext } from '../hooks/usePickerContext';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -32,10 +33,10 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
   classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
-export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
+export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
-    MakeOptional<BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem>, 'view'> {
-  toolbarVariant?: WrapperVariant;
+    MakeOptional<BaseToolbarProps<PickerValue, DateOrTimeViewWithMeridiem>, 'view'> {
+  toolbarVariant?: PickerVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -44,12 +45,11 @@ export interface DateTimePickerToolbarProps<TDate extends PickerValidDate>
   ampmInClock?: boolean;
 }
 
-interface DateTimePickerToolbarOwnerState<TDate extends PickerValidDate>
-  extends DateTimePickerToolbarProps<TDate> {
+interface DateTimePickerToolbarOwnerState extends DateTimePickerToolbarProps {
   isRtl: boolean;
 }
 
-const useUtilityClasses = (ownerState: DateTimePickerToolbarOwnerState<any>) => {
+const useUtilityClasses = (ownerState: DateTimePickerToolbarOwnerState) => {
   const { classes, isLandscape, isRtl } = ownerState;
 
   const slots = {
@@ -69,7 +69,7 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>(({ theme }) => ({
+})<{ ownerState: DateTimePickerToolbarOwnerState }>(({ theme }) => ({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
@@ -105,7 +105,7 @@ const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
   overridesResolver: (props, styles) => styles.dateContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
+})<{ ownerState: DateTimePickerToolbarOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -115,7 +115,7 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
+})<{ ownerState: DateTimePickerToolbarOwnerState }>({
   display: 'flex',
   flexDirection: 'row',
   variants: [
@@ -134,14 +134,14 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
       },
     },
     {
-      props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarOwnerState<any>) =>
+      props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarOwnerState) =>
         isLandscape && toolbarVariant !== 'desktop',
       style: {
         flexDirection: 'column',
       },
     },
     {
-      props: ({ isLandscape, toolbarVariant, isRtl }: DateTimePickerToolbarOwnerState<any>) =>
+      props: ({ isLandscape, toolbarVariant, isRtl }: DateTimePickerToolbarOwnerState) =>
         isLandscape && toolbarVariant !== 'desktop' && isRtl,
       style: {
         flexDirection: 'column-reverse',
@@ -154,7 +154,7 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
   overridesResolver: (props, styles) => styles.timeDigitsContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState<any> }>({
+})<{ ownerState: DateTimePickerToolbarOwnerState }>({
   display: 'flex',
   variants: [
     {
@@ -175,7 +175,7 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
 })<{
-  ownerState: DateTimePickerToolbarOwnerState<any>;
+  ownerState: DateTimePickerToolbarOwnerState;
 }>({
   margin: '0 4px 0 2px',
   cursor: 'default',
@@ -199,7 +199,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
     styles.ampmSelection,
   ],
 })<{
-  ownerState: DateTimePickerToolbarProps<any>;
+  ownerState: DateTimePickerToolbarProps;
 }>({
   display: 'flex',
   flexDirection: 'column',
@@ -231,9 +231,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  *
  * - [DateTimePickerToolbar API](https://mui.com/x/api/date-pickers/date-time-picker-toolbar/)
  */
-function DateTimePickerToolbar<TDate extends PickerValidDate>(
-  inProps: DateTimePickerToolbarProps<TDate>,
-) {
+function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
@@ -246,8 +244,6 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    disabled,
-    readOnly,
     toolbarVariant = 'mobile',
     toolbarTitle: inToolbarTitle,
     className,
@@ -255,18 +251,19 @@ function DateTimePickerToolbar<TDate extends PickerValidDate>(
   } = props;
 
   const isRtl = useRtl();
-  const ownerState: DateTimePickerToolbarOwnerState<TDate> = { ...props, isRtl };
-  const utils = useUtils<TDate>();
+  const { disabled, readOnly } = usePickerContext();
+  const ownerState: DateTimePickerToolbarOwnerState = { ...props, isRtl };
+  const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const isDesktop = toolbarVariant === 'desktop';
 
-  const translations = usePickersTranslations<TDate>();
+  const translations = usePickerTranslations();
   const classes = useUtilityClasses(ownerState);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
-  const formatHours = (time: TDate) =>
+  const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
   const dateText = React.useMemo(() => {
@@ -415,7 +412,6 @@ DateTimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
@@ -429,7 +425,6 @@ DateTimePickerToolbar.propTypes = {
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  readOnly: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

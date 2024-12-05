@@ -6,12 +6,10 @@ import {
   BaseClockProps,
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
-} from '../internals/models/props/clock';
-import { PickerValidDate, TimeView } from '../models';
+} from '../internals/models/props/time';
+import { TimeView } from '../models';
 
-export interface ExportedDigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedBaseClockProps<TDate>,
-    DigitalClockOnlyProps {}
+export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 
 export interface DigitalClockSlots {
   /**
@@ -25,9 +23,9 @@ export interface DigitalClockSlotProps {
   digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, Record<string, any>>;
 }
 
-export interface DigitalClockProps<TDate extends PickerValidDate>
-  extends ExportedDigitalClockProps<TDate>,
-    BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
+export interface DigitalClockProps
+  extends ExportedDigitalClockProps,
+    BaseClockProps<Extract<TimeView, 'hours'>> {
   /**
    * Available views.
    * @default ['hours']

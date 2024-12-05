@@ -31,12 +31,15 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, TimeView>) {
-  const { actionBar, content, toolbar } = usePickerLayout(props);
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
+  const { actionBar, content, toolbar, ownerState } = usePickerLayout(props);
   return (
-    <StyledLayout ownerState={props}>
+    <StyledLayout ownerState={ownerState}>
       {toolbar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper
+        className={pickersLayoutClasses.contentWrapper}
+        ownerState={ownerState}
+      >
         {content}
         {actionBar}
       </PickersLayoutContentWrapper>

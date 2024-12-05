@@ -10,6 +10,11 @@
   "stopUpdatingLabel": "on hold",
   "packageRules": [
     {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
       "matchDepTypes": ["peerDependencies"],
       "rangeStrategy": "widen"
     },
@@ -60,7 +65,8 @@
     {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0"
+      "allowedVersions": "< 21.0.0",
+      "automerge": true
     },
     {
       "groupName": "bundling fixtures",
@@ -103,11 +109,12 @@
     },
     {
       "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
-      "pinDigests": true
+      "pinDigests": true,
+      "automerge": true
     },
     {
       "groupName": "GitHub Actions",

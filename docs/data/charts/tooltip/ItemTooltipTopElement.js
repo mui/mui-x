@@ -4,8 +4,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef, useXAxis, useXScale, useYScale } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
-import { generateVirtualElement } from './generateVirtualElement';
 
 function usePointer() {
   const svgRef = useSvgRef();
@@ -52,7 +50,7 @@ function usePointer() {
   return pointer;
 }
 
-export function ItemTooltipTopElement() {
+export function ItemTooltipTopElement({ children }) {
   const tooltipData = useItemTooltip();
   const { isActive } = usePointer();
   // Get xAxis config to access its data array.
@@ -74,7 +72,8 @@ export function ItemTooltipTopElement() {
   if (
     tooltipData.identifier.type !== 'bar' ||
     tooltipData.identifier.dataIndex === undefined ||
-    tooltipData.value === null
+    tooltipData.value === null ||
+    svgRef.current === null
   ) {
     // This demo is only about bar charts
     return null;
@@ -102,9 +101,21 @@ export function ItemTooltipTopElement() {
         }}
         open
         placement="top"
-        anchorEl={generateVirtualElement(tooltipPosition)}
+        anchorEl={{
+          getBoundingClientRect: () => ({
+            x: tooltipPosition.x,
+            y: tooltipPosition.y,
+            top: tooltipPosition.y,
+            left: tooltipPosition.x,
+            right: tooltipPosition.x,
+            bottom: tooltipPosition.y,
+            width: 0,
+            height: 0,
+            toJSON: () => '',
+          }),
+        }}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

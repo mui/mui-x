@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Headless
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
@@ -123,7 +122,7 @@ const useCustomPlugin = ({ models }) => {
     models.expandedItems.setValue([]);
 
     // Check if an item is expanded
-    const isExpanded = instance.isNodeExpanded('some-item-id');
+    const isExpanded = useSelector(selectorIsItemExpanded, 'some-item-id');
   };
 };
 ```

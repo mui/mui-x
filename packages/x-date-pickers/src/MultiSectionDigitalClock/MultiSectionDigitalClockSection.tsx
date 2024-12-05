@@ -19,6 +19,7 @@ import {
   MULTI_SECTION_CLOCK_SECTION_WIDTH,
 } from '../internals/constants/dimensions';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { FormProps } from '../internals/models/formProps';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -27,13 +28,12 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
   slotProps?: MultiSectionDigitalClockSlotProps;
 }
 
-export interface MultiSectionDigitalClockSectionProps<TValue>
-  extends ExportedMultiSectionDigitalClockSectionProps {
+export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
+  extends FormProps,
+    ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
-  disabled?: boolean;
-  readOnly?: boolean;
-  items: MultiSectionDigitalClockOption<TValue>[];
-  onChange: (value: TValue) => void;
+  items: MultiSectionDigitalClockOption<TSectionValue>[];
+  onChange: (value: TSectionValue) => void;
   active?: boolean;
   skipDisabled?: boolean;
   role?: string;
@@ -123,16 +123,17 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   },
 }));
 
-type MultiSectionDigitalClockSectionComponent = <TValue>(
-  props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
+type MultiSectionDigitalClockSectionComponent = <TSectionValue extends number | string>(
+  props: MultiSectionDigitalClockSectionProps<TSectionValue> &
+    React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 export const MultiSectionDigitalClockSection = React.forwardRef(
-  function MultiSectionDigitalClockSection<TValue>(
-    inProps: MultiSectionDigitalClockSectionProps<TValue>,
+  function MultiSectionDigitalClockSection<TSectionValue extends number | string>(
+    inProps: MultiSectionDigitalClockSectionProps<TSectionValue>,
     ref: React.Ref<HTMLUListElement>,
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);

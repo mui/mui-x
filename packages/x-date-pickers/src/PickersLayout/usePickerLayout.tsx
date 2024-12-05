@@ -2,24 +2,29 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
+import { useRtl } from '@mui/system/RtlProvider';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
-import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
+import { PickerLayoutOwnerState, PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { getPickersLayoutUtilityClass, PickersLayoutClasses } from './pickersLayoutClasses';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { PickerValidDate } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { usePickerContext } from '../hooks';
 
-function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
+function toolbarHasView<TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
 }
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
-  const { classes, isLandscape } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersLayoutClasses> | undefined,
+  ownerState: PickerLayoutOwnerState,
+) => {
+  const { pickerOrientation } = ownerState;
   const slots = {
-    root: ['root', isLandscape && 'landscape'],
+    root: ['root', pickerOrientation === 'landscape' && 'landscape'],
     contentWrapper: ['contentWrapper'],
     toolbar: ['toolbar'],
     actionBar: ['actionBar'],
@@ -31,24 +36,18 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
-> extends PickersLayoutProps<TValue, TDate, TView> {
-  value: TValue;
+interface UsePickerLayoutResponse<TValue extends PickerValidValue> extends SubComponents<TValue> {
+  ownerState: PickerLayoutOwnerState;
 }
-interface UsePickerLayoutResponse<TValue> extends SubComponents<TValue> {}
 
-const usePickerLayout = <
-  TValue,
-  TDate extends PickerValidDate,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TDate, TView>,
+const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTimeViewWithMeridiem>(
+  props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse<TValue> => {
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const { variant, orientation } = usePickerContext();
+  const isRtl = useRtl();
+
   const {
-    wrapperVariant,
     onAccept,
     onClear,
     onCancel,
@@ -60,19 +59,18 @@ const usePickerLayout = <
     onChange,
     onSelectShortcut,
     isValid,
-    isLandscape,
-    disabled,
-    readOnly,
     children,
     slots,
     slotProps,
+    classes: classesProp,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
-    // - For pickers value: TDate | null
-    // - For range pickers value: [TDate | null, TDate | null]
-  } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
+    // - For pickers value: PickerValidDate | null
+    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
+  } = props;
 
-  const classes = useUtilityClasses(props);
+  const ownerState: PickerLayoutOwnerState = { ...pickerOwnerState, isRtl };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar
   const ActionBar = slots?.actionBar ?? PickersActionBar;
@@ -84,11 +82,10 @@ const usePickerLayout = <
       onClear,
       onCancel,
       onSetToday,
-      actions:
-        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+      actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,
-    ownerState: { ...props, wrapperVariant },
+    ownerState,
   });
   const actionBar = <ActionBar {...actionBarProps} />;
 
@@ -98,17 +95,15 @@ const usePickerLayout = <
     elementType: Toolbar!,
     externalSlotProps: slotProps?.toolbar,
     additionalProps: {
-      isLandscape,
+      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
       onChange,
       value,
       view,
       onViewChange,
       views,
-      disabled,
-      readOnly,
     },
     className: classes.toolbar,
-    ownerState: { ...props, wrapperVariant },
+    ownerState,
   });
   const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
@@ -129,16 +124,11 @@ const usePickerLayout = <
     externalSlotProps: slotProps?.shortcuts,
     additionalProps: {
       isValid,
-      isLandscape,
+      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
       onChange: onSelectShortcut,
     },
     className: classes.shortcuts,
-    ownerState: {
-      isValid,
-      isLandscape,
-      onChange: onSelectShortcut,
-      wrapperVariant,
-    },
+    ownerState,
   });
   const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 
@@ -148,6 +138,7 @@ const usePickerLayout = <
     tabs,
     actionBar,
     shortcuts,
+    ownerState,
   };
 };
 

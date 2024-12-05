@@ -3,14 +3,16 @@ import { unstable_useTimeField as useTimeField } from '@mui/x-date-pickers/TimeF
 import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedTimeField,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import { PickerValidDate, TimeValidationError } from '@mui/x-date-pickers/models';
+import { TimeValidationError } from '@mui/x-date-pickers/models';
 import { validateTimeRange } from '../../../validation';
-import { TimeRangeValidationError, DateRange } from '../../../models';
+import { TimeRangeValidationError } from '../../../models';
 import type {
   UseMultiInputTimeRangeFieldParams,
   UseMultiInputTimeRangeFieldProps,
@@ -21,7 +23,6 @@ import { excludeProps } from './shared';
 import { useMultiInputFieldSelectedSections } from '../useMultiInputFieldSelectedSections';
 
 export const useMultiInputTimeRangeField = <
-  TDate extends PickerValidDate,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TTextFieldSlotProps extends {},
 >({
@@ -31,19 +32,18 @@ export const useMultiInputTimeRangeField = <
   endTextFieldProps,
   unstableEndFieldRef,
 }: UseMultiInputTimeRangeFieldParams<
-  TDate,
   TEnableAccessibleFieldDOMStructure,
   TTextFieldSlotProps
 >): UseMultiInputRangeFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedTimeField<
-    TDate,
-    UseMultiInputTimeRangeFieldProps<TDate, TEnableAccessibleFieldDOMStructure>,
+    UseMultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
     typeof inSharedProps
   >(inSharedProps);
 
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     format,
     formatDensity,
     shouldRespectLeadingZeros,
@@ -64,6 +64,7 @@ export const useMultiInputTimeRangeField = <
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
+    referenceDate,
   });
 
   const { validationError, getValidationErrorForNewValue } = useValidation({
@@ -77,9 +78,9 @@ export const useMultiInputTimeRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<TDate | null, TimeValidationError> => {
+  ): FieldChangeHandler<PickerValue, TimeValidationError> => {
     return (newDate, rawContext) => {
-      const newDateRange: DateRange<TDate> =
+      const newDateRange: PickerRangeValue =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
       const context: FieldChangeHandlerContext<TimeRangeValidationError> = {
@@ -135,16 +136,13 @@ export const useMultiInputTimeRangeField = <
   };
 
   const startDateResponse = useTimeField<
-    TDate,
     TEnableAccessibleFieldDOMStructure,
     typeof startFieldProps
   >(startFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
-  const endDateResponse = useTimeField<
-    TDate,
-    TEnableAccessibleFieldDOMStructure,
-    typeof endFieldProps
-  >(endFieldProps) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
+  const endDateResponse = useTimeField<TEnableAccessibleFieldDOMStructure, typeof endFieldProps>(
+    endFieldProps,
+  ) as UseFieldResponse<TEnableAccessibleFieldDOMStructure, TTextFieldSlotProps>;
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {

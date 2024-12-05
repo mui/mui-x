@@ -13,6 +13,7 @@ export default function CSSCustomization() {
         },
         '& .MuiAreaElement-series-Germany': {
           fill: "url('#myGradient')",
+          filter: 'none', // Remove the default filtering
         },
       }}
       xAxis={[

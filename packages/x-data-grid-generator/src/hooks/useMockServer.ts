@@ -3,7 +3,6 @@ import { LRUCache } from 'lru-cache';
 import {
   getGridDefaultColumnTypes,
   GridRowModel,
-  GridGetRowsParams,
   GridGetRowsResponse,
   GridColDef,
   GridInitialState,
@@ -104,7 +103,7 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
   return columns;
 };
 
-function decodeParams(url: string): GridGetRowsParams {
+function decodeParams(url: string) {
   const params = new URL(url).searchParams;
   const decodedParams = {} as any;
   const array = Array.from(params.entries());
@@ -117,7 +116,7 @@ function decodeParams(url: string): GridGetRowsParams {
     }
   }
 
-  return decodedParams as GridGetRowsParams;
+  return decodedParams;
 }
 
 const getInitialState = (columns: GridColDefGenerator[], groupingField?: string) => {

@@ -26,14 +26,7 @@ import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import { PivotModel } from '../hooks/features/pivoting/useGridPivoting';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  /**
-   * Enables accessibility improvements that will be enabled by default in V8.
-   * If you rely on the v7 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
-   * @default false
-   */
-  ariaV8: boolean;
-}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {

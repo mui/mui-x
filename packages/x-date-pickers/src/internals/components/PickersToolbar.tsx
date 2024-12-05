@@ -5,10 +5,12 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { DateOrTimeViewWithMeridiem } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../models';
 
-export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
-  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
+export interface PickersToolbarProps<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -16,11 +18,10 @@ export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMer
 }
 
 const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
-  const { classes, isLandscape } = ownerState;
+  const { classes } = ownerState;
   const slots = {
     root: ['root'],
     content: ['content'],
-    penIconButton: ['penIconButton', isLandscape && 'penIconButtonLandscape'],
   };
 
   return composeClasses(slots, getPickersToolbarUtilityClass, classes);
@@ -84,13 +85,16 @@ const PickersToolbarContent = styled('div', {
   ],
 });
 
-type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+type PickersToolbarComponent = (<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(
   inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,

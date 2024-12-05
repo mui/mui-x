@@ -37,7 +37,7 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -432,10 +432,11 @@ export const useGridRowEditing = (
           return acc;
         }
 
+        const column = apiRef.current.getColumn(field);
         let newValue = apiRef.current.getCellValue(id, field);
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           if (deleteValue) {
-            newValue = getDefaultCellValue(apiRef.current.getColumn(field));
+            newValue = getDefaultCellValue(column);
           } else if (initialValue) {
             newValue = initialValue;
           }
@@ -444,7 +445,7 @@ export const useGridRowEditing = (
         acc[field] = {
           value: newValue,
           error: false,
-          isProcessingProps: false,
+          isProcessingProps: !!column.preProcessEditCellProps && deleteValue,
         };
 
         return acc;
@@ -455,8 +456,35 @@ export const useGridRowEditing = (
       if (fieldToFocus) {
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
+
+      columnFields
+        .filter((field) => !!apiRef.current.getColumn(field).preProcessEditCellProps && deleteValue)
+        .forEach((field) => {
+          const column = apiRef.current.getColumn(field);
+          const value = apiRef.current.getCellValue(id, field);
+          const newValue = deleteValue ? getDefaultCellValue(column) : (initialValue ?? value);
+
+          Promise.resolve(
+            column.preProcessEditCellProps!({
+              id,
+              row: apiRef.current.getRow(id),
+              props: newProps[field],
+              hasChanged: newValue !== value,
+            }),
+          ).then((processedProps) => {
+            // Check if still in edit mode before updating
+            if (apiRef.current.getRowMode(id) === GridRowModes.Edit) {
+              const editingState = gridEditRowsStateSelector(apiRef.current.state);
+              updateOrDeleteFieldState(id, field, {
+                ...processedProps,
+                value: editingState[id][field].value,
+                isProcessingProps: false,
+              });
+            }
+          });
+        });
     },
-  ) as GridRowEditingApi['stopRowEditMode'];
+  ) as GridRowEditingApi['startRowEditMode'];
 
   const stopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
     (params) => {
@@ -715,7 +743,7 @@ export const useGridRowEditing = (
 
   // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;
@@ -725,7 +753,7 @@ export const useGridRowEditing = (
     Array.from(ids).forEach((id) => {
       const params = rowModesModel[id] ?? { mode: GridRowModes.View };
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
-      const originalId = idToIdLookup[id] ?? id;
+      const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
       if (params.mode === GridRowModes.Edit && prevMode === GridRowModes.View) {
         updateStateToStartRowEditMode({ id: originalId, ...params });
       } else if (params.mode === GridRowModes.View && prevMode === GridRowModes.Edit) {

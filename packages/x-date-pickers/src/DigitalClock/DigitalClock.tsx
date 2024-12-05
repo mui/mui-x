@@ -9,21 +9,21 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { usePickersTranslations } from '../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
 
-const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
+const useUtilityClasses = (ownerState: DigitalClockProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -38,7 +38,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>({
+})<{ ownerState: DigitalClockProps & { alreadyRendered: boolean } }>({
   overflowY: 'auto',
   width: '100%',
   '@media (prefers-reduced-motion: no-preference)': {
@@ -94,8 +94,8 @@ const DigitalClockItem = styled(MenuItem, {
   },
 }));
 
-type DigitalClockComponent = (<TDate extends PickerValidDate>(
-  props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DigitalClockComponent = ((
+  props: DigitalClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -108,11 +108,11 @@ type DigitalClockComponent = (<TDate extends PickerValidDate>(
  *
  * - [DigitalClock API](https://mui.com/x/api/date-pickers/digital-clock/)
  */
-export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends PickerValidDate>(
-  inProps: DigitalClockProps<TDate>,
+export const DigitalClock = React.forwardRef(function DigitalClock(
+  inProps: DigitalClockProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
@@ -163,12 +163,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
 
-  const translations = usePickersTranslations<TDate>();
-  const now = useNow<TDate>(timezone);
+  const translations = usePickerTranslations();
+  const now = useNow(timezone);
 
   const ownerState = React.useMemo(
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
@@ -193,11 +194,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     timezone,
   });
 
-  const handleValueChange = useEventCallback((newValue: TDate | null) =>
+  const handleValueChange = useEventCallback((newValue: PickerValidDate | null) =>
     handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
-  const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
+  const { setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
@@ -207,7 +208,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onFocusedViewChange,
   });
 
-  const handleItemSelect = useEventCallback((newValue: TDate | null) => {
+  const handleItemSelect = useEventCallback((newValue: PickerValidDate | null) => {
     setValueAndGoToNextView(newValue, 'finish');
   });
 
@@ -232,7 +233,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   });
 
   const isTimeDisabled = React.useCallback(
-    (valueToCheck: TDate) => {
+    (valueToCheck: PickerValidDate) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
 
       const containsValidTime = () => {
@@ -283,7 +284,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const result: TDate[] = [];
+    const result: PickerValidDate[] = [];
     const startOfDay = utils.startOfDay(valueOrReferenceDate);
     let nextTimeStepOption = startOfDay;
     while (utils.isSameDay(valueOrReferenceDate, nextTimeStepOption)) {
@@ -400,7 +401,8 @@ DigitalClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -467,7 +469,8 @@ DigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -478,8 +481,7 @@ DigitalClock.propTypes = {
   referenceDate: PropTypes.object,
   /**
    * Disable specific time.
-   * @template TDate
-   * @param {TDate} value The value to check.
+   * @param {PickerValidDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

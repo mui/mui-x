@@ -68,10 +68,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { getRootProps, contextValue, instance } = useTreeView<
-    RichTreeViewPluginSignatures,
-    typeof props
-  >({
+  const { getRootProps, contextValue } = useTreeView<RichTreeViewPluginSignatures, typeof props>({
     plugins: RICH_TREE_VIEW_PLUGINS,
     rootRef: ref,
     props,
@@ -92,11 +89,7 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   return (
     <TreeViewProvider value={contextValue}>
       <Root {...rootProps}>
-        <RichTreeViewItems
-          slots={slots}
-          slotProps={slotProps}
-          itemsToRender={instance.getItemsToRender()}
-        />
+        <RichTreeViewItems slots={slots} slotProps={slotProps} />
       </Root>
     </TreeViewProvider>
   );
@@ -170,7 +163,6 @@ RichTreeView.propTypes = {
    * the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    indentationAtItemLevel: PropTypes.bool,
     labelEditing: PropTypes.bool,
   }),
   /**

@@ -5,23 +5,23 @@ import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
 import { PickerSelectionState } from './usePicker';
 import { PickersTimezone, PickerValidDate } from '../../models';
 
-export interface MonthValidationOptions<TDate extends PickerValidDate> {
+export interface MonthValidationOptions {
   disablePast?: boolean;
   disableFuture?: boolean;
-  minDate: TDate;
-  maxDate: TDate;
+  minDate: PickerValidDate;
+  maxDate: PickerValidDate;
   timezone: PickersTimezone;
 }
 
-export function useNextMonthDisabled<TDate extends PickerValidDate>(
-  month: TDate,
+export function useNextMonthDisabled(
+  month: PickerValidDate,
   {
     disableFuture,
     maxDate,
     timezone,
-  }: Pick<MonthValidationOptions<TDate>, 'disableFuture' | 'maxDate' | 'timezone'>,
+  }: Pick<MonthValidationOptions, 'disableFuture' | 'maxDate' | 'timezone'>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   return React.useMemo(() => {
     const now = utils.date(undefined, timezone);
     const lastEnabledMonth = utils.startOfMonth(
@@ -31,15 +31,15 @@ export function useNextMonthDisabled<TDate extends PickerValidDate>(
   }, [disableFuture, maxDate, month, utils, timezone]);
 }
 
-export function usePreviousMonthDisabled<TDate extends PickerValidDate>(
-  month: TDate,
+export function usePreviousMonthDisabled(
+  month: PickerValidDate,
   {
     disablePast,
     minDate,
     timezone,
-  }: Pick<MonthValidationOptions<TDate>, 'disablePast' | 'minDate' | 'timezone'>,
+  }: Pick<MonthValidationOptions, 'disablePast' | 'minDate' | 'timezone'>,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
 
   return React.useMemo(() => {
     const now = utils.date(undefined, timezone);
@@ -50,19 +50,19 @@ export function usePreviousMonthDisabled<TDate extends PickerValidDate>(
   }, [disablePast, minDate, month, utils, timezone]);
 }
 
-export function useMeridiemMode<TDate extends PickerValidDate>(
-  date: TDate | null,
+export function useMeridiemMode(
+  date: PickerValidDate | null,
   ampm: boolean | undefined,
-  onChange: PickerOnChangeFn<TDate>,
+  onChange: PickerOnChangeFn,
   selectionState?: PickerSelectionState,
 ) {
-  const utils = useUtils<TDate>();
+  const utils = useUtils();
   const meridiemMode = getMeridiem(date, utils);
 
   const handleMeridiemChange = React.useCallback(
     (mode: 'am' | 'pm') => {
       const timeWithMeridiem =
-        date == null ? null : convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
+        date == null ? null : convertToMeridiem(date, mode, Boolean(ampm), utils);
       onChange(timeWithMeridiem, selectionState ?? 'partial');
     },
     [ampm, date, onChange, selectionState, utils],

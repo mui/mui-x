@@ -93,10 +93,8 @@ function MarkPlot(props: MarkPlotProps) {
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
-            xAxisId: xAxisIdProp,
-            yAxisId: yAxisIdProp,
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
+            xAxisId = defaultXAxisId,
+            yAxisId = defaultYAxisId,
             stackedData,
             data,
             showMark = true,
@@ -105,9 +103,6 @@ function MarkPlot(props: MarkPlotProps) {
           if (showMark === false) {
             return null;
           }
-
-          const xAxisId = xAxisIdProp ?? xAxisKey;
-          const yAxisId = yAxisIdProp ?? yAxisKey;
 
           const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
           const yScale = yAxis[yAxisId].scale;

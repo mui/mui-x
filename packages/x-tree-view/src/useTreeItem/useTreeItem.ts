@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
 import useForkRef from '@mui/utils/useForkRef';
 import { TreeViewCancellableEvent } from '../models';
@@ -25,7 +25,11 @@ import { TreeViewItemPluginSlotPropsEnhancerParams } from '../internals/models';
 import { useTreeItemUtils } from '../hooks/useTreeItemUtils';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { isTargetInDescendants } from '../internals/utils/tree';
+import { useSelector } from '../internals/hooks/useSelector';
+import { selectorIsItemTheDefaultFocusableItem } from '../internals/plugins/useTreeViewFocus/useTreeViewFocus.selectors';
 import { generateTreeItemIdAttribute } from '../internals/corePlugins/useTreeViewId/useTreeViewId.utils';
+import { selectorCanItemBeFocused } from '../internals/plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { selectorTreeViewId } from '../internals/corePlugins/useTreeViewId/useTreeViewId.selectors';
 
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
@@ -35,14 +39,27 @@ export const useTreeItem = <
 ): UseTreeItemReturnValue<TSignatures, TOptionalSignatures> => {
   const {
     runItemPlugins,
-    items: { onItemClick, disabledItemsFocusable, indentationAtItemLevel },
+    items: { onItemClick },
     selection: { disableSelection, checkboxSelection },
     expansion: { expansionTrigger },
-    treeId,
+    label: labelContext,
     instance,
     publicAPI,
+    store,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
   const depthContext = React.useContext(TreeViewItemDepthContext);
+
+  const depth = useSelector(
+    store,
+    (...params) => {
+      if (typeof depthContext === 'function') {
+        return depthContext(...params);
+      }
+
+      return depthContext;
+    },
+    parameters.itemId,
+  );
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -54,8 +71,13 @@ export const useTreeItem = <
   const handleContentRef = useForkRef(contentRef, contentRefObject)!;
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
+  const treeId = useSelector(store, selectorTreeViewId);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
-  const rootTabIndex = instance.canItemBeTabbed(itemId) ? 0 : -1;
+  const shouldBeAccessibleWithTab = useSelector(
+    store,
+    selectorIsItemTheDefaultFocusableItem,
+    itemId,
+  );
 
   const sharedPropsEnhancerParams: Omit<
     TreeViewItemPluginSlotPropsEnhancerParams,
@@ -70,8 +92,11 @@ export const useTreeItem = <
         return;
       }
 
-      const canBeFocused = !status.disabled || disabledItemsFocusable;
-      if (!status.focused && canBeFocused && event.currentTarget === event.target) {
+      if (
+        !status.focused &&
+        selectorCanItemBeFocused(store.value, itemId) &&
+        event.currentTarget === event.target
+      ) {
         instance.focusItem(event, itemId);
       }
     };
@@ -132,7 +157,7 @@ export const useTreeItem = <
   const createContentHandleClick =
     (otherHandlers: EventHandlers) => (event: React.MouseEvent & TreeViewCancellableEvent) => {
       otherHandlers.onClick?.(event);
-      onItemClick?.(event, itemId);
+      onItemClick(event, itemId);
 
       if (event.defaultMuiPrevented || checkboxRef.current?.contains(event.target as HTMLElement)) {
         return;
@@ -170,6 +195,8 @@ export const useTreeItem = <
       }
     };
 
+  const getContextProviderProps = () => ({ itemId, id });
+
   const getRootProps = <ExternalProps extends Record<string, any> = {}>(
     externalProps: ExternalProps = {} as ExternalProps,
   ): UseTreeItemRootSlotProps<ExternalProps> => {
@@ -195,23 +222,20 @@ export const useTreeItem = <
       ...externalEventHandlers,
       ref: handleRootRef,
       role: 'treeitem',
-      tabIndex: rootTabIndex,
+      tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
       'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
+      style: {
+        ...(externalProps.style ?? {}),
+        '--TreeView-itemDepth': depth,
+      } as React.CSSProperties,
       onFocus: createRootHandleFocus(externalEventHandlers),
       onBlur: createRootHandleBlur(externalEventHandlers),
       onKeyDown: createRootHandleKeyDown(externalEventHandlers),
     };
-
-    if (indentationAtItemLevel) {
-      props.style = {
-        '--TreeView-itemDepth':
-          typeof depthContext === 'function' ? depthContext(itemId) : depthContext,
-      } as React.CSSProperties;
-    }
 
     const enhancedRootProps =
       propsEnhancers.root?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
@@ -235,10 +259,6 @@ export const useTreeItem = <
       onMouseDown: createContentHandleMouseDown(externalEventHandlers),
       status,
     };
-
-    if (indentationAtItemLevel) {
-      props.indentationAtItemLevel = true;
-    }
 
     const enhancedContentProps =
       propsEnhancers.content?.({ ...sharedPropsEnhancerParams, externalEventHandlers }) ?? {};
@@ -286,7 +306,7 @@ export const useTreeItem = <
       onDoubleClick: createLabelHandleDoubleClick(externalEventHandlers),
     };
 
-    if (instance.isTreeViewEditable) {
+    if (labelContext?.isItemEditable) {
       props.editable = status.editable;
     }
 
@@ -337,10 +357,6 @@ export const useTreeItem = <
       ...externalProps,
     };
 
-    if (indentationAtItemLevel) {
-      response.indentationAtItemLevel = true;
-    }
-
     return response;
   };
 
@@ -362,6 +378,7 @@ export const useTreeItem = <
   };
 
   return {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getGroupTransitionProps,

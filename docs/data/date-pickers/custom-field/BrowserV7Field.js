@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -84,10 +83,7 @@ const BrowserTextField = React.forwardRef((props, ref) => {
 const BrowserDateField = React.forwardRef((props, ref) => {
   const { slots, slotProps, ...textFieldProps } = props;
 
-  const fieldResponse = useDateField({
-    ...textFieldProps,
-    enableAccessibleFieldDOMStructure: true,
-  });
+  const fieldResponse = useDateField(textFieldProps);
 
   /* If you don't need a clear button, you can skip the use of this hook */
   const processedFieldProps = useClearableField({

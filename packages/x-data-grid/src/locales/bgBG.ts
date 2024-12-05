@@ -30,6 +30,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Търсене',
   toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
@@ -42,6 +53,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Няма колони',
   columnsManagementShowHideAllText: 'Покажи/Скрий Всичко',
   columnsManagementReset: 'Нулирай',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',

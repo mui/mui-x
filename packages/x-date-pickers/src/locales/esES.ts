@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'Meridiano',
 };
 
-const esESPickers: Partial<PickersLocaleText<any>> = {
+const esESPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'Mes anterior',
   nextMonth: 'Mes siguiente',
@@ -43,8 +43,8 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
 
   // Clock labels
-  clockLabelText: (view, time, utils, formattedTime) =>
-    `Seleccione ${views[view]}. ${!formattedTime && (time === null || !utils.isValid(time)) ? 'No hay hora seleccionada' : `La hora seleccionada es ${formattedTime ?? utils.format(time, 'fullTime')}`}`,
+  clockLabelText: (view, formattedTime) =>
+    `Seleccione ${views[view]}. ${!formattedTime ? 'No hay hora seleccionada' : `La hora seleccionada es ${formattedTime}`}`,
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
@@ -59,14 +59,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  openDatePickerDialogue: (value, utils, formattedDate) =>
-    formattedDate || (value !== null && utils.isValid(value))
-      ? `Elige fecha, la fecha elegida es ${formattedDate ?? utils.format(value, 'fullDate')}`
-      : 'Elige fecha',
-  openTimePickerDialogue: (value, utils, formattedTime) =>
-    formattedTime || (value !== null && utils.isValid(value))
-      ? `Elige hora, la hora elegida es ${formattedTime ?? utils.format(value, 'fullTime')}`
-      : 'Elige hora',
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
+  openTimePickerDialogue: (formattedTime) =>
+    formattedTime ? `Elige hora, la hora elegida es ${formattedTime}` : 'Elige hora',
   fieldClearLabel: 'Limpiar valor',
 
   // Table labels
