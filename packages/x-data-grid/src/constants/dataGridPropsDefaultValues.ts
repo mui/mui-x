@@ -51,11 +51,11 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rows: [],
   rowSelection: true,
   rowSpacingType: 'margin',
+  rowSpanning: false,
   showCellVerticalBorder: false,
   showColumnVerticalBorder: false,
   sortingMode: 'client',
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
-  unstable_rowSpanning: false,
   virtualizeColumnsWithAutoRowHeight: false,
 };

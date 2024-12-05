@@ -5,7 +5,7 @@
   showColumnVerticalBorder
   disableRowSelectionOnClick
   hideFooter
-  unstable_rowSpanning
+  rowSpanning
   sx={{
     '& .MuiDataGrid-row:hover': {
       backgroundColor: 'transparent',
