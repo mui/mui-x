@@ -11,11 +11,11 @@ import { DataGrid, Grid } from '@mui/x-data-grid';
 
 function Toolbar() {
   return (
-    <Grid.Toolbar>
+    <Grid.Toolbar.Root>
       <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
         Filters
       </Grid.FilterPanel.Trigger>
-    </Grid.Toolbar>
+    </Grid.Toolbar.Root>
   );
 }
 
