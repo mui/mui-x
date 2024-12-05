@@ -23,7 +23,7 @@ Following are all team members who have contributed to this release:
 
 ### Data Grid
 
-### Breaking changes
+#### Breaking changes
 
 - The "Select all" checkbox is now checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
 - The `rowPositionsDebounceMs` prop was removed.
@@ -60,7 +60,7 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
 
 ### Date and Time Pickers
 
-### Breaking changes
+#### Breaking changes
 
 - The `onOpen()` and `onClose()` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
 
