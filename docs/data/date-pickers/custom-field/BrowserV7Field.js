@@ -2,14 +2,13 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { usePickerContext } from '@mui/x-date-pickers/hooks';
-
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
+import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -29,7 +28,9 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-const BrowserTextField = React.forwardRef((props, ref) => {
+const BrowserDateField = React.forwardRef((props, ref) => {
+  const fieldResponse = useDateField(props);
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -61,10 +62,9 @@ const BrowserTextField = React.forwardRef((props, ref) => {
     error,
     // The rest can be passed to the root element
     ...other
-  } = props;
+  } = fieldResponse;
 
   const pickerContext = usePickerContext();
-
   const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
   return (
@@ -91,14 +91,6 @@ const BrowserTextField = React.forwardRef((props, ref) => {
       </IconButton>
     </BrowserFieldRoot>
   );
-});
-
-const BrowserDateField = React.forwardRef((props, ref) => {
-  const { slots, slotProps, ...textFieldProps } = props;
-
-  const fieldResponse = useDateField(textFieldProps);
-
-  return <BrowserTextField ref={ref} {...fieldResponse} />;
 });
 
 const BrowserDatePicker = React.forwardRef((props, ref) => {

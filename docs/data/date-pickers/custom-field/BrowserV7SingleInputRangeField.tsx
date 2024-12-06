@@ -1,8 +1,8 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -15,7 +15,6 @@ import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField }
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import { FieldType } from '@mui/x-date-pickers-pro/models';
-import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
   display: 'flex',
@@ -35,15 +34,16 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-interface BrowserTextFieldProps
-  extends BaseSingleInputPickersFieldHooksReturnValue<true>,
-    Omit<
-      React.HTMLAttributes<HTMLDivElement>,
-      keyof BaseSingleInputPickersFieldHooksReturnValue<true>
-    > {}
+interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProps {}
 
-const BrowserTextField = React.forwardRef(
-  (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
+type BrowserSingleInputDateRangeFieldComponent = ((
+  props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
+) => React.JSX.Element) & { fieldType?: FieldType };
+
+const BrowserSingleInputDateRangeField = React.forwardRef(
+  (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
+    const fieldResponse = useSingleInputDateRangeField<true, typeof props>(props);
+
     const {
       // Should be ignored
       enableAccessibleFieldDOMStructure,
@@ -58,9 +58,6 @@ const BrowserTextField = React.forwardRef(
       onInput,
       onPaste,
       onKeyDown,
-
-      // Should be passed to the button that opens the picker
-      openPickerAriaLabel,
 
       // Can be passed to a hidden <input /> element
       onChange,
@@ -82,13 +79,19 @@ const BrowserTextField = React.forwardRef(
 
       // The rest can be passed to the root element
       ...other
-    } = props;
+    } = fieldResponse;
 
     const pickerContext = usePickerContext();
     const handleRef = useForkRef(pickerContext.triggerRef, ref);
 
     return (
-      <BrowserFieldRoot ref={handleRef} {...other}>
+      <BrowserFieldRoot
+        ref={handleRef}
+        {...other}
+        style={{
+          minWidth: 300,
+        }}
+      >
         <BrowserFieldContent>
           <PickersSectionList
             elements={elements}
@@ -102,47 +105,12 @@ const BrowserTextField = React.forwardRef(
             onKeyDown={onKeyDown}
           />
         </BrowserFieldContent>
-        <IconButton
-          onClick={() => pickerContext.setOpen((prev) => !prev)}
-          sx={{ marginLeft: 1.5 }}
-          aria-label={openPickerAriaLabel}
-        >
-          <DateRangeIcon />
-        </IconButton>
+        <InputAdornment position="end">
+          <IconButton onClick={() => pickerContext.setOpen((prev) => !prev)}>
+            <DateRangeIcon />
+          </IconButton>
+        </InputAdornment>
       </BrowserFieldRoot>
-    );
-  },
-);
-
-interface BrowserSingleInputDateRangeFieldProps extends DateRangePickerFieldProps {}
-
-type BrowserSingleInputDateRangeFieldComponent = ((
-  props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { fieldType?: FieldType };
-
-const BrowserSingleInputDateRangeField = React.forwardRef(
-  (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
-    const { slots, slotProps, ...other } = props;
-
-    const textFieldProps: typeof props = useSlotProps({
-      elementType: 'input',
-      externalSlotProps: slotProps?.textField,
-      externalForwardedProps: other,
-      ownerState: props as any,
-    });
-
-    const fieldResponse = useSingleInputDateRangeField<true, typeof textFieldProps>(
-      textFieldProps,
-    ) as BaseSingleInputPickersFieldHooksReturnValue<true>;
-
-    return (
-      <BrowserTextField
-        {...fieldResponse}
-        ref={ref}
-        style={{
-          minWidth: 300,
-        }}
-      />
     );
   },
 ) as BrowserSingleInputDateRangeFieldComponent;

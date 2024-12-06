@@ -10,7 +10,7 @@ import {
   CssVarsProvider,
   THEME_ID,
 } from '@mui/joy/styles';
-import Input, { InputProps } from '@mui/joy/Input';
+import Input from '@mui/joy/Input';
 import IconButton from '@mui/joy/IconButton';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
@@ -24,7 +24,6 @@ import {
 } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
-import { BaseSingleInputPickersFieldHooksReturnValue } from '@mui/x-date-pickers/models';
 
 const CalendarIcon = createSvgIcon(
   <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />,
@@ -33,16 +32,13 @@ const CalendarIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-interface JoyFieldProps
-  extends BaseSingleInputPickersFieldHooksReturnValue<false>,
-    Omit<InputProps, keyof BaseSingleInputPickersFieldHooksReturnValue<false>> {}
+const JoyDateField = React.forwardRef(
+  (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
+    const fieldResponse = useDateField<false, typeof props>({
+      ...props,
+      enableAccessibleFieldDOMStructure: false,
+    });
 
-type JoyFieldComponent = ((
-  props: JoyFieldProps & React.RefAttributes<HTMLDivElement>,
-) => React.JSX.Element) & { propTypes?: any };
-
-const JoyField = React.forwardRef(
-  (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       // Should be ignored
       enableAccessibleFieldDOMStructure,
@@ -65,50 +61,35 @@ const JoyField = React.forwardRef(
       inputRef,
 
       // The rest can be passed to the root element
-      endDecorator,
       slotProps,
       slots,
+      id,
       ...other
-    } = props;
+    } = fieldResponse;
 
     const pickerContext = usePickerContext();
 
     return (
-      <FormControl ref={ref}>
+      <FormControl disabled={disabled} id={id} ref={ref}>
         <FormLabel>{label}</FormLabel>
         <Input
           ref={pickerContext.triggerRef}
           disabled={disabled}
           endDecorator={
-            <React.Fragment>
-              <IconButton
-                onClick={() => pickerContext.setOpen((prev) => !prev)}
-                aria-label={openPickerAriaLabel}
-              >
-                <CalendarIcon size="md" />
-              </IconButton>
-              {endDecorator}
-            </React.Fragment>
+            <IconButton
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
+              aria-label={openPickerAriaLabel}
+            >
+              <CalendarIcon size="md" />
+            </IconButton>
           }
           slotProps={{
-            ...slotProps,
             input: { ref: inputRef },
           }}
           {...other}
         />
       </FormControl>
     );
-  },
-) as JoyFieldComponent;
-
-const JoyDateField = React.forwardRef(
-  (props: DatePickerFieldProps<false>, ref: React.Ref<HTMLDivElement>) => {
-    const fieldResponse = useDateField<false, typeof props>({
-      ...props,
-      enableAccessibleFieldDOMStructure: false,
-    });
-
-    return <JoyField ref={ref} {...fieldResponse} />;
   },
 );
 

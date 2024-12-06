@@ -28,7 +28,12 @@ const CalendarIcon = createSvgIcon(
 
 const joyTheme = extendJoyTheme();
 
-const JoyField = React.forwardRef((props, ref) => {
+const JoyDateField = React.forwardRef((props, ref) => {
+  const fieldResponse = useDateField({
+    ...props,
+    enableAccessibleFieldDOMStructure: false,
+  });
+
   const {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
@@ -46,48 +51,35 @@ const JoyField = React.forwardRef((props, ref) => {
     error,
     inputRef,
     // The rest can be passed to the root element
-    endDecorator,
     slotProps,
     slots,
+    id,
     ...other
-  } = props;
+  } = fieldResponse;
 
   const pickerContext = usePickerContext();
 
   return (
-    <FormControl ref={ref}>
+    <FormControl disabled={disabled} id={id} ref={ref}>
       <FormLabel>{label}</FormLabel>
       <Input
         ref={pickerContext.triggerRef}
         disabled={disabled}
         endDecorator={
-          <React.Fragment>
-            <IconButton
-              onClick={() => pickerContext.setOpen((prev) => !prev)}
-              aria-label={openPickerAriaLabel}
-            >
-              <CalendarIcon size="md" />
-            </IconButton>
-            {endDecorator}
-          </React.Fragment>
+          <IconButton
+            onClick={() => pickerContext.setOpen((prev) => !prev)}
+            aria-label={openPickerAriaLabel}
+          >
+            <CalendarIcon size="md" />
+          </IconButton>
         }
         slotProps={{
-          ...slotProps,
           input: { ref: inputRef },
         }}
         {...other}
       />
     </FormControl>
   );
-});
-
-const JoyDateField = React.forwardRef((props, ref) => {
-  const fieldResponse = useDateField({
-    ...props,
-    enableAccessibleFieldDOMStructure: false,
-  });
-
-  return <JoyField ref={ref} {...fieldResponse} />;
 });
 
 const JoyDatePicker = React.forwardRef((props, ref) => {
