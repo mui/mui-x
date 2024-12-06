@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-relative-packages
 import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
 
 export const ADAPTER_TO_LIBRARY: Record<string, keyof typeof pickersPackageJson.devDependencies> = {
