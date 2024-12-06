@@ -53,12 +53,11 @@ const JoyDateField = React.forwardRef(
       <FormControl disabled={disabled} id={id} ref={ref}>
         <FormLabel>{label}</FormLabel>
         <Input
-          ref={ref}
+          ref={containerRef}
           disabled={disabled}
           startDecorator={startAdornment}
           endDecorator={endAdornment}
           slotProps={{
-            root: { ref: containerRef },
             input: { ref: inputRef },
           }}
           {...other}

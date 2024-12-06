@@ -59,11 +59,10 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
     >
       <FormLabel>{label}</FormLabel>
       <Input
-        ref={ref}
+        ref={containerRef}
         disabled={disabled}
         endDecorator={<DateRangeIcon size="md" />}
         slotProps={{
-          root: { ref: containerRef },
           input: { ref: inputRef },
         }}
         {...other}
