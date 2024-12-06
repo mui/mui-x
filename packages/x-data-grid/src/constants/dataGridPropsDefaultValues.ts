@@ -47,7 +47,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   resizeThrottleMs: 60,
   rowBufferPx: 150,
   rowHeight: 52,
-  rowPositionsDebounceMs: 166,
   rows: [],
   rowSelection: true,
   rowSpacingType: 'margin',

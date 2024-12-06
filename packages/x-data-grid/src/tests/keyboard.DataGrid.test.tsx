@@ -38,7 +38,7 @@ const expectAriaCoordinate = (
 };
 
 describe('<DataGrid /> - Keyboard', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function NavigationTestCaseNoScrollX(
     props: Omit<
@@ -499,96 +499,100 @@ describe('<DataGrid /> - Keyboard', () => {
       );
     }
 
-    it('should scroll horizontally when navigating between column group headers with arrows', function test() {
+    it('should scroll horizontally when navigating between column group headers with arrows', async function test() {
       if (isJSDOM) {
         // Need layouting for column virtualization
         this.skip();
       }
-      render(
-        <div style={{ width: 60, height: 300 }}>
-          <DataGrid
-            columnGroupingModel={columnGroupingModel}
-            autoHeight={isJSDOM}
-            {...getBasicGridData(10, 10)}
-          />
+      const { user } = render(
+        <div style={{ width: 100, height: 300 }}>
+          <DataGrid columnGroupingModel={columnGroupingModel} {...getBasicGridData(10, 10)} />
         </div>,
       );
-      act(() => getColumnHeaderCell(0, 0).focus());
+      // Tab to the first column header
+      await user.keyboard('{Tab}');
       const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
       expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      // We then need to move up to the group header, then right to the first named column
+      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
       expect(virtualScroller.scrollLeft).not.to.equal(0);
     });
 
-    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', async function test() {
       if (isJSDOM) {
         // Need layouting for column virtualization
         this.skip();
       }
-      render(
-        <div style={{ width: 60, height: 300 }}>
+      const { user } = render(
+        <div style={{ width: 100, height: 300 }}>
           <DataGrid
             columnGroupingModel={columnGroupingModel}
-            autoHeight={isJSDOM}
             {...getBasicGridData(10, 10)}
             rows={[]}
           />
         </div>,
       );
-      act(() => getColumnHeaderCell(0, 0).focus());
+      // Tab to the first column header
+      await user.keyboard('{Tab}');
       const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
       expect(virtualScroller.scrollLeft).to.equal(0);
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      // We then need to move up to the group header, then right to the first named column
+      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowRight}');
       expect(virtualScroller.scrollLeft).not.to.equal(0);
       expect(document.activeElement!).toHaveAccessibleName('prices');
     });
 
-    it('should move to the group header below when pressing "ArrowDown" on a column group header', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should move to the group header below when pressing "ArrowDown" on a column group header', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(2, 0).focus());
+      // Tab to the first column header then move to the first group header on the third column
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      // Move down to the group header below
+      await user.keyboard('{ArrowDown}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 3 });
     });
 
-    it('should go back to the same group header when pressing "ArrowUp" and "ArrowDown"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go back to the same group header when pressing "ArrowUp" and "ArrowDown"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(3, 1).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowRight}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      await user.keyboard('{ArrowUp}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
     });
 
-    it('should go to next group header when pressing "ArrowRight"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go to next group header when pressing "ArrowRight"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(0, 0).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      await user.keyboard('{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
     });
 
-    it('should go to previous group header when pressing "ArrowLeft"', () => {
-      render(<NavigationTestGroupingCaseNoScrollX />);
+    it('should go to previous group header when pressing "ArrowLeft"', async () => {
+      const { user } = render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(6, 0).focus());
+      // Tab to the first column header then move to the testing group header
+      await user.keyboard('{Tab}{ArrowUp}{ArrowUp}{ArrowRight}{ArrowRight}{ArrowRight}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
 
-      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      await user.keyboard('{ArrowLeft}');
       expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
     });
 
