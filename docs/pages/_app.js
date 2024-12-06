@@ -317,6 +317,11 @@ function AppWrapper(props) {
         ))}
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
+        <style>{`
+button[data-ga-event-action="stackblitz"] {
+  display: none;
+}
+`}</style>
       </NextHead>
       <DocsProvider
         config={config}
