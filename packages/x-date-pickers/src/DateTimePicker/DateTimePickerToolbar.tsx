@@ -41,11 +41,6 @@ export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
     MakeOptional<BaseToolbarProps<PickerValue, DateOrTimeViewWithMeridiem>, 'view'> {
   /**
-   * If defined, the toolbar will always be rendered in the desktop mode.
-   * This is used by the Date Time Range Picker Toolbar.
-   */
-  forceDesktopVariant?: boolean;
-  /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
   toolbarTitle?: React.ReactNode;
@@ -239,6 +234,10 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   ],
 });
 
+/**
+ * If this context value is set to true, the toolbar will always be rendered in the desktop mode.
+ * This is used by the Date Time Range Picker Toolbar.
+ */
 export const DateTimePickerToolbarForceDesktopVariant = React.createContext(false);
 
 /**
@@ -440,11 +439,6 @@ DateTimePickerToolbar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  /**
-   * If defined, the toolbar will always be rendered in the desktop mode.
-   * This is used by the Date Time Range Picker Toolbar.
-   */
-  forceDesktopVariant: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
    * @default `true` for Desktop, `false` for Mobile.
