@@ -40,8 +40,8 @@ const JoyDateField = React.forwardRef((props, ref) => {
     // Should be passed to the button that opens the picker
     openPickerAriaLabel,
     // Can be passed to the button that clears the value
-    clearable,
     onClear,
+    clearable,
     // Can be used to render a custom label
     label,
     // Can be used to style the component

@@ -59,8 +59,8 @@ const BrowserDateField = React.forwardRef(
       value,
 
       // Can be passed to the button that clears the value
-      clearable,
       onClear,
+      clearable,
 
       // Can be used to render a custom label
       label,

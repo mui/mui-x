@@ -48,8 +48,8 @@ const JoySingleInputDateRangeField = React.forwardRef(
       enableAccessibleFieldDOMStructure,
 
       // Can be passed to the button that clears the value
-      clearable,
       onClear,
+      clearable,
 
       disabled,
       id,
