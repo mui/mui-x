@@ -122,6 +122,8 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     return null;
   }
 
+  console.log(ownerState);
+
   return (
     <PickersToolbarRoot
       ref={ref}

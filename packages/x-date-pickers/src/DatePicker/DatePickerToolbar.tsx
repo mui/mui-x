@@ -54,7 +54,7 @@ const DatePickerToolbarTitle = styled(Typography, {
 })<{ ownerState: PickerToolbarOwnerState }>({
   variants: [
     {
-      props: { toolbarDirection: 'rtl' },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: 'auto 16px auto auto',
       },
