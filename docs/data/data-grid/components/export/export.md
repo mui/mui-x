@@ -4,7 +4,7 @@
 
 ## Anatomy
 
-The `Grid.Export` component is comprised of the following parts.
+`Grid.Export` is comprised of the following parts:
 
 ```tsx
 <Grid.Export.Trigger />

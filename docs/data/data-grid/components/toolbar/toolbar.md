@@ -1,18 +1,18 @@
 # Data Grid - Toolbar component
 
-<p class="description">The Toolbar component provides a way to add custom controls and functionality to the Data Grid.</p>
+<p class="description">The Toolbar component enables adding custom actions and controls to the data grid.</p>
 
 {{"demo": "GridToolbar.js"}}
 
 ## Usage
 
-Import the `Grid` component. See [Grid components](/x/react-data-grid/components/overview/) for details.
+Import `Grid` from the data grid package:
 
 ```tsx
 import { Grid } from '@mui/x-data-grid';
 ```
 
-Create a toolbar using the `Grid.Toolbar` component.
+Build a toolbar component using the `Grid.Toolbar` parts:
 
 ```tsx
 function Toolbar() {
@@ -26,7 +26,7 @@ function Toolbar() {
 }
 ```
 
-Pass the component to the `toolbar` slot.
+Pass the component to the `toolbar` slot:
 
 ```tsx
 <DataGrid slots={{ toolbar: Toolbar }} />
@@ -34,7 +34,7 @@ Pass the component to the `toolbar` slot.
 
 ## Anatomy
 
-The `Grid.Toolbar` component is comprised of the following parts.
+`Grid.Toolbar` is comprised of the following parts:
 
 ```tsx
 <Grid.Toolbar.Root>

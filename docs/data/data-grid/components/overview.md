@@ -1,14 +1,20 @@
-# Data Grid - Components
+# Data Grid - Grid components
 
-<p class="description">Data Grid components provide a way to extend the default UI via composable parts.</p>
+<p class="description">Grid components provide a way to extend the default gird UI via composable parts.</p>
 
 ## Introduction
 
-The `Grid` component is available to import from the same package as the `DataGrid` component. It consists of many parts that can be used in combination with [slots](/x/react-data-grid/components/) to extend the Data Grid.
+Grid components can be used by importing `Grid` from the data grid package:
 
 ```tsx
 import { DataGrid, Grid } from '@mui/x-data-grid';
+```
 
+By itself, `Grid` doesn't render anything. It is a namespace that acts to organize the grid components e.g. `Grid.Toolbar` and `Grid.FilterPanel`.
+
+The grid components can be used in combination with [slots](/x/react-data-grid/components/) to extend the Data Grid, as shown in the snippet below.
+
+```tsx
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
@@ -23,6 +29,14 @@ function App() {
   return <DataGrid slots={{ toolbar: Toolbar }} />;
 }
 ```
+
+### Key concepts
+
+There are some key concepts that make grid components different from the other [Data Grid subcomponents](http://localhost:3001/x/react-data-grid/components/):
+
+- Each grid component is built of several parts. For example, `Grid.Toolbar.Root`, `Grid.Toolbar.Button` and `Grid.Toolbar.Separator` are parts of the [Toolbar component](http://localhost:3001/x/react-data-grid/components/toolbar/).
+- The component namespace, e.g. `Grid.Toolbar`, does not render anything by itself but acts as a way to organize the various parts.
+- Highly customizable via the `className` and `render` prop. See the [customization](/x/react-data-grid/components/overview/#customization) section below to learn more.
 
 ## Customization
 

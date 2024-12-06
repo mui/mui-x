@@ -10,7 +10,7 @@ Currently, the only feature available for the Columns Panel component is the Tri
 
 ## Anatomy
 
-The `Grid.ColumnsPanel` component is comprised of the following parts.
+`Grid.ColumnsPanel` is comprised of the following parts:
 
 ```tsx
 <Grid.ColumnsPanel.Trigger />

@@ -10,7 +10,7 @@ Currently, the only feature available for the Filter Panel component is the Trig
 
 ## Anatomy
 
-The `Grid.FilterPanel` component is comprised of the following parts.
+`Grid.FilterPanel` is comprised of the following parts:
 
 ```tsx
 <Grid.FilterPanel.Trigger />
