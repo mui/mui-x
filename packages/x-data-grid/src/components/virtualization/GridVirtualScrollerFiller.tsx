@@ -19,7 +19,7 @@ const Pinned = styled('div')({
   height: '100%',
   boxSizing: 'border-box',
   borderTop: '1px solid var(--rowBorderColor)',
-  backgroundColor: vars.colors.background.pinned,
+  backgroundColor: vars.cell.background.pinned,
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,
