@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, SxProps, Theme } from '@mui/material/styles';
@@ -6,9 +7,14 @@ import clsx from 'clsx';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import {
+  useGridComponentRenderer,
+  RenderProp,
+} from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridToolbarSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
+  render?: RenderProp<{}>;
 }
 
 type OwnerState = DataGridProcessedProps;
@@ -34,27 +40,61 @@ const Separator = styled('div', {
   backgroundColor: theme.palette.divider,
 }));
 
-function GridToolbarSeparator(props: GridToolbarSeparatorProps) {
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
-  const { className, ...other } = props;
+const DefaultGridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparatorProps>(
+  function DefaultGridToolbarSeparator(props, ref) {
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
+    const { className, ...other } = props;
 
-  return (
-    <Separator
-      ownerState={rootProps}
-      className={clsx(classes.root, className)}
-      role="separator"
-      aria-orientation="vertical"
-      {...other}
-    />
-  );
-}
+    return (
+      <Separator
+        ref={ref}
+        ownerState={rootProps}
+        className={clsx(classes.root, className)}
+        {...other}
+      />
+    );
+  },
+);
+
+DefaultGridToolbarSeparator.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparatorProps>(
+  function GridToolbarSeparator(props, ref) {
+    const { render, ...other } = props;
+
+    const { renderElement } = useGridComponentRenderer({
+      render,
+      defaultElement: DefaultGridToolbarSeparator,
+      props: {
+        ref,
+        role: 'separator',
+        'aria-orientation': 'vertical',
+        ...other,
+      },
+    });
+
+    return renderElement();
+  },
+);
 
 GridToolbarSeparator.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

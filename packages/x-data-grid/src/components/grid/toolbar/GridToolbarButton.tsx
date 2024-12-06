@@ -1,4 +1,6 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { alpha, styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
@@ -6,10 +8,15 @@ import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import {
+  useGridComponentRenderer,
+  RenderProp,
+} from '../../../hooks/utils/useGridComponentRenderer';
 
-export type GridToolbarButtonProps = ButtonBaseProps & {
+export interface GridToolbarButtonProps extends ButtonBaseProps {
   color?: 'standard' | 'primary';
-};
+  render?: RenderProp<{}>;
+}
 
 type OwnerState = DataGridProcessedProps;
 
@@ -108,8 +115,8 @@ const StyledGridToolbarButton = styled(ButtonBase, {
   ],
 }));
 
-const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
-  function GridToolbarButton(props, ref) {
+const DefaultGridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
+  function DefaultGridToolbarButton(props, ref) {
     const { children, className, color = 'standard', ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
@@ -129,5 +136,40 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
     );
   },
 );
+
+DefaultGridToolbarButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  color: PropTypes.oneOf(['primary', 'standard']),
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
+
+const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
+  function GridToolbarButton(props, ref) {
+    const { render, ...other } = props;
+
+    const { renderElement } = useGridComponentRenderer({
+      render,
+      defaultElement: DefaultGridToolbarButton,
+      props: {
+        ref,
+        ...other,
+      },
+    });
+
+    return renderElement();
+  },
+);
+
+GridToolbarButton.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  color: PropTypes.oneOf(['primary', 'standard']),
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+} as any;
 
 export { GridToolbarButton };

@@ -73,6 +73,7 @@ GridColumnsPanelTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

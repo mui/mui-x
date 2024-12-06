@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -6,10 +7,15 @@ import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import {
+  useGridComponentRenderer,
+  RenderProp,
+} from '../../../hooks/utils/useGridComponentRenderer';
 
-export type GridToolbarRootProps = React.HTMLAttributes<HTMLDivElement> & {
+export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
-};
+  render?: RenderProp<{}>;
+}
 
 type OwnerState = DataGridProcessedProps;
 
@@ -37,18 +43,14 @@ const StyledGridToolbarRoot = styled('div', {
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
+const DefaultGridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
     const { className, children, ...other } = props;
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
-    if (!children) {
-      return null;
-    }
 
     return (
       <StyledGridToolbarRoot
-        role="toolbar"
         ref={ref}
         className={clsx(classes.root, className)}
         ownerState={rootProps}
@@ -60,11 +62,43 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   },
 );
 
+DefaultGridToolbarRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
+  function GridToolbarRoot(props, ref) {
+    const { render, ...other } = props;
+
+    const { renderElement } = useGridComponentRenderer({
+      render,
+      defaultElement: DefaultGridToolbarRoot,
+      props: {
+        ref,
+        role: 'toolbar',
+        ...other,
+      },
+    });
+
+    return renderElement();
+  },
+);
+
 GridToolbarRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
