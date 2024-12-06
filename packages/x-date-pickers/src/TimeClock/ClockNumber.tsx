@@ -28,7 +28,7 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
 interface ClockNumberOwnerState extends PickerOwnerState {
   /**
    * `true` if the clock number is in the inner clock ring.
-   * When used with meridiem, all the hours are all in the outer ring.
+   * When used with meridiem, all the hours are in the outer ring.
    * When used without meridiem, the hours from 1 to 12 are in the outer ring and the hours from 13 to 24 are in the inner ring.
    * The minutes are always in the outer ring.
    */
