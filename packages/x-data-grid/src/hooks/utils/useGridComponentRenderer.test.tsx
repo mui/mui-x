@@ -127,7 +127,7 @@ describe('useGridComponentRenderer', () => {
       />,
     );
     const computedStyle = window.getComputedStyle(screen.getByTestId('rendered-element'));
-    expect(computedStyle.color).to.equal('red');
-    expect(computedStyle.backgroundColor).to.equal('blue');
+    expect(computedStyle.color).to.equal('rgb(255, 0, 0)');
+    expect(computedStyle.backgroundColor).to.equal('rgb(0, 0, 255)');
   });
 });
