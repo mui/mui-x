@@ -113,9 +113,11 @@ describe('useGridComponentRenderer', () => {
     function TestComponentWithSxProp(
       props: BoxProps & { render?: RenderProp<{ someState: string }> },
     ) {
+      const { render: renderProp, ...other } = props;
       const { renderElement } = useGridComponentRenderer({
         defaultElement: Box,
-        props: props as Omit<BoxProps, 'color'>,
+        props: other as Omit<BoxProps, 'color'>,
+        render: renderProp,
       });
       return renderElement();
     }
