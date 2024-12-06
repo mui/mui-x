@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridColDef } from '@mui/x-data-grid-pro';
 import { GridContextProvider } from '../../context/GridContextProvider';
 import { useDataGridProps } from '../../DataGrid/useDataGridProps';
 import { useDataGridComponent } from '../../DataGrid/useDataGridComponent';
@@ -7,6 +6,7 @@ import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../../hooks/features/rows/useGridRowAriaAttributes';
 import { DataGridProps } from '../../models/props/DataGridProps';
 import { GridValidRowModel } from '../../models/gridRows';
+import { GridColDef } from '../../models/colDef';
 
 interface DemoContainerProps<R extends GridValidRowModel> extends Partial<DataGridProps<R>> {
   children: React.ReactNode;

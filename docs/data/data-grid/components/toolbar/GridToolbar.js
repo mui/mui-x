@@ -53,8 +53,8 @@ export default function GridToolbar() {
 }
 
 const demoStyles = {
+  flex: 1,
   border: '1px solid',
   borderColor: 'divider',
   borderRadius: 1,
-  width: '100%',
 };

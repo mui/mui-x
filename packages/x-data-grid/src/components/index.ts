@@ -18,6 +18,3 @@ export { GridPagination } from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
-
-export * from './grid';
-export * as Grid from './grid/index.parts';

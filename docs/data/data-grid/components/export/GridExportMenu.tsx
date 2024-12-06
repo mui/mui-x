@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, Grid } from '@mui/x-data-grid';
+import { DataGridPremium, Grid } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -36,6 +36,9 @@ function ExportMenu() {
         <Grid.Export.Trigger exportType="csv" render={<MenuItem />}>
           Download as CSV
         </Grid.Export.Trigger>
+        <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
+          Download as Excel
+        </Grid.Export.Trigger>
         <Grid.Export.Trigger exportType="print" render={<MenuItem />}>
           Print
         </Grid.Export.Trigger>
@@ -61,7 +64,7 @@ export default function GridExportMenu() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} loading={loading} slots={{ toolbar: Toolbar }} />
+      <DataGridPremium {...data} loading={loading} slots={{ toolbar: Toolbar }} />
     </div>
   );
 }

@@ -40,3 +40,6 @@ export {
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export * from './components/grid';
+export * as Grid from './components/grid/index.parts';
