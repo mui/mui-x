@@ -21,6 +21,8 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
+  UsePickerValueContextValue,
+  UsePickerValueProviderParams,
 } from './usePickerValue.types';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import { PickerValidValue } from '../../models';
@@ -208,7 +210,7 @@ export const usePickerValue = <
 
   const utils = useUtils();
   const adapter = useLocalizationContext();
-  const { isOpen, setIsOpen } = useOpenState(props);
+  const { open, setOpen } = useOpenState(props);
 
   const {
     timezone,
@@ -312,7 +314,7 @@ export const usePickerValue = <
     }
 
     if (shouldClose) {
-      setIsOpen(false);
+      setOpen(false);
     }
   });
 
@@ -379,12 +381,12 @@ export const usePickerValue = <
 
   const handleOpen = useEventCallback((event: React.UIEvent) => {
     event.preventDefault();
-    setIsOpen(true);
+    setOpen(true);
   });
 
   const handleClose = useEventCallback((event?: React.UIEvent) => {
     event?.preventDefault();
-    setIsOpen(false);
+    setOpen(false);
   });
 
   const handleChange = useEventCallback(
@@ -426,16 +428,16 @@ export const usePickerValue = <
     onChange: handleChangeFromField,
   };
 
-  const viewValue = React.useMemo(
+  const valueWithoutError = React.useMemo(
     () => valueManager.cleanValue(utils, dateState.draft),
     [utils, valueManager, dateState.draft],
   );
 
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: viewValue,
+    value: valueWithoutError,
     onChange: handleChange,
     onClose: handleClose,
-    open: isOpen,
+    open,
   };
 
   const isValid = (testedValue: TValue) => {
@@ -451,17 +453,30 @@ export const usePickerValue = <
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
-    value: viewValue,
+    value: valueWithoutError,
     onChange: handleChange,
     onSelectShortcut: handleSelectShortcut,
     isValid,
   };
 
+  const contextValue = React.useMemo<UsePickerValueContextValue>(() => {
+    return {
+      open,
+      setOpen,
+    };
+  }, [open, setOpen]);
+
+  const providerParams: UsePickerValueProviderParams<TValue> = {
+    value: valueWithoutError,
+    contextValue,
+  };
+
   return {
-    open: isOpen,
+    open,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,
     actions,
+    provider: providerParams,
   };
 };

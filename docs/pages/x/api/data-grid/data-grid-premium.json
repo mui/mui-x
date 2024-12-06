@@ -581,11 +581,6 @@
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": {
-      "type": { "name": "number" },
-      "default": "166",
-      "deprecated": true
-    },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },

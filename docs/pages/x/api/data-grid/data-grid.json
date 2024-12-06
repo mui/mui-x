@@ -435,11 +435,6 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": {
-      "type": { "name": "number" },
-      "default": "166",
-      "deprecated": true
-    },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
