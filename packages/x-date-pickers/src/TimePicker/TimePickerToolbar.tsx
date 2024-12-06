@@ -97,13 +97,13 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
   alignItems: 'flex-end',
   variants: [
     {
-      props: { isRtl: true },
+      props: { toolbarDirection: 'rtl' },
       style: {
         flexDirection: 'row-reverse',
       },
     },
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         marginTop: 'auto',
       },
@@ -131,7 +131,7 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: '4px 0 auto',
         flexDirection: 'row',

@@ -5,7 +5,6 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
-  pickersToolbarTextClasses,
   PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
 
