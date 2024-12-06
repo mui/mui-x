@@ -68,6 +68,4 @@ export interface UsePickerResponse<
   providerProps: UsePickerProviderReturnValue;
   layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &
     UsePickerViewsResponse<TView>['layoutProps'];
-  // TODO v8: Remove in https://github.com/mui/mui-x/pull/15671
-  hasUIView: boolean;
 }
