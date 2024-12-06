@@ -34,4 +34,4 @@ Display export options within a menu on the toolbar.
 
 ## API
 
-- [GridExportTrigger](/x/api/data-grid/grid-export-trigger/)
+- TBC

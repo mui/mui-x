@@ -55,9 +55,6 @@ export type GridExportTriggerProps = ButtonProps & {
  *
  * - [Export](https://mui.com/x/react-data-grid/components/export/)
  *
- * API:
- *
- * - [GridExportTrigger API](https://mui.com/x/api/data-grid/grid-export-trigger/)
  */
 const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerProps>(
   function GridExportTrigger(props, ref) {
