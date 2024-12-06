@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
 import PropTypes from 'prop-types';
 import { useLegend } from '../hooks/useLegend';
@@ -12,23 +12,12 @@ import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
+import clsx from 'clsx';
 
 export interface ChartsLegendProps
   extends ChartsLegendPlacement,
     Omit<ChartsLabelProps, 'children'>,
     PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
-  // TODO: should be handled by the `BarChart/LineChart/etc` components
-  // hidden?: boolean
-  /**
-   * Space between two legend items (in px).
-   * @default theme.spacing(2)
-   */
-  gap?: number;
-  /**
-   * Space between the mark and the label (in px).
-   * @default theme.spacing(1)
-   */
-  markGap?: number;
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
@@ -45,16 +34,18 @@ export interface ChartsLegendProps
    */
   // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLegendClasses>;
+  className?: string;
+  sx?: SxProps<Theme>;
 }
 
 const RootDiv = styled('div', {
   name: 'MuiChartsLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: Pick<ChartsLegendProps, 'gap' | 'direction'> }>(({ ownerState, theme }) => ({
+})<{ ownerState: Pick<ChartsLegendProps, 'direction'> }>(({ ownerState, theme }) => ({
   display: 'flex',
   flexDirection: ownerState.direction ?? 'row',
-  gap: ownerState.gap ?? theme.spacing(2),
+  gap: theme.spacing(2),
 }));
 
 const defaultProps: Partial<ChartsLegendProps> = { direction: 'row' };
@@ -73,26 +64,29 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const {
       direction,
-      gap,
       labelStyle,
-      markGap,
       markBorderRadius,
       markLineWidth,
       markSize,
       markType,
       onItemClick,
+      className,
+      classes,
+      ...other
     } = props;
 
-    const classes = useUtilityClasses(props);
-
     return (
-      <RootDiv className={classes.root} ownerState={{ direction, gap }} ref={ref}>
+      <RootDiv
+        className={clsx(classes?.root, className)}
+        ownerState={{ direction }}
+        ref={ref}
+        {...other}
+      >
         {data.itemsToDisplay.map((item, i) => {
           return (
             <ChartsLegendItem
               key={item.id}
               labelStyle={labelStyle}
-              gap={markGap}
               classes={classes}
               onClick={
                 onItemClick
