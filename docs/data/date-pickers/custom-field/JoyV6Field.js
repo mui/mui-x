@@ -30,8 +30,8 @@ const JoyDateField = React.forwardRef((props, ref) => {
     // Should be ignored
     enableAccessibleFieldDOMStructure,
     // Can be passed to the button that clears the value
-    clearable,
     onClear,
+    clearable,
     disabled,
     id,
     label,
