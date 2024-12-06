@@ -7,29 +7,58 @@ import {
   GridPrintExportOptions,
   useGridComponentRenderer,
   RenderProp,
-  GridExportTriggerState,
 } from '@mui/x-data-grid';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridExcelExportOptions } from '../../../hooks/features/export';
 
 export type GridExportTriggerProps = ButtonProps & {
-  render?: RenderProp<GridExportTriggerState>;
+  /**
+   * A function to customize rendering of the component.
+   */
+  render?: RenderProp<{}>;
 } & (
     | {
+        /**
+         * The type of export to trigger.
+         */
         exportType: 'csv';
+        /**
+         * Configure how the export is generated.
+         */
         exportOptions?: GridCsvExportOptions;
       }
     | {
+        /**
+         * The type of export to trigger.
+         */
         exportType: 'print';
+        /**
+         * Configure how the export is generated.
+         */
         exportOptions?: GridPrintExportOptions;
       }
     | {
+        /**
+         * The type of export to trigger.
+         */
         exportType: 'excel';
+        /**
+         * Configure how the export is generated.
+         */
         exportOptions?: GridExcelExportOptions;
       }
   );
 
+/**
+ * Demos:
+ *
+ * - [Export](https://mui.com/x/react-data-grid/components/export/)
+ *
+ * API:
+ *
+ * - [GridExportTrigger API](https://mui.com/x/api/data-grid/grid-export-trigger/)
+ */
 const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerProps>(
   function GridExportTrigger(props, ref) {
     const { render, exportType, exportOptions, onClick, ...other } = props;
@@ -74,6 +103,9 @@ GridExportTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Configure how the export is generated.
+   */
   exportOptions: PropTypes.oneOfType([
     PropTypes.shape({
       allColumns: PropTypes.bool,
@@ -114,7 +146,13 @@ GridExportTrigger.propTypes = {
       pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     }),
   ]),
+  /**
+   * The type of export to trigger.
+   */
   exportType: PropTypes.oneOf(['csv', 'excel', 'print']).isRequired,
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

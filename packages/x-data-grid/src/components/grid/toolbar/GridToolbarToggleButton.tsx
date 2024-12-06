@@ -14,6 +14,9 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridToolbarToggleButtonProps extends ToggleButtonProps {
+  /**
+   * A function to customize rendering of the component.
+   */
   render?: RenderProp<{}>;
 }
 
@@ -67,9 +70,21 @@ DefaultGridToolbarToggleButton.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
+ *
+ * API:
+ *
+ * - [GridToolbarToggleButton API](https://mui.com/x/api/data-grid/grid-toolbar-toggle-button/)
+ */
 const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarToggleButtonProps>(
   function GridToolbarToggleButton(props, ref) {
     const { render, ...other } = props;
@@ -92,6 +107,9 @@ GridToolbarToggleButton.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
@@ -9,22 +10,43 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../../models/gridExport';
 
-export interface GridExportTriggerState {}
-
 export type GridExportTriggerProps = ButtonProps & {
-  // eslint-disable-next-line react/no-unused-prop-types
-  render?: RenderProp<GridExportTriggerState>;
+  /**
+   * A function to customize rendering of the component.
+   */
+  render?: RenderProp<{}>;
 } & (
     | {
+        /**
+         * The type of export to trigger.
+         */
         exportType: 'csv';
+        /**
+         * Configure how the export is generated.
+         */
         exportOptions?: GridCsvExportOptions;
       }
     | {
+        /**
+         * The type of export to trigger.
+         */
         exportType: 'print';
+        /**
+         * Configure how the export is generated.
+         */
         exportOptions?: GridPrintExportOptions;
       }
   );
 
+/**
+ * Demos:
+ *
+ * - [Export](https://mui.com/x/react-data-grid/components/export/)
+ *
+ * API:
+ *
+ * - [GridExportTrigger API](https://mui.com/x/api/data-grid/grid-export-trigger/)
+ */
 const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerProps>(
   function GridExportTrigger(props, ref) {
     const { render, exportType, exportOptions, onClick, ...other } = props;
@@ -66,6 +88,9 @@ GridExportTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Configure how the export is generated.
+   */
   exportOptions: PropTypes.oneOfType([
     PropTypes.shape({
       allColumns: PropTypes.bool,
@@ -92,7 +117,13 @@ GridExportTrigger.propTypes = {
       pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     }),
   ]),
+  /**
+   * The type of export to trigger.
+   */
   exportType: PropTypes.oneOf(['csv', 'print']).isRequired,
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

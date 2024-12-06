@@ -14,7 +14,14 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridToolbarButtonProps extends ButtonBaseProps {
+  /**
+   * The color of the component.
+   * @default 'standard'
+   */
   color?: 'standard' | 'primary';
+  /**
+   * A function to customize rendering of the component.
+   */
   render?: RenderProp<{}>;
 }
 
@@ -142,10 +149,26 @@ DefaultGridToolbarButton.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The color of the component.
+   * @default 'standard'
+   */
   color: PropTypes.oneOf(['primary', 'standard']),
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
+ *
+ * API:
+ *
+ * - [GridToolbarButton API](https://mui.com/x/api/data-grid/grid-toolbar-button/)
+ */
 const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
@@ -168,7 +191,14 @@ GridToolbarButton.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The color of the component.
+   * @default 'standard'
+   */
   color: PropTypes.oneOf(['primary', 'standard']),
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

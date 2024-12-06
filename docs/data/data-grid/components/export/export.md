@@ -34,6 +34,4 @@ Display export options within a menu on the toolbar.
 
 ## API
 
-- [Grid](/x/api/data-grid/data-grid/)
-- [GridExport](/x/api/data-grid/data-grid/)
-- [GridExportTrigger](/x/api/data-grid/data-grid/)
+- [GridExportTrigger](/x/api/data-grid/grid-export-trigger/)

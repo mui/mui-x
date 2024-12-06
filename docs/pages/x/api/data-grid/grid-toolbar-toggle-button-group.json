@@ -1,0 +1,92 @@
+{
+  "props": {
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "GridToolbarToggleButtonGroup",
+  "imports": [
+    "import { GridToolbarToggleButtonGroup } from '@mui/x-data-grid/components';",
+    "import { GridToolbarToggleButtonGroup } from '@mui/x-data-grid';",
+    "import { GridToolbarToggleButtonGroup } from '@mui/x-data-grid-pro';",
+    "import { GridToolbarToggleButtonGroup } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "firstButton",
+      "className": "MuiGridToolbarToggleButtonGroup-firstButton",
+      "description": "Styles applied to the first button in the toggle button group.",
+      "isGlobal": false
+    },
+    {
+      "key": "fullWidth",
+      "className": "MuiGridToolbarToggleButtonGroup-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "grouped",
+      "className": "MuiGridToolbarToggleButtonGroup-grouped",
+      "description": "Styles applied to the children.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupedHorizontal",
+      "className": "MuiGridToolbarToggleButtonGroup-groupedHorizontal",
+      "description": "Styles applied to the children if `orientation=\"horizontal\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupedVertical",
+      "className": "MuiGridToolbarToggleButtonGroup-groupedVertical",
+      "description": "Styles applied to the children if `orientation=\"vertical\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiGridToolbarToggleButtonGroup-horizontal",
+      "description": "Styles applied to the root element if `orientation=\"horizontal\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "lastButton",
+      "className": "MuiGridToolbarToggleButtonGroup-lastButton",
+      "description": "Styles applied to the last button in the toggle button group.",
+      "isGlobal": false
+    },
+    {
+      "key": "middleButton",
+      "className": "MuiGridToolbarToggleButtonGroup-middleButton",
+      "description": "Styles applied to buttons in the middle of the toggle button group.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiGridToolbarToggleButtonGroup-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "selected",
+      "className": "Mui-selected",
+      "description": "State class applied to the root element if `selected={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "vertical",
+      "className": "MuiGridToolbarToggleButtonGroup-vertical",
+      "description": "Styles applied to the root element if `orientation=\"vertical\"`.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiGridToolbarToggleButtonGroup",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/grid/toolbar/GridToolbarToggleButtonGroup.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

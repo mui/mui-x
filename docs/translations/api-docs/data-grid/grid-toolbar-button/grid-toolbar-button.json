@@ -1,0 +1,20 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "color": { "description": "The color of the component." },
+    "render": { "description": "A function to customize rendering of the component." }
+  },
+  "classDescriptions": {
+    "disabled": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>disabled={true}</code>"
+    },
+    "focusVisible": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "keyboard focused"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

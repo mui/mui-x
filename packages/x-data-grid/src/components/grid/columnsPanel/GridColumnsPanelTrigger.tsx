@@ -16,14 +16,32 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridColumnsPanelTriggerState {
+  /**
+   * If `true`, the columns panel is open.
+   */
   open: boolean;
 }
 
 export interface GridColumnsPanelTriggerProps extends Omit<ButtonProps, 'className'> {
+  /**
+   * A function to customize rendering of the component.
+   */
   render?: RenderProp<GridColumnsPanelTriggerState>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   className?: string | ((state: GridColumnsPanelTriggerState) => string);
 }
 
+/**
+ * Demos:
+ *
+ * - [Columns Panel](https://mui.com/x/react-data-grid/components/columns-panel/)
+ *
+ * API:
+ *
+ * - [GridColumnsPanelTrigger API](https://mui.com/x/api/data-grid/grid-columns-panel-trigger/)
+ */
 const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsPanelTriggerProps>(
   function GridColumnsPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
@@ -73,7 +91,13 @@ GridColumnsPanelTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

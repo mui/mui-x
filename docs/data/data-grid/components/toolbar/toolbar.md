@@ -106,9 +106,8 @@ Show active filter chips in the toolbar.
 
 ## API
 
-- [GridToolbar](/x/api/data-grid/data-grid/)
-- [GridToolbarRoot](/x/api/data-grid/data-grid/)
-- [GridToolbarButton](/x/api/data-grid/data-grid/)
-- [GridToolbarToggleButtonGroup](/x/api/data-grid/data-grid/)
-- [GridToolbarToggleButton](/x/api/data-grid/data-grid/)
-- [GridToolbarSeparator](/x/api/data-grid/data-grid/)
+- [GridToolbarRoot](/x/api/data-grid/grid-toolbar-root/)
+- [GridToolbarButton](/x/api/data-grid/grid-toolbar-button/)
+- [GridToolbarToggleButtonGroup](/x/api/data-grid/grid-toolbar-toggle-button-group/)
+- [GridToolbarToggleButton](/x/api/data-grid/grid-toolbar-toggle-button/)
+- [GridToolbarSeparator](/x/api/data-grid/grid-toolbar-separator/)

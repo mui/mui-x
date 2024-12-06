@@ -34,6 +34,4 @@ Toggle the visibility of the columns panel.
 
 ## API
 
-- [Grid](/x/api/data-grid/data-grid/)
-- [GridColumnsPanel](/x/api/data-grid/data-grid/)
-- [GridColumnsPanelTrigger](/x/api/data-grid/data-grid/)
+- [GridColumnsPanelTrigger](/x/api/data-grid/grid-columns-panel-trigger/)

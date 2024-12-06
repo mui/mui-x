@@ -34,6 +34,4 @@ Toggle the visibility of the filter panel.
 
 ## API
 
-- [Grid](/x/api/data-grid/data-grid/)
-- [GridFilterPanel](/x/api/data-grid/data-grid/)
-- [GridFilterPanelTrigger](/x/api/data-grid/data-grid/)
+- [GridFilterPanelTrigger](/x/api/data-grid/grid-filter-panel-trigger/)

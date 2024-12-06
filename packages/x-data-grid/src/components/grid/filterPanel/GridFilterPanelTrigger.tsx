@@ -17,15 +17,36 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridFilterPanelTriggerState {
+  /**
+   * If `true`, the filter panel is open.
+   */
   open: boolean;
+  /**
+   * The number of active filters.
+   */
   filterCount: number;
 }
 
 export interface GridFilterPanelTriggerProps extends Omit<ButtonProps, 'className'> {
+  /**
+   * A function to customize rendering of the component.
+   */
   render?: RenderProp<GridFilterPanelTriggerState>;
+  /**
+   * A function to customize rendering of the component.
+   */
   className?: string | ((state: GridFilterPanelTriggerState) => string);
 }
 
+/**
+ * Demos:
+ *
+ * - [Filter Panel](https://mui.com/x/react-data-grid/components/filter-panel/)
+ *
+ * API:
+ *
+ * - [GridFilterPanelTrigger API](https://mui.com/x/api/data-grid/grid-filter-panel-trigger/)
+ */
 const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPanelTriggerProps>(
   function GridFilterPanelTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
@@ -77,7 +98,13 @@ GridFilterPanelTrigger.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
   className: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 } as any;
 

@@ -13,7 +13,13 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 
 export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx?: SxProps<Theme>;
+  /**
+   * A function to customize rendering of the component.
+   */
   render?: RenderProp<{}>;
 }
 
@@ -67,7 +73,13 @@ DefaultGridToolbarRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -75,6 +87,15 @@ DefaultGridToolbarRoot.propTypes = {
   ]),
 } as any;
 
+/**
+ * Demos:
+ *
+ * - [Toolbar](https://mui.com/x/react-data-grid/components/toolbar/)
+ *
+ * API:
+ *
+ * - [GridToolbarRoot API](https://mui.com/x/api/data-grid/grid-toolbar-root/)
+ */
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
     const { render, ...other } = props;
@@ -98,7 +119,13 @@ GridToolbarRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * A function to customize rendering of the component.
+   */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

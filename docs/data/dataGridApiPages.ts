@@ -16,6 +16,10 @@ const dataGridApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/data-grid/grid-columns-panel-trigger',
+    title: 'GridColumnsPanelTrigger',
+  },
+  {
     pathname: '/x/api/data-grid/grid-filter-form',
     title: 'GridFilterForm',
   },
@@ -24,8 +28,32 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridFilterPanel',
   },
   {
+    pathname: '/x/api/data-grid/grid-filter-panel-trigger',
+    title: 'GridFilterPanelTrigger',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-toolbar-button',
+    title: 'GridToolbarButton',
+  },
+  {
     pathname: '/x/api/data-grid/grid-toolbar-quick-filter',
     title: 'GridToolbarQuickFilter',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-toolbar-root',
+    title: 'GridToolbarRoot',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-toolbar-separator',
+    title: 'GridToolbarSeparator',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-toolbar-toggle-button',
+    title: 'GridToolbarToggleButton',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-toolbar-toggle-button-group',
+    title: 'GridToolbarToggleButtonGroup',
   },
 ];
 export default dataGridApiPages;
