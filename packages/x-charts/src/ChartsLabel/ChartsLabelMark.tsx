@@ -167,7 +167,10 @@ ChartsLabelMark.propTypes = {
    * The type of the mark.
    * @default 'square'
    */
-  type: PropTypes.oneOfType([PropTypes.oneOf(['circle', 'line', 'square']), PropTypes.object]),
+  type: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.oneOf(['circle', 'line', 'square']),
+    PropTypes.string,
+  ]),
 } as any;
 
 export { ChartsLabelMark };
