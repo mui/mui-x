@@ -206,7 +206,7 @@ The x-axis label placement is based on the axis configuration, and the y-axis is
 ### Position
 
 Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
-Those pros can accept three type of value:
+Those props can accept three type of value:
 
 - `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.

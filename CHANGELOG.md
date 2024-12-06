@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.23.1
+
+_Dec 5, 2024_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve German locale on the Data Grid component
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@lhilgert9.
+
+Following are all team members who have contributed to this release:
+@arthurbalduini, @cherniavskii, @flaviendelangle, @JCQuintas, @LukasTy and @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.1`
+
+- [DataGrid] Make column autosizing work with flex columns (#15712) @cherniavskii
+- [l10n] Improve German (de-DE) locale (#15641) @lhilgert9
+
+#### `@mui/x-data-grid-pro@7.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.1`, plus:
+
+- [DataGridPro] Cleanup pinned rows on removal (#15702) @cherniavskii
+
+#### `@mui/x-data-grid-premium@7.23.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.1`
+
+- [TimePicker] Prevent mouse events after `touchend` event (#15430) @arthurbalduini
+
+#### `@mui/x-date-pickers-pro@7.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.1`.
+
+### Charts
+
+#### `@mui/x-charts@7.23.1`
+
+- [charts] Improve SVG `pattern` and `gradient` support (#15724) @JCQuintas
+
+#### `@mui/x-charts-pro@7.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.23.1`.
+
+### Docs
+
+- [docs] Fix Pickers theme augmentation example (#15675) @LukasTy
+- [docs] Remove duplicated warning (#15715) @cherniavskii
+- [test] Force hover in headless Chrome (#15711) @cherniavskii
+- [docs-infra] Bump `@mui/internal-markdown` to support nested demo imports (#15738) @alexfauquette
+- [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
+
+### Core
+
+- [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
+
 ## 7.23.0
 
 _Nov 29, 2024_
