@@ -1,11 +1,11 @@
 export const DATE_ADAPTER_VERSIONS: Record<string, string> = {
   'date-fns': '^2.30.0',
   'date-fns-jalali': '^2.30.0-0',
-  dayjs: '^1.11.10',
-  luxon: '^3.4.4',
-  moment: '^2.29.4',
-  'moment-hijri': '^2.1.2',
-  'moment-jalaali': '^0.10.0',
+  dayjs: '^1.11.13',
+  luxon: '^3.5.0',
+  moment: '^2.30.1',
+  'moment-hijri': '^3.0.0',
+  'moment-jalaali': '^0.10.1',
 } as const;
 
 export const ADAPTER_TO_LIBRARY: Record<string, string> = {
