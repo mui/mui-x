@@ -135,7 +135,7 @@ export const GridRootStyles = styled('div', {
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   const baseBackground = vars.colors.background.base;
-  const pinnedBackground = vars.colors.background.pinned;
+  const pinnedBackground = vars.cell.background.pinned;
 
   const hoverColor = vars.colors.interactive.hover;
   const hoverOpacity = vars.colors.interactive.hoverOpacity;
@@ -376,7 +376,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 4, // Should be above the column separator
-      background: vars.colors.background.pinned,
+      background: vars.cell.background.pinned,
     },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
@@ -627,7 +627,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 3,
-      background: vars.colors.background.pinned,
+      background: vars.cell.background.pinned,
       '&.Mui-selected': {
         backgroundColor: pinnedSelectedBackground,
       },
@@ -709,7 +709,7 @@ export const GridRootStyles = styled('div', {
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: vars.colors.background.pinned,
+        backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
         right: 0,
       },
@@ -762,7 +762,6 @@ function transformMaterialUITheme(t: Theme) {
 
     [k.colors.border.base]: borderColor,
     [k.colors.background.base]: backgroundBase,
-    [k.colors.background.pinned]: backgroundPinned,
     [k.colors.background.overlay]: t.palette.background.paper,
     [k.colors.background.backdrop]: backgroundBackdrop,
     [k.colors.foreground.base]: t.palette.text.primary,
@@ -778,6 +777,8 @@ function transformMaterialUITheme(t: Theme) {
     [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
     [k.colors.interactive.selected]: selectedColor,
     [k.colors.interactive.selectedOpacity]: t.palette.action.selectedOpacity,
+
+    [k.cell.background.pinned]: backgroundPinned,
 
     [k.radius.base]:
       typeof t.shape.borderRadius === 'number' ? `${t.shape.borderRadius}px` : t.shape.borderRadius,

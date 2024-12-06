@@ -6,7 +6,7 @@ import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridCol
 
 const Filler = styled('div')({
   flex: 1,
-  backgroundColor: `var(${vars.colors.background.base})`,
+  backgroundColor: vars.colors.background.base,
 });
 
 export interface GridColumnHeadersProps

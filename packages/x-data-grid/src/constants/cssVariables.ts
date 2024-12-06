@@ -34,9 +34,6 @@ const keys = {
     },
     background: {
       base: '--DataGrid-t-colors-background-base',
-      // FIXME(kenan): validate `pinned`
-      pinned: '--DataGrid-t-colors-background-pinned',
-      // FIXME(kenan): validate `overlay` and `backdrop`
       overlay: '--DataGrid-t-colors-background-overlay',
       backdrop: '--DataGrid-t-colors-background-backdrop',
     },
@@ -50,6 +47,11 @@ const keys = {
       selected: '--DataGrid-t-colors-interactive-selected',
       selectedOpacity: '--DataGrid-t-colors-interactive-selected-opacity',
     },
+  },
+  cell: {
+    background: {
+      pinned: '--DataGrid-t-cell-background-pinned',
+    }
   },
   radius: {
     base: '--DataGrid-t-radius-base',
