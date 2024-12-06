@@ -53,7 +53,7 @@ export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolb
         ref={ref}
         className={clsx(classes.root, className)}
         component="span"
-        data-selected={selected}
+        {...(selected && { 'data-selected': true })}
         {...other}
       >
         {value}

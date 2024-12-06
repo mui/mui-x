@@ -22,13 +22,14 @@ import {
   PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
-import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
+import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import {
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '../../../hooks/useClearableField';
 import { PickersTextFieldProps } from '../../../PickersTextField';
+import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
   extends Pick<
@@ -93,7 +94,7 @@ export interface DesktopOnlyPickerProps
   extends BaseNonStaticPickerProps,
     BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps,
-    UsePickerViewsNonStaticProps {
+    UsePickerProviderNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
