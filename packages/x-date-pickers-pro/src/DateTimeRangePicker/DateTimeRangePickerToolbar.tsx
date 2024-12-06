@@ -12,6 +12,7 @@ import {
   PickerRangeValue,
   useToolbarOwnerState,
   PickerToolbarOwnerState,
+  DateTimePickerToolbarForceDesktopVariant,
 } from '@mui/x-date-pickers/internals';
 import { usePickerContext, usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
@@ -176,30 +177,32 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       sx={sx}
       {...other}
     >
-      <DateTimeRangePickerToolbarStart
-        value={start}
-        onViewChange={handleStartRangeViewChange}
-        toolbarTitle={translations.start}
-        ownerState={ownerState}
-        forceDesktopVariant
-        view={rangePosition === 'start' ? view : undefined}
-        className={classes.startToolbar}
-        onChange={handleOnChange}
-        titleId={titleId ? `${titleId}-start-toolbar` : undefined}
-        {...commonToolbarProps}
-      />
-      <DateTimeRangePickerToolbarEnd
-        value={end}
-        onViewChange={handleEndRangeViewChange}
-        toolbarTitle={translations.end}
-        ownerState={ownerState}
-        forceDesktopVariant
-        view={rangePosition === 'end' ? view : undefined}
-        className={classes.endToolbar}
-        onChange={handleOnChange}
-        titleId={titleId ? `${titleId}-end-toolbar` : undefined}
-        {...commonToolbarProps}
-      />
+      <DateTimePickerToolbarForceDesktopVariant.Provider value>
+        <DateTimeRangePickerToolbarStart
+          value={start}
+          onViewChange={handleStartRangeViewChange}
+          toolbarTitle={translations.start}
+          ownerState={ownerState}
+          forceDesktopVariant
+          view={rangePosition === 'start' ? view : undefined}
+          className={classes.startToolbar}
+          onChange={handleOnChange}
+          titleId={titleId ? `${titleId}-start-toolbar` : undefined}
+          {...commonToolbarProps}
+        />
+        <DateTimeRangePickerToolbarEnd
+          value={end}
+          onViewChange={handleEndRangeViewChange}
+          toolbarTitle={translations.end}
+          ownerState={ownerState}
+          forceDesktopVariant
+          view={rangePosition === 'end' ? view : undefined}
+          className={classes.endToolbar}
+          onChange={handleOnChange}
+          titleId={titleId ? `${titleId}-end-toolbar` : undefined}
+          {...commonToolbarProps}
+        />
+      </DateTimePickerToolbarForceDesktopVariant.Provider>
     </DateTimeRangePickerToolbarRoot>
   );
 }) as DateTimeRangePickerToolbarComponent;

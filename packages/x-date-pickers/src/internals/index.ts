@@ -170,3 +170,5 @@ export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.typ
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { isInternalTimeView, isTimeView } from './utils/time-utils';
+
+export { DateTimePickerToolbarForceDesktopVariant } from '../DateTimePicker/DateTimePickerToolbar';

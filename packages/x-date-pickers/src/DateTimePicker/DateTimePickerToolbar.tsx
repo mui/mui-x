@@ -239,6 +239,8 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   ],
 });
 
+export const DateTimePickerToolbarForceDesktopVariant = React.createContext(false);
+
 /**
  * Demos:
  *
@@ -262,7 +264,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    forceDesktopVariant,
     toolbarTitle: inToolbarTitle,
     className,
     classes: classesProp,
@@ -275,6 +276,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
   const translations = usePickerTranslations();
+  const forceDesktopVariant = React.useContext(DateTimePickerToolbarForceDesktopVariant);
 
   const toolbarVariant = forceDesktopVariant ? 'desktop' : variant;
   const isDesktop = toolbarVariant === 'desktop';
