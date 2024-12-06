@@ -39,11 +39,11 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Download în format Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'Caută',
+  columnsManagementNoColumns: 'Nicio coloană',
+  columnsManagementShowHideAllText: 'Arată/Ascunde tot',
+  columnsManagementReset: 'Resetează',
+  columnsManagementDeleteIconLabel: 'Șterge',
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
@@ -59,9 +59,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'conține',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'nu conține',
   filterOperatorEquals: 'este egal cu',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nu este egal cu',
   filterOperatorStartsWith: 'începe cu',
   filterOperatorEndsWith: 'se termină cu',
   filterOperatorIs: 'este',
@@ -82,9 +82,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Conține',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Nu conține',
   headerFilterOperatorEquals: 'Egal cu',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nu este egal cu',
   headerFilterOperatorStartsWith: 'Începe cu',
   headerFilterOperatorEndsWith: 'Se termină cu',
   headerFilterOperatorIs: 'Este',
