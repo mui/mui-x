@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { PrependKeys } from '@mui/x-internals/types';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
 import type { ChartsLegendPlacement, ChartsLegendSlotExtension } from './legend.types';
@@ -12,7 +13,6 @@ import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
-import clsx from 'clsx';
 
 export interface ChartsLegendProps
   extends ChartsLegendPlacement,

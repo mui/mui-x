@@ -21,19 +21,17 @@ export interface ChartsLabelMarkProps {
    * The type of the mark.
    * @default 'square'
    */
-  type?: 'square' | 'circle' | 'line';
+  type?: 'square' | 'circle' | 'line' | (string & {});
   /**
    * The color of the mark.
    */
   color?: string;
-
   /**
    * The width of the line.
    * @default 4
    */
   // eslint-disable-next-line react/no-unused-prop-types
   lineWidth?: number;
-
   /**
    * The border radius of the mark.
    *
@@ -66,12 +64,15 @@ const defaultLineWidth = 4;
 
 const defaultType = 'square';
 
+const toDefinedType = (type?: string): keyof typeof sizeMap =>
+  type && type in sizeMap ? (type as keyof typeof sizeMap) : defaultType;
+
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
 })<{ ownerState: ChartsLabelMarkProps }>(({ ownerState }) => {
-  const size = ownerState.size ?? sizeMap[ownerState.type ?? defaultType];
-  const borderRadius = ownerState.borderRadius ?? borderRadiusMap[ownerState.type ?? defaultType];
+  const size = ownerState.size ?? sizeMap[toDefinedType(ownerState.type)];
+  const borderRadius = ownerState.borderRadius ?? borderRadiusMap[toDefinedType(ownerState.type)];
 
   return {
     display: 'flex',
@@ -166,7 +167,7 @@ ChartsLabelMark.propTypes = {
    * The type of the mark.
    * @default 'square'
    */
-  type: PropTypes.oneOf(['circle', 'line', 'square']),
+  type: PropTypes.oneOfType([PropTypes.oneOf(['circle', 'line', 'square']), PropTypes.object]),
 } as any;
 
 export { ChartsLabelMark };
