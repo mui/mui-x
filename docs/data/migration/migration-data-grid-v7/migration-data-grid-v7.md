@@ -42,6 +42,7 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 ### Changes to the public API
 
+- The `rowPositionsDebounceMs` prop was removed.
 - The `apiRef.current.resize()` method was removed.
 - The `<GridOverlays />` component is not exported anymore.
 - `gridRowsDataRowIdToIdLookupSelector` was removed. Use `gridRowsLookupSelector` in combination with `getRowId()` API method instead.
