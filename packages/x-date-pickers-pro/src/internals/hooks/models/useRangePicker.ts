@@ -5,7 +5,7 @@ import {
   UsePickerViewsProps,
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
-  UsePickerViewsNonStaticProps,
+  UsePickerProviderNonStaticProps,
   DateOrTimeViewWithMeridiem,
   ExportedBaseTabsProps,
   PickerRangeValue,
@@ -37,7 +37,7 @@ export interface UseRangePickerSlotProps<
 export interface RangeOnlyPickerProps
   extends BaseNonStaticPickerProps,
     UsePickerValueNonStaticProps,
-    UsePickerViewsNonStaticProps,
+    UsePickerProviderNonStaticProps,
     BaseRangeNonStaticPickerProps,
     UseRangePositionProps {}
 
