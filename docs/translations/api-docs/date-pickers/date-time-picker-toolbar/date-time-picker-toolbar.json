@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
+    "forceDesktopVariant": {
+      "description": "If defined, the toolbar will always be rendered in the desktop mode. This is used by the Date Time Range Picker Toolbar."
+    },
     "hidden": { "description": "If <code>true</code>, show the toolbar even in desktop mode." },
     "onViewChange": {
       "description": "Callback called when a toolbar is clicked",

@@ -13,6 +13,7 @@
       "required": true
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "forceDesktopVariant": { "type": { "name": "bool" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "sx": {
       "type": {
