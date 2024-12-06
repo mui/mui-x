@@ -34,7 +34,7 @@ Pass the component to the `toolbar` slot:
 
 ## Anatomy
 
-`Grid.Toolbar` is comprised of the following parts:
+The Toolbar component is comprised of the following parts:
 
 ```tsx
 <Grid.Toolbar.Root>
