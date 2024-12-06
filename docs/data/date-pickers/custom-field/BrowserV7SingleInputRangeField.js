@@ -64,8 +64,8 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ...other
   } = fieldResponse;
 
-  const handleRef = useForkRef(InputPropsRef, ref);
   const pickerContext = usePickerContext();
+  const handleRef = useForkRef(InputPropsRef, ref);
 
   return (
     <BrowserFieldRoot
