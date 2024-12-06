@@ -26,7 +26,7 @@ function applySelector<Api extends GridApiCommon, Args, T>(
   if (isOutputSelector(selector)) {
     return selector(apiRef, args);
   }
-  return selector(apiRef.current.state, instanceId);
+  return selector(apiRef.current.state, args, instanceId);
 }
 
 const defaultCompare = Object.is;

@@ -23,7 +23,7 @@ export interface OutputSelector<State, Args, Result> {
     apiRef: React.MutableRefObject<{ state: State; instanceId: GridCoreApi['instanceId'] }>,
     args?: Args,
   ): Result;
-  (state: State, instanceId: GridCoreApi['instanceId']): Result;
+  (state: State, args?: Args, instanceId?: GridCoreApi['instanceId']): Result;
   acceptsApiRef: boolean;
 }
 
