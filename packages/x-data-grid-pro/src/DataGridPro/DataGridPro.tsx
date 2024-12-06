@@ -35,7 +35,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 ) {
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
-  useLicenseVerifier('x-data-grid-pro', releaseInfo);
+  //useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
@@ -50,7 +50,9 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody />
+        <GridBody>
+          <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        </GridBody>
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
