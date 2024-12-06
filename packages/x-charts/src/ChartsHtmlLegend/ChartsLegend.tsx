@@ -125,20 +125,10 @@ ChartsLegend.propTypes = {
    */
   direction: PropTypes.oneOf(['column', 'row']),
   /**
-   * Space between two legend items (in px).
-   * @default theme.spacing(2)
-   */
-  gap: PropTypes.number,
-  /**
    * Style applied to legend labels.
    * @default theme.typography.caption
    */
   labelStyle: PropTypes.object,
-  /**
-   * Space between the mark and the label (in px).
-   * @default theme.spacing(1)
-   */
-  markGap: PropTypes.number,
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.

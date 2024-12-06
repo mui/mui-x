@@ -64,8 +64,10 @@ const defaultLineWidth = 4;
 
 const defaultType = 'square';
 
-const toDefinedType = (type?: string): keyof typeof sizeMap =>
-  type && type in sizeMap ? (type as keyof typeof sizeMap) : defaultType;
+type OnlyLiterals = Exclude<ChartsLabelMarkProps['type'], object | undefined>;
+
+const toDefinedType = (type?: string): OnlyLiterals =>
+  type && type in sizeMap ? (type as OnlyLiterals) : defaultType;
 
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
@@ -108,10 +110,12 @@ const Root = styled('div', {
 function ChartsLabelMark(props: ChartsLabelMarkProps) {
   const { type, color } = props;
 
-  const classes = useUtilityClasses(props);
+  const parsedProps = { ...props, type: toDefinedType(type) };
+
+  const classes = useUtilityClasses(parsedProps);
 
   return (
-    <Root className={classes.root} ownerState={props} aria-hidden="true">
+    <Root className={classes.root} ownerState={parsedProps} aria-hidden="true">
       <div>
         <svg
           width="100%"
