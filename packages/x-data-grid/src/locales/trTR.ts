@@ -42,7 +42,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Kolon yok',
   columnsManagementShowHideAllText: 'Hepsini Göster/Gizle',
   columnsManagementReset: 'Sıfırla',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Temizle',
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
@@ -58,9 +58,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'içerir',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'içermiyor',
   filterOperatorEquals: 'eşittir',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'eşit değil',
   filterOperatorStartsWith: 'ile başlar',
   filterOperatorEndsWith: 'ile biter',
   filterOperatorIs: 'eşittir',
