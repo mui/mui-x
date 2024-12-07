@@ -53,6 +53,7 @@ export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
+  useFieldInternalPropsWithDefaults,
   createDateStrForV7HiddenInputFromSections,
   createDateStrForV6InputFromSections,
 } from './hooks/useField';
@@ -148,11 +149,6 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export {
-  useDefaultizedDateField,
-  useDefaultizedTimeField,
-  useDefaultizedDateTimeField,
-} from './hooks/defaultizedFieldProps';
 export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { applyDefaultViewProps } from './utils/views';
 
@@ -168,3 +164,7 @@ export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.typ
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { isInternalTimeView, isTimeView } from './utils/time-utils';
+
+export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
+export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
+export { getDateTimeFieldInternalPropsDefaults } from '../managers/useDateTimeManager';
