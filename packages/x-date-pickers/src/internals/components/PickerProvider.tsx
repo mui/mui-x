@@ -3,7 +3,7 @@ import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 import { PickerOrientation, PickerVariant } from '../models';
-import { UsePickerValueContextValue } from '../hooks/usePicker/usePickerValue.types';
+import type { UsePickerValueContextValue } from '../hooks/usePicker/usePickerValue.types';
 
 export const PickerContext = React.createContext<PickerContextValue | null>(null);
 
