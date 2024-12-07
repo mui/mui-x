@@ -5,6 +5,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -30,23 +31,23 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   width: 'auto',
-  paddingBottom: theme.spacing(0.5),
+  paddingBottom: vars.spacing(0.5),
   '& input': {
-    marginLeft: theme.spacing(0.5),
+    marginLeft: vars.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderBottom: `1px solid ${vars.colors.border.base}`,
   },
   [`& input[type="search"]::-webkit-search-decoration,
-  & input[type="search"]::-webkit-search-cancel-button,
-  & input[type="search"]::-webkit-search-results-button,
-  & input[type="search"]::-webkit-search-results-decoration`]: {
+    & input[type="search"]::-webkit-search-cancel-button,
+    & input[type="search"]::-webkit-search-results-button,
+    & input[type="search"]::-webkit-search-results-decoration`]: {
     /* clears the 'X' icon from Chrome */
     display: 'none',
   },
-}));
+});
 
 const defaultSearchValueParser = (searchText: string) =>
   searchText.split(' ').filter((word) => word !== '');

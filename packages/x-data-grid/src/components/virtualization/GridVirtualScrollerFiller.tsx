@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { fastMemo } from '@mui/x-internals/fastMemo';
+import { vars } from '../../constants/cssVariables';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
@@ -18,7 +19,7 @@ const Pinned = styled('div')({
   height: '100%',
   boxSizing: 'border-box',
   borderTop: '1px solid var(--rowBorderColor)',
-  backgroundColor: 'var(--DataGrid-pinnedBackground)',
+  backgroundColor: vars.cell.background.pinned,
 });
 const PinnedLeft = styled(Pinned)({
   left: 0,

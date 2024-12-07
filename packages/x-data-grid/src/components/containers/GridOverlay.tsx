@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { Theme, SxProps, styled } from '@mui/system';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -34,7 +35,7 @@ const GridOverlayRoot = styled('div', {
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
+  backgroundColor: vars.colors.background.backdrop,
 });
 
 const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
