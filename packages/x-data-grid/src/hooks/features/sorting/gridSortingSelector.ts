@@ -84,6 +84,6 @@ export const gridSortedRowIndexLookupSelector = createSelectorMemoized(
     return sortedIds.reduce<Record<GridRowId, number>>((acc, id, index) => {
       acc[id] = index;
       return acc;
-    }, {});
+    }, Object.create(null));
   },
 );
