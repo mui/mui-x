@@ -5,7 +5,6 @@ import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
-import { onSpaceOrEnter } from '../../utils/utils';
 import { PickersLayout } from '../../../PickersLayout';
 import { FieldRef, InferError } from '../../../models';
 import { BaseSingleInputFieldProps, DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
@@ -28,7 +27,6 @@ export const useMobilePicker = <
   >,
 >({
   props,
-  getOpenDialogAriaText,
   ...pickerParams
 }: UseMobilePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
@@ -47,6 +45,7 @@ export const useMobilePicker = <
     inputRef,
     readOnly,
     disabled,
+    autoFocus,
     localeText,
   } = props;
 
@@ -83,7 +82,7 @@ export const useMobilePicker = <
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       // Internal props
-      readOnly: readOnly ?? true,
+      readOnly,
       disabled,
       format,
       formatDensity,
@@ -91,6 +90,7 @@ export const useMobilePicker = <
       selectedSections,
       onSelectedSectionsChange,
       timezone,
+      autoFocus: autoFocus && !props.open,
       ...pickerFieldProps, // onChange and value
 
       // Forwarded props
@@ -98,26 +98,12 @@ export const useMobilePicker = <
       sx,
       label,
       name,
+      focused: open ? true : undefined,
       ...(isToolbarHidden && { id: labelId }),
-      ...(!(disabled || readOnly) && {
-        onClick: actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
-      }),
       ...(!!inputRef && { inputRef }),
     },
     ownerState,
   });
-
-  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  fieldProps.inputProps = {
-    ...fieldProps.inputProps,
-    'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
-  } as typeof fieldProps.inputProps;
-
-  const slotsForField = {
-    textField: slots.textField,
-    ...fieldProps.slots,
-  };
 
   const Layout = slots.layout ?? PickersLayout;
 
@@ -141,6 +127,16 @@ export const useMobilePicker = <
     },
   };
 
+  const slotsForField = {
+    ...slots,
+    ...fieldProps.slots,
+  };
+
+  const slotPropsForField = {
+    ...slotProps,
+    ...fieldProps.slotProps,
+  };
+
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
@@ -148,7 +144,7 @@ export const useMobilePicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
-        slotProps={slotProps}
+        slotProps={slotPropsForField}
         unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>

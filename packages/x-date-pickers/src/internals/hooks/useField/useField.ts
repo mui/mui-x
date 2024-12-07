@@ -52,6 +52,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    getOpenDialogAriaLabel: getOpenDialogAriaText,
   } = params;
 
   const isRtl = useRtl();
@@ -279,9 +280,15 @@ export const useField = <
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
   };
 
+  const openPickerAriaLabel = React.useMemo(
+    () => getOpenDialogAriaText(state.value),
+    [getOpenDialogAriaText, state.value],
+  );
+
   const commonAdditionalProps: UseFieldCommonAdditionalProps = {
     disabled,
     readOnly,
+    openPickerAriaLabel,
   };
 
   return {

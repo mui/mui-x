@@ -23,7 +23,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'multi-section-digital-clock',
-    variant: 'desktop',
   }));
 
   describeConformance(<MultiSectionDigitalClock />, () => ({
@@ -39,7 +38,6 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     render,
     componentFamily: 'multi-section-digital-clock',
     type: 'time',
-    variant: 'desktop',
     values: [adapterToUse.date('2018-01-01T11:30:00'), adapterToUse.date('2018-01-01T12:35:00')],
     emptyValue: null,
     clock,

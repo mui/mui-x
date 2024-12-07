@@ -40,5 +40,7 @@ export const useSingleInputDateTimeRangeField = <
     fieldValueManager,
     validator: validateDateTimeRange,
     valueType: 'date-time',
+    // TODO v8: Add a real aria label before enabling the button.
+    getOpenDialogAriaLabel: () => '',
   });
 };

@@ -1,20 +1,21 @@
 import { SxProps } from '@mui/material/styles';
 import { MakeRequired } from '@mui/x-internals/types';
-import type {
-  ExportedUseClearableFieldProps,
-  UseClearableFieldSlotProps,
-  UseClearableFieldSlots,
-} from '../../hooks/useClearableField';
 import type { FieldSection, PickerOwnerState } from '../../models';
 import type { UseFieldInternalProps } from '../hooks/useField';
 import { RangePosition } from './pickers';
 import { PickerValidValue } from './value';
+import type {
+  ExportedPickerFieldUIProps,
+  ExportedPickerFieldUISlots,
+  PickerFieldUISlotProps,
+} from '../components/PickerFieldUI';
 
 export interface FieldRangeSection extends FieldSection {
   dateName: RangePosition;
 }
 
-export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearableFieldProps {
+export interface BaseForwardedSingleInputFieldProps
+  extends Pick<ExportedPickerFieldUIProps, 'clearable' | 'onClear'> {
   className: string | undefined;
   sx: SxProps<any> | undefined;
   label: React.ReactNode | undefined;
@@ -25,16 +26,8 @@ export interface BaseForwardedSingleInputFieldProps extends ExportedUseClearable
   onBlur?: React.FocusEventHandler;
   ref?: React.Ref<HTMLDivElement>;
   inputRef?: React.Ref<HTMLInputElement>;
-  InputProps?: {
-    ref?: React.Ref<any>;
-    endAdornment?: React.ReactNode;
-    startAdornment?: React.ReactNode;
-  };
-  inputProps?: {
-    'aria-label'?: string;
-  };
-  slots?: UseClearableFieldSlots;
-  slotProps?: UseClearableFieldSlotProps & {
+  slots?: ExportedPickerFieldUISlots;
+  slotProps?: PickerFieldUISlotProps & {
     textField?: {};
   };
   ownerState: PickerOwnerState;
