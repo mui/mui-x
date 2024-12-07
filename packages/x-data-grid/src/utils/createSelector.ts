@@ -164,7 +164,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
       if (cacheKey.id === 'default') {
         warnOnce([
           'MUI X: A selector was called without passing the instance ID, which may impact the performance of the grid.',
-          'To fix, call it with `apiRef`, for example `mySelector(apiRef)`, or pass the instance ID explicitly, for example `mySelector(state, apiRef.current.instanceId)`.',
+          'To fix, call it with `apiRef`, for example `mySelector(apiRef)`, or pass the instance ID explicitly, for example `mySelector(state, args, apiRef.current.instanceId)`.',
         ]);
       }
     }
