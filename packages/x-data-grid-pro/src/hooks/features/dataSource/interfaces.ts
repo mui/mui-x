@@ -52,4 +52,5 @@ export interface GridDataSourcePrivateApi {
    * Resets the data source state.
    */
   resetDataSourceState: () => void;
+  internal_getAggregatedValue: (groupId: GridRowId, field: string) => any;
 }
