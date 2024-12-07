@@ -20,6 +20,8 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
+  'unstableStartFieldRef',
+  'unstableEndFieldRef',
   'enableAccessibleFieldDOMStructure',
   'disabled',
   'readOnly',
@@ -51,7 +53,7 @@ export const useSplitFieldProps = <
 ) => {
   return React.useMemo(() => {
     const forwardedProps = { ...props } as Omit<TProps, InternalPropNames<TValueType>>;
-    const internalProps = {} as Pick<TProps, InternalPropNames<TValueType>>;
+    const internalProps = {} as ExtractInternalProps<TValueType, TProps>;
 
     const extractProp = (propName: string) => {
       if (forwardedProps.hasOwnProperty(propName)) {
@@ -76,3 +78,12 @@ export const useSplitFieldProps = <
     return { forwardedProps, internalProps };
   }, [props, valueType]);
 };
+
+/**
+ * Extract the internal props from the props received by the field component.
+ * Makes sure that internal props not defined in the props are not present in the result.
+ */
+type ExtractInternalProps<
+  TValueType extends PickerValueType,
+  TProps extends { [key in InternalPropNames<TValueType>]?: any },
+> = { [K in keyof TProps]: K extends InternalPropNames<TValueType> ? TProps[K] : never };
