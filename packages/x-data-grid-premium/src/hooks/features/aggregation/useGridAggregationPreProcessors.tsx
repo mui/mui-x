@@ -25,7 +25,12 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition' | 'slotProps' | 'slots'
+    | 'aggregationFunctions'
+    | 'disableAggregation'
+    | 'getAggregationPosition'
+    | 'slotProps'
+    | 'slots'
+    | 'pivotParams'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
@@ -59,6 +64,7 @@ export const useGridAggregationPreProcessors = (
             column,
             aggregationRule: aggregationRules[field],
             apiRef,
+            pivotMode: props.pivotParams?.pivotMode ?? false,
           });
         }
 
@@ -69,7 +75,7 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, props.pivotParams],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(

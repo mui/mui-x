@@ -15,6 +15,7 @@ export interface GridColumnHeaderSortIconProps {
   index: number | undefined;
   sortingOrder: readonly GridSortDirection[];
   disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 type OwnerState = GridColumnHeaderSortIconProps & {

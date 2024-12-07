@@ -1190,6 +1190,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the footer selected row count element"
     },
+    "sidePanel": { "description": "" },
     "sortIcon": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
@@ -1327,6 +1328,13 @@
     "openFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
     "pagination": "Pagination component rendered in the grid footer by default.",
     "panel": "Panel component wrapping the filters and columns panels.",
+    "pivotMenuAddIcon": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+    "pivotMenuCheckIcon": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+    "pivotMenuMoveDownIcon": "Icon displayed in the pivot menu for moving a field down.",
+    "pivotMenuMoveToBottomIcon": "Icon displayed in the pivot menu for moving a field to the bottom.",
+    "pivotMenuMoveToTopIcon": "Icon displayed in the pivot menu for moving a field to the top.",
+    "pivotMenuMoveUpIcon": "Icon displayed in the pivot menu for moving a field up.",
+    "pivotMenuRemoveIcon": "Icon displayed in the pivot menu for removing a field from the pivot.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
     "row": "Component rendered for each row.",
