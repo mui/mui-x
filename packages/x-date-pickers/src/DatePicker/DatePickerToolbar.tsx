@@ -16,6 +16,10 @@ import {
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
 import { PickerValue } from '../internals/models';
+import {
+  PickerToolbarOwnerState,
+  useToolbarOwnerState,
+} from '../internals/hooks/useToolbarOwnerState';
 
 export interface DatePickerToolbarProps
   extends BaseToolbarProps<PickerValue, DateView>,
@@ -28,8 +32,7 @@ export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps
   classes?: Partial<DatePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: DatePickerToolbarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DatePickerToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     title: ['title'],
@@ -48,10 +51,10 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps }>({
+})<{ ownerState: PickerToolbarOwnerState }>({
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: 'auto 16px auto auto',
       },
@@ -86,13 +89,15 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
     toolbarPlaceholder = '––',
     views,
     className,
+    classes: classesProp,
     onViewChange,
     view,
     ...other
   } = props;
   const utils = useUtils();
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const ownerState = useToolbarOwnerState();
+  const classes = useUtilityClasses(classesProp);
 
   const dateText = React.useMemo(() => {
     if (!value) {
@@ -103,8 +108,6 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar(
 
     return utils.formatByString(value, formatFromViews);
   }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);
-
-  const ownerState = props;
 
   return (
     <DatePickerToolbarRoot
