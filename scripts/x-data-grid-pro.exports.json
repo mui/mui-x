@@ -530,7 +530,6 @@
   { "name": "GridSortDirection", "kind": "TypeAlias" },
   { "name": "gridSortedRowEntriesSelector", "kind": "Variable" },
   { "name": "gridSortedRowIdsSelector", "kind": "Variable" },
-  { "name": "gridSortedRowIndexLookupSelector", "kind": "Variable" },
   { "name": "GridSortingInitialState", "kind": "Interface" },
   { "name": "GridSortingState", "kind": "Interface" },
   { "name": "GridSortItem", "kind": "Interface" },
