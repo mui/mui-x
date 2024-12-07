@@ -10,12 +10,12 @@ import {
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface MultiSectionDigitalClockOption<TValue> {
-  isDisabled?: (value: TValue) => boolean;
-  isSelected: (value: TValue) => boolean;
-  isFocused: (value: TValue) => boolean;
+export interface MultiSectionDigitalClockOption<TSectionValue extends number | string> {
+  isDisabled?: (value: TSectionValue) => boolean;
+  isSelected: (value: TSectionValue) => boolean;
+  isFocused: (value: TSectionValue) => boolean;
   label: string;
-  value: TValue;
+  value: TSectionValue;
   ariaLabel: string;
 }
 
@@ -23,8 +23,8 @@ export interface ExportedMultiSectionDigitalClockProps
   extends ExportedBaseClockProps,
     MultiSectionDigitalClockOnlyProps {}
 
-export interface MultiSectionDigitalClockViewProps<TValue>
-  extends Pick<MultiSectionDigitalClockSectionProps<TValue>, 'onChange' | 'items'> {}
+export interface MultiSectionDigitalClockViewProps<TSectionValue extends number | string>
+  extends Pick<MultiSectionDigitalClockSectionProps<TSectionValue>, 'onChange' | 'items'> {}
 
 export interface MultiSectionDigitalClockSlots {
   /**

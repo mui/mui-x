@@ -17,6 +17,9 @@ In `package.json`, change the version of the Tree View package to `next`.
 ```diff
 -"@mui/x-tree-view": "7.x.x",
 +"@mui/x-tree-view": "next",
+
+-"@mui/x-tree-view-pro": "7.x.x",
++"@mui/x-tree-view-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -128,7 +131,7 @@ This inconsistency has been solved, all the event manager now target the root of
 -<SimpleTreeView>
 +<SimpleTreeView onItemClick={handleItemClick}>
 -  <TreeItem onClick={handleItemClick}>
-+  <TreeItem >
++  <TreeItem>
  </SimpleTreeView>
 ```
 

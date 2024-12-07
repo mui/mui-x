@@ -40,6 +40,33 @@ export type ChartDataProviderProps = Omit<
   children?: React.ReactNode;
 };
 
+/**
+ * Orchestrates the data providers for the chart components and hooks.
+ *
+ * Use this component if you have custom HTML components that need to access the chart data.
+ *
+ * Demos:
+ *
+ * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartDataProvider API](https://mui.com/x/api/charts/chart-data-provider/)
+ *
+ * @example
+ * ```jsx
+ * <ChartDataProvider
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *   <ChartsSurface>
+ *      <BarPlot />
+ *      <ChartsXAxis position="bottom" axisId="x-axis" />
+ *   </ChartsSurface>
+ *   {'Custom Legend Component'}
+ * </ChartDataProvider>
+ * ```
+ */
 function ChartDataProvider(props: ChartDataProviderProps) {
   const {
     children,
@@ -182,7 +209,6 @@ ChartDataProvider.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -197,7 +223,6 @@ ChartDataProvider.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -258,7 +283,6 @@ ChartDataProvider.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -273,7 +297,6 @@ ChartDataProvider.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

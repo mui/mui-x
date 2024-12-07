@@ -1,5 +1,5 @@
 {
-  "componentDescription": "",
+  "componentDescription": "It provides the drawing area for the chart elements.\nIt is the root `<svg>` of all the chart elements.\n\nIt also provides the `title` and `desc` elements for the chart.",
   "propDescriptions": {
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."

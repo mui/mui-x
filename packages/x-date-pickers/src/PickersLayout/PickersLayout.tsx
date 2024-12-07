@@ -11,7 +11,7 @@ import {
   PickersLayoutClasses,
 } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
 import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (
@@ -87,7 +87,10 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+type PickersLayoutComponent = (<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -101,7 +104,7 @@ type PickersLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
 const PickersLayout = React.forwardRef(function PickersLayout<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
@@ -179,7 +182,7 @@ PickersLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,

@@ -92,7 +92,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 let isJSDOM = false;
 try {
   if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
   }
 } catch (_) {
   /* ignore */
@@ -267,9 +267,14 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
     const newScroll = {
-      top: scrollerRef.current!.scrollTop,
-      left: scrollerRef.current!.scrollLeft,
+      top: scroller.scrollTop,
+      left: scroller.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;

@@ -48,6 +48,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider',
+    title: 'ChartDataProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -135,6 +139,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip',
+    title: 'HeatmapTooltip',
     plan: 'pro',
   },
   {

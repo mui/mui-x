@@ -5,6 +5,235 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.3
+
+_Dec 5, 2024_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Support [Server-side lazy loading](https://mui.com/x/react-data-grid/server-side-data/lazy-loading/) on the Data Grid. Use [data source](https://mui.com/x/react-data-grid/server-side-data/#data-source) to fetch a range of rows on demand and update the rows in the same way as described in [Infinite loading](https://mui.com/x/react-data-grid/row-updates/#infinite-loading) and [Lazy loading](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) without the need to use any additional event listeners and callbacks.
+- 🎯 Improved [data caching](https://mui.com/x/react-data-grid/server-side-data/#data-caching). Check out our [recommendations](https://mui.com/x/react-data-grid/server-side-data/#improving-the-cache-hit-rate) for improving the cache hit rate.
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@ihsanberkozcan, @k-rajat19, @perezShaked.
+Following are all team members who have contributed to this release:
+@arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @noraleonte.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The "Select all" checkbox is now checked when all the selectable rows are selected, ignoring rows that are not selectable because of the `isRowSelectable` prop.
+- The `rowPositionsDebounceMs` prop was removed.
+- The `gridRowsDataRowIdToIdLookupSelector` selector was removed. Use the `gridRowsLookupSelector` selector in combination with the `getRowId()` API method instead.
+  ```diff
+  -const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  -const rowId = idToIdLookup[id]
+  +const rowsLookup = gridRowsLookupSelector(apiRef);
+  +const rowId = apiRef.current.getRowId(rowsLookup[id])
+  ```
+- The Grid is now more aligned with the WAI-ARIA authoring practices and sets the `role` attribute to `treegrid` if the Data Grid is used with row grouping feature.
+
+#### `@mui/x-data-grid@8.0.0-alpha.3`
+
+- [DataGrid] Fix deselection not working with `isRowSelectable` (#15692) @MBilalShafi
+- [DataGrid] Make column autosizing work with flex columns (#15465) @cherniavskii
+- [DataGrid] Remove `gridRowsDataRowIdToIdLookupSelector` selector (#15698) @arminmeh
+- [DataGrid] Remove `rowPositionsDebounceMs` prop (#15482) @k-rajat19
+- [l10n] Improve Hebrew (he-IL) locale (#15699) @perezShaked
+- [l10n] Improve Turkish (tr-TR) locale (#15734) @ihsanberkozcan
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.3`, plus:
+
+- [DataGridPro] Cleanup pinned rows on removal (#15697) @cherniavskii
+- [DataGridPro] Server-side lazy loading (#13878) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.3`, plus:
+
+- [DataGridPremium] Remove the `ariaV8` experimental flag (#15694) @arminmeh
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The `onOpen()` and `onClose()` methods of the `usePickerContext()` hook have been replaced with a single `setOpen` method — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#usepickercontext).
+
+#### `@mui/x-date-pickers@8.0.0-alpha.3`
+
+- [pickers] Replace the `onOpen()` and `onClose()` methods of `usePickerContext()` with a single `setOpen()` method. (#15701) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.3`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.3`
+
+- [charts] Improve SVG `pattern` and `gradient` support (#15720) @JCQuintas
+
+#### `@mui/x-charts-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.3`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.3`
+
+No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.2`.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
+
+### Docs
+
+- [docs] Add a customization demo for the Date and Time Pickers overview page (#15118) @noraleonte
+- [docs] Fix typo in charts axis documentation (#15743) @JCQuintas
+- [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
+
+### Core
+
+- [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15316) @flaviendelangle
+- [code-infra] Lock file maintenance (#11894)
+- [code-infra] Check if `preset-safe` folder exists in codemod test (#15703) @JCQuintas
+- [code-infra] Import Pickers `preset-safe` into global codemod config (#15659) @JCQuintas
+- [code-infra] Playwright 1.49 (#15493) @JCQuintas
+- [test] Force hover in headless Chrome (#15710) @cherniavskii
+
+## v8.0.0-alpha.2
+
+_Nov 29, 2024_
+
+We'd like to offer a big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
+
+- 👨🏽‍💻 Improve resize performance on the Data Gird.
+- `<ChartDataProvider />` and `<ChartsSurface />` components are now fully divided — [Learn more](https://next.mui.com/x/react-charts/composition/#overview).
+- Users can create their own HTML components using chart data — [Learn more](https://next.mui.com/x/react-charts/components/#html-components).
+- 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
+- 🌍 Improve Dutch locale on the Date and Time Pickers components.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@dloeda, @headironc, @jedesroches, @k-rajat19, @lauri865, @mathzdev, @nphmuller, @zinoroman.
+Following are all team members who have contributed to this release:
+@arminmeh, @alexfauquette, @cherniavskii, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi, @oliviertassinari.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
+
+- The `<GridOverlays />` component is not exported anymore.
+- The `indeterminateCheckboxAction` prop has been removed. Clicking on an indeterminate checkbox "selects" the unselected descendants.
+- The `apiRef.current.resize()` method was removed.
+- The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
+  To revert to the previous behavior, pass `rowSelectionPropagation` as `{ parents: false, descendants: false }`.
+- If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
+
+#### `@mui/x-data-grid@v8.0.0-alpha.2`
+
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15634) @jedesroches
+- [DataGrid] Clear timers on unmount (#15620) @cherniavskii
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
+- [DataGrid] Improve resize performance (#15549) @lauri865
+- [DataGrid] Make estimation label more accurate (#15632) @arminmeh
+- [DataGrid] Remove `<GridOverlays />` export (#15573) @k-rajat19
+- [DataGrid] Remove `indeterminateCheckboxAction` prop (#15522) @MBilalShafi
+- [DataGrid] Remove try/catch from `<GridCell />` due to performance issues (#15616) @lauri865
+- [DataGrid] Remove unused `resize` method (#15599) @cherniavskii
+- [DataGrid] Support column virtualization with dynamic row height (#15541) @cherniavskii
+- [DataGrid] Update the default value for `rowSelectionPropagation` (#15523) @MBilalShafi
+- [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+
+#### `@mui/x-data-grid-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v8.0.0-alpha.2`, plus:
+
+- [DataGridPro] Fix header filtering with `boolean` column type (#15528) @k-rajat19
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15622) @zinoroman
+- [DataGridPro] Fix selection propagation issue on initialization (#15461) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@v8.0.0-alpha.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.2`.
+
+### Date and Time Pickers
+
+#### Breaking changes
+
+- The props received by the `layout` and the `toolbar` slots have been reworked — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#do-not-pass-the-section-type-as-a-generic).
+
+- The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+
+#### `@mui/x-date-pickers@v8.0.0-alpha.2`
+
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15552) @flaviendelangle
+- [pickers] Improve validation internals (#15419) @flaviendelangle
+- [pickers] Remove `TSection` and strictly type `TValue` (#15434) @flaviendelangle
+- [pickers] Remove `orientation`, `isLandscape`, `isRtl`, `wrapperVariant` and `disabled` props from `PickersLayout` (#15494) @flaviendelangle
+- [pickers] Use the new `ownerState` in `<PickersCalendarHeader />`, `<PickersArrowSwitcher />` and `<DayCalendarSkeleton />` (#15499) @flaviendelangle
+- [pickers] Use the new `ownerState` object in all the field components (#15510) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.2`.
+
+### Charts
+
+#### Breaking changes
+
+- Charts Container don't have a `<div />` wrapping them anymore. All props are now passed to the root `<svg />` instead of the `<div />`.
+
+#### `@mui/x-charts@v8.0.0-alpha.2`
+
+- [charts] Allow the creation of custom HTML components using charts data (#15511) @JCQuintas
+- [charts] Flatten imports from `@mui/utils` and `@mui/system` (#15603) @alexfauquette
+- [charts] Introduce the plugin system (#15513) @alexfauquette
+- [charts] Prevent invalid `releasePointerCapture` (#15602) @alexfauquette
+- [charts] Fix custom Tooltip demos (#15631) @alexfauquette
+
+#### `@mui/x-charts-pro@v8.0.0-alpha.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v8.0.0-alpha.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v8.0.0-alpha.2`
+
+- [TreeView] Flatten import from `@mui/utils` and `@mui/system` (#15604) @alexfauquette
+
+#### `@mui/x-tree-view-pro@v8.0.0-alpha.2`
+
+Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
+
+### Docs
+
+- [docs] Fix 404 links (#15575) @oliviertassinari
+- [docs] Fix bash comments (#15571) @oliviertassinari
+- [docs] Fix Pickers theme augmentation example (#15672) @LukasTy
+- [docs] Replace use of "e.g." with "for example" (#15572) @oliviertassinari
+- [docs] Update stale `new` and `preview` tags in v8 docs (#15547) @JCQuintas
+- [docs] Fix layout shift image on Tree View docs (#15626) @oliviertassinari
+- [docs] Fix `anchorEl` API page for charts (#15625) @oliviertassinari
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+### Core
+
+- [core] Follow `()` function convention for docs @oliviertassinari
+- [core] Remove dead translation key (#15566) @oliviertassinari
+- [code-infra] Auto-merge `@types/node` bumps (#15591) @LukasTy
+
 ## v8.0.0-alpha.1
 
 _Nov 22, 2024_
@@ -16,8 +245,6 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 - 🌍 Improve Chinese, Spanish, and Swedish locale on the Data Grid component
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-
-### Breaking change
 
 Special thanks go out to the community contributors who have helped make this release possible:
 @CarlosLopezLg, @headironc, @hendrikpeilke, @k-rajat19, @lhilgert9, @viktormelin.
@@ -56,7 +283,7 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 #### Breaking change
 
 - The `FieldValueType` type has been renamed to `PickerValueType` — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#renamed-variables).
-- The `toolbar` and `layout` slots no longer receive the  `disabled` and `readOnly` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
+- The `toolbar` and `layout` slots no longer receive the `disabled` and `readOnly` props — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#slots-breaking-changes).
 
 #### `@mui/x-date-pickers@v8.0.0-alpha.1`
 
@@ -64,9 +291,9 @@ Same changes as in `@mui/x-data-grid-pro@v8.0.0-alpha.1`, plus:
 - [pickers] React 19 support (#15342) @arminmeh
 - [pickers] Add new properties to `PickerOwnerState` and `PickerContextValue` (#15415) @flaviendelangle
 - [pickers] Always use `props.value` when it changes (#15490) @flaviendelangle
-- [pickers] Ensure internal value timezone is updated  (#15435) @LukasTy
+- [pickers] Ensure internal value timezone is updated (#15435) @LukasTy
 - [pickers] Fix unused code in `<PickersToolbar />` component (#15515) @LukasTy
-- [pickers] Remove  `FieldValueType` in favor of `PickerValueType` (#15259) @arthurbalduini
+- [pickers] Remove `FieldValueType` in favor of `PickerValueType` (#15259) @arthurbalduini
 - [pickers] Remove the form props from the layout and the toolbar slots (#15492) @flaviendelangle
 - [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15532) @flaviendelangle
 - [TimePicker] Prevent mouse events after `touchend` event (#15346) @arthurbalduini
@@ -82,12 +309,14 @@ Same changes as in `@mui/x-date-pickers@v8.0.0-alpha.1`, plus:
 #### Breaking change
 
 - The DX of the Tooltip customization has been refactored
+
   - The `tooltip` prop has been removed in favor of `slotProps.tooltip` for consistency.
-  - The `popper`, `axisContent`,  and `itemContent` slots have been removed in favor of the `tooltip` slot which overrides the entire tooltip.
+  - The `popper`, `axisContent`, and `itemContent` slots have been removed in favor of the `tooltip` slot which overrides the entire tooltip.
     - To override the tooltip content, use the `useItemTooltip` or `useAxisTooltip` hook to get the data, and wrap your component in `ChartsTooltipContainer` to follow the pointer position.
     - To override the tooltip placement, use the `ChartsItemTooltipContent` or `ChartsItemTooltipContent` to get default data and place them in your custom tooltip.
 
 - The library now uses the SVG `filter` attribute instead of `d3-color` for color manipulation.
+
   - This modification impacts the `LinePlot`, `AreaPlot`, and `BarPlot` components.
     If you've customized the `fill` of those elements, you might need to override it by using the CSS `filter`.
   - The `theme.styleOverride` is removed for `MuiLineElement`, `MuiAreaElement`, and `MuiBarElement` to improve performance.
@@ -337,6 +566,100 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [core] Remove duplicate title header (#15389) @oliviertassinari
 - [release] v8 preparation (#15054) @michelengelen
 - [test] Fix advanced list view regression test snapshot (#15260) @KenanYusuf
+
+## 7.23.0
+
+_Nov 29, 2024_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Support for a new display mode on the Data Grid with the [List View feature](https://mui.com/x/react-data-grid/list-view/), offering an extremely flexible way to render datasets and enabling developers to adapt how data is displayed across different screen sizes.
+
+  https://github.com/user-attachments/assets/61286adc-03fc-4323-9739-8ca726fcc16c
+
+- ⚛️ React 19 support
+- 📚 Documentation improvements
+- 🌍 Improve Spanish, Portuguese, Chinese locales on the Data Grid component.
+- 🌍 Improve Dutch locale on the Date and Time Picker components.
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@dloeda, @headironc, @mathzdev, @nphmuller, @lhilgert9, @lauri865.
+Following are all team members who have contributed to this release:
+@oliviertassinari, @arminmeh, @KenanYusuf, @flaviendelangle, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@v7.23.0`
+
+- [DataGrid] React 19 support (#15557) @arminmeh
+- [DataGrid] Change test dom check from `/jsdom/` to `/jsdom|HappyDOM/`. (#15642) @jedesroches
+- [DataGrid] Fix last separator not being hidden when grid is scrollable (#15551) @KenanYusuf
+- [DataGrid] Fix order of spread props on toolbar items (#15556) @KenanYusuf
+- [DataGrid] Fix row-spanning in combination with column-pinning (#15460) @lhilgert9
+- [DataGrid] Improve resize performance (#15592) @lauri865
+- [DataGrid] Support column virtualization with dynamic row height (#15567) @cherniavskii
+- [DataGrid] Improve `GridCell` performance (#15621) @lauri865
+- [l10n] Improve Chinese (zh-CN) locale (#15570) @headironc
+- [l10n] Improve Portuguese (pt-PT) locale (#15561) @mathzdev
+
+#### `@mui/x-data-grid-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v7.23.0`, plus:
+
+- [DataGridPro] Fix header filtering with `boolean` column type (#15640) @k-rajat19
+- [DataGridPro] Fix pagination state not updating if the data source response has no rows (#15643) @zinoroman
+- [DataGridPro] Fix selection propagation issue on initialization (#15593) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@v7.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v7.23.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@v7.23.0`
+
+- [pickers] React 19 support (#15557) @arminmeh
+- [pickers] Fix DST issue with `America/Asuncion` timezone and `AdapterMoment` (#15653) @flaviendelangle
+- [pickers] Use `props.referenceDate` timezone when `props.value` and `props.defaultValue` are not defined (#15544) @flaviendelangle
+- [l10n] Improve Dutch (nl-NL) locale (#15564) @nphmuller
+
+#### `@mui/x-date-pickers-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v7.23.0`.
+
+### Charts
+
+#### `@mui/x-charts@v7.23.0`
+
+- [charts] React 19 support (#15557) @arminmeh
+- [charts] Prevent invalid `releasePointerCapture` (#15609) @alexfauquette
+
+#### `@mui/x-charts-pro@v7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@v7.23.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@v7.23.0`
+
+- [TreeView] React 19 support (#15557) @arminmeh
+
+#### `@mui/x-tree-view-pro@7.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@7.23.0`.
+
+### Docs
+
+- [docs] Add data caching to lazy loaded detail panel demo (#15555) @cherniavskii
+- [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
+- [docs] Add documentation for the list view feature (#15344) @KenanYusuf
+
+### Core
+
+- [core] Update @mui/monorepo (#15574) @oliviertassinari
 
 ## v7.22.3
 
@@ -4803,7 +5126,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
   The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-  You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+  You should now be able to directly pass the returned value from your field hook (for example `useDateField`) to `useClearableField`
 
   ```diff
    const fieldResponse = useDateField(props);

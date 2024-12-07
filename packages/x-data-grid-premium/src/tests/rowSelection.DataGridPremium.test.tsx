@@ -154,43 +154,18 @@ describe('<DataGridPremium /> - Row selection', () => {
       expect(apiRef.current.state.rowSelection.length).to.equal(expectedCount);
     });
 
-    describe("prop: indeterminateCheckboxAction = 'select'", () => {
-      it('should select all the children when selecting an indeterminate parent', () => {
-        render(
-          <Test
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="select"
-          />,
-        );
+    it('should select all the children when selecting an indeterminate parent', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} density="compact" />);
 
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(0, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows()).to.have.keys([
-          0,
-          1,
-          2,
-          'auto-generated-row-category1/Cat A',
-        ]);
-      });
-    });
-
-    describe("prop: indeterminateCheckboxAction = 'deselect'", () => {
-      it('should deselect all the children when selecting an indeterminate parent', () => {
-        render(
-          <Test
-            defaultGroupingExpansionDepth={-1}
-            density="compact"
-            indeterminateCheckboxAction="deselect"
-          />,
-        );
-
-        fireEvent.click(getCell(2, 0).querySelector('input')!);
-        expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
-        fireEvent.click(getCell(0, 0).querySelector('input')!);
-        expect(apiRef.current.getSelectedRows().size).to.equal(0);
-      });
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
+      expect(getCell(0, 0).querySelector('input')!).to.have.attr('data-indeterminate', 'true');
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      expect(apiRef.current.getSelectedRows()).to.have.keys([
+        0,
+        1,
+        2,
+        'auto-generated-row-category1/Cat A',
+      ]);
     });
   });
 });

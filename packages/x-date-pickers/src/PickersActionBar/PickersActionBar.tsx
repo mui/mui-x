@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { usePickerTranslations } from '../hooks/usePickerTranslations';
@@ -19,6 +20,12 @@ export interface PickersActionBarProps extends DialogActionsProps {
   onCancel: () => void;
   onSetToday: () => void;
 }
+
+const PickersActionBarRoot = styled(DialogActions, {
+  name: 'MuiPickersLayout',
+  slot: 'ActionBar',
+  overridesResolver: (_, styles) => styles.actionBar,
+})({});
 
 /**
  * Demos:
@@ -74,7 +81,7 @@ function PickersActionBar(props: PickersActionBarProps) {
     }
   });
 
-  return <DialogActions {...other}>{buttons}</DialogActions>;
+  return <PickersActionBarRoot {...other}>{buttons}</PickersActionBarRoot>;
 }
 
 PickersActionBar.propTypes = {
