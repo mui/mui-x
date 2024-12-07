@@ -14,4 +14,9 @@ export interface DayRangeValidationProps {
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate?: (day: PickerValidDate, position: 'start' | 'end') => boolean;
+  /**
+   * If `true`, prevents the selection of ranges containing disabled dates.
+   * @default false
+   */
+  disableNonContiguousDateRange?: boolean;
 }

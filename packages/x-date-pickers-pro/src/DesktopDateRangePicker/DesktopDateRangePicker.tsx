@@ -163,6 +163,11 @@ DesktopDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
+   * If `true`, prevents the selection of ranges containing disabled dates.
+   * @default false
+   */
+  disableNonContiguousDateRange: PropTypes.bool,
+  /**
    * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */

@@ -93,6 +93,7 @@ export interface ExportedDateRangeCalendarProps
 export interface DateRangeCalendarProps
   extends ExportedDateRangeCalendarProps,
     UseRangePositionProps,
+    DayRangeValidationProps,
     ExportedUseViewsOptions<PickerRangeValue, 'day'> {
   /**
    * The selected value.

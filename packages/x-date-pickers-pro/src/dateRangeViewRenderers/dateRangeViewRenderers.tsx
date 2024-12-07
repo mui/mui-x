@@ -20,6 +20,7 @@ export const renderDateRangeViewCalendar = ({
   classes,
   disableFuture,
   disablePast,
+  disableNonContiguousDateRange,
   minDate,
   maxDate,
   shouldDisableDate,
@@ -60,6 +61,7 @@ export const renderDateRangeViewCalendar = ({
     classes={classes}
     disableFuture={disableFuture}
     disablePast={disablePast}
+    disableNonContiguousDateRange={disableNonContiguousDateRange}
     minDate={minDate}
     maxDate={maxDate}
     shouldDisableDate={shouldDisableDate}

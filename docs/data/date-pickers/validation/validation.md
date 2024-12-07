@@ -149,6 +149,14 @@ The `shouldDisableYear` prop prevents the selection of all dates in years for wh
 
 {{"demo": "DateValidationShouldDisableYear.js", "defaultCodeOpen": false}}
 
+### Disable non contiguous date range
+
+The `disableNonContiguousDateRange` prop, when defined as `true`, prevents the selection of a range containing a disabled date among it.
+
+In the calendar view the disabled dates are dynamically updated during the range selection, not allowing the selection of a non contiguous range.
+
+{{"demo": "DateValidationDisableNonContiguousRange.js", "defaultCodeOpen": false}}
+
 ## Time validation
 
 ### Minimum and maximum time

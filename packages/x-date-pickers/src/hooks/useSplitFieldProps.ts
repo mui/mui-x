@@ -4,6 +4,7 @@ import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
+  DATE_RANGE_VALIDATION_PROP_NAMES,
 } from '../validation/extractValidationProps';
 import { PickerValueType } from '../models/common';
 
@@ -65,12 +66,14 @@ export const useSplitFieldProps = <
 
     if (valueType === 'date') {
       DATE_VALIDATION_PROP_NAMES.forEach(extractProp);
+      DATE_RANGE_VALIDATION_PROP_NAMES.forEach(extractProp);
     } else if (valueType === 'time') {
       TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
     } else if (valueType === 'date-time') {
       DATE_VALIDATION_PROP_NAMES.forEach(extractProp);
       TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
       DATE_TIME_VALIDATION_PROP_NAMES.forEach(extractProp);
+      DATE_RANGE_VALIDATION_PROP_NAMES.forEach(extractProp);
     }
 
     return { forwardedProps, internalProps };
