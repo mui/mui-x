@@ -52,10 +52,7 @@ const GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE: Pick<
  * TODO: Make this index comparator depth invariant, the logic should not be inverted when sorting in the "desc" direction (but the current return format of `sortComparator` does not support this behavior).
  */
 const groupingFieldIndexComparator: GridComparatorFn = (v1, v2, cellParams1, cellParams2) => {
-  const model = gridRowGroupingSanitizedModelSelector(
-    cellParams1.api.state,
-    cellParams1.api.instanceId,
-  );
+  const model = gridRowGroupingSanitizedModelSelector({ current: cellParams1.api });
 
   const groupingField1 = (cellParams1.rowNode as GridGroupNode).groupingField ?? null;
   const groupingField2 = (cellParams2.rowNode as GridGroupNode).groupingField ?? null;
