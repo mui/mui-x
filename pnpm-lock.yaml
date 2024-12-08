@@ -483,8 +483,8 @@ importers:
         specifier: ^9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/query-core':
-        specifier: ^5.62.2
-        version: 5.62.2
+        specifier: ^5.62.3
+        version: 5.62.3
       ast-types:
         specifier: ^0.14.2
         version: 0.14.2
@@ -4011,8 +4011,8 @@ packages:
   '@swc/types@0.1.17':
     resolution: {integrity: sha512-V5gRru+aD8YVyCOMAjMpWR1Ui577DD5KSJsHP8RAxopAH22jFz6GZd/qxqjO6MJHQhcsjvjOFXyDhyLQUnMveQ==}
 
-  '@tanstack/query-core@5.62.2':
-    resolution: {integrity: sha512-LcwVcC5qpsDpHcqlXUUL5o9SaOBwhNkGeV+B06s0GBoyBr8FqXPuXT29XzYXR36lchhnerp6XO+CWc84/vh7Zg==}
+  '@tanstack/query-core@5.62.3':
+    resolution: {integrity: sha512-Jp/nYoz8cnO7kqhOlSv8ke/0MJRJVGuZ0P/JO9KQ+f45mpN90hrerzavyTKeSoT/pOzeoOUkv1Xd0wPsxAWXfg==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -13114,7 +13114,7 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-  '@tanstack/query-core@5.62.2': {}
+  '@tanstack/query-core@5.62.3': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:
