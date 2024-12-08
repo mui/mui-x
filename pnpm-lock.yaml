@@ -688,7 +688,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       '@types/stylis':
-        specifier: ^4.2.6
+        specifier: ^4.2.7
         version: 4.2.7
       '@types/webpack-bundle-analyzer':
         specifier: ^4.7.0
