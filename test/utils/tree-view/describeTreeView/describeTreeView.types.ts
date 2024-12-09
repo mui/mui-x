@@ -141,7 +141,7 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
 ) => DescribeTreeViewRendererReturnValue<TSignatures>;
 
 export type DescribeTreeViewJSXRenderer = (
-  element: React.ReactElement,
+  element: React.ReactElement<any>,
 ) => DescribeTreeViewRendererUtils;
 
 type TreeViewComponentName = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
