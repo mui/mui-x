@@ -66,6 +66,7 @@ const YearCalendarRoot = styled('div', {
   flexWrap: 'wrap',
   justifyContent: 'space-evenly',
   rowGap: 16,
+  padding: '6px 0',
   overflowY: 'auto',
   height: '100%',
   width: DIALOG_WIDTH,
