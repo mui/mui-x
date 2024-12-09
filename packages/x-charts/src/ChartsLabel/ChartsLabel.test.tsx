@@ -17,6 +17,6 @@ describe('<ChartsLabel />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
 });

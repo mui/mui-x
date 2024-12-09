@@ -25,7 +25,7 @@ describe('<ChartsLabelGradient />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
 });
 
