@@ -102,18 +102,6 @@ export function usePickerProvider<
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue>(
-    () => ({
-      ...paramsFromUsePickerValue.contextValue,
-      disabled: props.disabled ?? false,
-      readOnly: props.readOnly ?? false,
-      variant,
-      orientation,
-      triggerRef,
-    }),
-    [paramsFromUsePickerValue.contextValue, variant, orientation, props.disabled, props.readOnly],
-  );
-
   const triggerStatus = React.useMemo(() => {
     if (props.disableOpenPicker || !paramsFromUsePickerViews.hasUIView) {
       return 'hidden';
@@ -126,9 +114,29 @@ export function usePickerProvider<
     return 'enabled';
   }, [props.disableOpenPicker, paramsFromUsePickerViews.hasUIView, props.disabled, props.readOnly]);
 
+  const contextValue = React.useMemo<PickerContextValue>(
+    () => ({
+      ...paramsFromUsePickerValue.contextValue,
+      disabled: props.disabled ?? false,
+      readOnly: props.readOnly ?? false,
+      variant,
+      orientation,
+      triggerRef,
+      triggerStatus,
+    }),
+    [
+      paramsFromUsePickerValue.contextValue,
+      variant,
+      orientation,
+      props.disabled,
+      props.readOnly,
+      triggerStatus,
+    ],
+  );
+
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ownerState, triggerStatus }),
-    [ownerState, triggerStatus],
+    () => ({ ownerState }),
+    [ownerState],
   );
 
   return {

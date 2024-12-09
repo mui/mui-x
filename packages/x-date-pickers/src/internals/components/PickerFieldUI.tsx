@@ -11,7 +11,6 @@ import { useFieldOwnerState } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
-import { usePickerPrivateContext } from '../hooks/usePickerPrivateContext';
 import type { UseFieldResponse } from '../hooks/useField';
 import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
 
@@ -88,7 +87,6 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
 
   const translations = usePickerTranslations();
   const pickerContext = useNullablePickerContext();
-  const { triggerStatus } = usePickerPrivateContext();
   const {
     textFieldProps,
     onClear,
@@ -101,6 +99,7 @@ export function PickerFieldUI(props: PickerFieldUIProps) {
 
   const handleTogglePicker = useEventCallback(() => pickerContext?.setOpen((prev) => !prev));
 
+  const triggerStatus = pickerContext ? pickerContext.triggerStatus : 'hidden';
   const clearButtonPosition = clearable ? clearButtonPositionProp : null;
   const openPickerButtonPosition = triggerStatus !== 'hidden' ? openPickerButtonPositionProp : null;
 

@@ -10,7 +10,7 @@ export interface DescribeValidationInputOptions {
   after?: () => void;
   componentFamily: PickerComponentFamily;
   views: DateOrTimeView[];
-  variant?: 'mobile' | 'desktop' | 'static';
+  variant?: 'mobile' | 'desktop';
 }
 
 export interface DescribeValidationOptions extends DescribeValidationInputOptions {
