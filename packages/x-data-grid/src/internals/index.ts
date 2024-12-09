@@ -17,6 +17,7 @@ export { getValueOptions } from '../components/panel/filterPanel/filterPanelUtil
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
+  GridStrategyGroup,
   useGridRegisterStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../hooks/core/strategyProcessing';
@@ -117,6 +118,7 @@ export {
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export {

@@ -90,6 +90,6 @@ export const ChartsTooltipMark = styled('div', {
   width: theme.spacing(1),
   height: theme.spacing(1),
   borderRadius: '50%',
-  backgroundColor: color,
+  background: color,
   boxSizing: 'content-box',
 }));

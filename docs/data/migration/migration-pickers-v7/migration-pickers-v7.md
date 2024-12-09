@@ -70,10 +70,13 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ## New DOM structure for the field
 
-Before version `v8.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component,
-but unfortunately presents a few limitations in terms of accessibility when managing multiple section values.
+Before version `v7.x`, the fields' DOM structure consisted of an `<input />`, which held the whole value for the component.
+Unfortunately it presented accessibility limitations, which are impossible to resolve.
 
-Starting with version `v8.x`, all the field and picker components come with a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience with screen readers.
+Starting with version `v7.x`, we have introduced a new DOM structure that allows the field component to set aria attributes on individual sections, providing a far better experience on screen readers.
+This approach is recommended in [W3C ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/examples/datepicker-spinbuttons/) example and is also used by native date HTML input element under the hood.
+
+Starting with version `v8.x`, the new DOM structure is the default for all fields.
 
 ### Fallback to the non-accessible DOM structure
 
@@ -86,7 +89,7 @@ Starting with version `v8.x`, all the field and picker components come with a ne
 ### Migrate `slotProps.field`
 
 When using `slotProps.field` to pass props to your field component,
-the field consumes some props (e.g: `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
+the field consumes some props (for example `shouldRespectLeadingZeros`) and forwards the rest to the `TextField`.
 
 - For the props consumed by the field, the behavior should remain exactly the same with both DOM structures.
 
@@ -348,9 +351,9 @@ const theme = createTheme({
   +console.log(readOnly);
   ```
 
-## Renamed variables
+## Renamed variables and types
 
-The following variables were renamed to have a coherent `Picker` / `Pickers` prefix:
+The following variables and types have been renamed to have a coherent `Picker` / `Pickers` prefix:
 
 - `usePickersTranslations`
 
@@ -394,9 +397,59 @@ The following variables were renamed to have a coherent `Picker` / `Pickers` pre
   +import { PickerValueType } from '@mui/x-date-pickers-pro';
   ```
 
+  - `RangeFieldSection`
+
+  ```diff
+  -import { RangeFieldSection } from '@mui/x-date-pickers-pro/models';
+  -import { RangeFieldSection } from '@mui/x-date-pickers-pro';
+
+  +import { FieldRangeSection } from '@mui/x-date-pickers-pro/models';
+  +import { FieldRangeSection } from '@mui/x-date-pickers-pro';
+  ```
+
+## Hooks breaking changes
+
+### `usePickerContext`
+
+- The `onOpen` and `onClose` methods have been replaced with a single `setOpen` method.
+  This method no longer takes an event, which was used to prevent the browser default behavior:
+
+  ```diff
+   const pickerContext = usePickerContext();
+
+  -<button onClick={pickerContext.onOpen}>Open</button>
+  +<button onClick={() => pickerContext.setOpen(true)}>Open</button>
+
+  -<button onClick={pickerContext.onClose}>Close</button>
+  +<button onClick={() => pickerContext.setOpen(false)}>Open</button>
+
+  -<button
+  -  onClick={(event) =>
+  -    pickerContext.open ? pickerContext.onClose(event) : pickerContext.onOpen(event)
+  -  }
+  ->
+  -  Toggle
+  -</button>
+  +<button onClick={() => pickerContext.setOpen(prev => !prev)}>Toggle</button>
+  ```
+
+  If you want to prevent the default behavior, you now have to do it manually:
+
+  ```diff
+     <div
+     onKeyDown={(event) => {
+       if (event.key === 'Escape') {
+  -      pickerContext.onClose();
+  +      event.preventDefault();
+  +      pickerContext.setOpen(false);
+       }
+     }}
+   />
+  ```
+
 ## Typing breaking changes
 
-### Remove `TDate` generic
+### Do not pass the date object as a generic
 
 The `TDate` generic has been removed from all the types, interfaces, and variables of the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
@@ -406,14 +459,24 @@ If you were passing your date object type as a generic to any element of one of 
 -<DatePicker<Dayjs> value={value} onChange={onChange} />
 +<DatePicker value={value} onChange={onChange} />
 
--type Slot = DateCalendarSlots<Dayjs>['calendarHeader'];
-+type Slot = DateCalendarSlots['calendarHeader'];
+-type FieldComponent = DatePickerSlots<Dayjs>['field'];
++type FieldComponent = DatePickerSlots['field'];
 
--type Props = DatePickerToolbarProps<Dayjs>;
-+type Props = DatePickerToolbarProps;
+-function CustomDatePicker(props: DatePickerProps<Dayjs>) {}
++function CustomDatePicker(props: DatePickerProps) {}
 ```
 
-A follow-up release will add the full list of the impacted elements to the migration guide.
+### Do not pass the section type as a generic
+
+The `TSection` generic of the `FieldRef` type has been replaced with the `TValue` generic:
+
+```diff
+-const fieldRef = React.useRef<FieldRef<FieldSection>>(null);
++const fieldRef = React.useRef<Dayjs | null>(null);
+
+-const fieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
++const fieldRef = React.useRef<DateRange<Dayjs>>(null);
+```
 
 ### Removed types
 

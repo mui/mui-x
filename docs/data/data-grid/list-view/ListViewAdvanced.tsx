@@ -17,6 +17,7 @@ import OpenIcon from '@mui/icons-material/Visibility';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CSSBaseline from '@mui/material/CssBaseline';
 import { randomId } from '@mui/x-data-grid-generator';
+import { useTheme } from '@mui/material/styles';
 import { FileIcon } from './components/FileIcon';
 import { DetailsDrawer } from './components/DetailsDrawer';
 import { ListCell } from './components/ListCell';
@@ -37,12 +38,21 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export default function ListViewAdvanced() {
+interface Props {
+  // Injected by the documentation to work in an iframe.
+  window?: () => Window;
+}
+
+export default function ListViewAdvanced(props: Props) {
   // This is used only for the example - renders the drawer inside the container
   const containerRef = React.useRef<HTMLDivElement>(null);
   const container = () => containerRef.current as HTMLElement;
 
-  const isListView = useMediaQuery('(min-width: 700px)');
+  const theme = useTheme();
+  const isBelowMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const isDocsDemo = props.window !== undefined;
+  const isListView = isDocsDemo ? true : isBelowMd;
 
   const apiRef = useGridApiRef();
 

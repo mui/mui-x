@@ -75,7 +75,11 @@ function CustomLayout(props: CustomLayoutProps) {
               flexGrow: 1,
               maxWidth: '100%',
             }
-          : {},
+          : {
+              '& li': {
+                px: 1,
+              },
+            },
         [`.${pickersLayoutClasses.contentWrapper}`]: {
           flexGrow: 1,
           alignItems: 'center',

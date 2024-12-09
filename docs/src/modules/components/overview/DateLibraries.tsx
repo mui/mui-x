@@ -58,6 +58,7 @@ export default function DateLibraries() {
           <SectionHeadline
             overline="Date libraries"
             title={
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
               <Typography variant="h2" fontSize="1.625rem">
                 Use your favorite date library
               </Typography>
@@ -76,6 +77,7 @@ export default function DateLibraries() {
               value={selectedLibrary}
               onChange={handleLibrarySwitch}
               size="small"
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
               aria-label="Select language"
               exclusive
             >
@@ -91,6 +93,7 @@ export default function DateLibraries() {
               size="small"
               href="/x/react-date-pickers/base-concepts/#date-library"
               endIcon={<ArrowForwardIcon />}
+              // eslint-disable-next-line material-ui/no-hardcoded-labels
             >
               More info
             </Button>

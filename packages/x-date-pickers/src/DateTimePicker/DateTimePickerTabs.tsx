@@ -15,6 +15,8 @@ import {
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { isDatePickerView } from '../internals/utils/date-utils';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { PickerOwnerState } from '../models/pickers';
 
 type TabValue = 'date' | 'time';
 
@@ -60,8 +62,7 @@ export interface DateTimePickerTabsProps
   extends ExportedDateTimePickerTabsProps,
     BaseTabsProps<DateOrTimeViewWithMeridiem> {}
 
-const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateTimePickerTabsClasses> | undefined) => {
   const slots = {
     root: ['root'],
   };
@@ -73,7 +74,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
@@ -103,11 +104,13 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
     className,
+    classes: classesProp,
     sx,
   } = props;
 
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(props);
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onViewChange(tabToView(value));
@@ -119,7 +122,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={props}
+      ownerState={ownerState}
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}

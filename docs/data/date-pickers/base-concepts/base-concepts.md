@@ -161,9 +161,14 @@ import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
 const theme = createTheme({
   components: {
     MuiDatePicker: {
+      defaultProps: {
+        displayWeekNumber: true,
+      },
+    },
+    MuiDateRangeCalendar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'red',
+          backgroundColor: '#f0f0f0',
         },
       },
     },
