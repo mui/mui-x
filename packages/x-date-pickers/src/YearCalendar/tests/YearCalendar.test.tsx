@@ -57,8 +57,8 @@ describe('<YearCalendar />', () => {
       />,
     );
 
-    const yearButttons = screen.queryAllByTestId('year');
-    expect(yearButttons[0].children.item(0)?.textContent).to.equal('2020');
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2020');
   });
 
   it('should display years in descending (reverse chronological) order when props.yearsOrder = "desc"', () => {
@@ -70,8 +70,8 @@ describe('<YearCalendar />', () => {
       />,
     );
 
-    const yearButtons = screen.queryAllByTestId('year');
-    expect(yearButtons[0].children.item(0)?.textContent).to.equal('2024');
+    const yearButtons = screen.queryAllByRole('radio');
+    expect(yearButtons[0]?.textContent).to.equal('2024');
   });
 
   describe('Disabled', () => {

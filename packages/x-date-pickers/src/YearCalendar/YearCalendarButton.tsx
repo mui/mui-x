@@ -141,7 +141,6 @@ export const YearCalendarButton = React.memo(function YearCalendarButton(
       type: 'button' as const,
       role: 'radio',
       'aria-checked': selected,
-      'data-testid': 'year',
       onClick: (event: React.MouseEvent) => onClick(event, value),
       onKeyDown: (event: React.KeyboardEvent) => onKeyDown(event, value),
       onFocus: (event: React.FocusEvent) => onFocus(event, value),
