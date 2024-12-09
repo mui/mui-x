@@ -1,4 +1,3 @@
-
 // NOTE: Breakpoints can't come from the theme because we need access to them at
 // initialization time and media-queries can't use CSS variables. For users with
 // custom breakpoints, we might want to provide a way to configure them globally
@@ -51,7 +50,7 @@ const keys = {
   cell: {
     background: {
       pinned: '--DataGrid-t-cell-background-pinned',
-    }
+    },
   },
   radius: {
     base: '--DataGrid-t-radius-base',
@@ -93,6 +92,9 @@ const keys = {
       long: '--DataGrid-t-transitions-duration-long',
     },
   },
+  shadows: {
+    base: '--DataGrid-t-shadows-base',
+  },
   zIndex: {
     panel: '--DataGrid-t-z-index-panel',
     menu: '--DataGrid-t-z-index-menu',
@@ -104,6 +106,7 @@ const values = wrap(keys);
 export const vars = {
   breakpoints,
   spacing,
+  transition,
   keys,
   ...values,
 };
@@ -135,13 +138,31 @@ function spacingString(value: number) {
   return `calc(var(--DataGrid-t-spacing-unit) * ${value})`;
 }
 
+function transition(
+  props: string[],
+  options?: {
+    duration?: string;
+    easing?: string;
+    delay?: number;
+  },
+) {
+  const {
+    duration = vars.transitions.duration.base,
+    easing = vars.transitions.easing.easeInOut,
+    delay = 0,
+  } = options ?? {};
+  return props.map((prop) => `${prop} ${duration} ${easing} ${delay}ms`).join(', ');
+}
+
 function wrap<T>(input: T): T {
   if (typeof input === 'string') {
     return `var(${input})` as any;
   }
   const result = {} as any;
-  for (const key in (input as any)) {
-    result[key] = wrap((input as any)[key])
+  for (const key in input as any) {
+    if (Object.hasOwn(input as any, key)) {
+      result[key] = wrap((input as any)[key]);
+    }
   }
   return result;
 }

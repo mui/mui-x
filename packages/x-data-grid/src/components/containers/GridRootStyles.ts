@@ -1,13 +1,5 @@
 import { CSSInterpolation } from '@mui/system';
-import {
-  alpha,
-  styled,
-  darken,
-  lighten,
-  decomposeColor,
-  recomposeColor,
-  Theme,
-} from '@mui/material/styles';
+import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
@@ -323,8 +315,8 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}) .${c.sortIcon}`]: {
       opacity: 0,
-      transition: t.transitions.create(['opacity'], {
-        duration: t.transitions.duration.shorter,
+      transition: vars.transition(['opacity'], {
+        duration: vars.transitions.duration.short,
       }),
     },
     [`& .${c.columnHeaderTitleContainer}`]: {
@@ -437,8 +429,8 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c.iconSeparator}`]: {
       color: 'inherit',
-      transition: t.transitions.create(['color', 'width'], {
-        duration: t.transitions.duration.shortest,
+      transition: vars.transition(['color', 'width'], {
+        duration: vars.transitions.duration.short,
       }),
     },
     [`& .${c.menuIcon}`]: {
@@ -542,7 +534,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.cell}.${c['cell--editing']}`]: {
       padding: 1,
       display: 'flex',
-      boxShadow: t.shadows[2],
+      boxShadow: vars.shadows.base,
       backgroundColor: vars.colors.background.overlay,
       '&:focus-within': {
         outline: `${focusOutlineWidth}px solid ${vars.colors.interactive.focus}`,
@@ -550,10 +542,10 @@ export const GridRootStyles = styled('div', {
       },
     },
     [`& .${c['row--editing']}`]: {
-      boxShadow: t.shadows[2],
+      boxShadow: vars.shadows.base,
     },
     [`& .${c['row--editing']} .${c.cell}`]: {
-      boxShadow: t.shadows[0],
+      boxShadow: 'none',
       backgroundColor: vars.colors.background.overlay,
     },
     [`& .${c.editBooleanCell}`]: {
@@ -798,9 +790,11 @@ function transformMaterialUITheme(t: Theme) {
     [k.transitions.easing.easeIn]: t.transitions.easing.easeIn,
     [k.transitions.easing.easeOut]: t.transitions.easing.easeOut,
     [k.transitions.easing.easeInOut]: t.transitions.easing.easeInOut,
-    [k.transitions.duration.short]: t.transitions.duration.shorter,
-    [k.transitions.duration.base]: t.transitions.duration.short,
-    [k.transitions.duration.long]: t.transitions.duration.standard,
+    [k.transitions.duration.short]: `${t.transitions.duration.shorter}ms`,
+    [k.transitions.duration.base]: `${t.transitions.duration.short}ms`,
+    [k.transitions.duration.long]: `${t.transitions.duration.standard}ms`,
+
+    [k.shadows.base]: t.shadows[2],
 
     [k.zIndex.panel]: t.zIndex.modal,
     [k.zIndex.menu]: t.zIndex.modal,
