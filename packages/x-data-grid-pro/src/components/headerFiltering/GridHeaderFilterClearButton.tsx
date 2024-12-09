@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { IconButtonProps } from '@mui/material/IconButton';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridHeaderFilterClearIconProps extends IconButtonProps {}
-
-const sx = { padding: '2px' };
 
 function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
   const rootProps = useGridRootProps();
@@ -13,7 +12,11 @@ function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
       tabIndex={-1}
       aria-label="Clear filter"
       size="small"
-      sx={sx}
+      sx={{
+        [`.${inputBaseClasses.root} &`]: {
+          mx: -0.5,
+        },
+      }}
       {...props}
       {...rootProps.slotProps?.baseIconButton}
     >

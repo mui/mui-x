@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { refType, unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -25,15 +24,6 @@ export const sanitizeFilterItemValue = (value: any): boolean | undefined => {
   }
   return undefined;
 };
-
-const BooleanOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
@@ -79,7 +69,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <BooleanOperatorContainer>
+    <React.Fragment>
       <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
@@ -129,7 +119,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
       {clearButton}
-    </BooleanOperatorContainer>
+    </React.Fragment>
   );
 }
 

@@ -12,9 +12,7 @@ import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 const sx = {
-  width: 22,
-  height: 22,
-  margin: 'auto 0 10px 5px',
+  marginRight: -0.75,
 };
 
 function GridHeaderFilterMenuContainer(props: {

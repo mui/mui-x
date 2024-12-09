@@ -88,9 +88,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const dateSx = {
-  [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
-};
+const inputSx = { flex: 1, mr: 0.5 };
+const dateSx = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
+
 const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
   string: GridFilterInputValue,
   number: GridFilterInputValue,
@@ -374,10 +374,15 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
                   />
                 ) : null
               }
+              variant="outlined"
+              size="small"
               disabled={isFilterReadOnly || isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
-              sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
+              sx={[
+                inputSx,
+                colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined,
+              ]}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}

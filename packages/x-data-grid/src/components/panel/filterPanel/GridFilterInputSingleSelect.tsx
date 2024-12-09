@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
-import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -45,15 +44,6 @@ const renderSingleSelectOptions = ({
     );
   });
 };
-
-const SingleSelectOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'flex-end',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -122,7 +112,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <SingleSelectOperatorContainer>
+    <React.Fragment>
       <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
@@ -164,7 +154,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
       {clearButton}
-    </SingleSelectOperatorContainer>
+    </React.Fragment>
   );
 }
 
