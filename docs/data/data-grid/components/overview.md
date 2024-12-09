@@ -66,7 +66,7 @@ The `render` prop can be used to override the element rendered by each grid comp
 <Grid.FilterPanel.Trigger render={<MyCustomButton />} />
 ```
 
-A function can also be passed to the `render` prop, giving you control over the props that are forwarded to the custom element:
+A function can also be passed to the `render` prop to control which props are forwarded to the custom element:
 
 ```tsx
 <Grid.FilterPanel.Trigger

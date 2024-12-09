@@ -6,7 +6,11 @@
 This component is incomplete.
 
 Currently, the only feature available for the Columns Panel component is the Trigger. In the future, this component will allow you to extend the data grid's columns panel.
-:::
+
+In the meantime, see the following:
+
+- [Custom subcomponents—Columns panel](/x/react-data-grid/components/#columns-panel)
+  :::
 
 ## Anatomy
 

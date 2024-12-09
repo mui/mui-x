@@ -18,9 +18,9 @@ Build a toolbar component using the `Grid.Toolbar` parts:
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
-        Filters
-      </Grid.FilterPanel.Trigger>
+      <Grid.Toolbar.Button>New row</Grid.Toolbar.Button>
+      <Grid.Toolbar.Separator />
+      <Grid.Toolbar.Button>Columns</Grid.Toolbar.Button>
     </Grid.Toolbar.Root>
   );
 }
@@ -50,13 +50,9 @@ The Toolbar component is comprised of the following parts:
 
 The top level component that positions items in a row.
 
-Renders a `div` with `role="toolbar"`.
-
 ### Button
 
 A button item that can be used to perform actions from the toolbar.
-
-See [ButtonBase API](/material-ui/api/button-base/) for available props.
 
 {{"demo": "GridToolbarButton.js"}}
 
@@ -64,15 +60,11 @@ See [ButtonBase API](/material-ui/api/button-base/) for available props.
 
 A toggle button group that can be used to switch between multiple states.
 
-See [ToggleButtonGroup API](/material-ui/api/toggle-button/) for available props.
-
 {{"demo": "GridToolbarToggleButtonGroup.js"}}
 
 ### ToggleButton
 
 A toggle button item that can be used to switch between two states.
-
-See [ToggleButton API](/material-ui/api/toggle-button-group/) for available props.
 
 {{"demo": "GridToolbarToggleButton.js"}}
 
@@ -80,11 +72,7 @@ See [ToggleButton API](/material-ui/api/toggle-button-group/) for available prop
 
 Separate items and groups in the toolbar.
 
-Renders a `div` with `role="separator"`.
-
-```tsx
-<GridToolbar.Separator />
-```
+{{"demo": "GridToolbarSeparator.js"}}
 
 ## Examples
 

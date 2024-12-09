@@ -180,7 +180,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
           {
             pathname: '/x/react-data-grid/components/',
-            title: 'Components',
+            title: 'Grid components',
             unstable: true,
             children: [
               { pathname: '/x/react-data-grid/components/overview', title: 'Overview' },
