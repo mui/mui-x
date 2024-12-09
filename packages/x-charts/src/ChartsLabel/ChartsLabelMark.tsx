@@ -161,7 +161,7 @@ ChartsLabelMark.propTypes = {
    * @default type='circle': '50%'
    * @default type='line': 1
    */
-  borderRadius: PropTypes.number,
+  borderRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */

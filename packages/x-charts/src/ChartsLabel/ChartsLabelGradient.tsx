@@ -53,12 +53,10 @@ const Root = styled('div', {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     '> div': {
       borderRadius,
       overflow: 'hidden',
     },
-
     [`&.${labelGradientClasses.row}`]: {
       width: '100%',
       '> div': {
@@ -66,7 +64,6 @@ const Root = styled('div', {
         width: '100%',
       },
     },
-
     [`&.${labelGradientClasses.column}`]: {
       height: '100%',
       '> div': {
@@ -74,7 +71,6 @@ const Root = styled('div', {
         height: '100%',
       },
     },
-
     svg: {
       display: 'block',
     },
@@ -123,11 +119,32 @@ ChartsLabelGradient.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The border radius of the Gradient.
+   * The border radius of the gradient.
    *
-   * @default type='square': 2
+   * @default 2
    */
   borderRadius: PropTypes.number,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The direction of the gradient.
+   *
+   * @default 'row'
+   */
+  direction: PropTypes.oneOf(['column', 'row']),
+  /**
+   * A unique identifier for the gradient.
+   *
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
+   */
+  gradientId: PropTypes.string.isRequired,
+  /**
+   * The width of the line.
+   * @default 12
+   */
+  lineWidth: PropTypes.number,
 } as any;
 
 export { ChartsLabelGradient };
