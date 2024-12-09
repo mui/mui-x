@@ -79,17 +79,6 @@ export interface UsePickerViewsBaseProps<
 }
 
 /**
- * Props used to handle the views of the pickers.
- */
-export interface UsePickerViewsNonStaticProps {
-  /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
-   * @default false
-   */
-  disableOpenPicker?: boolean;
-}
-
-/**
  * Props used to handle the value of the pickers.
  */
 export interface UsePickerViewsProps<
@@ -129,19 +118,20 @@ export interface UsePickerViewParams<
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
-  /**
-   * Indicates if the the picker has at least one view that should be rendered in UI.
-   */
-  hasUIView: boolean;
-  views: readonly TView[];
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
+  provider: UsePickerViewsProviderParams<TView>;
 }
 
 export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
   view: TView | null;
   onViewChange: (view: TView) => void;
+  views: readonly TView[];
+}
+
+export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
+  hasUIView: boolean;
   views: readonly TView[];
 }
 
@@ -273,11 +263,15 @@ export const usePickerViews = <
     onViewChange: setView,
   };
 
-  return {
+  const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
+  };
+
+  return {
     shouldRestoreFocus,
     layoutProps,
+    provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {
         return null;

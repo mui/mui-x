@@ -58,8 +58,8 @@ export const usePicker = <
     localeText,
     valueManager,
     variant,
-    views: pickerViewsResponse.views,
     paramsFromUsePickerValue: pickerValueResponse.provider,
+    paramsFromUsePickerViews: pickerViewsResponse.provider,
   });
 
   return {
@@ -70,7 +70,7 @@ export const usePicker = <
 
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
-    hasUIView: pickerViewsResponse.hasUIView,
+    hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
