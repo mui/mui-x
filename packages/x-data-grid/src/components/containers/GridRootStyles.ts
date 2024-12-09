@@ -656,16 +656,16 @@ export const GridRootStyles = styled('div', {
       display: 'none',
     },
     [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
-      background: (t.vars || t).palette.background.paper,
+      background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['row--dragging']}`]: {
-      background: (t.vars || t).palette.background.paper,
+      background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: vars.colors.interactive.disabledOpacity,
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
         display: 'flex',
