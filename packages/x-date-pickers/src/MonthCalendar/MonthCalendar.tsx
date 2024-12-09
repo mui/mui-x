@@ -34,7 +34,10 @@ const useUtilityClasses = (classes: Partial<MonthCalendarClasses> | undefined) =
 export function useMonthCalendarDefaultizedProps(
   props: MonthCalendarProps,
   name: string,
-): DefaultizedProps<MonthCalendarProps, 'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'> {
+): DefaultizedProps<
+  MonthCalendarProps,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'monthsPerRow'
+> {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
   const themeProps = useThemeProps({
