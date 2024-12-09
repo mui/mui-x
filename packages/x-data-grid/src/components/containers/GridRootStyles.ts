@@ -547,7 +547,7 @@ export const GridRootStyles = styled('div', {
       padding: 1,
       display: 'flex',
       boxShadow: t.shadows[2],
-      backgroundColor: (t.vars || t).palette.background.paper,
+      backgroundColor: vars.colors.background.overlay,
       '&:focus-within': {
         outline: `${focusOutlineWidth}px solid ${(t.vars || t).palette.primary.main}`,
         outlineOffset: focusOutlineWidth * -1,
@@ -558,7 +558,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${c['row--editing']} .${c.cell}`]: {
       boxShadow: t.shadows[0],
-      backgroundColor: (t.vars || t).palette.background.paper,
+      backgroundColor: vars.colors.background.overlay,
     },
     [`& .${c.editBooleanCell}`]: {
       display: 'flex',
@@ -568,10 +568,10 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${c.booleanCell}[data-value="true"]`]: {
-      color: (t.vars || t).palette.text.secondary,
+      color: vars.colors.foreground.muted,
     },
     [`& .${c.booleanCell}[data-value="false"]`]: {
-      color: (t.vars || t).palette.text.disabled,
+      color: vars.colors.foreground.disabled,
     },
     [`& .${c.actionsCell}`]: {
       display: 'inline-flex',
@@ -583,7 +583,7 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: (t.vars || t).palette.action.disabledOpacity,
+      opacity: vars.colors.interactive.disabledOpacity,
     },
     [`& .${c['rowReorderCell--draggable']}`]: {
       cursor: 'move',
