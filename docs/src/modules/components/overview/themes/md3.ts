@@ -1,6 +1,7 @@
 import { ThemeOptions } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
 import { Config, PaletteMode } from './themes.types';
+import { yearCalendarClasses } from '@mui/x-date-pickers';
 
 declare module '@mui/material/styles' {
   interface Mixins {
@@ -259,10 +260,9 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             alignContent: 'flex-start',
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 40,
           }),
-          button: ({ theme, ownerState }) => ({
+          button: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
             height: theme.mixins.density.height,
-            ...(!ownerState.isYearSelected && { color: theme.palette.text.secondary }),
           }),
         },
       },
