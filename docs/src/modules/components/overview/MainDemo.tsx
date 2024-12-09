@@ -26,9 +26,9 @@ const components: Components<Theme> = {
       }),
     },
   },
-  MuiPickersMonth: {
+  MuiMonthCalendar: {
     styleOverrides: {
-      monthButton: ({ theme }) => ({
+      button: ({ theme }) => ({
         fontWeight: 400,
         fontSize: '0.875rem',
         borderRadius: theme.shape.borderRadius,

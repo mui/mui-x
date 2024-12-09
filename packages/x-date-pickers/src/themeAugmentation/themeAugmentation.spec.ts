@@ -18,7 +18,6 @@ import { pickersArrowSwitcherClasses } from '../internals/components/PickersArro
 import { pickersPopperClasses } from '../internals/components/pickersPopperClasses';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
-import { pickersMonthClasses } from '../MonthCalendar';
 import { digitalClockClasses } from '../DigitalClock';
 import {
   multiSectionDigitalClockClasses,
@@ -350,25 +349,6 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiPickersDay class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
-    MuiPickersMonth: {
-      defaultProps: {
-        classes: { selected: 'test' },
-        // @ts-expect-error invalid MuiPickersMonth prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${pickersMonthClasses.monthButton}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiPickersMonth class key
         content: {
           backgroundColor: 'blue',
         },

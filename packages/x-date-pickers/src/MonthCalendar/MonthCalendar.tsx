@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
@@ -10,7 +11,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickersMonth } from './PickersMonth';
+import { MonthCalendarButton } from './MonthCalendarButton';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass, MonthCalendarClasses } from './monthCalendarClasses';
 import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
@@ -54,14 +55,15 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickerOwnerState }>({
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignContent: 'stretch',
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
+})<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   padding: '0 4px',
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
+  variants: [{ props: { monthsPerRow: 4 }, style: { gridTemplateColumns: 'repeat(4, 1fr' } }],
 });
 
 type MonthCalendarComponent = ((
@@ -268,6 +270,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       ownerState={ownerState}
       role="radiogroup"
       aria-labelledby={gridLabelId}
+      monthsPerRow={monthsPerRow}
       {...other}
     >
       {getMonthsInYear(utils, value ?? referenceDate).map((month) => {
@@ -278,7 +281,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
-          <PickersMonth
+          <MonthCalendarButton
             key={monthText}
             selected={isSelected}
             value={monthNumber}
@@ -291,12 +294,12 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
             aria-label={monthLabel}
-            monthsPerRow={monthsPerRow}
             slots={slots}
             slotProps={slotProps}
+            classes={classesProp}
           >
             {monthText}
-          </PickersMonth>
+          </MonthCalendarButton>
         );
       })}
     </MonthCalendarRoot>
