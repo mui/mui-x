@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridBody,
   GridFooterPlaceholder,
@@ -28,12 +29,10 @@ const configuration = {
 };
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValidRowModel>(
-  inProps: DataGridProProps<R>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const DataGridProRaw = function DataGridPro({ ref, ...inProps }: any) {
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
+  useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
@@ -48,12 +47,14 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         {...props.forwardedProps}
       >
         <GridHeader />
-        <GridBody />
+        <GridBody>
+          <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
+        </GridBody>
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
   );
-});
+};
 
 interface DataGridProComponent {
   <R extends GridValidRowModel = any>(
