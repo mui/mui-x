@@ -10,7 +10,8 @@ Currently, the only feature available for the Filter Panel component is the Trig
 In the meantime, see the following:
 
 - [Custom filter panel](/x/react-data-grid/filtering/customization/#custom-filter-panel)
-  :::
+
+:::
 
 ## Anatomy
 

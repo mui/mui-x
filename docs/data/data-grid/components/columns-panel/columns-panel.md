@@ -10,7 +10,8 @@ Currently, the only feature available for the Columns Panel component is the Tri
 In the meantime, see the following:
 
 - [Custom subcomponents—Columns panel](/x/react-data-grid/components/#columns-panel)
-  :::
+
+:::
 
 ## Anatomy
 
