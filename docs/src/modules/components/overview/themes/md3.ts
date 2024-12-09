@@ -1,7 +1,6 @@
 import { ThemeOptions } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers-pro/themeAugmentation';
 import { Config, PaletteMode } from './themes.types';
-import { yearCalendarClasses } from '@mui/x-date-pickers';
 
 declare module '@mui/material/styles' {
   interface Mixins {
