@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  screen,
+  ErrorBoundary,
+  waitFor,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -960,8 +966,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }).toErrorDev([
         'The Data Grid component requires all rows to have a unique `id` property',
-        'The Data Grid component requires all rows to have a unique `id` property',
-        'The above error occurred in the <ForwardRef(DataGrid)> component',
+        reactMajor < 19 &&
+          'The Data Grid component requires all rows to have a unique `id` property',
+        reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -1283,8 +1290,8 @@ describe('<DataGrid /> - Layout & warnings', () => {
         </div>,
       );
     }).toErrorDev([
-      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
-      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      'Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      'Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
     ]);
   });
 

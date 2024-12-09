@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { expect } from 'chai';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<ScatterChart />', () => {
   const { render } = createRenderer();
@@ -38,4 +41,49 @@ describe('<ScatterChart />', () => {
       ],
     }),
   );
+
+  const config = {
+    dataset: [
+      { id: 1, x: 0, y: 10 },
+      { id: 2, x: 10, y: 10 },
+      { id: 3, x: 10, y: 0 },
+      { id: 4, x: 0, y: 0 },
+      { id: 5, x: 5, y: 5 },
+    ],
+    margin: { top: 0, left: 0, bottom: 0, right: 0 },
+    width: 100,
+    height: 100,
+  };
+
+  it('should show the tooltip without errors in default config', function test() {
+    if (isJSDOM) {
+      // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
+      this.skip();
+    }
+    render(
+      <div
+        style={{
+          margin: -8, // Removes the body default margins
+          width: 100,
+          height: 100,
+        }}
+      >
+        <ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} />
+      </div>,
+    );
+    const svg = document.querySelector<HTMLElement>('svg')!;
+    const marks = document.querySelectorAll<HTMLElement>('circle');
+
+    fireEvent.pointerEnter(marks[0]);
+
+    fireEvent.pointerEnter(svg); // Trigger the tooltip
+    fireEvent.pointerMove(marks[0]); // Only to set the tooltip position
+
+    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
+
+    fireEvent.pointerEnter(marks[4]);
+    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
+    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
+  });
 });

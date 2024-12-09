@@ -3,7 +3,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 function usePointer() {
   const svgRef = useSvgRef();
@@ -50,7 +49,7 @@ function usePointer() {
   return pointer;
 }
 
-export function ItemTooltipFixedY() {
+export function ItemTooltipFixedY({ children }) {
   const tooltipData = useItemTooltip();
   const { isActive } = usePointer();
 
@@ -109,7 +108,7 @@ export function ItemTooltipFixedY() {
         }}
         popperRef={popperRef}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

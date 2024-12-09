@@ -1,6 +1,11 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection, PickersTimezone } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  PickersTimezone,
+  InferFieldSection,
+} from '../../../models';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries } from './useField.types';
 import {
@@ -15,6 +20,7 @@ import {
   isStringNumber,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
+import { PickerValidValue } from '../../models';
 
 interface CharacterEditingQuery {
   value: string;
@@ -27,9 +33,9 @@ export interface ApplyCharacterEditingParams {
   sectionIndex: number;
 }
 
-interface UseFieldCharacterEditingParams<TSection extends FieldSection> {
-  sections: TSection[];
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
+interface UseFieldCharacterEditingParams<TValue extends PickerValidValue> {
+  sections: InferFieldSection<TValue>[];
+  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries;
   localizedDigits: string[];
   setTempAndroidValueStr: (newValue: string | null) => void;
@@ -65,15 +71,15 @@ type CharacterEditingApplier = (
  * If it returns `{ saveQuery: false },
  * Then we do nothing.
  */
-type QueryApplier<TSection extends FieldSection> = (
+type QueryApplier<TValue extends PickerValidValue> = (
   queryValue: string,
-  activeSection: TSection,
+  activeSection: InferFieldSection<TValue>,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | { saveQuery: boolean };
 
 const QUERY_LIFE_DURATION_MS = 5000;
 
-const isQueryResponseWithoutValue = <TSection extends FieldSection>(
-  response: ReturnType<QueryApplier<TSection>>,
+const isQueryResponseWithoutValue = <TValue extends PickerValidValue>(
+  response: ReturnType<QueryApplier<TValue>>,
 ): response is { saveQuery: boolean } => (response as { saveQuery: boolean }).saveQuery != null;
 
 /**
@@ -83,14 +89,14 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
  * 1. The numeric editing when the user presses a digit
  * 2. The letter editing when the user presses another key
  */
-export const useFieldCharacterEditing = <TSection extends FieldSection>({
+export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   sections,
   updateSectionValue,
   sectionsValueBoundaries,
   localizedDigits,
   setTempAndroidValueStr,
   timezone,
-}: UseFieldCharacterEditingParams<TSection>): UseFieldCharacterEditingResponse => {
+}: UseFieldCharacterEditingParams<TValue>): UseFieldCharacterEditingResponse => {
   const utils = useUtils();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
@@ -117,7 +123,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
-    getFirstSectionValueMatchingWithQuery: QueryApplier<TSection>,
+    getFirstSectionValueMatchingWithQuery: QueryApplier<TValue>,
     isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
@@ -170,7 +176,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
       format: string,
       options: string[],
       queryValue: string,
-    ): ReturnType<QueryApplier<TSection>> => {
+    ): ReturnType<QueryApplier<TValue>> => {
       const matchingValues = options.filter((option) =>
         option.toLowerCase().startsWith(queryValue),
       );
@@ -187,7 +193,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
 
     const testQueryOnFormatAndFallbackFormat = (
       queryValue: string,
-      activeSection: TSection,
+      activeSection: InferFieldSection<TValue>,
       fallbackFormat?: string,
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
@@ -225,7 +231,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
       return { saveQuery: false };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TSection> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {
@@ -284,7 +290,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
         | 'hasLeadingZerosInInput'
         | 'maxLength'
       >,
-    ): ReturnType<QueryApplier<TSection>> => {
+    ): ReturnType<QueryApplier<TValue>> => {
       const cleanQueryValue = removeLocalizedDigits(queryValue, localizedDigits);
       const queryValueNumber = Number(cleanQueryValue);
       const sectionBoundaries = sectionsValueBoundaries[section.type]({
@@ -319,7 +325,7 @@ export const useFieldCharacterEditing = <TSection extends FieldSection>({
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };
 
-    const getFirstSectionValueMatchingWithQuery: QueryApplier<TSection> = (
+    const getFirstSectionValueMatchingWithQuery: QueryApplier<TValue> = (
       queryValue,
       activeSection,
     ) => {

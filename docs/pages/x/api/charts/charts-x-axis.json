@@ -6,12 +6,6 @@
     "disableTicks": { "type": { "name": "bool" }, "default": "false" },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
     "label": { "type": { "name": "string" } },
-    "labelFontSize": {
-      "type": { "name": "number" },
-      "default": "14",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>labelStyle.fontSize</code> instead."
-    },
     "labelStyle": { "type": { "name": "object" } },
     "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -21,12 +15,6 @@
       "additionalInfo": { "slotsApi": true }
     },
     "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
-    "tickFontSize": {
-      "type": { "name": "number" },
-      "default": "12",
-      "deprecated": true,
-      "deprecationInfo": "Consider using <code>tickLabelStyle.fontSize</code> instead."
-    },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
       "default": "'auto'"

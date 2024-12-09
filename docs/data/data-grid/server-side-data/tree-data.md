@@ -1,8 +1,8 @@
 ---
-title: React Server-side tree data
+title: React Data Grid - Server-side tree data
 ---
 
-# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Data Grid - Server-side tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
 
 <p class="description">Tree data lazy-loading with server-side data source.</p>
 
@@ -20,14 +20,14 @@ The data source also requires some additional props to handle tree data:
 ```tsx
 const customDataSource: GridDataSource = {
   getRows: async (params) => {
-    // Fetch the data from the server
+    // Fetch the data from the server.
   },
   getGroupKey: (row) => {
-    // Return the group key for the row, e.g. `name`
+    // Return the group key for the row, e.g. `name`.
     return row.name;
   },
   getChildrenCount: (row) => {
-    // Return the number of children for the row
+    // Return the number of children for the row.
     return row.childrenCount;
   },
 };
@@ -39,11 +39,11 @@ Use `groupKeys` on the server to extract the rows for a given nested level.
 ```tsx
 const getRows: async (params) => {
   const urlParams = new URLSearchParams({
-    // Example: JSON.stringify(['Billy Houston', 'Lora Dean'])
+    // Example: JSON.stringify(['Billy Houston', 'Lora Dean']).
     groupKeys: JSON.stringify(params.groupKeys),
   });
   const getRowsResponse = await fetchRows(
-    // Server should extract the rows for the nested level based on `groupKeys`
+    // Server should extract the rows for the nested level based on `groupKeys`.
     `https://mui.com/x/api/data-grid?${urlParams.toString()}`,
   );
   return {
@@ -59,10 +59,10 @@ It also caches the data by default.
 {{"demo": "ServerSideTreeData.js", "bg": "inline"}}
 
 :::info
-The data source demos use a utility function `useMockServer` to simulate the server-side data fetching.
-In a real-world scenario, you would replace this with your own server-side data fetching logic.
+The data source demos use a `useMockServer` utility function to simulate server-side data fetching.
+In a real-world scenario you would replace this with your own server-side data-fetching logic.
 
-Open the info section of the browser console to see the requests being made and the data being fetched in response.
+Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
 ## Error handling
@@ -78,7 +78,7 @@ The demo below shows a toast apart from the default error message in the groupin
 The idea behind the group expansion is the same as explained in the [Row grouping](/x/react-data-grid/row-grouping/#group-expansion) section.
 The difference is that the data is not initially available and is fetched automatically after the Data Grid is mounted based on the props `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault` in a waterfall manner.
 
-The following demo uses `defaultGroupingExpansionDepth='-1'` to expand all levels of the tree by default.
+The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all levels of the tree by default.
 
 {{"demo": "ServerSideTreeDataGroupExpansion.js", "bg": "inline"}}
 

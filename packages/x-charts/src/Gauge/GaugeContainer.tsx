@@ -2,17 +2,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import useForkRef from '@mui/utils/useForkRef';
-import { useChartContainerDimensions } from '../ChartContainer/useChartContainerDimensions';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import { DrawingAreaProvider, DrawingAreaProviderProps } from '../context/DrawingAreaProvider';
 import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
-import { SvgRefProvider } from '../context/SvgRefProvider';
+import { SizeProvider } from '../context/SizeProvider';
+import { ChartProvider } from '../context/ChartProvider';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'width' | 'height' | 'children'>,
-    Omit<DrawingAreaProviderProps, 'svgRef' | 'width' | 'height' | 'children'>,
-    Omit<GaugeProviderProps, 'children'> {
+    Pick<DrawingAreaProviderProps, 'margin'>,
+    Omit<GaugeProviderProps, 'children'>,
+    React.SVGProps<SVGSVGElement> {
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -24,23 +24,7 @@ export interface GaugeContainerProps
   children?: React.ReactNode;
 }
 
-const ResizableContainer = styled('div', {
-  name: 'MuiGauge',
-  slot: 'Container',
-})<{ ownerState: Pick<GaugeContainerProps, 'width' | 'height'> }>(({ ownerState, theme }) => ({
-  width: ownerState.width ?? '100%',
-  height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexGrow: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  '&>svg': {
-    width: '100%',
-    height: '100%',
-  },
+const GStyled = styled('g')(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
@@ -69,56 +53,40 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
     children,
     ...other
   } = props;
-  const { containerRef, width, height } = useChartContainerDimensions(inWidth, inHeight);
-
-  const svgRef = React.useRef<SVGSVGElement>(null);
-  const chartSurfaceRef = useForkRef(ref, svgRef);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: inWidth, height: inHeight }}
-      role="meter"
-      aria-valuenow={value === null ? undefined : value}
-      aria-valuemin={valueMin}
-      aria-valuemax={valueMax}
-      {...other}
-    >
-      {width && height ? (
-        <SvgRefProvider svgRef={svgRef}>
-          <DrawingAreaProvider
-            width={width}
-            height={height}
-            margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}
+    <ChartProvider>
+      <SizeProvider width={inWidth} height={inHeight}>
+        <DrawingAreaProvider margin={{ left: 10, right: 10, top: 10, bottom: 10, ...margin }}>
+          <GaugeProvider
+            value={value}
+            valueMin={valueMin}
+            valueMax={valueMax}
+            startAngle={startAngle}
+            endAngle={endAngle}
+            outerRadius={outerRadius}
+            innerRadius={innerRadius}
+            cornerRadius={cornerRadius}
+            cx={cx}
+            cy={cy}
           >
-            <GaugeProvider
-              value={value}
-              valueMin={valueMin}
-              valueMax={valueMax}
-              startAngle={startAngle}
-              endAngle={endAngle}
-              outerRadius={outerRadius}
-              innerRadius={innerRadius}
-              cornerRadius={cornerRadius}
-              cx={cx}
-              cy={cy}
+            <ChartsSurface
+              title={title}
+              desc={desc}
+              disableAxisListener
+              role="meter"
+              aria-valuenow={value === null ? undefined : value}
+              aria-valuemin={valueMin}
+              aria-valuemax={valueMax}
+              {...other}
+              ref={ref}
             >
-              <ChartsSurface
-                width={width}
-                height={height}
-                ref={chartSurfaceRef}
-                title={title}
-                desc={desc}
-                disableAxisListener
-                aria-hidden="true"
-              >
-                {children}
-              </ChartsSurface>
-            </GaugeProvider>
-          </DrawingAreaProvider>
-        </SvgRefProvider>
-      ) : null}
-    </ResizableContainer>
+              <GStyled aria-hidden="true">{children}</GStyled>
+            </ChartsSurface>
+          </GaugeProvider>
+        </DrawingAreaProvider>
+      </SizeProvider>
+    </ChartProvider>
   );
 });
 
@@ -215,12 +183,6 @@ GaugeContainer.propTypes = {
    * @default 0
    */
   valueMin: PropTypes.number,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

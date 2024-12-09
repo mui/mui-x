@@ -30,6 +30,17 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Szukaj',
   toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
+  // Prompt toolbar field
+  // toolbarPromptControlPlaceholder: 'Type a prompt…',
+  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
+  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
+  // toolbarPromptControlLabel: 'Prompt input',
+  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
+  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
+  // toolbarPromptControlSendActionLabel: 'Send',
+  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
+  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
@@ -42,6 +53,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Brak kolumn',
   columnsManagementShowHideAllText: 'Wyświetl/Ukryj wszystkie',
   columnsManagementReset: 'Resetuj',
+  // columnsManagementDeleteIconLabel: 'Clear',
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
