@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useRtl } from '@mui/system/RtlProvider';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import clsx from 'clsx';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { MakeOptional } from '@mui/x-internals/types';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
@@ -25,6 +25,10 @@ import { pickersToolbarTextClasses } from '../internals/components/pickersToolba
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickerValidDate } from '../models';
 import { usePickerContext } from '../hooks/usePickerContext';
+import {
+  PickerToolbarOwnerState,
+  useToolbarOwnerState,
+} from '../internals/hooks/useToolbarOwnerState';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -36,7 +40,6 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
     MakeOptional<BaseToolbarProps<PickerValue, DateOrTimeViewWithMeridiem>, 'view'> {
-  toolbarVariant?: PickerVariant;
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -45,20 +48,19 @@ export interface DateTimePickerToolbarProps
   ampmInClock?: boolean;
 }
 
-interface DateTimePickerToolbarOwnerState extends DateTimePickerToolbarProps {
-  isRtl: boolean;
-}
-
-const useUtilityClasses = (ownerState: DateTimePickerToolbarOwnerState) => {
-  const { classes, isLandscape, isRtl } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<DateTimePickerToolbarClasses> | undefined,
+  ownerState: PickerToolbarOwnerState,
+) => {
+  const { pickerOrientation, toolbarDirection } = ownerState;
 
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
-    timeContainer: ['timeContainer', isRtl && 'timeLabelReverse'],
-    timeDigitsContainer: ['timeDigitsContainer', isRtl && 'timeLabelReverse'],
+    timeContainer: ['timeContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
+    timeDigitsContainer: ['timeDigitsContainer', toolbarDirection === 'rtl' && 'timeLabelReverse'],
     separator: ['separator'],
-    ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
+    ampmSelection: ['ampmSelection', pickerOrientation === 'landscape' && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
   };
 
@@ -69,7 +71,8 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarOwnerState }>(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
+})<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>(({ theme }) => ({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
@@ -86,13 +89,13 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       },
     },
     {
-      props: { toolbarVariant: 'desktop', isLandscape: true },
+      props: { toolbarVariant: 'desktop', pickerOrientation: 'landscape' },
       style: {
         borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
       },
     },
     {
-      props: { toolbarVariant: 'desktop', isLandscape: false },
+      props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
       style: {
         paddingLeft: 24,
         paddingRight: 0,
@@ -105,7 +108,7 @@ const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
   overridesResolver: (props, styles) => styles.dateContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState }>({
+})<{ ownerState: PickerToolbarOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -115,18 +118,19 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
+})<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
   flexDirection: 'row',
   variants: [
     {
-      props: { isRtl: true },
+      props: { toolbarDirection: 'rtl' },
       style: {
         flexDirection: 'row-reverse',
       },
     },
     {
-      props: { toolbarVariant: 'desktop', isLandscape: false },
+      props: { toolbarVariant: 'desktop', pickerOrientation: 'portrait' },
       style: {
         gap: 9,
         marginRight: 4,
@@ -134,15 +138,24 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
       },
     },
     {
-      props: ({ isLandscape, toolbarVariant }: DateTimePickerToolbarOwnerState) =>
-        isLandscape && toolbarVariant !== 'desktop',
+      props: ({
+        pickerOrientation,
+        toolbarVariant,
+      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+        pickerOrientation === 'landscape' && toolbarVariant !== 'desktop',
       style: {
         flexDirection: 'column',
       },
     },
     {
-      props: ({ isLandscape, toolbarVariant, isRtl }: DateTimePickerToolbarOwnerState) =>
-        isLandscape && toolbarVariant !== 'desktop' && isRtl,
+      props: ({
+        pickerOrientation,
+        toolbarVariant,
+        toolbarDirection,
+      }: PickerToolbarOwnerState & { toolbarVariant: PickerVariant }) =>
+        pickerOrientation === 'landscape' &&
+        toolbarVariant !== 'desktop' &&
+        toolbarDirection === 'rtl',
       style: {
         flexDirection: 'column-reverse',
       },
@@ -154,11 +167,12 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeDigitsContainer',
   overridesResolver: (props, styles) => styles.timeDigitsContainer,
-})<{ ownerState: DateTimePickerToolbarOwnerState }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
+})<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   display: 'flex',
   variants: [
     {
-      props: { isRtl: true },
+      props: { toolbarDirection: 'rtl' },
       style: {
         flexDirection: 'row-reverse',
       },
@@ -174,9 +188,8 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
-})<{
-  ownerState: DateTimePickerToolbarOwnerState;
-}>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'toolbarVariant',
+})<{ ownerState: PickerToolbarOwnerState; toolbarVariant: PickerVariant }>({
   margin: '0 4px 0 2px',
   cursor: 'default',
   variants: [
@@ -199,7 +212,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
     styles.ampmSelection,
   ],
 })<{
-  ownerState: DateTimePickerToolbarProps;
+  ownerState: PickerToolbarOwnerState;
 }>({
   display: 'flex',
   flexDirection: 'column',
@@ -210,7 +223,7 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
   },
   variants: [
     {
-      props: { isLandscape: true },
+      props: { pickerOrientation: 'landscape' },
       style: {
         margin: '4px 0 auto',
         flexDirection: 'row',
@@ -220,6 +233,12 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
     },
   ],
 });
+
+/**
+ * If this context value is set to true, the toolbar will always be rendered in the desktop mode.
+ * This is used by the Date Time Range Picker Toolbar.
+ */
+export const DateTimePickerToolbarForceDesktopVariant = React.createContext(false);
 
 /**
  * Demos:
@@ -244,23 +263,23 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
-    toolbarVariant = 'mobile',
     toolbarTitle: inToolbarTitle,
     className,
+    classes: classesProp,
     ...other
   } = props;
 
-  const isRtl = useRtl();
-  const { disabled, readOnly } = usePickerContext();
-  const ownerState: DateTimePickerToolbarOwnerState = { ...props, isRtl };
+  const { disabled, readOnly, variant } = usePickerContext();
+  const ownerState = useToolbarOwnerState();
+  const classes = useUtilityClasses(classesProp, ownerState);
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
-
-  const showAmPmControl = Boolean(ampm && !ampmInClock);
-  const isDesktop = toolbarVariant === 'desktop';
-
   const translations = usePickerTranslations();
-  const classes = useUtilityClasses(ownerState);
+  const forceDesktopVariant = React.useContext(DateTimePickerToolbarForceDesktopVariant);
+
+  const toolbarVariant = forceDesktopVariant ? 'desktop' : variant;
+  const isDesktop = toolbarVariant === 'desktop';
+  const showAmPmControl = Boolean(ampm && !ampmInClock);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
 
   const formatHours = (time: PickerValidDate) =>
@@ -283,6 +302,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
       isLandscape={isLandscape}
       className={clsx(classes.root, className)}
       toolbarTitle={toolbarTitle}
+      toolbarVariant={toolbarVariant}
       {...other}
       ownerState={ownerState}
     >
@@ -309,10 +329,15 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
           />
         )}
       </DateTimePickerToolbarDateContainer>
-      <DateTimePickerToolbarTimeContainer className={classes.timeContainer} ownerState={ownerState}>
+      <DateTimePickerToolbarTimeContainer
+        className={classes.timeContainer}
+        ownerState={ownerState}
+        toolbarVariant={toolbarVariant}
+      >
         <DateTimePickerToolbarTimeDigitsContainer
           className={classes.timeDigitsContainer}
           ownerState={ownerState}
+          toolbarVariant={toolbarVariant}
         >
           {views.includes('hours') && (
             <React.Fragment>
@@ -329,6 +354,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
                 value=":"
                 className={classes.separator}
                 ownerState={ownerState}
+                toolbarVariant={toolbarVariant}
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
@@ -349,6 +375,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
                 value=":"
                 className={classes.separator}
                 ownerState={ownerState}
+                toolbarVariant={toolbarVariant}
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
@@ -447,7 +474,6 @@ DateTimePickerToolbar.propTypes = {
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
   toolbarTitle: PropTypes.node,
-  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
   value: PropTypes.object,
   /**
    * Currently visible picker view.
