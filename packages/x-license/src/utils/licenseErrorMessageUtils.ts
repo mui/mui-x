@@ -9,9 +9,10 @@
  */
 const isCodeSandbox =
   typeof window !== 'undefined' && window.location.hostname.endsWith('.csb.app');
-const logger = isCodeSandbox ? console.log : console.error;
 
 function showError(message: string[]) {
+  // eslint-disable-next-line no-console
+  const logger = isCodeSandbox ? console.log : console.error;
   logger(
     [
       '*************************************************************',
