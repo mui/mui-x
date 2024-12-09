@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
@@ -11,7 +12,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickersYear } from './PickersYear';
+import { YearCalendarButton } from './YearCalendarButton';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass, YearCalendarClasses } from './yearCalendarClasses';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -58,11 +59,10 @@ function useYearCalendarDefaultizedProps(
 const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'yearsPerRow',
 })<{ ownerState: PickerOwnerState }>({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
@@ -71,6 +71,7 @@ const YearCalendarRoot = styled('div', {
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
+  variants: [{ props: { yearsPerRow: 4 }, style: { gridTemplateColumns: 'repeat(4, 1fr' } }],
 });
 
 type YearCalendarComponent = ((props: YearCalendarProps) => React.JSX.Element) & {
@@ -309,7 +310,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
         const isDisabled = disabled || isYearDisabled(year);
 
         return (
-          <PickersYear
+          <YearCalendarButton
             key={utils.format(year, 'year')}
             selected={isSelected}
             value={yearNumber}
@@ -321,12 +322,12 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
-            yearsPerRow={yearsPerRow}
             slots={slots}
             slotProps={slotProps}
+            classes={classesProp}
           >
             {utils.format(year, 'year')}
-          </PickersYear>
+          </YearCalendarButton>
         );
       })}
     </YearCalendarRoot>

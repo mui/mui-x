@@ -79,9 +79,9 @@ describe('<YearCalendar />', () => {
       const onChange = spy();
       render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
-      screen.getAllByRole('radio').forEach((monthButton) => {
-        expect(monthButton).to.have.attribute('disabled');
-        fireEvent.click(monthButton);
+      screen.getAllByRole('radio').forEach((yearButton) => {
+        expect(yearButton).to.have.attribute('disabled');
+        fireEvent.click(yearButton);
         expect(onChange.callCount).to.equal(0);
       });
     });

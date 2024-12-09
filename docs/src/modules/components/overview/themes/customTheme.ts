@@ -378,9 +378,9 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           }),
         },
       },
-      MuiPickersYear: {
+      MuiYearCalendar: {
         styleOverrides: {
-          yearButton: ({ theme }) => ({
+          button: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
           }),
         },

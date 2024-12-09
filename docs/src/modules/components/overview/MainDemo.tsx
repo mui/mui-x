@@ -37,9 +37,9 @@ const components: Components<Theme> = {
       }),
     },
   },
-  MuiPickersYear: {
+  MuiYearCalendar: {
     styleOverrides: {
-      yearButton: ({ theme }) => ({
+      button: ({ theme }) => ({
         fontWeight: 400,
         fontSize: '0.875rem',
         borderRadius: theme.shape.borderRadius,

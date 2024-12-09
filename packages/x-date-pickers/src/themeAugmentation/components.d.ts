@@ -102,10 +102,6 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersLayout'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersLayout'];
   };
-  MuiPickersYear?: {
-    defaultProps?: ComponentsProps['MuiPickersYear'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersYear'];
-  };
   MuiTimeClock?: {
     defaultProps?: ComponentsProps['MuiTimeClock'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiTimeClock'];

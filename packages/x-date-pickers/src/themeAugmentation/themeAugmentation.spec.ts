@@ -459,22 +459,6 @@ createTheme({
         },
       },
     },
-    MuiPickersYear: {
-      defaultProps: {
-        classes: { yearButton: 'test' },
-        // @ts-expect-error invalid MuiPickersYear prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        yearButton: {
-          backgroundColor: 'red',
-        },
-        // @ts-expect-error invalid MuiPickersYear class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
     MuiTimeClock: {
       defaultProps: {
         view: 'hours',

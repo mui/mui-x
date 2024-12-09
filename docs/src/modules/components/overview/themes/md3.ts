@@ -259,6 +259,11 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             alignContent: 'flex-start',
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 40,
           }),
+          button: ({ theme, ownerState }) => ({
+            borderRadius: theme.shape.borderRadius,
+            height: theme.mixins.density.height,
+            ...(!ownerState.isYearSelected && { color: theme.palette.text.secondary }),
+          }),
         },
       },
       MuiDayCalendar: {
@@ -295,15 +300,6 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             borderRadius: theme.shape.borderRadius,
             width: theme.mixins.density.width,
             height: theme.mixins.density.height,
-          }),
-        },
-      },
-      MuiPickersYear: {
-        styleOverrides: {
-          yearButton: ({ theme, ownerState }) => ({
-            borderRadius: theme.shape.borderRadius,
-            height: theme.mixins.density.height,
-            ...(!ownerState.selected && { color: theme.palette.text.secondary }),
           }),
         },
       },
