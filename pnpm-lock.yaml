@@ -13347,7 +13347,7 @@ snapshots:
 
   '@types/react-is@18.3.0':
     dependencies:
-      '@types/react': 18.3.12
+      '@types/react': 18.3.14
 
   '@types/react-router-dom@5.3.3':
     dependencies:
