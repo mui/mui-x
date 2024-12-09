@@ -1,0 +1,6 @@
+<DataGridPremium
+  rows={initialRows}
+  columns={initialColumns}
+  pivotParams={pivotParams}
+  apiRef={apiRef}
+/>
