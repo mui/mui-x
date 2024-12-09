@@ -94,7 +94,9 @@ const Root = styled('div', {
 });
 
 /**
- * @internal Generates the label mark for the tooltip and legend.
+ * @ignore - internal component.
+ *
+ * Generates the label mark for the tooltip and legend.
  */
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',

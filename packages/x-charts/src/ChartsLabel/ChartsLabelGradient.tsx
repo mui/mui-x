@@ -88,7 +88,9 @@ const Root = styled('div', {
 });
 
 /**
- * @internal Generates the label Gradient for the tooltip and legend.
+ * @ignore - internal component.
+ *
+ * Generates the label Gradient for the tooltip and legend.
  */
 const ChartsLabelGradient = consumeThemeProps(
   'MuiChartsLabelGradient',
