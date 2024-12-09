@@ -1499,11 +1499,14 @@ describe('<DataGridPro /> - Row editing', () => {
         }
       }, [hasFocus, inputRef]);
       return (
-        (<Portal>
-          <input ref={ref => {
-            setInputRef(ref);
-          }} data-testid="input" />
-        </Portal>)
+        <Portal>
+          <input
+            ref={(ref) => {
+              setInputRef(ref);
+            }}
+            data-testid="input"
+          />
+        </Portal>
       );
     }
     const renderEditCell = (props: GridRenderEditCellParams) => (
