@@ -42,19 +42,6 @@ describe('<ScatterChart />', () => {
 
   const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-  const config = {
-    dataset: [
-      { id: 1, x: 0, y: 10 },
-      { id: 2, x: 10, y: 10 },
-      { id: 3, x: 10, y: 0 },
-      { id: 4, x: 0, y: 0 },
-      { id: 5, x: 5, y: 5 },
-    ],
-    margin: { top: 0, left: 0, bottom: 0, right: 0 },
-    width: 100,
-    height: 100,
-  };
-
   it('should support dataset with missing values', async function test() {
     if (isJSDOM) {
       this.skip();
