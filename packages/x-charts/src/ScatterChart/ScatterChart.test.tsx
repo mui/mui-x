@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
