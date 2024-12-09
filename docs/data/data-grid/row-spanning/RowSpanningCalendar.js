@@ -137,7 +137,7 @@ export default function RowSpanningCalendar() {
       <DataGrid
         columns={columns}
         rows={rows}
-        unstable_rowSpanning
+        rowSpanning
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder
