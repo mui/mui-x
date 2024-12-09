@@ -127,6 +127,7 @@ RichTreeView.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
@@ -142,15 +143,6 @@ RichTreeView.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
-  dataSource: PropTypes.shape({
-    getChildrenCount: PropTypes.func,
-    getTreeItems: PropTypes.func,
-  }),
-  dataSourceCache: PropTypes.shape({
-    clear: PropTypes.func.isRequired,
-    get: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-  }),
   /**
    * Expanded item ids.
    * Used when the item's expansion is not controlled.
@@ -190,7 +182,6 @@ RichTreeView.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     labelEditing: PropTypes.bool,
-    lazyLoading: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.

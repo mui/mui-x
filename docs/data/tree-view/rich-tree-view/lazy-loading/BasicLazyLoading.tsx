@@ -8,7 +8,7 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type ItemType = TreeViewBaseItem<{
@@ -62,7 +62,7 @@ export default function BasicLazyLoading() {
           valueLabelDisplay="auto"
         />
       </Box>
-      <RichTreeView
+      <RichTreeViewPro
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}
         dataSource={{

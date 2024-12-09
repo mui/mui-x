@@ -5,7 +5,7 @@
 >
   {failRequests ? 'Resolve requests' : 'Fail Requests'}
 </Button>
-<RichTreeView
+<RichTreeViewPro
   items={initialItems}
   experimentalFeatures={{ lazyLoading: true }}
   dataSource={{

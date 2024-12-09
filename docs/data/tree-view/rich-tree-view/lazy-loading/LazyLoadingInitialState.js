@@ -6,7 +6,7 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { initialItems } from './items';
 
 const fetchData = async () => {
@@ -27,7 +27,7 @@ const fetchData = async () => {
 export default function LazyLoadingInitialState() {
   return (
     <Box sx={{ width: '300px' }}>
-      <RichTreeView
+      <RichTreeViewPro
         items={initialItems}
         experimentalFeatures={{ lazyLoading: true }}
         dataSource={{

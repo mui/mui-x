@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import {
   randomInt,
   randomName,
@@ -36,7 +36,7 @@ export function FetchChildren() {
   };
 
   return (
-    <RichTreeView
+    <RichTreeViewPro
       items={[]}
       experimentalFeatures={{ lazyLoading: true }}
       dataSource={{

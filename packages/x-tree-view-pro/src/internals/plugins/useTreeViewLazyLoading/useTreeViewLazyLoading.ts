@@ -1,19 +1,18 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { warnOnce } from '@mui/x-internals/warning';
-import { TreeViewPlugin } from '../../models';
-import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
+import { selectorItemMeta, TreeViewPlugin } from '@mui/x-tree-view/internals';
 import { NestedDataManager } from './utils';
-import { TreeViewItemId } from '../../../models';
-import { DataSourceCache, DataSourceCacheDefault } from '../../../utils';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
+import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import {
   selectorGetTreeItemError,
   selectorDataSourceState,
 } from './useTreeViewLazyLoading.selectors';
-import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
-import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
-import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
+import { useInstanceEventHandler } from '@mui/x-tree-view/internals/hooks/useInstanceEventHandler';
+import { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
+import { selectorIsItemExpanded } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemSelected } from '@mui/x-tree-view/internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
 
 const INITIAL_STATE = {
   loading: {},

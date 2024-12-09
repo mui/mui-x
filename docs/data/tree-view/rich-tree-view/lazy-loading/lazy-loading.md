@@ -1,7 +1,7 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Lazy Loading Children
-components: RichTreeView, TreeItem
+title: Rich Tree View Pro - Lazy Loading Children
+components: RichTreeViewPro, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/

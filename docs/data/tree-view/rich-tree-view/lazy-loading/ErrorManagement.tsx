@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { randomName, randomId } from '@mui/x-data-grid-generator';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { initialItems, ItemType } from './items';
 
 export default function ErrorManagement() {
@@ -35,7 +35,7 @@ export default function ErrorManagement() {
       >
         {failRequests ? 'Resolve requests' : 'Fail Requests'}
       </Button>
-      <RichTreeView
+      <RichTreeViewPro
         items={initialItems}
         experimentalFeatures={{ lazyLoading: true }}
         dataSource={{

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 
@@ -30,7 +30,7 @@ const lowTTLCache = new DataSourceCacheDefault({ ttl: 1000 * 10 }); // 10 second
 export default function LowTTLCache() {
   return (
     <Box sx={{ width: '300px' }}>
-      <RichTreeView
+      <RichTreeViewPro
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}
         dataSource={{

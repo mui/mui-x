@@ -1,4 +1,4 @@
-<RichTreeView
+<RichTreeViewPro
   items={[]}
   experimentalFeatures={{ lazyLoading: true }}
   dataSource={{

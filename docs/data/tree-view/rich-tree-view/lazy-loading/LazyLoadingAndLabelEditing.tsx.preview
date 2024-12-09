@@ -1,4 +1,4 @@
-<RichTreeView
+<RichTreeViewPro
   items={[]}
   apiRef={apiRef}
   experimentalFeatures={{ lazyLoading: true, labelEditing: true }}

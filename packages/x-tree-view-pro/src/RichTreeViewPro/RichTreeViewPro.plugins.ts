@@ -15,13 +15,15 @@ import {
   TreeViewCorePluginParameters,
   useTreeViewLabel,
   UseTreeViewLabelParameters,
-  useTreeViewLazyLoading,
-  UseTreeViewLazyLoadingParameters,
 } from '@mui/x-tree-view/internals';
 import {
   useTreeViewItemsReordering,
   UseTreeViewItemsReorderingParameters,
 } from '../internals/plugins/useTreeViewItemsReordering';
+import {
+  useTreeViewLazyLoading,
+  UseTreeViewLazyLoadingParameters,
+} from '../internals/plugins/useTreeViewLazyLoading';
 
 export const RICH_TREE_VIEW_PRO_PLUGINS = [
   useTreeViewItems,

@@ -8,7 +8,7 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
 
 function valuetext(value) {
   return `${value}°C`;
@@ -55,7 +55,7 @@ export default function BasicLazyLoading() {
           valueLabelDisplay="auto"
         />
       </Box>
-      <RichTreeView
+      <RichTreeViewPro
         items={[]}
         experimentalFeatures={{ lazyLoading: true }}
         dataSource={{

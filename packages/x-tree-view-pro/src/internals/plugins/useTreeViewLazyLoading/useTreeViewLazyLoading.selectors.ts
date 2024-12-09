@@ -1,5 +1,4 @@
-import { TreeViewState } from '../../models';
-import { createSelector } from '../../utils/selectors';
+import { createSelector, TreeViewState } from '@mui/x-tree-view/internals';
 import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
 
 export const selectorDataSourceState = (state: TreeViewState<[UseTreeViewLazyLoadingSignature]>) =>
