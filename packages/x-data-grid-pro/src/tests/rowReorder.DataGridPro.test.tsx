@@ -284,6 +284,6 @@ describe('<DataGridPro /> - Row reorder', () => {
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Adidas', 'Skechers']);
+    expect(getColumnValues(1)).to.deep.equal(['Puma', 'Adidas', 'Skechers']);
   });
 });
