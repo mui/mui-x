@@ -46,6 +46,7 @@ export function useMonthCalendarDefaultizedProps(
     disableFuture: false,
     disablePast: false,
     ...themeProps,
+    monthsPerRow: themeProps.monthsPerRow ?? 3,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -57,13 +58,23 @@ const MonthCalendarRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'monthsPerRow',
 })<{ ownerState: PickerOwnerState; monthsPerRow: 3 | 4 }>({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  padding: '0 4px',
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'space-evenly',
+  rowGap: 10,
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
-  variants: [{ props: { monthsPerRow: 4 }, style: { gridTemplateColumns: 'repeat(4, 1fr' } }],
+  variants: [
+    {
+      props: { monthsPerRow: 3 },
+      style: { columnGap: 24 },
+    },
+    {
+      props: { monthsPerRow: 4 },
+      style: { columnGap: 0 },
+    },
+  ],
 });
 
 type MonthCalendarComponent = ((
@@ -85,6 +96,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 ) {
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
   const {
+    autoFocus,
     className,
     classes: classesProp,
     value: valueProp,
@@ -99,11 +111,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
-    autoFocus = false,
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
-    monthsPerRow = 3,
+    monthsPerRow,
     timezone: timezoneProp,
     gridLabelId,
     slots,

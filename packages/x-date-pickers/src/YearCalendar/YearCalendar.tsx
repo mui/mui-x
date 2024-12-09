@@ -37,7 +37,7 @@ function useYearCalendarDefaultizedProps(
   name: string,
 ): DefaultizedProps<
   YearCalendarProps,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow'
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow' | 'yearsOrder'
 > {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
@@ -51,6 +51,7 @@ function useYearCalendarDefaultizedProps(
     disableFuture: false,
     ...themeProps,
     yearsPerRow: themeProps.yearsPerRow ?? 3,
+    yearsOrder: themeProps.yearsOrder ?? 'asc',
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -60,18 +61,36 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'yearsPerRow',
-})<{ ownerState: PickerOwnerState }>({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
+})<{ ownerState: PickerOwnerState; yearsPerRow: 3 | 4 }>({
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'space-evenly',
+  rowGap: 10,
   overflowY: 'auto',
   height: '100%',
-  padding: '0 4px',
   width: DIALOG_WIDTH,
   maxHeight: MAX_CALENDAR_HEIGHT,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
-  variants: [{ props: { yearsPerRow: 4 }, style: { gridTemplateColumns: 'repeat(4, 1fr' } }],
+  variants: [
+    {
+      props: { yearsPerRow: 3 },
+      style: { columnGap: 24 },
+    },
+    {
+      props: { yearsPerRow: 4 },
+      style: { columnGap: 0, padding: '0 2px' },
+    },
+  ],
+});
+
+const YearCalendarButtonFiller = styled('div', {
+  name: 'MuiYearCalendar',
+  slot: 'ButtonFiller',
+})({
+  height: 36,
+  width: 72,
 });
 
 type YearCalendarComponent = ((props: YearCalendarProps) => React.JSX.Element) & {
@@ -111,7 +130,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
-    yearsOrder = 'asc',
+    yearsOrder,
     yearsPerRow,
     timezone: timezoneProp,
     gridLabelId,
@@ -295,6 +314,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     yearRange.reverse();
   }
 
+  let fillerAmount = yearsPerRow - (yearRange.length % yearsPerRow);
+  if (fillerAmount === yearsPerRow) {
+    fillerAmount = 0;
+  }
+
   return (
     <YearCalendarRoot
       ref={handleRef}
@@ -302,6 +326,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
       ownerState={ownerState}
       role="radiogroup"
       aria-labelledby={gridLabelId}
+      yearsPerRow={yearsPerRow}
       {...other}
     >
       {yearRange.map((year) => {
@@ -330,6 +355,9 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
           </YearCalendarButton>
         );
       })}
+      {Array.from({ length: fillerAmount }, (_, index) => (
+        <YearCalendarButtonFiller key={index} />
+      ))}
     </YearCalendarRoot>
   );
 }) as YearCalendarComponent;
