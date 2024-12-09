@@ -93,7 +93,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="outlined"
+      variant="standard"
       type={type || 'text'}
       InputLabelProps={{
         shrink: true,
