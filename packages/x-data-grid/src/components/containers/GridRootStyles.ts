@@ -262,15 +262,11 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
     },
     [`& .${c.columnHeader}:focus-within, & .${c.cell}:focus-within`]: {
-      outline: `solid ${
-        t.vars
-          ? `rgba(${t.vars.palette.primary.mainChannel} / 0.5)`
-          : alpha(t.palette.primary.main, 0.5)
-      } ${focusOutlineWidth}px`,
+      outline: `solid ${setOpacity(vars.colors.interactive.focus, 0.5)} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
     [`& .${c.columnHeader}:focus, & .${c.cell}:focus`]: {
-      outline: `solid ${t.palette.primary.main} ${focusOutlineWidth}px`,
+      outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
       outlineOffset: focusOutlineWidth * -1,
     },
     // Hide the column separator when:
@@ -549,7 +545,7 @@ export const GridRootStyles = styled('div', {
       boxShadow: t.shadows[2],
       backgroundColor: vars.colors.background.overlay,
       '&:focus-within': {
-        outline: `${focusOutlineWidth}px solid ${(t.vars || t).palette.primary.main}`,
+        outline: `${focusOutlineWidth}px solid ${vars.colors.interactive.focus}`,
         outlineOffset: focusOutlineWidth * -1,
       },
     },
@@ -771,7 +767,7 @@ function transformMaterialUITheme(t: Theme) {
 
     [k.colors.interactive.hover]: removeOpacity(t.palette.action.hover),
     [k.colors.interactive.hoverOpacity]: t.palette.action.hoverOpacity,
-    [k.colors.interactive.focus]: removeOpacity(t.palette.action.focus),
+    [k.colors.interactive.focus]: removeOpacity(t.palette.primary.main),
     [k.colors.interactive.focusOpacity]: t.palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity(t.palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: t.palette.action.disabledOpacity,
@@ -821,8 +817,12 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
+function setOpacity(color: string, opacity: number) {
+  return `rgba(from ${color} r g b / ${opacity})`;
+}
+
 function removeOpacity(color: string) {
-  return `rgb(from ${color} r g b / 1)`;
+  return setOpacity(color, 1);
 }
 
 function mix(background: string, overlay: string, opacity: number | string) {
