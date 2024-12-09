@@ -7,7 +7,10 @@ const mergeMinMax = (
   acc: ExtremumGetterResult,
   val: ExtremumGetterResult,
 ): ExtremumGetterResult => {
-  return [Math.min(acc[0], val[0]), Math.max(acc[1], val[1])];
+  return [
+    val[0] === null ? acc[0] : Math.min(acc[0], val[0]),
+    val[1] === null ? acc[1] : Math.min(acc[1], val[1]),
+  ];
 };
 
 export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
