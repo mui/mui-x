@@ -3,6 +3,7 @@ import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ChartsLegend, legendClasses } from '@mui/x-charts/ChartsHtmlLegend';
 import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 describe('<ChartsLegend />', () => {
   const { render } = createRenderer();
@@ -34,14 +35,9 @@ describe('<ChartsLegend />', () => {
     muiName: 'MuiChartsLegend',
     testComponentPropWith: 'div',
     refInstanceof: window.HTMLDivElement,
+    ThemeProvider,
+    createTheme,
     // SKIP
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'themeCustomPalette',
-    ],
+    skip: ['componentProp', 'componentsProp'],
   }));
 });

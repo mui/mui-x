@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import clsx from 'clsx';
 import {
   ChartsLabelGradientClasses,
   useUtilityClasses,
   labelGradientClasses,
 } from './labelGradientClasses';
+import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelGradientProps {
   /**
@@ -41,15 +43,15 @@ export interface ChartsLabelGradientProps {
    */
   // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelGradientClasses>;
+  className?: string;
+  // eslint-disable-next-line react/no-unused-prop-types
+  sx?: SxProps<Theme>;
 }
-
-const defaultLineWidth = 12;
-const defaultBorderRadius = 2;
-const defaultDirection = 'row';
 
 const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLabelGradientProps }>(({ ownerState }) => {
   const { lineWidth, borderRadius } = ownerState;
 
@@ -59,14 +61,14 @@ const Root = styled('div', {
     justifyContent: 'center',
 
     '> div': {
-      borderRadius: borderRadius ?? defaultBorderRadius,
+      borderRadius,
       overflow: 'hidden',
     },
 
     [`&.${labelGradientClasses.row}`]: {
       width: '100%',
       '> div': {
-        height: lineWidth ?? defaultLineWidth,
+        height: lineWidth,
         width: '100%',
       },
     },
@@ -74,7 +76,7 @@ const Root = styled('div', {
     [`&.${labelGradientClasses.column}`]: {
       height: '100%',
       '> div': {
-        width: lineWidth ?? defaultLineWidth,
+        width: lineWidth,
         height: '100%',
       },
     },
@@ -88,23 +90,36 @@ const Root = styled('div', {
 /**
  * Generates the label Gradient for the tooltip and legend.
  */
-function ChartsLabelGradient(props: ChartsLabelGradientProps) {
-  const { gradientId, direction } = props;
+const ChartsLabelGradient = consumeThemeProps(
+  'MuiChartsLabelGradient',
+  {
+    defaultProps: {
+      direction: 'row',
+      lineWidth: 12,
+      borderRadius: 2,
+    },
+    classesResolver: useUtilityClasses,
+  },
+  function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
+    const { gradientId, direction, classes, borderRadius, lineWidth, className, ...other } = props;
 
-  const parsedProps = { ...props, direction: direction ?? defaultDirection };
-
-  const classes = useUtilityClasses(parsedProps);
-
-  return (
-    <Root className={classes.root} ownerState={parsedProps} aria-hidden="true">
-      <div>
-        <svg width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio={'none'}>
-          <rect width="10" height="10" fill={`url(#${gradientId})`} />
-        </svg>
-      </div>
-    </Root>
-  );
-}
+    return (
+      <Root
+        className={clsx(classes?.root, className)}
+        ownerState={props}
+        aria-hidden="true"
+        ref={ref}
+        {...other}
+      >
+        <div>
+          <svg width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio={'none'}>
+            <rect width="10" height="10" fill={`url(#${gradientId})`} />
+          </svg>
+        </div>
+      </Root>
+    );
+  },
+);
 
 ChartsLabelGradient.propTypes = {
   // ----------------------------- Warning --------------------------------

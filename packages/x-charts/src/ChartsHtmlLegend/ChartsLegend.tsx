@@ -48,13 +48,11 @@ const RootDiv = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const defaultProps: Partial<ChartsLegendProps> = { direction: 'row' };
-
 const ChartsLegend = consumeSlots(
   'MuiChartsLegend',
   'legend',
   {
-    defaultProps,
+    defaultProps: { direction: 'row' },
     classesResolver: useUtilityClasses,
   },
   function ChartsLegend(

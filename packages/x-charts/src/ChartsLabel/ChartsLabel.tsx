@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import clsx from 'clsx';
 import { ChartsLabelClasses, useUtilityClasses } from './labelClasses';
-// import { labelClasses, useUtilityClasses } from './labelClasses';
+import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelProps {
   /**
@@ -18,6 +19,9 @@ export interface ChartsLabelProps {
   // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelClasses>;
   children?: React.ReactNode;
+  className?: string;
+  // eslint-disable-next-line react/no-unused-prop-types
+  sx?: SxProps<Theme>;
 }
 
 const Root = styled('div', {
@@ -35,17 +39,21 @@ const Root = styled('div', {
 /**
  * Generates the label mark for the tooltip and legend.
  */
-function ChartsLabel(props: ChartsLabelProps) {
-  const { children } = props;
+const ChartsLabel = consumeThemeProps(
+  'MuiChartsLabel',
+  {
+    classesResolver: useUtilityClasses,
+  },
+  function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLDivElement>) {
+    const { children, className, classes, labelStyle, ...other } = props;
 
-  const classes = useUtilityClasses(props);
-
-  return (
-    <Root className={classes.root} ownerState={props}>
-      {children}
-    </Root>
-  );
-}
+    return (
+      <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>
+        {children}
+      </Root>
+    );
+  },
+);
 
 ChartsLabel.propTypes = {
   // ----------------------------- Warning --------------------------------

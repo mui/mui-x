@@ -1,5 +1,5 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
-import deepmerge from '@mui/utils/deepmerge';
+import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import * as React from 'react';
 import * as ReactIs from 'react-is';
@@ -51,7 +51,9 @@ export const consumeSlots = <
   slotPropName: string,
   options: {
     propagateSlots?: boolean;
-    defaultProps?: Omit<Partial<Props>, 'slots' | 'slotProps'>;
+    defaultProps?:
+      | Omit<Partial<Props>, 'slots' | 'slotProps'>
+      | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
   InComponent: React.JSXElementConstructor<Props>,
@@ -63,7 +65,12 @@ export const consumeSlots = <
       name,
     });
 
-    const defaultizedProps = deepmerge(themedProps, options.defaultProps) as Props;
+    const defaultProps =
+      typeof options.defaultProps === 'function'
+        ? options.defaultProps(themedProps as Props)
+        : (options.defaultProps ?? {});
+
+    const defaultizedProps = resolveProps(defaultProps, themedProps) as Props;
     const { slots, slotProps, ...other } = defaultizedProps;
 
     const theme = useTheme();
@@ -77,7 +84,8 @@ export const consumeSlots = <
 
     const OutComponent = ReactIs.isForwardRef(Component)
       ? (Component as unknown as React.ElementType)
-      : React.forwardRef(Component);
+      : // Component needs to be a function that accepts `(props, ref)`
+        React.forwardRef(Component);
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 
