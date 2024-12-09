@@ -92,7 +92,7 @@ export const useTreeItemUtils = <
     instance,
     label,
     store,
-    selection: { multiSelect, checkboxSelection },
+    selection: { multiSelect },
     lazyLoading,
     publicAPI,
   } = useTreeViewContext<TSignatures, TOptionalSignatures>();
@@ -144,24 +144,9 @@ export const useTreeItemUtils = <
 
     // If already expanded and trying to toggle selection don't close
     if (status.expandable && !(multiple && selectorIsItemExpanded(store.value, itemId))) {
-      let fetchErrors = false;
-      if (instance?.fetchItems && lazyLoading && !status.expanded) {
-        // return a boolean if fails/succeeds to check for expansion? might work better
-        await instance.fetchItems([itemId]);
-        fetchErrors = Boolean(selectorGetTreeItemError(store.value, itemId));
-        if (!fetchErrors && status.selected && checkboxSelection) {
-          instance.selectItem({
-            event,
-            itemId,
-            keepExistingSelection: true,
-            shouldBeSelected: true,
-          });
-        }
-      }
+      // make sure the children selection is propagated again
 
-      if (!fetchErrors) {
-        instance.toggleItemExpansion(event, itemId);
-      }
+      await instance.toggleItemExpansion(event, itemId);
     }
   };
 

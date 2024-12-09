@@ -11,6 +11,9 @@ import {
   selectorDataSourceState,
 } from './useTreeViewLazyLoading.selectors';
 import { selectorItemMeta } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { useInstanceEventHandler } from '../../hooks/useInstanceEventHandler';
+import { selectorIsItemExpanded } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
+import { selectorIsItemSelected } from '../useTreeViewSelection/useTreeViewSelection.selectors';
 
 const INITIAL_STATE = {
   loading: {},
@@ -199,6 +202,28 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     },
     [nestedDataManager, params.dataSource, instance, cache, store],
   );
+
+  useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
+    if (selectorIsItemExpanded(store.value, eventParameters.itemId)) {
+      return;
+    }
+
+    eventParameters.isExpansionPrevented = true;
+    await instance.fetchItems([eventParameters.itemId]);
+    const fetchErrors = Boolean(selectorGetTreeItemError(store.value, eventParameters.itemId));
+    if (!fetchErrors) {
+      instance.setItemExpansion(eventParameters.event, eventParameters.itemId, true);
+      if (selectorIsItemSelected(store.value, eventParameters.itemId)) {
+        // make sure selection propagation works correctly
+        instance.selectItem({
+          event: eventParameters.event as React.SyntheticEvent,
+          itemId: eventParameters.itemId,
+          keepExistingSelection: true,
+          shouldBeSelected: true,
+        });
+      }
+    }
+  });
 
   React.useEffect(() => {
     if (firstRenderRef.current) {

@@ -16,7 +16,6 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import { hasPlugin } from '../../utils/plugins';
 import { useTreeViewLabel } from '../useTreeViewLabel';
-import { useTreeViewLazyLoading } from '../useTreeViewLazyLoading';
 import { useSelector } from '../../hooks/useSelector';
 import {
   selectorItemMetaLookup,
@@ -32,7 +31,6 @@ import {
   selectorIsItemExpandable,
   selectorIsItemExpanded,
 } from '../useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { selectorGetTreeItemError } from '../useTreeViewLazyLoading/useTreeViewLazyLoading.selectors';
 
 function isPrintableKey(string: string) {
   return !!string && string.length === 1 && !!string.match(/\S/);
@@ -151,18 +149,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
         ) {
           instance.setEditedItemId(itemId);
         } else if (canToggleItemExpansion(itemId)) {
-          let fetchErrors = false;
-          if (
-            hasPlugin(instance, useTreeViewLazyLoading) &&
-            instance.isLazyLoadingEnabled &&
-            !selectorIsItemExpanded(store.value, itemId)
-          ) {
-            await instance.fetchItems([itemId]);
-            fetchErrors = Boolean(selectorGetTreeItemError(store.value, itemId));
-          }
-          if (!fetchErrors) {
-            instance.toggleItemExpansion(event, itemId);
-          }
+          instance.toggleItemExpansion(event, itemId);
           event.preventDefault();
         } else if (canToggleItemSelection(itemId)) {
           if (params.multiSelect) {

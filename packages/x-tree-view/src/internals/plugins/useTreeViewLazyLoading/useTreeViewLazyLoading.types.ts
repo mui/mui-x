@@ -4,6 +4,7 @@ import { DataSourceCache } from '../../../utils';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
+import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 type DataSource<R extends {}> = {
   /**
@@ -56,6 +57,7 @@ export interface UseTreeViewLazyLoadingState {
     errors: Record<TreeViewItemId, any>;
   };
 }
+
 export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   params: UseTreeViewLazyLoadingParameters<any>;
   defaultizedParams: UseTreeViewLazyLoadingDefaultizedParameters<any>;
@@ -63,6 +65,10 @@ export type UseTreeViewLazyLoadingSignature = TreeViewPluginSignature<{
   instance: UseTreeViewLazyLoadingInstance;
   state: UseTreeViewLazyLoadingState;
   experimentalFeatures: 'lazyLoading';
-  dependencies: [UseTreeViewItemsSignature, UseTreeViewExpansionSignature];
+  dependencies: [
+    UseTreeViewItemsSignature,
+    UseTreeViewExpansionSignature,
+    UseTreeViewSelectionSignature,
+  ];
   contextValue: UseTreeViewLazyLoadingContextValue;
 }>;
