@@ -146,6 +146,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     (itemId: string) => selectorItemModel(store.value, itemId),
     [store],
   );
+  const getParentId = React.useCallback(
+    (itemId: string) => {
+      const itemMeta = selectorItemMeta(store.value, itemId);
+      return itemMeta?.parentId || null;
+    },
+    [store],
+  );
 
   const isTreeViewLoading = React.useMemo(
     () => selectorIsTreeViewLoading(store.value) || false,
@@ -359,6 +366,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemDOMElement,
       getItemTree,
       getItemOrderedChildrenIds,
+      getParentId,
     },
     instance: {
       getItemDOMElement,

@@ -2,17 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId } from '@mui/x-data-grid-generator';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
+
 import { DataSourceCacheDefault } from '@mui/x-tree-view/utils';
 import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
-const fetchData = async (): Promise<
-  TreeViewBaseItem<{
-    id: string;
-    label: string;
-    childrenCount?: number;
-  }>[]
-> => {
+const fetchData = async () => {
   const rows = Array.from({ length: 10 }, () => ({
     id: randomId(),
     label: randomName({}, {}),
@@ -31,7 +25,7 @@ const customCache = new DataSourceCacheDefault({}); // 10 seconds
 export default function LazyLoadingAndLabelEditing() {
   const apiRef = useTreeViewApiRef();
 
-  const handleItemLabelChange = (itemId: TreeViewItemId, newLabel: string) => {
+  const handleItemLabelChange = (itemId, newLabel) => {
     const parentId = apiRef.current?.getParentId(itemId) || 'root';
 
     const cachedData = customCache.get(parentId);
@@ -57,7 +51,7 @@ export default function LazyLoadingAndLabelEditing() {
         onItemLabelChange={handleItemLabelChange}
         isItemEditable
         dataSource={{
-          getChildrenCount: (item) => item?.childrenCount as number,
+          getChildrenCount: (item) => item?.childrenCount,
           getTreeItems: fetchData,
         }}
         dataSourceCache={customCache}

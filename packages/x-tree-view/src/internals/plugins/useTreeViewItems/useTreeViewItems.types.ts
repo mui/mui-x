@@ -40,6 +40,12 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
    * @returns {TreeViewBaseItem[]} The items in the tree.
    */
   getItemTree: () => TreeViewBaseItem[];
+  /**
+   * Get the id of the parent item.
+   * @param {string} itemId The id of the item to whose parentId we want to retrieve.
+   * @returns {TreeViewItemId | null} The id of the parent item.
+   */
+  getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
 export interface UseTreeViewItemsInstance<R extends {}>
@@ -55,6 +61,7 @@ export interface UseTreeViewItemsInstance<R extends {}>
    * @returns {boolean} `true` if the updates to the state based on the `items` prop are prevented.
    */
   areItemUpdatesPrevented: () => boolean;
+  // todo: add JSDoc
   addItems: (args: AddItemsParams<R>) => void;
   removeChildren: (parentId?: TreeViewItemId) => void;
   isTreeViewLoading: boolean;
