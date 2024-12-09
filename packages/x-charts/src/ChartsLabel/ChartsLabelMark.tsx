@@ -17,7 +17,6 @@ export interface ChartsLabelMarkProps {
    * @default type='line': 16
    * @default type='circle': 15
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   size?: number;
   /**
    * The type of the mark.
@@ -32,7 +31,6 @@ export interface ChartsLabelMarkProps {
    * The width of the line.
    * @default 4
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   lineWidth?: number;
   /**
    * The border radius of the mark.
@@ -41,15 +39,12 @@ export interface ChartsLabelMarkProps {
    * @default type='circle': '50%'
    * @default type='line': 1
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   borderRadius?: number | string;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelMarkClasses>;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
 

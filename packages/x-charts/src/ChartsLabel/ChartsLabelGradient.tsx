@@ -16,35 +16,29 @@ export interface ChartsLabelGradientProps {
    *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   gradientId: string;
   /**
    * The direction of the gradient.
    *
    * @default 'row'
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   direction?: 'column' | 'row';
   /**
    * The width of the line.
    * @default 12
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   lineWidth?: number;
   /**
    * The border radius of the gradient.
    *
    * @default 2
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   borderRadius?: number;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelGradientClasses>;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
 

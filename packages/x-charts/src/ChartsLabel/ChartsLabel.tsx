@@ -11,16 +11,13 @@ export interface ChartsLabelProps {
    * Style applied to legend labels.
    * @default theme.typography.caption
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   labelStyle?: React.CSSProperties;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelClasses>;
   children?: React.ReactNode;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
 
