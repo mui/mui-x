@@ -371,7 +371,7 @@ export const GridRootStyles = styled('div', {
       marginLeft: -5,
     },
     [`& .${c['columnHeader--moving']}`]: {
-      backgroundColor: (t.vars || t).palette.action.hover,
+      backgroundColor: hoverBackground,
     },
     [`& .${c['columnHeader--pinnedLeft']}, & .${c['columnHeader--pinnedRight']}`]: {
       position: 'sticky',
@@ -403,7 +403,7 @@ export const GridRootStyles = styled('div', {
       [`& .${c.columnHeader}:focus,
         & .${c['columnHeader--siblingFocused']}`]: {
         [`.${c['columnSeparator--resizable']}`]: {
-          color: (t.vars || t).palette.primary.main,
+          color: vars.colors.foreground.accent,
         },
       },
     },
@@ -423,7 +423,7 @@ export const GridRootStyles = styled('div', {
       cursor: 'col-resize',
       touchAction: 'none',
       [`&.${c['columnSeparator--resizing']}`]: {
-        color: (t.vars || t).palette.primary.main,
+        color: vars.colors.foreground.accent,
       },
       // Always appear as draggable on touch devices
       '@media (hover: none)': {
@@ -431,7 +431,7 @@ export const GridRootStyles = styled('div', {
       },
       '@media (hover: hover)': {
         '&:hover': {
-          color: (t.vars || t).palette.primary.main,
+          color: vars.colors.foreground.accent,
           [`& .${c.iconSeparator} rect`]: separatorIconDragStyles,
         },
       },
