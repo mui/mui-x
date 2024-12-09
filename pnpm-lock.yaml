@@ -27,8 +27,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       '@argos-ci/core':
-        specifier: ^2.11.1
-        version: 2.11.1
+        specifier: ^2.12.0
+        version: 2.12.0
       '@babel/cli':
         specifier: ^7.26.4
         version: 7.26.4(@babel/core@7.26.0)
@@ -1794,8 +1794,8 @@ packages:
     resolution: {integrity: sha512-cJBNriNEs4aSBBpvsJH0f1D71rr9zxu/f0xRiqdEIIEN4ioFCCxs/66hNKrTxCw+lTaBnBL6LaM5vrBUkzgkzQ==}
     engines: {node: '>=18.0.0'}
 
-  '@argos-ci/core@2.11.1':
-    resolution: {integrity: sha512-ZB/LIsdpFrGGLJ0tElh0RxrnOWeTWgsC3+84X1I2mcc6vwp1cGNu8uitr+2AOB0a6OXtKCVd7OK9zg/4yv93Sw==}
+  '@argos-ci/core@2.12.0':
+    resolution: {integrity: sha512-SmJYi93Oh0DYnJ1kZVFtzM0UDr0MfrcUhOuUsBJNpYc4hV2AlCNeoi8hzWYPJvARMKh03ZcbNx4+VY5jXiGLOA==}
     engines: {node: '>=18.0.0'}
 
   '@argos-ci/util@2.2.1':
@@ -10538,7 +10538,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@argos-ci/core@2.11.1':
+  '@argos-ci/core@2.12.0':
     dependencies:
       '@argos-ci/api-client': 0.7.1
       '@argos-ci/util': 2.2.1
