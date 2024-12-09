@@ -211,7 +211,7 @@
     "languageTag": "ro-RO",
     "importName": "roRO",
     "localeName": "Romanian",
-    "missingKeysCount": 9,
+    "missingKeysCount": 0,
     "totalKeysCount": 123,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/roRO.ts"
   },
@@ -251,7 +251,7 @@
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 3,
+    "missingKeysCount": 0,
     "totalKeysCount": 123,
     "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/trTR.ts"
   },
