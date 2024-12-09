@@ -94,7 +94,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = (par
 };
 
 export const useGridRowsPreProcessors = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  apiRef: React.RefObject<GridPrivateApiCommunity>,
 ) => {
   useGridRegisterStrategyProcessor(
     apiRef,

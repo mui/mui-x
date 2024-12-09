@@ -99,7 +99,7 @@ try {
 }
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
