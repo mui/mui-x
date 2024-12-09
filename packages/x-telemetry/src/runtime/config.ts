@@ -67,6 +67,25 @@ function getIsTelemetryCollecting(): boolean | undefined {
     // If there is an error, return the default value
   }
 
+  try {
+    // e.g. Next.js, webpack EnvironmentPlugin
+    const envValue = (
+      process.env.MUI_X_TELEMETRY_DISABLED ||
+      process.env.NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED ||
+      process.env.GATSBY_MUI_X_TELEMETRY_DISABLED ||
+      process.env.REACT_APP_MUI_X_TELEMETRY_DISABLED ||
+      process.env.PUBLIC_MUI_X_TELEMETRY_DISABLED
+    )
+    const result = getBooleanEnv(envValue)
+    if (typeof result === 'boolean') {
+      // If disabled=true, telemetry is disabled
+      // If disabled=false, telemetry is enabled
+      return !result;
+    }
+  } catch (_) {
+    // If there is an error, return the default value
+  }
+
   return undefined;
 }
 
@@ -104,6 +123,23 @@ function getIsDebugModeEnabled(): boolean {
       if (typeof result === 'boolean') {
         return result;
       }
+    }
+  } catch (_) {
+    // If there is an error, return the default value
+  }
+
+  try {
+    // e.g. Next.js, webpack EnvironmentPlugin
+    const envValue = (
+      process.env.MUI_X_TELEMETRY_DEBUG ||
+      process.env.NEXT_PUBLIC_MUI_X_TELEMETRY_DEBUG ||
+      process.env.GATSBY_MUI_X_TELEMETRY_DEBUG ||
+      process.env.REACT_APP_MUI_X_TELEMETRY_DEBUG ||
+      process.env.PUBLIC_MUI_X_TELEMETRY_DEBUG
+    )
+    const result = getBooleanEnv(envValue)
+    if (typeof result === 'boolean') {
+      return result;
     }
   } catch (_) {
     // If there is an error, return the default value
