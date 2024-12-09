@@ -1,29 +1,31 @@
 import * as React from 'react';
 import type { TextFieldProps } from '@mui/material/TextField';
-import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
+import { AmPmProps, PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { BuiltInFieldTextFieldProps, FieldOwnerState } from '@mui/x-date-pickers/models';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import {
   ExportedUseClearableFieldProps,
   UseClearableFieldSlots,
   UseClearableFieldSlotProps,
 } from '@mui/x-date-pickers/hooks';
-import { UseTimeRangeFieldProps } from '../internals/models';
-import { TimeRangeValidationError } from '../models';
+import { RangeFieldSeparatorProps, TimeRangeValidationError } from '../models';
+import { ExportedValidateTimeRangeProps } from '../validation/validateTimeRange';
 
 export interface UseSingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends UseTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    ExportedUseClearableFieldProps,
-    Pick<
+> extends MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,
         TimeRangeValidationError
       >,
-      'unstableFieldRef'
-    > {}
+      'format'
+    >,
+    RangeFieldSeparatorProps,
+    ExportedValidateTimeRangeProps,
+    AmPmProps,
+    ExportedUseClearableFieldProps {}
 
 export type SingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
