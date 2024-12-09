@@ -9,10 +9,11 @@ async function getRawMachineId(): Promise<string | null> {
   }
 }
 
-async function getAnonymousMachineId(): Promise<string | null> {
+export default async function getAnonymousMachineId(): Promise<string | null> {
   const rawMachineId = await getRawMachineId();
+  if (!rawMachineId) {
+    return null;
+  }
 
-  return rawMachineId ? createHash('sha256').update(rawMachineId).digest('hex') : rawMachineId;
+  return createHash('sha256').update(rawMachineId).digest('hex');
 }
-
-export default getAnonymousMachineId;

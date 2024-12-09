@@ -2,19 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import { randomBytes } from 'crypto';
 import type { TelemetryContextType } from '../context';
-import getAnonymousEnvironment from '../internal/get-anonymous-environment';
-import getAnonymousProjectId from '../internal/get-project-id';
-// eslint-disable-next-line import/no-cycle
-import { TelemetryStorage } from '../internal/storage';
-import getAnonymousMachineId from '../internal/get-machine-id';
+import getEnvironmentInfo from './get-environment-info';
+import getAnonymousProjectId from './get-project-id';
+import getAnonymousMachineId from './get-machine-id';
+import { TelemetryStorage } from './storage';
 
 (async () => {
   const storage = new TelemetryStorage({
     distDir: path.join(process.cwd()),
   });
 
-  const [anonymousEnvironment, projectId, machineId] = await Promise.all([
-    getAnonymousEnvironment(),
+  const [environmentInfo, projectId, machineId] = await Promise.all([
+    getEnvironmentInfo(),
     getAnonymousProjectId(),
     getAnonymousMachineId(),
   ]);
@@ -25,7 +24,7 @@ import getAnonymousMachineId from '../internal/get-machine-id';
       isInitialized: true,
     },
     traits: {
-      ...anonymousEnvironment,
+      ...environmentInfo,
       machineId,
       projectId,
       sessionId: randomBytes(32).toString('hex'),
@@ -42,15 +41,17 @@ import getAnonymousMachineId from '../internal/get-machine-id';
   writeContextData('esm', (content) => `export default ${content};`);
   writeContextData(
     '',
-    (content) => `"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = void 0;
-var _default = exports.default = ${content};`,
+    (content) => [
+      `"use strict";`,
+      `Object.defineProperty(exports, "__esModule", { value: true });`,
+      `exports.default = void 0;`,
+      `var _default = exports.default = ${content};`
+    ].join('\n'),
   );
 })().catch((error) => {
   console.error(
     '[telemetry] Failed to make initialization. Please, report error to MUI X team:\n' +
-      'https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x\n',
+      'https://github.com/mui/mui-x/issues/new/choose\n',
     error,
   );
 });

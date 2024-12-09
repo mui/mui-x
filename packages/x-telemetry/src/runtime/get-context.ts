@@ -1,5 +1,5 @@
-import telemetryContext from './context';
-import type { TelemetryContextType } from './context';
+import telemetryContext from '../context';
+import type { TelemetryContextType } from '../context';
 import {
   getWindowStorageItem,
   setWindowStorageItem,

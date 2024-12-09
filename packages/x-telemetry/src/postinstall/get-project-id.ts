@@ -28,14 +28,10 @@ async function execCLI(command: string): Promise<string | null> {
 
 // Q: Why does MUI need a project ID? Why is it looking at my git remote?
 // A:
-// MUI' telemetry is and always will be completely anonymous. Because of
-// this, we need a way to differentiate different projects to track feature
-// usage accurately. For example, to prevent a feature from appearing to be
-// constantly `used` and then `unused` when switching between local projects.
-// To reiterate,
-// we **never** can read your actual git remote. The value is hashed one-way,
-// making it impossible for us to reverse or try to
-// guess the remote by re-computing hashes.
+// MUI' telemetry is and always will anonimise this values. We need a way to
+// differentiate different projects to track feature usage accurately.
+// For example, to prevent a feature from appearing to be constantly `used`
+// and then `unused` when switching between local projects.
 
 async function getRawProjectId(): Promise<string> {
   return (
@@ -46,10 +42,7 @@ async function getRawProjectId(): Promise<string> {
   );
 }
 
-async function getAnonymousProjectId(): Promise<string> {
-  return createHash('sha256')
-    .update(await getRawProjectId())
-    .digest('hex');
+export default async function getAnonymousProjectId(): Promise<string> {
+  const rawProjectId = await getRawProjectId();
+  return createHash('sha256').update(rawProjectId).digest('hex');
 }
-
-export default getAnonymousProjectId;

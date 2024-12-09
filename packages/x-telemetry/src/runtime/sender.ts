@@ -1,6 +1,8 @@
 import getTelemetryContext, { TelemetryContextType } from './get-context';
-import { getMuiXTelemetryEnv } from './config';
-import { TelemetryEvent } from './types';
+import { getTelemetryEnvConfigValue } from './config';
+import { TelemetryEvent } from '../types';
+import { fetchWithRetry } from "./fetcher";
+import * as packageJson from '../../package.json';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   // Disable collection of the telemetry
@@ -10,7 +12,7 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   }
 
   // Priority to the config (e.g. in code, env)
-  const envIsCollecting = getMuiXTelemetryEnv('IS_COLLECTING');
+  const envIsCollecting = getTelemetryEnvConfigValue('IS_COLLECTING');
   if (typeof envIsCollecting === 'boolean') {
     return envIsCollecting;
   }
@@ -29,26 +31,7 @@ function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
   return false;
 }
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
-  try {
-    const response = await fetch(url, options);
-    if (response.ok) {
-      return response;
-    }
-
-    throw new Error(`Request failed with status ${response.status}`);
-  } catch (error) {
-    if (retries === 0) {
-      throw error;
-    }
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(fetchWithRetry(url, options, retries - 1));
-      }, Math.random() * 3_000);
-    });
-  }
-}
+const sendMuiXTelemetryRetries = 3;
 
 async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   try {
@@ -65,28 +48,26 @@ async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
       },
     };
 
-    if (getMuiXTelemetryEnv('DEBUG')) {
+    if (getTelemetryEnvConfigValue('DEBUG')) {
       console.log('[mui-x-telemetry] event', JSON.stringify(eventPayload, null, 2));
-      return;
-    }
-
-    // Ignore if fetch is not available (e.g. IE, etc.)
-    if (typeof fetch !== 'function') {
       return;
     }
 
     // TODO: batch events and send them in a single request when there will be more
     await fetchWithRetry(
-      'https://telemetry.x.mui.com/api/v1/telemetry/record',
+      'https://x-telemetry.mui.com/api/v1/telemetry/record',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Telemetry-Client-Version': packageJson.version,
+        },
         body: JSON.stringify([eventPayload]),
       },
-      3,
+      sendMuiXTelemetryRetries,
     );
-  } catch (error) {
-    console.error('[mui-x-telemetry] error', error);
+  } catch (_) {
+    // Ignore for now
   }
 }
 

@@ -1,18 +1,27 @@
 // This file will be modified by the `postinstall` script.
-// See scripts/postinstall.ts for more information.
+// See postinstall/index.ts for more information.
 
 export interface TelemetryContextType {
   config: {
     isCollecting: true | false | null;
     isInitialized: boolean;
   };
-  traits: Record<string, any>;
+  traits: Record<string, any> & {
+    machineId?: string | null;
+    projectId?: string | null;
+    sessionId?: string | null;
+    anonymousId?: string | null;
+    isDocker?: boolean;
+    isCI?: boolean;
+  };
 }
 
-export default {
+const defaultValue: TelemetryContextType = {
   config: {
     isCollecting: null,
     isInitialized: false,
   },
   traits: {},
-} as TelemetryContextType;
+};
+
+export default defaultValue;
