@@ -34,19 +34,21 @@ function getMuiPackageVersion(packageName, commitRef) {
 }
 
 ponyfillGlobal.muiDocConfig = {
-  csbIncludePeerDependencies: (deps, { versions }) => {
+  csbIncludePeerDependencies: (deps) => {
     const newDeps = { ...deps };
 
-    newDeps['@mui/material'] = versions['@mui/material'];
+    newDeps['@mui/material'] = '^5.4.1';
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/icons-material'] = '^5.0.0';
     }
     return newDeps;
   },
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
+      react: '^18.0.0',
+      'react-dom': '^18.0.0',
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
       '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
@@ -55,7 +57,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      exceljs: 'latest',
+      exceljs: '^4.3.0',
     };
     return output;
   },
