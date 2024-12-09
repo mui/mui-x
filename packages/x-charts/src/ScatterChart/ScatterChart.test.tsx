@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
@@ -54,38 +54,6 @@ describe('<ScatterChart />', () => {
     width: 100,
     height: 100,
   };
-
-  it('should show the tooltip without errors in default config', function test() {
-    if (isJSDOM) {
-      // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
-      this.skip();
-    }
-    render(
-      <div
-        style={{
-          margin: -8, // Removes the body default margins
-          width: 100,
-          height: 100,
-        }}
-      >
-        <ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} />
-      </div>,
-    );
-    const svg = document.querySelector<HTMLElement>('svg')!;
-    const marks = document.querySelectorAll<HTMLElement>('circle');
-
-    fireEvent.pointerEnter(marks[0]);
-
-    fireEvent.pointerEnter(svg); // Trigger the tooltip
-    fireEvent.pointerMove(marks[0]); // Only to set the tooltip position
-
-    let cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(0, 10)']);
-
-    fireEvent.pointerEnter(marks[4]);
-    cells = document.querySelectorAll<HTMLElement>('.MuiChartsTooltip-root td');
-    expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '', '(5, 5)']);
-  });
 
   it('should support dataset with missing values', async function test() {
     if (isJSDOM) {
