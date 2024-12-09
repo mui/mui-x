@@ -39,6 +39,8 @@ describe('<ScatterChart />', () => {
     }),
   );
 
+  const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
   const config = {
     dataset: [
       { id: 1, x: 0, y: 10 },
