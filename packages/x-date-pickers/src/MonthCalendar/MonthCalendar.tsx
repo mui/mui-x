@@ -64,7 +64,7 @@ const MonthCalendarRoot = styled('div', {
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-evenly',
-  rowGap: 10,
+  rowGap: 16,
   width: DIALOG_WIDTH,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
