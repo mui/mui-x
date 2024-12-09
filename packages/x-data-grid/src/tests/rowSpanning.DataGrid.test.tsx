@@ -11,7 +11,7 @@ describe('<DataGrid /> - Row spanning', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
   const baselineProps: DataGridProps = {
-    unstable_rowSpanning: true,
+    rowSpanning: true,
     columns: [
       {
         field: 'code',
