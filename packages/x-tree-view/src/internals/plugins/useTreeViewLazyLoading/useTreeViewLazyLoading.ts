@@ -123,7 +123,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         // set caching
         cache.set('root', getTreeItemsResponse);
 
-        // update the items in the state -> need to write a method for this in useTreeViewItems
+        // update the items in the state
         instance.addItems({ items: getTreeItemsResponse, depth: 0, getChildrenCount });
       } catch (error) {
         // set the items to empty
@@ -183,7 +183,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
 
         // set caching
         cache.set(id, getTreeItemsResponse);
-        // update the items in the state -> need to write a method for this in useTreeViewItems
+        // update the items in the state
         instance.addItems({ items: getTreeItemsResponse, depth, parentId: id, getChildrenCount });
       } catch (error) {
         const childrenFetchError = error as Error;

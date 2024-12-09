@@ -30,6 +30,7 @@ interface UpdateItemsStateParameters
   initialDepth?: number;
   initialParentId?: string | null;
   getChildrenCount?: (item: TreeViewBaseItem) => number;
+  ignoreChildren?: boolean;
 }
 
 type State = UseTreeViewItemsState<any>['items'];
@@ -70,6 +71,7 @@ const updateItemsState = ({
   initialDepth = 0,
   initialParentId = null,
   getChildrenCount,
+  ignoreChildren = false,
 }: UpdateItemsStateParameters): Omit<State, 'loading' | 'error'> => {
   const itemMetaLookup: State['itemMetaLookup'] = {};
   const itemModelLookup: State['itemModelLookup'] = {};
@@ -111,7 +113,10 @@ const updateItemsState = ({
     }
     itemOrderedChildrenIdsLookup[parentIdWithDefault].push(id);
 
-    item.children?.forEach((child) => processItem(child, depth + 1, id));
+    // if lazy loading is enabled, we don't want to process children passed through the `items` prop
+    if (!ignoreChildren) {
+      item.children?.forEach((child) => processItem(child, depth + 1, id));
+    }
   };
 
   items?.forEach((item) => processItem(item, initialDepth, initialParentId));
@@ -219,13 +224,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
         getChildrenCount,
         initialDepth: depth,
         initialParentId: parentId,
+        ignoreChildren: true,
       });
 
       store.update((prevState) => {
         let newItems;
         if (parentId) {
           newItems = {
-            itemModelLookup: prevState.items.itemModelLookup,
+            itemModelLookup: { ...prevState.items.itemModelLookup, ...newState.itemModelLookup },
             itemMetaLookup: { ...prevState.items.itemMetaLookup, ...newState.itemMetaLookup },
             itemOrderedChildrenIdsLookup: {
               ...newState.itemOrderedChildrenIdsLookup,
@@ -238,7 +244,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
           };
         } else {
           newItems = {
-            itemModelLookup: items,
+            itemModelLookup: newState.itemModelLookup,
             itemMetaLookup: newState.itemMetaLookup,
             itemOrderedChildrenIdsLookup: newState.itemOrderedChildrenIdsLookup,
             itemChildrenIndexesLookup: newState.itemChildrenIndexesLookup,
@@ -249,7 +255,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
             publishTreeViewEvent(instance, 'removeItem', { id: item.id });
           }
         });
-
         return { ...prevState, items: { ...prevState.items, ...newItems } };
       });
     }
