@@ -268,7 +268,7 @@ describe('<DataGridPro /> - Row reorder', () => {
             columns={columns}
             rowReordering
             filterModel={{
-              items: [{ field: 'brand', operator: 'doesNotContain', value: 'Nike' }],
+              items: [{ field: 'brand', operator: 'doesNotEqual', value: 'Nike' }],
             }}
           />
         </div>
