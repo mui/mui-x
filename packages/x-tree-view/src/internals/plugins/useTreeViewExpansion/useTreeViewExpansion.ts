@@ -5,7 +5,7 @@ import { TreeViewPlugin } from '../../models';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 import { TreeViewItemId } from '../../../models';
 import { selectorIsItemExpandable, selectorIsItemExpanded } from './useTreeViewExpansion.selectors';
-import { createExpandedItemsMap } from './useTreeViewExpansion.utils';
+import { createExpandedItemsMap, getExpansionTrigger } from './useTreeViewExpansion.utils';
 import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
@@ -16,18 +16,36 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   store,
   params,
   models,
-  experimentalFeatures,
 }) => {
-  const isTreeViewEditable = Boolean(params.isItemEditable) && !!experimentalFeatures.labelEditing;
-
   useEnhancedEffect(() => {
     store.update((prevState) => ({
       ...prevState,
       expansion: {
+        ...prevState.expansion,
         expandedItemsMap: createExpandedItemsMap(models.expandedItems.value),
       },
     }));
   }, [store, models.expandedItems.value]);
+
+  useEnhancedEffect(() => {
+    store.update((prevState) => {
+      const newExpansionTrigger = getExpansionTrigger({
+        isItemEditable: params.isItemEditable,
+        expansionTrigger: params.expansionTrigger,
+      });
+      if (prevState.expansion.expansionTrigger === newExpansionTrigger) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        expansion: {
+          ...prevState.expansion,
+          expansionTrigger: newExpansionTrigger,
+        },
+      };
+    });
+  }, [store, params.isItemEditable, params.expansionTrigger]);
 
   const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
@@ -89,27 +107,6 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }
   };
 
-  const expansionTrigger = React.useMemo(() => {
-    if (params.expansionTrigger) {
-      return params.expansionTrigger;
-    }
-
-    if (isTreeViewEditable) {
-      return 'iconContainer';
-    }
-
-    return 'content';
-  }, [params.expansionTrigger, isTreeViewEditable]);
-
-  const pluginContextValue = React.useMemo(
-    () => ({
-      expansion: {
-        expansionTrigger,
-      },
-    }),
-    [expansionTrigger],
-  );
-
   return {
     publicAPI: {
       setItemExpansion,
@@ -119,7 +116,6 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
       toggleItemExpansion,
       expandAllSiblings,
     },
-    contextValue: pluginContextValue,
   };
 };
 
@@ -141,6 +137,7 @@ useTreeViewExpansion.getInitialState = (params) => ({
     expandedItemsMap: createExpandedItemsMap(
       params.expandedItems === undefined ? params.defaultExpandedItems : params.expandedItems,
     ),
+    expansionTrigger: getExpansionTrigger(params),
   },
 });
 

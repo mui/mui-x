@@ -24,3 +24,13 @@ export const selectorIsItemExpandable = createSelector(
   [selectorItemMeta],
   (itemMeta) => itemMeta?.expandable ?? false,
 );
+
+/**
+ * Get the slot that triggers the item's expansion when clicked.
+ * @param {TreeViewState<[UseTreeViewExpansionSignature]>} state The state of the tree view.
+ * @returns {'content' | 'iconContainer'} The slot that triggers the item's expansion when clicked. Is `null` if the item is not expandable.
+ */
+export const selectorItemExpansionTrigger = createSelector(
+  [selectorExpansion],
+  (expansionState) => expansionState.expansionTrigger,
+);

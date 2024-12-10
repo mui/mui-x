@@ -112,7 +112,7 @@ type PluginPropertyWithDependencies<
 export type TreeViewUsedParams<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'params'>;
 
-type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
+export type TreeViewUsedDefaultizedParams<TSignature extends TreeViewAnyPluginSignature> =
   PluginPropertyWithDependencies<TSignature, 'defaultizedParams'>;
 
 export type TreeViewUsedInstance<TSignature extends TreeViewAnyPluginSignature> =
