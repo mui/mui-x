@@ -439,7 +439,7 @@ describe('<DateCalendar />', () => {
     it('renders year selection standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date('2019-01-01')} openTo="year" />);
 
-      expect(screen.getAllByTestId('year')).to.have.length(200);
+      expect(screen.getAllByRole('radio')).to.have.length(200);
     });
 
     it('should select the closest enabled date in the month if the current date is disabled', () => {
