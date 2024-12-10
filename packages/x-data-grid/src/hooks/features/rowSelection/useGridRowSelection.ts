@@ -534,10 +534,14 @@ export const useGridRowSelection = (
       const isMultipleSelectionDisabled =
         !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event);
       const resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled;
+      const selectedRowsCount = apiRef.current.getSelectedRows().size;
 
-      const isSelected = apiRef.current.isRowSelected(id);
-
-      apiRef.current.selectRow(id, !isSelected, resetSelection);
+      if (canHaveMultipleSelection && selectedRowsCount > 1 && !hasCtrlKey) {
+        apiRef.current.selectRow(id, true, resetSelection);
+      } else {
+        const isSelected = apiRef.current.isRowSelected(id);
+        apiRef.current.selectRow(id, !isSelected, resetSelection);
+      }
     },
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
