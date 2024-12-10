@@ -12,6 +12,14 @@ The following demo explores the usage of this API:
 
 {{"demo": "ScrollPlayground.js", "bg": "inline"}}
 
+## Scroll restoration
+
+You can restore scroll to a previous position by definining `initialState.scroll` values `{ top: number, left: number }`. The Data Grid will mount at the specified scroll offset in pixels.
+
+The following demo explores the usage of scroll restoration:
+
+{{"demo": "ScrollRestoration.js", "bg": "inline"}}
+
 ## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
