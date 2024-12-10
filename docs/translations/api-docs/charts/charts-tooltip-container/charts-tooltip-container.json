@@ -46,6 +46,10 @@
     }
   },
   "classDescriptions": {
+    "axisValueCell": {
+      "description": "Styles applied to {{nodeName}}. Only available for axis tooltip.",
+      "nodeName": "the axisValueCell element"
+    },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "labelCell": {
       "description": "Styles applied to {{nodeName}}.",
