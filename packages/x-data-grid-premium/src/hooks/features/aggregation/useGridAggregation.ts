@@ -106,9 +106,10 @@ export const useGridAggregation = (
       return {
         ...params,
         aggregationModel: gridAggregationModelSelector(apiRef),
+        aggregationRowsScope: props.aggregationRowsScope,
       };
     },
-    [apiRef],
+    [apiRef, props.aggregationRowsScope],
   );
 
   const reapplyAggregation = React.useCallback(() => {
