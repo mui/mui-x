@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRtl } from '@mui/system/RtlProvider';
+import { shouldForwardProp } from '@mui/system/createStyled';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
@@ -11,7 +12,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { DefaultizedProps } from '@mui/x-internals/types';
-import { PickersYear } from './PickersYear';
+import { YearCalendarButton } from './YearCalendarButton';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getYearCalendarUtilityClass, YearCalendarClasses } from './yearCalendarClasses';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -36,7 +37,7 @@ function useYearCalendarDefaultizedProps(
   name: string,
 ): DefaultizedProps<
   YearCalendarProps,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow'
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'yearsPerRow' | 'yearsOrder'
 > {
   const utils = useUtils();
   const defaultDates = useDefaultDates();
@@ -50,6 +51,7 @@ function useYearCalendarDefaultizedProps(
     disableFuture: false,
     ...themeProps,
     yearsPerRow: themeProps.yearsPerRow ?? 3,
+    yearsOrder: themeProps.yearsOrder ?? 'asc',
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
@@ -58,19 +60,38 @@ function useYearCalendarDefaultizedProps(
 const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickerOwnerState }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'yearsPerRow',
+})<{ ownerState: PickerOwnerState; yearsPerRow: 3 | 4 }>({
   display: 'flex',
-  flexDirection: 'row',
   flexWrap: 'wrap',
+  justifyContent: 'space-evenly',
+  rowGap: 12,
+  padding: '6px 0',
   overflowY: 'auto',
   height: '100%',
-  padding: '0 4px',
   width: DIALOG_WIDTH,
   maxHeight: MAX_CALENDAR_HEIGHT,
   // avoid padding increasing width over defined
   boxSizing: 'border-box',
   position: 'relative',
+  variants: [
+    {
+      props: { yearsPerRow: 3 },
+      style: { columnGap: 24 },
+    },
+    {
+      props: { yearsPerRow: 4 },
+      style: { columnGap: 0, padding: '0 2px' },
+    },
+  ],
+});
+
+const YearCalendarButtonFiller = styled('div', {
+  name: 'MuiYearCalendar',
+  slot: 'ButtonFiller',
+})({
+  height: 36,
+  width: 72,
 });
 
 type YearCalendarComponent = ((props: YearCalendarProps) => React.JSX.Element) & {
@@ -110,7 +131,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
-    yearsOrder = 'asc',
+    yearsOrder,
     yearsPerRow,
     timezone: timezoneProp,
     gridLabelId,
@@ -294,6 +315,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
     yearRange.reverse();
   }
 
+  let fillerAmount = yearsPerRow - (yearRange.length % yearsPerRow);
+  if (fillerAmount === yearsPerRow) {
+    fillerAmount = 0;
+  }
+
   return (
     <YearCalendarRoot
       ref={handleRef}
@@ -301,6 +327,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
       ownerState={ownerState}
       role="radiogroup"
       aria-labelledby={gridLabelId}
+      yearsPerRow={yearsPerRow}
       {...other}
     >
       {yearRange.map((year) => {
@@ -309,7 +336,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
         const isDisabled = disabled || isYearDisabled(year);
 
         return (
-          <PickersYear
+          <YearCalendarButton
             key={utils.format(year, 'year')}
             selected={isSelected}
             value={yearNumber}
@@ -321,14 +348,17 @@ export const YearCalendar = React.forwardRef(function YearCalendar(
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
-            yearsPerRow={yearsPerRow}
             slots={slots}
             slotProps={slotProps}
+            classes={classesProp}
           >
             {utils.format(year, 'year')}
-          </PickersYear>
+          </YearCalendarButton>
         );
       })}
+      {Array.from({ length: fillerAmount }, (_, index) => (
+        <YearCalendarButtonFiller key={index} />
+      ))}
     </YearCalendarRoot>
   );
 }) as YearCalendarComponent;
