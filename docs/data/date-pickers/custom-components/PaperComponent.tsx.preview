@@ -1,0 +1,10 @@
+<DesktopDatePicker
+  label="Desktop variant"
+  slots={{
+    desktopPaper: CustomPaper,
+  }}
+/>
+<MobileDatePicker
+  label="Mobile variant"
+  slots={{ mobilePaper: CustomPaper }}
+/>
