@@ -1,40 +1,37 @@
 'use client';
-import * as React from 'react';
-import { useField, useDefaultizedDateField, PickerRangeValue } from '@mui/x-date-pickers/internals';
+import {
+  useField,
+  useFieldInternalPropsWithDefaults,
+  PickerRangeValue,
+} from '@mui/x-date-pickers/internals';
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { UseSingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
-import { rangeValueManager, getRangeFieldValueManager } from '../internals/utils/valueManagers';
-import { validateDateRange } from '../validation';
+import { useDateRangeManager } from '../managers';
 
 export const useSingleInputDateRangeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
   TAllProps extends UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
 >(
-  inProps: TAllProps,
+  props: TAllProps,
 ) => {
-  const props = useDefaultizedDateField<
-    UseSingleInputDateRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
-    TAllProps
-  >(inProps);
-
+  const manager = useDateRangeManager(props);
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'date');
-
-  const fieldValueManager = React.useMemo(
-    () => getRangeFieldValueManager({ dateSeparator: internalProps.dateSeparator }),
-    [internalProps.dateSeparator],
-  );
+  const internalPropsWithDefaults = useFieldInternalPropsWithDefaults({
+    manager,
+    internalProps,
+  });
 
   return useField<
     PickerRangeValue,
     TEnableAccessibleFieldDOMStructure,
     typeof forwardedProps,
-    typeof internalProps
+    typeof internalPropsWithDefaults
   >({
     forwardedProps,
-    internalProps,
-    valueManager: rangeValueManager,
-    fieldValueManager,
-    validator: validateDateRange,
-    valueType: 'date',
+    internalProps: internalPropsWithDefaults,
+    valueManager: manager.internal_valueManager,
+    fieldValueManager: manager.internal_fieldValueManager,
+    validator: manager.validator,
+    valueType: manager.valueType,
   });
 };
