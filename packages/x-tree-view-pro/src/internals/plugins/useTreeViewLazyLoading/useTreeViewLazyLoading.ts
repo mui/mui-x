@@ -1,18 +1,19 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { warnOnce } from '@mui/x-internals/warning';
-import { selectorItemMeta, TreeViewPlugin } from '@mui/x-tree-view/internals';
-import { NestedDataManager } from './utils';
+import {
+  selectorItemMeta,
+  TreeViewPlugin,
+  selectorIsItemExpanded,
+  selectorIsItemSelected,
+  useInstanceEventHandler,
+  selectorDataSourceState,
+  selectorGetTreeItemError,
+} from '@mui/x-tree-view/internals';
+import type { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { DataSourceCache, DataSourceCacheDefault } from '@mui/x-tree-view/utils';
-import {
-  selectorGetTreeItemError,
-  selectorDataSourceState,
-} from './useTreeViewLazyLoading.selectors';
-import { useInstanceEventHandler } from '@mui/x-tree-view/internals/hooks/useInstanceEventHandler';
-import { UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewLazyLoading/useTreeViewLazyLoading.types';
-import { selectorIsItemExpanded } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import { selectorIsItemSelected } from '@mui/x-tree-view/internals/plugins/useTreeViewSelection/useTreeViewSelection.selectors';
+import { NestedDataManager } from './utils';
 
 const INITIAL_STATE = {
   loading: {},
@@ -46,7 +47,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   const cache = React.useRef<DataSourceCache>(getCache(params.dataSourceCache)).current;
 
   const setDataSourceLoading = React.useCallback(
-    (itemId, isLoading) => {
+    (itemId: TreeViewItemId, isLoading: boolean) => {
       store.update((prevState) => {
         if (!prevState.dataSource.loading[itemId] && isLoading === false) {
           return prevState;
@@ -65,7 +66,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     [store],
   );
 
-  const setDataSourceError = (itemId, error) => {
+  const setDataSourceError = (itemId: TreeViewItemId, error: Error | null) => {
     store.update((prevState) => {
       const errors = { ...prevState.dataSource.errors };
       if (error === null && errors[itemId] !== undefined) {
@@ -157,6 +158,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       }
 
       const depth = parent.depth ? parent.depth + 1 : 1;
+
       // handle loading here
       instance.setDataSourceLoading(id, true);
 

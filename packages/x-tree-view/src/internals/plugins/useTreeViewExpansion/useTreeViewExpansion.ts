@@ -30,7 +30,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }));
   }, [store, models.expandedItems.value]);
 
-  const setExpandedItems = (event: React.SyntheticEvent | null, value: TreeViewItemId[]) => {
+  const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
     models.expandedItems.setControlledValue(value);
   };
@@ -48,7 +48,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   );
 
   const setItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => {
+    (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
       const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       if (isExpandedBefore === isExpanded) {
         return;

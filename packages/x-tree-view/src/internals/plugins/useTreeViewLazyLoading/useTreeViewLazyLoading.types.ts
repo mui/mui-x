@@ -54,7 +54,7 @@ interface UseTreeViewLazyLoadingContextValue {
 export interface UseTreeViewLazyLoadingState {
   dataSource: {
     loading: Record<TreeViewItemId, boolean>;
-    errors: Record<TreeViewItemId, any>;
+    errors: Record<TreeViewItemId, Error | null>;
   };
 }
 

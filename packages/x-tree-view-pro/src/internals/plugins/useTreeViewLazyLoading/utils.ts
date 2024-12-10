@@ -1,6 +1,5 @@
-import { TreeViewItemId } from '../../../models';
-import { TreeViewInstance, TreeViewUsedInstance } from '../../models';
-import { UseTreeViewLazyLoadingSignature } from './useTreeViewLazyLoading.types';
+import { TreeViewInstance, UseTreeViewLazyLoadingSignature } from '@mui/x-tree-view/internals';
+import { TreeViewItemId } from '@mui/x-tree-view/models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -42,7 +41,7 @@ export class NestedDataManager {
   private maxConcurrentRequests: number;
 
   constructor(
-    instance: TreeViewUsedInstance<UseTreeViewLazyLoadingSignature>,
+    instance: TreeViewInstance<[UseTreeViewLazyLoadingSignature]>,
     maxConcurrentRequests = MAX_CONCURRENT_REQUESTS,
   ) {
     this.instance = instance;

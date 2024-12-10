@@ -160,13 +160,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   );
   const getTreeViewError = React.useMemo(() => selectorGetTreeViewError(store.value), [store]);
 
-  const setTreeViewLoading = (isLoading) => {
+  const setTreeViewLoading = (isLoading: boolean) => {
     store.update((prevState) => ({
       ...prevState,
       items: { ...prevState.items, loading: isLoading },
     }));
   };
-  const setTreeViewError = (error) => {
+  const setTreeViewError = (error: Error | null) => {
     store.update((prevState) => ({
       ...prevState,
       items: { ...prevState.items, error },
@@ -266,7 +266,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       });
     }
   };
-  const removeChildren = (parentId) => {
+  const removeChildren = (parentId: string | undefined) => {
     store.update((prevState) => {
       if (!parentId) {
         return {
