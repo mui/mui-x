@@ -581,11 +581,6 @@
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": {
-      "type": { "name": "number" },
-      "default": "166",
-      "deprecated": true
-    },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -610,6 +605,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -652,7 +648,6 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",

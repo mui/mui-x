@@ -954,14 +954,6 @@ DataGridPremiumRaw.propTypes = {
    */
   rowModesModel: PropTypes.object,
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: PropTypes.number,
-  /**
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
@@ -1012,6 +1004,11 @@ DataGridPremiumRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
+  /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
   /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
@@ -1126,11 +1123,6 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
-  /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
-   * @default false
-   */
-  unstable_rowSpanning: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

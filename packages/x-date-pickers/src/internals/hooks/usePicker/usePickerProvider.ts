@@ -17,6 +17,7 @@ import {
 } from '../../models';
 import { useUtils } from '../useUtils';
 import { arrayIncludes } from '../../utils/utils';
+import { UsePickerViewsProviderParams } from './usePickerViews';
 
 function getOrientation(): PickerOrientation {
   if (typeof window === 'undefined') {
@@ -59,13 +60,21 @@ export const usePickerOrientation = (
   return customOrientation ?? orientation;
 };
 
-export function usePickerProvider<TValue extends PickerValidValue>(
-  parameters: UsePickerProviderParameters<TValue>,
-): UsePickerProviderReturnValue {
-  const { props, valueManager, localeText, variant, views, paramsFromUsePickerValue } = parameters;
+export function usePickerProvider<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(parameters: UsePickerProviderParameters<TValue, TView>): UsePickerProviderReturnValue {
+  const {
+    props,
+    valueManager,
+    localeText,
+    variant,
+    paramsFromUsePickerValue,
+    paramsFromUsePickerViews,
+  } = parameters;
 
   const utils = useUtils();
-  const orientation = usePickerOrientation(views, props.orientation);
+  const orientation = usePickerOrientation(paramsFromUsePickerViews.views, props.orientation);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -115,19 +124,21 @@ export function usePickerProvider<TValue extends PickerValidValue>(
   };
 }
 
-export interface UsePickerProviderParameters<TValue extends PickerValidValue>
-  extends Pick<PickerProviderProps, 'localeText'> {
+export interface UsePickerProviderParameters<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends Pick<PickerProviderProps, 'localeText'> {
   props: UsePickerProps<TValue, any, any, any, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
-  views: readonly DateOrTimeViewWithMeridiem[];
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue>;
+  paramsFromUsePickerViews: UsePickerViewsProviderParams<TView>;
 }
 
 export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
 
 /**
- * Props used to create the private context.
+ * Props used to create the picker's contexts.
  * Those props are exposed on all the pickers.
  */
 export interface UsePickerProviderProps extends FormProps {
@@ -135,4 +146,15 @@ export interface UsePickerProviderProps extends FormProps {
    * Force rendering in particular orientation.
    */
   orientation?: PickerOrientation;
+}
+
+/**
+ * Props used to create the picker's contexts and that are not available on static pickers.
+ */
+export interface UsePickerProviderNonStaticProps {
+  /**
+   * If `true`, the open picker button will not be rendered (renders only the field).
+   * @default false
+   */
+  disableOpenPicker?: boolean;
 }

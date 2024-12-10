@@ -110,10 +110,30 @@ interface UseTreeViewItemsEventLookup {
 
 export interface UseTreeViewItemsState<R extends {}> {
   items: {
+    /**
+     * If `true`, will allow focus on disabled items.
+     * Always equal to `props.disabledItemsFocusable` (or `false` if not provided).
+     */
     disabledItemsFocusable: boolean;
-    itemModelLookup: TreeViewItemModelLookup<R>;
-    itemMetaLookup: TreeViewItemMetaLookup;
+    /**
+     * Model of each item as provided by `props.items` or by imperative items updates.
+     * It is not updated when properties derived from the model are updated:
+     * - when the label of an item is updated, `itemMetaLookup` is updated, not `itemModelLookup`.
+     * - when the children of an item are updated, `itemOrderedChildrenIdsLookup` and `itemChildrenIndexesLookup` are updated, not `itemModelLookup`.
+     * This means that the `children`, `label` or `id` properties of an item model should never be used directly, always use the structured sub-states instead.
+     */
+    itemModelLookup: { [itemId: string]: TreeViewBaseItem<R> };
+    /**
+     * Meta data of each item.
+     */
+    itemMetaLookup: { [itemId: string]: TreeViewItemMeta };
+    /**
+     * Ordered children ids of each item.
+     */
     itemOrderedChildrenIdsLookup: { [parentItemId: string]: string[] };
+    /**
+     * Index of each child in the ordered children ids of its parent.
+     */
     itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
   };
 }
@@ -133,7 +153,3 @@ export type UseTreeViewItemsSignature = TreeViewPluginSignature<{
   state: UseTreeViewItemsState<TreeViewDefaultItemModelProperties>;
   contextValue: UseTreeViewItemsContextValue;
 }>;
-
-export type TreeViewItemMetaLookup = { [itemId: string]: TreeViewItemMeta };
-
-export type TreeViewItemModelLookup<R extends {}> = { [itemId: string]: TreeViewBaseItem<R> };

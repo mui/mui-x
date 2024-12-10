@@ -366,14 +366,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   clipboardCopyCellDelimiter: string;
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
-  /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
    */
@@ -387,7 +379,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
-  unstable_rowSpanning: boolean;
+  rowSpanning: boolean;
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
