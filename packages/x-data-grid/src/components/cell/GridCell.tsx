@@ -90,31 +90,6 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   [x: `data-${string}`]: string;
 };
 
-const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
-  id: -1,
-  field: '__unset__',
-  row: {},
-  rowNode: {
-    id: -1,
-    depth: 0,
-    type: 'leaf',
-    parent: -1,
-    groupingKey: null,
-  },
-  colDef: {
-    type: 'string',
-    field: '__unset__',
-    computedWidth: 0,
-  },
-  cellMode: GridCellModes.View,
-  hasFocus: false,
-  tabIndex: -1,
-  value: null,
-  formattedValue: '__unset__',
-  isEditable: false,
-  api: {} as any,
-};
-
 type OwnerState = Pick<GridCellProps, 'align' | 'pinnedPosition'> & {
   showLeftBorder: boolean;
   showRightBorder: boolean;
@@ -408,10 +383,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
         style={{ width: 'var(--width)', ...style }}
       />
     );
-  }
-
-  if (cellParams === EMPTY_CELL_PARAMS) {
-    return null;
   }
 
   let handleFocus: any = other.onFocus;
