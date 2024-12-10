@@ -204,7 +204,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
           skipAnimation
           slots={slots}
           slotProps={slotProps}
-          sx={{ shapeRendering: 'auto' }}
         />
       )}
 
