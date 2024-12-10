@@ -286,24 +286,45 @@ function StaticDatePicker(props) {
 
 TODO
 
-## Usage with date and time views
+## Usage with date and time
 
 ### Without Material UI
 
-The user can use the `<Picker.MatchView />` component to conditionally render the view components.
-This is needed to build date time pickers:
+The user can use both the `Calendar.*` and the `DigitalClock.*` components together to render the date and the time picking UI side by side:
 
 ```tsx
-import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+import { DigitalClock } from '@base-ui-components/react-x-date-pickers/digital-clock';
 
 <Popover.Popup>
-  <Picker.MatchView match={Calendar.supportedViews}>
-    <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
-  </Picker.MatchView>
-  <Picker.MatchView match={[Calendar.supportedViews]}>
-    <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
-  </Picker.MatchView>
+  <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+  <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
+</Popover.Popup>;
+```
+
+If the user wants to set the UI to select the date, then the time, he can conditionally render the view component based on the active section:
+
+```tsx
+import { Popover } from '@base-ui-components/react/popover';
+import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+import { DigitalClock } from '@base-ui-components/react-x-date-pickers/digital-clock';
+import { isDateSection } from '@base-ui-components/react-x-date-pickers/utils';
+
+<Popover.Popup>
+  <Picker.ContextValue>
+    {({ activeSection }) =>
+      isDateSection(activeSection) ? (
+        <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
+      ) : (
+        <DigitalClock.Root>
+          {/** See digital clock documentation */}
+        </DigitalClock.Root>
+      )
+    }
+  </Picker.ContextValue>
 </Popover.Popup>;
 ```
 
@@ -355,7 +376,7 @@ import { Popover } from '@base-ui-components/react/popover';
 </Popover.Popup>;
 ```
 
-The toolbar can also be used to switch between views thanks to the `<Picker.SetView />` component:
+The toolbar can also be used to switch between sections thanks to the `<Picker.SetActiveSection />` component:
 
 ```tsx
 import { Popover } from '@base-ui-components/react/popover';
@@ -363,12 +384,12 @@ import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 
 <Popover.Popup>
   <div>
-    <Picker.SetView target="year">
+    <Picker.SetActiveSection target="year">
       <Picker.FormattedValue format="YYYY" />
-    </Picker.SetView>
-    <Picker.SetView target="day">
+    </Picker.SetActiveSection>
+    <Picker.SetActiveSection target="day">
       <Picker.FormattedValue format="DD MMMM" />
-    </Picker.SetView>
+    </Picker.SetActiveSection>
   </div>
   <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
 </Popover.Popup>;
@@ -382,7 +403,7 @@ TODO
 
 ### Without Material UI
 
-The user can use the `<Picker.SetView />` component in combination with any Tabs / Tab components.
+The user can use the `<Picker.SetActiveSection />` component in combination with any Tabs / Tab components.
 
 The example below uses the `Tabs` component from Base UI as an example:
 
@@ -390,21 +411,22 @@ The example below uses the `Tabs` component from Base UI as an example:
 import { Tabs } from '@base-ui-components/react/tabs';
 import { Popover } from '@base-ui-components/react/popover';
 import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
+import { isDateSection } from '@base-ui-components/react-x-date-pickers/utils';
 
 <Popover.Popup>
   <Picker.ContextValue>
-    {({ view }) => (
-      <Tabs.Root value={['day', 'month', 'year'].includes(view) ? 'date' : 'time'}>
+    {({ activeSection }) => (
+      <Tabs.Root value={isDateSection(activeSection) ? 'date' : 'time'}>
         <Tabs.List>
           <Tabs.Tab
             value="date"
-            render={(props) => <Picker.SetView {...props} target="day" />}
+            render={(props) => <Picker.SetActiveSection {...props} target="day" />}
           >
             Date
           </Tabs.Tab>
           <Tabs.Tab
             value="time"
-            render={(props) => <Picker.SetView {...props} target="hours" />}
+            render={(props) => <Picker.SetActiveSection {...props} target="hours" />}
           >
             Time
           </Tabs.Tab>
@@ -561,27 +583,6 @@ Formats the value based on the provided format.
 
 - `format`: `string` - **required**
 
-### `Picker.MatchView`
-
-Utility component to conditionally render some components based on the current view.
-Doesn't render a DOM node (it does not have a `render` prop either).
-
-```tsx
-<Picker.MatchView match="day">
-  Only rendered when the view is "day"
-</Picker.MatchView>
-
-<Picker.MatchView match={["day", "month"]}>
-  Only rendered when the view is "day" or "month"
-</Picker.MatchView>
-```
-
-#### Props
-
-- `match`: `TView | readonly TView[]` - **required**.
-
-- `children`: `React.ReactNode`
-
 ### `Picker.ContextValue`
 
 Utility component to access the picker public context.
@@ -624,12 +625,12 @@ Renders a button to cancel the current value.
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
-### `Picker.SetView`
+### `Picker.SetActiveSection`
 
-Renders a button to set the current visible view.
+Renders a button to set the active section.
 
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
-- `target`: `TView` - **required**
+- `target`: `PickerSectionType` (current `FieldSectionType` that would be renamed) - **required**

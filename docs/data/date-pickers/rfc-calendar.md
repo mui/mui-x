@@ -271,9 +271,9 @@ When MD3 is supported, the default views of `<DateCalendar />` should probably b
 
 ### Without Material UI
 
-The user can use the `<Calendar.GoToMonth />`, `<Calendar.FormattedValue />` and `<Calendar.SetView />` to build basically any kind of header they could think of:
+The user can use the `<Calendar.GoToMonth />`, `<Calendar.FormattedValue />` and `<Calendar.SetActiveSection />` to build basically any kind of header they could think of:
 
-#### Very basic header (without month and year views)
+#### Very basic header (without month and year UI)
 
 ```tsx
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
@@ -298,20 +298,22 @@ import {
 } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { view } = useCalendarContext();
+  const { activeSection } = useCalendarContext();
 
   return (
     <div>
-      <Calendar.SetView target={view === 'year' ? 'month' : 'year'}>
+      <Calendar.SetActiveSection
+        target={activeSection === 'year' ? 'month' : 'year'}
+      >
         <Calendar.FormattedValue format="MMMM YYYY" />
-        {view === 'year' ? '▲' : '▼'}
-      </Calendar.SetView>
-      <Calendar.MatchView match="day">
+        {activeSection === 'year' ? '▲' : '▼'}
+      </Calendar.SetActiveSection>
+      {activeSection === 'day' && (
         <div>
           <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
           <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
         </div>
-      </Calendar.MatchView>
+      )}
     </div>
   );
 }
@@ -323,32 +325,36 @@ function CalendarHeader() {
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { view } = useCalendarContext();
+  const { activeSection } = useCalendarContext();
   return (
     <div>
       <div>
-        {view === 'day' && (
+        {activeSection === 'day' && (
           <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
         )}
-        <Calendar.SetView
-          target={view === 'year' ? 'day' : 'year'}
-          disabled={view === 'month'}
+        <Calendar.SetActiveSection
+          target={activeSection === 'year' ? 'day' : 'year'}
+          disabled={activeSection === 'month'}
         >
           <Calendar.FormattedValue format="YYYY" />
-        </Calendar.SetView>
-        {view === 'day' && <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>}
+        </Calendar.SetActiveSection>
+        {activeSection === 'day' && (
+          <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
+        )}
       </div>
       <div>
-        {view === 'day' && (
+        {activeSection === 'day' && (
           <Calendar.GoToYear target="previous">◀</Calendar.GoToYear>
         )}
-        <Calendar.SetView
-          target={view === 'month' ? 'day' : 'month'}
-          disabled={view === 'year'}
+        <Calendar.SetActiveSection
+          target={activeSection === 'month' ? 'day' : 'month'}
+          disabled={activeSection === 'year'}
         >
           <Calendar.FormattedValue format="YYYY" />
-        </Calendar.SetView>
-        {view === 'day' && <Calendar.GoToYear target="next">▶</Calendar.GoToYear>}
+        </Calendar.SetActiveSection>
+        {activeSection === 'day' && (
+          <Calendar.GoToYear target="next">▶</Calendar.GoToYear>
+        )}
       </div>
     </div>
   );
@@ -364,7 +370,6 @@ import { Menu } from '@base-ui-components/react/menu';
 import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
 
 function CalendarHeader() {
-  const { view } = useCalendarContext();
   return (
     <div>
       <Menu.Root>
@@ -697,7 +702,7 @@ Top level component that wraps the other components.
 
 - `autoFocus`: `boolean`
 
-- `monthPageSize`: `number | { keyboard: number, button: number }`, default: `1`. The amount of months to navigate by in the day view when pressing `<Calendar.GoToMonth />` or with arrow navigation.
+- `monthPageSize`: `number | { keyboard: number, button: number }`, default: `1`. The amount of months to navigate by in the day grid when pressing `<Calendar.GoToMonth />` or with arrow navigation.
 
 :::success
 All the props that the picker can pass to the calendar (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that the calendar can be used inside a picker built with composition.
@@ -721,27 +726,6 @@ That way, users only have to pass the props specific to the calendar to the `Cal
 ```
 
 :::
-
-### `Calendar.MatchView`
-
-Utility component to conditionally render some components based on the current view.
-Doesn't render a DOM node (it does not have a `render` prop either).
-
-```tsx
-<Calendar.MatchView match="day">
-  Only rendered when the view is "day"
-</Calendar.MatchView>
-
-<Calendar.MatchView match={["day", "month"]}>
-  Only rendered when the view is "day" or "month"
-</Calendar.MatchView>
-```
-
-#### Props
-
-- `match`: `TView | readonly TView[]` - **required**.
-
-- `children`: `React.ReactNode`
 
 ### `Calendar.FormattedValue`
 
@@ -796,19 +780,19 @@ It does not modify the value it only navigates to the target year.
 TODO: Clarify the behavior when multiple calendars are rendered at once.
 :::
 
-### `Calendar.SetView`
+### `Picker.SetActiveSection`
 
-Renders a button to set the current visible view.
+Renders a button to set the active section.
 
 #### Props
 
-- Extends `React.HTMLAttributes<HTMLButtonElement>`
+- Extends `React.HTMLAttributes<HTMLButtonELement>`
 
-- `target`: `TView`
+- `target`: `"day" | "month" | "year"` - **required**
 
 ### `Calendar.DaysGrid`
 
-Top level component for the `"day"` view.
+Top level component to pick a day.
 
 #### Props
 
@@ -916,7 +900,7 @@ Renders the number of the current week.
 
 ### `Calendar.MonthsList`
 
-Top level component for the `"month"` view.
+Top level component to pick a month.
 
 It expects a function as its children, which receives the list of the months to render as a parameter:
 
@@ -940,11 +924,11 @@ This component takes care of the keyboard navigation (for example <kbd class="ke
 
 - `itemsOrder`: `'asc' | 'desc'`, default: `'asc'`.
 
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"month"`.
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"month"`.
 
 ### `Calendar.MonthsGrid`
 
-Top level component for the `"month"` view when the layout is a grid.
+Top level component to pick a month, when the layout is a grid.
 
 It expects a function as its children, which receives the list of rows to render as a parameter:
 
@@ -966,7 +950,7 @@ It expects a function as its children, which receives the list of rows to render
 
 - `itemsPerRow`: `number` **required**.
 
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"month"`.
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"month"`.
 
 ### `Calendar.MonthsRow`
 
@@ -1002,7 +986,7 @@ Renders the cell for a single month.
 
 ### `Calendar.YearsList`
 
-Top level component for the `"year"` view when the layout is a list.
+Top level component to pick a year when the layout is a list.
 
 It expects a function as its children, which receives the list of years to render as a parameter:
 
@@ -1024,11 +1008,11 @@ This component takes care of the keyboard navigation (for example <kbd class="ke
 
 - `itemsOrder`: `'asc' | 'desc'`, default: `'asc'`.
 
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"year"`.
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"year"`.
 
 ### `Calendar.YearsGrid`
 
-Top level component for the `"year"` view when the layout is a grid.
+Top level component to pick a year when the layout is a grid.
 
 It expects a function as its children, which receives the list of rows to render as a parameter:
 
@@ -1050,7 +1034,7 @@ It expects a function as its children, which receives the list of rows to render
 
 - `itemsPerRow`: `number` **required**.
 
-- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the current view is `"year"`.
+- `alwaysVisible`: `boolean`, default: `false`. By default this component is only rendered when the active section is `"year"`.
 
 ### `Calendar.YearsRow`
 
@@ -1081,9 +1065,3 @@ Renders the cell for a single year.
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
 
 - `value`: `PickerValidDate` - **required**.
-
-#### `Calendar.supportedViews`
-
-Utility variable that helps building Date Time Pickers without hardcoding the list of views (which could become outdated if we introduce new views in the future).
-
-Value: `["day", "month", "year"]`
