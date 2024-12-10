@@ -16,35 +16,29 @@ export interface ChartsLabelGradientProps {
    *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   gradientId: string;
   /**
    * The direction of the gradient.
    *
    * @default 'row'
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   direction?: 'column' | 'row';
   /**
    * The width of the line.
    * @default 12
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   lineWidth?: number;
   /**
    * The border radius of the gradient.
    *
    * @default 2
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   borderRadius?: number;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelGradientClasses>;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
 
@@ -59,12 +53,10 @@ const Root = styled('div', {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     '> div': {
       borderRadius,
       overflow: 'hidden',
     },
-
     [`&.${labelGradientClasses.row}`]: {
       width: '100%',
       '> div': {
@@ -72,15 +64,17 @@ const Root = styled('div', {
         width: '100%',
       },
     },
-
     [`&.${labelGradientClasses.column}`]: {
       height: '100%',
       '> div': {
         width: lineWidth,
         height: '100%',
+        '> svg': {
+          transform: 'rotate(90deg)',
+          height: '100%',
+        },
       },
     },
-
     svg: {
       display: 'block',
     },
@@ -88,6 +82,8 @@ const Root = styled('div', {
 });
 
 /**
+ * @ignore - internal component.
+ *
  * Generates the label Gradient for the tooltip and legend.
  */
 const ChartsLabelGradient = consumeThemeProps(
@@ -112,8 +108,8 @@ const ChartsLabelGradient = consumeThemeProps(
         {...other}
       >
         <div>
-          <svg width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio={'none'}>
-            <rect width="10" height="10" fill={`url(#${gradientId})`} />
+          <svg viewBox="0 0 24 24" preserveAspectRatio={'none'}>
+            <rect width="24" height="24" fill={`url(#${gradientId})`} />
           </svg>
         </div>
       </Root>
@@ -127,11 +123,32 @@ ChartsLabelGradient.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The border radius of the Gradient.
+   * The border radius of the gradient.
    *
-   * @default type='square': 2
+   * @default 2
    */
   borderRadius: PropTypes.number,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The direction of the gradient.
+   *
+   * @default 'row'
+   */
+  direction: PropTypes.oneOf(['column', 'row']),
+  /**
+   * A unique identifier for the gradient.
+   *
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
+   */
+  gradientId: PropTypes.string.isRequired,
+  /**
+   * The width of the line.
+   * @default 12
+   */
+  lineWidth: PropTypes.number,
 } as any;
 
 export { ChartsLabelGradient };

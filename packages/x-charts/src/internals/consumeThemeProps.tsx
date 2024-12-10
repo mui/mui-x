@@ -63,8 +63,8 @@ export const consumeThemeProps = <
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
   InComponent: React.JSXElementConstructor<Props>,
-) =>
-  React.forwardRef(function (props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+) => {
+  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -82,6 +82,7 @@ export const consumeThemeProps = <
     const classes = options.classesResolver?.(outProps, theme);
 
     if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line react-compiler/react-compiler
       (InComponent as any).displayName = name;
     }
 
@@ -92,4 +93,7 @@ export const consumeThemeProps = <
         React.forwardRef(InComponent);
 
     return <OutComponent {...outProps} classes={classes} ref={ref} />;
-  });
+  }
+
+  return React.forwardRef(InternalComponent);
+};

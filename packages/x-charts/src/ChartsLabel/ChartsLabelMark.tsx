@@ -17,13 +17,12 @@ export interface ChartsLabelMarkProps {
    * @default type='line': 16
    * @default type='circle': 15
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   size?: number;
   /**
    * The type of the mark.
    * @default 'square'
    */
-  type?: 'square' | 'circle' | 'line' | (string & {});
+  type?: 'square' | 'circle' | 'line';
   /**
    * The color of the mark.
    */
@@ -32,7 +31,6 @@ export interface ChartsLabelMarkProps {
    * The width of the line.
    * @default 4
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   lineWidth?: number;
   /**
    * The border radius of the mark.
@@ -41,24 +39,14 @@ export interface ChartsLabelMarkProps {
    * @default type='circle': '50%'
    * @default type='line': 1
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   borderRadius?: number | string;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelMarkClasses>;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
-
-type OnlyLiterals = Exclude<ChartsLabelMarkProps['type'], object | undefined>;
-
-const definedValues = ['square', 'circle', 'line'] as const;
-
-const toDefinedType = (type?: string): OnlyLiterals =>
-  type && definedValues.includes(type as any) ? (type as OnlyLiterals) : definedValues[0];
 
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
@@ -94,15 +82,15 @@ const Root = styled('div', {
 });
 
 /**
+ * @ignore - internal component.
+ *
  * Generates the label mark for the tooltip and legend.
  */
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
   {
     defaultProps: (props) => {
-      const type = toDefinedType(props.type);
-
-      if (type === 'line') {
+      if (props.type === 'line') {
         return {
           size: 16,
           borderRadius: 1,
@@ -110,7 +98,7 @@ const ChartsLabelMark = consumeThemeProps(
         };
       }
 
-      if (type === 'circle') {
+      if (props.type === 'circle') {
         return {
           size: 15,
           borderRadius: '50%',
@@ -141,10 +129,10 @@ const ChartsLabelMark = consumeThemeProps(
           <svg
             width="100%"
             height="100%"
-            viewBox="0 0 10 10"
+            viewBox="0 0 24 24"
             preserveAspectRatio={type === 'line' ? 'none' : undefined}
           >
-            <rect width="10" height="10" fill={color} />
+            <rect width="24" height="24" fill={color} />
           </svg>
         </div>
       </Root>
@@ -164,7 +152,7 @@ ChartsLabelMark.propTypes = {
    * @default type='circle': '50%'
    * @default type='line': 1
    */
-  borderRadius: PropTypes.number,
+  borderRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Override or extend the styles applied to the component.
    */
@@ -193,10 +181,7 @@ ChartsLabelMark.propTypes = {
    * The type of the mark.
    * @default 'square'
    */
-  type: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.oneOf(['circle', 'line', 'square']),
-    PropTypes.string,
-  ]),
+  type: PropTypes.oneOf(['circle', 'line', 'square']),
 } as any;
 
 export { ChartsLabelMark };

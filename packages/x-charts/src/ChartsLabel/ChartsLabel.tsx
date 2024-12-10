@@ -8,19 +8,11 @@ import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelProps {
   /**
-   * Style applied to legend labels.
-   * @default theme.typography.caption
-   */
-  // eslint-disable-next-line react/no-unused-prop-types
-  labelStyle?: React.CSSProperties;
-  /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLabelClasses>;
   children?: React.ReactNode;
   className?: string;
-  // eslint-disable-next-line react/no-unused-prop-types
   sx?: SxProps<Theme>;
 }
 
@@ -28,15 +20,16 @@ const Root = styled('div', {
   name: 'MuiChartsLabel',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelProps }>(({ theme, ownerState }) => ({
+})<{ ownerState: ChartsLabelProps }>(({ theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
-  ...ownerState.labelStyle,
   lineHeight: undefined,
   display: 'flex',
 }));
 
 /**
+ * @ignore - internal component.
+ *
  * Generates the label mark for the tooltip and legend.
  */
 const ChartsLabel = consumeThemeProps(
@@ -45,7 +38,7 @@ const ChartsLabel = consumeThemeProps(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLDivElement>) {
-    const { children, className, classes, labelStyle, ...other } = props;
+    const { children, className, classes, ...other } = props;
 
     return (
       <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>
@@ -65,11 +58,6 @@ ChartsLabel.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * Style applied to legend labels.
-   * @default theme.typography.caption
-   */
-  labelStyle: PropTypes.object,
 } as any;
 
 export { ChartsLabel };
