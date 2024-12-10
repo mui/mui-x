@@ -15,6 +15,8 @@ import {
   blueberryTwilightPalette,
   mangoFusionPalette,
   cheerfulFiestaPalette,
+  rainbowSurgePalette,
+  bananaMilkshakePalette,
 } from '@mui/x-charts/colorPalettes';
 
 const chance = new Chance(42);
@@ -79,6 +81,8 @@ const categories = {
   blueberryTwilight: blueberryTwilightPalette,
   mangoFusion: mangoFusionPalette,
   cheerfulFiesta: cheerfulFiestaPalette,
+  rainbowSurge: rainbowSurgePalette,
+  bananaMilkshake: bananaMilkshakePalette,
 } as const;
 
 type PaletteKey = keyof typeof categories;
