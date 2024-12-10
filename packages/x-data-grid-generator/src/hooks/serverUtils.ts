@@ -10,10 +10,32 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
+import {
+  GRID_AGGREGATION_FUNCTIONS,
+  GridAggregationModel,
+  GridAggregationFunction,
+} from '@mui/x-data-grid-premium';
 import { randomInt } from '../services/random-generator';
+
+const getAvailableAggregationFunctions = (columnType: GridColDef['type']) => {
+  const availableAggregationFunctions = new Map<string, GridAggregationFunction>();
+  Object.keys(GRID_AGGREGATION_FUNCTIONS).forEach((functionName) => {
+    const columnTypes =
+      GRID_AGGREGATION_FUNCTIONS[functionName as keyof typeof GRID_AGGREGATION_FUNCTIONS]
+        .columnTypes;
+    if (!columnTypes || columnTypes.includes(columnType ?? 'string')) {
+      availableAggregationFunctions.set(
+        functionName,
+        GRID_AGGREGATION_FUNCTIONS[functionName as keyof typeof GRID_AGGREGATION_FUNCTIONS],
+      );
+    }
+  });
+  return availableAggregationFunctions;
+};
 
 export interface FakeServerResponse {
   returnedRows: GridRowModel[];
+  aggregateRow?: GridValidRowModel;
   nextCursor?: string;
   hasNextPage?: boolean;
   totalRowCount: number;
@@ -39,6 +61,8 @@ export interface QueryOptions {
   page?: number;
   pageSize?: number;
   filterModel?: GridFilterModel;
+  aggregationModel?: GridAggregationModel;
+  aggregationRowsScope?: 'all' | 'filtered';
   sortModel?: GridSortModel;
   start?: number;
   end?: number;
@@ -50,6 +74,8 @@ export interface ServerSideQueryOptions {
   groupKeys?: string[];
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
+  aggregationModel?: GridAggregationModel;
+  aggregationRowsScope?: 'all' | 'filtered';
   start?: number;
   end?: number;
   groupFields?: string[];
@@ -261,6 +287,41 @@ const getFilteredRows = (
   );
 };
 
+const applyAggregation = (
+  aggregationModel: GridAggregationModel,
+  colDefs: GridColDef[],
+  rows: GridRowModel[],
+  groupId: string = 'root',
+) => {
+  const columnsToAggregate = Object.keys(aggregationModel);
+  if (columnsToAggregate.length === 0) {
+    return {};
+  }
+
+  const aggregateValues: GridValidRowModel = {};
+  columnsToAggregate.forEach((field) => {
+    const type = colDefs.find(({ field: f }) => f === field)?.type;
+    if (!type) {
+      return;
+    }
+    const availableAggregationFunctions = getAvailableAggregationFunctions(type);
+    if (!availableAggregationFunctions.has(aggregationModel[field])) {
+      return;
+    }
+    const aggregationFunction = availableAggregationFunctions.get(aggregationModel[field]);
+    if (!aggregationFunction) {
+      return;
+    }
+    const values = rows.map((row) => row[field]);
+    aggregateValues[`${field}Aggregate`] = aggregationFunction.apply({
+      values,
+      field,
+      groupId,
+    });
+  });
+  return aggregateValues;
+};
+
 /**
  * Simulates server data loading
  */
@@ -288,6 +349,16 @@ export const loadServerRows = (
   const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
   filteredRows = [...filteredRows].sort(rowComparator);
 
+  let aggregateRow = {};
+  if (queryOptions.aggregationModel) {
+    const rowsToAggregate = queryOptions.aggregationRowsScope === 'all' ? rows : filteredRows;
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      rowsToAggregate,
+    );
+  }
+
   const totalRowCount = filteredRows.length;
   if (start !== undefined && end !== undefined) {
     firstRowIndex = start;
@@ -311,6 +382,7 @@ export const loadServerRows = (
     hasNextPage,
     nextCursor,
     totalRowCount,
+    ...(queryOptions.aggregationModel ? { aggregateRow } : {}),
   };
 
   return new Promise<FakeServerResponse>((resolve) => {
@@ -323,6 +395,7 @@ export const loadServerRows = (
 interface NestedDataRowsResponse {
   rows: GridRowModel[];
   rootRowCount: number;
+  aggregateRow?: GridRowModel;
 }
 
 const findTreeDataRowChildren = (
@@ -464,6 +537,19 @@ export const processTreeDataRows = (
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
     const descendantCount = descendants.length;
+    if (descendantCount > 0 && queryOptions.aggregationModel) {
+      // Parent row, compute aggregation
+      return {
+        ...row,
+        descendantCount,
+        ...applyAggregation(
+          queryOptions.aggregationModel,
+          columnsWithDefaultColDef,
+          descendants,
+          row.id,
+        ),
+      };
+    }
     return { ...row, descendantCount } as GridRowModel;
   });
 
@@ -471,6 +557,15 @@ export const processTreeDataRows = (
     // apply sorting
     const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
     childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
+  }
+
+  let aggregateRow: GridRowModel | undefined;
+  if (queryOptions.aggregationModel) {
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      filteredRows,
+    );
   }
 
   if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
@@ -486,7 +581,7 @@ export const processTreeDataRows = (
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ rows: childRowsWithDescendantCounts, rootRowCount });
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount, aggregateRow });
     }, delay); // simulate network latency
   });
 };
@@ -584,6 +679,19 @@ export const processRowGroupingRows = (
       ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
     );
     const descendantCount = descendants.length;
+    if (descendantCount > 0 && queryOptions.aggregationModel) {
+      // Parent row, compute aggregation
+      return {
+        ...row,
+        descendantCount,
+        ...applyAggregation(
+          queryOptions.aggregationModel,
+          columnsWithDefaultColDef,
+          descendants,
+          row.id,
+        ),
+      };
+    }
     return { ...row, descendantCount } as GridRowModel;
   });
 
@@ -592,6 +700,15 @@ export const processRowGroupingRows = (
     const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
     const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
     childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];
+  }
+
+  let aggregateRow: GridRowModel | undefined;
+  if (queryOptions.aggregationModel) {
+    aggregateRow = applyAggregation(
+      queryOptions.aggregationModel,
+      columnsWithDefaultColDef,
+      filteredRows,
+    );
   }
 
   if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
@@ -607,7 +724,7 @@ export const processRowGroupingRows = (
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ rows: childRowsWithDescendantCounts, rootRowCount });
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount, aggregateRow });
     }, delay); // simulate network latency
   });
 };

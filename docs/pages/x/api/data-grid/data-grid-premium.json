@@ -6,7 +6,7 @@
     },
     "aggregationFunctions": {
       "type": { "name": "object" },
-      "default": "GRID_AGGREGATION_FUNCTIONS"
+      "default": "GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided"
     },
     "aggregationModel": { "type": { "name": "object" } },
     "aggregationRowsScope": {

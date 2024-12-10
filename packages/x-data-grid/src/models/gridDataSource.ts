@@ -6,6 +6,11 @@ import type {
   GridPaginationModel,
 } from '.';
 
+// TODO: Remove after moving logic to `Premium` package
+type GridAggregationModel = {
+  [field: string]: string;
+};
+
 export interface GridGetRowsParams {
   sortModel: GridSortModel;
   filterModel: GridFilterModel;
@@ -31,10 +36,20 @@ export interface GridGetRowsParams {
    * Useful for `treeData` and `rowGrouping` only.
    */
   groupKeys?: string[];
+  // TODO: Move the logic to `Premium` package
+  aggregationModel?: GridAggregationModel;
+  aggregationRowsScope?: 'filtered' | 'all';
 }
 
 export interface GridGetRowsResponse {
   rows: GridRowModel[];
+  // TODO: Move the logic to `Premium` package
+  /**
+   * Row to be used for aggregation footer row.
+   * It must provide the values for the aggregated columns passed in
+   * `GridGetRowsParams.aggregationModel`.
+   */
+  aggregateRow?: GridRowModel;
   /**
    * To reflect updates in total `rowCount` (optional).
    * Useful when the `rowCount` is inaccurate (for example when filtering) or not available upfront.
@@ -76,6 +91,14 @@ export interface GridDataSource {
    * If the children count is not available for some reason, but there are some children, `getChildrenCount` should return `-1`.
    */
   getChildrenCount?: (row: GridRowModel) => number;
+  // TODO: Move the logic to `Premium` package
+  /**
+   * Used to get the aggregated value for a parent row.
+   * @param {GridRowModel} row The row to extract the aggregated value from.
+   * @param {GridColDef['field']} field The field to extract the aggregated value for.
+   * @returns {string} The aggregated value for a specific aggregated column.
+   */
+  getAggregatedValue?: (row: GridRowModel, field: GridColDef['field']) => string;
 }
 
 export interface GridDataSourceCache {
