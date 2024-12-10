@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, createEvent } from '@mui/internal-test-utils';
-import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
+import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
+import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
@@ -199,5 +199,51 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(handleDragStart.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
+  });
+
+  it('should reorder rows correctly on any page when pagination is enabled', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+      { id: 3, brand: 'Skechers' },
+    ];
+    const columns = [{ field: 'brand' }];
+
+    function Test() {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            rowReordering
+            pagination
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 2 },
+              },
+            }}
+            pageSizeOptions={[2]}
+          />
+        </div>
+      );
+    }
+
+    render(<Test />);
+    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Puma', 'Skechers']);
+    const rowReorderCell = getCell(2, 0).firstChild!;
+    const targetCell = getCell(3, 0);
+
+    fireEvent.dragStart(rowReorderCell);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Skechers', 'Puma']);
   });
 });
