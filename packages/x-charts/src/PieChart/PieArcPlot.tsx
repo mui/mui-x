@@ -168,6 +168,10 @@ PieArcPlot.propTypes = {
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       index: PropTypes.number.isRequired,
       label: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+      labelMarkType: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+        PropTypes.oneOf(['circle', 'line', 'square']),
+        PropTypes.string,
+      ]),
       padAngle: PropTypes.number.isRequired,
       startAngle: PropTypes.number.isRequired,
       value: PropTypes.number.isRequired,

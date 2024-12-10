@@ -167,7 +167,6 @@
   { "name": "getPieArcUtilityClass", "kind": "Function" },
   { "name": "getPieCoordinates", "kind": "Function" },
   { "name": "getReferenceLineUtilityClass", "kind": "Function" },
-  { "name": "getSeriesToDisplay", "kind": "Function" },
   { "name": "getValueToPositionMapper", "kind": "Function" },
   { "name": "Heatmap", "kind": "Variable" },
   { "name": "heatmapClasses", "kind": "Variable" },
