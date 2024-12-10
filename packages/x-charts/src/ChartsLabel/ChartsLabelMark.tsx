@@ -22,7 +22,7 @@ export interface ChartsLabelMarkProps {
    * The type of the mark.
    * @default 'square'
    */
-  type?: 'square' | 'circle' | 'line' | (string & {});
+  type?: 'square' | 'circle' | 'line';
   /**
    * The color of the mark.
    */
@@ -47,13 +47,6 @@ export interface ChartsLabelMarkProps {
   className?: string;
   sx?: SxProps<Theme>;
 }
-
-type OnlyLiterals = Exclude<ChartsLabelMarkProps['type'], object | undefined>;
-
-const definedValues = ['square', 'circle', 'line'] as const;
-
-const toDefinedType = (type?: string): OnlyLiterals =>
-  type && definedValues.includes(type as any) ? (type as OnlyLiterals) : definedValues[0];
 
 const Root = styled('div', {
   name: 'MuiChartsLabelMark',
@@ -97,9 +90,7 @@ const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
   {
     defaultProps: (props) => {
-      const type = toDefinedType(props.type);
-
-      if (type === 'line') {
+      if (props.type === 'line') {
         return {
           size: 16,
           borderRadius: 1,
@@ -107,7 +98,7 @@ const ChartsLabelMark = consumeThemeProps(
         };
       }
 
-      if (type === 'circle') {
+      if (props.type === 'circle') {
         return {
           size: 15,
           borderRadius: '50%',
@@ -190,10 +181,7 @@ ChartsLabelMark.propTypes = {
    * The type of the mark.
    * @default 'square'
    */
-  type: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.oneOf(['circle', 'line', 'square']),
-    PropTypes.string,
-  ]),
+  type: PropTypes.oneOf(['circle', 'line', 'square']),
 } as any;
 
 export { ChartsLabelMark };
