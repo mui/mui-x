@@ -188,6 +188,7 @@
     "string-replace-loader": "^3.1.0",
     "terser-webpack-plugin": "^5.3.10",
     "tsx": "^4.19.2",
+    "typedoc": "^0.27.4",
     "typescript": "^5.7.2",
     "unist-util-visit": "^5.0.0",
     "util": "^0.12.5",
