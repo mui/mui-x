@@ -171,23 +171,21 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const field = column.field;
 
-  const cellParams: GridCellParams<any, any, any, any> = {
-    ...apiRef.current.getCellParamsForRow<any, any, any, GridTreeNodeWithRender>(
-      rowId,
-      field,
-      row,
-      rowNode as GridTreeNodeWithRender,
-    ),
-    tabIndex: useGridSelector(apiRef, () => {
-      const cellTabIndex = gridTabIndexCellSelector(apiRef);
-      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
-    }),
-    hasFocus: useGridSelector(apiRef, () => {
-      const focus = gridFocusCellSelector(apiRef);
-      return focus?.id === rowId && focus.field === field;
-    }),
-    api: apiRef.current,
-  };
+  const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
+    any,
+    any,
+    any,
+    GridTreeNodeWithRender
+  >(rowId, field, row, rowNode as GridTreeNodeWithRender);
+  cellParams.tabIndex = useGridSelector(apiRef, () => {
+    const cellTabIndex = gridTabIndexCellSelector(apiRef);
+    return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+  });
+  cellParams.hasFocus = useGridSelector(apiRef, () => {
+    const focus = gridFocusCellSelector(apiRef);
+    return focus?.id === rowId && focus.field === field;
+  });
+  cellParams.api = apiRef.current;
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
