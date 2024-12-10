@@ -25,11 +25,13 @@ import {
   GridCellParams,
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
-import { GridTreeNodeWithRender } from '../../models/gridRows';
-import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import {
+  gridFocusCellSelector,
+  gridTabIndexCellSelector,
+} from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../../utils/cellBorderUtils';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -37,6 +39,7 @@ import {
   gridRowSpanningHiddenCellsSelector,
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 
 export enum PinnedPosition {
   NONE,
@@ -57,7 +60,9 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
   colIndex: number;
   column: GridColDef;
+  row: GridRowModel;
   rowId: GridRowId;
+  rowNode: GridTreeNode;
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
@@ -155,7 +160,9 @@ let warnedOnce = false;
 const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
+    row,
     rowId,
+    rowNode,
     editCellState,
     align,
     children: childrenProp,
@@ -183,32 +190,29 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     ...other
   } = props;
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
 
   const field = column.field;
 
-  const cellParams = useGridSelector(
-    apiRef,
-    () => {
-      // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
-      // associated with `rowId`/`fieldId`, but this selector runs after the state has been
-      // updated, while `rowId`/`fieldId` reference an entry in the old state.
-      const row = apiRef.current.getRow(rowId);
-      if (!row) {
-        return EMPTY_CELL_PARAMS;
-      }
-
-      const result = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-        rowId,
-        field,
-      );
-      result.api = apiRef.current;
-      return result;
-    },
-    objectShallowCompare,
-  );
+  const cellParams: GridCellParams<any, any, any, any> = {
+    ...apiRef.current.getCellParamsForRow<any, any, any, GridTreeNodeWithRender>(
+      rowId,
+      field,
+      row,
+      rowNode as GridTreeNodeWithRender,
+    ),
+    tabIndex: useGridSelector(apiRef, () => {
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
+      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+    }),
+    hasFocus: useGridSelector(apiRef, () => {
+      const focus = gridFocusCellSelector(apiRef);
+      return focus?.id === rowId && focus.field === field;
+    }),
+    api: apiRef.current,
+  };
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
@@ -535,7 +539,9 @@ GridCell.propTypes = {
   isNotVisible: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number.isRequired,
   pinnedPosition: PropTypes.oneOf([0, 1, 2, 3]).isRequired,
+  row: PropTypes.object.isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  rowNode: PropTypes.object.isRequired,
   sectionIndex: PropTypes.number.isRequired,
   sectionLength: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
