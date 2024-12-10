@@ -55,6 +55,8 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     return {
       ...versions,
+      react: '^18.0.0',
+      'react-dom': '^18.0.0',
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
       '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
       '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
@@ -315,6 +317,11 @@ function AppWrapper(props) {
         ))}
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
+        <style>{`
+button[data-ga-event-action="stackblitz"] {
+  display: none;
+}
+`}</style>
       </NextHead>
       <DocsProvider
         config={config}
