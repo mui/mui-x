@@ -8,7 +8,6 @@ import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
 import type { ChartsLegendPlacement, ChartsLegendSlotExtension } from './legend.types';
 import { SeriesLegendItemContext } from './legendContext.types';
-import { ChartsLabelProps } from '../ChartsLabel/ChartsLabel';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
@@ -16,7 +15,6 @@ import { consumeSlots } from '../internals/consumeSlots';
 
 export interface ChartsLegendProps
   extends ChartsLegendPlacement,
-    Omit<ChartsLabelProps, 'children'>,
     PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
   /**
    * Callback fired when a legend item is clicked.
@@ -62,7 +60,6 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const {
       direction,
-      labelStyle,
       markBorderRadius,
       markLineWidth,
       markSize,
@@ -84,7 +81,6 @@ const ChartsLegend = consumeSlots(
           return (
             <ChartsLegendItem
               key={item.id}
-              labelStyle={labelStyle}
               classes={classes}
               onClick={
                 onItemClick
