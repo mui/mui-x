@@ -85,7 +85,7 @@ ChartsTooltip.propTypes = {
    * so it's simply `document.body` most of the time.
    */
   container: PropTypes.oneOfType([
-    (props, propName) => {
+    (props, propName: string) => {
       if (props[propName] == null) {
         return new Error(`Prop '${propName}' is required but wasn't specified`);
       }
