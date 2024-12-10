@@ -6,16 +6,13 @@ import { refType } from '@mui/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { DatePickerViewRenderers, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils } from '../internals/hooks/useUtils';
 import { validateDate, extractValidationProps } from '../validation';
 import { DateView, PickerOwnerState } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { resolveDateFormat } from '../internals/utils/date-utils';
-import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalization';
 
 type DesktopDatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -38,7 +35,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   inProps: DesktopDatePickerProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const translations = usePickerTranslations();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers
@@ -60,7 +56,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
-      openPickerIcon: CalendarIcon,
       field: DateField,
       ...defaultizedProps.slots,
     },
@@ -86,12 +81,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText: buildGetOpenDialogAriaText({
-      utils,
-      formatKey: 'fullDate',
-      contextTranslation: translations.openDatePickerDialogue,
-      propsTranslation: props.localeText?.openDatePickerDialogue,
-    }),
     validator: validateDate,
   });
 

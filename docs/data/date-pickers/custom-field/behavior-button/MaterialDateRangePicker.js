@@ -15,16 +15,8 @@ import {
 function ButtonDateRangeField(props) {
   const { internalProps, forwardedProps } = useSplitFieldProps(props, 'date');
   const { value, timezone, format } = internalProps;
-  const {
-    InputProps,
-    slotProps,
-    slots,
-    ownerState,
-    label,
-    focused,
-    name,
-    ...other
-  } = forwardedProps;
+  const { slotProps, slots, ownerState, label, focused, name, ...other } =
+    forwardedProps;
 
   const pickerContext = usePickerContext();
 
@@ -45,7 +37,7 @@ function ButtonDateRangeField(props) {
       {...other}
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
-      ref={InputProps?.ref}
+      ref={pickerContext.triggerRef}
       onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}

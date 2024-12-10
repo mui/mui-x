@@ -70,6 +70,18 @@ export interface PickerContextValue extends UsePickerValueContextValue {
    * Is always equal to "portrait" if the component you are accessing the ownerState from is not wrapped by a picker.
    */
   orientation: PickerOrientation;
+  /**
+   * The ref that should be attached to the element that triggers the picker opening.
+   * When using a built-in field component, this property is automatically handled.
+   */
+  triggerRef: React.RefObject<any>;
+  /**
+   * The status of the element that triggers the picker opening.
+   * If it is "hidden", the field should not render the UI to open the picker.
+   * If it is "disabled", the field should render the UI to open the picker, but it should not have any behavior attached to it.
+   * If it is "enabled", the field should render the UI to open the picker and interacting with it should open the picker.
+   */
+  triggerStatus: 'hidden' | 'disabled' | 'enabled';
 }
 export interface PickerPrivateContextValue {
   /**

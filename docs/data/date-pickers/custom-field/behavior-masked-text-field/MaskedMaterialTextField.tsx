@@ -2,6 +2,8 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -9,8 +11,13 @@ import {
   DatePickerProps,
   DatePickerFieldProps,
 } from '@mui/x-date-pickers/DatePicker';
-import { useSplitFieldProps, useParsedFormat } from '@mui/x-date-pickers/hooks';
+import {
+  useSplitFieldProps,
+  useParsedFormat,
+  usePickerContext,
+} from '@mui/x-date-pickers/hooks';
 import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
 
 const MASK_USER_INPUT_SYMBOL = '_';
 const ACCEPT_REGEX = /[\d]/gi;
@@ -46,6 +53,7 @@ function MaskedDateField(props: DatePickerFieldProps) {
   }, [format, value]);
 
   const parsedFormat = useParsedFormat(internalProps);
+  const pickerContext = usePickerContext();
 
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
@@ -131,6 +139,19 @@ function MaskedDateField(props: DatePickerFieldProps) {
       error={!!hasValidationError}
       {...rifmProps}
       {...forwardedProps}
+      InputProps={{
+        ref: pickerContext.triggerRef,
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              onClick={() => pickerContext.setOpen((prev) => !prev)}
+              edge="end"
+            >
+              <CalendarIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
     />
   );
 }
