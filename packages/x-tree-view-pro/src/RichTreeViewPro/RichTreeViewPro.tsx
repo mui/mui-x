@@ -120,6 +120,7 @@ RichTreeViewPro.propTypes = {
       getItemDOMElement: PropTypes.func.isRequired,
       getItemOrderedChildrenIds: PropTypes.func.isRequired,
       getItemTree: PropTypes.func.isRequired,
+      getParentId: PropTypes.func.isRequired,
       selectItem: PropTypes.func.isRequired,
       setItemExpansion: PropTypes.func.isRequired,
       updateItemLabel: PropTypes.func.isRequired,
@@ -184,6 +185,7 @@ RichTreeViewPro.propTypes = {
   experimentalFeatures: PropTypes.shape({
     itemsReordering: PropTypes.bool,
     labelEditing: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
   }),
   /**
    * Used to determine the id of a given item.

@@ -10,6 +10,7 @@ import {
   selectorItemMeta,
   selectorItemOrderedChildrenIds,
 } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
@@ -29,20 +30,25 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     }));
   }, [store, models.expandedItems.value]);
 
-  const setExpandedItems = (event: React.SyntheticEvent, value: TreeViewItemId[]) => {
+  const setExpandedItems = (event: React.SyntheticEvent | null, value: TreeViewItemId[]) => {
     params.onExpandedItemsChange?.(event, value);
     models.expandedItems.setControlledValue(value);
   };
 
   const toggleItemExpansion = useEventCallback(
     (event: React.SyntheticEvent, itemId: TreeViewItemId) => {
+      const eventParameters = { isExpansionPrevented: false, event, itemId };
+      publishTreeViewEvent(instance, 'beforeItemToggleExpansion', eventParameters);
+      if (eventParameters.isExpansionPrevented) {
+        return;
+      }
       const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       instance.setItemExpansion(event, itemId, !isExpandedBefore);
     },
   );
 
   const setItemExpansion = useEventCallback(
-    (event: React.SyntheticEvent, itemId: TreeViewItemId, isExpanded: boolean) => {
+    (event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => {
       const isExpandedBefore = selectorIsItemExpanded(store.value, itemId);
       if (isExpandedBefore === isExpanded) {
         return;
