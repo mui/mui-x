@@ -71,14 +71,14 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
   );
 
   React.useEffect(() => {
-    if (expandedRowIds.length === 0) {
+    if (expandedRowIds.size === 0) {
       setPanels(EMPTY_DETAIL_PANELS);
     } else {
-      setPanels(
-        new Map<GridRowId, React.ReactNode>(
-          expandedRowIds.map((rowId) => [rowId, getDetailPanel(rowId)]),
-        ),
-      );
+      const map = new Map<GridRowId, React.ReactNode>();
+      for (const rowId of expandedRowIds) {
+        map.set(rowId, getDetailPanel(rowId));
+      }
+      setPanels(map);
     }
   }, [expandedRowIds, setPanels, getDetailPanel]);
 

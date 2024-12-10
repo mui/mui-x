@@ -148,9 +148,13 @@ export const useGridDetailPanel = (
       }
 
       const ids = apiRef.current.getExpandedDetailPanels();
-      apiRef.current.setExpandedDetailPanels(
-        ids.includes(id) ? ids.filter((rowId) => rowId !== id) : [...ids, id],
-      );
+      const newIds = new Set(ids);
+      if (ids.has(id)) {
+        newIds.delete(id);
+      } else {
+        newIds.add(id);
+      }
+      apiRef.current.setExpandedDetailPanels(newIds);
     },
     [apiRef, contentCache, props.getDetailPanelContent],
   );
@@ -292,7 +296,7 @@ export const useGridDetailPanel = (
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
-      if (!expandedRowIds || expandedRowIds.length === 0 || !expandedRowIds.includes(row.id)) {
+      if (!expandedRowIds || expandedRowIds.size === 0 || !expandedRowIds.has(row.id)) {
         initialValue.detail = 0;
         return initialValue;
       }
