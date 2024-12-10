@@ -154,3 +154,309 @@ and you don't want the UI to look like a Text Field, you can replace the field w
 The same logic can be applied to any Range Picker:
 
 {{"demo": "behavior-button/MaterialDateRangePicker.js", "defaultCodeOpen": false}}
+
+### Build your own custom field
+
+:::success
+The sections below show how to build a field for your picker.
+Unlike the field components exposed by `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`, those fields are not suitable for a standalone usage.
+:::
+
+#### Basic example
+
+```jsx
+function CustomDateField(props) {
+  const { format, value, onChange } = props;
+  const [inputValue, setInputValue] = useInputValue(value, format);
+
+  const handleChange = (event) => {
+    const newInputValue = event.target.value;
+    const newValue = dayjs(newInputValue, format);
+    setInputValue(newInputValue);
+    onChange(newValue, { validationError: null });
+  };
+
+  return <TextField value={inputValue} onChange={handleChange} />;
+}
+
+function useInputValue(valueProp, format) {
+  const [lastValueProp, setLastValueProp] = React.useState(valueProp);
+  const [inputValue, setInputValue] = React.useState(() =>
+    createInputValue(valueProp, format),
+  );
+
+  if (lastValueProp !== valueProp) {
+    setLastValueProp(valueProp);
+    if (valueProp && valueProp.isValid()) {
+      setInputValue(createInputValue(valueProp, format));
+    }
+  }
+
+  return [inputValue, setInputValue];
+}
+
+function createInputValue(value, format) {
+  if (value == null) {
+    return '';
+  }
+
+  return value.isValid() ? value.format(format) : '';
+}
+```
+
+You can then pass your custom field to your picker using the `field` slot:
+
+```tsx
+function DatePickerWithCustomField() {
+  return (
+    <DatePicker slots={{ field: CustomDateField }}>
+  )
+}
+
+// Also works with the other variants of the component
+function DesktopDatePickerWithCustomField() {
+  return (
+    <DesktopDatePicker slots={{ field: CustomDateField }}>
+  )
+}
+
+```
+
+#### Typing
+
+Each picker component exposes an interface describing the props it passes to its field.
+You can import it from the same endpoint as the picker component and use it to type the props of your field:
+
+```tsx
+import { DatePickerFieldProps } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePickerFieldProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+
+function CustomDateField(props: DatePickerFieldProps) {
+  // Your custom field
+}
+
+function CustomDateRangeField(props: DateRangePickerFieldProps) {
+  // Your custom field
+}
+```
+
+##### Import
+
+|       Picker component | Field props interface           |
+| ---------------------: | :------------------------------ |
+|            Date Picker | `DatePickerFieldProps`          |
+|            Time Picker | `TimePickerFieldProps`          |
+|       Date Time Picker | `DateTimePickerFieldProps`      |
+|      Date Range Picker | `DateRangePickerFieldProps`     |
+| Date Time Range Picker | `DateTimeRangePickerFieldProps` |
+
+#### Validation
+
+You can use the `useValidation` hook to check if the current value passed to your field is valid or not:
+
+```ts
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+
+const {
+  // The error associated to the current value.
+  // i.e.: "minDate" if `props.value < props.minDate`.
+  validationError,
+  // `true` if the value is invalid.
+  // On range pickers it is true if the start date or the end date is invalid.
+  hasValidationError,
+  // Imperatively get the error of a value.
+  // Can be useful to generate the context to pass to `onChange`.
+  getValidationErrorForNewValue,
+} = useValidation({
+  value: props.value, // If you have a value in an internal state, you should pass it here.
+  timezone: props.timezone,
+  props,
+  validator: validateDate,
+});
+```
+
+##### Import
+
+Each picker component has a validator adapted to its value type:
+
+|       Picker component | Import validator                                                             |
+| ---------------------: | :--------------------------------------------------------------------------- |
+|            Date Picker | `import { validateDate } from '@mui/x-date-pickers/validation'`              |
+|            Time Picker | `import { validateTime } from '@mui/x-date-pickers/validation'`              |
+|       Date Time Picker | `import { validateDateTime } from '@mui/x-date-pickers/validation'`          |
+|      Date Range Picker | `import { validateDateRange } from '@mui/x-date-pickers-pro/validation'`     |
+| Date Time Range Picker | `import { validateDateTimeRange } from '@mui/x-date-pickers-pro/validation'` |
+
+##### Updated example
+
+Here is the updated example with validation:
+
+```jsx
+import { useValidation, validateDate } from '@mui/x-date-pickers/validation';
+// ... other imports
+
+function CustomDateField(props) {
+  const { format, timezone, value, onChange } = props;
+  const [inputValue, setInputValue] = useInputValue(value, format);
+
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
+    value,
+    timezone,
+    props,
+    validator: validateDate,
+  });
+
+  const handleChange = (event) => {
+    const newInputValue = event.target.value;
+    const newValue = dayjs(newInputValue, format);
+    setInputValue(newInputValue);
+    onChange(newValue, { validationError: getValidationErrorForNewValue(newValue) });
+  };
+
+  return (
+    <TextField
+      value={inputValue}
+      onChange={handleChange}
+      error={hasValidationError}
+    />
+  );
+}
+```
+
+#### Localized placeholder
+
+You can use the `useParsedFormat` to get a clean placeholder.
+This hook applies two main transformation on the format:
+
+1. It replaces all the localized tokens (i.e: `L` for a date with `dayjs`) with there expanded value (`DD/MM/YYYY` for the same date with `dayjs`).
+2. It replaces each token with its token from our localization object (i.e: `YYYY` remains `YYYY` for the english locale but becomes `AAAA` for the french locale).
+
+:::warning
+The format returned by `useParsedFormat` cannot be parsed by your date library.
+:::
+
+```js
+import { useParsedFormat } from '@mui/x-date-pickers/hooks';
+
+const parsedFormat = useParsedFormat(props);
+```
+
+##### Updated example
+
+Here is the updated example with a placeholder:
+
+```jsx
+import { useParsedFormat } from '@mui/x-date-pickers/hooks';
+// ... other imports
+
+function CustomDateField(props) {
+  const { format, timezone, value, onChange } = props;
+  const [inputValue, setInputValue] = useInputValue(value, format);
+
+  const placeholder = useParsedFormat(props);
+
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
+    value,
+    timezone,
+    props,
+    validator: validateDate,
+  });
+
+  const handleChange = (event) => {
+    const newInputValue = event.target.value;
+    const newValue = dayjs(newInputValue, format);
+    setInputValue(newInputValue);
+    onChange(newValue, { validationError: getValidationErrorForNewValue(newValue) });
+  };
+
+  return (
+    <TextField
+      placeholder={format}
+      value={inputValue}
+      onChange={handleChange}
+      error={hasValidationError}
+    />
+  );
+}
+```
+
+#### Spread props to the DOM
+
+The field receives a lot of props that cannot be forwarded to the DOM element without warnings.
+You can use the `useSplitFieldProps` hook to get the props that can be forwarded safely to the DOM:
+
+```tsx
+const { internalProps, forwardedProps } = useSplitFieldProps(
+  // The props received by the field component
+  props,
+  // The value type ("date", "time" or "date-time")
+  'date',
+);
+
+return (
+  <TextField {...forwardedProps} value={inputValue} onChange={handleChange}>
+)
+```
+
+:::success
+The `forwardedProps` contain props like `slots`, `slotProps` and `sx` that are specific to MUI.
+You can omit them if the component your are forwarding the props to does not support those concepts:
+
+```jsx
+const { slots, slotProps, sx, ...other } = props;
+
+const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
+
+return (
+  <TextField {...forwardedProps} value={inputValue} onChange={handleChange}>
+)
+```
+
+:::
+
+##### Updated example
+
+Here is the updated example with the props forwarded to the DOM:
+
+```jsx
+function CustomDateField(props) {
+  // TextField does not support slots and slotProps before `@mui/material` v6.0
+  const { slots, slotProps, ...other } = props;
+  const { internalProps, forwardedProps } = useSplitFieldProps(other, 'date');
+
+  const { format, timezone, value, onChange } = internalProps;
+  const [inputValue, setInputValue] = useInputValue(value, format);
+
+  const { hasValidationError, getValidationErrorForNewValue } = useValidation({
+    value,
+    timezone,
+    props: internalProps,
+    validator: validateDate,
+  });
+
+  const handleChange = (event) => {
+    const newInputValue = event.target.value;
+    const newValue = dayjs(newInputValue, format);
+    setInputValue(newInputValue);
+    onChange(newValue, { validationError: getValidationErrorForNewValue(newValue) });
+  };
+
+  const placeholder = useParsedFormat(internalProps);
+
+  return (
+    <TextField
+      {...forwardedProps}
+      placeholder={placeholder}
+      value={inputValue}
+      onChange={handleChange}
+      error={hasValidationError}
+    />
+  );
+}
+```
+
+#### Enhanced basic example
+
+Here is a live demo of the example created in all the previous sections:
+
+{{"demo": "behavior-tutorial/MaterialDatePicker.js", "defaultCodeOpen": false}}
