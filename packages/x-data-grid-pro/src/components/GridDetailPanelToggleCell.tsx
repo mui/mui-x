@@ -1,7 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  useGridSelector,
+  GridRenderCellParams,
+  GridRowId,
+} from '@mui/x-data-grid';
+import { createSelectorMemoizedV8, useGridSelectorV8 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -23,13 +29,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const isExpandedSelector = createSelectorMemoizedV8(
+  gridDetailPanelExpandedRowIdsSelector,
+  (expandedRowIds, rowId: GridRowId) => {
+    return expandedRowIds.includes(rowId);
+  },
+);
+
 function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const { id, row, api } = props;
   const rowId = api.getRowId(row);
-  const isExpanded = useGridSelector({ current: api }, () => {
-    const expandedRowIds = gridDetailPanelExpandedRowIdsSelector((api as GridApiPro).state);
-    return expandedRowIds.includes(rowId);
-  });
+  const isExpanded = useGridSelectorV8({ current: api as GridApiPro }, isExpandedSelector, rowId);
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
