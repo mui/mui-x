@@ -13,6 +13,8 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUIToggleButton from '@mui/material/ToggleButton';
+import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -28,7 +30,6 @@ import {
   GridKeyboardArrowRight,
   GridMoreVertIcon,
   GridRemoveIcon,
-  GridSaveAltIcon,
   GridSearchIcon,
   GridSeparatorIcon,
   GridTableRowsIcon,
@@ -40,6 +41,7 @@ import {
   GridClearIcon,
   GridLoadIcon,
   GridDeleteForeverIcon,
+  GridFileDownloadIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -60,7 +62,7 @@ const iconSlots: GridIconSlotsComponent = {
   densityCompactIcon: GridViewHeadlineIcon,
   densityStandardIcon: GridTableRowsIcon,
   densityComfortableIcon: GridViewStreamIcon,
-  exportIcon: GridSaveAltIcon,
+  exportIcon: GridFileDownloadIcon,
   moreActionsIcon: GridMoreVertIcon,
   treeDataCollapseIcon: GridExpandMoreIcon,
   treeDataExpandIcon: GridKeyboardArrowRight,
@@ -101,6 +103,8 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseChip: MUIChip,
+  baseToggleButton: MUIToggleButton,
+  baseToggleButtonGroup: MUIToggleButtonGroup,
 };
 
 export default materialSlots;

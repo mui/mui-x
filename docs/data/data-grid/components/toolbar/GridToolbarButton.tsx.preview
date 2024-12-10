@@ -1,0 +1,3 @@
+<Grid.Toolbar.Button>
+  <PrintIcon fontSize="small" /> Print
+</Grid.Toolbar.Button>
