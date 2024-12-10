@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { selectorChartSeriesState } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
 
 /**
@@ -13,7 +13,7 @@ import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useCha
  */
 export function useSeries() {
   const store = useStore<[UseChartSeriesSignature]>();
-  return useSelector(store, selectorChartSeriesState);
+  return useSelector(store, selectorChartSeriesProcessed);
 }
 
 /**

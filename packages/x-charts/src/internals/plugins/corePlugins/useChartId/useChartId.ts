@@ -6,7 +6,10 @@ import { createChartDefaultId } from './useChartId.utils';
 export const useChartId: ChartPlugin<UseChartIdSignature> = ({ params, store }) => {
   React.useEffect(() => {
     store.update((prevState) => {
-      if (params.id === prevState.id.providedChartId && prevState.id.chartId !== undefined) {
+      if (
+        params.id === undefined ||
+        (params.id === prevState.id.providedChartId && prevState.id.chartId !== undefined)
+      ) {
         return prevState;
       }
 
@@ -24,5 +27,5 @@ useChartId.params = {
 };
 
 useChartId.getInitialState = ({ id }) => ({
-  id: { chartId: undefined, providedChartId: id },
+  id: { chartId: id, providedChartId: id },
 });

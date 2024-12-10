@@ -6,8 +6,7 @@ import {
   CartesianExtremumGetter,
   CartesianExtremumGetterResult,
 } from '../../models/seriesConfig/extremumGetter.types';
-import { GetZoomAxisFilters } from './useChartCartesianAxis.types';
-import { isCartesianSeriesType } from '../../../isCartesian';
+import { GetZoomAxisFilters } from './useChartProCartesianAxis.types';
 
 const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
   acc: CartesianExtremumGetterResult,
@@ -16,7 +15,7 @@ const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
   axisDirection: 'x' | 'y',
   seriesConfig: ChartSeriesConfig<TSeriesType>,
   axisIndex: number,
-  formattedSeries: ProcessedSeries<TSeriesType>,
+  formattedSeries: ProcessedSeries<CartesianChartSeriesType>,
   getFilters?: GetZoomAxisFilters,
 ): CartesianExtremumGetterResult => {
   const getter =
@@ -38,21 +37,21 @@ const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(
   return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
 };
 
-export const getAxisExtremum = <T extends CartesianChartSeriesType>(
+export const getAxisExtremum = (
   axis: AxisConfig,
   axisDirection: 'x' | 'y',
-  seriesConfig: ChartSeriesConfig<T>,
+  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>,
   axisIndex: number,
-  formattedSeries: ProcessedSeries<T>,
+  formattedSeries: ProcessedSeries,
   getFilters?: GetZoomAxisFilters,
 ) => {
-  const charTypes = Object.keys(seriesConfig).filter(isCartesianSeriesType);
+  const charTypes = Object.keys(seriesConfig) as CartesianChartSeriesType[];
 
   const extremums = charTypes.reduce<CartesianExtremumGetterResult>(
     (acc, charType) =>
       axisExtremumCallback(
         acc,
-        charType as T,
+        charType,
         axis,
         axisDirection,
         seriesConfig,

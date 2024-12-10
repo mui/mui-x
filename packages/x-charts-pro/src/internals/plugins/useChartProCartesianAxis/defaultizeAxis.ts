@@ -1,12 +1,8 @@
-'use client';
-import * as React from 'react';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
+import { AxisConfig, ChartsAxisProps, DatasetType, ScaleName } from '@mui/x-charts/internals';
 import { MakeOptional } from '@mui/x-internals/types';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../../constants';
-import { AxisConfig, ScaleName } from '../../models';
-import { ChartsAxisProps } from '../../models/axis';
-import { DatasetType } from '../../models/seriesType/config';
 
-const defaultizeAxis = (
+export const defaultizeAxis = (
   inAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
   dataset: DatasetType | undefined,
   axisName: 'x' | 'y',
@@ -32,15 +28,4 @@ const defaultizeAxis = (
       data: dataset.map((d) => d[dataKey]),
     };
   });
-};
-
-export const useDefaultizeAxis = (
-  inXAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
-  inYAxis: MakeOptional<AxisConfig<ScaleName, any, ChartsAxisProps>, 'id'>[] | undefined,
-  dataset: DatasetType | undefined,
-) => {
-  const xAxis = React.useMemo(() => defaultizeAxis(inXAxis, dataset, 'x'), [inXAxis, dataset]);
-  const yAxis = React.useMemo(() => defaultizeAxis(inYAxis, dataset, 'y'), [inYAxis, dataset]);
-
-  return [xAxis, yAxis];
 };

@@ -4,3 +4,4 @@ export type {
   UseChartSeriesParameters,
   UseChartSeriesDefaultizedParameters,
 } from './useChartSeries.types';
+export * from './useChartSeries.selectors';

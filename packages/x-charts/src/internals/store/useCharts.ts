@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { ChartStore } from '../plugins/utils/ChartStore';
 import {
   ChartAnyPluginSignature,
@@ -14,6 +15,7 @@ import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInte
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
 import { ChartSeriesType } from '../../models/seriesType/config';
 import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
+import { useChartModels } from './useChartModels';
 
 export function useChartApiInitialization<T>(
   inputApiRef: React.MutableRefObject<T | undefined> | undefined,
@@ -47,6 +49,8 @@ export function useCharts<
     ...TSignatures,
   ];
 
+  const chartId = useId();
+
   const plugins = React.useMemo(
     () =>
       [
@@ -60,7 +64,9 @@ export function useCharts<
     plugins,
     props,
   });
+  pluginParams.id = pluginParams.id ?? chartId;
 
+  const models = useChartModels<TSignatures>(plugins, pluginParams);
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
@@ -99,6 +105,7 @@ export function useCharts<
       store: storeRef.current as ChartStore<any>,
       svgRef: innerSvgRef,
       seriesConfig,
+      models,
     });
 
     if (pluginResponse.publicAPI) {

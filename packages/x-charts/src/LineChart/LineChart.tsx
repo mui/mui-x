@@ -54,14 +54,14 @@ export interface LineChartSlotProps
 
 export interface LineChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    // Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
-  /**
-   * The series to display in the line chart.
-   * An array of [[LineSeriesType]] objects.
-   */
-  series: MakeOptional<LineSeriesType, 'type'>[];
+  // /**
+  //  * The series to display in the line chart.
+  //  * An array of [[LineSeriesType]] objects.
+  //  */
+  // series: MakeOptional<LineSeriesType, 'type'>[];
   /**
    * Option to display a cartesian grid in the background.
    */

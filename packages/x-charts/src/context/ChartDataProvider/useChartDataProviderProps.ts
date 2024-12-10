@@ -3,19 +3,23 @@ import { useTheme } from '@mui/material/styles';
 import type { ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { HighlightedProviderProps } from '../HighlightedProvider';
-import { useDefaultizeAxis } from './useDefaultizeAxis';
 import { AnimationProviderProps } from '../AnimationProvider';
 import { ChartProviderProps } from '../ChartProvider';
-import { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../../internals/plugins/models';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 
-export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
+export const useChartDataProviderProps = <
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TSeries extends ChartSeriesType = ChartSeriesType,
+>(
+  props: ChartDataProviderProps<TSignatures, TSeries>,
+) => {
   const {
     width,
     height,
     series,
     margin,
-    xAxis,
-    yAxis,
     zAxis,
     colors,
     dataset,
@@ -23,15 +27,14 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     onHighlightChange,
     children,
     skipAnimation,
+    plugins,
+    ...other
   } = props;
 
   const theme = useTheme();
-  const [defaultizedXAxis, defaultizedYAxis] = useDefaultizeAxis(xAxis, yAxis, dataset);
 
-  const chartProviderProps: Omit<
-    ChartProviderProps<[UseChartCartesianAxisSignature]>,
-    'children'
-  > = {
+  const chartProviderProps: Omit<ChartProviderProps<TSignatures, TSeries>, 'children'> = {
+    plugins,
     pluginParams: {
       width,
       height,
@@ -40,9 +43,11 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
       series,
       colors,
       theme: theme.palette.mode,
-      xAxis: defaultizedXAxis,
-      yAxis: defaultizedYAxis,
-    },
+      ...other,
+    } as unknown as MergeSignaturesProperty<
+      [...ChartCorePluginSignatures, ...TSignatures],
+      'params'
+    >,
   };
 
   const animationProviderProps: Omit<AnimationProviderProps, 'children'> = {
@@ -64,8 +69,6 @@ export const useChartDataProviderProps = (props: ChartDataProviderProps) => {
     zAxisContextProps,
     highlightedProviderProps,
     animationProviderProps,
-    xAxis: defaultizedXAxis,
-    yAxis: defaultizedYAxis,
     chartProviderProps,
   };
 };

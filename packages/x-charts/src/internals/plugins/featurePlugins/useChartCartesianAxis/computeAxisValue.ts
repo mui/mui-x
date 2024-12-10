@@ -7,7 +7,7 @@ import {
   isBandScaleConfig,
   isPointScaleConfig,
 } from '../../../../models/axis';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getTickNumber } from '../../../../hooks/useTicks';
 import { getScale } from '../../../getScale';
@@ -77,40 +77,28 @@ type ComputeResult<T extends ChartsAxisProps> = {
   axisIds: string[];
 };
 
-type ComputeCommonParams = {
+type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
-  formattedSeries: ProcessedSeries;
-  seriesConfig: ChartSeriesConfig<ChartSeriesType>;
+  formattedSeries: ProcessedSeries<T>;
+  seriesConfig: ChartSeriesConfig<T>;
   zoomData?: ZoomData[];
   zoomOptions?: ZoomOptions;
   getFilters?: GetZoomAxisFilters;
 };
 
-export function computeAxisValue(
-  options: ComputeCommonParams & {
+export function computeAxisValue<T extends ChartSeriesType>(
+  options: ComputeCommonParams<T> & {
     axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
-export function computeAxisValue(
-  options: ComputeCommonParams & {
+export function computeAxisValue<T extends ChartSeriesType>(
+  options: ComputeCommonParams<T> & {
     axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsAxisProps>;
-// export function computeAxisValue(
-//   options: ComputeCommonParams & {
-//     axis: AxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
-//     axisDirection: 'radius';
-//   },
-// ): ComputeResult<ChartsRadiusAxisProps>;
-// export function computeAxisValue(
-//   options: ComputeCommonParams & {
-//     axis: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-//     axisDirection: 'rotation';
-//   },
-// ): ComputeResult<ChartsRotationAxisProps>;
-export function computeAxisValue({
+export function computeAxisValue<T extends ChartSeriesType>({
   drawingArea,
   formattedSeries,
   axis: allAxis,
@@ -119,7 +107,7 @@ export function computeAxisValue({
   zoomData,
   zoomOptions,
   getFilters,
-}: ComputeCommonParams & {
+}: ComputeCommonParams<T> & {
   axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y'; // | 'radius' | 'rotation';
 }) {
@@ -134,7 +122,7 @@ export function computeAxisValue({
     const [minData, maxData] = getAxisExtremum(
       axis,
       axisDirection,
-      seriesConfig,
+      seriesConfig as ChartSeriesConfig<CartesianChartSeriesType>,
       axisIndex,
       formattedSeries,
       zoom === undefined && !zoomOption ? getFilters : undefined, // Do not apply filtering if zoom is already defined.

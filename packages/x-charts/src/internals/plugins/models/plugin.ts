@@ -7,11 +7,20 @@ import { ChartSeriesConfig } from './seriesConfig';
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
   instance: ChartUsedInstance<TSignature>;
   params: ChartUsedDefaultizedParams<TSignature>;
+  models: ChartUsedControlModels<TSignature>;
   store: ChartUsedStore<TSignature>;
   svgRef: React.RefObject<SVGSVGElement>;
   plugins: ChartPlugin<ChartAnyPluginSignature>[];
   seriesConfig: ChartSeriesConfig<any>;
 }
+
+type ChartControlModelsInitializer<TSignature extends ChartAnyPluginSignature> = {
+  [TControlled in keyof TSignature['models']]: {
+    getDefaultValue: (
+      params: TSignature['defaultizedParams'],
+    ) => Exclude<TSignature['defaultizedParams'][TControlled], undefined>;
+  };
+};
 
 type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
   'publicAPI',
@@ -26,6 +35,7 @@ export type ChartPluginSignature<
     instance?: {};
     publicAPI?: {};
     state?: {};
+    modelNames?: keyof T['defaultizedParams'];
     dependencies?: readonly ChartAnyPluginSignature[];
     optionalDependencies?: readonly ChartAnyPluginSignature[];
   },
@@ -35,6 +45,13 @@ export type ChartPluginSignature<
   instance: T extends { instance: {} } ? T['instance'] : {};
   state: T extends { state: {} } ? T['state'] : {};
   publicAPI: T extends { publicAPI: {} } ? T['publicAPI'] : {};
+  models: T extends { defaultizedParams: {}; modelNames: keyof T['defaultizedParams'] }
+    ? {
+        [TControlled in T['modelNames']]-?: ChartControlModel<
+          Exclude<T['defaultizedParams'][TControlled], undefined>
+        >;
+      }
+    : {};
   dependencies: T extends { dependencies: Array<any> } ? T['dependencies'] : [];
   optionalDependencies: T extends { optionalDependencies: Array<any> }
     ? T['optionalDependencies']
@@ -45,6 +62,7 @@ export type ChartAnyPluginSignature = {
   state: any;
   instance: any;
   params: any;
+  models: any;
   defaultizedParams: any;
   dependencies: any;
   optionalDependencies: any;
@@ -77,6 +95,20 @@ export type ChartUsedInstance<TSignature extends ChartAnyPluginSignature> =
     $$signature: TSignature;
   };
 
+export interface ChartControlModel<TValue> {
+  name: string;
+  value: TValue;
+  setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
+}
+
+type RemoveSetValue<Models extends Record<string, ChartControlModel<any>>> = {
+  [K in keyof Models]: Omit<Models[K], 'setValue'>;
+};
+
+export type ChartUsedControlModels<TSignature extends ChartAnyPluginSignature> =
+  TSignature['models'] &
+    RemoveSetValue<MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'models'>>;
+
 export type ChartUsedStore<TSignature extends ChartAnyPluginSignature> = ChartStore<
   [TSignature, ...TSignature['dependencies']]
 >;
@@ -88,6 +120,7 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
     currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
     seriesConfig: ChartSeriesConfig<any>,
   ) => TSignature['state'];
+  models?: ChartControlModelsInitializer<TSignature>;
   params: Record<keyof TSignature['params'], true>;
   getDefaultizedParams?: (options: {
     params: ChartUsedParams<TSignature>;

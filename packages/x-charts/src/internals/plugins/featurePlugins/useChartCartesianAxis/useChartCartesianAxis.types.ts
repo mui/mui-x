@@ -1,5 +1,6 @@
+import { MakeOptional } from '@mui/x-internals/types';
 import { ChartPluginSignature } from '../../models';
-import { DatasetType } from '../../../../models/seriesType/config';
+import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
 import {
   AxisDefaultized,
   ScaleName,
@@ -9,26 +10,6 @@ import {
   AxisConfig,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-
-export type CartesianProviderProps = {
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
-  /**
-   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
-   */
-  dataset?: DatasetType;
-  children: React.ReactNode;
-};
 
 export type DefaultizedAxisConfig<AxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
@@ -73,39 +54,22 @@ export interface UseChartCartesianAxisParameters {
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  dataset?: DatasetType;
 }
 
 export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {};
 
 export interface UseChartCartesianAxisState {
   cartesianAxis: {
-    x: {
-      /**
-       * Mapping from x-axis key to scaling configuration.
-       */
-      axis: DefaultizedAxisConfig<ChartsXAxisProps>;
-      /**
-       * The x-axes IDs sorted by order they got provided.
-       */
-      axisIds: AxisId[];
-    };
-    y: {
-      /**
-       * Mapping from y-axis key to scaling configuration.
-       */
-      axis: DefaultizedAxisConfig<ChartsYAxisProps>;
-      /**
-       * The y-axes IDs sorted by order they got provided.
-       */
-      axisIds: AxisId[];
-    };
+    x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    y: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
   };
 }
 
@@ -116,13 +80,14 @@ export type ExtremumFilter = (
 
 export interface UseChartCartesianAxisInstance {}
 
-export type UseChartCartesianAxisSignature = ChartPluginSignature<{
-  params: UseChartCartesianAxisParameters;
-  defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
-  state: UseChartCartesianAxisState;
-  // instance: UseChartCartesianAxisInstance;
-  dependencies: [UseChartSeriesSignature];
-}>;
+export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  ChartPluginSignature<{
+    params: UseChartCartesianAxisParameters;
+    defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
+    state: UseChartCartesianAxisState;
+    // instance: UseChartCartesianAxisInstance;
+    dependencies: [UseChartSeriesSignature<SeriesType>];
+  }>;
 
 export type ZoomData = { axisId: AxisId; start: number; end: number };
 

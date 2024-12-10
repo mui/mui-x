@@ -3,9 +3,13 @@ import * as React from 'react';
 import { ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartDataProviderProps } from '../context/ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
+import {
+  useChartCartesianAxis,
+  UseChartCartesianAxisSignature,
+} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 export type UseChartContainerPropsReturnValue = {
-  chartDataProviderProps: ChartDataProviderProps;
+  chartDataProviderProps: ChartDataProviderProps<[UseChartCartesianAxisSignature]>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -44,7 +48,7 @@ export const useChartContainerProps = (
     ...other,
   };
 
-  const chartDataProviderProps: ChartDataProviderProps = {
+  const chartDataProviderProps: ChartDataProviderProps<[UseChartCartesianAxisSignature]> = {
     margin,
     series,
     colors,
@@ -57,6 +61,7 @@ export const useChartContainerProps = (
     skipAnimation,
     width,
     height,
+    plugins: [useChartCartesianAxis],
   };
 
   return {

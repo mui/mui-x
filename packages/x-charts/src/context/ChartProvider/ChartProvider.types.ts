@@ -34,7 +34,7 @@ export type ChartContextValue<
 };
 
 export interface ChartProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[] = [],
+  TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
 > {
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;

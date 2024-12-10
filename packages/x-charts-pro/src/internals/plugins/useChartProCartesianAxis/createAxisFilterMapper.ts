@@ -1,16 +1,7 @@
-import {
-  getAxisExtremum,
-  FormattedSeries,
-  ExtremumGettersConfig,
-  ExtremumFilter,
-  ZoomAxisFilters,
-  GetZoomAxisFilters,
-  isDefined,
-  getScale,
-} from '@mui/x-charts/internals';
+import { getAxisExtremum, isDefined, getScale } from '@mui/x-charts/internals';
 import { ScaleName, AxisConfig } from '@mui/x-charts/models';
 import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ZoomData } from '../ZoomProvider';
+import { ZoomData } from '../../../context/ZoomProvider';
 
 type CreateAxisFilterMapperParams = {
   zoomData: ZoomData[];

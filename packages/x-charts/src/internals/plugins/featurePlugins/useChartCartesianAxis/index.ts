@@ -4,3 +4,4 @@ export type {
   UseChartCartesianAxisParameters,
   UseChartCartesianAxisDefaultizedParameters,
 } from './useChartCartesianAxis.types';
+export { defaultizeAxis } from './defaultizeAxis';

@@ -1,34 +1,29 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { MakeOptional } from '@mui/x-internals/types';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
-import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../../models/axis';
 import { AnimationProvider, AnimationProviderProps } from '../AnimationProvider';
 import { ZAxisContextProvider, ZAxisContextProviderProps } from '../ZAxisContextProvider';
 import { HighlightedProvider, HighlightedProviderProps } from '../HighlightedProvider';
 import { ChartProvider, ChartProviderProps } from '../ChartProvider';
-import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+// import {
+//   useChartCartesianAxis,
+//   UseChartCartesianAxisSignature,
+// } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 
-export type ChartDataProviderProps = Omit<
+export type ChartDataProviderProps<
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TSeries extends ChartSeriesType = ChartSeriesType,
+> = Omit<
   ZAxisContextProviderProps &
     HighlightedProviderProps &
     AnimationProviderProps &
-    ChartProviderProps<[]>['pluginParams'],
+    ChartProviderProps<TSignatures, TSeries>['pluginParams'],
   'children'
 > & {
-  /**
-   * The configuration of the x-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  xAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsXAxisProps>, 'id'>[];
-  /**
-   * The configuration of the y-axes.
-   * If not provided, a default axis config is used.
-   * An array of [[AxisConfig]] objects.
-   */
-  yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>[];
+  plugins?: ChartProviderProps<TSignatures, TSeries>['plugins'];
   children?: React.ReactNode;
 };
 
@@ -59,7 +54,10 @@ export type ChartDataProviderProps = Omit<
  * </ChartDataProvider>
  * ```
  */
-function ChartDataProvider(props: ChartDataProviderProps) {
+function ChartDataProvider<
+  TSignatures extends readonly ChartAnyPluginSignature[],
+  TSeries extends ChartSeriesType = ChartSeriesType,
+>(props: ChartDataProviderProps<TSignatures, TSeries>) {
   const {
     children,
     zAxisContextProps,
@@ -69,7 +67,7 @@ function ChartDataProvider(props: ChartDataProviderProps) {
   } = useChartDataProviderProps(props);
 
   return (
-    <ChartProvider {...chartProviderProps} plugins={[useChartCartesianAxis]}>
+    <ChartProvider<TSignatures, TSeries> {...chartProviderProps}>
       <ZAxisContextProvider {...zAxisContextProps}>
         <HighlightedProvider {...highlightedProviderProps}>
           <AnimationProvider {...animationProviderProps}>{children}</AnimationProvider>

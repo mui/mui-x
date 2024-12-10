@@ -4,3 +4,4 @@ export type {
   UseChartDimensionsParameters,
   UseChartDimensionsDefaultizedParameters,
 } from './useChartDimensions.types';
+export * from './useChartDimensions.selectors';
