@@ -441,7 +441,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   }
 
   let children: React.ReactNode;
-  let title: string | undefined;
 
   if (editCellState === null && column.renderCell) {
     children = column.renderCell(cellParams);
@@ -472,7 +471,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = valueString;
-    title = valueString;
   }
 
   if (React.isValidElement(children) && canManageOwnFocus) {
@@ -497,7 +495,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       aria-colspan={colSpan}
       aria-rowspan={rowSpan}
       style={style}
-      title={title}
       tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
