@@ -31,10 +31,33 @@ type DataSource<R extends {}> = {
 export interface UseTreeViewLazyLoadingPublicAPI {}
 
 export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPublicAPI {
+  /**
+   * Method used for fetching multiple items concurrently.
+   * Only relevant for lazy-loaded tree views.
+   *
+   * @param {TreeViewItemId[]} parentIds The ids of the items to fetch the children of.
+   * @returns { Promise<void>} The children of the items.
+   */
   fetchItems: (parentIds?: TreeViewItemId[]) => Promise<void>;
-  fetchItemChildren: (id: TreeViewItemId) => Promise<void>;
-  isLazyLoadingEnabled: boolean;
+  /**
+   * Method used for fetching and item's children.
+   * Only relevant for lazy-loaded tree views.
+   *
+   * @param {TreeViewItemId} itemId The The id of the item to fetch the children of.
+   * @returns { Promise<void>} The children of the item.
+   */
+  fetchItemChildren: (itemId: TreeViewItemId) => Promise<void>;
+  /**
+   * Set the loading state of an item.
+   * @param {TreeViewItemId} itemId The id of the item to set the loading state of.
+   * @param {boolean} isLoading True if the item is loading.
+   */
   setDataSourceLoading: (itemId: TreeViewItemId, isLoading: boolean) => void;
+  /**
+   * Set the error state of an item.
+   * @param {TreeViewItemId} itemId The id of the item to set the error state of.
+   * @param {Error | null} error The error caught on the item.
+   */
   setDataSourceError: (itemId: TreeViewItemId, error: Error | null) => void;
 }
 

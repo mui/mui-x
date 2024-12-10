@@ -5,7 +5,7 @@ import {
   UseTreeViewItemsSignature,
   UseTreeViewItemsDefaultizedParameters,
   UseTreeViewItemsState,
-  AddItemsParams,
+  AddItemsParameters,
 } from './useTreeViewItems.types';
 import { publishTreeViewEvent } from '../../utils/publishTreeViewEvent';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -16,8 +16,6 @@ import {
   selectorItemOrderedChildrenIds,
   selectorItemModel,
   selectorItemDepth,
-  selectorIsTreeViewLoading,
-  selectorGetTreeViewError,
 } from './useTreeViewItems.selectors';
 import { selectorTreeViewId } from '../../corePlugins/useTreeViewId/useTreeViewId.selectors';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
@@ -154,12 +152,6 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [store],
   );
 
-  const isTreeViewLoading = React.useMemo(
-    () => selectorIsTreeViewLoading(store.value) || false,
-    [store],
-  );
-  const getTreeViewError = React.useMemo(() => selectorGetTreeViewError(store.value), [store]);
-
   const setTreeViewLoading = (isLoading: boolean) => {
     store.update((prevState) => ({
       ...prevState,
@@ -220,7 +212,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     parentId,
     depth,
     getChildrenCount,
-  }: AddItemsParams<TreeViewBaseItem>) => {
+  }: AddItemsParameters<TreeViewBaseItem>) => {
     if (items) {
       const newState = updateItemsState({
         disabledItemsFocusable: params.disabledItemsFocusable,
@@ -373,10 +365,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       preventItemUpdates,
       areItemUpdatesPrevented,
       addItems,
-      isTreeViewLoading,
       setTreeViewLoading,
       setTreeViewError,
-      getTreeViewError,
       removeChildren,
     },
     contextValue: pluginContextValue,
