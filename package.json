@@ -208,7 +208,8 @@
   "pnpm": {
     "patchedDependencies": {
       "karma-mocha@2.0.1": "patches/karma-mocha@2.0.1.patch",
-      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch"
+      "babel-plugin-replace-imports@1.0.2": "patches/babel-plugin-replace-imports@1.0.2.patch",
+      "@shikijs/vscode-textmate@9.3.0": "patches/@shikijs__vscode-textmate@9.3.0.patch"
     }
   }
 }

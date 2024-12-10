@@ -8,7 +8,7 @@ async function main() {
   const configFileName = ts.findConfigFile(
     path.dirname(entryPoint),
     ts.sys.fileExists,
-    'tsconfig.build.json',
+    'tsconfig.json',
   );
 
   if (!configFileName) {

@@ -9,6 +9,9 @@ overrides:
   '@types/node': ^20.17.9
 
 patchedDependencies:
+  '@shikijs/vscode-textmate@9.3.0':
+    hash: cq3qol55ube4gr2wwm2ef6cmxu
+    path: patches/@shikijs__vscode-textmate@9.3.0.patch
   babel-plugin-replace-imports@1.0.2:
     hash: 7wlacyoi44skuhtzjdjwgtjyxe
     path: patches/babel-plugin-replace-imports@1.0.2.patch
@@ -11779,7 +11782,7 @@ snapshots:
     dependencies:
       '@shikijs/engine-oniguruma': 1.24.2
       '@shikijs/types': 1.24.2
-      '@shikijs/vscode-textmate': 9.3.0
+      '@shikijs/vscode-textmate': 9.3.0(patch_hash=cq3qol55ube4gr2wwm2ef6cmxu)
 
   '@gitbeaker/core@38.12.1':
     dependencies:
@@ -12955,14 +12958,14 @@ snapshots:
   '@shikijs/engine-oniguruma@1.24.2':
     dependencies:
       '@shikijs/types': 1.24.2
-      '@shikijs/vscode-textmate': 9.3.0
+      '@shikijs/vscode-textmate': 9.3.0(patch_hash=cq3qol55ube4gr2wwm2ef6cmxu)
 
   '@shikijs/types@1.24.2':
     dependencies:
-      '@shikijs/vscode-textmate': 9.3.0
+      '@shikijs/vscode-textmate': 9.3.0(patch_hash=cq3qol55ube4gr2wwm2ef6cmxu)
       '@types/hast': 3.0.4
 
-  '@shikijs/vscode-textmate@9.3.0': {}
+  '@shikijs/vscode-textmate@9.3.0(patch_hash=cq3qol55ube4gr2wwm2ef6cmxu)': {}
 
   '@sigstore/bundle@2.3.2':
     dependencies:
