@@ -23,7 +23,7 @@ export interface GridControlledStateEventLookupPro {
    * Fired when the open detail panels are changed.
    * @ignore - do not document.
    */
-  detailPanelsExpandedRowIdsChange: { params: GridRowId[] };
+  detailPanelsExpandedRowIdsChange: { params: Set<GridRowId> };
   /**
    * Fired when the pinned columns is changed.
    * @ignore - do not document.

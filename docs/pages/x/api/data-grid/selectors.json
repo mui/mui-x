@@ -130,7 +130,7 @@
   },
   {
     "name": "gridDetailPanelExpandedRowIdsSelector",
-    "returnType": "GridRowId[]",
+    "returnType": "Set<GridRowId>",
     "description": "",
     "supportsApiRef": false
   },
@@ -139,12 +139,6 @@
     "returnType": "Record<GridRowId, ReactNode>",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
-    "returnType": "Record<GridRowId, number>",
-    "description": "",
-    "supportsApiRef": true
   },
   {
     "name": "gridDimensionsSelector",

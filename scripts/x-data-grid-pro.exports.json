@@ -245,7 +245,6 @@
   { "name": "GridDetailPanelApi", "kind": "Interface" },
   { "name": "gridDetailPanelExpandedRowIdsSelector", "kind": "Variable" },
   { "name": "gridDetailPanelExpandedRowsContentCacheSelector", "kind": "Variable" },
-  { "name": "gridDetailPanelExpandedRowsHeightCacheSelector", "kind": "Variable" },
   { "name": "GridDetailPanelInitialState", "kind": "TypeAlias" },
   { "name": "GridDetailPanelPrivateApi", "kind": "Interface" },
   { "name": "GridDetailPanelState", "kind": "Interface" },

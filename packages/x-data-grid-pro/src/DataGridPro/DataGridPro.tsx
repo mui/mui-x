@@ -187,9 +187,7 @@ DataGridProRaw.propTypes = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false

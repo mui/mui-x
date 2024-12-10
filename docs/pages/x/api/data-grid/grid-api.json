@@ -112,7 +112,7 @@
       "isPremiumPlan": true
     },
     "getExpandedDetailPanels": {
-      "type": { "description": "() =&gt; GridRowId[]" },
+      "type": { "description": "() =&gt; Set&lt;GridRowId&gt;" },
       "required": true,
       "isProPlan": true
     },
@@ -335,7 +335,7 @@
       "required": true
     },
     "setExpandedDetailPanels": {
-      "type": { "description": "(ids: GridRowId[]) =&gt; void" },
+      "type": { "description": "(ids: Set&lt;GridRowId&gt;) =&gt; void" },
       "required": true,
       "isProPlan": true
     },
