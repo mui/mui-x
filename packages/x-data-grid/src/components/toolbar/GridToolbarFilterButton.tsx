@@ -71,10 +71,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
-        return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
+        return apiRef.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement<any>;
       }
       if (activeFilters.length === 0) {
-        return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
+        return apiRef.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement<any>;
       }
 
       const getOperatorLabel = (item: GridFilterItem): string =>

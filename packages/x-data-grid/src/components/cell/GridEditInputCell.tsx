@@ -77,7 +77,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
     } = props;
 
     const apiRef = useGridApiContext();
-    const inputRef = React.useRef<HTMLInputElement>();
+    const inputRef = React.useRef<HTMLInputElement>(null);
     const [valueState, setValueState] = React.useState(value);
     const classes = useUtilityClasses(rootProps);
 

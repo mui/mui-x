@@ -7,14 +7,14 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
   label: string;
-  icon?: React.ReactElement;
+  icon?: React.ReactElement<any>;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
 }
 
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({ showInMenu?: false; icon: React.ReactElement<any> } & Omit<IconButtonProps, 'component'>)
     | ({
         showInMenu: true;
         /**
@@ -26,7 +26,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
       } & Omit<MenuItemProps, 'component'>)
   );
 
-const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
+const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellItemProps>(
   (props, ref) => {
     const rootProps = useGridRootProps();
 
@@ -39,7 +39,7 @@ const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemPro
 
       return (
         <rootProps.slots.baseIconButton
-          ref={ref as React.MutableRefObject<HTMLButtonElement>}
+          ref={ref}
           size="small"
           role="menuitem"
           aria-label={label}

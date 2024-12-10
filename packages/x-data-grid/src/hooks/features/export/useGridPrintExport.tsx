@@ -70,7 +70,7 @@ export const useGridPrintExport = (
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
   const previousRows = React.useRef<GridValidRowModel[]>([]);
-  const previousVirtualizationState = React.useRef<GridStateCommunity['virtualization']>();
+  const previousVirtualizationState = React.useRef<GridStateCommunity['virtualization']>(null);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
