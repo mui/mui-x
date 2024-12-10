@@ -20,10 +20,9 @@ const Root = styled('div', {
   name: 'MuiChartsLabel',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelProps }>(({ theme, ownerState }) => ({
+})<{ ownerState: ChartsLabelProps }>(({ theme }) => ({
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
-  ...ownerState.labelStyle,
   lineHeight: undefined,
   display: 'flex',
 }));
@@ -39,7 +38,7 @@ const ChartsLabel = consumeThemeProps(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLDivElement>) {
-    const { children, className, classes, labelStyle, ...other } = props;
+    const { children, className, classes, ...other } = props;
 
     return (
       <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>
@@ -59,11 +58,6 @@ ChartsLabel.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
-  /**
-   * Style applied to legend labels.
-   * @default theme.typography.caption
-   */
-  labelStyle: PropTypes.object,
 } as any;
 
 export { ChartsLabel };
