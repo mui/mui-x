@@ -2,10 +2,11 @@ import * as React from 'react';
 import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
-import { PickerOrientation, PickerVariant } from '../models';
+import { DateOrTimeViewWithMeridiem, PickerOrientation, PickerVariant } from '../models';
 import type { UsePickerValueContextValue } from '../hooks/usePicker/usePickerValue.types';
+import { UsePickerViewsContextValue } from '../hooks/usePicker/usePickerViews';
 
-export const PickerContext = React.createContext<PickerContextValue | null>(null);
+export const PickerContext = React.createContext<PickerContextValue<any> | null>(null);
 
 export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
   ownerState: {
@@ -38,13 +39,16 @@ export function PickerProvider(props: PickerProviderProps) {
 }
 
 export interface PickerProviderProps {
-  contextValue: PickerContextValue;
+  contextValue: PickerContextValue<any>;
   privateContextValue: PickerPrivateContextValue;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
 }
 
-export interface PickerContextValue extends UsePickerValueContextValue {
+export interface PickerContextValue<
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
+> extends UsePickerValueContextValue,
+    UsePickerViewsContextValue<TView> {
   /**
    * `true` if the picker is disabled, `false` otherwise.
    */

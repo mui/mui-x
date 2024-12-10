@@ -214,7 +214,7 @@ createTheme({
     },
     MuiDateTimePickerTabs: {
       defaultProps: {
-        view: 'day',
+        hidden: true,
         // @ts-expect-error invalid MuiDateTimePicker prop
         someRandomProp: true,
       },

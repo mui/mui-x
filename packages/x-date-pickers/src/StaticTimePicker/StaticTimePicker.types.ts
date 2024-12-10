@@ -11,13 +11,11 @@ import {
 } from '../internals/hooks/useStaticPicker';
 import { TimeView } from '../models';
 
-export interface StaticTimePickerSlots
-  extends BaseTimePickerSlots,
-    UseStaticPickerSlots<TimeView> {}
+export interface StaticTimePickerSlots extends BaseTimePickerSlots, UseStaticPickerSlots {}
 
 export interface StaticTimePickerSlotProps
   extends BaseTimePickerSlotProps,
-    UseStaticPickerSlotProps<TimeView> {}
+    UseStaticPickerSlotProps {}
 
 export interface StaticTimePickerProps
   extends BaseTimePickerProps<TimeView>,

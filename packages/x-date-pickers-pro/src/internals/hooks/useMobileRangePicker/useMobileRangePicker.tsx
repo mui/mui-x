@@ -162,7 +162,7 @@ export const useMobileRangePicker = <
     singleInputFieldRef,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue> = {
     ...innerSlotProps,
     tabs: {
       ...innerSlotProps?.tabs,

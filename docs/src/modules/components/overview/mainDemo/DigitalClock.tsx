@@ -13,7 +13,6 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { TimeView } from '@mui/x-date-pickers/models';
 
 const StyledLayout = styled(PickersLayoutRoot)({
   overflow: 'auto',
@@ -24,7 +23,7 @@ const StyledLayout = styled(PickersLayoutRoot)({
   },
 });
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, TimeView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
   const { actionBar, content, ownerState } = usePickerLayout(props);
   return (
     <StyledLayout ownerState={ownerState}>
