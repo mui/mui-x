@@ -130,7 +130,7 @@
   },
   {
     "name": "gridDetailPanelExpandedRowIdsSelector",
-    "returnType": "GridRowId[]",
+    "returnType": "Set<GridRowId>",
     "description": "",
     "supportsApiRef": false
   },
