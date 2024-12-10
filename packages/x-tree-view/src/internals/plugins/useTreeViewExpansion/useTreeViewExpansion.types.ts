@@ -75,11 +75,8 @@ export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
 export interface UseTreeViewExpansionState {
   expansion: {
     expandedItemsMap: Map<string, true>;
+    expansionTrigger: 'content' | 'iconContainer';
   };
-}
-
-interface UseTreeViewExpansionContextValue {
-  expansion: Pick<UseTreeViewExpansionParameters, 'expansionTrigger'>;
 }
 
 export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
@@ -89,7 +86,6 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewExpansionPublicAPI;
   modelNames: 'expandedItems';
   state: UseTreeViewExpansionState;
-  contextValue: UseTreeViewExpansionContextValue;
   dependencies: [UseTreeViewItemsSignature];
   optionalDependencies: [UseTreeViewLabelSignature];
 }>;
