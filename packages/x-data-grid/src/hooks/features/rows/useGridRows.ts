@@ -387,7 +387,7 @@ export const useGridRows = (
           },
         };
       });
-      apiRef.current.publishEvent('rowsSet');
+      apiRef.current.applySorting();
     },
     [apiRef, logger],
   );
