@@ -8,11 +8,6 @@ import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelProps {
   /**
-   * Style applied to legend labels.
-   * @default theme.typography.caption
-   */
-  labelStyle?: React.CSSProperties;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLabelClasses>;

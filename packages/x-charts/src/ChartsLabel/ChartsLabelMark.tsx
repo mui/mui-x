@@ -138,7 +138,7 @@ const ChartsLabelMark = consumeThemeProps(
           <svg
             width="100%"
             height="100%"
-            viewBox="0 0 10 10"
+            viewBox="0 0 24 24"
             preserveAspectRatio={type === 'line' ? 'none' : undefined}
           >
             <rect width="10" height="10" fill={color} />
