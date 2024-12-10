@@ -5,7 +5,6 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
-  pickersToolbarTextClasses,
   PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
 
@@ -21,10 +20,9 @@ export interface PickersToolbarTextProps
   value: React.ReactNode;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarTextProps) => {
-  const { classes, selected } = ownerState;
+const useUtilityClasses = (classes: Partial<PickersToolbarTextClasses> | undefined) => {
   const slots = {
-    root: ['root', selected && 'selected'],
+    root: ['root'],
   };
 
   return composeClasses(slots, getPickersToolbarTextUtilityClass, classes);
@@ -33,16 +31,13 @@ const useUtilityClasses = (ownerState: PickersToolbarTextProps) => {
 const PickersToolbarTextRoot = styled(Typography, {
   name: 'MuiPickersToolbarText',
   slot: 'Root',
-  overridesResolver: (_, styles) => [
-    styles.root,
-    { [`&.${pickersToolbarTextClasses.selected}`]: styles.selected },
-  ],
+  overridesResolver: (_, styles) => [styles.root],
 })<{
   component?: React.ElementType;
 }>(({ theme }) => ({
   transition: theme.transitions.create('color'),
   color: (theme.vars || theme).palette.text.secondary,
-  [`&.${pickersToolbarTextClasses.selected}`]: {
+  [`&[data-selected]`]: {
     color: (theme.vars || theme).palette.text.primary,
   },
 }));
@@ -50,14 +45,15 @@ const PickersToolbarTextRoot = styled(Typography, {
 export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolbarTextProps>(
   function PickersToolbarText(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarText' });
-    const { className, selected, value, ...other } = props;
-    const classes = useUtilityClasses(props);
+    const { className, classes: classesProp, selected, value, ...other } = props;
+    const classes = useUtilityClasses(classesProp);
 
     return (
       <PickersToolbarTextRoot
         ref={ref}
         className={clsx(classes.root, className)}
         component="span"
+        {...(selected && { 'data-selected': true })}
         {...other}
       >
         {value}
