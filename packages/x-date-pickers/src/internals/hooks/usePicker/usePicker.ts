@@ -2,15 +2,13 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { FieldSection, InferError } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { InferError } from '../../../models';
+import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../../models';
 import { usePickerProvider } from './usePickerProvider';
 
 export const usePicker = <
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
   TAdditionalProps extends {},
 >({
@@ -24,10 +22,9 @@ export const usePicker = <
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<TValue, TView, TSection, TExternalProps, TAdditionalProps>): UsePickerResponse<
+}: UsePickerParams<TValue, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
   TValue,
   TView,
-  TSection,
   InferError<TExternalProps>
 > => {
   if (process.env.NODE_ENV !== 'production') {
@@ -39,7 +36,7 @@ export const usePicker = <
       ]);
     }
   }
-  const pickerValueResponse = usePickerValue<TValue, TSection, TExternalProps>({
+  const pickerValueResponse = usePickerValue<TValue, TExternalProps>({
     props,
     valueManager,
     valueType,
@@ -47,13 +44,7 @@ export const usePicker = <
     validator,
   });
 
-  const pickerViewsResponse = usePickerViews<
-    TValue,
-    TView,
-    TSection,
-    TExternalProps,
-    TAdditionalProps
-  >({
+  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps, TAdditionalProps>({
     props,
     additionalViewProps,
     autoFocusView,
@@ -62,20 +53,13 @@ export const usePicker = <
     rendererInterceptor,
   });
 
-  const pickerLayoutResponse = usePickerLayoutProps({
-    props,
-    variant,
-    propsFromPickerValue: pickerValueResponse.layoutProps,
-    propsFromPickerViews: pickerViewsResponse.layoutProps,
-  });
-
   const providerProps = usePickerProvider({
     props,
-    pickerValueResponse,
     localeText,
     valueManager,
     variant,
-    views: pickerViewsResponse.views,
+    paramsFromUsePickerValue: pickerValueResponse.provider,
+    paramsFromUsePickerViews: pickerViewsResponse.provider,
   });
 
   return {
@@ -86,11 +70,14 @@ export const usePicker = <
 
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
-    hasUIView: pickerViewsResponse.hasUIView,
+    hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    layoutProps: pickerLayoutResponse.layoutProps,
+    layoutProps: {
+      ...pickerViewsResponse.layoutProps,
+      ...pickerValueResponse.layoutProps,
+    },
 
     // Picker provider
     providerProps,

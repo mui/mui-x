@@ -2,24 +2,47 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartDataProvider, ChartDataProviderProps } from '../context/ChartDataProvider';
-import { ResizableContainer } from './ResizableContainer';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 
 export interface ChartContainerProps extends ChartDataProviderProps, ChartsSurfaceProps {}
 
+/**
+ * It sets up the data providers as well as the `<svg>` for the chart.
+ *
+ * This is a combination of both the `ChartDataProvider` and `ChartsSurface` components.
+ *
+ * Demos:
+ *
+ * - [Composition](http://localhost:3001/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ *
+ * @example
+ * ```jsx
+ * <ChartContainer
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *    <BarPlot />
+ *    <ChartsXAxis position="bottom" axisId="x-axis" />
+ * </ChartContainer>
+ * ```
+ */
 const ChartContainer = React.forwardRef(function ChartContainer(
   props: ChartContainerProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProps(props, ref);
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
+    props,
+    ref,
+  );
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-      </ResizableContainer>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
 });
@@ -146,7 +169,6 @@ ChartContainer.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -161,7 +183,6 @@ ChartContainer.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -222,7 +243,6 @@ ChartContainer.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -237,7 +257,6 @@ ChartContainer.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

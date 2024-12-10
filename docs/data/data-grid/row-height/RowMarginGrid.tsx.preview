@@ -1,5 +1,6 @@
 <DataGrid
   {...data}
+  loading={loading}
   getRowSpacing={getRowSpacing}
   sx={{
     [`& .${gridClasses.row}`]: {

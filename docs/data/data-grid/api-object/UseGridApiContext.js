@@ -17,7 +17,7 @@ function CustomToolbar() {
 }
 
 export default function UseGridApiContext() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -27,6 +27,7 @@ export default function UseGridApiContext() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         slots={{
           toolbar: CustomToolbar,
         }}

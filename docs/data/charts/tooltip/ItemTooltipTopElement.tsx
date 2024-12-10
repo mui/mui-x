@@ -78,7 +78,8 @@ export function ItemTooltipTopElement({ children }: React.PropsWithChildren) {
   if (
     tooltipData.identifier.type !== 'bar' ||
     tooltipData.identifier.dataIndex === undefined ||
-    tooltipData.value === null
+    tooltipData.value === null ||
+    svgRef.current === null
   ) {
     // This demo is only about bar charts
     return null;

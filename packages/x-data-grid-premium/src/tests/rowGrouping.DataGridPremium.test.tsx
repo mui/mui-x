@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  waitFor,
+  reactMajor,
+} from '@mui/internal-test-utils';
 import {
   microtasks,
   getColumnHeaderCell,
@@ -160,6 +167,32 @@ describe('<DataGridPremium /> - Row grouping', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (2)', '', '']);
+    });
+
+    it('should display the value from the `valueOptions` for `singleSelect` column type', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'category',
+              type: 'singleSelect',
+              valueOptions: [
+                { value: 'category1', label: 'categoryLabel1' },
+                { value: 'category2', label: 'categoryLabel2' },
+              ],
+            },
+          ]}
+          rows={[
+            { id: 1, category: 'category1' },
+            { id: 2, category: 'category1' },
+            { id: 3, category: 'category1' },
+            { id: 4, category: 'category2' },
+            { id: 5, category: 'category2' },
+          ]}
+          initialState={{ rowGrouping: { model: ['category'] } }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['categoryLabel1 (3)', 'categoryLabel2 (2)']);
     });
 
     it('should display icon on auto-generated row', () => {
@@ -666,7 +699,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           isGroupExpandedByDefault={isGroupExpandedByDefault}
         />,
       );
-      expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
       const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()

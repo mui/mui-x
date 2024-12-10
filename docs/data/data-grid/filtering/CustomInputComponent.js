@@ -44,7 +44,7 @@ function RatingInputValue(props) {
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function CustomInputComponent() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -76,6 +76,7 @@ export default function CustomInputComponent() {
       <DataGrid
         rows={data.rows}
         columns={columns}
+        loading={loading}
         initialState={{
           ...data.initialState,
           filter: {

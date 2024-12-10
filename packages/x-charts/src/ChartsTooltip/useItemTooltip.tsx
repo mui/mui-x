@@ -1,23 +1,22 @@
 'use client';
-import * as React from 'react';
 import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import {
+  ChartItemIdentifier,
   ChartSeriesDefaultized,
   ChartSeriesType,
   ChartsSeriesConfig,
 } from '../models/seriesType/config';
 import { getLabel } from '../internals/getLabel';
 import { CommonSeriesType } from '../models/seriesType/common';
-import { selectorChartsInteractionItem } from '../context/InteractionSelectors';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
-import { ItemInteractionData } from '../internals/plugins/models';
+import { selectorChartsInteractionItem } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { useSelector } from '../internals/store/useSelector';
+import { useStore } from '../internals/store/useStore';
+import { useZAxis } from '../hooks/useZAxis';
 
 export interface UseItemTooltipReturnValue<T extends ChartSeriesType> {
-  identifier: ItemInteractionData<T>;
+  identifier: ChartItemIdentifier<T>;
   color: string;
   label: string | undefined;
   value: ChartsSeriesConfig[T]['valueType'];
@@ -31,7 +30,7 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
   const series = useSeries();
 
   const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
   const colorProcessors = useColorProcessor();
 
   const xAxisId = (series as any).xAxisId ?? xAxisIds[0];
@@ -60,7 +59,7 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
     )?.(value, { dataIndex: item.dataIndex });
 
     return {
-      identifier: item as ItemInteractionData<T>,
+      identifier: item as ChartItemIdentifier<T>,
       color: getColor(item.dataIndex),
       label,
       value,
@@ -75,7 +74,7 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
   )?.(value, { dataIndex: item.dataIndex });
 
   return {
-    identifier: item as ItemInteractionData<T>,
+    identifier: item as ChartItemIdentifier<T>,
     color: getColor(item.dataIndex),
     label,
     value,

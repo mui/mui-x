@@ -68,10 +68,14 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
       // Convert to an object to make O(1) checking if a row exists or not
       // TODO create selector that returns visibleRowIds/paginatedVisibleRowIds as an object
       return rowIds.reduce<Record<GridRowId, true>>((acc, id) => {
+        if (!apiRef.current.isRowSelectable(id)) {
+          return acc;
+        }
         acc[id] = true;
         return acc;
       }, {});
     }, [
+      apiRef,
       rootProps.pagination,
       rootProps.checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
@@ -126,19 +130,16 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectAllRows' : 'checkboxSelectionSelectAllRows',
+      isChecked && !isIndeterminate
+        ? 'checkboxSelectionUnselectAllRows'
+        : 'checkboxSelectionSelectAllRows',
     );
-
-    const checked =
-      rootProps.indeterminateCheckboxAction === 'select'
-        ? isChecked && !isIndeterminate
-        : isChecked;
 
     return (
       <rootProps.slots.baseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
-        checked={checked}
+        checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
         inputProps={{ 'aria-label': label }}

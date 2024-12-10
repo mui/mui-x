@@ -55,10 +55,10 @@ describe('<DateTimeField /> - Timezone', () => {
 
       const expectedDate = fillEmptyValue(view, 'default');
 
-      // Check the rendered value (uses default timezone, e.g: UTC, see TZ env variable)
+      // Check the rendered value (uses default timezone, for example: UTC, see TZ env variable)
       expectFieldValueV7(view.getSectionsContainer(), '12/31/2022 23');
 
-      // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
+      // Check the `onChange` value (uses default timezone, for example: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
 
       // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.

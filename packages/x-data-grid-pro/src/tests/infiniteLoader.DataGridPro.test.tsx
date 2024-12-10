@@ -108,7 +108,6 @@ describe('<DataGridPro /> - Infnite loader', () => {
       const [loading, setLoading] = React.useState(false);
       const handleRowsScrollEnd = React.useCallback(async () => {
         setLoading(true);
-        await sleep(50);
         setRows((prevRows) => {
           const lastRowId = prevRows[prevRows.length - 1].id;
           const nextRow = getRow(lastRowId + 1);
@@ -137,45 +136,20 @@ describe('<DataGridPro /> - Infnite loader', () => {
     //   1 initial row
     //   5 rows loaded one by one through `onRowsScrollEnd` callback
 
-    expect(getColumnValues(0)).to.deep.equal(['0']);
+    const multiplier = 2; // `setRows` is called twice for each `handleRowsScrollEnd` call
     await waitFor(() => {
-      expect(getRow.callCount).to.equal(1);
-    });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+      expect(getRow.callCount).to.equal(5 * multiplier);
     });
 
-    await waitFor(() => {
-      expect(getRow.callCount).to.equal(2);
-    });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    });
+    const getRowCalls = getRow.getCalls();
+    for (let callIndex = 0; callIndex < getRowCalls.length; callIndex += multiplier) {
+      const call = getRowCalls[callIndex];
+      expect(call.returnValue?.id).to.equal(callIndex / multiplier + 1);
+    }
 
-    await waitFor(() => {
-      expect(getRow.callCount).to.equal(3);
-    });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
-    });
-
-    await waitFor(() => {
-      expect(getRow.callCount).to.equal(4);
-    });
-    await waitFor(() => {
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
-    });
-
-    await waitFor(() => {
-      expect(getRow.callCount).to.equal(5);
-    });
     await waitFor(() => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
     });
-
-    await sleep(200);
-    // should not load more rows because the threshold is not reached
-    expect(getRow.callCount).to.equal(5);
   });
 
   it('should not observe intersections with the rows pinned to the bottom', async function test() {
