@@ -38,8 +38,6 @@ export default function ListViewAdvanced(props) {
 
   const apiRef = useGridApiRef();
 
-  const [rows, setRows] = React.useState(INITIAL_ROWS);
-
   const [loading, setLoading] = React.useState(false);
 
   const [overlayState, setOverlayState] = React.useState({
@@ -51,65 +49,67 @@ export default function ListViewAdvanced(props) {
     setOverlayState({ overlay: null, params: null });
   };
 
-  const handleDelete = React.useCallback((ids) => {
-    setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
-  }, []);
+  const handleDelete = React.useCallback(
+    (ids) => {
+      apiRef.current.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+    },
+    [apiRef],
+  );
 
-  const handleUpdate = React.useCallback((id, field, value) => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id
-          ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
-          : row,
-      ),
-    );
-  }, []);
+  const handleUpdate = React.useCallback(
+    (id, field, value) => {
+      const updatedAt = new Date().toISOString();
+      apiRef.current.updateRows([{ id, [field]: value, updatedAt }]);
+    },
+    [apiRef],
+  );
 
-  const handleUpload = React.useCallback((event) => {
-    if (!event.target.files) {
-      return;
-    }
+  const handleUpload = React.useCallback(
+    (event) => {
+      if (!event.target.files) {
+        return;
+      }
 
-    const file = event.target.files[0];
-    const createdAt = new Date().toISOString();
+      const file = event.target.files[0];
+      const createdAt = new Date().toISOString();
 
-    const fileType = file.type.split('/')[1];
+      const fileType = file.type.split('/')[1];
 
-    // validate file type
-    if (!FILE_TYPES.includes(fileType)) {
-      alert('Invalid file type');
-      return;
-    }
+      // validate file type
+      if (!FILE_TYPES.includes(fileType)) {
+        alert('Invalid file type');
+        return;
+      }
 
-    const row = {
-      id: randomId(),
-      name: file.name,
-      description: '',
-      type: fileType,
-      size: file.size,
-      createdBy: 'Kenan Yusuf',
-      createdAt,
-      updatedAt: createdAt,
-      state: 'pending',
-    };
+      const row = {
+        id: randomId(),
+        name: file.name,
+        description: '',
+        type: fileType,
+        size: file.size,
+        createdBy: 'Kenan Yusuf',
+        createdAt,
+        updatedAt: createdAt,
+        state: 'pending',
+      };
 
-    event.target.value = '';
+      event.target.value = '';
 
-    // Add temporary row
-    setLoading(true);
-    setRows((prevRows) => [...prevRows, row]);
+      // Add temporary row
+      setLoading(true);
+      apiRef.current.updateRows([row]);
 
-    // Simulate server response time
-    const timeout = Math.floor(Math.random() * 3000) + 2000;
-    setTimeout(() => {
-      const uploadedRow = { ...row, state: 'uploaded' };
-      setRows((prevRows) =>
-        prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
-      );
-      setOverlayState({ overlay: 'actions', params: { row } });
-      setLoading(false);
-    }, timeout);
-  }, []);
+      // Simulate server response time
+      const timeout = Math.floor(Math.random() * 3000) + 2000;
+      setTimeout(() => {
+        const uploadedRow = { ...row, state: 'uploaded' };
+        apiRef.current.updateRows([uploadedRow]);
+        setOverlayState({ overlay: 'actions', params: { row } });
+        setLoading(false);
+      }, timeout);
+    },
+    [apiRef],
+  );
 
   const columns = React.useMemo(
     () => [
@@ -272,7 +272,7 @@ export default function ListViewAdvanced(props) {
       >
         <DataGridPremium
           apiRef={apiRef}
-          rows={rows}
+          rows={INITIAL_ROWS}
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}
