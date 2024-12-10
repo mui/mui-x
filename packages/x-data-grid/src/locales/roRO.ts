@@ -32,15 +32,16 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 
   // Prompt toolbar field
-  // toolbarPromptControlPlaceholder: 'Type a prompt…',
-  // toolbarPromptControlWithRecordingPlaceholder: 'Type or record a prompt…',
-  // toolbarPromptControlRecordingPlaceholder: 'Listening for prompt…',
-  // toolbarPromptControlLabel: 'Prompt input',
-  // toolbarPromptControlRecordButtonDefaultLabel: 'Record',
-  // toolbarPromptControlRecordButtonActiveLabel: 'Stop recording',
-  // toolbarPromptControlSendActionLabel: 'Send',
-  // toolbarPromptControlSendActionAriaLabel: 'Send prompt',
-  // toolbarPromptControlErrorMessage: 'An error occurred while processing the request. Please try again with a different prompt.',
+  toolbarPromptControlPlaceholder: 'Scrie un prompt…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Scrie sau înregistrează un prompt…',
+  toolbarPromptControlRecordingPlaceholder: 'Ascultare prompt…',
+  toolbarPromptControlLabel: 'Introducere prompt',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Înregistrează',
+  toolbarPromptControlRecordButtonActiveLabel: 'Oprește înregistrare',
+  toolbarPromptControlSendActionLabel: 'Trimite',
+  toolbarPromptControlSendActionAriaLabel: 'Trimite prompt',
+  toolbarPromptControlErrorMessage:
+    'A apărut o eroare la procesare. Încercați din nou cu un alt prompt.',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -50,11 +51,11 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Download în format Excel',
 
   // Columns management text
-  // columnsManagementSearchTitle: 'Search',
-  // columnsManagementNoColumns: 'No columns',
-  // columnsManagementShowHideAllText: 'Show/Hide All',
-  // columnsManagementReset: 'Reset',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementSearchTitle: 'Caută',
+  columnsManagementNoColumns: 'Nicio coloană',
+  columnsManagementShowHideAllText: 'Arată/Ascunde tot',
+  columnsManagementReset: 'Resetează',
+  columnsManagementDeleteIconLabel: 'Șterge',
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
@@ -70,9 +71,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'conține',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'nu conține',
   filterOperatorEquals: 'este egal cu',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'nu este egal cu',
   filterOperatorStartsWith: 'începe cu',
   filterOperatorEndsWith: 'se termină cu',
   filterOperatorIs: 'este',
@@ -93,9 +94,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Conține',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Nu conține',
   headerFilterOperatorEquals: 'Egal cu',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'Nu este egal cu',
   headerFilterOperatorStartsWith: 'Începe cu',
   headerFilterOperatorEndsWith: 'Se termină cu',
   headerFilterOperatorIs: 'Este',

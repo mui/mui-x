@@ -12,6 +12,8 @@ import {
   BaseToolbarProps,
   ExportedBaseToolbarProps,
   PickerRangeValue,
+  PickerToolbarOwnerState,
+  useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
@@ -20,8 +22,7 @@ import {
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
 
-const useUtilityClasses = (ownerState: DateRangePickerToolbarProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
   const slots = {
     root: ['root'],
     container: ['container'],
@@ -47,7 +48,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: DateRangePickerToolbarProps;
+  ownerState: PickerToolbarOwnerState;
 }>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
@@ -85,6 +86,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
     onRangePositionChange,
     toolbarFormat,
     className,
+    classes: classesProp,
     onViewChange,
     view,
     views,
@@ -92,6 +94,8 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   } = props;
 
   const translations = usePickerTranslations();
+  const ownerState = useToolbarOwnerState();
+  const classes = useUtilityClasses(classesProp);
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -100,9 +104,6 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
   const endDateValue = end
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
     : translations.end;
-
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
 
   return (
     <DateRangePickerToolbarRoot

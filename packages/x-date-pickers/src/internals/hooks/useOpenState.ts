@@ -8,7 +8,7 @@ export interface OpenStateProps {
 
 export const useOpenState = ({ open, onOpen, onClose }: OpenStateProps) => {
   const isControllingOpenProp = React.useRef(typeof open === 'boolean').current;
-  const [openState, setIsOpenState] = React.useState(false);
+  const [openState, setOpenState] = React.useState(false);
 
   // It is required to update inner state in useEffect in order to avoid situation when
   // Our component is not mounted yet, but `open` state is set to `true` (for example initially opened)
@@ -18,26 +18,27 @@ export const useOpenState = ({ open, onOpen, onClose }: OpenStateProps) => {
         throw new Error('You must not mix controlling and uncontrolled mode for `open` prop');
       }
 
-      setIsOpenState(open);
+      setOpenState(open);
     }
   }, [isControllingOpenProp, open]);
 
-  const setIsOpen = React.useCallback(
-    (newIsOpen: boolean) => {
+  const setOpen = React.useCallback(
+    (action: React.SetStateAction<boolean>) => {
+      const newOpen = typeof action === 'function' ? action(openState) : action;
       if (!isControllingOpenProp) {
-        setIsOpenState(newIsOpen);
+        setOpenState(newOpen);
       }
 
-      if (newIsOpen && onOpen) {
+      if (newOpen && onOpen) {
         onOpen();
       }
 
-      if (!newIsOpen && onClose) {
+      if (!newOpen && onClose) {
         onClose();
       }
     },
-    [isControllingOpenProp, onOpen, onClose],
+    [isControllingOpenProp, onOpen, onClose, openState],
   );
 
-  return { isOpen: openState, setIsOpen };
+  return { open: openState, setOpen };
 };

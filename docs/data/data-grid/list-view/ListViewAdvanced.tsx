@@ -7,7 +7,6 @@ import {
   DataGridPremium,
   GridRowId,
   gridClasses,
-  GridRowModel,
 } from '@mui/x-data-grid-premium';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -56,8 +55,6 @@ export default function ListViewAdvanced(props: Props) {
 
   const apiRef = useGridApiRef();
 
-  const [rows, setRows] = React.useState<GridRowModel<RowModel>[]>(INITIAL_ROWS);
-
   const [loading, setLoading] = React.useState(false);
 
   const [overlayState, setOverlayState] = React.useState<{
@@ -72,9 +69,12 @@ export default function ListViewAdvanced(props: Props) {
     setOverlayState({ overlay: null, params: null });
   };
 
-  const handleDelete = React.useCallback((ids: GridRowId[]) => {
-    setRows((prevRows) => prevRows.filter((row) => !ids.includes(row.id)));
-  }, []);
+  const handleDelete = React.useCallback(
+    (ids: GridRowId[]) => {
+      apiRef.current.updateRows(ids.map((id) => ({ id, _action: 'delete' })));
+    },
+    [apiRef],
+  );
 
   const handleUpdate = React.useCallback(
     (
@@ -82,15 +82,10 @@ export default function ListViewAdvanced(props: Props) {
       field: GridRowParams<RowModel>['columns'][number]['field'],
       value: string,
     ) => {
-      setRows((prevRows) =>
-        prevRows.map((row) =>
-          row.id === id
-            ? { ...row, [field]: value, updatedAt: new Date().toISOString() }
-            : row,
-        ),
-      );
+      const updatedAt = new Date().toISOString();
+      apiRef.current.updateRows([{ id, [field]: value, updatedAt }]);
     },
-    [],
+    [apiRef],
   );
 
   const handleUpload = React.useCallback(
@@ -126,20 +121,18 @@ export default function ListViewAdvanced(props: Props) {
 
       // Add temporary row
       setLoading(true);
-      setRows((prevRows) => [...prevRows, row]);
+      apiRef.current.updateRows([row]);
 
       // Simulate server response time
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };
-        setRows((prevRows) =>
-          prevRows.map((r) => (r.id === row.id ? uploadedRow : r)),
-        );
+        apiRef.current.updateRows([uploadedRow]);
         setOverlayState({ overlay: 'actions', params: { row } });
         setLoading(false);
       }, timeout);
     },
-    [],
+    [apiRef],
   );
 
   const columns: GridColDef[] = React.useMemo(
@@ -303,7 +296,7 @@ export default function ListViewAdvanced(props: Props) {
       >
         <DataGridPremium
           apiRef={apiRef}
-          rows={rows}
+          rows={INITIAL_ROWS}
           columns={columns}
           loading={loading}
           slots={{ toolbar: Toolbar }}

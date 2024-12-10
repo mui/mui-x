@@ -5,7 +5,7 @@ import {
   TreeViewCancellableEvent,
 } from '../../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
-import { TreeViewItemPlugin } from '../../models';
+import { TreeViewItemPlugin, TreeViewState } from '../../models';
 import {
   UseTreeItemCheckboxSlotPropsFromSelection,
   UseTreeViewSelectionSignature,
@@ -13,27 +13,26 @@ import {
 import { UseTreeViewItemsSignature } from '../useTreeViewItems';
 import { selectorItemOrderedChildrenIds } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { selectorIsItemSelected } from './useTreeViewSelection.selectors';
-import { TreeViewStore } from '../../utils/TreeViewStore';
+import { useSelector } from '../../hooks/useSelector';
 
-function getCheckboxStatus({
-  itemId,
-  store,
-  selectionPropagation,
-  selected,
-}: {
-  itemId: TreeViewItemId;
-  store: TreeViewStore<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>;
-  selectionPropagation: TreeViewSelectionPropagation;
-  selected: boolean;
-}) {
-  if (selected) {
+function selectorItemCheckboxStatus(
+  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>,
+  {
+    itemId,
+    selectionPropagation,
+  }: {
+    itemId: TreeViewItemId;
+    selectionPropagation: TreeViewSelectionPropagation;
+  },
+) {
+  if (selectorIsItemSelected(state, itemId)) {
     return {
       indeterminate: false,
       checked: true,
     };
   }
 
-  const children = selectorItemOrderedChildrenIds(store.value, itemId);
+  const children = selectorItemOrderedChildrenIds(state, itemId);
   if (children.length === 0) {
     return {
       indeterminate: false,
@@ -46,22 +45,21 @@ function getCheckboxStatus({
 
   const traverseDescendants = (itemToTraverseId: TreeViewItemId) => {
     if (itemToTraverseId !== itemId) {
-      if (selectorIsItemSelected(store.value, itemToTraverseId)) {
+      if (selectorIsItemSelected(state, itemToTraverseId)) {
         hasSelectedDescendant = true;
       } else {
         hasUnSelectedDescendant = true;
       }
     }
 
-    selectorItemOrderedChildrenIds(store.value, itemToTraverseId).forEach(traverseDescendants);
+    selectorItemOrderedChildrenIds(state, itemToTraverseId).forEach(traverseDescendants);
   };
 
   traverseDescendants(itemId);
 
   return {
-    indeterminate:
-      (hasSelectedDescendant && hasUnSelectedDescendant) || (!hasUnSelectedDescendant && !selected),
-    checked: selectionPropagation.parents ? hasSelectedDescendant : selected,
+    indeterminate: (hasSelectedDescendant && hasUnSelectedDescendant) || !hasUnSelectedDescendant,
+    checked: selectionPropagation.parents ? hasSelectedDescendant : false,
   };
 }
 
@@ -72,6 +70,17 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     store,
     selection: { disableSelection, checkboxSelection, selectionPropagation },
   } = useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
+
+  const checkboxStatus = useSelector(
+    store,
+    selectorItemCheckboxStatus,
+    {
+      itemId,
+      selectionPropagation,
+    },
+    (a, b) => a.checked === b.checked && a.indeterminate === b.indeterminate,
+  );
+
   return {
     propsEnhancers: {
       checkbox: ({
@@ -93,13 +102,6 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
 
           interactions.handleCheckboxSelection(event);
         };
-
-        const checkboxStatus = getCheckboxStatus({
-          store,
-          itemId,
-          selectionPropagation,
-          selected: status.selected,
-        });
 
         return {
           visible: checkboxSelection,

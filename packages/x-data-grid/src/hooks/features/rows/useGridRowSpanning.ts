@@ -164,7 +164,7 @@ const computeRowSpanningState = (
  * @requires filterStateInitializer (method) - should be initialized before
  */
 export const rowSpanningStateInitializer: GridStateInitializer = (state, props, apiRef) => {
-  if (props.unstable_rowSpanning) {
+  if (props.rowSpanning) {
     const rowIds = state.rows!.dataRowIds || [];
     const orderedFields = state.columns!.orderedFields || [];
     const dataRowIdToModelLookup = state.rows!.dataRowIdToModelLookup;
@@ -221,7 +221,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
 
 export const useGridRowSpanning = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'unstable_rowSpanning' | 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
@@ -247,7 +247,7 @@ export const useGridRowSpanning = (
     // - The `paginationModel` is updated
     // - The rows are updated
     (resetState: boolean = true) => {
-      if (!props.unstable_rowSpanning) {
+      if (!props.rowSpanning) {
         if (apiRef.current.state.rowSpanning !== EMPTY_STATE) {
           apiRef.current.setState((state) => ({ ...state, rowSpanning: EMPTY_STATE }));
         }
@@ -320,15 +320,7 @@ export const useGridRowSpanning = (
         };
       });
     },
-    [
-      apiRef,
-      props.unstable_rowSpanning,
-      range,
-      renderContext,
-      visibleRows,
-      colDefs,
-      processedRange,
-    ],
+    [apiRef, props.rowSpanning, range, renderContext, visibleRows, colDefs, processedRange],
   );
 
   const prevRenderContext = React.useRef(renderContext);

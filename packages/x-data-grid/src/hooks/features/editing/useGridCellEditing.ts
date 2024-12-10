@@ -31,7 +31,7 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
-import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridCellEditStartParams,
@@ -560,7 +560,7 @@ export const useGridCellEditing = (
 
   // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+    const rowsLookup = gridRowsLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
     const copyOfPrevCellModes = prevCellModesModel.current;
@@ -569,7 +569,7 @@ export const useGridCellEditing = (
     Object.entries(cellModesModel).forEach(([id, fields]) => {
       Object.entries(fields).forEach(([field, params]) => {
         const prevMode = copyOfPrevCellModes[id]?.[field]?.mode || GridCellModes.View;
-        const originalId = idToIdLookup[id] ?? id;
+        const originalId = apiRef.current.getRowId(rowsLookup[id]) ?? id;
         if (params.mode === GridCellModes.Edit && prevMode === GridCellModes.View) {
           updateStateToStartCellEditMode({ id: originalId, field, ...params });
         } else if (params.mode === GridCellModes.View && prevMode === GridCellModes.Edit) {

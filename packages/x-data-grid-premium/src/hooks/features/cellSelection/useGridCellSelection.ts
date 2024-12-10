@@ -20,7 +20,6 @@ import {
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GridCellCoordinates,
-  gridRowsDataRowIdToIdLookupSelector,
   GridRowId,
   gridClasses,
   gridFocusCellSelector,
@@ -168,7 +167,6 @@ export const useGridCellSelection = (
     GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
     const selectionModel = apiRef.current.getCellSelectionModel();
-    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
     const currentVisibleRows = getVisibleRows(apiRef, props);
     const sortedEntries = currentVisibleRows.rows.reduce(
       (result, row) => {
@@ -186,7 +184,7 @@ export const useGridCellSelection = (
           ...Object.entries(fields).reduce<{ id: GridRowId; field: string }[]>(
             (selectedFields, [field, isSelected]) => {
               if (isSelected) {
-                selectedFields.push({ id: idToIdLookup[id], field });
+                selectedFields.push({ id, field });
               }
               return selectedFields;
             },

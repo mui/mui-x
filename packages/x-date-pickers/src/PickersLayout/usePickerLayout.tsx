@@ -69,7 +69,10 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
     // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
   } = props;
 
-  const ownerState: PickerLayoutOwnerState = { ...pickerOwnerState, isRtl };
+  const ownerState = React.useMemo<PickerLayoutOwnerState>(
+    () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr' }),
+    [pickerOwnerState, isRtl],
+  );
   const classes = useUtilityClasses(classesProp, ownerState);
 
   // Action bar

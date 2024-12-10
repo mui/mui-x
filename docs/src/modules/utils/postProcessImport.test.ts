@@ -1,5 +1,7 @@
 import { expect } from 'chai';
-import { DATE_ADAPTER_VERSIONS, ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
+// eslint-disable-next-line import/no-relative-packages
+import pickersPackageJson from '../../../../packages/x-date-pickers/package.json';
+import { ADAPTER_TO_LIBRARY, postProcessImport } from './postProcessImport';
 
 describe('postProcessImport', () => {
   const ADAPTERS = ['AdapterDateFns', 'AdapterDayjs', 'AdapterLuxon', 'AdapterMoment'];
@@ -11,7 +13,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
         });
       });
     });
@@ -30,7 +32,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
         });
       });
     });
@@ -49,7 +51,7 @@ describe('postProcessImport', () => {
 
         const expectedLibrary = ADAPTER_TO_LIBRARY[adapter];
         expect(resolvedDep).to.deep.equal({
-          [expectedLibrary]: DATE_ADAPTER_VERSIONS[expectedLibrary],
+          [expectedLibrary]: pickersPackageJson.devDependencies[expectedLibrary],
         });
       });
     });

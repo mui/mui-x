@@ -46,14 +46,6 @@ function ButtonDateTimeField(props) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
   const valueStr = value == null ? parsedFormat : value.format(format);
 
   return (
@@ -62,7 +54,7 @@ function ButtonDateTimeField(props) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${valueStr}` : valueStr}
     </Button>

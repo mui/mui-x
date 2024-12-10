@@ -1,8 +1,7 @@
 'use client';
-import * as React from 'react';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { AxisScaleComputedConfig, ScaleName } from '../models/axis';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
+import { useZAxis } from './useZAxis';
 
 export function useXColorScale<S extends ScaleName>(
   identifier?: number | string,
@@ -27,7 +26,7 @@ export function useYColorScale<S extends ScaleName>(
 export function useZColorScale<S extends ScaleName>(
   identifier?: number | string,
 ): AxisScaleComputedConfig[S]['colorScale'] | undefined {
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
 
   const id = typeof identifier === 'string' ? identifier : zAxisIds[identifier ?? 0];
 

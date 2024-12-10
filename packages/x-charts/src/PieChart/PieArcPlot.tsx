@@ -110,10 +110,8 @@ function PieArcPlot(props: PieArcPlotProps) {
             endAngle,
             paddingAngle: pA,
             innerRadius: iR,
-            arcLabelRadius,
             outerRadius: oR,
             cornerRadius: cR,
-            ...style
           },
           item,
           _,
@@ -127,7 +125,6 @@ function PieArcPlot(props: PieArcPlotProps) {
               innerRadius={iR}
               outerRadius={oR}
               cornerRadius={cR}
-              style={style}
               id={id}
               color={item.color}
               dataIndex={index}

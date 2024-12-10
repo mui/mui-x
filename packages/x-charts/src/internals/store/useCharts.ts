@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { ChartStore } from '../plugins/utils/ChartStore';
 import {
   ChartAnyPluginSignature,
@@ -48,7 +49,9 @@ export function useCharts<
     [inPlugins],
   );
 
-  const pluginParams = {}; // To generate when plugins use params.
+  const defaultChartId = useId();
+
+  const pluginParams = { id: defaultChartId }; // To generate when plugins use params.
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
@@ -70,7 +73,7 @@ export function useCharts<
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(initialState, plugin.getInitialState({}));
+        Object.assign(initialState, plugin.getInitialState({ id: defaultChartId }));
       }
     });
     storeRef.current = new ChartStore(initialState);

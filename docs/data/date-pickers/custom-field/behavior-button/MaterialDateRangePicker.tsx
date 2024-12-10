@@ -40,14 +40,6 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
     props: internalProps,
   });
 
-  const handleTogglePicker = (event: React.UIEvent) => {
-    if (pickerContext.open) {
-      pickerContext.onClose(event);
-    } else {
-      pickerContext.onOpen(event);
-    }
-  };
-
   const formattedValue = (value ?? [null, null])
     .map((date: Dayjs) => (date == null ? parsedFormat : date.format(format)))
     .join(' – ');
@@ -58,7 +50,7 @@ function ButtonDateRangeField(props: DateRangePickerFieldProps) {
       variant="outlined"
       color={hasValidationError ? 'error' : 'primary'}
       ref={InputProps?.ref}
-      onClick={handleTogglePicker}
+      onClick={() => pickerContext.setOpen((prev) => !prev)}
     >
       {label ? `${label}: ${formattedValue}` : formattedValue}
     </Button>

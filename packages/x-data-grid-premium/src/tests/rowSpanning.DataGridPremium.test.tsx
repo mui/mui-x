@@ -9,7 +9,7 @@ describe('<DataGridPremium /> - Row spanning', () => {
   const { render } = createRenderer();
 
   const baselineProps: DataGridPremiumProps = {
-    unstable_rowSpanning: true,
+    rowSpanning: true,
     columns: [
       {
         field: 'code',

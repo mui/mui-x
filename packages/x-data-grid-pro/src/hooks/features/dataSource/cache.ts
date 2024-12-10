@@ -1,6 +1,6 @@
 import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
 
-type GridDataSourceCacheDefaultConfig = {
+export type GridDataSourceCacheDefaultConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
@@ -11,11 +11,12 @@ type GridDataSourceCacheDefaultConfig = {
 
 function getKey(params: GridGetRowsParams) {
   return JSON.stringify([
-    params.paginationModel,
     params.filterModel,
     params.sortModel,
     params.groupKeys,
     params.groupFields,
+    params.start,
+    params.end,
   ]);
 }
 
@@ -41,10 +42,12 @@ export class GridDataSourceCacheDefault {
     if (!entry) {
       return undefined;
     }
+
     if (Date.now() > entry.expiry) {
       delete this.cache[keyString];
       return undefined;
     }
+
     return entry.value;
   }
 
