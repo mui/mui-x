@@ -1,7 +1,4 @@
 import * as React from 'react';
-import type { IconButtonProps } from '@mui/material/IconButton';
-import type { InputAdornmentProps } from '@mui/material/InputAdornment';
-import type { TextFieldProps } from '@mui/material/TextField';
 import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import {
   BaseNonStaticPickerProps,
@@ -10,12 +7,7 @@ import {
 } from '../../models/props/basePickerProps';
 import { PickersPopperSlots, PickersPopperSlotProps } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
-import {
-  FieldOwnerState,
-  PickerFieldSlotProps,
-  PickerOwnerState,
-  PickerValidDate,
-} from '../../../models';
+import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
   ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotProps,
@@ -24,11 +16,7 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
-import {
-  UseClearableFieldSlots,
-  UseClearableFieldSlotProps,
-} from '../../../hooks/useClearableField';
-import { PickersTextFieldProps } from '../../../PickersTextField';
+import { ExportedPickerFieldUISlots, PickerFieldUISlotProps } from '../../components/PickerFieldUI';
 import { UsePickerProviderNonStaticProps } from '../usePicker/usePickerProvider';
 
 export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
@@ -37,7 +25,7 @@ export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlots<PickerValue, TView>,
-    UseClearableFieldSlots {
+    ExportedPickerFieldUISlots {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -47,20 +35,19 @@ export interface UseDesktopPickerSlots<TView extends DateOrTimeViewWithMeridiem>
    * @default TextField from '@mui/material' or PickersTextField if `enableAccessibleFieldDOMStructure` is `true`.
    */
   textField?: React.ElementType;
-  /**
-   * Component displayed on the start or end input adornment used to open the picker on desktop.
-   * @default InputAdornment
-   */
-  inputAdornment?: React.ElementType<InputAdornmentProps>;
-  /**
-   * Button to open the picker on desktop.
-   * @default IconButton
-   */
-  openPickerButton?: React.ElementType<IconButtonProps>;
-  /**
-   * Icon displayed in the open picker button on desktop.
-   */
-  openPickerIcon: React.ElementType;
+}
+
+export interface ExportedUseDesktopPickerSlotProps<
+  TView extends DateOrTimeViewWithMeridiem,
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends PickersPopperSlotProps,
+    ExportedPickersLayoutSlotProps<PickerValue, TView>,
+    PickerFieldUISlotProps {
+  field?: SlotComponentPropsFromProps<
+    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
+    {},
+    PickerOwnerState
+  >;
 }
 
 export interface UseDesktopPickerSlotProps<
@@ -68,27 +55,6 @@ export interface UseDesktopPickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends ExportedUseDesktopPickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerValue, TView>, 'toolbar'> {}
-
-export interface ExportedUseDesktopPickerSlotProps<
-  TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends PickersPopperSlotProps,
-    ExportedPickersLayoutSlotProps<PickerValue, TView>,
-    UseClearableFieldSlotProps {
-  field?: SlotComponentPropsFromProps<
-    PickerFieldSlotProps<PickerValue, TEnableAccessibleFieldDOMStructure>,
-    {},
-    PickerOwnerState
-  >;
-  textField?: SlotComponentPropsFromProps<
-    PickersTextFieldProps | TextFieldProps,
-    {},
-    FieldOwnerState
-  >;
-  inputAdornment?: SlotComponentPropsFromProps<InputAdornmentProps, {}, PickerOwnerState>;
-  openPickerButton?: SlotComponentPropsFromProps<IconButtonProps, {}, PickerOwnerState>;
-  openPickerIcon?: SlotComponentPropsFromProps<Record<string, any>, {}, PickerOwnerState>;
-}
 
 export interface DesktopOnlyPickerProps
   extends BaseNonStaticPickerProps,
@@ -135,5 +101,4 @@ export interface UseDesktopPickerParams<
     'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor'
   > {
   props: TExternalProps;
-  getOpenDialogAriaText: (date: PickerValidDate | null) => string;
 }

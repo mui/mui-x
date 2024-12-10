@@ -61,7 +61,7 @@ describe('<MobileDatePicker /> - Describes', () => {
     },
     setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        openPicker({ type: 'date', variant: 'mobile' });
+        openPicker({ type: 'date' });
       }
 
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);

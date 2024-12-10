@@ -1,15 +1,11 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { refType } from '@mui/utils';
-import { useClearableField } from '@mui/x-date-pickers/hooks';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
+import { CalendarIcon } from '@mui/x-date-pickers/icons';
+import { useFieldOwnerState, PickerFieldUI } from '@mui/x-date-pickers/internals';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
@@ -45,9 +41,9 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   const ownerState = useFieldOwnerState(themeProps);
 
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
+  // The `textField` slot props cannot be handled inside `PickerFieldUI` because it would be a breaking change to not pass the enriched props to `useField`.
+  // Once the non-accessible DOM structure will be removed, we will be able to remove the `textField` slot and clean this logic.
+  const TextField = PickersTextField;
   const textFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
@@ -66,15 +62,14 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     TEnableAccessibleFieldDOMStructure,
     typeof textFieldProps
   >(textFieldProps);
-  const convertedFieldResponse = convertFieldResponseIntoMuiTextFieldProps(fieldResponse);
 
-  const processedFieldProps = useClearableField({
-    ...convertedFieldResponse,
-    slots,
-    slotProps,
-  });
-
-  return <TextField {...processedFieldProps} />;
+  return (
+    <PickerFieldUI
+      slots={{ openPickerIcon: CalendarIcon, ...slots }}
+      slotProps={slotProps}
+      fieldResponse={fieldResponse}
+    />
+  );
 }) as DateRangeFieldComponent;
 
 SingleInputDateRangeField.fieldType = 'single-input';
@@ -95,6 +90,12 @@ SingleInputDateRangeField.propTypes = {
    * @default false
    */
   clearable: PropTypes.bool,
+  /**
+   * The position at which the clear button is placed.
+   * If the field is not clearable, the button is not rendered.
+   * @default 'end'
+   */
+  clearButtonPosition: PropTypes.oneOf(['end', 'start']),
   /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the

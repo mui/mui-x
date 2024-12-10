@@ -1,7 +1,5 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import MuiInputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
@@ -29,7 +27,6 @@ export const useDesktopPicker = <
   >,
 >({
   props,
-  getOpenDialogAriaText,
   ...pickerParams
 }: UseDesktopPickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
   const {
@@ -53,7 +50,6 @@ export const useDesktopPicker = <
     reduceAnimations,
   } = props;
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
   const fieldRef = React.useRef<FieldRef<PickerValue>>(null);
 
   const labelId = useId();
@@ -62,7 +58,6 @@ export const useDesktopPicker = <
   const {
     open,
     actions,
-    hasUIView,
     layoutProps,
     providerProps,
     renderCurrentView,
@@ -77,36 +72,6 @@ export const useDesktopPicker = <
     autoFocusView: true,
     additionalViewProps: {},
     variant: 'desktop',
-  });
-
-  const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
-  const { ownerState: inputAdornmentOwnerState, ...inputAdornmentProps } = useSlotProps({
-    elementType: InputAdornment,
-    externalSlotProps: innerSlotProps?.inputAdornment,
-    additionalProps: {
-      position: 'end' as const,
-    },
-    ownerState,
-  });
-
-  const OpenPickerButton = slots.openPickerButton ?? IconButton;
-  const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
-    elementType: OpenPickerButton,
-    externalSlotProps: innerSlotProps?.openPickerButton,
-    additionalProps: {
-      disabled: disabled || readOnly,
-      onClick: open ? actions.onClose : actions.onOpen,
-      'aria-label': getOpenDialogAriaText(pickerFieldProps.value),
-      edge: inputAdornmentProps.position,
-    },
-    ownerState,
-  });
-
-  const OpenPickerIcon = slots.openPickerIcon;
-  const openPickerIconProps = useSlotProps({
-    elementType: OpenPickerIcon,
-    externalSlotProps: innerSlotProps?.openPickerIcon,
-    ownerState,
   });
 
   const Field = slots.field;
@@ -142,30 +107,6 @@ export const useDesktopPicker = <
     ownerState,
   });
 
-  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  if (hasUIView) {
-    fieldProps.InputProps = {
-      ...fieldProps.InputProps,
-      ref: containerRef,
-      ...(!props.disableOpenPicker && {
-        [`${inputAdornmentProps.position}Adornment`]: (
-          <InputAdornment {...inputAdornmentProps}>
-            <OpenPickerButton {...openPickerButtonProps}>
-              <OpenPickerIcon {...openPickerIconProps} />
-            </OpenPickerButton>
-          </InputAdornment>
-        ),
-      }),
-    } as typeof fieldProps.InputProps;
-  }
-
-  const slotsForField = {
-    textField: slots.textField,
-    clearIcon: slots.clearIcon,
-    clearButton: slots.clearButton,
-    ...fieldProps.slots,
-  };
-
   const Layout = slots.layout ?? PickersLayout;
 
   let labelledById = labelId;
@@ -188,6 +129,16 @@ export const useDesktopPicker = <
     },
   };
 
+  const slotsForField = {
+    ...slots,
+    ...fieldProps.slots,
+  };
+
+  const slotPropsForField = {
+    ...slotProps,
+    ...fieldProps.slotProps,
+  };
+
   const handleFieldRef = useForkRef(fieldRef, fieldProps.unstableFieldRef);
 
   const renderPicker = () => (
@@ -195,13 +146,13 @@ export const useDesktopPicker = <
       <Field
         {...fieldProps}
         slots={slotsForField}
-        slotProps={slotProps}
+        slotProps={slotPropsForField}
         unstableFieldRef={handleFieldRef}
       />
       <PickersPopper
         role="dialog"
         placement="bottom-start"
-        anchorEl={containerRef.current}
+        anchorEl={providerProps.contextValue.triggerRef!.current}
         {...actions}
         open={open}
         slots={slots}

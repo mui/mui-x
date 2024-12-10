@@ -8,24 +8,12 @@ import {
   adapterToUse,
   openPicker,
   getClockTouchEvent,
-  getFieldSectionsContainer,
 } from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
-    it('should open when clicking the input', () => {
-      const onOpen = spy();
-
-      render(<MobileTimePicker onOpen={onOpen} />);
-
-      fireEvent.click(getFieldSectionsContainer());
-
-      expect(onOpen.callCount).to.equal(1);
-      expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-
     it('should fire a change event when meridiem changes', () => {
       const handleChange = spy();
       render(
@@ -64,7 +52,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'time', variant: 'mobile' });
+      openPicker({ type: 'time' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

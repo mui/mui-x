@@ -9,6 +9,7 @@ import { validateTime } from '../validation';
 import { useSplitFieldProps } from '../hooks';
 import { useDefaultizedTimeField } from '../internals/hooks/defaultizedFieldProps';
 import { PickerValue } from '../internals/models';
+import { useGetOpenDialogAriaLabel } from '../internals/hooks/useGetOpenDialogAriaLabel';
 
 export const useTimeField = <
   TEnableAccessibleFieldDOMStructure extends boolean,
@@ -23,6 +24,11 @@ export const useTimeField = <
 
   const { forwardedProps, internalProps } = useSplitFieldProps(props, 'time');
 
+  const getOpenDialogAriaLabel = useGetOpenDialogAriaLabel({
+    formatKey: 'fullTime',
+    translationKey: 'openTimePickerDialogue',
+  });
+
   return useField<
     PickerValue,
     TEnableAccessibleFieldDOMStructure,
@@ -35,5 +41,6 @@ export const useTimeField = <
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,
     valueType: 'time',
+    getOpenDialogAriaLabel,
   });
 };

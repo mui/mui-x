@@ -75,6 +75,7 @@ export function usePickerProvider<
 
   const utils = useUtils();
   const orientation = usePickerOrientation(paramsFromUsePickerViews.views, props.orientation);
+  const triggerRef = React.useRef<HTMLElement>(null);
 
   const ownerState = React.useMemo<PickerOwnerState>(
     () => ({
@@ -101,6 +102,18 @@ export function usePickerProvider<
     ],
   );
 
+  const triggerStatus = React.useMemo(() => {
+    if (props.disableOpenPicker || !paramsFromUsePickerViews.hasUIView) {
+      return 'hidden';
+    }
+
+    if (props.disabled || props.readOnly) {
+      return 'disabled';
+    }
+
+    return 'enabled';
+  }, [props.disableOpenPicker, paramsFromUsePickerViews.hasUIView, props.disabled, props.readOnly]);
+
   const contextValue = React.useMemo<PickerContextValue>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
@@ -108,8 +121,17 @@ export function usePickerProvider<
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
+      triggerRef,
+      triggerStatus,
     }),
-    [paramsFromUsePickerValue.contextValue, variant, orientation, props.disabled, props.readOnly],
+    [
+      paramsFromUsePickerValue.contextValue,
+      variant,
+      orientation,
+      props.disabled,
+      props.readOnly,
+      triggerStatus,
+    ],
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
@@ -128,7 +150,7 @@ export interface UsePickerProviderParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > extends Pick<PickerProviderProps, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any, any> & UsePickerProviderNonStaticProps;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue>;
