@@ -23,7 +23,7 @@ export default function RowSpanning() {
           showCellVerticalBorder
           showColumnVerticalBorder
           disableRowSelectionOnClick
-          unstable_rowSpanning={enabled}
+          rowSpanning={enabled}
           hideFooter
           sx={{
             '& .MuiDataGrid-row:hover': {
