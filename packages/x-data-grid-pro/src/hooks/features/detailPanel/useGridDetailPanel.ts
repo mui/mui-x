@@ -206,17 +206,6 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
-  // TODO: remove
-  const detailPanelHasAutoHeight = React.useCallback<
-    GridDetailPanelPrivateApi['detailPanelHasAutoHeight']
-  >(
-    (id) => {
-      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
-      return heightCache[id] ? heightCache[id].autoHeight : false;
-    },
-    [apiRef],
-  );
-
   const detailPanelPubicApi: GridDetailPanelApi = {
     toggleDetailPanel,
     getExpandedDetailPanels,
@@ -225,7 +214,6 @@ export const useGridDetailPanel = (
 
   const detailPanelPrivateApi: GridDetailPanelPrivateApi = {
     storeDetailPanelHeight,
-    detailPanelHasAutoHeight,
   };
 
   useGridApiMethod(apiRef, detailPanelPubicApi, 'public');

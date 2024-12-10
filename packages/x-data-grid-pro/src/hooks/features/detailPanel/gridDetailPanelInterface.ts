@@ -31,12 +31,6 @@ export interface GridDetailPanelPrivateApi {
    * @param {number} height The new height.
    */
   storeDetailPanelHeight: (id: GridRowId, height: number) => void;
-  /**
-   * Determines if the height of a detail panel is "auto".
-   * @param {GridRowId} id The id of the row.
-   * @returns {boolean} `true` if the detail panel height is "auto".
-   */
-  detailPanelHasAutoHeight: (id: GridRowId) => boolean;
 }
 
 export interface GridDetailPanelState {
