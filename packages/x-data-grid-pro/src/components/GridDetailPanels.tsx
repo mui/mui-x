@@ -6,10 +6,10 @@ import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
   gridDetailPanelExpandedRowsContentCacheSelector,
-  gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
 import { GridDetailPanel } from './GridDetailPanel';
+import { gridDetailPanelRawHeightCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
 
 const useUtilityClasses = () => {
   const slots = {
@@ -36,10 +36,7 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
     apiRef,
     gridDetailPanelExpandedRowsContentCacheSelector,
   );
-  const detailPanelsHeights = useGridSelector(
-    apiRef,
-    gridDetailPanelExpandedRowsHeightCacheSelector,
-  );
+  const detailPanelsHeights = useGridSelector(apiRef, gridDetailPanelRawHeightCacheSelector);
 
   const getDetailPanel = React.useCallback(
     (rowId: GridRowId): React.ReactNode => {
@@ -53,8 +50,8 @@ function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
         return null;
       }
 
-      const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(rowId);
-      const height = hasAutoHeight ? 'auto' : detailPanelsHeights[rowId];
+      const heightCache = detailPanelsHeights[rowId];
+      const height = heightCache.autoHeight ? 'auto' : heightCache.height;
 
       return (
         <GridDetailPanel

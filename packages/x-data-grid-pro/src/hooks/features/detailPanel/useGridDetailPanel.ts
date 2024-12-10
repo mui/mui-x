@@ -18,7 +18,6 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
-  gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelRawHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -185,7 +184,7 @@ export const useGridDetailPanel = (
     GridDetailPanelPrivateApi['storeDetailPanelHeight']
   >(
     (id, height) => {
-      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
 
       if (!heightCache[id] || heightCache[id].height === height) {
         return;
@@ -207,11 +206,12 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
+  // TODO: remove
   const detailPanelHasAutoHeight = React.useCallback<
     GridDetailPanelPrivateApi['detailPanelHasAutoHeight']
   >(
     (id) => {
-      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
       return heightCache[id] ? heightCache[id].autoHeight : false;
     },
     [apiRef],
@@ -303,9 +303,9 @@ export const useGridDetailPanel = (
 
       updateCachesIfNeeded();
 
-      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef);
 
-      initialValue.detail = heightCache[row.id] ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
+      initialValue.detail = heightCache[row.id].height ?? 0; // Fallback to zero because the cache might not be ready yet (for example page was changed)
       return initialValue;
     },
     [apiRef, expandedRowIds, updateCachesIfNeeded],

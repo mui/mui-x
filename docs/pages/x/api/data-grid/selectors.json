@@ -141,12 +141,6 @@
     "supportsApiRef": false
   },
   {
-    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
-    "returnType": "Record<GridRowId, number>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridDimensionsSelector",
     "returnType": "GridDimensions",
     "description": "",
