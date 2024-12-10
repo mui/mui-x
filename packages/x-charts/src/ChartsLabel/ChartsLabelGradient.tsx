@@ -104,8 +104,8 @@ const ChartsLabelGradient = consumeThemeProps(
         {...other}
       >
         <div>
-          <svg width="100%" height="100%" viewBox="0 0 10 10" preserveAspectRatio={'none'}>
-            <rect width="10" height="10" fill={`url(#${gradientId})`} />
+          <svg width="100%" height="100%" viewBox="0 0 24 24" preserveAspectRatio={'none'}>
+            <rect width="24" height="24" fill={`url(#${gradientId})`} />
           </svg>
         </div>
       </Root>
