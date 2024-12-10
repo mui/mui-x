@@ -75,7 +75,6 @@ export const usePicker = <
 
     // Picker layout
     layoutProps: {
-      ...pickerViewsResponse.layoutProps,
       ...pickerValueResponse.layoutProps,
     },
 

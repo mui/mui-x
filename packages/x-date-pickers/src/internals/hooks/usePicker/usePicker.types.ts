@@ -66,8 +66,7 @@ export interface UsePickerResponse<
     Pick<UsePickerViewsResponse<TView>, 'shouldRestoreFocus' | 'renderCurrentView'> {
   ownerState: PickerOwnerState;
   providerProps: UsePickerProviderReturnValue;
-  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'] &
-    UsePickerViewsResponse<TView>['layoutProps'];
+  layoutProps: UsePickerValueResponse<TValue, TError>['layoutProps'];
   // TODO v8: Remove in https://github.com/mui/mui-x/pull/15671
   hasUIView: boolean;
 }

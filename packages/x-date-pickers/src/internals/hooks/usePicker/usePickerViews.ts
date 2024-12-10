@@ -120,19 +120,30 @@ export interface UsePickerViewParams<
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
-  layoutProps: UsePickerViewsLayoutResponse<TView>;
   provider: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
-  view: TView | null;
-  onViewChange: (view: TView) => void;
+export interface UsePickerViewsContextValue<TView extends DateOrTimeViewWithMeridiem> {
+  /**
+   * Available views.
+   */
   views: readonly TView[];
+  /**
+   * View currently rendered.
+   */
+  view: TView | null;
+  /**
+   * Callback called when the view to render changes
+   * @template TView
+   * @param {TView} view The view to render
+   */
+  onViewChange: (view: TView) => void;
 }
 
 export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
   hasUIView: boolean;
   views: readonly TView[];
+  contextValue: UsePickerViewsContextValue<TView>;
 }
 
 /**
@@ -257,20 +268,23 @@ export const usePickerViews = <
     setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const layoutProps: UsePickerViewsLayoutResponse<TView> = {
-    views,
-    view: popperView,
-    onViewChange: setView,
-  };
+  const contextValue = React.useMemo<UsePickerViewsContextValue<TView>>(
+    () => ({
+      views,
+      view: popperView,
+      onViewChange: setView,
+    }),
+    [views, popperView, setView],
+  );
 
   const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
     views,
+    contextValue,
   };
 
   return {
     shouldRestoreFocus,
-    layoutProps,
     provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {

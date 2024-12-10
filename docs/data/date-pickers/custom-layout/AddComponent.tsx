@@ -17,7 +17,6 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateView } from '@mui/x-date-pickers/models';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -58,7 +57,7 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null>) {
   const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout(props);
 
   return (
