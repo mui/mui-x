@@ -4,12 +4,13 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerRangeValue,
+  PickerValue,
   UseFieldResponse,
   useControlledValueWithTimezone,
   useDefaultizedDateField,
 } from '@mui/x-date-pickers/internals';
 import { useValidation } from '@mui/x-date-pickers/validation';
-import { DateValidationError, PickerValidDate } from '@mui/x-date-pickers/models';
+import { DateValidationError } from '@mui/x-date-pickers/models';
 import {
   UseMultiInputDateRangeFieldParams,
   UseMultiInputDateRangeFieldProps,
@@ -42,6 +43,7 @@ export const useMultiInputDateRangeField = <
   const {
     value: valueProp,
     defaultValue,
+    referenceDate,
     format,
     formatDensity,
     shouldRespectLeadingZeros,
@@ -60,6 +62,7 @@ export const useMultiInputDateRangeField = <
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate,
     onChange,
     valueManager: rangeValueManager,
   });
@@ -75,7 +78,7 @@ export const useMultiInputDateRangeField = <
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
-  ): FieldChangeHandler<PickerValidDate | null, DateValidationError> => {
+  ): FieldChangeHandler<PickerValue, DateValidationError> => {
     return (newDate, rawContext) => {
       const newDateRange: PickerRangeValue =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];

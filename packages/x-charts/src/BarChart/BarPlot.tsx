@@ -2,8 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTransition } from '@react-spring/web';
+import { styled } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
+import { BarElement, barElementClasses, BarElementSlotProps, BarElementSlots } from './BarElement';
 import { AxisDefaultized } from '../models/axis';
 import { BarItemIdentifier } from '../models';
 import getColor from './getColor';
@@ -234,6 +235,16 @@ const enterStyle = ({ x, width, y, height }: AnimationData) => ({
   width,
 });
 
+const BarPlotRoot = styled('g', {
+  name: 'MuiBarPlot',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  [`& .${barElementClasses.root}`]: {
+    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  },
+});
+
 /**
  * Demos:
  *
@@ -271,7 +282,7 @@ function BarPlot(props: BarPlotProps) {
   });
 
   return (
-    <React.Fragment>
+    <BarPlotRoot>
       {!withoutBorderRadius &&
         maskTransition((style, { id, hasPositive, hasNegative, layout }) => {
           return (
@@ -316,7 +327,7 @@ function BarPlot(props: BarPlotProps) {
           {...other}
         />
       )}
-    </React.Fragment>
+    </BarPlotRoot>
   );
 }
 

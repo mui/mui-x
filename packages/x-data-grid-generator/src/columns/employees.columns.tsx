@@ -132,6 +132,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
   },
   {
     field: 'position',
+    description: 'Job title',
     headerName: 'Position',
     generateData: randomJobTitle,
     width: 180,

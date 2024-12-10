@@ -38,6 +38,7 @@ export default function ServerSideDataGridNoCache() {
       ...initialState,
       pagination: {
         paginationModel: { pageSize: 10, page: 0 },
+        rowCount: 0,
       },
     }),
     [initialState],

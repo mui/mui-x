@@ -31,7 +31,12 @@ By default, columns coming under 150 pixels region are rendered outside of the v
 
 {{"demo": "ColumnVirtualizationGrid.js", "bg": "inline"}}
 
-You can disable column virtualization by calling `apiRef.current.unstable_setColumnVirtualization(false)`, or by setting the column buffer to the number of total columns.
+You can disable column virtualization by calling `apiRef.current.unstable_setColumnVirtualization(false)`, or by setting the [`columnBufferPx`](/x/api/data-grid/data-grid/#data-grid-prop-columnBufferPx) to a high value.
+
+:::info
+Column virtualization is disabled when dynamic row height is enabled.
+See [dynamic row height and column virtualization](/x/react-data-grid/row-height/#column-virtualization) to learn more.
+:::
 
 ## Disable virtualization
 

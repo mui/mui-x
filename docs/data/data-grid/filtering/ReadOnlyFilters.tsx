@@ -5,7 +5,7 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 export default function ReadOnlyFilters() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
     rowLength: 100,
@@ -34,10 +34,9 @@ export default function ReadOnlyFilters() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
-        slots={{
-          toolbar: GridToolbar,
-        }}
+        slots={{ toolbar: GridToolbar }}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
       />

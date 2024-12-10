@@ -2,7 +2,6 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRifm } from 'rifm';
 import TextField from '@mui/material/TextField';
-import useControlled from '@mui/utils/useControlled';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -19,7 +18,7 @@ const ACCEPT_REGEX = /[\d]/gi;
 const staticDateWith2DigitTokens = dayjs('2019-11-21T11:30:00.000');
 const staticDateWith1DigitTokens = dayjs('2019-01-01T09:00:00.000');
 
-function getValueStrFromValue(value: Dayjs | null, format: string) {
+function getInputValueFromValue(value: Dayjs | null, format: string) {
   if (value == null) {
     return '';
   }
@@ -27,35 +26,21 @@ function getValueStrFromValue(value: Dayjs | null, format: string) {
   return value.isValid() ? value.format(format) : '';
 }
 
-function MaskedField(props: DatePickerFieldProps) {
+function MaskedDateField(props: DatePickerFieldProps) {
   const { slots, slotProps, ...other } = props;
 
   const { forwardedProps, internalProps } = useSplitFieldProps(other, 'date');
 
-  const {
-    format,
-    value: valueProp,
-    defaultValue,
-    onChange,
-    timezone,
-    onError,
-  } = internalProps;
-
-  const [value, setValue] = useControlled({
-    controlled: valueProp,
-    default: defaultValue ?? null,
-    name: 'MaskedField',
-    state: 'value',
-  });
+  const { format, value, onChange, timezone } = internalProps;
 
   // Control the input text
   const [inputValue, setInputValue] = React.useState<string>(() =>
-    getValueStrFromValue(value, format),
+    getInputValueFromValue(value, format),
   );
 
   React.useEffect(() => {
     if (value && value.isValid()) {
-      const newDisplayDate = getValueStrFromValue(value, format);
+      const newDisplayDate = getInputValueFromValue(value, format);
       setInputValue(newDisplayDate);
     }
   }, [format, value]);
@@ -65,22 +50,17 @@ function MaskedField(props: DatePickerFieldProps) {
   const { hasValidationError, getValidationErrorForNewValue } = useValidation({
     value,
     timezone,
-    onError,
     props: internalProps,
     validator: validateDate,
   });
 
-  const handleValueStrChange = (newValueStr: string) => {
-    setInputValue(newValueStr);
+  const handleInputValueChange = (newInputValue: string) => {
+    setInputValue(newInputValue);
 
-    const newValue = dayjs(newValueStr, format);
-    setValue(newValue);
-
-    if (onChange) {
-      onChange(newValue, {
-        validationError: getValidationErrorForNewValue(newValue),
-      });
-    }
+    const newValue = dayjs(newInputValue, format);
+    onChange(newValue, {
+      validationError: getValidationErrorForNewValue(newValue),
+    });
   };
 
   const rifmFormat = React.useMemo(() => {
@@ -141,7 +121,7 @@ function MaskedField(props: DatePickerFieldProps) {
 
   const rifmProps = useRifm({
     value: inputValue,
-    onChange: handleValueStrChange,
+    onChange: handleInputValueChange,
     format: rifmFormat,
   });
 
@@ -156,7 +136,9 @@ function MaskedField(props: DatePickerFieldProps) {
 }
 
 function MaskedFieldDatePicker(props: DatePickerProps) {
-  return <DatePicker slots={{ ...props.slots, field: MaskedField }} {...props} />;
+  return (
+    <DatePicker slots={{ ...props.slots, field: MaskedDateField }} {...props} />
+  );
 }
 
 export default function MaskedMaterialTextField() {

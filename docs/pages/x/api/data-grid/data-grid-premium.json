@@ -81,10 +81,7 @@
     },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ ariaV8?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ warnIfFocusStateIsNotSynced?: bool }" }
     },
     "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
@@ -186,10 +183,6 @@
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
       "default": "false"
-    },
-    "indeterminateCheckboxAction": {
-      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
-      "default": "\"deselect\""
     },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
@@ -588,11 +581,6 @@
     "rowGroupingModel": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": {
-      "type": { "name": "number" },
-      "default": "166",
-      "deprecated": true
-    },
     "rowReordering": { "type": { "name": "bool" }, "default": "false" },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -607,15 +595,17 @@
     },
     "rowSelectionPropagation": {
       "type": { "name": "shape", "description": "{ descendants?: bool, parents?: bool }" },
-      "default": "{ parents: false, descendants: false }"
+      "default": "{ parents: true, descendants: true }"
     },
     "rowsLoadingMode": {
-      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
+      "default": "\"client\""
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -649,6 +639,8 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_lazyLoading": { "type": { "name": "bool" }, "default": "false" },
+    "unstable_lazyLoadingRequestThrottleMs": { "type": { "name": "number" }, "default": "500" },
     "unstable_listColumn": {
       "type": {
         "name": "shape",
@@ -656,7 +648,7 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPremium",
   "imports": [
@@ -1125,6 +1117,18 @@
       "description": "Icon displayed in column menu for aggregation",
       "default": "GridFunctionsIcon",
       "class": null
+    },
+    {
+      "name": "toolbarPromptSendIcon",
+      "description": "Icon used for the button that sends a prompt",
+      "default": "GridFunctionsIcon",
+      "class": null
+    },
+    {
+      "name": "toolbarPromptRecordIcon",
+      "description": "Icon used for the button that starts/stops recording the prompt",
+      "default": "GridFunctionsIcon",
+      "class": null
     }
   ],
   "classes": [
@@ -1474,6 +1478,12 @@
       "key": "columnsManagementRow",
       "className": "MuiDataGridPremium-columnsManagementRow",
       "description": "Styles applied to the columns management row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGridPremium-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
       "isGlobal": false
     },
     {
@@ -1888,6 +1898,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGridPremium-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGridPremium-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGridPremium-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGridPremium-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGridPremium-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

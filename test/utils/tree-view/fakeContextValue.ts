@@ -1,27 +1,12 @@
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
+import { TreeViewStore } from '@mui/x-tree-view/internals/utils/TreeViewStore';
 
 export const getFakeContextValue = (
   features: { checkboxSelection?: boolean } = {},
 ): TreeViewContextValue<SimpleTreeViewPluginSignatures> => ({
-  instance: {
-    isItemExpandable: () => false,
-    isItemExpanded: () => false,
-    isItemFocused: () => false,
-    isItemSelected: () => false,
-    isItemDisabled: (itemId: string | null): itemId is string => !!itemId,
-    mapFirstCharFromJSX: () => () => {},
-    canItemBeTabbed: () => false,
-  } as any,
-  publicAPI: {
-    focusItem: () => {},
-    getItem: () => ({}),
-    getItemOrderedChildrenIds: () => [],
-    setItemExpansion: () => {},
-    getItemDOMElement: () => null,
-    selectItem: () => {},
-    getItemTree: () => [],
-  },
+  instance: {} as any,
+  publicAPI: {} as any,
   runItemPlugins: () => ({
     rootRef: null,
     contentRef: null,
@@ -30,7 +15,7 @@ export const getFakeContextValue = (
   wrapItem: ({ children }) => children,
   wrapRoot: ({ children }) => children,
   items: {
-    disabledItemsFocusable: false,
+    onItemClick: () => {},
   },
   icons: {
     slots: {},
@@ -42,9 +27,22 @@ export const getFakeContextValue = (
     disableSelection: false,
     selectionPropagation: {},
   },
-  treeId: 'mui-tree-view-1',
   rootRef: {
     current: null,
   },
   expansion: { expansionTrigger: 'content' },
+  store: new TreeViewStore({
+    cacheKey: { id: 1 },
+    id: { treeId: 'mui-tree-view-1', providedTreeId: undefined },
+    items: {
+      disabledItemsFocusable: false,
+      itemMetaLookup: {},
+      itemModelLookup: {},
+      itemOrderedChildrenIdsLookup: {},
+      itemChildrenIndexesLookup: {},
+    },
+    expansion: { expandedItemsMap: new Map() },
+    selection: { selectedItemsMap: new Map() },
+    focus: { focusedItemId: null, defaultFocusableItemId: null },
+  }),
 });

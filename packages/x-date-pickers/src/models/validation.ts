@@ -1,3 +1,5 @@
+import type { PickerValidValue } from '../internals/models';
+
 /**
  * Validation error types applicable to both date and time validation
  */
@@ -22,7 +24,7 @@ export type TimeValidationError =
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
-export interface OnErrorProps<TValue, TError> {
+export interface OnErrorProps<TValue extends PickerValidValue, TError> {
   /**
    * Callback fired when the error associated with the current value changes.
    * When a validation error is detected, the `error` parameter contains a non-null value.

@@ -3,7 +3,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
 
 type PointerState = {
   isActive: boolean;
@@ -56,7 +55,7 @@ function usePointer(): PointerState {
   return pointer;
 }
 
-export function ItemTooltipFixedY() {
+export function ItemTooltipFixedY({ children }: React.PropsWithChildren) {
   const tooltipData = useItemTooltip();
   const { isActive } = usePointer();
 
@@ -115,7 +114,7 @@ export function ItemTooltipFixedY() {
         }}
         popperRef={popperRef}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

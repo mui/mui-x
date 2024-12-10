@@ -8,6 +8,8 @@ import {
   getTodayDate,
   getDefaultReferenceDate,
   PickerRangeValue,
+  PickerNonNullableRangeValue,
+  FieldRangeSection,
 } from '@mui/x-date-pickers/internals';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
@@ -15,17 +17,15 @@ import type {
   DateRangeValidationError,
   DateTimeRangeValidationError,
   TimeRangeValidationError,
-  RangeFieldSection,
   RangePosition,
 } from '../../models';
 
-export type RangePickerValueManager<
-  TValue = [any, any],
+type RangePickerValueManager<
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
     | DateTimeRangeValidationError = any,
-> = PickerValueManager<TValue, TError>;
+> = PickerValueManager<PickerRangeValue, TError>;
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
@@ -38,14 +38,14 @@ export const rangeValueManager: RangePickerValueManager = {
     const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
-      return value;
+      return value as PickerNonNullableRangeValue;
     }
 
     const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
 
     return [
-      shouldKeepStartDate ? value[0] : referenceDate,
-      shouldKeepEndDate ? value[1] : referenceDate,
+      shouldKeepStartDate ? value[0]! : referenceDate,
+      shouldKeepEndDate ? value[1]! : referenceDate,
     ];
   },
   cleanValue: (utils, value) =>
@@ -77,7 +77,7 @@ export const getRangeFieldValueManager = ({
   dateSeparator = '–',
 }: {
   dateSeparator: string | undefined;
-}): FieldValueManager<PickerRangeValue, RangeFieldSection> => ({
+}): FieldValueManager<PickerRangeValue> => ({
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
@@ -87,14 +87,14 @@ export const getRangeFieldValueManager = ({
     }
 
     if (shouldKeepStartDate && shouldKeepEndDate) {
-      return value;
+      return value as PickerNonNullableRangeValue;
     }
 
     if (shouldKeepStartDate) {
-      return [value[0], prevReferenceValue[0]];
+      return [value[0]!, prevReferenceValue[0]!];
     }
 
-    return [prevReferenceValue[1], value[1]];
+    return [prevReferenceValue[1]!, value[1]!];
   },
   getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
     const separatedFallbackSections =
@@ -104,7 +104,7 @@ export const getRangeFieldValueManager = ({
 
     const getSections = (
       newDate: PickerValidDate | null,
-      fallbackDateSections: RangeFieldSection[] | null,
+      fallbackDateSections: FieldRangeSection[] | null,
       position: RangePosition,
     ) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!fallbackDateSections;
@@ -167,7 +167,9 @@ export const getRangeFieldValueManager = ({
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (newDate: PickerValidDate | null, prevDateRange: PickerRangeValue) =>
-      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as PickerRangeValue;
+      (index === 0
+        ? [newDate, prevDateRange[1]]
+        : [prevDateRange[0], newDate]) as PickerNonNullableRangeValue;
 
     return {
       date: state.value[index],

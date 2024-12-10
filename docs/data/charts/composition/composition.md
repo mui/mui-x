@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'component: charts'
-components: ChartContainer, ChartContainerPro, ChartsGrid
+components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartsSurface
 packageName: '@mui/x-charts'
 ---
 
@@ -13,11 +13,75 @@ packageName: '@mui/x-charts'
 ## Overview
 
 The `@mui/x-charts` follows an architecture based on context providers.
-The overall idea is to pass your series and axes definitions to a single component: the `<ChartContainer />`.
-This component transforms the data and makes it available to its children.
+The overall idea is to pass your series and axes definitions to special components.
+This component transforms the data and makes it available to its children, which can be composed.
 
-Based on the data provided by the container, you can render some graphical elements with provided subcomponents, such as `<LinePlot />` or `<ChartsYAxis />`.
-Or you can [create your own components](/x/react-charts/components/).
+There are two main classes of components, which are used to create a chart.
+
+### Structural components
+
+These are used to define the chart's structure and data.
+
+#### The Data Provider and Surface components
+
+As the name suggests, the `ChartDataProvider` provides the data to the children components.
+While the `ChartsSurface` renders the SVG elements.
+
+```jsx
+<ChartDataProvider
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+>
+  <ChartsSurface
+    // Ref needs to be directly on the ChartsSurface
+    ref={mySvgRef}
+  >
+    {children}
+  </ChartsSurface>
+</ChartDataProvider>
+```
+
+:::info
+The demos here are using the `ChartContainer` component.
+To see demos using the separate `ChartDataProvider` and `ChartsSurface` components, check the [HTML components documentation](/x/react-charts/components/#html-components).
+:::
+
+#### The `ChartContainer` helper
+
+This component is a composition of the two previous components.
+It can be used instead of them when there is no need to customize anything outside the chart's graphical elements.
+
+```jsx
+<ChartContainer
+  // The configuration of the chart
+  series={[{ type: 'bar', data: [100, 200] }]}
+  xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
+  width={500}
+  height={300}
+  // Ref is forwarded internally to the ChartsSurface
+  ref={mySvgRef}
+>
+  {children}
+</ChartContainer>
+```
+
+### Graphical components
+
+These are any component that render the graphical elements of the chart.
+They are the children of the **Structural components** shown above.
+There are many of them, so they won't all be listed here.
+You can even [create your own components](/x/react-charts/components/).
+
+Some examples of graphical components are:
+
+- `LinePlot`
+- `BarPlot`
+- `ChartsXAxis`
+- `ChartsLegend`
+- `ChartsTooltip`
 
 ## Container options
 

@@ -6,7 +6,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { useCartesianContext } from '../context/CartesianProvider';
 import { ChartsGridClasses, getChartsGridUtilityClass } from './chartsGridClasses';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { GridRoot } from './styledCommonents';
+import { GridRoot } from './styledComponents';
 import { ChartsGridVertical } from './ChartsVerticalGrid';
 import { ChartsGridHorizontal } from './ChartsHorizontalGrid';
 

@@ -90,7 +90,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-data-grid/filtering/header-filters',
                 plan: 'pro',
-                newFeature: true,
               },
               { pathname: '/x/react-data-grid/filtering-recipes', title: 'Recipes' },
             ],
@@ -100,7 +99,7 @@ const pages: MuiPage[] = [
             pathname: '/x/react-data-grid/selection',
             children: [
               { pathname: '/x/react-data-grid/row-selection' },
-              { pathname: '/x/react-data-grid/cell-selection', plan: 'premium', newFeature: true },
+              { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
             ],
           },
           { pathname: '/x/react-data-grid/virtualization' },
@@ -128,9 +127,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', plan: 'premium', planned: true },
           { pathname: '/x/react-data-grid/export' },
-          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+          { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
           { pathname: '/x/react-data-grid/scrolling' },
-
           {
             pathname: '/x/react-data-grid/list-view',
             title: 'List view',
@@ -142,22 +140,26 @@ const pages: MuiPage[] = [
             title: 'Server-side data',
             plan: 'pro',
             children: [
-              { pathname: '/x/react-data-grid/server-side-data', title: 'Overview' },
-              { pathname: '/x/react-data-grid/server-side-data/tree-data', plan: 'pro' },
+              {
+                pathname: '/x/react-data-grid/server-side-data',
+                title: 'Overview',
+                plan: 'pro',
+                unstable: true,
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/tree-data',
+                plan: 'pro',
+                unstable: true,
+              },
               {
                 pathname: '/x/react-data-grid/server-side-data/lazy-loading',
                 plan: 'pro',
-                planned: true,
-              },
-              {
-                pathname: '/x/react-data-grid/server-side-data/infinite-loading',
-                plan: 'pro',
-                planned: true,
+                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/row-grouping',
                 plan: 'premium',
-                planned: true,
+                unstable: true,
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
@@ -211,6 +213,7 @@ const pages: MuiPage[] = [
               },
 
               { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
+              { pathname: '/x/api/data-grid/grid-list-col-def', title: 'GridListColDef' },
               {
                 pathname: '/x/api/data-grid/grid-export-state-params',
                 title: 'GridExportStateParams',
@@ -340,7 +343,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/date-time-range-picker',
                 title: 'Date Time Range Picker',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/date-time-range-field',
@@ -410,7 +412,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-charts-group',
     title: 'Charts',
-    newFeature: true,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       { pathname: '/x/react-charts/getting-started' },
@@ -460,7 +461,6 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/heatmap',
             title: 'Heatmap',
             plan: 'pro',
-            unstable: true,
           },
           {
             pathname: '/x/react-charts/main-features',
@@ -479,7 +479,6 @@ const pages: MuiPage[] = [
                 pathname: '/x/react-charts/zoom-and-pan',
                 title: 'Zoom and pan',
                 plan: 'pro',
-                unstable: true,
               },
             ],
           },
@@ -525,7 +524,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-tree-view-group',
     title: 'Tree View',
-    newFeature: true,
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       { pathname: '/x/react-tree-view/getting-started' },
@@ -549,8 +547,8 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-tree-view/rich-tree-view/expansion' },
           { pathname: '/x/react-tree-view/rich-tree-view/customization' },
           { pathname: '/x/react-tree-view/rich-tree-view/focus' },
-          { pathname: '/x/react-tree-view/rich-tree-view/editing' },
-          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
+          { pathname: '/x/react-tree-view/rich-tree-view/editing', newFeature: true },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
         ],
       },
       {

@@ -48,6 +48,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/chart-data-provider',
+    title: 'ChartDataProvider',
+  },
+  {
     pathname: '/x/api/charts/charts-axis',
     title: 'ChartsAxis',
   },
@@ -56,12 +60,20 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisHighlight',
   },
   {
+    pathname: '/x/api/charts/charts-axis-tooltip-content',
+    title: 'ChartsAxisTooltipContent',
+  },
+  {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
   },
   {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
+  },
+  {
+    pathname: '/x/api/charts/charts-item-tooltip-content',
+    title: 'ChartsItemTooltipContent',
   },
   {
     pathname: '/x/api/charts/charts-legend',
@@ -88,6 +100,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsTooltip',
   },
   {
+    pathname: '/x/api/charts/charts-tooltip-container',
+    title: 'ChartsTooltipContainer',
+  },
+  {
     pathname: '/x/api/charts/charts-voronoi-handler',
     title: 'ChartsVoronoiHandler',
   },
@@ -104,21 +120,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
-    pathname: '/x/api/charts/default-charts-axis-tooltip-content',
-    title: 'DefaultChartsAxisTooltipContent',
-  },
-  {
-    pathname: '/x/api/charts/default-charts-item-tooltip-content',
-    title: 'DefaultChartsItemTooltipContent',
-  },
-  {
     pathname: '/x/api/charts/default-charts-legend',
     title: 'DefaultChartsLegend',
-  },
-  {
-    pathname: '/x/api/charts/default-heatmap-tooltip',
-    title: 'DefaultHeatmapTooltip',
-    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/gauge',
@@ -136,6 +139,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-tooltip',
+    title: 'HeatmapTooltip',
     plan: 'pro',
   },
   {
