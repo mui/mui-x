@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { TreeViewCancellableEvent } from '../../models';
 import { useTreeViewContext } from '../../internals/TreeViewProvider';
-import { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
-import { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
-import { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
-import { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
-import { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
+import type { UseTreeViewLazyLoadingSignature } from '../../internals/plugins/useTreeViewLazyLoading';
+import type { UseTreeViewSelectionSignature } from '../../internals/plugins/useTreeViewSelection';
+import type { UseTreeViewExpansionSignature } from '../../internals/plugins/useTreeViewExpansion';
+import type { UseTreeViewItemsSignature } from '../../internals/plugins/useTreeViewItems';
+import type { UseTreeViewFocusSignature } from '../../internals/plugins/useTreeViewFocus';
 import {
   UseTreeViewLabelSignature,
   useTreeViewLabel,
