@@ -77,8 +77,8 @@ export const addPositionPropertiesToSections = <TValue extends PickerValidValue>
 
 export const useFieldV6TextField: UseFieldTextField<false> = (params) => {
   const isRtl = useRtl();
-  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const focusTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const selectionSyncTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const {
     forwardedProps: {

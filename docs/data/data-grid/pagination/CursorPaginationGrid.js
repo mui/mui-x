@@ -48,7 +48,7 @@ export default function CursorPaginationGrid() {
     }
   };
 
-  const paginationMetaRef = React.useRef();
+  const paginationMetaRef = React.useRef(undefined);
 
   // Memoize to avoid flickering when the `hasNextPage` is `undefined` during refetch
   const paginationMeta = React.useMemo(() => {

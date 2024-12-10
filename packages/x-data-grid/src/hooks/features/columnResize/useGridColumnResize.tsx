@@ -133,7 +133,7 @@ function preventClick(event: MouseEvent) {
  * is disabled.
  */
 function useColumnVirtualizationDisabled(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  const promise = React.useRef<ControllablePromise>();
+  const promise = React.useRef<ControllablePromise>(undefined);
   const selector = () => gridVirtualizationColumnEnabledSelector(apiRef);
   const value = useGridSelector(apiRef, selector);
 
@@ -288,11 +288,11 @@ export const useGridColumnResize = (
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
   // This ref stores the offset between the click and the separator.
-  const initialOffsetToSeparator = React.useRef<number>();
-  const resizeDirection = React.useRef<ResizeDirection>();
+  const initialOffsetToSeparator = React.useRef<number>(0);
+  const resizeDirection = React.useRef<ResizeDirection>(null);
 
   const stopResizeEventTimeout = useTimeout();
-  const touchId = React.useRef<number>();
+  const touchId = React.useRef<number>(0);
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${refs.colDef!.field}`);

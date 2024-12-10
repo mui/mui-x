@@ -89,6 +89,7 @@ function MarkElement(props: MarkElementProps) {
         transformOrigin: to([position.x, position.y], (pX, pY) => `${pX}px ${pY}px`),
       }}
       ownerState={ownerState}
+      // @ts-expect-error
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}

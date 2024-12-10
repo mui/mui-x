@@ -7,7 +7,7 @@ export const useGridRegisterStrategyProcessor = <
   Api extends GridPrivateApiCommon,
   G extends GridStrategyProcessorName,
 >(
-  apiRef: React.MutableRefObject<Api>,
+  apiRef: React.RefObject<Api>,
   strategyName: string,
   group: G,
   processor: GridStrategyProcessor<G>,
