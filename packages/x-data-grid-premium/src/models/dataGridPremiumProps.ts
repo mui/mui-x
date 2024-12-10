@@ -17,6 +17,7 @@ import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
@@ -86,9 +87,10 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided
+   * @default {} when `unstable_dataSource` is provided
    */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions: Record<string, GridAggregationFunction | GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
