@@ -79,7 +79,9 @@ export const getAvailableAggregationFunctions = ({
   colDef,
   isDataSource,
 }: {
-  aggregationFunctions: Record<string, GridAggregationFunction | GridAggregationFunctionDataSource>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   colDef: GridColDef;
   isDataSource: boolean;
 }) =>
@@ -107,7 +109,9 @@ export const getAggregationRules = ({
 }: {
   columnsLookup: GridColumnRawLookup;
   aggregationModel: GridAggregationModel;
-  aggregationFunctions: Record<string, GridAggregationFunction | GridAggregationFunctionDataSource>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   isDataSource?: boolean;
 }) => {
   const aggregationRules: GridAggregationRules = {};

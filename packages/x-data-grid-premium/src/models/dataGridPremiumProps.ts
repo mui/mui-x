@@ -87,10 +87,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   rowGroupingColumnMode: 'single' | 'multiple';
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided
-   * @default {} when `unstable_dataSource` is provided
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
    */
-  aggregationFunctions: Record<string, GridAggregationFunction | GridAggregationFunctionDataSource>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.

@@ -235,6 +235,10 @@ const pages: MuiPage[] = [
                 title: 'GridAggregationFunction',
               },
               {
+                pathname: '/x/api/data-grid/grid-aggregation-function-data-source',
+                title: 'GridAggregationFunctionDataSource',
+              },
+              {
                 pathname: '/x/api/data-grid/grid-csv-export-options',
                 title: 'GridCsvExportOptions',
               },

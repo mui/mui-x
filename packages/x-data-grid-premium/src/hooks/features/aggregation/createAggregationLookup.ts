@@ -124,7 +124,9 @@ export const createAggregationLookup = ({
   isDataSource,
 }: {
   apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-  aggregationFunctions: Record<string, GridAggregationFunction | GridAggregationFunctionDataSource>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
   isDataSource: boolean;
