@@ -2,9 +2,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -31,13 +33,11 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  width: 'auto',
-  paddingBottom: theme.spacing(0.5),
-  '& input': {
-    marginLeft: theme.spacing(0.5),
+  [`.${outlinedInputClasses.root}`]: {
+    fontSize: theme.typography.body2.fontSize,
   },
-  '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  [`.${outlinedInputClasses.notchedOutline}`]: {
+    borderColor: theme.palette.divider,
   },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
@@ -144,7 +144,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     <GridToolbarQuickFilterRoot
       as={rootProps.slots.baseTextField}
       ownerState={rootProps}
-      variant="standard"
+      variant="outlined"
+      size="small"
       value={searchValue}
       onChange={handleSearchValueChange}
       className={clsx(classes.root, className)}
@@ -153,25 +154,32 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       type="search"
       {...other}
       InputProps={{
-        startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
+        startAdornment: (
+          <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
+            <rootProps.slots.quickFilterIcon fontSize="small" />
+          </InputAdornment>
+        ),
         endAdornment: (
-          <rootProps.slots.baseIconButton
-            aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
-            size="small"
-            sx={[
-              searchValue
-                ? {
-                    visibility: 'visible',
-                  }
-                : {
-                    visibility: 'hidden',
-                  },
-            ]}
-            onClick={handleSearchReset}
-            {...rootProps.slotProps?.baseIconButton}
-          >
-            <rootProps.slots.quickFilterClearIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
+          <InputAdornment position="end">
+            <rootProps.slots.baseIconButton
+              aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
+              size="small"
+              sx={[
+                searchValue
+                  ? {
+                      visibility: 'visible',
+                    }
+                  : {
+                      visibility: 'hidden',
+                    },
+              ]}
+              onClick={handleSearchReset}
+              edge="end"
+              {...rootProps.slotProps?.baseIconButton}
+            >
+              <rootProps.slots.quickFilterClearIcon fontSize="small" />
+            </rootProps.slots.baseIconButton>
+          </InputAdornment>
         ),
         ...other.InputProps,
       }}

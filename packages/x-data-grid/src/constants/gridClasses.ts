@@ -593,6 +593,26 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
+   * Styles applied to the toolbar root element.
+   */
+  toolbarRoot: string;
+  /**
+   * Styles applied to the toolbar button element.
+   */
+  toolbarButton: string;
+  /**
+   * Styles applied to the toolbar separator element.
+   */
+  toolbarSeparator: string;
+  /**
+   * Styles applied to the toolbar toggle button element.
+   */
+  toolbarToggleButton: string;
+  /**
+   * Styles applied to the toolbar toggle button group element.
+   */
+  toolbarToggleButtonGroup: string;
+  /**
    * Styles applied to the toolbar prompt control element.
    */
   toolbarPromptControl: string;
@@ -823,6 +843,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'sortIcon',
   'toolbarContainer',
   'toolbarFilterList',
+  'toolbarSeparator',
+  'toolbarToggleButton',
+  'toolbarToggleButtonGroup',
   'toolbarPromptControl',
   'toolbarPromptControl--recording',
   'toolbarPromptControlRecordingIndicator',
