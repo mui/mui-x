@@ -6,7 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
-  label: string;
+  label: React.ReactElement | string;
   icon?: React.ReactElement;
   /** from https://mui.com/material-ui/api/button-base/#ButtonBase-prop-component */
   component?: React.ElementType;
@@ -42,7 +42,7 @@ const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemPro
           ref={ref as React.MutableRefObject<HTMLButtonElement>}
           size="small"
           role="menuitem"
-          aria-label={label}
+          aria-label={typeof label === 'string' ? label : undefined}
           {...other}
           onClick={handleClick}
           {...rootProps.slotProps?.baseIconButton}
@@ -88,7 +88,7 @@ GridActionsCellItem.propTypes = {
    */
   component: PropTypes.elementType,
   icon: PropTypes.element,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   showInMenu: PropTypes.bool,
 } as any;
 
