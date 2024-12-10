@@ -207,7 +207,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       result.api = apiRef.current;
       return result;
     },
-    objectShallowCompare,
+    undefined,
+    objectShallowCompare as (a: unknown, b: unknown) => boolean,
   );
 
   const isSelected = useGridSelector(apiRef, () =>

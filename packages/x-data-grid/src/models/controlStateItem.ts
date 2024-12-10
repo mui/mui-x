@@ -5,12 +5,13 @@ import { GridStateCommunity } from './gridStateCommunity';
 
 export interface GridControlStateItem<
   State extends GridStateCommunity,
+  Args,
   E extends keyof GridControlledStateEventLookup,
 > {
   stateId: string;
   propModel?: GridEventLookup[E]['params'];
   stateSelector:
-    | OutputSelector<State, GridControlledStateEventLookup[E]['params']>
+    | OutputSelector<State, Args, GridControlledStateEventLookup[E]['params']>
     | ((state: State) => GridControlledStateEventLookup[E]['params']);
   propOnChange?: (
     model: GridControlledStateEventLookup[E]['params'],
