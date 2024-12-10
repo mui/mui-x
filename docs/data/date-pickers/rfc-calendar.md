@@ -519,6 +519,107 @@ The `<CustomCalendarHeader />` component can be built in a few different ways:
 
    :::
 
+## Display multiple months
+
+### Without Material UI
+
+The user can use the `offset` prop of the `<Calendar.DaysGrid />` component to render months with an offset compared to the currently visible month:
+
+```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
+function CalendarGrid({ offset }) {
+  return (
+    <Calendar.DaysGrid offset={offset}>
+      <Calendar.DaysGridHeader>
+        {({ days }) =>
+          days.map((day) => (
+            <Calendar.DaysGridHeaderCell value={day} key={day.toString()} />
+          ))
+        }
+      </Calendar.DaysGridHeader>
+      <Calendar.DaysGridBody>
+        {({ weeks }) =>
+          weeks.map((week) => (
+            <Calendar.DaysWeekRow value={week} key={week.toString()}>
+              {({ days }) =>
+                days.map((day) => (
+                  <Calendar.DaysCell value={day} key={day.toString()} />
+                ))
+              }
+            </Calendar.DaysWeekRow>
+          ))
+        }
+      </Calendar.DaysGridBody>
+    </Calendar.DaysGrid>
+  );
+}
+
+<Calendar.Root value={value} onChange={setValue}>
+  <div>{/** See demo below for the navigation with multiple months */}</div>
+  <div>
+    <CalendarGrid offset={0} />
+    <CalendarGrid offset={1} />
+  </div>
+</Calendar.Root>;
+```
+
+#### Month navigation with multiple months
+
+There is two way to navigate to the next / previous months:
+
+1. With the `<Calendar.GoToMonth />` button
+2. With the arrow navigation when the target is not in the current month
+
+When rendering multiple months, both those navigation technic only navigate one month at the time.
+For example, if you were rendering May and June, pressing `<Calendar.GoToMonth target="next" />` will render June and July.
+
+The user can use the `monthPageSize` prop on the `<Calendar.Root />` component to customize this behavior.
+
+If the prop receives a number, it will move by the amount of month both for `<Calendar.GoToMonth />` and for arrow navigation:
+
+```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
+function CalendarHeader() {
+  return (
+    <Calendar.Root monthPageSize={2}>
+      <div>
+        <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
+        <Calendar.FormattedValue format="MMMM YYYY" />
+        <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
+      </div>
+      <CalendarGrid offset={0} />
+      <CalendarGrid offset={1} />
+    </Calendar.Root>
+  );
+}
+```
+
+But the user can also distinguish both behaviors by providing an object:
+
+```tsx
+import { Calendar } from '@base-ui-components/react-x-date-pickers/calendar';
+
+function CalendarHeader() {
+  return (
+    <Calendar.Root monthPageSize={{ keyboard: 2, button: 1 }}>
+      <div>
+        <Calendar.GoToMonth target="previous">◀</Calendar.GoToMonth>
+        <Calendar.FormattedValue format="MMMM YYYY" />
+        <Calendar.GoToMonth target="next">▶</Calendar.GoToMonth>
+      </div>
+      <CalendarGrid offset={0} />
+      <CalendarGrid offset={1} />
+    </Calendar.Root>
+  );
+}
+```
+
+### With Material UI
+
+This is currently not doable.
+
 ## Display week number
 
 ### Without Material UI
@@ -595,6 +696,8 @@ Top level component that wraps the other components.
   Same typing and behavior as today.
 
 - `autoFocus`: `boolean`
+
+- `monthPageSize`: `number | { keyboard: number, button: number }`, default: `1`. The amount of months to navigate by in the day view when pressing `<Calendar.GoToMonth />` or with arrow navigation.
 
 :::success
 All the props that the picker can pass to the calendar (validation props, value props, etc...) are read both from the props and from `usePickerContext` so that the calendar can be used inside a picker built with composition.

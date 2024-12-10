@@ -258,6 +258,11 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-date-pickers/rfc-field', title: 'Field' },
       { pathname: '/x/react-date-pickers/rfc-calendar', title: 'Calendar' },
+      {
+        pathname: '/x/react-date-pickers/rfc-range-calendar',
+        title: 'Range Calendar',
+        plan: 'pro',
+      },
       { pathname: '/x/react-date-pickers/rfc-digital-clock', title: 'Digital Clock' },
       { pathname: '/x/react-date-pickers/rfc-picker', title: 'Picker' },
     ],
