@@ -72,7 +72,7 @@ The following example demonstrates a basic server-side aggregation.
 {{"demo": "ServerSideDataGridAggregation.js", "bg": "inline"}}
 
 :::info
-The data source mock server (`useMockServer`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
+The data source mock server (`useMockServer`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
 :::
 
 ## Customize the aggregation rows scope
