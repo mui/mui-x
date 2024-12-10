@@ -1081,3 +1081,9 @@ Renders the cell for a single year.
 - Extends `React.HTMLAttributes<HTMLButtonElement>`
 
 - `value`: `PickerValidDate` - **required**.
+
+#### `Calendar.supportedViews`
+
+Utility variable that helps building Date Time Pickers without hardcoding the list of views (which could become outdated if we introduce new views in the future).
+
+Value: `["day", "month", "year"]`

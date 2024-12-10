@@ -298,10 +298,10 @@ import { Picker } from '@base-ui-components/react-x-date-pickers/picker';
 import { Popover } from '@base-ui-components/react/popover';
 
 <Popover.Popup>
-  <Picker.MatchView match={['day', 'month', 'year']}>
+  <Picker.MatchView match={Calendar.supportedViews}>
     <Calendar.Root>{/** See calendar documentation */}</Calendar.Root>
   </Picker.MatchView>
-  <Picker.MatchView match={['hours', 'minutes', 'seconds', 'meridiem']}>
+  <Picker.MatchView match={[Calendar.supportedViews]}>
     <DigitalClock.Root>{/** See digital clock documentation */}</DigitalClock.Root>
   </Picker.MatchView>
 </Popover.Popup>;
@@ -523,7 +523,9 @@ It expects a function as its children, which receives the context value as a par
 
   The `onOpenChange` replaces the `onOpen` and `onClose` props in the current implementation
 
-#### `Picker.StaticRoot`
+### `Picker.StaticRoot`
+
+#### Props
 
 Top level component that wraps the other components when there is not field UI but only views.
 
@@ -548,8 +550,6 @@ Top level component that wraps the other components when there is not field UI b
 - **Form props**: `disabled`, `readOnly`.
 
   Same typing and behavior as today.
-
-#### Props
 
 ### `Picker.FormattedValue`
 

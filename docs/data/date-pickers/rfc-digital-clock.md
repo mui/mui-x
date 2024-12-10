@@ -11,7 +11,7 @@ title: DX - Digital Clock
 
 ### Without Material UI
 
-The user can use the `<DigitalClock.HourOptions />` and `<DigitalClock.MinuteOptions />` components to list all the time options with one column per view:
+The user can use the `<DigitalClock.HourOptions />` and `<DigitalClock.MinuteOptions />` components to list all the time options with one column per section:
 
 ```tsx
 <DigitalClock.Root value={value} onChange={setValue}>
