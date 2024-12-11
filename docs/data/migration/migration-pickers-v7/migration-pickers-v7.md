@@ -331,6 +331,18 @@ const theme = createTheme({
   +console.log(variant);
   ```
 
+- The component passed to the `layout` slot no longer receives a `rangePosition` and `onRangePositionChange` in range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
+  ```
+
 ### Slot: `toolbar`
 
 - The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
@@ -349,6 +361,32 @@ const theme = createTheme({
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
   +const { readOnly } = usePickerContext();
   +console.log(readOnly);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `rangePosition` and `onRangePositionChange` in range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
+  ```
+
+## Slot: `tabs`
+
+- The component passed to the `tabs` slot no longer receives a `rangePosition` and `onRangePositionChange` in range pickers, instead you can use the `usePickerRangePositionContext` hook:
+
+  ```diff
+  +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
+
+  -const { rangePosition } = props;
+  +const { rangePosition } = usePickerRangePositionContext();
+
+  -const { onRangePositionChange } = props;
+  +const { onRangePositionChange } = usePickerRangePositionContext();
   ```
 
 ## Renamed variables and types

@@ -9,20 +9,18 @@ import { usePickerProvider } from './usePickerProvider';
 export const usePicker = <
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
-  TAdditionalProps extends {},
+  TExternalProps extends UsePickerProps<TValue, TView, any, any>,
 >({
   props,
   valueManager,
   valueType,
   variant,
-  additionalViewProps,
   validator,
   autoFocusView,
   rendererInterceptor,
   fieldRef,
   localeText,
-}: UsePickerParams<TValue, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
+}: UsePickerParams<TValue, TView, TExternalProps>): UsePickerResponse<
   TValue,
   TView,
   InferError<TExternalProps>
@@ -44,9 +42,8 @@ export const usePicker = <
     validator,
   });
 
-  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps, TAdditionalProps>({
+  const pickerViewsResponse = usePickerViews<TValue, TView, TExternalProps>({
     props,
-    additionalViewProps,
     autoFocusView,
     fieldRef,
     propsFromPickerValue: pickerValueResponse.viewProps,

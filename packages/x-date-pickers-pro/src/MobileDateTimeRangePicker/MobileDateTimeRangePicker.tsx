@@ -14,6 +14,7 @@ import {
   resolveDateTimeFormat,
   useUtils,
   PickerRangeValue,
+  PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -36,10 +37,7 @@ import {
 } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
-import {
-  DateTimeRangePickerRenderers,
-  useDateTimeRangePickerDefaultizedProps,
-} from '../DateTimeRangePicker/shared';
+import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
@@ -47,7 +45,7 @@ import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 const rendererInterceptor = function rendererInterceptor<
   TEnableAccessibleFieldDOMStructure extends boolean,
 >(
-  inViewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any>,
+  inViewRenderers: PickerViewRendererLookup<any, any, any>,
   popperView: DateTimeRangePickerView,
   rendererProps: PickerViewsRendererProps<
     PickerRangeValue,
@@ -59,9 +57,8 @@ const rendererInterceptor = function rendererInterceptor<
         any,
         any
       >,
-      'rangePosition' | 'onRangePositionChange' | 'openTo'
-    >,
-    {}
+      'openTo'
+    >
   >,
 ) {
   const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
@@ -102,9 +99,7 @@ const rendererInterceptor = function rendererInterceptor<
     return (
       <DateTimeRangePickerTimeWrapper
         {...finalProps}
-        viewRenderer={
-          viewRenderer as PickerViewRenderer<PickerRangeValue, TimeViewWithMeridiem, any, {}>
-        }
+        viewRenderer={viewRenderer as PickerViewRenderer<PickerRangeValue, any>}
         view={view && isInternalTimeView(view) ? view : 'hours'}
         views={finalProps.views as TimeViewWithMeridiem[]}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
@@ -112,7 +107,7 @@ const rendererInterceptor = function rendererInterceptor<
     );
   }
   // avoiding problem of `props: never`
-  const typedViewRenderer = viewRenderer as PickerViewRenderer<PickerRangeValue, 'day', any, any>;
+  const typedViewRenderer = viewRenderer as PickerViewRenderer<PickerRangeValue, any>;
 
   return typedViewRenderer({
     ...finalProps,
@@ -154,7 +149,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: DateTimeRangePickerRenderers<DateTimeRangePickerView, any> = {
+  const viewRenderers: PickerViewRendererLookup<any, any, any> = {
     day: renderDateRangeViewCalendar,
     hours: renderTimeView,
     minutes: renderTimeView,

@@ -128,7 +128,7 @@ export interface UsePickerProviderParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > extends Pick<PickerProviderProps, 'localeText'> {
-  props: UsePickerProps<TValue, any, any, any, any>;
+  props: UsePickerProps<TValue, any, any, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
   paramsFromUsePickerValue: UsePickerValueProviderParams<TValue>;

@@ -16,11 +16,11 @@ import {
   useToolbarOwnerState,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
 } from './dateRangePickerToolbarClasses';
+import { usePickerRangePositionContext } from '../hooks';
 
 const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | undefined) => {
   const slots = {
@@ -33,8 +33,7 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'>,
-    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
+    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -82,8 +81,6 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
 
   const {
     value: [start, end],
-    rangePosition,
-    onRangePositionChange,
     toolbarFormat,
     className,
     classes: classesProp,
@@ -95,6 +92,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
 
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
+  const { rangePosition, onRangePositionChange } = usePickerRangePositionContext();
   const classes = useUtilityClasses(classesProp);
 
   const startDateValue = start
@@ -148,14 +146,12 @@ DateRangePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  onRangePositionChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
    * @template TView
    * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
-  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
