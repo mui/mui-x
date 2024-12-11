@@ -72,6 +72,22 @@ Below are described the steps you need to make to migrate from v7 to v8.
 
 - The Grid is more aligned with the WAI-ARIA authoring practices and sets the `role` attribute to `treegrid` if the Data Grid is used with row grouping feature.
 
+### State
+
+- The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -mySelector(state, instanceId)
+  +mySelector(state, arguments, instanceId)
+  ```
+
+- The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -const output = useGridSelector(apiRef, selector, equals)
+  +const output = useGridSelector(apiRef, selector, arguments, equals)
+  ```
+
 ### Other exports
 
 - `ariaV8` experimental flag is removed.
