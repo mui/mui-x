@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
-import type { ChartsLegendPlacement, ChartsLegendSlotExtension } from './legend.types';
+import type { ChartsLegendSlotExtension, Direction } from './legend.types';
 import { SeriesLegendItemContext } from './legendContext.types';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
@@ -14,8 +14,7 @@ import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClass
 import { consumeSlots } from '../internals/consumeSlots';
 
 export interface ChartsLegendProps
-  extends ChartsLegendPlacement,
-    PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
+  extends PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
@@ -27,6 +26,11 @@ export interface ChartsLegendProps
     legendItem: SeriesLegendItemContext,
     index: number,
   ) => void;
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction?: Direction;
   /**
    * Override or extend the styles applied to the component.
    */

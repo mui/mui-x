@@ -4,13 +4,20 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
-import { ChartsLegendPlacement } from './legend.types';
 import { ColorLegendSelector } from './continuousColorLegend.types';
-import { ChartsLabel, ChartsLabelGradient } from '../ChartsLabel';
+import { ChartsLabel, ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel';
+import { Direction } from './legend.types';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
-export interface ContinuousColorLegendProps extends ChartsLegendPlacement, ColorLegendSelector {
+export interface ContinuousColorLegendProps
+  extends ColorLegendSelector,
+    Omit<ChartsLabelGradientProps, 'gradientId'> {
+  /**
+   * The direction of the legend layout.
+   * The default depends on the chart.
+   */
+  direction?: Direction;
   /**
    * The label to display at the minimum side of the gradient.
    * Can either be a string, or a function.
