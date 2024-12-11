@@ -737,8 +737,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-charts-vendor':
         specifier: workspace:*
         version: link:../x-charts-vendor
@@ -817,8 +817,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../x-charts/build
@@ -1005,8 +1005,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1099,8 +1099,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
@@ -1167,8 +1167,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-data-grid':
         specifier: workspace:*
         version: link:../x-data-grid/build
@@ -1226,8 +1226,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1312,8 +1312,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-date-pickers':
         specifier: workspace:*
         version: link:../x-date-pickers/build
@@ -1386,8 +1386,8 @@ importers:
         specifier: ^7.26.0
         version: 7.26.0
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       react:
         specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.0.0
@@ -1406,8 +1406,8 @@ importers:
         specifier: ^7.26.0
         version: 7.26.0
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       react:
         specifier: ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.0.0
@@ -1432,8 +1432,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1494,8 +1494,8 @@ importers:
         specifier: ^11.8.1
         version: 11.13.5(@emotion/react@11.13.5(@types/react@19.0.1)(react@19.0.0))(@types/react@19.0.1)(react@19.0.0)
       '@mui/utils':
-        specifier: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils
-        version: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)
+        specifier: ^5.16.6 || ^6.0.0
+        version: 5.16.12(@types/react@19.0.1)(react@19.0.0)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -3283,28 +3283,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/types@https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/types':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/types}
-    version: 7.2.15
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@mui/utils@5.16.12':
     resolution: {integrity: sha512-p3JAq7nA0ur8M/zLnBvR6ZeAjM8mD4LnPdKfsJAYPS26w4eDQjQzl55XvoOmch2MeXhmWaO4Pkvs/xurrISNBw==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@mui/utils@https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils':
-    resolution: {tarball: https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils}
-    version: 5.16.8
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12372,26 +12352,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.1
 
-  '@mui/types@https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/types(@types/react@19.0.1)':
-    optionalDependencies:
-      '@types/react': 19.0.1
-
   '@mui/utils@5.16.12(@types/react@19.0.1)(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/types': 7.2.20(@types/react@19.0.1)
-      '@types/prop-types': 15.7.14
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 19.0.0
-      react-is: 19.0.0
-    optionalDependencies:
-      '@types/react': 19.0.1
-
-  '@mui/utils@https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/utils(@types/react@19.0.1)(react@19.0.0)':
-    dependencies:
-      '@babel/runtime': 7.26.0
-      '@mui/types': https://pkg.csb.dev/mui/material-ui/commit/a0262017/@mui/types(@types/react@19.0.1)
       '@types/prop-types': 15.7.14
       clsx: 2.1.1
       prop-types: 15.8.1
