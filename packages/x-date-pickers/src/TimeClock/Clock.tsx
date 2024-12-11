@@ -42,6 +42,10 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
    * The current full date value.
    */
   value: PickerValidDate | null;
+  /**
+   * Minimal and maximal value of the clock.
+   */
+  viewRange: [number, number];
   className?: string;
   classes?: Partial<ClockClasses>;
 }
@@ -225,6 +229,7 @@ export function Clock(inProps: ClockProps) {
     selectedId,
     type,
     viewValue,
+    viewRange: [minViewValue, maxViewValue],
     disabled = false,
     readOnly,
     className,
@@ -316,6 +321,8 @@ export function Clock(inProps: ClockProps) {
     }
   }, [autoFocus]);
 
+  const cleanValue = (newValue: number) => (newValue + maxViewValue + 1) % (maxViewValue + 1);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // TODO: Why this early exit?
     if (isMoving.current) {
@@ -325,11 +332,11 @@ export function Clock(inProps: ClockProps) {
     switch (event.key) {
       case 'Home':
         // reset both hours and minutes
-        handleValueChange(0, 'partial');
+        handleValueChange(minViewValue, 'partial');
         event.preventDefault();
         break;
       case 'End':
-        handleValueChange(type === 'minutes' ? 59 : 23, 'partial');
+        handleValueChange(maxViewValue, 'partial');
         event.preventDefault();
         break;
       case 'ArrowUp':
@@ -341,11 +348,11 @@ export function Clock(inProps: ClockProps) {
         event.preventDefault();
         break;
       case 'PageUp':
-        handleValueChange(viewValue + 5, 'partial');
+        handleValueChange(cleanValue(viewValue + 5), 'partial');
         event.preventDefault();
         break;
       case 'PageDown':
-        handleValueChange(viewValue - 5, 'partial');
+        handleValueChange(cleanValue(viewValue - 5), 'partial');
         event.preventDefault();
         break;
       case 'Enter':

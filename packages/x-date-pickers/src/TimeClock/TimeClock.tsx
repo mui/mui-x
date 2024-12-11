@@ -260,7 +260,9 @@ export const TimeClock = React.forwardRef(function TimeClock(
     ],
   );
 
-  const viewProps = React.useMemo<Pick<ClockProps, 'onChange' | 'viewValue' | 'children'>>(() => {
+  const viewProps = React.useMemo<
+    Pick<ClockProps, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
+  >(() => {
     switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
@@ -284,6 +286,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
+          viewRange: [0, ampm ? 11 : 23],
         };
       }
 
@@ -308,6 +311,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -332,6 +336,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
