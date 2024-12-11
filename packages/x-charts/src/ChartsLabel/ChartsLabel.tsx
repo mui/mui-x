@@ -16,7 +16,7 @@ export interface ChartsLabelProps {
   sx?: SxProps<Theme>;
 }
 
-const Root = styled('div', {
+const Root = styled('span', {
   name: 'MuiChartsLabel',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
@@ -37,7 +37,7 @@ const ChartsLabel = consumeThemeProps(
   {
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLDivElement>) {
+  function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLSpanElement>) {
     const { children, className, classes, ...other } = props;
 
     return (

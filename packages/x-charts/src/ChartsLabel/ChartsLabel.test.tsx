@@ -14,7 +14,7 @@ describe('<ChartsLabel />', () => {
     render,
     muiName: 'MuiChartsLabel',
     testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    refInstanceof: window.HTMLSpanElement,
     ThemeProvider,
     createTheme,
     // SKIP
