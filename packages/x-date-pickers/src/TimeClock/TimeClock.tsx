@@ -274,9 +274,22 @@ export const TimeClock = React.forwardRef(function TimeClock(
           );
         };
 
+        const viewValue = utils.getHours(valueOrReferenceDate);
+
+        let viewRange: [number, number];
+        if (ampm) {
+          if (viewValue >= 12) {
+            viewRange = [12, 23];
+          } else {
+            viewRange = [0, 11];
+          }
+        } else {
+          viewRange = [0, 23];
+        }
+
         return {
           onChange: handleHoursChange,
-          viewValue: utils.getHours(valueOrReferenceDate),
+          viewValue,
           children: getHourNumbers({
             value,
             utils,
@@ -286,7 +299,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
-          viewRange: [0, ampm ? 11 : 23],
+          viewRange,
         };
       }
 

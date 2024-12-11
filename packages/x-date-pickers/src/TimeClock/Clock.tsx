@@ -251,14 +251,15 @@ export function Clock(inProps: ClockProps) {
   const isPointerInner = !ampm && type === 'hours' && (viewValue < 1 || viewValue > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
+    const cleanNewValue = Math.max(minViewValue, Math.min(maxViewValue, newValue));
     if (disabled || readOnly) {
       return;
     }
-    if (isTimeDisabled(newValue, type)) {
+    if (isTimeDisabled(cleanNewValue, type)) {
       return;
     }
 
-    onChange(newValue, isFinish);
+    onChange(cleanNewValue, isFinish);
   };
 
   const setTime = (event: MouseEvent | React.TouchEvent, isFinish: PickerSelectionState) => {
@@ -321,8 +322,6 @@ export function Clock(inProps: ClockProps) {
     }
   }, [autoFocus]);
 
-  const cleanValue = (newValue: number) => (newValue + maxViewValue + 1) % (maxViewValue + 1);
-
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // TODO: Why this early exit?
     if (isMoving.current) {
@@ -348,11 +347,11 @@ export function Clock(inProps: ClockProps) {
         event.preventDefault();
         break;
       case 'PageUp':
-        handleValueChange(cleanValue(viewValue + 5), 'partial');
+        handleValueChange(viewValue + 5, 'partial');
         event.preventDefault();
         break;
       case 'PageDown':
-        handleValueChange(cleanValue(viewValue - 5), 'partial');
+        handleValueChange(viewValue - 5, 'partial');
         event.preventDefault();
         break;
       case 'Enter':
