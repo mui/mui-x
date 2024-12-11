@@ -1,25 +1,24 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { MakeOptional } from '@mui/x-internals/types';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
-import { MakeOptional } from '../helpers';
 import { DateOrTimeViewWithMeridiem } from '../common';
 import { UseFieldInternalProps } from '../../hooks/useField';
-import { PickerValidDate } from '../../../models';
+import { PickerValidValue } from '../value';
 
 /**
  * Props common to all pickers after applying the default props on each picker.
  */
 export interface BasePickerProps<
-  TValue,
-  TDate extends PickerValidDate,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerBaseProps<TValue, TDate, TView, TError, TExternalProps, TAdditionalProps> {
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -29,19 +28,18 @@ export interface BasePickerProps<
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
-  localeText?: PickersInputComponentLocaleText<TDate>;
+  localeText?: PickersInputComponentLocaleText;
 }
 
 /**
  * Props common to all pickers before applying the default props on each picker.
  */
 export interface BasePickerInputProps<
-  TValue,
-  TDate extends PickerValidDate,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
-    MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
+    MakeOptional<BasePickerProps<TValue, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 
@@ -52,7 +50,7 @@ export interface BasePickerInputProps<
  */
 export interface BaseNonStaticPickerProps
   extends Pick<
-    UseFieldInternalProps<any, any, any, any, any>,
+    UseFieldInternalProps<any, any, any>,
     | 'formatDensity'
     | 'enableAccessibleFieldDOMStructure'
     | 'selectedSections'

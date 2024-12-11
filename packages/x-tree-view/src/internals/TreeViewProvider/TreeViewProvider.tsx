@@ -15,7 +15,7 @@ export function TreeViewProvider<TSignatures extends readonly TreeViewAnyPluginS
 
   return (
     <TreeViewContext.Provider value={value}>
-      {value.wrapRoot({ children, instance: value.instance })}
+      {value.wrapRoot({ children })}
     </TreeViewContext.Provider>
   );
 }

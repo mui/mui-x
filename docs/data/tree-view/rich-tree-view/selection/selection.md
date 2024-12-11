@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Selection
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
@@ -88,12 +87,12 @@ type TreeViewSelectionPropagation = {
 };
 ```
 
-When `selectionPropagation.descendants` is set to `true`.
+When `selectionPropagation.descendants` is set to `true`:
 
 - Selecting a parent selects all its descendants automatically.
 - Deselecting a parent deselects all its descendants automatically.
 
-When `selectionPropagation.parents` is set to `true`.
+When `selectionPropagation.parents` is set to `true`:
 
 - Selecting all the descendants of a parent selects the parent automatically.
 - Deselecting a descendant of a selected parent deselects the parent automatically.
@@ -117,13 +116,13 @@ const apiRef = useTreeViewApiRef();
 return <RichTreeView apiRef={apiRef} items={ITEMS}>;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
+When your component first renders, `apiRef` is `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 
 ### Select or deselect an item
 
-Use the `selectItem` API method to select or deselect an item:
+Use the `selectItem()` API method to select or deselect an item:
 
 ```ts
 apiRef.current.selectItem({

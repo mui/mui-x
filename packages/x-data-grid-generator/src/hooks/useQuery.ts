@@ -7,8 +7,14 @@ import {
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';
-import { DEFAULT_DATASET_OPTIONS, DEFAULT_SERVER_OPTIONS, loadServerRows } from './serverUtils';
+import { DEFAULT_SERVER_OPTIONS, loadServerRows } from './serverUtils';
 import type { ServerOptions, QueryOptions, PageInfo } from './serverUtils';
+
+const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
+  dataSet: 'Commodity',
+  rowLength: 100,
+  maxColumns: 6,
+};
 
 export const createFakeServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,

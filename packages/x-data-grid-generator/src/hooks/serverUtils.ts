@@ -10,7 +10,6 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
-import { UseDemoDataOptions } from './useDemoData';
 import { randomInt } from '../services/random-generator';
 
 export interface FakeServerResponse {
@@ -41,8 +40,8 @@ export interface QueryOptions {
   pageSize?: number;
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
-  firstRowToRender?: number;
-  lastRowToRender?: number;
+  start?: number;
+  end?: number;
 }
 
 export interface ServerSideQueryOptions {
@@ -51,15 +50,10 @@ export interface ServerSideQueryOptions {
   groupKeys?: string[];
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
-  firstRowToRender?: number;
-  lastRowToRender?: number;
+  start?: number;
+  end?: number;
+  groupFields?: string[];
 }
-
-export const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
-  dataSet: 'Commodity',
-  rowLength: 100,
-  maxColumns: 6,
-};
 
 declare const DISABLE_CHANCE_RANDOM: any;
 export const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
@@ -283,7 +277,7 @@ export const loadServerRows = (
   }
   const delay = randomInt(minDelay, maxDelay);
 
-  const { cursor, page = 0, pageSize } = queryOptions;
+  const { cursor, page = 0, pageSize, start, end } = queryOptions;
 
   let nextCursor;
   let firstRowIndex;
@@ -295,22 +289,25 @@ export const loadServerRows = (
   filteredRows = [...filteredRows].sort(rowComparator);
 
   const totalRowCount = filteredRows.length;
-  if (!pageSize) {
+  if (start !== undefined && end !== undefined) {
+    firstRowIndex = start;
+    lastRowIndex = end;
+  } else if (!pageSize) {
     firstRowIndex = 0;
-    lastRowIndex = filteredRows.length;
+    lastRowIndex = filteredRows.length - 1;
   } else if (useCursorPagination) {
     firstRowIndex = cursor ? filteredRows.findIndex(({ id }) => id === cursor) : 0;
     firstRowIndex = Math.max(firstRowIndex, 0); // if cursor not found return 0
-    lastRowIndex = firstRowIndex + pageSize;
+    lastRowIndex = firstRowIndex + pageSize - 1;
 
-    nextCursor = lastRowIndex >= filteredRows.length ? undefined : filteredRows[lastRowIndex].id;
+    nextCursor = filteredRows[lastRowIndex + 1]?.id;
   } else {
     firstRowIndex = page * pageSize;
-    lastRowIndex = (page + 1) * pageSize;
+    lastRowIndex = (page + 1) * pageSize - 1;
   }
   const hasNextPage = lastRowIndex < filteredRows.length - 1;
   const response: FakeServerResponse = {
-    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex),
+    returnedRows: filteredRows.slice(firstRowIndex, lastRowIndex + 1),
     hasNextPage,
     nextCursor,
     totalRowCount,
@@ -323,7 +320,7 @@ export const loadServerRows = (
   });
 };
 
-interface ProcessTreeDataRowsResponse {
+interface NestedDataRowsResponse {
   rows: GridRowModel[];
   rootRowCount: number;
 }
@@ -333,6 +330,7 @@ const findTreeDataRowChildren = (
   parentPath: string[],
   pathKey: string = 'path',
   depth: number = 1, // the depth of the children to find relative to parentDepth, `-1` to find all
+  rowQualifier?: (row: GridRowModel) => boolean,
 ) => {
   const parentDepth = parentPath.length;
   const children = [];
@@ -346,7 +344,9 @@ const findTreeDataRowChildren = (
       ((depth < 0 && rowPath.length > parentDepth) || rowPath.length === parentDepth + depth) &&
       parentPath.every((value, index) => value === rowPath[index])
     ) {
-      children.push(row);
+      if (!rowQualifier || rowQualifier(row)) {
+        children.push(row);
+      }
     }
   }
   return children;
@@ -427,14 +427,14 @@ const getTreeDataFilteredRows: GetTreeDataFilteredRows = (
 };
 
 /**
- * Simulates server data loading
+ * Simulates server data for tree-data feature
  */
 export const processTreeDataRows = (
   rows: GridRowModel[],
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
-): Promise<ProcessTreeDataRowsResponse> => {
+): Promise<NestedDataRowsResponse> => {
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
   const pathKey = 'path';
   // TODO: Support filtering and cursor based pagination
@@ -471,6 +471,127 @@ export const processTreeDataRows = (
     // apply sorting
     const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
     childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
+  }
+
+  if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
+    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
+    const { pageSize, page } = queryOptions.paginationModel;
+    if (pageSize < childRowsWithDescendantCounts.length) {
+      childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+        page * pageSize,
+        (page + 1) * pageSize,
+      );
+    }
+  }
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ rows: childRowsWithDescendantCounts, rootRowCount });
+    }, delay); // simulate network latency
+  });
+};
+
+/**
+ * Simulates server data for row grouping feature
+ */
+export const processRowGroupingRows = (
+  rows: GridValidRowModel[],
+  queryOptions: ServerSideQueryOptions,
+  serverOptions: ServerOptions,
+  columnsWithDefaultColDef: GridColDef[],
+): Promise<NestedDataRowsResponse> => {
+  const { minDelay = 100, maxDelay = 300 } = serverOptions;
+  const pathKey = 'path';
+
+  if (maxDelay < minDelay) {
+    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+  }
+
+  if (queryOptions.groupKeys == null) {
+    throw new Error('serverOptions.groupKeys must be defined to compute row grouping data');
+  }
+
+  if (queryOptions.groupFields == null) {
+    throw new Error('serverOptions.groupFields must be defined to compute row grouping data');
+  }
+
+  const delay = randomInt(minDelay, maxDelay);
+
+  const pathsToAutogenerate = new Set<string>();
+  let rowsWithPaths = rows;
+  const rowsWithMissingGroups: GridValidRowModel[] = [];
+
+  // add paths and generate parent rows based on `groupFields`
+  const groupFields = queryOptions.groupFields;
+  if (groupFields.length > 0) {
+    rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
+      const partialPath = groupFields.map((field) => String(row[field]));
+      for (let index = 0; index < partialPath.length; index += 1) {
+        const value = partialPath[index];
+        if (value === undefined) {
+          if (index === 0) {
+            rowsWithMissingGroups.push({ ...row, group: false });
+          }
+          return acc;
+        }
+        const parentPath = partialPath.slice(0, index + 1);
+        const strigifiedPath = parentPath.join(',');
+        if (!pathsToAutogenerate.has(strigifiedPath)) {
+          pathsToAutogenerate.add(strigifiedPath);
+        }
+      }
+      acc.push({ ...row, path: [...partialPath, ''] });
+      return acc;
+    }, []);
+  } else {
+    rowsWithPaths = rows.map((row) => ({ ...row, path: [''] }));
+  }
+
+  const autogeneratedRows = Array.from(pathsToAutogenerate).map((path) => {
+    const pathArray = path.split(',');
+    return {
+      id: `auto-generated-parent-${pathArray.join('-')}`,
+      path: pathArray.slice(0, pathArray.length),
+      group: pathArray.slice(-1)[0],
+    };
+  });
+
+  // apply plain filtering
+  const filteredRows = getTreeDataFilteredRows(
+    [...autogeneratedRows, ...rowsWithPaths, ...rowsWithMissingGroups],
+    queryOptions.filterModel,
+    columnsWithDefaultColDef,
+  ) as GridValidRowModel[];
+
+  // get root row count
+  const rootRows = findTreeDataRowChildren(filteredRows, []);
+  const rootRowCount = rootRows.length;
+
+  let filteredRowsWithMissingGroups: GridValidRowModel[] = [];
+  let childRows = rootRows;
+  if (queryOptions.groupKeys.length === 0) {
+    filteredRowsWithMissingGroups = filteredRows.filter(({ group }) => group === false);
+  } else {
+    childRows = findTreeDataRowChildren(filteredRows, queryOptions.groupKeys);
+  }
+
+  let childRowsWithDescendantCounts = childRows.map((row) => {
+    const descendants = findTreeDataRowChildren(
+      filteredRows,
+      row[pathKey],
+      pathKey,
+      -1,
+      ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
+    );
+    const descendantCount = descendants.length;
+    return { ...row, descendantCount } as GridRowModel;
+  });
+
+  if (queryOptions.sortModel) {
+    const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+    const sortedMissingGroups = [...filteredRowsWithMissingGroups].sort(rowComparator);
+    const sortedChildRows = [...childRowsWithDescendantCounts].sort(rowComparator);
+    childRowsWithDescendantCounts = [...sortedMissingGroups, ...sortedChildRows];
   }
 
   if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {

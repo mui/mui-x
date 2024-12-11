@@ -20,7 +20,10 @@ interface FilterRowTreeFromTreeDataParams {
   apiRef: React.MutableRefObject<GridPrivateApiPro>;
 }
 
-export const TREE_DATA_STRATEGY = 'tree-data';
+export enum TreeDataStrategy {
+  Default = 'tree-data',
+  DataSource = 'tree-data-source',
+}
 
 /**
  * A node is visible if one of the following criteria is met:

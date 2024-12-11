@@ -78,7 +78,7 @@ describe('findClosestEnabledDate', () => {
       disableFuture: false,
       disablePast: true,
       timezone: 'default',
-    });
+    })!;
 
     expect(adapterToUse.isBefore(result, today)).to.equal(false);
     expect(adapterToUse.isBefore(result, adapterToUse.addDays(today, 31))).to.equal(true);

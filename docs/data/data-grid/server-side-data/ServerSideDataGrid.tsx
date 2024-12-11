@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro, GridDataSource } from '@mui/x-data-grid-pro';
 import { useMockServer } from '@mui/x-data-grid-generator';
 
-function ServerSideDataGrid() {
+export default function ServerSideDataGrid() {
   const { columns, initialState, fetchRows } = useMockServer(
     {},
     { useCursorPagination: false },
@@ -51,5 +51,3 @@ function ServerSideDataGrid() {
     </div>
   );
 }
-
-export default ServerSideDataGrid;

@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Items
 components: RichTreeView, TreeItem
 packageName: '@mui/x-tree-view'
 githubLabel: 'component: tree view'
@@ -179,7 +178,7 @@ const item = apiRef.current.getItem(
 
 ### Get an item's DOM element by ID
 
-Use the `getItemDOMElement` API method to get an item's DOM element by its ID.
+Use the `getItemDOMElement()` API method to get an item's DOM element by its ID.
 
 ```ts
 const itemElement = apiRef.current.getItemDOMElement(

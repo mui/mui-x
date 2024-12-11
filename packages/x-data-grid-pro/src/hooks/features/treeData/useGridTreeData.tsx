@@ -17,7 +17,7 @@ export const useGridTreeData = (
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (
         cellParams.colDef.field === GRID_TREE_DATA_GROUPING_FIELD &&
-        event.key === ' ' &&
+        (event.key === ' ' || event.key === 'Enter') &&
         !event.shiftKey
       ) {
         if (params.rowNode.type !== 'group') {

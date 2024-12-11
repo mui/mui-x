@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/utils';
+import { EventHandlers } from '@mui/utils/types';
 import type { TreeViewContextValue } from '../TreeViewProvider';
 import {
   TreeViewAnyPluginSignature,
   ConvertSignaturesIntoPlugins,
   MergeSignaturesProperty,
-  TreeViewInstance,
   TreeViewPublicAPI,
   TreeViewExperimentalFeatures,
 } from '../models';
@@ -40,5 +39,4 @@ export interface UseTreeViewReturnValue<TSignatures extends readonly TreeViewAny
   ) => UseTreeViewRootSlotProps;
   rootRef: React.RefCallback<HTMLUListElement> | null;
   contextValue: TreeViewContextValue<TSignatures>;
-  instance: TreeViewInstance<TSignatures>;
 }

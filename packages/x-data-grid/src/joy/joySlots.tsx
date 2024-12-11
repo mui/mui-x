@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { ColorPaletteProp, Theme, VariantProp } from '@mui/joy/styles';
-import JoyBadge from '@mui/joy/Badge';
+import JoyBadge, { BadgeOrigin } from '@mui/joy/Badge';
 import JoyCheckbox from '@mui/joy/Checkbox';
 import JoyDivider from '@mui/joy/Divider';
 import JoyInput from '@mui/joy/Input';
@@ -72,10 +72,15 @@ function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard'
 }
 
 const Badge = React.forwardRef<HTMLElement, NonNullable<GridSlotsComponentsProps['baseBadge']>>(
-  ({ slotProps, variant, color, sx, ...props }, ref) => {
+  ({ slotProps, variant, color, sx, anchorOrigin, ...props }, ref) => {
     return (
       <JoyBadge
         {...props}
+        anchorOrigin={
+          anchorOrigin?.horizontal && anchorOrigin?.vertical
+            ? (anchorOrigin as BadgeOrigin)
+            : { vertical: 'top', horizontal: 'right' }
+        }
         color={convertColor(color)}
         variant="plain"
         sx={sx as SxProps<Theme>}

@@ -1,6 +1,5 @@
 ---
 productId: x-tree-view
-title: Rich Tree View - Editing
 components: RichTreeView, TreeItem
 githubLabel: 'component: tree view'
 packageName: '@mui/x-tree-view'

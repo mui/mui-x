@@ -103,7 +103,7 @@ const quantityOnlyOperators = [
 ];
 
 export default function CustomMultiValueOperator() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const { data, loading } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   const [filterModel, setFilterModel] = React.useState({
     items: [
@@ -136,6 +136,7 @@ export default function CustomMultiValueOperator() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
+        loading={loading}
         columns={columns}
         filterModel={filterModel}
         onFilterModelChange={(model) => setFilterModel(model)}

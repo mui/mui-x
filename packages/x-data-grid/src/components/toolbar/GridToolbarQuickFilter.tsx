@@ -124,6 +124,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     () => debounce(updateSearchValue, debounceMs),
     [updateSearchValue, debounceMs],
   );
+  React.useEffect(() => debouncedUpdateSearchValue.clear, [debouncedUpdateSearchValue]);
 
   const handleSearchValueChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

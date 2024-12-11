@@ -6,9 +6,7 @@
   onRowModesModelChange={handleRowModesModelChange}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
-  slots={{
-    toolbar: EditToolbar as GridSlots['toolbar'],
-  }}
+  slots={{ toolbar: EditToolbar }}
   slotProps={{
     toolbar: { setRows, setRowModesModel },
   }}

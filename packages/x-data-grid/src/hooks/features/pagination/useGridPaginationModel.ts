@@ -115,17 +115,20 @@ export const useGridPaginationModel = (
       }
       logger.debug("Setting 'paginationModel' to", paginationModel);
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          paginationModel: getDerivedPaginationModel(
-            state.pagination,
-            props.signature,
-            paginationModel,
-          ),
-        },
-      }));
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              props.signature,
+              paginationModel,
+            ),
+          },
+        }),
+        'setPaginationModel',
+      );
     },
     [apiRef, logger, props.signature],
   );
@@ -184,17 +187,20 @@ export const useGridPaginationModel = (
             ...context.stateToRestore.pagination?.paginationModel,
           }
         : gridPaginationModelSelector(apiRef);
-      apiRef.current.setState((state) => ({
-        ...state,
-        pagination: {
-          ...state.pagination,
-          paginationModel: getDerivedPaginationModel(
-            state.pagination,
-            props.signature,
-            paginationModel,
-          ),
-        },
-      }));
+      apiRef.current.setState(
+        (state) => ({
+          ...state,
+          pagination: {
+            ...state.pagination,
+            paginationModel: getDerivedPaginationModel(
+              state.pagination,
+              props.signature,
+              paginationModel,
+            ),
+          },
+        }),
+        'stateRestorePreProcessing',
+      );
       return params;
     },
     [apiRef, props.autoPageSize, props.signature],

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { InteractionContext } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useSvgRef } from '../hooks';
 import { useCartesianContext } from '../context/CartesianProvider';
+import { useStore } from '../internals/store/useStore';
 
 export type ChartsAxisData = {
   dataIndex: number;
@@ -27,7 +27,8 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
 
   const svgRef = useSvgRef();
   const series = useSeries();
-  const { axis } = React.useContext(InteractionContext);
+  const store = useStore();
+
   const { xAxisIds, xAxis, yAxisIds, yAxis } = useCartesianContext();
 
   React.useEffect(() => {
@@ -39,9 +40,10 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
     const handleMouseClick = (event: MouseEvent) => {
       event.preventDefault();
 
-      const isXaxis = axis.x && axis.x.index !== -1;
+      const { x: axisX, y: axisY } = store.value.interaction.axis;
+      const isXaxis = axisX && axisX.index !== -1;
       const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
-      const dataIndex = isXaxis ? axis.x && axis.x.index : axis.y && axis.y.index;
+      const dataIndex = isXaxis ? axisX && axisX.index : axisY && axisY.index;
 
       if (dataIndex == null) {
         return;
@@ -55,8 +57,8 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
           series[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = series[seriesType]!.series[seriesId];
 
-            const providedXAxisId = seriesItem.xAxisId ?? seriesItem.xAxisKey;
-            const providedYAxisId = seriesItem.yAxisId ?? seriesItem.yAxisKey;
+            const providedXAxisId = seriesItem.xAxisId;
+            const providedYAxisId = seriesItem.yAxisId;
 
             const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
@@ -72,7 +74,7 @@ function ChartsOnAxisClickHandler(props: ChartsOnAxisClickHandlerProps) {
     return () => {
       element.removeEventListener('click', handleMouseClick);
     };
-  }, [axis.x, axis.y, onAxisClick, series, svgRef, xAxis, xAxisIds, yAxis, yAxisIds]);
+  }, [onAxisClick, series, store, svgRef, xAxis, xAxisIds, yAxis, yAxisIds]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <React.Fragment />;

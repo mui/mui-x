@@ -20,6 +20,7 @@ import {
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
+import { GridGetRowsParams } from '../../../models/gridDataSource';
 import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
@@ -30,6 +31,7 @@ export interface GridPipeProcessingLookup {
     context: GridColDef;
   };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
+  getRowsParams: { value: Partial<GridGetRowsParams> };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };

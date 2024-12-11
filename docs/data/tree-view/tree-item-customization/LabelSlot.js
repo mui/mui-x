@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
 
 export const MUI_X_PRODUCTS = [
   {
@@ -70,12 +70,7 @@ function CustomLabel({ children, className, secondaryLabel }) {
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
-  const { publicAPI } = useTreeItemUtils({
-    itemId: props.itemId,
-    children: props.children,
-  });
-
-  const item = publicAPI.getItem(props.itemId);
+  const item = useTreeItemModel(props.itemId);
 
   return (
     <TreeItem

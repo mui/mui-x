@@ -1,18 +1,18 @@
 import { MuiPickersAdapter, PickerValidDate } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
-interface IGetHoursSectionOptions<TDate extends PickerValidDate> {
-  now: TDate;
-  value: TDate | null;
-  utils: MuiPickersAdapter<TDate>;
+interface GetHoursSectionOptionsParameters {
+  now: PickerValidDate;
+  value: PickerValidDate | null;
+  utils: MuiPickersAdapter;
   ampm: boolean;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveAriaLabel: (value: string) => string;
-  valueOrReferenceDate: TDate;
+  valueOrReferenceDate: PickerValidDate;
 }
 
-export const getHourSectionOptions = <TDate extends PickerValidDate>({
+export const getHourSectionOptions = ({
   now,
   value,
   utils,
@@ -21,7 +21,7 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
   resolveAriaLabel,
   timeStep,
   valueOrReferenceDate,
-}: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
+}: GetHoursSectionOptionsParameters): MultiSectionDigitalClockOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
 
   const result: MultiSectionDigitalClockOption<number>[] = [];
@@ -66,9 +66,9 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
   return result;
 };
 
-interface IGetTimeSectionOptions<TDate extends PickerValidDate> {
+interface GetTimeSectionOptionsParameters {
   value: number | null;
-  utils: MuiPickersAdapter<TDate>;
+  utils: MuiPickersAdapter;
   isDisabled: (value: number) => boolean;
   timeStep: number;
   resolveLabel: (value: number) => string;
@@ -76,7 +76,7 @@ interface IGetTimeSectionOptions<TDate extends PickerValidDate> {
   resolveAriaLabel: (value: string) => string;
 }
 
-export const getTimeSectionOptions = <TDate extends PickerValidDate>({
+export const getTimeSectionOptions = ({
   value,
   utils,
   isDisabled,
@@ -84,7 +84,7 @@ export const getTimeSectionOptions = <TDate extends PickerValidDate>({
   resolveLabel,
   resolveAriaLabel,
   hasValue = true,
-}: IGetTimeSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
+}: GetTimeSectionOptionsParameters): MultiSectionDigitalClockOption<number>[] => {
   const isSelected = (timeValue: number) => {
     if (value === null) {
       return false;

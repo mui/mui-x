@@ -47,11 +47,11 @@ function CustomAnimatedLine(props: CustomAnimatedLineProps) {
           height={top + height + bottom}
         />
       </clipPath>
-      <g clipPath={`url(#${clipIdleft})`}>
-        <AnimatedLine {...other} sx={sxBefore} />
+      <g clipPath={`url(#${clipIdleft})`} className="line-before">
+        <AnimatedLine {...other} />
       </g>
-      <g clipPath={`url(#${clipIdRight})`}>
-        <AnimatedLine {...other} sx={sxAfter} />
+      <g clipPath={`url(#${clipIdRight})`} className="line-after">
+        <AnimatedLine {...other} />
       </g>
     </React.Fragment>
   );
@@ -71,7 +71,8 @@ export default function LineWithPrediction() {
       height={200}
       width={400}
       slots={{ line: CustomAnimatedLine }}
-      slotProps={{ line: { limit: 5, sxAfter: { strokeDasharray: '10 5' } } as any }}
+      slotProps={{ line: { limit: 5 } as any }}
+      sx={{ '& .line-after path': { strokeDasharray: '10 5' } }}
     />
   );
 }

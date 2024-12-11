@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, TreeItemProps } from '@mui/x-tree-view/TreeItem';
@@ -11,10 +11,14 @@ import { MUI_X_PRODUCTS } from './products';
 interface CustomLabelProps {
   children: string;
   className: string;
-  numberOfChildren: number;
+  selectFirstChildren?: (event: React.MouseEvent) => void;
 }
 
-function CustomLabel({ children, className, numberOfChildren }: CustomLabelProps) {
+function CustomLabel({
+  children,
+  className,
+  selectFirstChildren,
+}: CustomLabelProps) {
   return (
     <Stack
       direction="row"
@@ -24,8 +28,16 @@ function CustomLabel({ children, className, numberOfChildren }: CustomLabelProps
       className={className}
     >
       <Typography>{children}</Typography>
-
-      <Chip label={numberOfChildren} size="small" />
+      {!!selectFirstChildren && (
+        <Button
+          size="small"
+          variant="text"
+          sx={{ position: 'absolute', right: 0, top: 0 }}
+          onClick={selectFirstChildren}
+        >
+          Select child
+        </Button>
+      )}
     </Stack>
   );
 }
@@ -34,9 +46,21 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: TreeItemProps,
   ref: React.Ref<HTMLLIElement>,
 ) {
-  const { publicAPI } = useTreeItem(props);
+  const { publicAPI, status } = useTreeItem(props);
 
-  const childrenNumber = publicAPI.getItemOrderedChildrenIds(props.itemId).length;
+  const selectFirstChildren = status.expanded
+    ? (event: React.MouseEvent) => {
+        event.stopPropagation();
+        const children = publicAPI.getItemOrderedChildrenIds(props.itemId);
+        if (children.length > 0) {
+          publicAPI.selectItem({
+            event,
+            itemId: children[0],
+            shouldBeSelected: true,
+          });
+        }
+      }
+    : undefined;
 
   return (
     <TreeItem
@@ -46,7 +70,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
         label: CustomLabel,
       }}
       slotProps={{
-        label: { numberOfChildren: childrenNumber } as CustomLabelProps,
+        label: { selectFirstChildren } as CustomLabelProps,
       }}
     />
   );

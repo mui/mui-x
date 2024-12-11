@@ -252,14 +252,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   ignoreDiacritics: boolean;
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: 'select' | 'deselect';
-  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -374,14 +366,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   clipboardCopyCellDelimiter: string;
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: number /* TODO(v8): remove this property */;
-  /**
    * If `true`, columns are autosized after the datagrid is mounted.
    * @default false
    */
@@ -395,7 +379,15 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
-  unstable_rowSpanning: boolean;
+  rowSpanning: boolean;
+  /**
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
+   * @default false
+   */
+  virtualizeColumnsWithAutoRowHeight: boolean;
 }
 
 /**
@@ -642,7 +634,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (
+    model: GridPaginationModel,
+    details: GridCallbackDetails<'pagination'>,
+  ) => void;
   /**
    * Callback fired when the row count has changed.
    * @param {number} count Updated row count.
@@ -852,7 +847,7 @@ export interface DataGridProSharedPropsWithDefaultValue {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: GridRowSelectionPropagation;
   /**
