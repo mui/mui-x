@@ -40,6 +40,8 @@ export const getFakeContextValue = (
       itemModelLookup: {},
       itemOrderedChildrenIdsLookup: {},
       itemChildrenIndexesLookup: {},
+      loading: false,
+      error: null,
     },
     expansion: { expandedItemsMap: new Map() },
     selection: { selectedItemsMap: new Map() },

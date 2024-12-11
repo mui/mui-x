@@ -205,6 +205,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   );
 
   useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
+    if (!isLazyLoadingEnabled) {
+      return;
+    }
+
     if (selectorIsItemExpanded(store.value, eventParameters.itemId)) {
       return;
     }
@@ -227,7 +231,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   });
 
   React.useEffect(() => {
-    if (firstRenderRef.current) {
+    if (isLazyLoadingEnabled && firstRenderRef.current) {
       if (params.items.length) {
         firstRenderRef.current = false;
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
@@ -236,7 +240,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         instance.fetchItems();
       }
     }
-  }, [instance, params.items, params.dataSource]);
+  }, [instance, params.items, params.dataSource, isLazyLoadingEnabled]);
 
   const pluginContextValue = React.useMemo(
     () => ({ lazyLoading: params.dataSource !== undefined }),
@@ -265,9 +269,9 @@ useTreeViewLazyLoading.getDefaultizedParams = ({ params, experimentalFeatures })
   if (process.env.NODE_ENV !== 'production') {
     if (params.dataSource && !canUseFeature) {
       warnOnce([
-        'MUI X: The label editing feature requires the `labelEditing` experimental feature to be enabled.',
-        'You can do it by passing `experimentalFeatures={{ labelEditing: true}}` to the Rich Tree View Pro component.',
-        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/editing/',
+        'MUI X: The label editing feature requires the `lazyLoading` experimental feature to be enabled.',
+        'You can do it by passing `experimentalFeatures={{ lazyLoading: true}}` to the Rich Tree View Pro component.',
+        'Check the documentation for more details: https://mui.com/x/react-tree-view/rich-tree-view/lazy-loading/',
       ]);
     }
   }
