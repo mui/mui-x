@@ -6,7 +6,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   MonthCalendarSlotProps,
   MonthCalendarSlots,
-  PickerMonthOwnerState,
+  MonthButtonOwnerState,
 } from './MonthCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import {
@@ -35,7 +35,7 @@ export interface MonthCalendarButtonProps {
 
 const useUtilityClasses = (
   classes: Partial<MonthCalendarClasses> | undefined,
-  ownerState: PickerMonthOwnerState,
+  ownerState: MonthButtonOwnerState,
 ) => {
   const slots = {
     button: [
@@ -57,7 +57,7 @@ const DefaultMonthButton = styled('button', {
     { [`&.${monthCalendarClasses.selected}`]: styles.selected },
   ],
 })<{
-  ownerState?: PickerMonthOwnerState;
+  ownerState?: MonthButtonOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -117,7 +117,7 @@ export const MonthCalendarButton = React.memo(function MonthCalendarButton(
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const ownerState: PickerMonthOwnerState = {
+  const ownerState: MonthButtonOwnerState = {
     ...pickerOwnerState,
     isMonthDisabled: disabled,
     isMonthSelected: selected,

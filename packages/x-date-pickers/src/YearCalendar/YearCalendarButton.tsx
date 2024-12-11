@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  PickerYearOwnerState,
+  YearButtonOwnerState,
   YearCalendarSlotProps,
   YearCalendarSlots,
 } from './YearCalendar.types';
@@ -35,7 +35,7 @@ export interface YearCalendarButtonProps {
 
 const useUtilityClasses = (
   classes: Partial<YearCalendarClasses> | undefined,
-  ownerState: PickerYearOwnerState,
+  ownerState: YearButtonOwnerState,
 ) => {
   const slots = {
     button: [
@@ -115,7 +115,7 @@ export const YearCalendarButton = React.memo(function YearCalendarButton(
 
   const ref = React.useRef<HTMLButtonElement>(null);
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const ownerState: PickerYearOwnerState = {
+  const ownerState: YearButtonOwnerState = {
     ...pickerOwnerState,
     isYearDisabled: disabled,
     isYearSelected: selected,
