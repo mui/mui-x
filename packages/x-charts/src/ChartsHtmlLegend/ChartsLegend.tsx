@@ -58,17 +58,7 @@ const ChartsLegend = consumeSlots(
     ref: React.Ref<HTMLDivElement>,
   ) {
     const data = useLegend();
-    const {
-      direction,
-      markBorderRadius,
-      markLineWidth,
-      markSize,
-      markType,
-      onItemClick,
-      className,
-      classes,
-      ...other
-    } = props;
+    const { direction, markType, onItemClick, className, classes, ...other } = props;
 
     return (
       <RootDiv
@@ -90,9 +80,6 @@ const ChartsLegend = consumeSlots(
               mark={{
                 color: item.color,
                 type: markType ?? item.markType,
-                borderRadius: markBorderRadius,
-                lineWidth: markLineWidth,
-                size: markSize,
               }}
             >
               {item.label}

@@ -28,14 +28,12 @@ const RootDiv = styled(
  * @ignore - internal component.
  */
 function ChartsLegendItem(props: ChartsLegendItemProps) {
-  const { children, mark, onClick, labelStyle, classes } = props;
+  const { children, mark, onClick, classes } = props;
 
   return (
     <RootDiv className={classes?.series} onClick={onClick}>
       <ChartsLabelMark classes={{ root: classes?.mark }} {...mark} />
-      <ChartsLabel classes={{ root: classes?.label }} labelStyle={labelStyle}>
-        {children}
-      </ChartsLabel>
+      <ChartsLabel classes={{ root: classes?.label }}>{children}</ChartsLabel>
     </RootDiv>
   );
 }
