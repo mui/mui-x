@@ -41,14 +41,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "react-is",
-        "react-test-renderer",
-        "@types/react",
-        "@types/react-dom"
-      ]
+      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "React router",
@@ -65,7 +58,8 @@
     {
       "groupName": "@types/node",
       "matchPackageNames": ["@types/node"],
-      "allowedVersions": "< 21.0.0"
+      "allowedVersions": "< 21.0.0",
+      "automerge": true
     },
     {
       "groupName": "bundling fixtures",
@@ -108,11 +102,12 @@
     },
     {
       "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
-      "pinDigests": true
+      "pinDigests": true,
+      "automerge": true
     },
     {
       "groupName": "GitHub Actions",

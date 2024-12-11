@@ -6,14 +6,19 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
-import { DateOrTimeViewWithMeridiem } from '../../models';
-import { FieldRef, FieldSection, PickerValidDate, TimezoneProps } from '../../../models';
+import {
+  DateOrTimeViewWithMeridiem,
+  PickerRangeValue,
+  PickerValidValue,
+  PickerValue,
+} from '../../models';
+import { FieldRef, PickerValidDate, TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
 
 export type PickerViewsRendererProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
@@ -29,7 +34,7 @@ export type PickerViewsRendererProps<
   };
 
 export type PickerViewRenderer<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
@@ -38,7 +43,7 @@ export type PickerViewRenderer<
 ) => React.ReactNode;
 
 export type PickerViewRendererLookup<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<any>,
   TAdditionalProps extends {},
@@ -50,17 +55,12 @@ export type PickerViewRendererLookup<
  * Props used to handle the views that are common to all pickers.
  */
 export interface UsePickerViewsBaseProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
     TimezoneProps {
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
   /**
    * If `null`, the section will only have field editing.
    * If `undefined`, internally defined view will be used.
@@ -79,21 +79,10 @@ export interface UsePickerViewsBaseProps<
 }
 
 /**
- * Props used to handle the views of the pickers.
- */
-export interface UsePickerViewsNonStaticProps {
-  /**
-   * If `true`, the open picker button will not be rendered (renders only the field).
-   * @default false
-   */
-  disableOpenPicker?: boolean;
-}
-
-/**
  * Props used to handle the value of the pickers.
  */
 export interface UsePickerViewsProps<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
@@ -103,9 +92,8 @@ export interface UsePickerViewsProps<
 }
 
 export interface UsePickerViewParams<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
   TAdditionalProps extends {},
 > {
@@ -113,7 +101,7 @@ export interface UsePickerViewParams<
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
   additionalViewProps: TAdditionalProps;
   autoFocusView: boolean;
-  fieldRef: React.RefObject<FieldRef<TSection>> | undefined;
+  fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue>> | undefined;
   /**
    * A function that intercepts the regular picker rendering.
    * Can be used to consume the provided `viewRenderers` and render a custom component wrapping them.
@@ -130,18 +118,20 @@ export interface UsePickerViewParams<
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
-  /**
-   * Indicates if the the picker has at least one view that should be rendered in UI.
-   */
-  hasUIView: boolean;
   renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
+  provider: UsePickerViewsProviderParams<TView>;
 }
 
 export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
   view: TView | null;
   onViewChange: (view: TView) => void;
+  views: readonly TView[];
+}
+
+export interface UsePickerViewsProviderParams<TView extends DateOrTimeViewWithMeridiem> {
+  hasUIView: boolean;
   views: readonly TView[];
 }
 
@@ -152,9 +142,8 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMe
  * - Handles the focus management when switching views
  */
 export const usePickerViews = <
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TSection extends FieldSection,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 >({
@@ -167,7 +156,6 @@ export const usePickerViews = <
 }: UsePickerViewParams<
   TValue,
   TView,
-  TSection,
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
@@ -275,10 +263,15 @@ export const usePickerViews = <
     onViewChange: setView,
   };
 
-  return {
+  const providerParams: UsePickerViewsProviderParams<TView> = {
     hasUIView,
+    views,
+  };
+
+  return {
     shouldRestoreFocus,
     layoutProps,
+    provider: providerParams,
     renderCurrentView: () => {
       if (popperView == null) {
         return null;

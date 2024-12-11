@@ -6,12 +6,8 @@ import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
@@ -25,14 +21,14 @@ import {
 export interface PieChartSlots
   extends PiePlotSlots,
     ChartsLegendSlots,
-    ChartsTooltipSlots<'pie'>,
-    ChartsOverlaySlots {}
+    ChartsOverlaySlots,
+    ChartsTooltipSlots {}
 
 export interface PieChartSlotProps
   extends PiePlotSlotProps,
     ChartsLegendSlotProps,
-    ChartsTooltipSlotProps<'pie'>,
-    ChartsOverlaySlotProps {}
+    ChartsOverlaySlotProps,
+    ChartsTooltipSlotProps {}
 
 export interface PieChartProps
   extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,
@@ -43,12 +39,6 @@ export interface PieChartProps
    * An array of [[PieSeriesType]] objects.
    */
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip?: ChartsTooltipProps<'pie'>;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -96,7 +86,6 @@ const PieChart = React.forwardRef(function PieChart(
     margin: marginProps,
     colors,
     sx,
-    tooltip = { trigger: 'item' },
     skipAnimation,
     hideLegend,
     children,
@@ -113,6 +102,7 @@ const PieChart = React.forwardRef(function PieChart(
 
   const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
 
+  const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
     <ChartContainer
       {...other}
@@ -139,7 +129,7 @@ const PieChart = React.forwardRef(function PieChart(
           slotProps={slotProps}
         />
       )}
-      {!loading && <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />}
+      {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       {children}
     </ChartContainer>
   );
@@ -211,16 +201,6 @@ PieChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
    */
@@ -246,25 +226,6 @@ PieChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -313,7 +274,6 @@ PieChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -328,7 +288,6 @@ PieChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -389,7 +348,6 @@ PieChart.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -404,7 +362,6 @@ PieChart.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

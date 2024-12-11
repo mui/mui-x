@@ -5,6 +5,8 @@ import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectio
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 import { TimeViewWithMeridiem } from '../common';
 import { ExportedValidateTimeProps } from '../../../validation/validateTime';
+import { FormProps } from '../formProps';
+import { PickerValue } from '../value';
 
 export interface AmPmProps {
   /**
@@ -20,8 +22,9 @@ export interface ExportedBaseClockProps
     AmPmProps {}
 
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
-  extends ExportedUseViewsOptions<PickerValidDate | null, TView>,
-    ExportedBaseClockProps {
+  extends ExportedUseViewsOptions<PickerValue, TView>,
+    ExportedBaseClockProps,
+    FormProps {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -37,16 +40,6 @@ export interface BaseClockProps<TView extends TimeViewWithMeridiem>
    * Used when the component is not controlled.
    */
   defaultValue?: PickerValidDate | null;
-  /**
-   * If `true`, the picker views and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * If `true`, the picker views and text field are read-only.
-   * @default false
-   */
-  readOnly?: boolean;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.

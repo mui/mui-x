@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DefaultizedProps } from '@mui/x-internals/types';
 import NoSsr from '@mui/material/NoSsr';
 import { useTheme, styled } from '@mui/material/styles';
-import { DrawingArea } from '../context/DrawingProvider';
+import { DrawingAreaState } from '../context/DrawingAreaProvider';
 import { ChartsTextStyle } from '../ChartsText';
 import { CardinalDirections } from '../models/layout';
 import { getWordsByLines } from '../internals/getWordsByLines';
@@ -17,7 +17,7 @@ import { ChartsLegendClasses } from './chartsLegendClasses';
 export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
   direction: Direction;
-  drawingArea: DrawingArea;
+  drawingArea: DrawingAreaState;
   offsetX?: number;
   offsetY?: number;
   seriesNumber: number;

@@ -13,18 +13,18 @@ import { usePickerTranslations } from '../hooks/usePickerTranslations';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getDigitalClockUtilityClass } from './digitalClockClasses';
-import { DigitalClockProps } from './DigitalClock.types';
+import { DigitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';
+import { DigitalClockOwnerState, DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerValidDate } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 import { getFocusedListItemIndex } from '../internals/utils/utils';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: DigitalClockProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DigitalClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     list: ['list'],
@@ -38,7 +38,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps & { alreadyRendered: boolean } }>({
+})<{ ownerState: DigitalClockOwnerState }>({
   overflowY: 'auto',
   width: '100%',
   '@media (prefers-reduced-motion: no-preference)': {
@@ -47,7 +47,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
   variants: [
     {
-      props: { alreadyRendered: true },
+      props: { hasDigitalClockAlreadyBeenRendered: true },
       style: {
         '@media (prefers-reduced-motion: no-preference)': {
           scrollBehavior: 'smooth',
@@ -146,6 +146,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     focusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     views = ['hours'],
@@ -163,6 +164,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -170,18 +172,19 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
   const translations = usePickerTranslations();
   const now = useNow(timezone);
 
-  const ownerState = React.useMemo(
-    () => ({ ...props, alreadyRendered: !!containerRef.current }),
-    [props],
-  );
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState: DigitalClockOwnerState = {
+    ...pickerOwnerState,
+    hasDigitalClockAlreadyBeenRendered: !!containerRef.current,
+  };
 
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   const ClockItem = slots?.digitalClockItem ?? DigitalClockItem;
   const clockItemProps = useSlotProps({
     elementType: ClockItem,
     externalSlotProps: slotProps?.digitalClockItem,
-    ownerState: {},
+    ownerState,
     className: classes.item,
   });
 
@@ -197,7 +200,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     handleRawValueChange(newValue, 'finish', 'hours'),
   );
 
-  const { setValueAndGoToNextView } = useViews<PickerValidDate | null, Extract<TimeView, 'hours'>>({
+  const { setValueAndGoToNextView } = useViews({
     view: inView,
     views,
     openTo,
@@ -400,7 +403,8 @@ DigitalClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -467,7 +471,8 @@ DigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,

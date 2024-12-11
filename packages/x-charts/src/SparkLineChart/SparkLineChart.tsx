@@ -6,12 +6,8 @@ import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import {
-  ChartsTooltip,
-  ChartsTooltipProps,
-  ChartsTooltipSlotProps,
-  ChartsTooltipSlots,
-} from '../ChartsTooltip';
+import { ChartsTooltip } from '../ChartsTooltip';
+import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig, ChartsXAxisProps, ChartsYAxisProps, ScaleName } from '../models/axis';
 import { LineSeriesType, BarSeriesType } from '../models/seriesType';
@@ -28,14 +24,14 @@ export interface SparkLineChartSlots
     MarkPlotSlots,
     LineHighlightPlotSlots,
     Omit<BarPlotSlots, 'barLabel'>,
-    ChartsTooltipSlots<'line' | 'bar'> {}
+    ChartsTooltipSlots {}
 export interface SparkLineChartSlotProps
   extends AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     BarPlotSlotProps,
-    ChartsTooltipSlotProps<'line' | 'bar'> {}
+    ChartsTooltipSlotProps {}
 
 export interface SparkLineChartProps
   extends Omit<ChartContainerProps, 'series' | 'xAxis' | 'yAxis' | 'zAxis' | 'margin' | 'plugins'> {
@@ -49,7 +45,6 @@ export interface SparkLineChartProps
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
    */
   yAxis?: MakeOptional<AxisConfig<ScaleName, any, ChartsYAxisProps>, 'id'>;
-  tooltip?: ChartsTooltipProps<'line' | 'bar'>;
   axisHighlight?: ChartsAxisHighlightProps;
   /**
    * Type of plot used.
@@ -142,7 +137,6 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     colors,
     sx,
     showTooltip,
-    tooltip,
     showHighlight,
     axisHighlight: inAxisHighlight,
     children,
@@ -163,6 +157,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
     ...defaultXHighlight,
     ...inAxisHighlight,
   };
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <ChartContainer
@@ -198,7 +194,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       colors={colors}
       sx={sx}
       disableAxisListener={
-        (!showTooltip || tooltip?.trigger !== 'axis') &&
+        (!showTooltip || slotProps?.tooltip?.trigger !== 'axis') &&
         axisHighlight?.x === 'none' &&
         axisHighlight?.y === 'none'
       }
@@ -221,7 +217,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       )}
 
       <ChartsAxisHighlight {...axisHighlight} />
-      {showTooltip && <ChartsTooltip {...tooltip} slotProps={slotProps} slots={slots} />}
+      {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
 
       {children}
     </ChartContainer>
@@ -318,16 +314,6 @@ SparkLineChart.propTypes = {
    */
   plotType: PropTypes.oneOf(['bar', 'line']),
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * Set to `true` to highlight the value.
    * With line, it shows a point.
    * With bar, it shows a highlight band.
@@ -360,14 +346,6 @@ SparkLineChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
   /**
    * Formatter used by the tooltip.
    * @param {number} value The value to format.
@@ -375,12 +353,6 @@ SparkLineChart.propTypes = {
    * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -425,7 +397,6 @@ SparkLineChart.propTypes = {
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
-    labelFontSize: PropTypes.number,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -440,7 +411,6 @@ SparkLineChart.propTypes = {
       PropTypes.func,
       PropTypes.object,
     ]),
-    tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
     tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),
@@ -492,7 +462,6 @@ SparkLineChart.propTypes = {
     hideTooltip: PropTypes.bool,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
-    labelFontSize: PropTypes.number,
     labelStyle: PropTypes.object,
     max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -507,7 +476,6 @@ SparkLineChart.propTypes = {
       PropTypes.func,
       PropTypes.object,
     ]),
-    tickFontSize: PropTypes.number,
     tickInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.array, PropTypes.func]),
     tickLabelInterval: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.func]),
     tickLabelPlacement: PropTypes.oneOf(['middle', 'tick']),

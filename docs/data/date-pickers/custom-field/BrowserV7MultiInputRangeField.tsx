@@ -5,21 +5,17 @@ import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateRangePicker,
+  DateRangePickerFieldProps,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { Unstable_PickersSectionList as PickersSectionList } from '@mui/x-date-pickers/PickersSectionList';
 import {
-  RangeFieldSection,
-  BaseMultiInputFieldProps,
-  BasePickersTextFieldProps,
   MultiInputFieldSlotTextFieldProps,
-  DateRangeValidationError,
-  DateRange,
-  UseDateRangeFieldProps,
+  MultiInputFieldRefs,
+  BaseMultiInputPickersTextFieldProps,
 } from '@mui/x-date-pickers-pro/models';
 
 const BrowserFieldRoot = styled('div', { name: 'BrowserField', slot: 'Root' })({
@@ -38,14 +34,12 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
 );
 
 interface BrowserTextFieldProps
-  extends BasePickersTextFieldProps<true>,
+  extends BaseMultiInputPickersTextFieldProps<true>,
     Omit<
       React.HTMLAttributes<HTMLDivElement>,
-      keyof BasePickersTextFieldProps<true>
+      keyof BaseMultiInputPickersTextFieldProps<true>
     > {}
 
-// This demo uses `BasePickersTextFieldProps` instead of `BaseMultiInputPickersTextFieldProps`,
-// That way you can reuse the same `BrowserTextField` for all your pickers, range or not.
 const BrowserTextField = React.forwardRef(
   (props: BrowserTextFieldProps, ref: React.Ref<unknown>) => {
     const {
@@ -108,14 +102,11 @@ const BrowserTextField = React.forwardRef(
 );
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends UseDateRangeFieldProps<true>,
-    BaseMultiInputFieldProps<
-      // This usage of PickerValidDate will go away with TIsRange
-      DateRange<PickerValidDate>,
-      RangeFieldSection,
-      true,
-      DateRangeValidationError
-    > {}
+  extends Omit<
+      DateRangePickerFieldProps,
+      'unstableFieldRef' | 'clearable' | 'onClear'
+    >,
+    MultiInputFieldRefs {}
 
 type BrowserMultiInputDateRangeFieldComponent = ((
   props: BrowserMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -126,12 +117,10 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     const {
       slotProps,
       value,
-      defaultValue,
       format,
       onChange,
       readOnly,
       disabled,
-      onError,
       shouldDisableDate,
       minDate,
       maxDate,
@@ -162,12 +151,10 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     >({
       sharedProps: {
         value,
-        defaultValue,
         format,
         onChange,
         readOnly,
         disabled,
-        onError,
         shouldDisableDate,
         minDate,
         maxDate,

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "7.21.0",
+  "version": "8.0.0-alpha.2",
   "description": "The community edition of the Tree View components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -49,15 +49,17 @@
     "@types/react-transition-group": "^4.4.11",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "reselect": "^5.1.1",
+    "use-sync-external-store": "^1.4.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.15.14 || ^6.0.0",
     "@mui/system": "^5.15.14 || ^6.0.0",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -68,10 +70,11 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^1.0.19",
-    "@mui/material": "^5.16.7",
-    "@mui/system": "^5.16.7",
-    "@types/prop-types": "^15.7.13",
+    "@mui/internal-test-utils": "^1.0.22",
+    "@mui/material": "^5.16.9",
+    "@mui/system": "^5.16.8",
+    "@types/prop-types": "^15.7.14",
+    "@types/use-sync-external-store": "^0.0.6",
     "rimraf": "^6.0.1"
   },
   "engines": {

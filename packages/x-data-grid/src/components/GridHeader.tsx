@@ -8,7 +8,12 @@ export function GridHeader() {
   return (
     <React.Fragment>
       <GridPreferencesPanel />
-      {rootProps.slots.toolbar && <rootProps.slots.toolbar {...rootProps.slotProps?.toolbar} />}
+      {rootProps.slots.toolbar && (
+        <rootProps.slots.toolbar
+          // Fixes error augmentation issue https://github.com/mui/mui-x/pull/15255#issuecomment-2454721612
+          {...(rootProps.slotProps?.toolbar as any)}
+        />
+      )}
     </React.Fragment>
   );
 }

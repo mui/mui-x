@@ -17,6 +17,9 @@ In `package.json`, change the version of the Tree View package to `next`.
 ```diff
 -"@mui/x-tree-view": "7.x.x",
 +"@mui/x-tree-view": "next",
+
+-"@mui/x-tree-view-pro": "7.x.x",
++"@mui/x-tree-view-pro": "next",
 ```
 
 Using `next` ensures that it will always use the latest v8 pre-release version, but you can also use a fixed version, like `8.0.0-alpha.0`.
@@ -34,10 +37,10 @@ You can either run it on a specific file, folder, or your entire codebase when c
 <!-- #default-branch-switch -->
 
 ```bash
-// Tree View specific
+# Tree View specific
 npx @mui/x-codemod@latest v8.0.0/tree-view/preset-safe <path>
 
-// Target the other packages as well
+# Target the other packages as well
 npx @mui/x-codemod@latest v8.0.0/preset-safe <path>
 ```
 
@@ -57,7 +60,7 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 
 ```tsx
-<RichTreeView {...pickerProps} />
+<RichTreeView {...treeViewProps} />
 ```
 
 After running the codemods, make sure to test your application and that you don't have any console errors.
@@ -128,7 +131,7 @@ This inconsistency has been solved, all the event manager now target the root of
 -<SimpleTreeView>
 +<SimpleTreeView onItemClick={handleItemClick}>
 -  <TreeItem onClick={handleItemClick}>
-+  <TreeItem >
++  <TreeItem>
  </SimpleTreeView>
 ```
 
@@ -225,6 +228,46 @@ All the new Tree Item-related components and utils (introduced in the previous m
 - } from '@mui/x-tree-view/TreeItem2LabelInput';
 + } from '@mui/x-tree-view/TreeItemLabelInput';
 ```
+
+## Stop using `publicAPI` methods in the render
+
+The Tree Items are now memoized to improve the performances of the Tree View components.
+If you call a `publicAPI` method in the render of an item, it might not re-render and you might not have the new value.
+
+```ts
+function CustomTreeItem(props) {
+  const { publicAPI } = useTreeItemUtils();
+
+  // Invalid
+  console.log(publicAPI.getItem(props.itemId));
+
+  // Valid
+  React.useEffect(() => {
+    console.log(publicAPI.getItem(props.itemId));
+  });
+
+  // Valid
+  function handleItemClick() {
+    console.log(publicAPI.getItem(props.itemId));
+  }
+}
+```
+
+If you need to access the tree item model inside the render, you can use the new `useTreeItemModel` hook:
+
+```diff
++import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+
+ function CustomTreeItem(props) {
+-  const { publicAPI } = useTreeItemUtils();
+-  const item = publicAPI.getItem(props.itemId);
++  const item = useTreeItemModel(props.itemId);
+ }
+```
+
+:::success
+If you were using `publicAPI` methods to access other information than the tree item model inside the render, please open an issue so that we can provide a way to do it.
+:::
 
 ## Apply the indentation on the item content instead of it's parent's group
 

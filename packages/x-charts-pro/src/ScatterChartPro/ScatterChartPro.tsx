@@ -44,9 +44,10 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   } = useScatterChartProps(other);
+
+  const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
     <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
@@ -61,7 +62,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         <ChartsOverlay {...overlayProps} />
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
-        {!props.loading && <ChartsTooltip {...tooltipProps} />}
+        {!props.loading && <Tooltip {...props?.slotProps?.tooltip} />}
         <ZoomSetup />
         {children}
       </ZAxisContextProvider>
@@ -76,7 +77,7 @@ ScatterChartPro.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
    */
   axisHighlight: PropTypes.shape({
@@ -176,16 +177,6 @@ ScatterChartPro.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
@@ -218,30 +209,11 @@ ScatterChartPro.propTypes = {
   ]),
   title: PropTypes.string,
   /**
-   * The configuration of the tooltip.
-   * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
-   * @default { trigger: 'item' }
-   */
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    classes: PropTypes.object,
-    itemContent: PropTypes.elementType,
-    slotProps: PropTypes.object,
-    slots: PropTypes.object,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
-  /**
    * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
    * If `undefined`, the radius is assumed to be infinite.
@@ -295,7 +267,6 @@ ScatterChartPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -310,7 +281,6 @@ ScatterChartPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -383,7 +353,6 @@ ScatterChartPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -398,7 +367,6 @@ ScatterChartPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

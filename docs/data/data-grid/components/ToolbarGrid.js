@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ToolbarGrid() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
@@ -11,12 +11,7 @@ export default function ToolbarGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        {...data}
-        slots={{
-          toolbar: GridToolbar,
-        }}
-      />
+      <DataGrid {...data} loading={loading} slots={{ toolbar: GridToolbar }} />
     </div>
   );
 }

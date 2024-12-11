@@ -1,4 +1,4 @@
-import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -286,7 +286,7 @@ describe('<DataGridPro /> - Tree data', () => {
       const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
-      expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
       const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current.state.rows
         .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault

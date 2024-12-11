@@ -5,6 +5,7 @@ import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
+import { FormProps } from '../internals/models/formProps';
 
 export interface PickerMonthOwnerState extends PickerOwnerState {
   isMonthSelected: boolean;
@@ -38,7 +39,8 @@ export interface MonthCalendarProps
   extends ExportedMonthCalendarProps,
     MonthValidationProps,
     BaseDateValidationProps,
-    TimezoneProps {
+    TimezoneProps,
+    FormProps {
   autoFocus?: boolean;
   className?: string;
   /**
@@ -59,8 +61,6 @@ export interface MonthCalendarProps
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -81,8 +81,6 @@ export interface MonthCalendarProps
    * @param {PickerValidDate} value The new value.
    */
   onChange?: (value: PickerValidDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false

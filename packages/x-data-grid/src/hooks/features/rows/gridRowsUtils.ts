@@ -21,7 +21,6 @@ import {
   GridRowsState,
   GridRowTreeCreationParams,
   GridRowIdToModelLookup,
-  GridRowIdToIdLookup,
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
@@ -90,13 +89,11 @@ export const createRowsInternalCache = ({
   };
 
   const dataRowIdToModelLookup: GridRowIdToModelLookup = {};
-  const dataRowIdToIdLookup: GridRowIdToIdLookup = {};
 
   for (let i = 0; i < rows.length; i += 1) {
     const model = rows[i];
     const id = getRowIdFromRowModel(model, getRowId);
     dataRowIdToModelLookup[id] = model;
-    dataRowIdToIdLookup[id] = id;
     updates.rows.push(id);
   }
 
@@ -105,7 +102,6 @@ export const createRowsInternalCache = ({
     loadingPropBeforePartialUpdates: loading,
     rowCountPropBeforePartialUpdates: rowCount,
     updates,
-    dataRowIdToIdLookup,
     dataRowIdToModelLookup,
   };
 };
@@ -153,7 +149,6 @@ export const getRowsStateFromCache = ({
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
-    dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
     previousGroupsToFetch,
   });
@@ -162,7 +157,6 @@ export const getRowsStateFromCache = ({
   const groupingParamsWithHydrateRows = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
     tree: unProcessedTree,
     treeDepths: unProcessedTreeDepths,
-    dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
     dataRowIds: unProcessedDataRowIds,
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   });
@@ -280,7 +274,6 @@ export const updateCacheWithNewRows = ({
     groupKeys,
   };
   const dataRowIdToModelLookup = { ...previousCache.dataRowIdToModelLookup };
-  const dataRowIdToIdLookup = { ...previousCache.dataRowIdToIdLookup };
 
   const alreadyAppliedActionsToRemove: Record<
     GridRowsPartialUpdateAction,
@@ -313,7 +306,6 @@ export const updateCacheWithNewRows = ({
       // Remove the data row from the lookups and add it to the "delete" update.
       partialUpdates.actions.remove.push(id);
       delete dataRowIdToModelLookup[id];
-      delete dataRowIdToIdLookup[id];
       return;
     }
 
@@ -354,7 +346,6 @@ export const updateCacheWithNewRows = ({
 
     // Update the data row lookups.
     dataRowIdToModelLookup[id] = partialRow;
-    dataRowIdToIdLookup[id] = id;
   });
 
   const actionTypeWithActionsToRemove = Object.keys(
@@ -372,7 +363,6 @@ export const updateCacheWithNewRows = ({
 
   return {
     dataRowIdToModelLookup,
-    dataRowIdToIdLookup,
     updates: partialUpdates,
     rowsBeforePartialUpdates: previousCache.rowsBeforePartialUpdates,
     loadingPropBeforePartialUpdates: previousCache.loadingPropBeforePartialUpdates,

@@ -10,22 +10,21 @@ import {
   ExportedBaseTabsProps,
   PickerProvider,
   PickerRangeValue,
+  PickerValue,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { FieldRef, InferError, PickerOwnerState } from '@mui/x-date-pickers/models';
+import { FieldRef, InferError } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
-  UseMobileRangePickerSlotProps,
 } from './useMobileRangePicker.types';
 import {
   RangePickerPropsForFieldSlot,
   useEnrichedRangePickerFieldProps,
 } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { RangeFieldSection } from '../../../models';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -65,16 +64,26 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
-  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const startFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const endFieldRef = React.useRef<FieldRef<PickerValue>>(null);
+  const singleInputFieldRef = React.useRef<FieldRef<PickerRangeValue>>(null);
 
   const fieldType = (slots.field as any).fieldType ?? 'multi-input';
   const { rangePosition, onRangePositionChange } = useRangePosition(
     props,
-    fieldType === 'single-input' ? startFieldRef : undefined,
+    fieldType === 'single-input' ? singleInputFieldRef : undefined,
   );
   const labelId = useId();
   const contextTranslations = usePickerTranslations();
+
+  let fieldRef: React.Ref<FieldRef<PickerValue> | FieldRef<PickerRangeValue>>;
+  if (fieldType === 'single-input') {
+    fieldRef = singleInputFieldRef;
+  } else if (rangePosition === 'start') {
+    fieldRef = startFieldRef;
+  } else {
+    fieldRef = endFieldRef;
+  }
 
   const {
     open,
@@ -84,18 +93,12 @@ export const useMobileRangePicker = <
     renderCurrentView,
     fieldProps: pickerFieldProps,
     ownerState,
-  } = usePicker<
-    PickerRangeValue,
-    TView,
-    RangeFieldSection,
-    TExternalProps,
-    MobileRangePickerAdditionalViewProps
-  >({
+  } = usePicker<PickerRangeValue, TView, TExternalProps, MobileRangePickerAdditionalViewProps>({
     ...pickerParams,
     props,
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     autoFocusView: true,
-    fieldRef: rangePosition === 'start' ? startFieldRef : endFieldRef,
+    fieldRef,
     localeText,
     additionalViewProps: {
       rangePosition,
@@ -105,31 +108,30 @@ export const useMobileRangePicker = <
 
   const Field = slots.field;
 
-  const fieldProps = useSlotProps<
-    typeof Field,
-    UseMobileRangePickerSlotProps<TView, TEnableAccessibleFieldDOMStructure>['field'],
-    RangePickerPropsForFieldSlot<
-      boolean,
-      TEnableAccessibleFieldDOMStructure,
-      InferError<TExternalProps>
-    >,
-    PickerOwnerState
-  >({
+  const fieldProps: RangePickerPropsForFieldSlot<
+    boolean,
+    TEnableAccessibleFieldDOMStructure,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...pickerFieldProps,
+      // Internal props
       readOnly: readOnly ?? true,
       disabled,
-      className,
-      sx,
       format,
       formatDensity,
       enableAccessibleFieldDOMStructure,
       selectedSections,
       onSelectedSectionsChange,
       timezone,
-      ...(fieldType === 'single-input' ? { inputRef, name } : {}),
+      ...pickerFieldProps, // onChange and value
+
+      // Forwarded props
+      className,
+      sx,
+      ...(fieldType === 'single-input' && !!inputRef && { inputRef }),
+      ...(fieldType === 'single-input' && { name }),
     },
     ownerState,
   });
@@ -141,7 +143,7 @@ export const useMobileRangePicker = <
     TEnableAccessibleFieldDOMStructure,
     InferError<TExternalProps>
   >({
-    wrapperVariant: 'mobile',
+    variant: 'mobile',
     fieldType,
     open,
     actions,
@@ -157,6 +159,7 @@ export const useMobileRangePicker = <
     fieldProps,
     startFieldRef,
     endFieldRef,
+    singleInputFieldRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {

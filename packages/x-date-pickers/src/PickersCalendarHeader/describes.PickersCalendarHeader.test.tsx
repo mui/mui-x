@@ -24,7 +24,12 @@ describe('<PickersCalendarHeader /> - Describes', () => {
       render,
       muiName: 'MuiPickersCalendarHeader',
       refInstanceof: window.HTMLDivElement,
-      skip: ['componentProp', 'componentsProp', 'themeVariants'],
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'slotPropsCallbackWithPropsAsOwnerState',
+      ],
       slots: {
         switchViewButton: {
           expectedClassName: pickersCalendarHeaderClasses.switchViewButton,

@@ -1,0 +1,8 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  rowHeight={64}
+  unstable_listView
+  unstable_listColumn={listColDef}
+  sx={{ backgroundColor: 'background.paper' }}
+/>

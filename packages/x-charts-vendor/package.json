@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "7.20.0",
+  "version": "8.0.0-alpha.3",
   "description": "Vendored dependencies for MUI X Charts",
   "author": "MUI Team",
   "keywords": [
@@ -30,7 +30,7 @@
     "@types/d3-interpolate": "^3.0.4",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-shape": "^3.1.6",
-    "@types/d3-time": "^3.0.3",
+    "@types/d3-time": "^3.0.4",
     "d3-color": "^3.1.0",
     "d3-delaunay": "^6.0.4",
     "d3-interpolate": "^3.0.1",
@@ -50,7 +50,7 @@
     "d3-format": "^3.1.0",
     "d3-path": "^3.1.0",
     "d3-time-format": "^4.1.0",
-    "execa": "^9.5.1",
+    "execa": "^9.5.2",
     "internmap": "^2.0.3",
     "rimraf": "^6.0.1"
   },

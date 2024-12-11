@@ -8,6 +8,7 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MonthCalendar /> - Describes', () => {
@@ -29,7 +30,7 @@ describe('<MonthCalendar /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(MonthCalendar, () => ({
+  describeValue<PickerValue, 'calendar'>(MonthCalendar, () => ({
     render,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-02-01')],

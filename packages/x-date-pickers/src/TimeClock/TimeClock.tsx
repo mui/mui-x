@@ -11,18 +11,18 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, TimeView } from '../models';
+import { PickerOwnerState, PickerValidDate, TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getTimeClockUtilityClass } from './timeClockClasses';
+import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
-const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<TimeClockClasses> | undefined) => {
   const slots = {
     root: ['root'],
     arrowSwitcher: ['arrowSwitcher'],
@@ -35,7 +35,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -45,7 +45,7 @@ const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
-})<{ ownerState: TimeClockProps<any> }>({
+})<{ ownerState: PickerOwnerState }>({
   position: 'absolute',
   right: 12,
   top: 15,
@@ -55,7 +55,7 @@ type TimeClockComponent = ((
   props: TimeClockProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
+const TIME_CLOCK_DEFAULT_VIEWS: readonly TimeView[] = ['hours', 'minutes'];
 
 /**
  * Demos:
@@ -68,7 +68,7 @@ const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
  * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
 export const TimeClock = React.forwardRef(function TimeClock(
-  inProps: TimeClockProps,
+  inProps: TimeClockProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils();
@@ -103,6 +103,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     focusedView,
     onFocusedViewChange,
     className,
+    classes: classesProp,
     disabled,
     readOnly,
     timezone: timezoneProp,
@@ -114,6 +115,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });
@@ -128,6 +130,8 @@ export const TimeClock = React.forwardRef(function TimeClock(
 
   const translations = usePickerTranslations();
   const now = useNow(timezone);
+  const selectedId = useId();
+  const { ownerState } = usePickerPrivateContext();
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
@@ -251,8 +255,6 @@ export const TimeClock = React.forwardRef(function TimeClock(
     ],
   );
 
-  const selectedId = useId();
-
   const viewProps = React.useMemo<Pick<ClockProps, 'onChange' | 'viewValue' | 'children'>>(() => {
     switch (view) {
       case 'hours': {
@@ -347,8 +349,7 @@ export const TimeClock = React.forwardRef(function TimeClock(
     disabled,
   ]);
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <TimeClockRoot
@@ -423,7 +424,8 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.object,
   /**
-   * If `true`, the picker views and text field are disabled.
+   * If `true`, the component is disabled.
+   * When disabled, the value cannot be changed and no interaction is possible.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -490,7 +492,8 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker views and text field are read-only.
+   * If `true`, the component is read-only.
+   * When read-only, the value cannot be changed but the user can interact with the interface.
    * @default false
    */
   readOnly: PropTypes.bool,

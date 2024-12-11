@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import type {} from '../typeOverloads';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
-import { ResizableContainer } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
 import { ZoomProps } from '../context/ZoomProvider';
@@ -17,14 +18,16 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProProps, resizableChartContainerProps, hasIntrinsicSize } =
-    useChartContainerProProps(props, ref);
+  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartContainerProProps(
+    props,
+    ref,
+  );
 
   return (
-    <ResizableContainer {...resizableChartContainerProps}>
-      {hasIntrinsicSize ? <ChartDataProviderPro {...chartDataProviderProProps} /> : null}
+    <ChartDataProviderPro {...chartDataProviderProProps}>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
       <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-    </ResizableContainer>
+    </ChartDataProviderPro>
   );
 });
 
@@ -92,16 +95,6 @@ ChartContainerPro.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -118,12 +111,6 @@ ChartContainerPro.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  viewBox: PropTypes.shape({
-    height: PropTypes.number,
-    width: PropTypes.number,
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -172,7 +159,6 @@ ChartContainerPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -187,7 +173,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -260,7 +245,6 @@ ChartContainerPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -275,7 +259,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

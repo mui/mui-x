@@ -24,12 +24,6 @@ export interface UseTreeViewSelectionPublicAPI {
 
 export interface UseTreeViewSelectionInstance extends UseTreeViewSelectionPublicAPI {
   /**
-   * Check if an item is selected.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item is selected, `false` otherwise.
-   */
-  isItemSelected: (itemId: string) => boolean;
-  /**
    * Select all the navigable items in the tree.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change.
    */
@@ -145,6 +139,12 @@ export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> 
   | 'selectionPropagation'
 >;
 
+export interface UseTreeViewSelectionState {
+  selection: {
+    selectedItemsMap: Map<string, true>;
+  };
+}
+
 interface UseTreeViewSelectionContextValue {
   selection: Pick<
     UseTreeViewSelectionDefaultizedParameters<boolean>,
@@ -159,6 +159,7 @@ export type UseTreeViewSelectionSignature = TreeViewPluginSignature<{
   publicAPI: UseTreeViewSelectionPublicAPI;
   contextValue: UseTreeViewSelectionContextValue;
   modelNames: 'selectedItems';
+  state: UseTreeViewSelectionState;
   dependencies: [
     UseTreeViewItemsSignature,
     UseTreeViewExpansionSignature,

@@ -21,7 +21,7 @@ export default function ScrollPlayground() {
     colIndex: 0,
   });
 
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
   });
@@ -100,6 +100,7 @@ export default function ScrollPlayground() {
           apiRef={apiRef}
           onCellClick={handleCellClick}
           hideFooter
+          loading={loading}
           {...data}
         />
       </Box>

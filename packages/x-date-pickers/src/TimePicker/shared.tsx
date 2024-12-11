@@ -4,19 +4,19 @@ import { DefaultizedProps } from '@mui/x-internals/types';
 import { useUtils } from '../internals/hooks/useUtils';
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   TimePickerToolbarProps,
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { PickerValidDate, TimeValidationError } from '../models';
+import { TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
+import { ValidateTimePropsToDefault } from '../validation/validateTime';
 
 export interface BaseTimePickerSlots extends TimeClockSlots {
   /**
@@ -34,14 +34,14 @@ export type TimePickerViewRenderers<
   TView extends TimeViewWithMeridiem,
   TAdditionalProps extends {} = {},
 > = PickerViewRendererLookup<
-  PickerValidDate | null,
+  PickerValue,
   TView,
   TimeViewRendererProps<TView, BaseClockProps<TView>>,
   TAdditionalProps
 >;
 
 export interface BaseTimePickerProps<TView extends TimeViewWithMeridiem>
-  extends BasePickerInputProps<PickerValidDate | null, TView, TimeValidationError>,
+  extends BasePickerInputProps<PickerValue, TView, TimeValidationError>,
     ExportedBaseClockProps {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
@@ -70,7 +70,7 @@ type UseTimePickerDefaultizedProps<
   TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TView>,
 > = LocalizedComponent<
-  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>
+  DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | ValidateTimePropsToDefault>
 >;
 
 export function useTimePickerDefaultizedProps<

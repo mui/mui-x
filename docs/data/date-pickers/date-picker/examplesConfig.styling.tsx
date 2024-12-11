@@ -166,7 +166,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root'],
@@ -187,7 +187,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root', 'label', 'labelContainer', 'switchViewButton', 'switchViewIcon'],
@@ -208,7 +208,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: [
@@ -235,7 +235,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
       },
     },
     slots: ['root', 'today'],
@@ -259,7 +259,7 @@ export const datePickerExamples: PickersSubcomponentType = {
         parentSlot: 'layout',
         parentComponent: 'PickersLayout',
         comments:
-          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a wtyled component',
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `layout` slot will need to be replaced with a styled component',
         componentProps: { views: ['month'] },
       },
     },
@@ -289,6 +289,30 @@ export const datePickerExamples: PickersSubcomponentType = {
     },
     slots: ['root'],
     moreInformation: <TextFieldMoreInfo />,
+  },
+  PickersPopper: {
+    examples: {
+      customTheme: {
+        type: 'success',
+        parentSlot: 'paper',
+      },
+      sxProp: {
+        type: 'warning',
+        parentSlot: 'popper',
+        current: true,
+        comments:
+          'Because of the structure of the DesktopDatePicker, the `sx` prop needs to be applied to the `popper` slot',
+      },
+      styledComponents: {
+        type: 'warning',
+        parentSlot: 'desktopPaper',
+        parentComponent: 'Paper',
+        current: true,
+        comments:
+          'Because of the structure of the DesktopDatePicker and the way the popper renders, the `desktopPaper` slot will need to be replaced with a styled component',
+      },
+    },
+    slots: ['paper', 'root'],
   },
 };
 

@@ -1,4 +1,4 @@
-import { ponyfillGlobal } from '@mui/utils';
+import ponyfillGlobal from '@mui/utils/ponyfillGlobal';
 
 export const getReleaseInfo = () => {
   const releaseInfo = '__RELEASE_INFO__';
