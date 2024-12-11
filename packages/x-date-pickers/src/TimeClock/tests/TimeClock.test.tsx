@@ -154,7 +154,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(15);
+    expect(adapterToUse.getHours(newDate)).to.equal(23);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -174,7 +174,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(9);
+    expect(adapterToUse.getHours(newDate)).to.equal(0);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -600,6 +600,8 @@ describe('<TimeClock />', () => {
       render(
         <TimeClock onChange={onChange} referenceDate={adapterToUse.date('2018-01-01T12:30:00')} />,
       );
+
+      console.log(adapterToUse.setHours(adapterToUse.date(), 3));
 
       timeClockHandler.setViewValue(
         adapterToUse,

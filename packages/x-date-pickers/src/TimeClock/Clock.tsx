@@ -251,15 +251,14 @@ export function Clock(inProps: ClockProps) {
   const isPointerInner = !ampm && type === 'hours' && (viewValue < 1 || viewValue > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
-    const cleanNewValue = Math.max(minViewValue, Math.min(maxViewValue, newValue));
     if (disabled || readOnly) {
       return;
     }
-    if (isTimeDisabled(cleanNewValue, type)) {
+    if (isTimeDisabled(newValue, type)) {
       return;
     }
 
-    onChange(cleanNewValue, isFinish);
+    onChange(newValue, isFinish);
   };
 
   const setTime = (event: MouseEvent | React.TouchEvent, isFinish: PickerSelectionState) => {
@@ -322,6 +321,10 @@ export function Clock(inProps: ClockProps) {
     }
   }, [autoFocus]);
 
+  const clampValue = (newValue: number) => Math.max(minViewValue, Math.min(maxViewValue, newValue));
+
+  const circleValue = (newValue: number) => (newValue + (maxViewValue + 1)) % (maxViewValue + 1);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // TODO: Why this early exit?
     if (isMoving.current) {
@@ -339,19 +342,19 @@ export function Clock(inProps: ClockProps) {
         event.preventDefault();
         break;
       case 'ArrowUp':
-        handleValueChange(viewValue + keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue + keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'ArrowDown':
-        handleValueChange(viewValue - keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue - keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'PageUp':
-        handleValueChange(viewValue + 5, 'partial');
+        handleValueChange(clampValue(viewValue + 5), 'partial');
         event.preventDefault();
         break;
       case 'PageDown':
-        handleValueChange(viewValue - 5, 'partial');
+        handleValueChange(clampValue(viewValue - 5), 'partial');
         event.preventDefault();
         break;
       case 'Enter':

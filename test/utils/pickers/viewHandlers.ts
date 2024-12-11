@@ -24,6 +24,7 @@ export const timeClockHandler: ViewHandler<TimeView> = {
       throw new Error('View not supported');
     }
 
+    console.log(valueInt);
     const hourClockEvent = getClockTouchEvent(valueInt, clockView);
 
     fireTouchChangedEvent(screen.getByTestId('clock'), 'touchmove', hourClockEvent);
