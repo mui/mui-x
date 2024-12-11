@@ -309,7 +309,7 @@ const theme = createTheme({
    }
   ```
 
-- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives an `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.orientation);
@@ -331,6 +331,53 @@ const theme = createTheme({
   +console.log(variant);
   ```
 
+- The component passed to the `layout` slot no longer receives an `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` and `onDismiss` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+
+  -const { onOpen } = props;
+  +const { setOpen } = usePickerActionsContext();
+  +const onOpen = event => {
+  +  event.preventDefault();
+  +  setOpen(true);
+  +}
+
+  -props.onClose();
+  +const { setOpen } = usePickerActionsContext();
+  +const onClose = event => {
+  +  event.preventDefault();
+  +  setOpen(false);
+  +}
+
+   // This contains a small behavior change.
+   // `onDismiss` was only calling the onAccept prop of your picker if the value had changed since the opening of the picker.
+   // With this code snippet, the onAccept prop will always be called.
+  -const { onDismiss } = props;
+  +const { acceptValueChanges, setOpen } = usePickerActionsContext();
+  +const onDismiss = event => {
+  +  acceptValueChanges();
+  +  setOpen(false);
+  +}
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contain variables with stable references that won't cause a re-render of your component.
+  :::
+
 ### Slot: `toolbar`
 
 - The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
@@ -350,6 +397,31 @@ const theme = createTheme({
   +const { readOnly } = usePickerContext();
   +console.log(readOnly);
   ```
+
+### Slot: `actionBar`
+
+- The component passed to the `actionBar` slot no longer receives an `onClear`, `onSetToday`, `onAccept` and `onCancel` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+
+  ```diff
+  +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
+
+  -const { onClear } = props;
+  +const { clearValue } = usePickerActionsContext();
+
+  -const { onSetToday } = props;
+  +const { setValueToToday } = usePickerActionsContext();
+
+  -const { onAccept } = props;
+  +const { acceptValueChanges } = usePickerActionsContext();
+
+  -const { onCancel } = props;
+  +const { cancelValueChanges } = usePickerActionsContext();
+  ```
+
+  :::success
+  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
+  The only difference is that `usePickerActionsContext` only contain variables with stable references that won't cause a re-render of your component.
+  :::
 
 ## Renamed variables and types
 

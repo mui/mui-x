@@ -113,13 +113,14 @@ export function usePickerProvider<
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
-    () => ({ ownerState }),
-    [ownerState],
+    () => ({ ...paramsFromUsePickerValue.privateContextValue, ownerState }),
+    [paramsFromUsePickerValue, ownerState],
   );
 
   return {
     localeText,
     contextValue,
+    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     privateContextValue,
   };
 }

@@ -48,10 +48,6 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
   const isRtl = useRtl();
 
   const {
-    onAccept,
-    onClear,
-    onCancel,
-    onSetToday,
     view,
     views,
     onViewChange,
@@ -81,10 +77,6 @@ const usePickerLayout = <TValue extends PickerValidValue, TView extends DateOrTi
     elementType: ActionBar,
     externalSlotProps: slotProps?.actionBar,
     additionalProps: {
-      onAccept,
-      onClear,
-      onCancel,
-      onSetToday,
       actions: variant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
     },
     className: classes.actionBar,

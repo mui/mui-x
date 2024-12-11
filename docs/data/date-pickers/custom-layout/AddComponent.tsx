@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
   PickersLayoutProps,
@@ -18,17 +17,23 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 import { DateView } from '@mui/x-date-pickers/models';
+import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
 
 function ActionList(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday } = props;
+  const { className } = props;
+  const { clearValue, setValueToToday, acceptValueChanges, cancelValueChanges } =
+    usePickerActionsContext();
+
   const actions = [
-    { text: 'Accept', method: onAccept },
-    { text: 'Clear', method: onClear },
-    { text: 'Cancel', method: onCancel },
-    { text: 'Today', method: onSetToday },
+    { text: 'Accept', method: acceptValueChanges },
+    { text: 'Clear', method: clearValue },
+    { text: 'Cancel', method: cancelValueChanges },
+    { text: 'Today', method: setValueToToday },
   ];
+
   return (
-    <List>
+    <List className={className}>
       {actions.map(({ text, method }) => (
         <ListItem key={text} disablePadding>
           <ListItemButton onClick={method}>
