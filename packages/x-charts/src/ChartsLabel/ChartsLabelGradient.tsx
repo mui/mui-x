@@ -24,6 +24,16 @@ export interface ChartsLabelGradientProps {
    */
   direction?: 'column' | 'row';
   /**
+   * If `true`, the gradient will be reversed.
+   */
+  reverse?: boolean;
+  /**
+   * If provided, the gradient will be rotated by 90deg.
+   *
+   * Useful for linear gradients that are not in the correct orientation.
+   */
+  rotate?: boolean;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLabelGradientClasses>;
@@ -31,11 +41,29 @@ export interface ChartsLabelGradientProps {
   sx?: SxProps<Theme>;
 }
 
+const getRotation = (direction?: 'column' | 'row', reverse?: boolean, rotate?: boolean) => {
+  if (!rotate && reverse) {
+    return direction === 'column' ? 90 : 180;
+  }
+
+  if (rotate && !reverse) {
+    return direction === 'column' ? 0 : 90;
+  }
+
+  if (rotate && reverse) {
+    return direction === 'column' ? 180 : -90;
+  }
+
+  return direction === 'column' ? -90 : 0;
+};
+
 const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelGradientProps }>(() => {
+})<{ ownerState: ChartsLabelGradientProps }>(({ ownerState }) => {
+  const rotation = getRotation(ownerState.direction, ownerState.reverse, ownerState.rotate);
+
   return {
     display: 'flex',
     alignItems: 'center',
@@ -57,12 +85,12 @@ const Root = styled('div', {
         width: 12,
         height: '100%',
         '> svg': {
-          transform: 'rotate(90deg)',
           height: '100%',
         },
       },
     },
     svg: {
+      transform: `rotate(${rotation}deg)`,
       display: 'block',
     },
   };
@@ -123,6 +151,16 @@ ChartsLabelGradient.propTypes = {
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: PropTypes.string.isRequired,
+  /**
+   * If `true`, the gradient will be reversed.
+   */
+  reverse: PropTypes.bool,
+  /**
+   * If provided, the gradient will be rotated by 90deg.
+   *
+   * Useful for linear gradients that are not in the correct orientation.
+   */
+  rotate: PropTypes.bool,
 } as any;
 
 export { ChartsLabelGradient };
