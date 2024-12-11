@@ -79,6 +79,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
       if (filterModelItem != null) {
         // there's a valid `filterModelItem` for this column
+        const defaultItem = getGridFilter(colDef);
+        filterItemsCache[colDef.field] = defaultItem;
         filterItemsCache[colDef.field].operator = filterModelItem.operator;
         return filterModelItem;
       }
