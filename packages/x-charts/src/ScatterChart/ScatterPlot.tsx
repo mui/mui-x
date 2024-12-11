@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, ScatterProps } from './Scatter';
 import getColor from './getColor';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useScatterSeries } from '../hooks/useSeries';
 import { useXAxes, useYAxes } from '../hooks';
+import { useZAxis } from '../hooks/useZAxis';
 
 export interface ScatterPlotSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -43,7 +43,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   const seriesData = useScatterSeries();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
 
   if (seriesData === undefined) {
     return null;

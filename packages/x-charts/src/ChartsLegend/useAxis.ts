@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { AxisDefaultized } from '../models/axis';
 import { ZAxisDefaultized } from '../models/z-axis';
 import { ColorLegendSelector } from './legend.types';
+import { useZAxis } from '../hooks/useZAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 
 /**
@@ -15,7 +14,7 @@ export function useAxis({
 }: ColorLegendSelector): ZAxisDefaultized | AxisDefaultized {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
 
   switch (axisDirection) {
     case 'x': {

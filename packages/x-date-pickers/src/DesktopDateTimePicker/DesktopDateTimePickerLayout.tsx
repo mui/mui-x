@@ -11,8 +11,12 @@ import {
 } from '../PickersLayout';
 import { DateOrTimeViewWithMeridiem } from '../internals/models/common';
 import { usePickerContext } from '../hooks/usePickerContext';
+import { PickerValidValue } from '../internals/models';
 
-type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
+type DesktopDateTimePickerLayoutComponent = (<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+>(
   props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
@@ -20,7 +24,7 @@ type DesktopDateTimePickerLayoutComponent = (<TValue, TView extends DateOrTimeVi
  * @ignore - internal component.
  */
 const DesktopDateTimePickerLayout = React.forwardRef(function DesktopDateTimePickerLayout<
-  TValue,
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 >(props: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const { toolbar, tabs, content, actionBar, shortcuts, ownerState } = usePickerLayout(props);
@@ -97,7 +101,7 @@ DesktopDateTimePickerLayout.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
   view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,

@@ -728,6 +728,7 @@ export const useGridColumnResize = (
           ...column,
           width: widthByField[column.field],
           computedWidth: widthByField[column.field],
+          flex: 0,
         }));
 
         if (options.expand) {
