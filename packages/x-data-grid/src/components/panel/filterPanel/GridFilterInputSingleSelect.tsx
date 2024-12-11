@@ -112,49 +112,55 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <React.Fragment>
-      <rootProps.slots.baseFormControl fullWidth>
-        <rootProps.slots.baseInputLabel
-          {...rootProps.slotProps?.baseInputLabel}
-          id={labelId}
-          htmlFor={id}
-          shrink
-          variant={variant}
-        >
-          {label}
-        </rootProps.slots.baseInputLabel>
-        <rootProps.slots.baseSelect
-          id={id}
-          label={label}
-          labelId={labelId}
-          value={filterValue}
-          onChange={onFilterChange}
-          variant={variant}
-          type={type || 'text'}
-          inputProps={{
-            tabIndex,
-            ref: focusElementRef,
-            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-          }}
-          native={isSelectNative}
-          notched={variant === 'outlined' ? true : undefined}
-          {
-            ...(others as any) /* FIXME: typing error */
-          }
-          {...rootProps.slotProps?.baseSelect}
-        >
-          {renderSingleSelectOptions({
-            column: resolvedColumn,
-            OptionComponent: rootProps.slots.baseSelectOption,
-            getOptionLabel,
-            getOptionValue,
-            isSelectNative,
-            baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
-          })}
-        </rootProps.slots.baseSelect>
-      </rootProps.slots.baseFormControl>
-      {clearButton}
-    </React.Fragment>
+    <rootProps.slots.baseFormControl fullWidth sx={others.sx}>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        htmlFor={id}
+        shrink
+        variant={variant}
+      >
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        id={id}
+        label={label}
+        labelId={labelId}
+        value={filterValue}
+        onChange={onFilterChange}
+        variant={variant}
+        type={type || 'text'}
+        startAdornment={others.InputProps?.startAdornment}
+        endAdornment={
+          <rootProps.slots.baseInputAdornment
+            position="end"
+            sx={{ position: 'absolute', right: 32 }}
+          >
+            {clearButton}
+          </rootProps.slots.baseInputAdornment>
+        }
+        inputProps={{
+          tabIndex,
+          ref: focusElementRef,
+          placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+        }}
+        native={isSelectNative}
+        notched={variant === 'outlined' ? true : undefined}
+        {
+          ...(others as any) /* FIXME: typing error */
+        }
+        {...rootProps.slotProps?.baseSelect}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
+    </rootProps.slots.baseFormControl>
   );
 }
 

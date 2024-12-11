@@ -11,10 +11,6 @@ import { refType, unstable_useId as useId } from '@mui/utils';
 import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-const sx = {
-  marginRight: -0.75,
-};
-
 function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
@@ -66,12 +62,12 @@ function GridHeaderFilterMenuContainer(props: {
         aria-haspopup="true"
         tabIndex={-1}
         size="small"
+        edge="start"
         onClick={handleClick}
-        sx={sx}
         disabled={disabled}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.openFilterButtonIcon fontSize="small" />
+        <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}

@@ -33,6 +33,7 @@ import {
   shouldCellShowLeftBorder,
   shouldCellShowRightBorder,
 } from '@mui/x-data-grid/internals';
+import { SxProps } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -88,8 +89,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const inputSx = { flex: 1, mr: 0.5 };
-const dateSx = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
+const inputSx: SxProps = {
+  flex: 1,
+  '.MuiOutlinedInput-root': { px: 1.25 },
+  '.MuiOutlinedInput-input': { fontSize: 14 },
+  '.MuiInputLabel-outlined': { transform: 'translate(12px, -9px) scale(0.75)' },
+  '.MuiOutlinedInput-notchedOutline': { px: 0.75 },
+};
+const dateSx: SxProps = { [`& input[value=""]:not(:focus)`]: { color: 'transparent' } };
 
 const defaultInputComponents: { [key in GridColType]: React.JSXElementConstructor<any> | null } = {
   string: GridFilterInputValue,
@@ -331,6 +338,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         style={{
           height,
           width,
+          paddingTop: 4,
           ...styleProp,
         }}
         role="columnheader"
@@ -341,62 +349,75 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       >
         {headerFilterComponent}
         {InputComponent && headerFilterComponent === undefined ? (
-          <React.Fragment>
-            <InputComponent
-              apiRef={apiRef}
-              item={item}
-              inputRef={inputRef}
-              applyValue={applyFilterChanges}
-              onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
-              onBlur={(event: React.FocusEvent) => {
-                apiRef.current.stopHeaderFilterEditMode();
-                // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
-                if (!event.relatedTarget?.className.includes('columnHeader')) {
-                  apiRef.current.setState((state) => ({
-                    ...state,
-                    focus: {
-                      cell: null,
-                      columnHeader: null,
-                      columnHeaderFilter: null,
-                      columnGroupHeader: null,
-                    },
-                  }));
-                }
-              }}
-              label={capitalize(label)}
-              placeholder=""
-              isFilterActive={isFilterActive}
-              clearButton={
-                showClearIcon && isApplied ? (
-                  <GridHeaderFilterClearButton
-                    onClick={clearFilterItem}
-                    disabled={isFilterReadOnly}
-                  />
-                ) : null
+          <InputComponent
+            apiRef={apiRef}
+            item={item}
+            inputRef={inputRef}
+            applyValue={applyFilterChanges}
+            onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
+            onBlur={(event: React.FocusEvent) => {
+              apiRef.current.stopHeaderFilterEditMode();
+              // Blurring an input element should reset focus state only if `relatedTarget` is not the header filter cell
+              if (!event.relatedTarget?.className.includes('columnHeader')) {
+                apiRef.current.setState((state) => ({
+                  ...state,
+                  focus: {
+                    cell: null,
+                    columnHeader: null,
+                    columnHeaderFilter: null,
+                    columnGroupHeader: null,
+                  },
+                }));
               }
-              variant="outlined"
-              size="small"
-              disabled={isFilterReadOnly || isNoInputOperator}
-              tabIndex={-1}
-              InputLabelProps={null}
-              sx={[
-                inputSx,
-                colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined,
-              ]}
-              {...(isNoInputOperator ? { value: '' } : {})}
-              {...currentOperator?.InputComponentProps}
-              {...InputComponentProps}
-            />
-            <GridHeaderFilterMenuContainer
-              operators={filterOperators!}
-              item={item}
-              field={colDef.field}
-              disabled={isFilterReadOnly}
-              applyFilterChanges={applyFilterChanges}
-              headerFilterMenuRef={headerFilterMenuRef}
-              buttonRef={buttonRef}
-            />
-          </React.Fragment>
+            }}
+            label={capitalize(label)}
+            placeholder=""
+            isFilterActive={isFilterActive}
+            variant="outlined"
+            size="small"
+            disabled={isFilterReadOnly || isNoInputOperator}
+            tabIndex={-1}
+            InputLabelProps={null}
+            InputProps={{
+              startAdornment: (
+                <rootProps.slots.baseInputAdornment position="start">
+                  <GridHeaderFilterMenuContainer
+                    operators={filterOperators!}
+                    item={item}
+                    field={colDef.field}
+                    disabled={isFilterReadOnly}
+                    applyFilterChanges={applyFilterChanges}
+                    headerFilterMenuRef={headerFilterMenuRef}
+                    buttonRef={buttonRef}
+                  />
+                </rootProps.slots.baseInputAdornment>
+              ),
+              endAdornment:
+                showClearIcon && isApplied ? (
+                  <rootProps.slots.baseInputAdornment position="end">
+                    <GridHeaderFilterClearButton
+                      onClick={clearFilterItem}
+                      disabled={isFilterReadOnly}
+                    />
+                  </rootProps.slots.baseInputAdornment>
+                ) : null,
+            }}
+            sx={[
+              inputSx,
+              colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined,
+            ]}
+            clearButton={
+              showClearIcon && isApplied ? (
+                <GridHeaderFilterClearButton
+                  onClick={clearFilterItem}
+                  disabled={isFilterReadOnly}
+                />
+              ) : null
+            }
+            {...(isNoInputOperator ? { value: '' } : {})}
+            {...currentOperator?.InputComponentProps}
+            {...InputComponentProps}
+          />
         ) : null}
       </div>
     );
