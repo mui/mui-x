@@ -280,22 +280,13 @@ const theme = createTheme({
    );
   ```
 
-- The component passed to the `layout` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives a `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
+  -console.log(props.disabled, props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled } = usePickerContext();
-  +console.log(disabled);
-  ```
-
-- The component passed to the `layout` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
-
-  ```diff
-  -console.log(props.readOnly);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
+  +const { disabled, readOnly } = usePickerContext();
+  +console.log(disabled, readOnly);
   ```
 
 - The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
@@ -331,24 +322,44 @@ const theme = createTheme({
   +console.log(variant);
   ```
 
-### Slot: `toolbar`
-
-- The component passed to the `toolbar` slot no longer receives a `disabled` prop, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled);
+  -console.log(props.layout, props.views, props.onViewChange);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled } = usePickerContext();
-  +console.log(disabled);
+  +const { view, views, onViewChange } = usePickerContext();
+  +console.log(view, views, onViewChange);
   ```
 
-- The component passed to the `toolbar` slot no longer receives a `readOnly` prop, instead you can use the `usePickerContext` hook:
+### Slot: `toolbar`
+
+- The component passed to the `toolbar` slot no longer receives a `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.readOnly);
+  -console.log(props.disabled, props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { readOnly } = usePickerContext();
-  +console.log(readOnly);
+  +const { disabled, readOnly } = usePickerContext();
+  +console.log(disabled, readOnly);
+  ```
+
+- The component passed to the `toolbar` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.layout, props.views, props.onViewChange);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { view, views, onViewChange } = usePickerContext();
+  +console.log(view, views, onViewChange);
+  ```
+
+### Slot: `tabs`
+
+- The component passed to the `tabs` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+
+  ```diff
+  -console.log(props.layout, props.views, props.onViewChange);
+  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+  +const { view, views, onViewChange } = usePickerContext();
+  +console.log(view, views, onViewChange);
   ```
 
 ## Renamed variables and types
