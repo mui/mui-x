@@ -8,17 +8,6 @@ import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelMarkProps {
   /**
-   * Defines the max size of the mark.
-   *
-   * For the `line` type, the size is the length of the line.
-   * For all other types, the size is the width and height of the mark.
-   *
-   * @default type='square': 13
-   * @default type='line': 16
-   * @default type='circle': 15
-   */
-  size?: number;
-  /**
    * The type of the mark.
    * @default 'square'
    */
@@ -27,19 +16,6 @@ export interface ChartsLabelMarkProps {
    * The color of the mark.
    */
   color?: string;
-  /**
-   * The width of the line.
-   * @default 4
-   */
-  lineWidth?: number;
-  /**
-   * The border radius of the mark.
-   *
-   * @default type='square': 2
-   * @default type='circle': '50%'
-   * @default type='line': 1
-   */
-  borderRadius?: number | string;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -52,31 +28,39 @@ const Root = styled('div', {
   name: 'MuiChartsLabelMark',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelMarkProps }>(({ ownerState }) => {
+})<{ ownerState: ChartsLabelMarkProps }>(() => {
   return {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
     [`&.${labelMarkClasses.line}`]: {
-      width: ownerState.size,
+      width: 16,
       display: 'flex',
       alignItems: 'center',
       '> div': {
-        height: ownerState.lineWidth,
+        height: 4,
         width: '100%',
-        borderRadius: ownerState.borderRadius,
+        borderRadius: 1,
         overflow: 'hidden',
       },
     },
-    [`&.${labelMarkClasses.square}, &.${labelMarkClasses.circle}`]: {
-      height: ownerState.size,
-      width: ownerState.size,
-      borderRadius: ownerState.borderRadius,
+    [`&.${labelMarkClasses.square}`]: {
+      height: 13,
+      width: 13,
+      borderRadius: 2,
+      overflow: 'hidden',
+    },
+    [`&.${labelMarkClasses.circle}`]: {
+      height: 15,
+      width: 15,
+      borderRadius: '50%',
       overflow: 'hidden',
     },
     svg: {
       display: 'block',
+      height: '100%',
+      width: '100%',
     },
   };
 });
@@ -89,33 +73,10 @@ const Root = styled('div', {
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
   {
-    defaultProps: (props) => {
-      if (props.type === 'line') {
-        return {
-          size: 16,
-          borderRadius: 1,
-          lineWidth: 4,
-        };
-      }
-
-      if (props.type === 'circle') {
-        return {
-          size: 15,
-          borderRadius: '50%',
-          lineWidth: 4,
-        };
-      }
-
-      return {
-        size: 13,
-        borderRadius: 2,
-        lineWidth: 4,
-      };
-    },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
-    const { type, color, className, classes, borderRadius, lineWidth, size, ...other } = props;
+    const { type, color, className, classes, ...other } = props;
 
     return (
       <Root
@@ -126,12 +87,7 @@ const ChartsLabelMark = consumeThemeProps(
         {...other}
       >
         <div>
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 24 24"
-            preserveAspectRatio={type === 'line' ? 'none' : undefined}
-          >
+          <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
             <rect width="24" height="24" fill={color} />
           </svg>
         </div>
@@ -146,14 +102,6 @@ ChartsLabelMark.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The border radius of the mark.
-   *
-   * @default type='square': 2
-   * @default type='circle': '50%'
-   * @default type='line': 1
-   */
-  borderRadius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -161,22 +109,6 @@ ChartsLabelMark.propTypes = {
    * The color of the mark.
    */
   color: PropTypes.string,
-  /**
-   * The width of the line.
-   * @default 4
-   */
-  lineWidth: PropTypes.number,
-  /**
-   * Defines the max size of the mark.
-   *
-   * For the `line` type, the size is the length of the line.
-   * For all other types, the size is the width and height of the mark.
-   *
-   * @default type='square': 13
-   * @default type='line': 16
-   * @default type='circle': 15
-   */
-  size: PropTypes.number,
   /**
    * The type of the mark.
    * @default 'square'
