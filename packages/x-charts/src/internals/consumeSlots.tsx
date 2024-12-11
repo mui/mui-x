@@ -57,8 +57,8 @@ export const consumeSlots = <
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
   InComponent: React.JSXElementConstructor<Props>,
-) =>
-  React.forwardRef(function (props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+) => {
+  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -89,7 +89,7 @@ export const consumeSlots = <
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 
-    const outProps = useSlotProps({
+    const { ownerState, ...outProps } = useSlotProps({
       elementType: OutComponent,
       externalSlotProps: slotProps?.[slotPropName],
       additionalProps: {
@@ -101,4 +101,7 @@ export const consumeSlots = <
     });
 
     return <OutComponent {...outProps} ref={ref} />;
-  });
+  }
+
+  return React.forwardRef(InternalComponent);
+};

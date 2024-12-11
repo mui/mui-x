@@ -63,9 +63,9 @@ const ChartsLegend = consumeSlots(
     return (
       <RootDiv
         className={clsx(classes?.root, className)}
-        ownerState={{ direction }}
         ref={ref}
         {...other}
+        ownerState={{ direction }}
       >
         {data.itemsToDisplay.map((item, i) => {
           return (
