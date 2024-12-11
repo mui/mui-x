@@ -67,7 +67,6 @@ import {
   virtualizationStateInitializer,
   useGridVirtualization,
   useGridDataSourceTreeDataPreProcessors,
-  useGridDataSource,
   dataSourceStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
@@ -76,6 +75,7 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
 import {
   useGridAggregation,

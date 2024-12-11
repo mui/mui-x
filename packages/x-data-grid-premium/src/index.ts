@@ -40,3 +40,14 @@ export {
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export type { GridDataSourceCache } from '@mui/x-data-grid-pro';
+
+export type {
+  GridGetRowsParamsPremium as GridGetRowsParams,
+  GridGetRowsResponsePremium as GridGetRowsResponse,
+  GridDataSourcePremium as GridDataSource,
+  GridDataSourceApiPremium as GridDataSourceApi,
+  GridDataSourceApiBasePremium as GridDataSourceApiBase,
+  GridDataSourcePremiumPrivateApi as GridDataSourcePrivateApi,
+} from './hooks/features/dataSource/models';

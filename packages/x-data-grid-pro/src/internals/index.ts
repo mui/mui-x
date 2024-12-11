@@ -45,9 +45,9 @@ export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoade
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 export {
-  useGridDataSource,
+  useGridDataSourceBase,
   dataSourceStateInitializer,
-} from '../hooks/features/dataSource/useGridDataSource';
+} from '../hooks/features/dataSource/useGridDataSourceBase';
 
 export type {
   GridExperimentalProFeatures,

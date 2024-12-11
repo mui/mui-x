@@ -7,7 +7,7 @@ import {
   GridColDef,
   GridInitialState,
   GridColumnVisibilityModel,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid-premium';
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';

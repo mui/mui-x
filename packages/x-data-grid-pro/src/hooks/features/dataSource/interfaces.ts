@@ -1,5 +1,5 @@
 import { GridRowId } from '@mui/x-data-grid';
-import { GridDataSourceCache, GridGetRowsParams } from '../../../models';
+import { GridDataSourceCache, GridGetRowsParams } from '@mui/x-data-grid/internals';
 
 export interface GridDataSourceState {
   loading: Record<GridRowId, boolean>;
@@ -52,5 +52,4 @@ export interface GridDataSourcePrivateApi {
    * Resets the data source state.
    */
   resetDataSourceState: () => void;
-  internal_getAggregatedValue: (groupId: GridRowId, field: string) => any;
 }

@@ -22,6 +22,13 @@ export interface GridAggregationApi {
   setAggregationModel: (model: GridAggregationModel) => void;
 }
 
+export interface GridAggregationPrivateApi {
+  /**
+   * Applies the aggregation to the rows.
+   */
+  applyAggregation: () => void;
+}
+
 export interface GridAggregationGetCellValueParams {
   /**
    * The row model of the row that the current cell belongs to.

@@ -65,7 +65,6 @@ export interface GridPipeProcessingLookup {
     context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
   };
   isColumnPinned: { value: GridPinnedColumnPosition | false; context: string };
-  reapplyAggregation: { value: boolean };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

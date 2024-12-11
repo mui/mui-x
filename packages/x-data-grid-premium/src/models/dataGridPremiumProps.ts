@@ -24,6 +24,7 @@ import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import { GridDataSourcePremium as GridDataSource } from '../hooks/features/dataSource/models';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -121,7 +122,10 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
+  extends Omit<
+    DataGridProPropsWithoutDefaultValue<R>,
+    'initialState' | 'apiRef' | 'unstable_dataSource'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -191,4 +195,5 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
+  unstable_dataSource?: GridDataSource;
 }

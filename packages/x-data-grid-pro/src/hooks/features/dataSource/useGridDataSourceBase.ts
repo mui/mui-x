@@ -1,14 +1,11 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
-  useGridApiEventHandler,
-  useGridApiMethod,
   GridDataSourceGroupNode,
   useGridSelector,
   gridPaginationModelSelector,
   GRID_ROOT_GROUP_ID,
   GridEventListener,
-  GridValidRowModel,
 } from '@mui/x-data-grid';
 import {
   GridGetRowsResponse,
@@ -16,7 +13,7 @@ import {
   GridStateInitializer,
   GridStrategyGroup,
   GridStrategyProcessor,
-  useGridRegisterStrategyProcessor,
+  GridDataSourceCache,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -29,7 +26,6 @@ import {
   RequestStatus,
   runIf,
 } from './utils';
-import { GridDataSourceCache } from '../../../models';
 import { GridDataSourceCacheDefault, GridDataSourceCacheDefaultConfig } from './cache';
 
 const INITIAL_STATE = {
@@ -60,8 +56,8 @@ export const dataSourceStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
-export const useGridDataSource = (
-  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+export const useGridDataSourceBase = <Api extends GridPrivateApiPro>(
+  apiRef: React.MutableRefObject<Api>,
   props: Pick<
     DataGridProProcessedProps,
     | 'unstable_dataSource'
@@ -92,7 +88,6 @@ export const useGridDataSource = (
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const scheduledGroups = React.useRef<number>(0);
   const lastRequestId = React.useRef<number>(0);
-  const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const onError = props.unstable_onDataSourceError;
 
@@ -346,11 +341,6 @@ export const useGridDataSource = (
         apiRef.current.setRowCount(response.rowCount);
       }
       apiRef.current.setRows(response.rows);
-      // TODO: Call the following lines only when needed
-      if (response.aggregateRow) {
-        aggregateRowRef.current = response.aggregateRow;
-      }
-      apiRef.current.unstable_applyPipeProcessors('reapplyAggregation', true);
     },
     [apiRef],
   );
@@ -364,19 +354,6 @@ export const useGridDataSource = (
     });
   }, [apiRef]);
 
-  const getAggregatedValue = React.useCallback<
-    GridDataSourcePrivateApi['internal_getAggregatedValue']
-  >(
-    (groupId, field) => {
-      if (groupId === GRID_ROOT_GROUP_ID) {
-        return props.unstable_dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
-      }
-      const row = apiRef.current.getRow(groupId);
-      return props.unstable_dataSource?.getAggregatedValue?.(row, field);
-    },
-    [apiRef, props.unstable_dataSource],
-  );
-
   const dataSourceApi: GridDataSourceApi = {
     unstable_dataSource: {
       setChildrenLoading,
@@ -389,36 +366,7 @@ export const useGridDataSource = (
   const dataSourcePrivateApi: GridDataSourcePrivateApi = {
     fetchRowChildren,
     resetDataSourceState,
-    // TODO: Revisit naming
-    internal_getAggregatedValue: getAggregatedValue,
   };
-
-  useGridApiMethod(apiRef, dataSourceApi, 'public');
-  useGridApiMethod(apiRef, dataSourcePrivateApi, 'private');
-
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    DataSourceRowsUpdateStrategy.Default,
-    'dataSourceRowsUpdate',
-    handleDataUpdate,
-  );
-
-  useGridApiEventHandler(apiRef, 'strategyAvailabilityChange', handleStrategyActivityChange);
-  useGridApiEventHandler(
-    apiRef,
-    'sortModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'filterModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
-  useGridApiEventHandler(
-    apiRef,
-    'paginationModelChange',
-    runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
-  );
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -452,4 +400,19 @@ export const useGridDataSource = (
       scheduledGroups.current = groupsToAutoFetch.length;
     }
   }, [apiRef, nestedDataManager, groupsToAutoFetch]);
+
+  return {
+    api: { public: dataSourceApi, private: dataSourcePrivateApi },
+    strategyProcessor: {
+      strategyName: DataSourceRowsUpdateStrategy.Default,
+      group: 'dataSourceRowsUpdate',
+      processor: handleDataUpdate,
+    },
+    events: {
+      strategyAvailabilityChange: handleStrategyActivityChange,
+      sortModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      filterModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+      paginationModelChange: runIf(defaultRowsUpdateStrategyActive, () => fetchRows()),
+    },
+  };
 };

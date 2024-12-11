@@ -8,13 +8,11 @@ import {
   GridRowId,
   GridPaginationModel,
   GridValidRowModel,
-} from '@mui/x-data-grid-pro';
-import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
-import {
   GRID_AGGREGATION_FUNCTIONS,
   GridAggregationModel,
   GridAggregationFunction,
 } from '@mui/x-data-grid-premium';
+import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
 
 const getAvailableAggregationFunctions = (columnType: GridColDef['type']) => {

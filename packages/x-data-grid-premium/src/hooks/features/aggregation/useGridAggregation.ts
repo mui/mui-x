@@ -12,7 +12,7 @@ import {
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
-import { GridAggregationApi } from './gridAggregationInterfaces';
+import { GridAggregationApi, GridAggregationPrivateApi } from './gridAggregationInterfaces';
 import {
   getAggregationRules,
   mergeStateWithAggregationModel,
@@ -99,7 +99,12 @@ export const useGridAggregation = (
     setAggregationModel,
   };
 
+  const aggregationPrivateApi: GridAggregationPrivateApi = {
+    applyAggregation,
+  };
+
   useGridApiMethod(apiRef, aggregationApi, 'public');
+  useGridApiMethod(apiRef, aggregationPrivateApi, 'private');
 
   const addGetRowsParams = React.useCallback<GridPipeProcessor<'getRowsParams'>>(
     (params) => {
@@ -112,14 +117,7 @@ export const useGridAggregation = (
     [apiRef, props.aggregationRowsScope],
   );
 
-  const reapplyAggregation = React.useCallback(() => {
-    apiRef.current.requestPipeProcessorsApplication('hydrateRows');
-    applyAggregation();
-    return true;
-  }, [apiRef, applyAggregation]);
-
   useGridRegisterPipeProcessor(apiRef, 'getRowsParams', addGetRowsParams);
-  useGridRegisterPipeProcessor(apiRef, 'reapplyAggregation', reapplyAggregation);
 
   /**
    * EVENTS
