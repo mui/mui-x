@@ -71,7 +71,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@argos-ci/core": "^2.11.1",
+    "@argos-ci/core": "^2.12.0",
     "@babel/cli": "^7.26.4",
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
@@ -175,7 +175,7 @@
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
     "nyc": "^17.1.0",
-    "prettier": "^3.4.1",
+    "prettier": "^3.4.2",
     "pretty-quick": "^4.0.0",
     "process": "^0.11.10",
     "react": "^18.3.1",

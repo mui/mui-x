@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -28,7 +29,7 @@ const randomRole = () => {
   return randomArrayItem(roles);
 };
 
-const initialRows = [
+const rows = [
   {
     id: randomId(),
     name: randomTraderName(),
@@ -73,10 +74,11 @@ const columns = [
 ];
 
 function EditAction(props) {
-  const { row, onSave } = props;
+  const { row } = props;
   const [editing, setEditing] = React.useState(false);
   const [name, setName] = React.useState(row.name);
   const [position, setPosition] = React.useState(row.position);
+  const apiRef = useGridApiContext();
 
   const handleEdit = (event) => {
     event.stopPropagation();
@@ -89,7 +91,7 @@ function EditAction(props) {
 
   const handleSave = (event) => {
     event.preventDefault();
-    onSave(row.id, { name, position });
+    apiRef.current.updateRows([{ id: row.id, name, position }]);
     handleClose();
   };
 
@@ -155,6 +157,20 @@ function EditAction(props) {
   );
 }
 
+function DeleteAction(props) {
+  const { row } = props;
+  const apiRef = useGridApiContext();
+
+  return (
+    <IconButton
+      aria-label="Delete"
+      onClick={() => apiRef.current.updateRows([{ id: row.id, _action: 'delete' }])}
+    >
+      <DeleteIcon />
+    </IconButton>
+  );
+}
+
 function ListViewCell(props) {
   const { row } = props;
 
@@ -176,28 +192,20 @@ function ListViewCell(props) {
           {row.position}
         </Typography>
       </Stack>
-      <EditAction {...props} />
+      <Stack direction="row" sx={{ gap: 0.5 }}>
+        <EditAction {...props} />
+        <DeleteAction {...props} />
+      </Stack>
     </Stack>
   );
 }
 
+const listColDef = {
+  field: 'listColumn',
+  renderCell: (params) => <ListViewCell {...params} />,
+};
+
 export default function ListViewEdit() {
-  const [rows, setRows] = React.useState(initialRows);
-
-  const updateRow = React.useCallback((id, rowUpdates) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === id ? { ...row, ...rowUpdates } : row)),
-    );
-  }, []);
-
-  const listColDef = React.useMemo(
-    () => ({
-      field: 'listColumn',
-      renderCell: (params) => <ListViewCell {...params} onSave={updateRow} />,
-    }),
-    [updateRow],
-  );
-
   return (
     <div
       style={{
