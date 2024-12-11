@@ -38,7 +38,7 @@ const Root = styled('div', {
       width: 16,
       display: 'flex',
       alignItems: 'center',
-      '> div': {
+      [`.${labelMarkClasses.mask}`]: {
         height: 4,
         width: '100%',
         borderRadius: 1,
@@ -86,7 +86,7 @@ const ChartsLabelMark = consumeThemeProps(
         ref={ref}
         {...other}
       >
-        <div>
+        <div className={classes?.mask}>
           <svg viewBox="0 0 24 24" preserveAspectRatio={type === 'line' ? 'none' : undefined}>
             <rect width="24" height="24" fill={color} />
           </svg>

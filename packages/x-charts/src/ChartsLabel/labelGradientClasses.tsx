@@ -6,6 +6,8 @@ import type { ChartsLabelGradientProps } from './ChartsLabelGradient';
 export interface ChartsLabelGradientClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the "mask" that gives shape to the gradient. */
+  mask: string;
   /** Styles applied when direction is "column". */
   column: string;
   /** Styles applied when direction is "row". */
@@ -20,7 +22,7 @@ export function getLabelGradientUtilityClass(slot: string) {
 
 export const labelGradientClasses: ChartsLabelGradientClasses = generateUtilityClasses(
   'MuiChartsLabelGradient',
-  ['root', 'column', 'row'],
+  ['root', 'column', 'row', 'mask'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
@@ -28,6 +30,7 @@ export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
 
   const slots = {
     root: ['root', direction],
+    mask: ['mask'],
   };
 
   return composeClasses(slots, getLabelGradientUtilityClass, props.classes);

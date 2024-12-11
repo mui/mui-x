@@ -40,20 +40,20 @@ const Root = styled('div', {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    '> div': {
+    [`.${labelGradientClasses.mask}`]: {
       borderRadius: 2,
       overflow: 'hidden',
     },
     [`&.${labelGradientClasses.row}`]: {
       width: '100%',
-      '> div': {
+      [`.${labelGradientClasses.mask}`]: {
         height: 12,
         width: '100%',
       },
     },
     [`&.${labelGradientClasses.column}`]: {
       height: '100%',
-      '> div': {
+      [`.${labelGradientClasses.mask}`]: {
         width: 12,
         height: '100%',
         '> svg': {
@@ -92,7 +92,7 @@ const ChartsLabelGradient = consumeThemeProps(
         ref={ref}
         {...other}
       >
-        <div>
+        <div className={classes?.mask}>
           <svg viewBox="0 0 24 24">
             <rect width="24" height="24" fill={`url(#${gradientId})`} />
           </svg>
