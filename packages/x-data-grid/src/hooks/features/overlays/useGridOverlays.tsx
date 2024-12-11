@@ -3,11 +3,8 @@ import { useGridSelector } from '../../utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { gridExpandedRowCountSelector } from '../filter';
-import {
-  gridRowCountSelector,
-  gridRowsLoadingSelector,
-  gridPinnedRowsCountSelector,
-} from '../rows';
+import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
+import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
 import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
 import type { GridOverlayType } from '../../../components/base/GridOverlays';
