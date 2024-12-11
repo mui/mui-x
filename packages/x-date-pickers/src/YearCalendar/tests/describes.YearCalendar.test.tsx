@@ -9,6 +9,7 @@ import {
   describeValue,
 } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<YearCalendar /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -31,7 +32,7 @@ describe('<YearCalendar /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(YearCalendar, () => ({
+  describeValue<PickerValue, 'calendar'>(YearCalendar, () => ({
     render,
     componentFamily: 'calendar',
     values: [adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-01')],

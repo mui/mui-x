@@ -4,7 +4,6 @@ import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
 import { ChartsLegendProps } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsTooltipProps } from '../ChartsTooltip';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
 import { ChartContainerProps } from '../ChartContainer';
 import { ZAxisContextProviderProps } from '../context';
@@ -24,7 +23,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     yAxis,
     zAxis,
     series,
-    tooltip,
     axisHighlight,
     voronoiMaxRadius,
     disableVoronoi,
@@ -108,13 +106,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
-  const tooltipProps: ChartsTooltipProps<'scatter'> = {
-    trigger: 'item' as const,
-    ...tooltip,
-    slots,
-    slotProps,
-  };
-
   return {
     chartContainerProps,
     zAxisProps,
@@ -125,7 +116,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     overlayProps,
     legendProps,
     axisHighlightProps,
-    tooltipProps,
     children,
   };
 };

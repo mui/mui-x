@@ -40,7 +40,6 @@ export default function RowGroupingFullExample() {
         groupingColDef={{
           leafField: 'traderEmail',
         }}
-        experimentalFeatures={{ ariaV8: true }}
       />
     </div>
   );

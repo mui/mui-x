@@ -21,13 +21,10 @@ export const useTreeViewId: TreeViewPlugin<UseTreeViewIdSignature> = ({ params, 
 
   const treeId = useSelector(store, selectorTreeViewId);
 
-  const pluginContextValue = React.useMemo(() => ({ treeId }), [treeId]);
-
   return {
     getRootProps: () => ({
       id: treeId,
     }),
-    contextValue: pluginContextValue,
   };
 };
 

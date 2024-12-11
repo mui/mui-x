@@ -1,29 +1,27 @@
 'use client';
-import * as React from 'react';
 import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
+import { useXAxis, useYAxis } from '../hooks/useAxis';
+import { useZAxis } from '../hooks/useZAxis';
 import {
-  selectorChartsInteractionAxis,
   selectorChartsInteractionXAxis,
   selectorChartsInteractionYAxis,
-} from '../context/InteractionSelectors';
-import { useXAxis, useYAxis } from '../hooks';
-import { useSelector } from '../internals/useSelector';
-import { useStore } from '../internals/useStore';
-import { AxisInteractionData } from '../internals/plugins/models';
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,
   AxisValueT extends string | number | Date = string | number | Date,
 > {
-  identifier: AxisInteractionData;
+  axisDirection: 'x' | 'y';
+  dataIndex: number;
   seriesItems: SeriesItem<SeriesT>[];
   axisValue: AxisValueT;
   axisFormattedValue: string;
@@ -44,9 +42,6 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
   const xAxisHasData = defaultXAxis.data !== undefined && defaultXAxis.data.length !== 0;
 
   const store = useStore();
-
-  // This line will be removed in v8 because it degrade perfs for no reason except avoiding breaking change.
-  const axis = useSelector(store, selectorChartsInteractionAxis);
   const axisData = useSelector(
     store,
     xAxisHasData ? selectorChartsInteractionXAxis : selectorChartsInteractionYAxis,
@@ -56,7 +51,7 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
 
   const { xAxis, yAxis } = useCartesianContext();
 
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { zAxis, zAxisIds } = useZAxis();
   const colorProcessors = useColorProcessor();
 
   if (axisData === null) {
@@ -124,7 +119,8 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
   const axisFormattedValue = axisFormatter(axisValue, { location: 'tooltip' });
 
   return {
-    identifier: axis,
+    axisDirection: xAxisHasData ? 'x' : 'y',
+    dataIndex,
     seriesItems: relevantSeries,
     axisValue,
     axisFormattedValue,

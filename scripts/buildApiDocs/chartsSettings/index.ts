@@ -54,6 +54,9 @@ export default chartsApiPages;
   translationLanguages: LANGUAGES,
   skipComponent(filename) {
     if (filename.includes('/context/')) {
+      if (filename.endsWith('ChartDataProvider.tsx')) {
+        return false;
+      }
       return true;
     }
     return [

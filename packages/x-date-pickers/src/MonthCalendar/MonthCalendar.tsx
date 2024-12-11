@@ -114,6 +114,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager: singleItemValueManager,
   });

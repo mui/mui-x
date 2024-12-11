@@ -42,6 +42,7 @@ export interface GridEventLookupPro {
   rowOrderChange: { params: GridRowOrderChangeParams };
   /**
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
+   * Used to trigger `onFetchRows`.
    */
   fetchRows: { params: GridFetchRowsParams };
 }

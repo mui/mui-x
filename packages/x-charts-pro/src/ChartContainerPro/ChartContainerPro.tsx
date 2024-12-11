@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import type {} from '../typeOverloads';
 import { Watermark } from '@mui/x-license/Watermark';
 import { ChartContainerProps } from '@mui/x-charts/ChartContainer';
-import { ResizableContainer } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
 import { ZoomProps } from '../context/ZoomProvider';
@@ -19,15 +18,15 @@ const ChartContainerPro = React.forwardRef(function ChartContainerPro(
   props: ChartContainerProProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { chartDataProviderProProps, children, resizableContainerProps, chartsSurfaceProps } =
-    useChartContainerProProps(props, ref);
+  const { chartDataProviderProProps, children, chartsSurfaceProps } = useChartContainerProProps(
+    props,
+    ref,
+  );
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps}>
-      <ResizableContainer {...resizableContainerProps}>
-        <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
-        <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
-      </ResizableContainer>
+      <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
+      <Watermark packageName="x-charts-pro" releaseInfo={releaseInfo} />
     </ChartDataProviderPro>
   );
 });
@@ -96,16 +95,6 @@ ChartContainerPro.propTypes = {
    */
   plugins: PropTypes.arrayOf(PropTypes.object),
   /**
-   * The chart will try to wait for the parent container to resolve its size
-   * before it renders for the first time.
-   *
-   * This can be useful in some scenarios where the chart appear to grow after
-   * the first render, like when used inside a grid.
-   *
-   * @default false
-   */
-  resolveSizeBeforeRender: PropTypes.bool,
-  /**
    * The array of series to display.
    * Each type of series has its own specificity.
    * Please refer to the appropriate docs page to learn more about it.
@@ -170,7 +159,6 @@ ChartContainerPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -185,7 +173,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,
@@ -258,7 +245,6 @@ ChartContainerPro.propTypes = {
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       label: PropTypes.string,
-      labelFontSize: PropTypes.number,
       labelStyle: PropTypes.object,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
@@ -273,7 +259,6 @@ ChartContainerPro.propTypes = {
         PropTypes.func,
         PropTypes.object,
       ]),
-      tickFontSize: PropTypes.number,
       tickInterval: PropTypes.oneOfType([
         PropTypes.oneOf(['auto']),
         PropTypes.array,

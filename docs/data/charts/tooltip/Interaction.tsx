@@ -21,8 +21,8 @@ const barChartsParams = {
 export default function Interaction() {
   return (
     <Stack direction="column" sx={{ width: '100%', maxWidth: 400 }}>
-      <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
-      <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
+      <BarChart {...barChartsParams} slotProps={{ tooltip: { trigger: 'axis' } }} />
+      <BarChart {...barChartsParams} slotProps={{ tooltip: { trigger: 'item' } }} />
     </Stack>
   );
 }
