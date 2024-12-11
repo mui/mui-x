@@ -1,7 +1,6 @@
-import { AxisId } from '@mui/x-charts/internals';
-import { DefaultizedZoomOptions, ZoomOptions } from './useChartProCartesianAxis.types';
+import { AxisId, DefaultizedZoomOption, ZoomOption } from '@mui/x-charts/internals';
 
-const defaultZoomOptions: Required<ZoomOptions> = {
+const defaultZoomOptions: Required<ZoomOption> = {
   minStart: 0,
   maxEnd: 100,
   step: 5,
@@ -12,10 +11,10 @@ const defaultZoomOptions: Required<ZoomOptions> = {
 };
 
 export const defaultizeZoom = (
-  zoom: boolean | ZoomOptions | undefined,
+  zoom: boolean | ZoomOption | undefined,
   axisId: AxisId,
   axisDirection: 'x' | 'y',
-): DefaultizedZoomOptions | undefined => {
+): DefaultizedZoomOption | undefined => {
   if (!zoom) {
     return undefined;
   }

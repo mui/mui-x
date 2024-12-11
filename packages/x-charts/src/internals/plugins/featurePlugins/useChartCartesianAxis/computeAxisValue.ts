@@ -6,6 +6,7 @@ import {
   ChartsYAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
+  AxisId,
 } from '../../../../models/axis';
 import { CartesianChartSeriesType, ChartSeriesType } from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
@@ -15,40 +16,15 @@ import { zoomScaleRange } from './zoom';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
-import {
-  DefaultizedAxisConfig,
-  GetZoomAxisFilters,
-  ZoomData,
-  ZoomOptions,
-} from './useChartCartesianAxis.types';
+import { DefaultizedAxisConfig, DefaultizedZoomOption } from './useChartCartesianAxis.types';
 import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { GetZoomAxisFilters, ZoomData } from './zoom.types';
 
 function getRange(
   drawingArea: ChartDrawingArea,
   axisDirection: 'x' | 'y', // | 'rotation' | 'radius',
-  axis: AxisConfig<
-    ScaleName,
-    any,
-    // ChartsRotationAxisProps | ChartsRotationAxisProps |
-    ChartsAxisProps
-  >,
+  axis: AxisConfig<ScaleName, any, ChartsAxisProps>,
 ): [number, number] {
-  // if (axisDirection === 'rotation') {
-  //   const { startAngle = 0, endAngle = startAngle + 360 } = axis as AxisConfig<
-  //     ScaleName,
-  //     any,
-  //     ChartsRotationAxisProps
-  //   >;
-  //   return axis.reverse
-  //     ? [(Math.PI * startAngle) / 180, (Math.PI * endAngle) / 180]
-  //     : [(Math.PI * endAngle) / 180, (Math.PI * startAngle) / 180];
-  // }
-  // if (axisDirection === 'radius') {
-  //   const { minRadius = 0, maxRadius = Math.min(drawingArea.width, drawingArea.height) / 2 } =
-  //     axis as AxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
-  //   return [minRadius, maxRadius];
-  // }
-
   const range: [number, number] =
     axisDirection === 'x'
       ? [drawingArea.left, drawingArea.left + drawingArea.width]
@@ -81,8 +57,8 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
   drawingArea: ChartDrawingArea;
   formattedSeries: ProcessedSeries<T>;
   seriesConfig: ChartSeriesConfig<T>;
-  zoomData?: ZoomData[];
-  zoomOptions?: ZoomOptions;
+  zoomMap?: Map<AxisId, ZoomData>;
+  zoomOptions?: Record<AxisId, DefaultizedZoomOption>;
   getFilters?: GetZoomAxisFilters;
 };
 
@@ -104,7 +80,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   axis: allAxis,
   seriesConfig,
   axisDirection,
-  zoomData,
+  zoomMap,
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
@@ -115,7 +91,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
     const zoomOption = zoomOptions?.[axis.id];
-    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+    const zoom = zoomMap?.get(axis.id);
     const zoomRange: [number, number] = zoom ? [zoom.start, zoom.end] : [0, 100];
     const range = getRange(drawingArea, axisDirection, axis);
 

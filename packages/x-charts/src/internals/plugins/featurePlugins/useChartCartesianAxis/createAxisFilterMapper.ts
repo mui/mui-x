@@ -1,23 +1,42 @@
-import { getAxisExtremum, isDefined, getScale } from '@mui/x-charts/internals';
-import { ScaleName, AxisConfig } from '@mui/x-charts/models';
-import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ZoomData } from '../../../context/ZoomProvider';
+import type { ChartsAxisProps } from '../../../../ChartsAxis';
+import { isDefined } from '../../../isDefined';
+import { AxisId } from '../../../../models/axis';
+import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { AxisConfig, ScaleName } from '../../../../models';
+import { ChartSeriesConfig } from '../../models/seriesConfig';
+import { getAxisExtremum } from './getAxisExtremum';
+import {
+  DefaultizedZoomOption,
+  ExtremumFilter,
+  GetZoomAxisFilters,
+  ZoomAxisFilters,
+  ZoomData,
+} from './useChartCartesianAxis.types';
 
 type CreateAxisFilterMapperParams = {
-  zoomData: ZoomData[];
-  extremumGetter: ExtremumGettersConfig;
-  formattedSeries: FormattedSeries;
+  zoomMap: Map<AxisId, ZoomData>;
+  zoomOptions: Record<AxisId, DefaultizedZoomOption>;
+  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
+  formattedSeries: ProcessedSeries;
   direction: 'x' | 'y';
 };
 
 export const createAxisFilterMapper =
-  ({ zoomData, extremumGetter, formattedSeries, direction }: CreateAxisFilterMapperParams) =>
+  ({
+    zoomMap,
+    zoomOptions,
+    seriesConfig,
+    formattedSeries,
+    direction,
+  }: CreateAxisFilterMapperParams) =>
   (axis: AxisConfig<ScaleName, any, ChartsAxisProps>, axisIndex: number): ExtremumFilter | null => {
-    if (typeof axis.zoom !== 'object' || axis.zoom.filterMode !== 'discard') {
+    const zoomOption = zoomOptions[axis.id];
+    if (!zoomOption || zoomOption.filterMode !== 'discard') {
       return null;
     }
 
-    const zoom = zoomData?.find(({ axisId }) => axisId === axis.id);
+    const zoom = zoomMap?.get(axis.id);
 
     if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
       // No zoom, or zoom with all data visible
@@ -30,7 +49,7 @@ export const createAxisFilterMapper =
     if (scaleType === 'point' || scaleType === 'band') {
       extremums = [0, (axis.data?.length ?? 1) - 1];
     } else {
-      extremums = getAxisExtremum(axis, extremumGetter, axisIndex, formattedSeries);
+      extremums = getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries);
     }
 
     let min: number | Date;

@@ -14,11 +14,11 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { ChartContainerPro } from '../ChartContainerPro';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { useZoom } from '../context/ZoomProvider/useZoom';
+import { useZoomIsInteracting } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
 
 function BarChartPlotZoom(props: BarPlotProps) {
-  const { isInteracting } = useZoom();
+  const isInteracting = useZoomIsInteracting();
 
   return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }

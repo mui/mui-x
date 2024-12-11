@@ -1,5 +1,4 @@
-import { AxisId } from '@mui/x-charts/internals';
-import { ZoomData } from './useChartProCartesianAxis.types';
+import { AxisId, ZoomData } from '@mui/x-charts/internals';
 
 export const createZoomMap = (zoom: ZoomData[]) => {
   const selectedItemsMap = new Map<AxisId, ZoomData>();

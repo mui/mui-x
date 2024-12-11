@@ -45,15 +45,19 @@ useChartCartesianAxis.params = {
   dataset: true,
 };
 
-useChartCartesianAxis.getDefaultizedParams = ({ params }) => ({
-  ...params,
-  colors: params.colors ?? blueberryTwilightPalette,
-  theme: params.theme ?? 'light',
-});
+useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
+  return {
+    ...params,
+    colors: params.colors ?? blueberryTwilightPalette,
+    theme: params.theme ?? 'light',
+    defaultizedXAxis: defaultizeAxis(params.xAxis, params.dataset, 'x'),
+    defaultizedYAxis: defaultizeAxis(params.yAxis, params.dataset, 'y'),
+  };
+};
 
-useChartCartesianAxis.getInitialState = ({ xAxis, yAxis, dataset }) => ({
+useChartCartesianAxis.getInitialState = (params) => ({
   cartesianAxis: {
-    x: defaultizeAxis(xAxis, dataset, 'x'),
-    y: defaultizeAxis(yAxis, dataset, 'y'),
+    x: params.defaultizedXAxis,
+    y: params.defaultizedYAxis,
   },
 });

@@ -10,6 +10,7 @@ import {
   AxisConfig,
 } from '../../../../models/axis';
 import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { ZoomData, ZoomOption } from './zoom.types';
 
 export type DefaultizedAxisConfig<AxisProps> = {
   [axisId: AxisId]: AxisDefaultized<ScaleName, any, AxisProps>;
@@ -34,20 +35,6 @@ export type CartesianContextState = {
   yAxisIds: AxisId[];
 };
 
-// export type ZoomData = { axisId: AxisId; start: number; end: number };
-
-// export type ZoomFilterMode = 'keep' | 'discard' | 'empty';
-// export type ZoomOptions = Record<AxisId, { filterMode: ZoomFilterMode }>;
-
-// export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
-
-// export type GetZoomAxisFilters = (params: {
-//   currentAxisId: AxisId | undefined;
-//   seriesXAxisId?: AxisId;
-//   seriesYAxisId?: AxisId;
-//   isDefaultAxis: boolean;
-// }) => ExtremumFilter;
-
 export interface UseChartCartesianAxisParameters {
   /**
    * The configuration of the x-axes.
@@ -64,9 +51,32 @@ export interface UseChartCartesianAxisParameters {
   dataset?: DatasetType;
 }
 
-export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {};
+export type UseChartCartesianAxisDefaultizedParameters = UseChartCartesianAxisParameters & {
+  defaultizedXAxis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+  defaultizedYAxis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+};
+
+export interface DefaultizedZoomOption extends Required<ZoomOption> {
+  axisId: AxisId;
+  axisDirection: 'x' | 'y';
+}
 
 export interface UseChartCartesianAxisState {
+  zoom?: {
+    /**
+     * The zoom options for each axis.
+     */
+    options: Record<AxisId, DefaultizedZoomOption>;
+    /**
+     * Whether the user is currently interacting with the chart.
+     * This is useful to prevent animations from running while the user is interacting.
+     */
+    isInteracting: boolean;
+    /**
+     * Mapping of axis id to the zoom data.
+     */
+    zoomMap: Map<AxisId, ZoomData>;
+  };
   cartesianAxis: {
     x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     y: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
@@ -88,17 +98,3 @@ export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = 
     // instance: UseChartCartesianAxisInstance;
     dependencies: [UseChartSeriesSignature<SeriesType>];
   }>;
-
-export type ZoomData = { axisId: AxisId; start: number; end: number };
-
-export type ZoomFilterMode = 'keep' | 'discard' | 'empty';
-export type ZoomOptions = Record<AxisId, { filterMode: ZoomFilterMode }>;
-
-export type ZoomAxisFilters = Record<AxisId, ExtremumFilter>;
-
-export type GetZoomAxisFilters = (params: {
-  currentAxisId: AxisId | undefined;
-  seriesXAxisId?: AxisId;
-  seriesYAxisId?: AxisId;
-  isDefaultAxis: boolean;
-}) => ExtremumFilter;

@@ -81,7 +81,10 @@ type PluginPropertyWithDependencies<
   MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, TProperty> &
   Partial<MergeSignaturesProperty<TSignature['optionalDependencies'], TProperty>>;
 
-export type ChartUsedParams<TSignature extends ChartAnyPluginSignature> =
+export type ChartUsedParams<TSignature extends ChartAnyPluginSignature> = MergeSignaturesProperty<
+  TSignature['dependencies'],
+  'defaultizedParams'
+> &
   PluginPropertyWithDependencies<TSignature, 'params'>;
 
 type ChartUsedDefaultizedParams<TSignature extends ChartAnyPluginSignature> =

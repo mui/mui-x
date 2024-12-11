@@ -1,9 +1,18 @@
 'use client';
 import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
-import { getSVGPoint, useChartContext } from '@mui/x-charts/internals';
-import { useZoom } from './useZoom';
-import { DefaultizedZoomOptions, ZoomData } from './Zoom.types';
+import {
+  AxisId,
+  DefaultizedZoomOption,
+  getSVGPoint,
+  UseChartCartesianAxisSignature,
+  useChartContext,
+  useSelector,
+  useStore,
+  ZoomData,
+} from '@mui/x-charts/internals';
+import { UseChartProZoomState } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
+import { selectorChartZoomOptions } from '../../internals/plugins/useChartProZoom';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.
@@ -15,7 +24,7 @@ const zoomAtPoint = (
   centerRatio: number,
   scaleRatio: number,
   currentZoomData: ZoomData,
-  options: DefaultizedZoomOptions,
+  options: Record<AxisId, DefaultizedZoomOption>,
 ) => {
   const MIN_RANGE = options.minStart;
   const MAX_RANGE = options.maxEnd;
@@ -56,7 +65,33 @@ const zoomAtPoint = (
 };
 
 export const useSetupZoom = () => {
-  const { setZoomData, isZoomEnabled, options, setIsInteracting } = useZoom();
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartProZoomState]>();
+
+  const options = useSelector(store, selectorChartZoomOptions);
+  const isZoomEnabled = Object.keys(options).length > 0;
+  const setZoomMap = React.useCallback(
+    (updateFunction: (zoomMap: Map<AxisId, ZoomData>) => Map<AxisId, ZoomData>) =>
+      store.update((prev) => ({
+        ...prev,
+        zoom: {
+          ...prev.zoom,
+          zoomMap: updateFunction(prev.zoom.zoomMap),
+        },
+      })),
+    [store],
+  );
+  const setIsInteracting = React.useCallback(
+    (newValue: boolean) =>
+      store.update((prev) => ({
+        ...prev,
+        zoom: {
+          ...prev.zoom,
+          isInteracting: newValue,
+        },
+      })),
+    [store],
+  );
+
   const drawingArea = useDrawingArea();
   const { instance } = useChartContext();
 
@@ -93,11 +128,14 @@ export const useSetupZoom = () => {
         setIsInteracting(false);
       }, 166);
 
-      setZoomData((prevZoomData) => {
-        return prevZoomData.map((zoom) => {
+      store.update((prevState) => {
+        const newZoomData = new Map(prevState.zoom.zoomMap);
+
+        let updated = false;
+        newZoomData.forEach((zoom, key) => {
           const option = options[zoom.axisId];
           if (!option) {
-            return zoom;
+            return;
           }
 
           const centerRatio =
@@ -109,11 +147,23 @@ export const useSetupZoom = () => {
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
           if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
+            return;
           }
 
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+          updated = true;
+
+          newZoomData.set(key, { axisId: zoom.axisId, start: newMinRange, end: newMaxRange });
         });
+
+        return updated
+          ? {
+              ...prevState,
+              zoom: {
+                ...prevState.zoom,
+                zoomMap: newZoomData,
+              },
+            }
+          : prevState;
       });
     };
 
@@ -140,11 +190,14 @@ export const useSetupZoom = () => {
       const firstEvent = eventCacheRef.current[0];
       const curDiff = getDiff(eventCacheRef.current);
 
-      setZoomData((prevZoomData) => {
-        const newZoomData = prevZoomData.map((zoom) => {
-          const option = options[zoom.axisId];
+      setZoomMap((prevZoomData) => {
+        const newZoomData = new Map(prevZoomData);
+        let updated = false;
+
+        prevZoomData.forEach((zoom, key) => {
+          const option = options[key];
           if (!option) {
-            return zoom;
+            return;
           }
 
           const { scaleRatio, isZoomIn } = getPinchScaleRatio(
@@ -155,7 +208,7 @@ export const useSetupZoom = () => {
 
           // If the scale ratio is 0, it means the pinch gesture is not valid.
           if (scaleRatio === 0) {
-            return zoom;
+            return;
           }
 
           const point = getSVGPoint(element, firstEvent);
@@ -168,12 +221,15 @@ export const useSetupZoom = () => {
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 
           if (!isSpanValid(newMinRange, newMaxRange, isZoomIn, option)) {
-            return zoom;
+            return;
           }
-          return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
+          updated = true;
+          newZoomData.set(key, { axisId: zoom.axisId, start: newMinRange, end: newMaxRange });
         });
+
         eventPrevDiff.current = curDiff;
-        return newZoomData;
+
+        return updated ? newZoomData : prevZoomData;
       });
     }
 
@@ -218,7 +274,7 @@ export const useSetupZoom = () => {
         clearTimeout(interactionTimeoutRef.current);
       }
     };
-  }, [svgRef, setZoomData, drawingArea, isZoomEnabled, options, setIsInteracting, instance]);
+  }, [svgRef, drawingArea, isZoomEnabled, options, setIsInteracting, instance, setZoomMap, store]);
 };
 
 /**

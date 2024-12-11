@@ -17,6 +17,7 @@ export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartInteraction';
+export * from './plugins/utils/selectors';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -30,7 +31,6 @@ export * from './getSVGPoint';
 export * from './isDefined';
 export { unstable_cleanupDOM } from './domUtils';
 export * from './getScale';
-export * from './plugins/featurePlugins/useChartCartesianAxis/computeAxisValue';
 
 // contexts
 
