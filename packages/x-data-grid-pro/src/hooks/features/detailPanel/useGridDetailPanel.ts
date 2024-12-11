@@ -30,6 +30,8 @@ import {
 // FIXME: calling `api.updateDimensions()` here triggers a cycle where `updateDimensions` is
 // called 3 times when opening/closing a panel.
 
+const emptySet = new Set();
+
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
 > = (state, props) => {
@@ -38,7 +40,9 @@ export const detailPanelStateInitializer: GridStateInitializer<
     detailPanel: {
       heightCache: {},
       expandedRowIds:
-        props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
+        props.detailPanelExpandedRowIds ??
+        props.initialState?.detailPanel?.expandedRowIds ??
+        emptySet,
     },
   };
 };
