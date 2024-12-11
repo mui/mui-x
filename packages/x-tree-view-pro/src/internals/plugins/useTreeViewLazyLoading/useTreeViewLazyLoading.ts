@@ -233,12 +233,12 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   React.useEffect(() => {
     if (isLazyLoadingEnabled && firstRenderRef.current) {
       if (params.items.length) {
-        firstRenderRef.current = false;
         const getChildrenCount = params.dataSource?.getChildrenCount || (() => 0);
         instance.addItems({ items: params.items, depth: 0, getChildrenCount });
       } else {
         instance.fetchItems();
       }
+      firstRenderRef.current = false;
     }
   }, [instance, params.items, params.dataSource, isLazyLoadingEnabled]);
 
