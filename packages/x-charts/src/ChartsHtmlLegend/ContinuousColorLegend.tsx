@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { AxisDefaultized, ContinuousScaleName } from '../models/axis';
+import { styled } from '@mui/material/styles';
+import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ChartsLegendPlacement } from './legend.types';
 import { ColorLegendSelector } from './continuousColorLegend.types';
+import { ChartsLabel, ChartsLabelGradient } from '../ChartsLabel';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
@@ -24,26 +26,41 @@ export interface ContinuousColorLegendProps extends ChartsLegendPlacement, Color
   maxLabel?: string | LabelFormatter;
   /**
    * A unique identifier for the gradient.
+   *
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
+   *
    * @default auto-generated id
    */
-  id?: string;
-  /**
-   * The scale used to display gradient colors.
-   * @default 'linear'
-   */
-  scaleType?: ContinuousScaleName;
+  gradientId?: string;
 }
 
-const defaultLabelFormatter: LabelFormatter = ({ formattedValue }) => formattedValue;
+const RootElement = styled('ul', {
+  name: 'MuiChartsLegend',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{ ownerState: Pick<ContinuousColorLegendProps, 'direction'> }>(({ ownerState, theme }) => ({
+  display: 'flex',
+  flexDirection: ownerState.direction ?? 'row',
+  alignItems: ownerState.direction === 'row' ? 'center' : undefined,
+  gap: theme.spacing(2),
+  listStyleType: 'none',
+  paddingInlineStart: 0,
+  flexWrap: 'wrap',
+}));
+
+const getText = (
+  label: string | LabelFormatter | undefined,
+  value: number | Date,
+  formattedValue: string,
+) => {
+  if (typeof label === 'string') {
+    return label;
+  }
+  return label?.({ value, formattedValue }) ?? formattedValue;
+};
 
 function ContinuousColorLegend(props: ContinuousColorLegendProps) {
-  const {
-    minLabel = defaultLabelFormatter,
-    maxLabel = defaultLabelFormatter,
-    direction,
-    axisDirection,
-    axisId,
-  } = props;
+  const { minLabel, maxLabel, direction, axisDirection, axisId } = props;
 
   const axisItem = useAxis({ axisDirection, axisId });
 
@@ -54,35 +71,34 @@ function ContinuousColorLegend(props: ContinuousColorLegendProps) {
     return null;
   }
 
-  // Define the coordinate to color mapping
-
   const minValue = colorMap.min ?? 0;
   const maxValue = colorMap.max ?? 100;
 
   // Get texts to display
 
-  const formattedMin =
-    (axisItem as AxisDefaultized).valueFormatter?.(minValue, { location: 'legend' }) ??
-    minValue.toLocaleString();
+  const valueFormatter = (axisItem as AxisDefaultized)?.valueFormatter;
+  const formattedMin = valueFormatter
+    ? valueFormatter(minValue, { location: 'legend' })
+    : minValue.toLocaleString();
 
-  const formattedMax =
-    (axisItem as AxisDefaultized).valueFormatter?.(maxValue, { location: 'legend' }) ??
-    maxValue.toLocaleString();
+  const formattedMax = valueFormatter
+    ? valueFormatter(maxValue, { location: 'legend' })
+    : maxValue.toLocaleString();
 
-  const minText =
-    typeof minLabel === 'string'
-      ? minLabel
-      : minLabel({ value: minValue ?? 0, formattedValue: formattedMin });
-
-  const maxText =
-    typeof maxLabel === 'string'
-      ? maxLabel
-      : maxLabel({ value: maxValue ?? 0, formattedValue: formattedMax });
+  const minText = getText(minLabel, minValue, formattedMin);
+  const maxText = getText(maxLabel, maxValue, formattedMax);
 
   const text1 = isReversed ? maxText : minText;
   const text2 = isReversed ? minText : maxText;
 
-  return <div />;
+  return (
+    <RootElement ownerState={{ direction }}>
+      <ChartsLabel>{text1}</ChartsLabel>
+      {/* TODO: Change gradientid */}
+      <ChartsLabelGradient direction={direction} gradientId={props.gradientId ?? ''} />
+      <ChartsLabel>{text2}</ChartsLabel>
+    </RootElement>
+  );
 }
 
 ContinuousColorLegend.propTypes = {
