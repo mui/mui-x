@@ -106,11 +106,6 @@ ChartsLegend.propTypes = {
    */
   direction: PropTypes.oneOf(['column', 'row']),
   /**
-   * Style applied to legend labels.
-   * @default theme.typography.caption
-   */
-  labelStyle: PropTypes.object,
-  /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
