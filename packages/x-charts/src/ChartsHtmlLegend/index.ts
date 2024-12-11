@@ -1,4 +1,6 @@
 export * from './ChartsLegend';
-export * from './legend.types';
+export * from './direction';
 export * from './legendContext.types';
 export { ChartsLegendClasses, legendClasses } from './chartsLegendClasses';
+export * from './ContinuousColorLegend';
+export * from './continuousColorLegend.types';

@@ -2,7 +2,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { ChartsLegendProps } from './ChartsLegend';
-import { ChartsLegendSlotExtension } from './legend.types';
+import type { ChartsLegendSlotExtension } from './chartsLegend.types';
 
 export interface ChartsLegendClasses {
   /** Styles applied to the root element. */
@@ -40,7 +40,6 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
 export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiChartsLegend', [
   'root',
   'series',
-  'itemBackground',
   'mark',
   'label',
   'column',

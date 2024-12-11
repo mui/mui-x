@@ -1,12 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import clsx from 'clsx';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
 import { ColorLegendSelector } from './continuousColorLegend.types';
 import { ChartsLabel, ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel';
-import { Direction } from './legend.types';
+import { Direction } from './direction';
+import {
+  continuousColorLegendClasses,
+  ContinuousColorLegendClasses,
+} from './continuousColorLegendClasses';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
@@ -35,10 +40,20 @@ export interface ContinuousColorLegendProps
    * A unique identifier for the gradient.
    *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
-   *
    * @default auto-generated id
    */
   gradientId?: string;
+  /**
+   * The position of the legend.
+   * @default 'below'
+   */
+  labelPosition?: 'below' | 'above' | 'extremes' | 'left' | 'right';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ContinuousColorLegendClasses>;
+  className?: string;
+  sx?: SxProps<Theme>;
 }
 
 const RootElement = styled('ul', {
@@ -52,7 +67,10 @@ const RootElement = styled('ul', {
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,
-  flexWrap: 'wrap',
+
+  [`.${continuousColorLegendClasses.gradient}`]: {
+    width: '100%',
+  },
 }));
 
 const getText = (
@@ -67,11 +85,22 @@ const getText = (
 };
 
 function ContinuousColorLegend(props: ContinuousColorLegendProps) {
-  const { minLabel, maxLabel, direction, axisDirection, axisId } = props;
+  const {
+    minLabel,
+    maxLabel,
+    direction,
+    axisDirection,
+    axisId,
+    rotate,
+    reverse,
+    classes,
+    className,
+    gradientId,
+    labelPosition,
+    ...other
+  } = props;
 
   const axisItem = useAxis({ axisDirection, axisId });
-
-  const isReversed = direction === 'column';
 
   const colorMap = axisItem?.colorMap;
   if (!colorMap || !colorMap.type || colorMap.type !== 'continuous') {
@@ -95,15 +124,29 @@ function ContinuousColorLegend(props: ContinuousColorLegendProps) {
   const minText = getText(minLabel, minValue, formattedMin);
   const maxText = getText(maxLabel, maxValue, formattedMax);
 
+  const isReversed = direction === 'column';
   const text1 = isReversed ? maxText : minText;
   const text2 = isReversed ? minText : maxText;
+  const class1 = isReversed ? classes?.maxLabel : classes?.minLabel;
+  const class2 = isReversed ? classes?.minLabel : classes?.maxLabel;
 
   return (
-    <RootElement ownerState={{ direction }}>
-      <ChartsLabel>{text1}</ChartsLabel>
-      {/* TODO: Change gradientid */}
-      <ChartsLabelGradient direction={direction} gradientId={props.gradientId ?? ''} />
-      <ChartsLabel>{text2}</ChartsLabel>
+    <RootElement className={clsx(classes?.root, className)} ownerState={{ direction }} {...other}>
+      <li className={class1}>
+        <ChartsLabel>{text1}</ChartsLabel>
+      </li>
+      <li className={classes?.gradient} style={{ width: '100%' }}>
+        <ChartsLabelGradient
+          direction={direction}
+          rotate={rotate}
+          reverse={reverse}
+          // TODO: Change gradientId
+          gradientId={gradientId ?? ''}
+        />
+      </li>
+      <li className={class2}>
+        <ChartsLabel>{text2}</ChartsLabel>
+      </li>
     </RootElement>
   );
 }
@@ -139,10 +182,10 @@ ContinuousColorLegend.propTypes = {
    */
   id: PropTypes.string,
   /**
-   * The style applied to labels.
-   * @default theme.typography.subtitle1
+   * The position of the legend.
+   * @default 'below'
    */
-  labelStyle: PropTypes.object,
+  labelPosition: PropTypes.oneOf(['below', 'above', 'extremes']),
   /**
    * The length of the gradient bar.
    * Can be a number (in px) or a string with a percentage such as '50%'.
@@ -170,6 +213,16 @@ ContinuousColorLegend.propTypes = {
     horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
     vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
   }),
+  /**
+   * If `true`, the gradient will be reversed.
+   */
+  reverse: PropTypes.bool,
+  /**
+   * If provided, the gradient will be rotated by 90deg.
+   *
+   * Useful for linear gradients that are not in the correct orientation.
+   */
+  rotate: PropTypes.bool,
   /**
    * The scale used to display gradient colors.
    * @default 'linear'

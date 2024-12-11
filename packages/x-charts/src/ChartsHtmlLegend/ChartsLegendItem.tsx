@@ -7,7 +7,7 @@ import {
   ChartsLabelMarkProps,
 } from '../ChartsLabel';
 import { ChartsLegendClasses } from './chartsLegendClasses';
-import { Direction } from './legend.types';
+import { Direction } from './direction';
 
 interface ChartsLegendItemProps extends Omit<ChartsLabelProps, 'classes'> {
   mark: ChartsLabelMarkProps;

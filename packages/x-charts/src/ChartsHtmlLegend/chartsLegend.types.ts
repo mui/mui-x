@@ -1,7 +1,5 @@
 import type { ChartsLegendProps } from './ChartsLegend';
 
-export type Direction = 'row' | 'column';
-
 export interface ChartsLegendSlots {
   /**
    * Custom rendering of the legend.

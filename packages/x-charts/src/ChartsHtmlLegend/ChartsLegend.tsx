@@ -6,12 +6,13 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
 import { ChartsLegendItem } from './ChartsLegendItem';
-import type { ChartsLegendSlotExtension, Direction } from './legend.types';
+import type { Direction } from './direction';
 import { SeriesLegendItemContext } from './legendContext.types';
 import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
+import { ChartsLegendSlotExtension } from './chartsLegend.types';
 
 export interface ChartsLegendProps
   extends PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
