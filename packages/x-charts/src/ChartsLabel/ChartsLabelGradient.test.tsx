@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
+import { ChartsLabelGradient, labelGradientClasses } from '@mui/x-charts/ChartsLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { ChartsLabelGradient } from '@mui/x-charts/ChartsLabel/ChartsLabelGradient';
-import { labelGradientClasses } from '@mui/x-charts/ChartsLabel/labelGradientClasses';
 
 describe('<ChartsLabelGradient />', () => {
   const { render } = createRenderer();
