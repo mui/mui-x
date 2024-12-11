@@ -24,17 +24,6 @@ export interface ChartsLabelGradientProps {
    */
   direction?: 'column' | 'row';
   /**
-   * The width of the line.
-   * @default 12
-   */
-  lineWidth?: number;
-  /**
-   * The border radius of the gradient.
-   *
-   * @default 2
-   */
-  borderRadius?: number;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLabelGradientClasses>;
@@ -46,28 +35,26 @@ const Root = styled('div', {
   name: 'MuiChartsLabelGradient',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelGradientProps }>(({ ownerState }) => {
-  const { lineWidth, borderRadius } = ownerState;
-
+})<{ ownerState: ChartsLabelGradientProps }>(() => {
   return {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    '> div': {
-      borderRadius,
+    [`.${labelGradientClasses.mask}`]: {
+      borderRadius: 2,
       overflow: 'hidden',
     },
     [`&.${labelGradientClasses.row}`]: {
       width: '100%',
-      '> div': {
-        height: lineWidth,
+      [`.${labelGradientClasses.mask}`]: {
+        height: 12,
         width: '100%',
       },
     },
     [`&.${labelGradientClasses.column}`]: {
       height: '100%',
-      '> div': {
-        width: lineWidth,
+      [`.${labelGradientClasses.mask}`]: {
+        width: 12,
         height: '100%',
         '> svg': {
           transform: 'rotate(90deg)',
@@ -91,13 +78,11 @@ const ChartsLabelGradient = consumeThemeProps(
   {
     defaultProps: {
       direction: 'row',
-      lineWidth: 12,
-      borderRadius: 2,
     },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
-    const { gradientId, direction, classes, borderRadius, lineWidth, className, ...other } = props;
+    const { gradientId, direction, classes, className, ...other } = props;
 
     return (
       <Root
@@ -107,7 +92,7 @@ const ChartsLabelGradient = consumeThemeProps(
         ref={ref}
         {...other}
       >
-        <div>
+        <div className={classes?.mask}>
           <svg viewBox="0 0 24 24">
             <rect width="24" height="24" fill={`url(#${gradientId})`} />
           </svg>
@@ -122,12 +107,6 @@ ChartsLabelGradient.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * The border radius of the gradient.
-   *
-   * @default 2
-   */
-  borderRadius: PropTypes.number,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -144,11 +123,6 @@ ChartsLabelGradient.propTypes = {
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: PropTypes.string.isRequired,
-  /**
-   * The width of the line.
-   * @default 12
-   */
-  lineWidth: PropTypes.number,
 } as any;
 
 export { ChartsLabelGradient };

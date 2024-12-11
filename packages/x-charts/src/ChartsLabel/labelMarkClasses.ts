@@ -6,6 +6,8 @@ import type { ChartsLabelMarkProps } from './ChartsLabelMark';
 export interface ChartsLabelMarkClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the "mask" that gives shape to the marks. */
+  mask: string;
   /** Styles applied to the mark type "line". */
   line: string;
   /** Styles applied to the mark type "square". */
@@ -22,13 +24,14 @@ export function getLabelMarkUtilityClass(slot: string) {
 
 export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
   'MuiChartsLabelMark',
-  ['root', 'line', 'square', 'circle'],
+  ['root', 'line', 'square', 'circle', 'mask'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
   const { type } = props;
   const slots = {
     root: ['root', type],
+    mask: ['mask'],
   };
 
   return composeClasses(slots, getLabelMarkUtilityClass, props.classes);
