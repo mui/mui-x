@@ -283,52 +283,59 @@ const theme = createTheme({
 - The component passed to the `layout` slot no longer receives a `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled, props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled, readOnly } = usePickerContext();
-  +console.log(disabled, readOnly);
+
+  -const { disabled } = props;
+  +const { disabled } = usePickerContext();
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
 - The component passed to the `layout` slot no longer receives an `isRtl` prop. If you need to access this information, you can use the `useRtl` hook from `@mui/system`:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
-   function CustomLayout(props) {
-  -  console.log(props.isRtl);
+
+  -  const { isRtl } = props;
   +  const isRtl = useRtl();
-  +  console.log(isRtl);
-   }
   ```
 
 - The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.orientation);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { orientation } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation);
-  -console.log(props.isLandscape);
-  +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { isLandscape } = props;
   +const { orientation } = usePickerContext();
-  +console.log(orientation === 'landscape');
+  +const isLandscape = orientation === 'landscape';
   ```
 
 - The component passed to the `layout` slot no longer receives a `wrapperVariant` prop, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.wrapperVariant);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
+
+  -const { wrapperVariant } = props;
   +const { variant } = usePickerContext();
-  +console.log(variant);
   ```
 
 - The component passed to the `layout` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.layout, props.views, props.onViewChange);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { view, views, onViewChange } = usePickerContext();
-  +console.log(view, views, onViewChange);
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
   ```
 
 ### Slot: `toolbar`
@@ -336,19 +343,28 @@ const theme = createTheme({
 - The component passed to the `toolbar` slot no longer receives a `disabled` and `readOnly` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.disabled, props.readOnly);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { disabled, readOnly } = usePickerContext();
-  +console.log(disabled, readOnly);
+
+  -const { disabled } = props;
+  +const { disabled } = usePickerContext();
+
+  -const { readOnly } = props;
+  +const { readOnly } = usePickerContext();
   ```
 
 - The component passed to the `toolbar` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.layout, props.views, props.onViewChange);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { view, views, onViewChange } = usePickerContext();
-  +console.log(view, views, onViewChange);
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
   ```
 
 ### Slot: `tabs`
@@ -356,10 +372,16 @@ const theme = createTheme({
 - The component passed to the `tabs` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
-  -console.log(props.layout, props.views, props.onViewChange);
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
-  +const { view, views, onViewChange } = usePickerContext();
-  +console.log(view, views, onViewChange);
+
+  -const { view } = props;
+  +const { view } = usePickerContext();
+
+  -const { views } = props;
+  +const { views } = usePickerContext();
+
+  -const { onViewChange } = props;
+  +const { onViewChange } = usePickerContext();
   ```
 
 ## Renamed variables and types
