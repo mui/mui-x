@@ -5,6 +5,7 @@ import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   PickersModalDialog,
+  ExportedBaseToolbarProps,
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
@@ -182,6 +183,10 @@ export const useMobileRangePicker = <
   }
   const slotProps = {
     ...innerSlotProps,
+    toolbar: {
+      ...innerSlotProps?.toolbar,
+      titleId: labelId,
+    } as ExportedBaseToolbarProps,
     mobilePaper: {
       'aria-labelledby': labelledById,
       ...innerSlotProps?.mobilePaper,

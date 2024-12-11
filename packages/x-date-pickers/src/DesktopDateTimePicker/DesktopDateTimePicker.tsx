@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
@@ -15,8 +14,7 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime, extractValidationProps } from '../validation';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
 import { CalendarIcon } from '../icons';
-import { UseDesktopPickerProps, useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { PickerViewsRendererProps } from '../internals/hooks/usePicker';
+import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import {
   resolveDateTimeFormat,
   resolveTimeViewsResponse,
@@ -36,8 +34,8 @@ import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
+  PickerRendererInterceptorProps,
   PickerViewRendererLookup,
-  UsePickerViewsProps,
 } from '../internals/hooks/usePicker/usePickerViews';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
@@ -45,22 +43,9 @@ import { buildGetOpenDialogAriaText } from '../locales/utils/getPickersLocalizat
 import { PickerLayoutOwnerState } from '../PickersLayout';
 
 const rendererInterceptor = function RendererInterceptor(
-  inViewRenderers: PickerViewRendererLookup<PickerValue, any, any>,
-  popperView: DateOrTimeViewWithMeridiem,
-  rendererProps: PickerViewsRendererProps<
-    PickerValue,
-    DateOrTimeViewWithMeridiem,
-    DefaultizedProps<
-      UseDesktopPickerProps<
-        DateOrTimeViewWithMeridiem,
-        true,
-        any,
-        UsePickerViewsProps<PickerValue, DateOrTimeViewWithMeridiem, any>
-      >,
-      'openTo'
-    >
-  >,
+  props: PickerRendererInterceptorProps<PickerValue, DateOrTimeViewWithMeridiem, any>,
 ) {
+  const { viewRenderers, popperView, rendererProps } = props;
   const { openTo, focusedView, timeViewsCount, ...otherProps } = rendererProps;
 
   const finalProps = {
@@ -84,7 +69,7 @@ const rendererInterceptor = function RendererInterceptor(
 
   return (
     <React.Fragment>
-      {inViewRenderers[dateView]?.({
+      {viewRenderers[dateView]?.({
         ...rendererProps,
         view: !isTimeViewActive ? popperView : 'day',
         focusedView: focusedView && isDatePickerView(focusedView) ? focusedView : null,
@@ -94,7 +79,7 @@ const rendererInterceptor = function RendererInterceptor(
       {timeViewsCount > 0 && (
         <React.Fragment>
           <Divider orientation="vertical" sx={{ gridColumn: 2 }} />
-          {inViewRenderers[timeView]?.({
+          {viewRenderers[timeView]?.({
             ...finalProps,
             view: isTimeViewActive ? popperView : 'hours',
             focusedView: focusedView && isInternalTimeView(focusedView) ? focusedView : null,

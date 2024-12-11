@@ -97,11 +97,19 @@ export interface UsePickerViewParams<
    * @param {any} rendererProps All the props that are being passed down to the renderer.
    * @returns {React.ReactNode} A React node that will be rendered instead of the default renderer.
    */
-  rendererInterceptor?: (
-    viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps>,
-    popperView: TView,
-    rendererProps: PickerViewsRendererProps<TValue, TView, TExternalProps>,
-  ) => React.ReactNode;
+  rendererInterceptor?: React.JSXElementConstructor<
+    PickerRendererInterceptorProps<TValue, TView, TExternalProps>
+  >;
+}
+
+export interface PickerRendererInterceptorProps<
+  TValue extends PickerValidValue,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps>,
+> {
+  viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps>;
+  popperView: TView;
+  rendererProps: PickerViewsRendererProps<TValue, TView, TExternalProps>;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
@@ -136,7 +144,7 @@ export const usePickerViews = <
   props,
   propsFromPickerValue,
   autoFocusView,
-  rendererInterceptor,
+  rendererInterceptor: RendererInterceptor,
   fieldRef,
 }: UsePickerViewParams<TValue, TView, TExternalProps>): UsePickerViewsResponse<TView> => {
   const { onChange, open, onClose } = propsFromPickerValue;
@@ -276,8 +284,14 @@ export const usePickerViews = <
         timeViewsCount,
       };
 
-      if (rendererInterceptor) {
-        return rendererInterceptor(viewRenderers, popperView, rendererProps);
+      if (RendererInterceptor) {
+        return (
+          <RendererInterceptor
+            viewRenderers={viewRenderers}
+            popperView={popperView}
+            rendererProps={rendererProps}
+          />
+        );
       }
 
       return renderer(rendererProps);

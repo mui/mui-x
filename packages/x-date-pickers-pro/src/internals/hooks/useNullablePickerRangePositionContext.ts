@@ -1,9 +1,5 @@
 import * as React from 'react';
-import { UseRangePositionResponse } from './useRangePosition';
-
-export const PickerRangePositionContext = React.createContext<UseRangePositionResponse | null>(
-  null,
-);
+import { PickerRangePositionContext } from '../../hooks/usePickerRangePositionContext';
 
 /**
  * Returns information about the range position of the picker that wraps the current component.

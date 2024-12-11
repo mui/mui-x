@@ -2,19 +2,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { refType } from '@mui/utils';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   DIALOG_WIDTH,
   VIEW_HEIGHT,
   isInternalTimeView,
   isDatePickerView,
   PickerViewRenderer,
-  PickerViewsRendererProps,
   TimeViewWithMeridiem,
   resolveDateTimeFormat,
   useUtils,
   PickerRangeValue,
   PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -31,40 +30,24 @@ import { digitalClockClasses } from '@mui/x-date-pickers/DigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import {
-  UseMobileRangePickerProps,
-  useMobileRangePicker,
-} from '../internals/hooks/useMobileRangePicker';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { usePickerRangePositionContext } from '../hooks';
 
-const rendererInterceptor = function rendererInterceptor<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: PickerViewRendererLookup<any, any, any>,
-  popperView: DateTimeRangePickerView,
-  rendererProps: PickerViewsRendererProps<
-    PickerRangeValue,
-    DateTimeRangePickerView,
-    DefaultizedProps<
-      UseMobileRangePickerProps<
-        DateTimeRangePickerView,
-        TEnableAccessibleFieldDOMStructure,
-        any,
-        any
-      >,
-      'openTo'
-    >
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, DateTimeRangePickerView, any>,
 ) {
-  const { view, openTo, rangePosition, ...otherRendererProps } = rendererProps;
+  const { viewRenderers, popperView, rendererProps } = props;
+  const { rangePosition } = usePickerRangePositionContext();
+  const { view, openTo, ...otherRendererProps } = rendererProps;
+
   const finalProps = {
     ...otherRendererProps,
-    rangePosition,
     focusedView: null,
     sx: [
       {
@@ -91,7 +74,7 @@ const rendererInterceptor = function rendererInterceptor<
     ],
   };
   const isTimeView = isInternalTimeView(popperView);
-  const viewRenderer = inViewRenderers[popperView];
+  const viewRenderer = viewRenderers[popperView];
   if (!viewRenderer) {
     return null;
   }

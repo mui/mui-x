@@ -14,7 +14,7 @@ import {
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
-import { PickerRangePositionContext } from '../useNullablePickerRangePositionContext';
+import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -54,8 +54,8 @@ export const useStaticRangePicker = <
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
-    <PickerProvider {...providerProps}>
-      <PickerRangePositionContext.Provider value={rangePositionResponse}>
+    <PickerRangePositionContext.Provider value={rangePositionResponse}>
+      <PickerProvider {...providerProps}>
         <Layout
           {...layoutProps}
           {...slotProps?.layout}
@@ -72,8 +72,8 @@ export const useStaticRangePicker = <
         >
           {renderCurrentView()}
         </Layout>
-      </PickerRangePositionContext.Provider>
-    </PickerProvider>
+      </PickerProvider>
+    </PickerRangePositionContext.Provider>
   );
 
   return { renderPicker };

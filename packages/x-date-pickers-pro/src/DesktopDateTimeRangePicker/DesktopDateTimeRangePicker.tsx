@@ -1,16 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import {
   isDatePickerView,
   isInternalTimeView,
   PickerViewRenderer,
-  PickerViewsRendererProps,
   resolveDateTimeFormat,
   useUtils,
   PickerRangeValue,
   PickerViewRendererLookup,
+  PickerRendererInterceptorProps,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
 import { PickerOwnerState } from '@mui/x-date-pickers/models';
@@ -32,10 +31,7 @@ import { DesktopDateTimePickerLayout } from '@mui/x-date-pickers/DesktopDateTime
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import {
-  useDesktopRangePicker,
-  UseDesktopRangePickerProps,
-} from '../internals/hooks/useDesktopRangePicker';
+import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateTimeRange } from '../validation';
 import { DateTimeRangePickerView } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
@@ -44,30 +40,13 @@ import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeR
 import { RANGE_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { usePickerRangePositionContext } from '../hooks';
 
-const rendererInterceptor = function RendererInterceptor<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  inViewRenderers: PickerViewRendererLookup<any, any, any>,
-  popperView: DateTimeRangePickerView,
-  rendererProps: PickerViewsRendererProps<
-    PickerRangeValue,
-    DateTimeRangePickerView,
-    DefaultizedProps<
-      Omit<
-        UseDesktopRangePickerProps<
-          DateTimeRangePickerView,
-          TEnableAccessibleFieldDOMStructure,
-          any,
-          any
-        >,
-        'onChange' | 'sx' | 'className'
-      >,
-      'openTo'
-    >
-  >,
+const rendererInterceptor = function RendererInterceptor(
+  props: PickerRendererInterceptorProps<PickerRangeValue, DateTimeRangePickerView, any>,
 ) {
-  const { rangePosition } = usePickerRangePositionContext();
+  const { viewRenderers, popperView, rendererProps } = props;
   const { openTo, ...otherProps } = rendererProps;
+  const { rangePosition } = usePickerRangePositionContext();
+
   const finalProps = {
     ...otherProps,
     focusedView: null,
@@ -86,7 +65,7 @@ const rendererInterceptor = function RendererInterceptor<
   const isTimeViewActive = isInternalTimeView(popperView);
   return (
     <React.Fragment>
-      {inViewRenderers.day?.({
+      {viewRenderers.day?.({
         ...rendererProps,
         availableRangePositions: [rangePosition],
         view: !isTimeViewActive ? popperView : 'day',
@@ -100,7 +79,7 @@ const rendererInterceptor = function RendererInterceptor<
         views={finalProps.views.filter(isInternalTimeView)}
         openTo={isInternalTimeView(openTo) ? openTo : 'hours'}
         viewRenderer={
-          inViewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
+          viewRenderers[isTimeViewActive ? popperView : 'hours'] as PickerViewRenderer<
             PickerRangeValue,
             any
           >
