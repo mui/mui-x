@@ -42,7 +42,7 @@ export interface GridStatePrivateApi<State extends GridStateCommunity> {
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
    */
-  registerControlState: <E extends keyof GridControlledStateEventLookup>(
-    controlState: GridControlStateItem<State, E>,
+  registerControlState: <E extends keyof GridControlledStateEventLookup, Args>(
+    controlState: GridControlStateItem<State, Args, E>,
   ) => void;
 }
