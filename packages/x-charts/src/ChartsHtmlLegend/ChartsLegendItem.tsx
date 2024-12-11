@@ -7,19 +7,21 @@ import {
   ChartsLabelMarkProps,
 } from '../ChartsLabel';
 import { ChartsLegendClasses } from './chartsLegendClasses';
+import { Direction } from './legend.types';
 
 interface ChartsLegendItemProps extends Omit<ChartsLabelProps, 'classes'> {
   mark: ChartsLabelMarkProps;
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  direction?: Direction;
+  onClick?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   classes?: Partial<Pick<ChartsLegendClasses, 'label' | 'mark' | 'series'>>;
 }
 
-const RootDiv = styled(
-  'div',
+const RootElement = styled(
+  'li',
   {},
-)(({ onClick, theme }) => ({
+)<{ ownerState: Pick<ChartsLegendItemProps, 'direction'> }>(({ ownerState, onClick, theme }) => ({
   cursor: onClick ? 'pointer' : 'unset',
-  display: 'flex',
+  display: ownerState.direction === 'row' ? 'inline-flex' : 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
 }));
@@ -28,13 +30,18 @@ const RootDiv = styled(
  * @ignore - internal component.
  */
 function ChartsLegendItem(props: ChartsLegendItemProps) {
-  const { children, mark, onClick, classes } = props;
+  const { children, mark, onClick, direction, classes } = props;
 
   return (
-    <RootDiv className={classes?.series} onClick={onClick}>
+    <RootElement
+      className={classes?.series}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      ownerState={{ direction }}
+    >
       <ChartsLabelMark classes={{ root: classes?.mark }} {...mark} />
       <ChartsLabel classes={{ root: classes?.label }}>{children}</ChartsLabel>
-    </RootDiv>
+    </RootElement>
   );
 }
 

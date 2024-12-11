@@ -10,7 +10,7 @@ describe('<ChartsLegend />', () => {
 
   describeConformance(<ChartsLegend />, () => ({
     classes: legendClasses,
-    inheritComponent: 'div',
+    inheritComponent: 'ul',
     render: (node) =>
       render(node, {
         wrapper: ({ children }) => (
@@ -33,8 +33,8 @@ describe('<ChartsLegend />', () => {
         ),
       }),
     muiName: 'MuiChartsLegend',
-    testComponentPropWith: 'div',
-    refInstanceof: window.HTMLDivElement,
+    testComponentPropWith: 'ul',
+    refInstanceof: window.HTMLUListElement,
     ThemeProvider,
     createTheme,
     // SKIP

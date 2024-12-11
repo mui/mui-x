@@ -18,32 +18,35 @@ export interface ChartsLegendProps
     PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
   /**
    * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    */
   onItemClick?: (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     legendItem: SeriesLegendItemContext,
     index: number,
   ) => void;
   /**
    * Override or extend the styles applied to the component.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ChartsLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
 }
 
-const RootDiv = styled('div', {
+const RootElement = styled('ul', {
   name: 'MuiChartsLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: Pick<ChartsLegendProps, 'direction'> }>(({ ownerState, theme }) => ({
   display: 'flex',
   flexDirection: ownerState.direction ?? 'row',
+  alignItems: ownerState.direction === 'row' ? 'center' : undefined,
   gap: theme.spacing(2),
+  listStyleType: 'none',
+  paddingInlineStart: 0,
+  flexWrap: 'wrap',
 }));
 
 const ChartsLegend = consumeSlots(
@@ -55,13 +58,13 @@ const ChartsLegend = consumeSlots(
   },
   function ChartsLegend(
     props: ChartsLegendProps & ChartsLegendSlotExtension,
-    ref: React.Ref<HTMLDivElement>,
+    ref: React.Ref<HTMLUListElement>,
   ) {
     const data = useLegend();
     const { direction, markType, onItemClick, className, classes, ...other } = props;
 
     return (
-      <RootDiv
+      <RootElement
         className={clsx(classes?.root, className)}
         ref={ref}
         {...other}
@@ -72,6 +75,7 @@ const ChartsLegend = consumeSlots(
             <ChartsLegendItem
               key={item.id}
               classes={classes}
+              direction={direction}
               onClick={
                 onItemClick
                   ? (event) => onItemClick(event, seriesContextBuilder(item), i)
@@ -86,7 +90,7 @@ const ChartsLegend = consumeSlots(
             </ChartsLegendItem>
           );
         })}
-      </RootDiv>
+      </RootElement>
     );
   },
 );
@@ -107,7 +111,7 @@ ChartsLegend.propTypes = {
   direction: PropTypes.oneOf(['column', 'row']),
   /**
    * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    */
