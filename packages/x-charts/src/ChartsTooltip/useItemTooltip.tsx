@@ -30,9 +30,9 @@ export function useItemTooltip<T extends ChartSeriesType>(): null | UseItemToolt
 
   const series = useSeries();
 
-  const {  xAxis, xAxisIds } = useXAxes();
-  const {  yAxis,  yAxisIds } = useYAxes();
-  
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
+
   const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
   const colorProcessors = useColorProcessor();
 

@@ -54,14 +54,14 @@ export interface LineChartSlotProps
 
 export interface LineChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
-    // Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     ChartsOnAxisClickHandlerProps {
-  // /**
-  //  * The series to display in the line chart.
-  //  * An array of [[LineSeriesType]] objects.
-  //  */
-  // series: MakeOptional<LineSeriesType, 'type'>[];
+  /**
+   * The series to display in the line chart.
+   * An array of [[LineSeriesType]] objects.
+   */
+  series: MakeOptional<LineSeriesType, 'type'>[];
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -240,6 +240,11 @@ LineChart.propTypes = {
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }),
   /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
@@ -254,7 +259,6 @@ LineChart.propTypes = {
    * The margin between the SVG and the drawing area.
    * It's used for leaving some space for extra information such as the x- and y-axis or legend.
    * Accepts an object with the optional properties: `top`, `bottom`, `left`, and `right`.
-   * @default object Depends on the charts type.
    */
   margin: PropTypes.shape({
     bottom: PropTypes.number,
@@ -318,6 +322,7 @@ LineChart.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * Indicate which axis to display the top of the charts.

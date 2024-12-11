@@ -49,8 +49,8 @@ function ChartsGrid(inProps: ChartsGridProps) {
 
   const drawingArea = useDrawingArea();
   const { vertical, horizontal, ...other } = props;
-  const {  xAxis, xAxisIds } = useXAxes();
-  const {  yAxis,  yAxisIds } = useYAxes();
+  const { xAxis, xAxisIds } = useXAxes();
+  const { yAxis, yAxisIds } = useYAxes();
 
   const classes = useUtilityClasses(props);
 
