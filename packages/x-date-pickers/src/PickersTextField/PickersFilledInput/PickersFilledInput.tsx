@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system';
 import { refType } from '@mui/utils';
@@ -8,12 +7,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersFilledInputClasses,
   getPickersFilledInputUtilityClass,
+  PickersFilledInputClasses,
 } from './pickersFilledInputClasses';
 import { PickersInputBaseProps, PickersInputBase } from '../PickersInputBase';
 import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
+import { PickersTextFieldOwnerState } from '../PickersTextField.types';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
@@ -25,7 +26,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
-})<{ ownerState: OwnerStateType }>(({ theme }) => {
+})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
@@ -58,7 +59,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
         // @ts-ignore
         .filter((key) => (theme.vars ?? theme).palette[key].main)
         .map((color) => ({
-          props: { color, disableUnderline: false },
+          props: { inputColor: color, disableUnderline: false },
           style: {
             '&::after': {
               // @ts-ignore
@@ -120,13 +121,13 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
         },
       },
       {
-        props: ({ startAdornment }: OwnerStateType) => !!startAdornment,
+        props: { isInputAdornedStart: true },
         style: {
           paddingLeft: 12,
         },
       },
       {
-        props: ({ endAdornment }: OwnerStateType) => !!endAdornment,
+        props: { isInputAdornedEnd: true },
         style: {
           paddingRight: 12,
         },
@@ -139,27 +140,28 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   name: 'MuiPickersFilledInput',
   slot: 'sectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'hiddenLabel',
+})<{ ownerState: PickersTextFieldOwnerState }>({
   paddingTop: 25,
   paddingRight: 12,
   paddingBottom: 8,
   paddingLeft: 12,
   variants: [
     {
-      props: { size: 'small' },
+      props: { inputSize: 'small' },
       style: {
         paddingTop: 21,
         paddingBottom: 4,
       },
     },
     {
-      props: ({ startAdornment }: OwnerStateType) => !!startAdornment,
+      props: { isInputAdornedStart: true },
       style: {
         paddingLeft: 0,
       },
     },
     {
-      props: ({ endAdornment }: OwnerStateType) => !!endAdornment,
+      props: { isInputAdornedEnd: true },
       style: {
         paddingRight: 0,
       },
@@ -172,7 +174,7 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
       },
     },
     {
-      props: { hiddenLabel: true, size: 'small' },
+      props: { hiddenLabel: true, inputSize: 'small' },
       style: {
         paddingTop: 8,
         paddingBottom: 9,
@@ -181,11 +183,9 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   ],
 });
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
-  const { classes, disableUnderline } = ownerState;
-
+const useUtilityClasses = (classes: Partial<PickersFilledInputClasses> | undefined) => {
   const slots = {
-    root: ['root', !disableUnderline && 'underline'],
+    root: ['root'],
     input: ['input'],
   };
 
@@ -196,10 +196,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
     ...composedClasses,
   };
 };
-
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersFilledInputProps, keyof FormControlState> {}
 
 /**
  * @ignore - internal component.
@@ -217,24 +213,18 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     label,
     autoFocus,
     disableUnderline = false,
+    hiddenLabel = false,
+    classes: classesProp,
     ownerState: ownerStateProp,
     ...other
   } = props;
 
-  const muiFormControl = useFormControl();
-
-  const ownerState = {
-    ...props,
-    ...ownerStateProp,
-    ...muiFormControl,
-    color: muiFormControl?.color || 'primary',
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp);
 
   return (
     <PickersInputBase
       slots={{ root: PickersFilledInputRoot, input: PickersFilledSectionsContainer }}
-      slotProps={{ root: { disableUnderline } }}
+      slotProps={{ root: { disableUnderline }, input: { hiddenLabel } }}
       {...other}
       label={label}
       classes={classes}

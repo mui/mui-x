@@ -6,10 +6,7 @@ import {
   PickersInputBaseClassKey,
 } from '../PickersInputBase';
 
-export interface PickersInputClasses extends PickersInputBaseClasses {
-  /** Styles applied to the root element unless `disableUnderline={true}`. */
-  underline: string;
-}
+export interface PickersInputClasses extends PickersInputBaseClasses {}
 
 export type PickersInputClassKey = keyof PickersInputClasses;
 

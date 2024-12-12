@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlState, useFormControl } from '@mui/material/FormControl';
+import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import { refType } from '@mui/utils';
@@ -8,10 +8,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
-import { useRtl } from '@mui/system/RtlProvider';
 import {
   pickersInputBaseClasses,
   getPickersInputBaseUtilityClass,
+  PickersInputBaseClasses,
 } from './pickersInputBaseClasses';
 import { PickersInputBaseProps } from './PickersInputBase.types';
 import {
@@ -21,6 +21,8 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../PickersSectionList';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
+import { PickersTextFieldOwnerState } from '../PickersTextField.types';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -28,7 +30,7 @@ export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: OwnerStateType }>(({ theme }) => ({
+})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
@@ -41,7 +43,7 @@ export const PickersInputBaseRoot = styled('div', {
   letterSpacing: `${round(0.15 / 16)}em`,
   variants: [
     {
-      props: { fullWidth: true },
+      props: { inputFullWidth: true },
       style: { width: '100%' },
     },
   ],
@@ -51,7 +53,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: OwnerStateType }>(({ theme }) => ({
+})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -66,19 +68,19 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   width: '182px',
   variants: [
     {
-      props: { isRtl: true },
+      props: { fieldDirection: 'rtl' },
       style: {
         textAlign: 'right /*! @noflip */' as any,
       },
     },
     {
-      props: { size: 'small' },
+      props: { inputSize: 'small' },
       style: {
         paddingTop: 1,
       },
     },
     {
-      props: { adornedStart: false, focused: false, filled: false },
+      props: { isInputAdornedStart: false, isFieldFocused: false, isFieldValueEmpty: true },
       style: {
         color: 'currentColor',
         opacity: 0,
@@ -86,8 +88,12 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
     },
     {
       // Can't use the object notation because label can be null or undefined
-      props: ({ adornedStart, focused, filled, label }: OwnerStateType) =>
-        !adornedStart && !focused && !filled && label == null,
+      props: {
+        isInputAdornedStart: false,
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        inputHasLabel: false,
+      },
       style: theme.vars
         ? {
             opacity: theme.vars.opacity.inputPlaceholder,
@@ -140,32 +146,34 @@ const PickersInputBaseInput = styled('input', {
   ...visuallyHidden,
 });
 
-const useUtilityClasses = (ownerState: OwnerStateType) => {
+const useUtilityClasses = (
+  classes: Partial<PickersInputBaseClasses> | undefined,
+  ownerState: PickersTextFieldOwnerState,
+) => {
   const {
-    focused,
-    disabled,
-    error,
-    classes,
-    fullWidth,
-    readOnly,
-    color,
-    size,
-    endAdornment,
-    startAdornment,
+    isFieldFocused,
+    isFieldDisabled,
+    isFieldReadOnly,
+    hasFieldError,
+    inputSize,
+    inputFullWidth,
+    inputColor,
+    isInputAdornedStart,
+    isInputAdornedEnd,
   } = ownerState;
 
   const slots = {
     root: [
       'root',
-      focused && !disabled && 'focused',
-      disabled && 'disabled',
-      readOnly && 'readOnly',
-      error && 'error',
-      fullWidth && 'fullWidth',
-      `color${capitalize(color!)}`,
-      size === 'small' && 'inputSizeSmall',
-      Boolean(startAdornment) && 'adornedStart',
-      Boolean(endAdornment) && 'adornedEnd',
+      isFieldFocused && !isFieldDisabled && 'focused',
+      isFieldDisabled && 'disabled',
+      isFieldReadOnly && 'readOnly',
+      hasFieldError && 'error',
+      inputFullWidth && 'fullWidth',
+      `color${capitalize(inputColor!)}`,
+      inputSize === 'small' && 'inputSizeSmall',
+      isInputAdornedStart && 'adornedStart',
+      isInputAdornedEnd && 'adornedEnd',
     ],
     notchedOutline: ['notchedOutline'],
     input: ['input'],
@@ -178,12 +186,6 @@ const useUtilityClasses = (ownerState: OwnerStateType) => {
   return composeClasses(slots, getPickersInputBaseUtilityClass, classes);
 };
 
-interface OwnerStateType
-  extends FormControlState,
-    Omit<PickersInputBaseProps, keyof FormControlState> {
-  isRtl: boolean;
-}
-
 /**
  * @ignore - internal component.
  */
@@ -195,6 +197,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     props: inProps,
     name: 'MuiPickersInputBase',
   });
+  const ownerState = usePickerTextFieldOwnerState();
 
   const {
     elements,
@@ -223,13 +226,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     sectionListRef,
     onFocus,
     onBlur,
+    classes: classesProp,
     ...other
   } = props;
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
-  const isRtl = useRtl();
   const muiFormControl = useFormControl();
   if (!muiFormControl) {
     throw new Error(
@@ -265,13 +268,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     }
   }, [muiFormControl, areAllSectionsEmpty]);
 
-  const ownerState: OwnerStateType = {
-    ...(props as Omit<PickersInputBaseProps, keyof FormControlState>),
-    ...muiFormControl,
-    isRtl,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   const InputRoot = slots?.root || PickersInputBaseRoot;
   const inputRootProps = useSlotProps({
@@ -310,12 +307,13 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
         }}
         slotProps={{
           root: {
+            ...slotProps?.input,
             ownerState,
           } as any,
           sectionContent: { className: pickersInputBaseClasses.sectionContent },
-          sectionSeparator: ({ position }) => ({
+          sectionSeparator: ({ separatorPosition }) => ({
             className:
-              position === 'before'
+              separatorPosition === 'before'
                 ? pickersInputBaseClasses.sectionBefore
                 : pickersInputBaseClasses.sectionAfter,
           }),
