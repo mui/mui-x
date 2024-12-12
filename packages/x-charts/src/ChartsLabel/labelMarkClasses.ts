@@ -16,8 +16,6 @@ export interface ChartsLabelMarkClasses {
   circle: string;
 }
 
-export type ChartsLabelMarkClassKey = keyof ChartsLabelMarkClasses;
-
 export function getLabelMarkUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelMark', slot);
 }

@@ -28,8 +28,6 @@ export interface ContinuousColorLegendClasses {
   right: string;
 }
 
-export type ContinuousColorLegendClassKey = keyof ContinuousColorLegendClasses;
-
 function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiContinuousColorLegend', slot);
 }

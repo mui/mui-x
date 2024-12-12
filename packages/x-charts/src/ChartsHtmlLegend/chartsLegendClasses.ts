@@ -19,8 +19,6 @@ export interface ChartsLegendClasses {
   row: string;
 }
 
-export type ChartsLegendClassKey = keyof ChartsLegendClasses;
-
 function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLegend', slot);
 }

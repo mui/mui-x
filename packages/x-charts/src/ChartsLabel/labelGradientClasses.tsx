@@ -14,8 +14,6 @@ export interface ChartsLabelGradientClasses {
   row: string;
 }
 
-export type ChartsLabelGradientClassKey = keyof ChartsLabelGradientClasses;
-
 export function getLabelGradientUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelGradient', slot);
 }
