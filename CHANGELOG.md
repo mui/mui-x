@@ -114,7 +114,7 @@ No changes, releasing to keep the versions in sync.
 
 #### `@mui/x-tree-view-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Releasing to benefit from license package fix (#15818).
+Releasing to benefit from license package fix (#15814).
 
 ### Docs
 
