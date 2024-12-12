@@ -146,9 +146,9 @@ ChartsLabelGradient.propTypes = {
   /**
    * The direction of the gradient.
    *
-   * @default 'row'
+   * @default 'horizontal'
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * A unique identifier for the gradient.
    *
