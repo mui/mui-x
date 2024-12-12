@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 8.0.0-alpha.4
 
-_Dec 12, 2024_
+_Dec 13, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
