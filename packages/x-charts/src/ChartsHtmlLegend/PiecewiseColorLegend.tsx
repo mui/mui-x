@@ -12,9 +12,14 @@ import {
   PiecewiseColorLegendClasses,
   useUtilityClasses,
 } from './piecewiseColorLegendClasses';
+import { ColorLegendSelector } from './colorLegend.types';
+import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
+import { AxisDefaultized } from '../models/axis';
+import { useAxis } from './useAxis';
 
 export interface PiecewiseColorLegendProps
-  extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
+  extends ColorLegendSelector,
+    PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
    * The default depends on the chart.
@@ -22,19 +27,11 @@ export interface PiecewiseColorLegendProps
    */
   direction?: Direction;
   /**
-   * The label to display at the minimum side of the gradient.
+   * Format the legend labels.
+   * @param {PiecewiseLabelFormatterParams} params The bound of the piece to format.
+   * @returns {string|null} The displayed label, `''` to skip the label but show the color mark, or `null` to skip it entirely.
    */
-  minLabel: string;
-  /**
-   * The label to display at the maximum side of the gradient.
-   */
-  maxLabel: string;
-  /**
-   * The colors to display in the gradient.
-   * The colors can be any valid CSS color string.
-   * One mark is displayed for each color, in the order they are provided.
-   */
-  colors: string[];
+  labelFormatter?: (params: PiecewiseLabelFormatterParams) => string | null;
   /**
    * Where to position the labels relative to the gradient.
    * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
@@ -122,12 +119,23 @@ const RootElement = styled('ul', {
   };
 });
 
+function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
+  if (params.min === null) {
+    return `<${params.formattedMax}`;
+  }
+  if (params.max === null) {
+    return `>${params.formattedMin}`;
+  }
+  return `${params.formattedMin}-${params.formattedMax}`;
+}
+
 const PiecewiseColorLegend = consumeThemeProps(
   'MuiPiecewiseColorLegend',
   {
     defaultProps: {
       direction: 'row',
       labelPosition: 'below',
+      labelFormatter: defaultLabelFormatter,
     },
     classesResolver: useUtilityClasses,
   },
@@ -136,34 +144,39 @@ const PiecewiseColorLegend = consumeThemeProps(
     ref: React.Ref<HTMLUListElement>,
   ) {
     const {
-      minLabel,
-      maxLabel,
       direction,
       classes,
       className,
       markType,
       labelPosition,
-      colors,
+      axisDirection,
+      axisId,
+      labelFormatter,
       ...other
     } = props;
 
     const isColumn = direction === 'column';
     const isReverse = isColumn;
-    const startText = isReverse ? maxLabel : minLabel;
-    const endText = isReverse ? minLabel : maxLabel;
+    const axisItem = useAxis({ axisDirection, axisId });
+
+    const colorMap = axisItem?.colorMap;
+    if (!colorMap || !colorMap.type || colorMap.type !== 'piecewise') {
+      return null;
+    }
+    const valueFormatter = (v: number | Date) =>
+      (axisItem as AxisDefaultized).valueFormatter?.(v, { location: 'legend' }) ??
+      v.toLocaleString();
+
+    const formattedLabels = colorMap.thresholds.map(valueFormatter);
+
     const startClass = isReverse ? classes?.maxLabel : classes?.minLabel;
     const endClass = isReverse ? classes?.minLabel : classes?.maxLabel;
 
-    const orderedColors = isReverse ? colors.slice().reverse() : colors;
+    const orderedColors = isReverse ? colorMap.colors.slice().reverse() : colorMap.colors;
 
     const isAbove = labelPosition === 'above' || labelPosition === 'right';
     const isBelow = labelPosition === 'below' || labelPosition === 'left';
     const isExtremes = labelPosition === 'extremes';
-
-    const isStartAbove = (isColumn ? isBelow : isAbove) || isExtremes;
-    const isStartBelow = isColumn ? isAbove : isBelow;
-    const isEndBelow = (isColumn ? isAbove : isBelow) || isExtremes;
-    const isEndAbove = isColumn ? isBelow : isAbove;
 
     return (
       <RootElement
@@ -172,25 +185,44 @@ const PiecewiseColorLegend = consumeThemeProps(
         {...other}
         ownerState={props}
       >
-        {orderedColors.map((color, index) => (
-          <li
-            key={index}
-            className={clsx(classes?.item, {
-              [`${startClass}`]: index === 0,
-              [`${endClass}`]: index === orderedColors.length - 1,
-            })}
-          >
-            {index === 0 && isStartAbove && <ChartsLabel>{startText}</ChartsLabel>}
-            {index === orderedColors.length - 1 && isEndAbove && (
-              <ChartsLabel>{endText}</ChartsLabel>
-            )}
-            <ChartsLabelMark type={markType} color={color} />
-            {index === 0 && isStartBelow && <ChartsLabel>{startText}</ChartsLabel>}
-            {index === orderedColors.length - 1 && isEndBelow && (
-              <ChartsLabel>{endText}</ChartsLabel>
-            )}
-          </li>
-        ))}
+        {orderedColors.map((color, index) => {
+          const isFirst = index === 0;
+          const isLast = index === colorMap.colors.length - 1;
+
+          const data = {
+            index,
+            length: formattedLabels.length,
+            ...(isFirst
+              ? { min: null, formattedMin: null }
+              : { min: colorMap.thresholds[index - 1], formattedMin: formattedLabels[index - 1] }),
+            ...(isLast
+              ? { max: null, formattedMax: null }
+              : { max: colorMap.thresholds[index], formattedMax: formattedLabels[index] }),
+          };
+
+          const label = labelFormatter?.(data);
+
+          if (label === null) {
+            return null;
+          }
+
+          const isTextBefore = (isColumn ? isBelow : isAbove) || (isExtremes && isFirst);
+          const isTextAfter = (isColumn ? isAbove : isBelow) || (isExtremes && isLast);
+
+          return (
+            <li
+              key={index}
+              className={clsx(classes?.item, {
+                [`${startClass}`]: index === 0,
+                [`${endClass}`]: index === orderedColors.length - 1,
+              })}
+            >
+              {isTextBefore && <ChartsLabel>{label}</ChartsLabel>}
+              <ChartsLabelMark type={markType} color={color} />
+              {isTextAfter && <ChartsLabel>{label}</ChartsLabel>}
+            </li>
+          );
+        })}
       </RootElement>
     );
   },
