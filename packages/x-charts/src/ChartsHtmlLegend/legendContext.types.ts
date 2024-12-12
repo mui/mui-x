@@ -15,6 +15,7 @@ interface LegendItemContextBase {
 
 export interface LegendItemParams
   extends Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+    Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**
    * The identifier of the legend element.
@@ -41,4 +42,21 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
   itemId?: PieItemId;
 }
 
-export type LegendItemContext = SeriesLegendItemContext;
+export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
+  /**
+   * The type of the legend item
+   * - `series` is used for series legend item
+   * - `piecewiseColor` is used for piecewise color legend item
+   */
+  type: 'piecewiseColor';
+  /**
+   * The minimum value of the category
+   */
+  minValue: number | Date | null;
+  /**
+   * The maximum value of the category
+   */
+  maxValue: number | Date | null;
+}
+
+export type LegendItemContext = SeriesLegendItemContext | PiecewiseColorLegendItemContext;

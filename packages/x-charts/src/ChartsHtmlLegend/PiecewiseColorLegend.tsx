@@ -16,6 +16,7 @@ import { ColorLegendSelector } from './colorLegend.types';
 import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
+import { PiecewiseColorLegendItemContext } from './legendContext.types';
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
@@ -38,6 +39,17 @@ export interface PiecewiseColorLegendProps
    * @default 'below'
    */
   labelPosition?: 'below' | 'above' | 'extremes' | 'left' | 'right';
+  /**
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
+   * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    legendItem: PiecewiseColorLegendItemContext,
+    index: number,
+  ) => void;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -119,6 +131,13 @@ const RootElement = styled('ul', {
   };
 });
 
+const ListItem = styled(
+  'li',
+  {},
+)(({ onClick }) => ({
+  cursor: onClick ? 'pointer' : 'unset',
+}));
+
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
     return `<${params.formattedMax}`;
@@ -152,6 +171,7 @@ const PiecewiseColorLegend = consumeThemeProps(
       axisDirection,
       axisId,
       labelFormatter,
+      onItemClick,
       ...other
     } = props;
 
@@ -210,17 +230,34 @@ const PiecewiseColorLegend = consumeThemeProps(
           const isTextAfter = (isColumn ? isAbove : isBelow) || (isExtremes && isLast);
 
           return (
-            <li
+            <ListItem
               key={index}
               className={clsx(classes?.item, {
                 [`${startClass}`]: index === 0,
                 [`${endClass}`]: index === orderedColors.length - 1,
               })}
+              role={onItemClick ? 'button' : undefined}
+              onClick={
+                onItemClick
+                  ? (event) =>
+                      onItemClick(
+                        event,
+                        {
+                          type: 'piecewiseColor',
+                          color,
+                          label: label!,
+                          minValue: data.min,
+                          maxValue: data.max,
+                        },
+                        index,
+                      )
+                  : undefined
+              }
             >
               {isTextBefore && <ChartsLabel>{label}</ChartsLabel>}
               <ChartsLabelMark type={markType} color={color} />
               {isTextAfter && <ChartsLabel>{label}</ChartsLabel>}
-            </li>
+            </ListItem>
           );
         })}
       </RootElement>
