@@ -296,6 +296,36 @@ Heatmap.propTypes = {
    * An array of [[HeatmapSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
+  seriesConfig: PropTypes.shape({
+    bar: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+    heatmap: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+    line: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+    pie: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+    }).isRequired,
+    scatter: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -404,7 +434,7 @@ Heatmap.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'empty', 'keep']).isRequired,
+          filterMode: PropTypes.oneOf(['discard', 'keep']).isRequired,
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -492,7 +522,7 @@ Heatmap.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'empty', 'keep']).isRequired,
+          filterMode: PropTypes.oneOf(['discard', 'keep']).isRequired,
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,

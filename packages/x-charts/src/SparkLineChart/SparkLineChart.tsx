@@ -318,6 +318,30 @@ SparkLineChart.propTypes = {
    * @default 'line'
    */
   plotType: PropTypes.oneOf(['bar', 'line']),
+  seriesConfig: PropTypes.shape({
+    bar: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+    line: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+    pie: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+    }).isRequired,
+    scatter: PropTypes.shape({
+      colorProcessor: PropTypes.func.isRequired,
+      seriesProcessor: PropTypes.func.isRequired,
+      xExtremumGetter: PropTypes.func.isRequired,
+      yExtremumGetter: PropTypes.func.isRequired,
+    }).isRequired,
+  }),
   /**
    * Set to `true` to highlight the value.
    * With line, it shows a point.
