@@ -5,6 +5,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { useGridSelector } from '../../utils/useGridSelector';
+import { gridRowTreeSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -226,6 +227,7 @@ export const useGridRowSpanning = (
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
     return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
       ? {
@@ -326,10 +328,16 @@ export const useGridRowSpanning = (
   const prevRenderContext = React.useRef(renderContext);
   const isFirstRender = React.useRef(true);
   const shouldResetState = React.useRef(false);
+  const previousTree = React.useRef(tree);
   React.useEffect(() => {
     const firstRender = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
+    }
+    if (tree !== previousTree.current) {
+      previousTree.current = tree;
+      updateRowSpanningState(true);
+      return;
     }
     if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
       lastRange.current = range;
@@ -344,5 +352,5 @@ export const useGridRowSpanning = (
       return;
     }
     updateRowSpanningState();
-  }, [updateRowSpanningState, renderContext, range, lastRange]);
+  }, [updateRowSpanningState, renderContext, range, lastRange, tree]);
 };
