@@ -43,7 +43,7 @@ export interface UseChartProZoomState {
     /**
      * Mapping of axis id to the zoom data.
      */
-    zoomMap: Map<AxisId, ZoomData>;
+    zoomData: ZoomData[];
   };
 }
 

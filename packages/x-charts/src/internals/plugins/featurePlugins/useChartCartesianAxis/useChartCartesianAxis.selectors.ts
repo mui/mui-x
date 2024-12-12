@@ -3,12 +3,21 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
+import { AxisId } from '../../../../models/axis';
 import { createSelector } from '../../utils/selectors';
 import { computeAxisValue } from './computeAxisValue';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { ChartState } from '../../models/chart';
 import { createAxisFilterMapper, createGetAxisFilters } from './createAxisFilterMapper';
-import { ZoomAxisFilters } from './zoom.types';
+import { ZoomAxisFilters, ZoomData } from './zoom.types';
+
+export const createZoomMap = (zoom: ZoomData[]) => {
+  const zoomItemMap = new Map<AxisId, ZoomData>();
+  zoom.forEach((zoomItem) => {
+    zoomItemMap.set(zoomItem.axisId, zoomItem);
+  });
+  return zoomItemMap;
+};
 
 export const selectorChartCartesianAxisState = (
   state: ChartState<[UseChartCartesianAxisSignature]>,
@@ -30,7 +39,10 @@ export const selectorChartRawYAxis = createSelector(
  * Following selectors are not exported because they exist in the MIT chart only to ba able to reuse the Zoom state from the pro.
  */
 
-const selectorChartZoomMap = createSelector(selectorChartZoomState, (zoom) => zoom?.zoomMap);
+const selectorChartZoomMap = createSelector(
+  selectorChartZoomState,
+  (zoom) => zoom?.zoomData && createZoomMap(zoom?.zoomData),
+);
 
 const selectorChartZoomOptions = createSelector(selectorChartZoomState, (zoom) => zoom?.options);
 

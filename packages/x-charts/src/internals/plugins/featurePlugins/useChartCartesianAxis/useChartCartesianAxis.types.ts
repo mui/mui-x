@@ -62,20 +62,13 @@ export interface DefaultizedZoomOption extends Required<ZoomOption> {
 }
 
 export interface UseChartCartesianAxisState {
+  /**
+   * @ignore - state populated by the useChartProZoomPlugin
+   */
   zoom?: {
-    /**
-     * The zoom options for each axis.
-     */
     options: Record<AxisId, DefaultizedZoomOption>;
-    /**
-     * Whether the user is currently interacting with the chart.
-     * This is useful to prevent animations from running while the user is interacting.
-     */
     isInteracting: boolean;
-    /**
-     * Mapping of axis id to the zoom data.
-     */
-    zoomMap: Map<AxisId, ZoomData>;
+    zoomData: ZoomData[];
   };
   cartesianAxis: {
     x: AxisConfig<ScaleName, any, ChartsXAxisProps>[];

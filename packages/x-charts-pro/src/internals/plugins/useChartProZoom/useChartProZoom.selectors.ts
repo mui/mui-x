@@ -9,7 +9,17 @@ export const selectorChartZoomOptions = createSelector(
   (zoom) => zoom.options,
 );
 
+export const selectorChartZoomData = createSelector(
+  selectorChartZoomState,
+  (zoom) => zoom.zoomData,
+);
+
 export const selectorChartZoomIsInteracting = createSelector(
   selectorChartZoomState,
   (zoom) => zoom.isInteracting,
+);
+
+export const selectorChartZoomIsEnabled = createSelector(
+  selectorChartZoomOptions,
+  (options) => Object.keys(options).length > 0,
 );

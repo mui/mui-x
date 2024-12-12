@@ -54,10 +54,11 @@ export const useChartModels = <TSignatures extends readonly ChartAnyPluginSignat
             if (!model.isControlled) {
               setModelsState((prevState) => ({
                 ...prevState,
-                [modelName]: newValue,
+                [modelName]: typeof newValue === 'function' ? newValue(value) : newValue,
               }));
             }
           },
+          isControlled: modelsRef.current[modelName].isControlled,
         },
       ];
     }),

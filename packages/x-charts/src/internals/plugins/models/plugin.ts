@@ -102,6 +102,7 @@ export interface ChartControlModel<TValue> {
   name: string;
   value: TValue;
   setControlledValue: (value: TValue | ((prevValue: TValue) => TValue)) => void;
+  isControlled: boolean;
 }
 
 type RemoveSetValue<Models extends Record<string, ChartControlModel<any>>> = {
