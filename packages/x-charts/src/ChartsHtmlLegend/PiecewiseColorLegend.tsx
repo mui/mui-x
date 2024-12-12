@@ -41,12 +41,12 @@ export interface PiecewiseColorLegendProps
   labelPosition?: 'below' | 'above' | 'extremes' | 'left' | 'right';
   /**
    * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
    * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    */
   onItemClick?: (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     legendItem: PiecewiseColorLegendItemContext,
     index: number,
   ) => void;
@@ -71,13 +71,24 @@ const RootElement = styled('ul', {
     paddingInlineStart: 0,
     width: 'max-content',
 
+    button: {
+      // Reset button styles
+      background: 'none',
+      border: 'none',
+      padding: 0,
+      cursor: ownerState.onItemClick ? 'pointer' : 'unset',
+    },
+
+    [`.${piecewiseColorLegendClasses.item}`]: {
+      display: 'flex',
+      gap: theme.spacing(0.5),
+    },
+
     [`&.${piecewiseColorLegendClasses.row}`]: {
       alignItems: 'center',
 
       [`.${piecewiseColorLegendClasses.item}`]: {
-        display: 'flex',
         flexDirection: 'column',
-        gap: theme.spacing(0.5),
       },
 
       [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
@@ -103,9 +114,7 @@ const RootElement = styled('ul', {
 
     [`&.${piecewiseColorLegendClasses.column}`]: {
       [`.${piecewiseColorLegendClasses.item}`]: {
-        display: 'flex',
         flexDirection: 'row',
-        gap: theme.spacing(0.5),
       },
 
       [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
@@ -130,13 +139,6 @@ const RootElement = styled('ul', {
     },
   };
 });
-
-const ListItem = styled(
-  'li',
-  {},
-)(({ onClick }) => ({
-  cursor: onClick ? 'pointer' : 'unset',
-}));
 
 function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
   if (params.min === null) {
@@ -222,42 +224,42 @@ const PiecewiseColorLegend = consumeThemeProps(
 
           const label = labelFormatter?.(data);
 
-          if (label === null) {
+          if (label === null || label === undefined) {
             return null;
           }
 
           const isTextBefore = (isColumn ? isBelow : isAbove) || (isExtremes && isFirst);
           const isTextAfter = (isColumn ? isAbove : isBelow) || (isExtremes && isLast);
 
+          const clickObject = {
+            type: 'piecewiseColor',
+            color,
+            label,
+            minValue: data.min,
+            maxValue: data.max,
+          } as const;
+
+          const Element = onItemClick ? 'button' : 'div';
+
           return (
-            <ListItem
-              key={index}
-              className={clsx(classes?.item, {
-                [`${startClass}`]: index === 0,
-                [`${endClass}`]: index === orderedColors.length - 1,
-              })}
-              role={onItemClick ? 'button' : undefined}
-              onClick={
-                onItemClick
-                  ? (event) =>
-                      onItemClick(
-                        event,
-                        {
-                          type: 'piecewiseColor',
-                          color,
-                          label: label!,
-                          minValue: data.min,
-                          maxValue: data.max,
-                        },
-                        index,
-                      )
-                  : undefined
-              }
-            >
-              {isTextBefore && <ChartsLabel>{label}</ChartsLabel>}
-              <ChartsLabelMark type={markType} color={color} />
-              {isTextAfter && <ChartsLabel>{label}</ChartsLabel>}
-            </ListItem>
+            <li key={index}>
+              <Element
+                role={onItemClick ? 'button' : undefined}
+                type={onItemClick ? 'button' : undefined}
+                onClick={
+                  // @ts-expect-error onClick is only attached to a button
+                  onItemClick ? (event) => onItemClick(event, clickObject, index) : undefined
+                }
+                className={clsx(classes?.item, {
+                  [`${startClass}`]: index === 0,
+                  [`${endClass}`]: index === orderedColors.length - 1,
+                })}
+              >
+                {isTextBefore && <ChartsLabel>{label}</ChartsLabel>}
+                <ChartsLabelMark type={markType} color={color} />
+                {isTextAfter && <ChartsLabel>{label}</ChartsLabel>}
+              </Element>
+            </li>
           );
         })}
       </RootElement>

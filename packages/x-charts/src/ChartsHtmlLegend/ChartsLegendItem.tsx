@@ -12,35 +12,48 @@ import { Direction } from './direction';
 interface ChartsLegendItemProps extends Omit<ChartsLabelProps, 'classes'> {
   mark: ChartsLabelMarkProps;
   direction?: Direction;
-  onClick?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   classes?: Partial<Pick<ChartsLegendClasses, 'label' | 'mark' | 'series'>>;
 }
 
 const RootElement = styled(
   'li',
   {},
-)<{ ownerState: Pick<ChartsLegendItemProps, 'direction'> }>(({ ownerState, onClick, theme }) => ({
-  cursor: onClick ? 'pointer' : 'unset',
+)<{ ownerState: ChartsLegendItemProps }>(({ ownerState, theme }) => ({
   display: ownerState.direction === 'row' ? 'inline-flex' : 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
+
+  button: {
+    // Reset button styles
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: ownerState.onClick ? 'pointer' : 'unset',
+
+    display: ownerState.direction === 'row' ? 'inline-flex' : 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+  },
 }));
 
 /**
  * @ignore - internal component.
  */
 function ChartsLegendItem(props: ChartsLegendItemProps) {
-  const { children, mark, onClick, direction, classes } = props;
+  const { children, mark, onClick, classes } = props;
+
+  const Element = onClick ? 'button' : 'div';
 
   return (
-    <RootElement
-      className={classes?.series}
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      ownerState={{ direction }}
-    >
-      <ChartsLabelMark classes={{ root: classes?.mark }} {...mark} />
-      <ChartsLabel classes={{ root: classes?.label }}>{children}</ChartsLabel>
+    <RootElement className={classes?.series} ownerState={props}>
+      <Element
+        role={onClick ? 'button' : undefined}
+        type={onClick ? 'button' : undefined}
+        // @ts-expect-error onClick is only attached to a button
+        onClick={onClick}
+      >
+        <ChartsLabelMark classes={{ root: classes?.mark }} {...mark} />
+        <ChartsLabel classes={{ root: classes?.label }}>{children}</ChartsLabel>
+      </Element>
     </RootElement>
   );
 }

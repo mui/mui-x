@@ -18,12 +18,12 @@ export interface ChartsLegendProps
   extends PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
   /**
    * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    */
   onItemClick?: (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     legendItem: SeriesLegendItemContext,
     index: number,
   ) => void;
