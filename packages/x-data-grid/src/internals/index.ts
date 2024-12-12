@@ -118,6 +118,7 @@ export {
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
+export { gridSortedRowIndexLookupSelector } from '../hooks/features/sorting/gridSortingSelector';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export {
@@ -150,13 +151,7 @@ export type * from '../models/props/DataGridProps';
 export type * from '../models/gridDataSource';
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export * from '../utils/createControllablePromise';
-export {
-  createSelector,
-  createSelectorV8,
-  createSelectorMemoized,
-  createSelectorMemoizedV8,
-} from '../utils/createSelector';
-export { useGridSelectorV8 } from '../hooks/utils/useGridSelector';
+export { createSelector, createSelectorMemoized } from '../utils/createSelector';
 export { gridRowGroupsToFetchSelector } from '../hooks/features/rows/gridRowsSelector';
 export {
   findParentElementFromClassName,
