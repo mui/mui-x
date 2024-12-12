@@ -52,8 +52,8 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         width: inWidth,
         height: inHeight,
         margin: { left: 10, right: 10, top: 10, bottom: 10, ...margin },
-        series: [],
       }}
+      plugins={[]}
     >
       <GaugeProvider
         value={value}
@@ -70,7 +70,6 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         <ChartsSurface
           title={title}
           desc={desc}
-          disableAxisListener
           role="meter"
           aria-valuenow={value === null ? undefined : value}
           aria-valuemin={valueMin}

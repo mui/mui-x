@@ -17,7 +17,7 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  const store = useStore(disableAxisListener);
+  const store = useStore();
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];

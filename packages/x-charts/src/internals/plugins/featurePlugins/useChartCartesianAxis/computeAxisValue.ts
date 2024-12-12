@@ -64,13 +64,13 @@ type ComputeCommonParams<T extends ChartSeriesType = ChartSeriesType> = {
 
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
+    axis?: AxisConfig<ScaleName, any, ChartsYAxisProps>[];
     axisDirection: 'y';
   },
 ): ComputeResult<ChartsYAxisProps>;
 export function computeAxisValue<T extends ChartSeriesType>(
   options: ComputeCommonParams<T> & {
-    axis: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
+    axis?: AxisConfig<ScaleName, any, ChartsXAxisProps>[];
     axisDirection: 'x';
   },
 ): ComputeResult<ChartsAxisProps>;
@@ -84,9 +84,16 @@ export function computeAxisValue<T extends ChartSeriesType>({
   zoomOptions,
   getFilters,
 }: ComputeCommonParams<T> & {
-  axis: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
   axisDirection: 'x' | 'y'; // | 'radius' | 'rotation';
 }) {
+  if (allAxis === undefined) {
+    return {
+      axis: {},
+      axisIds: [],
+    };
+  }
+
   const completeAxis: DefaultizedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
     const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;

@@ -27,12 +27,12 @@ const selectorChartZoomState = (state: ChartState<[UseChartCartesianAxisSignatur
 
 export const selectorChartRawXAxis = createSelector(
   selectorChartCartesianAxisState,
-  (axis) => axis.x,
+  (axis) => axis?.x,
 );
 
 export const selectorChartRawYAxis = createSelector(
   selectorChartCartesianAxisState,
-  (axis) => axis.y,
+  (axis) => axis?.y,
 );
 
 /**

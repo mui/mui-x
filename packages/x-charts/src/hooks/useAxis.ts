@@ -1,5 +1,5 @@
 'use client';
-import { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
