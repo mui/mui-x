@@ -601,8 +601,6 @@ describe('<TimeClock />', () => {
         <TimeClock onChange={onChange} referenceDate={adapterToUse.date('2018-01-01T12:30:00')} />,
       );
 
-      console.log(adapterToUse.setHours(adapterToUse.date(), 3));
-
       timeClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setHours(adapterToUse.date(), 3),
