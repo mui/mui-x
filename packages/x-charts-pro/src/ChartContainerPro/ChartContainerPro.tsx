@@ -87,12 +87,6 @@ ChartContainerPro.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
-  /**
-   * Callback fired when the zoom has changed.
-   *
-   * @param {ZoomData[]} zoomData Updated zoom data.
-   */
-  onZoomChange: PropTypes.func,
   plugins: PropTypes.arrayOf(PropTypes.func.isRequired),
   /**
    * The array of series to display.
@@ -190,7 +184,7 @@ ChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          filterMode: PropTypes.oneOf(['discard', 'empty', 'keep']).isRequired,
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -276,7 +270,7 @@ ChartContainerPro.propTypes = {
       valueFormatter: PropTypes.func,
       zoom: PropTypes.oneOfType([
         PropTypes.shape({
-          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          filterMode: PropTypes.oneOf(['discard', 'empty', 'keep']).isRequired,
           maxEnd: PropTypes.number,
           maxSpan: PropTypes.number,
           minSpan: PropTypes.number,
@@ -325,16 +319,6 @@ ChartContainerPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
-    }),
-  ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

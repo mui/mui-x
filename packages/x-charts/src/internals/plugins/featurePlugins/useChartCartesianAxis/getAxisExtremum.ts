@@ -6,7 +6,7 @@ import {
   CartesianExtremumGetter,
   CartesianExtremumGetterResult,
 } from '../../models/seriesConfig/extremumGetter.types';
-import { GetZoomAxisFilters } from './useChartCartesianAxis.types';
+import { GetZoomAxisFilters } from './zoom.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 
 const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(

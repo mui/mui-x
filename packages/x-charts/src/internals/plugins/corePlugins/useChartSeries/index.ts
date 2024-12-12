@@ -3,6 +3,6 @@ export type {
   UseChartSeriesSignature,
   UseChartSeriesParameters,
   UseChartSeriesDefaultizedParameters,
-  ProcessedSeries
+  ProcessedSeries,
 } from './useChartSeries.types';
 export * from './useChartSeries.selectors';

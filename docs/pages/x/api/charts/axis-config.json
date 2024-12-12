@@ -36,6 +36,6 @@
     "valueFormatter": {
       "type": { "description": "(value: V, context: AxisValueFormatterContext) =&gt; string" }
     },
-    "zoom": { "type": { "description": "boolean | ZoomOptions" }, "isProPlan": true }
+    "zoom": { "type": { "description": "boolean | ZoomOption" }, "isProPlan": true }
   }
 }

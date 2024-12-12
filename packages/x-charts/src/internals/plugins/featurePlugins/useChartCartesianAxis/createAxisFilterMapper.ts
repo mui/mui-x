@@ -6,13 +6,8 @@ import { ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { AxisConfig, ScaleName } from '../../../../models';
 import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
-import {
-  DefaultizedZoomOption,
-  ExtremumFilter,
-  GetZoomAxisFilters,
-  ZoomAxisFilters,
-  ZoomData,
-} from './useChartCartesianAxis.types';
+import { DefaultizedZoomOption, ExtremumFilter } from './useChartCartesianAxis.types';
+import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
