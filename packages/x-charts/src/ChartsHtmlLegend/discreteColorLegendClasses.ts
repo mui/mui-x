@@ -10,8 +10,8 @@ export interface DiscreteColorLegendClasses {
   minLabel: string;
   /** Styles applied to the list item that renders the `maxLabel`. */
   maxLabel: string;
-  /** Styles applied to the list items with marks. */
-  mark: string;
+  /** Styles applied to the list items. */
+  item: string;
   /** Styles applied to the legend with column layout. */
   column: string;
   /** Styles applied to the legend with row layout. */
@@ -38,7 +38,7 @@ export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
     root: ['root', direction, labelPosition],
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
-    mark: ['mark'],
+    item: ['item'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -50,7 +50,7 @@ export const discreteColorLegendClasses: DiscreteColorLegendClasses = generateUt
     'root',
     'minLabel',
     'maxLabel',
-    'mark',
+    'item',
     'column',
     'row',
     'below',

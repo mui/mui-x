@@ -49,109 +49,75 @@ export interface DiscreteColorLegendProps
   sx?: SxProps<Theme>;
 }
 
-const fillMark = (amount: number) =>
-  Array.from({ length: amount }, (_, i) => `mark-${i}`).join(' ');
-
-const fillEmpty = (amount: number) => Array.from({ length: amount }, (_) => `.`).join(' ');
-
-const fillColumns = (amount: number, labelPosition: 'left' | 'right') =>
-  Array.from({ length: amount }, (_, i) => {
-    if (i === 0) {
-      return labelPosition === 'left' ? `'max-label mark-${i}'` : `'mark-${i} max-label'`;
-    }
-
-    if (i === amount - 1) {
-      return labelPosition === 'left' ? `'min-label mark-${i}'` : `'mark-${i} min-label'`;
-    }
-
-    return labelPosition === 'left' ? `'. mark-${i}'` : `'mark-${i} .'`;
-  }).join(' ');
-
-const StyledLi = styled('li', {})({});
-
 const RootElement = styled('ul', {
   name: 'MuiDiscreteColorLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DiscreteColorLegendProps }>(({ theme, ownerState }) => {
-  const colorLength = ownerState.colors.length;
-
   return {
-    display: 'grid',
+    display: 'flex',
+    flexDirection: ownerState.direction ?? 'row',
     gap: theme.spacing(0.5),
     listStyleType: 'none',
     paddingInlineStart: 0,
+    width: 'max-content',
 
     [`&.${discreteColorLegendClasses.row}`]: {
-      gridTemplateRows: 'min-content min-content',
-      gridTemplateColumns: `repeat(${ownerState.colors.length}, max-content)`,
+      alignItems: 'center',
+
+      [`.${discreteColorLegendClasses.item}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(0.5),
+      },
 
       [`&.${discreteColorLegendClasses.below}, &.${discreteColorLegendClasses.left}`]: {
-        gridTemplateAreas: `
-          '${fillMark(colorLength)}'
-          'min-label ${fillEmpty(colorLength - 2)} max-label'
-        `,
-
-        [`.${discreteColorLegendClasses.mark}:nth-of-type(2)`]: {
-          justifyItems: 'end',
-        },
+        alignItems: 'start',
       },
 
       [`&.${discreteColorLegendClasses.above}, &.${discreteColorLegendClasses.right}`]: {
-        gridTemplateAreas: `
-          'min-label ${fillEmpty(colorLength - 2)} max-label'
-          '${fillMark(colorLength)}'
-        `,
+        alignItems: 'end',
+      },
 
-        [`.${discreteColorLegendClasses.mark}:nth-of-type(2)`]: {
-          justifyItems: 'end',
-        },
+      [`.${discreteColorLegendClasses.minLabel}`]: {
+        alignItems: 'end',
       },
 
       [`&.${discreteColorLegendClasses.extremes}`]: {
-        gridTemplateAreas: `'min-label ${fillMark(colorLength)} max-label'`,
-        gridTemplateRows: 'min-content',
-        gridTemplateColumns: `repeat(${ownerState.colors.length + 2}, max-content)`,
+        [`.${discreteColorLegendClasses.minLabel}, .${discreteColorLegendClasses.maxLabel}`]: {
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+        },
       },
     },
 
     [`&.${discreteColorLegendClasses.column}`]: {
-      gridTemplateRows: `repeat(${ownerState.colors.length}, min-content)`,
-      gridTemplateColumns: 'max-content max-content',
+      [`.${discreteColorLegendClasses.item}`]: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: theme.spacing(0.5),
+      },
 
       [`&.${discreteColorLegendClasses.below}, &.${discreteColorLegendClasses.left}`]: {
-        gridTemplateAreas: fillColumns(colorLength, 'left'),
-
-        [`.${discreteColorLegendClasses.maxLabel}, .${discreteColorLegendClasses.minLabel}`]: {
-          justifySelf: 'end',
-        },
+        alignItems: 'end',
       },
 
       [`&.${discreteColorLegendClasses.above}, &.${discreteColorLegendClasses.right}`]: {
-        gridTemplateAreas: fillColumns(colorLength, 'right'),
-
-        [`.${discreteColorLegendClasses.maxLabel}, .${discreteColorLegendClasses.minLabel}`]: {
-          justifySelf: 'start',
-        },
+        alignItems: 'start',
       },
+
+      [`.${discreteColorLegendClasses.minLabel}`]: {},
 
       [`&.${discreteColorLegendClasses.extremes}`]: {
-        gridTemplateColumns: 'max-content',
-        gridTemplateRows: `repeat(${ownerState.colors.length + 2}, min-content)`,
-        gridTemplateAreas: `'max-label' '${fillMark(colorLength).split(' ').join("' '")}' 'min-label'`,
+        alignItems: 'center',
 
-        [`.${discreteColorLegendClasses.maxLabel}, .${discreteColorLegendClasses.minLabel}, .${discreteColorLegendClasses.mark}`]:
-          {
-            justifySelf: 'center',
-          },
+        [`.${discreteColorLegendClasses.minLabel}, .${discreteColorLegendClasses.maxLabel}`]: {
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+        },
       },
-    },
-
-    [`.${discreteColorLegendClasses.maxLabel}`]: {
-      gridArea: 'max-label',
-    },
-    [`.${discreteColorLegendClasses.minLabel}`]: {
-      gridArea: 'min-label',
     },
   };
 });
@@ -178,17 +144,23 @@ const DiscreteColorLegend = consumeThemeProps(
       ...other
     } = props;
 
-    const isReverse = direction === 'column';
+    const isColumn = direction === 'column';
+    const isReverse = isColumn;
     const startText = isReverse ? maxLabel : minLabel;
     const endText = isReverse ? minLabel : maxLabel;
-    const startClass = isReverse
-      ? discreteColorLegendClasses.maxLabel
-      : discreteColorLegendClasses.minLabel;
-    const endClass = isReverse
-      ? discreteColorLegendClasses.minLabel
-      : discreteColorLegendClasses.maxLabel;
+    const startClass = isReverse ? classes?.maxLabel : classes?.minLabel;
+    const endClass = isReverse ? classes?.minLabel : classes?.maxLabel;
 
     const orderedColors = isReverse ? colors.slice().reverse() : colors;
+
+    const isAbove = labelPosition === 'above' || labelPosition === 'right';
+    const isBelow = labelPosition === 'below' || labelPosition === 'left';
+    const isExtremes = labelPosition === 'extremes';
+
+    const isStartAbove = (isColumn ? isBelow : isAbove) || isExtremes;
+    const isStartBelow = isColumn ? isAbove : isBelow;
+    const isEndBelow = (isColumn ? isAbove : isBelow) || isExtremes;
+    const isEndAbove = isColumn ? isBelow : isAbove;
 
     return (
       <RootElement
@@ -197,18 +169,25 @@ const DiscreteColorLegend = consumeThemeProps(
         {...other}
         ownerState={props}
       >
-        <li className={startClass}>
-          <ChartsLabel>{startText}</ChartsLabel>
-        </li>
-
         {orderedColors.map((color, index) => (
-          <StyledLi key={index} sx={{ gridArea: `mark-${index}` }} className={classes?.mark}>
+          <li
+            key={index}
+            className={clsx(classes?.item, {
+              [`${startClass}`]: index === 0,
+              [`${endClass}`]: index === orderedColors.length - 1,
+            })}
+          >
+            {index === 0 && isStartAbove && <ChartsLabel>{startText}</ChartsLabel>}
+            {index === orderedColors.length - 1 && isEndAbove && (
+              <ChartsLabel>{endText}</ChartsLabel>
+            )}
             <ChartsLabelMark type={markType} color={color} />
-          </StyledLi>
+            {index === 0 && isStartBelow && <ChartsLabel>{startText}</ChartsLabel>}
+            {index === orderedColors.length - 1 && isEndBelow && (
+              <ChartsLabel>{endText}</ChartsLabel>
+            )}
+          </li>
         ))}
-        <li className={endClass}>
-          <ChartsLabel>{endText}</ChartsLabel>
-        </li>
       </RootElement>
     );
   },
