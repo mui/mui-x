@@ -8,12 +8,12 @@ import { ChartsLabel, ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLab
 import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
-  discreteColorLegendClasses,
-  DiscreteColorLegendClasses,
+  piecewiseColorLegendClasses,
+  PiecewiseColorLegendClasses,
   useUtilityClasses,
-} from './discreteColorLegendClasses';
+} from './piecewiseColorLegendClasses';
 
-export interface DiscreteColorLegendProps
+export interface PiecewiseColorLegendProps
   extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
@@ -44,16 +44,16 @@ export interface DiscreteColorLegendProps
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<DiscreteColorLegendClasses>;
+  classes?: Partial<PiecewiseColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
 }
 
 const RootElement = styled('ul', {
-  name: 'MuiDiscreteColorLegend',
+  name: 'MuiPiecewiseColorLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DiscreteColorLegendProps }>(({ theme, ownerState }) => {
+})<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
   return {
     display: 'flex',
     flexDirection: ownerState.direction ?? 'row',
@@ -62,29 +62,29 @@ const RootElement = styled('ul', {
     paddingInlineStart: 0,
     width: 'max-content',
 
-    [`&.${discreteColorLegendClasses.row}`]: {
+    [`&.${piecewiseColorLegendClasses.row}`]: {
       alignItems: 'center',
 
-      [`.${discreteColorLegendClasses.item}`]: {
+      [`.${piecewiseColorLegendClasses.item}`]: {
         display: 'flex',
         flexDirection: 'column',
         gap: theme.spacing(0.5),
       },
 
-      [`&.${discreteColorLegendClasses.below}, &.${discreteColorLegendClasses.left}`]: {
+      [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
         alignItems: 'start',
       },
 
-      [`&.${discreteColorLegendClasses.above}, &.${discreteColorLegendClasses.right}`]: {
+      [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
         alignItems: 'end',
       },
 
-      [`.${discreteColorLegendClasses.minLabel}`]: {
+      [`.${piecewiseColorLegendClasses.minLabel}`]: {
         alignItems: 'end',
       },
 
-      [`&.${discreteColorLegendClasses.extremes}`]: {
-        [`.${discreteColorLegendClasses.minLabel}, .${discreteColorLegendClasses.maxLabel}`]: {
+      [`&.${piecewiseColorLegendClasses.extremes}`]: {
+        [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
@@ -92,27 +92,27 @@ const RootElement = styled('ul', {
       },
     },
 
-    [`&.${discreteColorLegendClasses.column}`]: {
-      [`.${discreteColorLegendClasses.item}`]: {
+    [`&.${piecewiseColorLegendClasses.column}`]: {
+      [`.${piecewiseColorLegendClasses.item}`]: {
         display: 'flex',
         flexDirection: 'row',
         gap: theme.spacing(0.5),
       },
 
-      [`&.${discreteColorLegendClasses.below}, &.${discreteColorLegendClasses.left}`]: {
+      [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
         alignItems: 'end',
       },
 
-      [`&.${discreteColorLegendClasses.above}, &.${discreteColorLegendClasses.right}`]: {
+      [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
         alignItems: 'start',
       },
 
-      [`.${discreteColorLegendClasses.minLabel}`]: {},
+      [`.${piecewiseColorLegendClasses.minLabel}`]: {},
 
-      [`&.${discreteColorLegendClasses.extremes}`]: {
+      [`&.${piecewiseColorLegendClasses.extremes}`]: {
         alignItems: 'center',
 
-        [`.${discreteColorLegendClasses.minLabel}, .${discreteColorLegendClasses.maxLabel}`]: {
+        [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
@@ -122,8 +122,8 @@ const RootElement = styled('ul', {
   };
 });
 
-const DiscreteColorLegend = consumeThemeProps(
-  'MuiDiscreteColorLegend',
+const PiecewiseColorLegend = consumeThemeProps(
+  'MuiPiecewiseColorLegend',
   {
     defaultProps: {
       direction: 'row',
@@ -131,7 +131,10 @@ const DiscreteColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function DiscreteColorLegend(props: DiscreteColorLegendProps, ref: React.Ref<HTMLUListElement>) {
+  function PiecewiseColorLegend(
+    props: PiecewiseColorLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const {
       minLabel,
       maxLabel,
@@ -193,7 +196,7 @@ const DiscreteColorLegend = consumeThemeProps(
   },
 );
 
-DiscreteColorLegend.propTypes = {
+PiecewiseColorLegend.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -282,4 +285,4 @@ DiscreteColorLegend.propTypes = {
   thickness: PropTypes.number,
 } as any;
 
-export { DiscreteColorLegend };
+export { PiecewiseColorLegend };

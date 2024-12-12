@@ -3,7 +3,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import type { ContinuousColorLegendProps } from './ContinuousColorLegend';
 
-export interface DiscreteColorLegendClasses {
+export interface PiecewiseColorLegendClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the list item that renders the `minLabel`. */
@@ -29,7 +29,7 @@ export interface DiscreteColorLegendClasses {
 }
 
 function getLegendUtilityClass(slot: string) {
-  return generateUtilityClass('MuiDiscreteColorLegendClasses', slot);
+  return generateUtilityClass('MuiPiecewiseColorLegendClasses', slot);
 }
 
 export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
@@ -44,8 +44,8 @@ export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
   return composeClasses(slots, getLegendUtilityClass, classes);
 };
 
-export const discreteColorLegendClasses: DiscreteColorLegendClasses = generateUtilityClasses(
-  'MuiDiscreteColorLegendClasses',
+export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generateUtilityClasses(
+  'MuiPiecewiseColorLegendClasses',
   [
     'root',
     'minLabel',

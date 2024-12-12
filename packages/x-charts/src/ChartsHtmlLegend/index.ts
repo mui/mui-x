@@ -8,8 +8,8 @@ export {
   ContinuousColorLegendClasses,
   continuousColorLegendClasses,
 } from './continuousColorLegendClasses';
-export * from './DiscreteColorLegend';
+export * from './PiecewiseColorLegend';
 export {
-  DiscreteColorLegendClasses,
-  discreteColorLegendClasses,
-} from './discreteColorLegendClasses';
+  PiecewiseColorLegendClasses,
+  piecewiseColorLegendClasses,
+} from './piecewiseColorLegendClasses';

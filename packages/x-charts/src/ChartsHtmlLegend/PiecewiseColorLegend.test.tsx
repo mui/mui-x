@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import { DiscreteColorLegend, discreteColorLegendClasses } from '@mui/x-charts/ChartsHtmlLegend';
+import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts/ChartsHtmlLegend';
 import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-describe('<DiscreteColorLegend />', () => {
+describe('<PiecewiseColorLegend />', () => {
   const { render } = createRenderer();
 
   describeConformance(
-    <DiscreteColorLegend
+    <PiecewiseColorLegend
       minLabel="min"
       maxLabel="max"
       colors={['#CAD4EE', '#4254FB', '#091159']}
     />,
     () => ({
-      classes: discreteColorLegendClasses,
+      classes: piecewiseColorLegendClasses,
       inheritComponent: 'ul',
       render: (node) =>
         render(node, {
@@ -48,7 +48,7 @@ describe('<DiscreteColorLegend />', () => {
             </ChartDataProvider>
           ),
         }),
-      muiName: 'MuiDiscreteColorLegend',
+      muiName: 'MuiPiecewiseColorLegend',
       testComponentPropWith: 'ul',
       refInstanceof: window.HTMLUListElement,
       ThemeProvider,
