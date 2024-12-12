@@ -17,6 +17,7 @@ import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
 import { PiecewiseColorLegendItemContext } from './legendContext.types';
+import { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
 
 export interface PiecewiseColorLegendProps
   extends ColorLegendSelector,
@@ -140,23 +141,13 @@ const RootElement = styled('ul', {
   };
 });
 
-function defaultLabelFormatter(params: PiecewiseLabelFormatterParams) {
-  if (params.min === null) {
-    return `<${params.formattedMax}`;
-  }
-  if (params.max === null) {
-    return `>${params.formattedMin}`;
-  }
-  return `${params.formattedMin}-${params.formattedMax}`;
-}
-
 const PiecewiseColorLegend = consumeThemeProps(
   'MuiPiecewiseColorLegend',
   {
     defaultProps: {
       direction: 'row',
       labelPosition: 'below',
-      labelFormatter: defaultLabelFormatter,
+      labelFormatter: piecewiseColorDefaultLabelFormatter,
     },
     classesResolver: useUtilityClasses,
   },
