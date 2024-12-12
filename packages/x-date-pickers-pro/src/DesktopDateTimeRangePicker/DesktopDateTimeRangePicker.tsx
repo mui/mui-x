@@ -190,7 +190,6 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       },
       toolbar: {
         hidden: true,
-        toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
       actionBar: (ownerState: PickerLayoutOwnerState) => ({
