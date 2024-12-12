@@ -34,7 +34,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Prompt toolbar field
   toolbarPromptControlPlaceholder: '输入提示词',
-  toolbarPromptControlWithRecordingPlaceholder: '输入提示词或点击录音',
+  toolbarPromptControlWithRecordingPlaceholder: '输入或录制提示词',
   toolbarPromptControlRecordingPlaceholder: '正在录音…',
   toolbarPromptControlLabel: '提示词输入',
   toolbarPromptControlRecordButtonDefaultLabel: '录音',
