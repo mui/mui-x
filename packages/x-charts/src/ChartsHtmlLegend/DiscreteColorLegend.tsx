@@ -67,7 +67,7 @@ const fillColumns = (amount: number, labelPosition: 'left' | 'right') =>
     return labelPosition === 'left' ? `'. mark-${i}'` : `'mark-${i} .'`;
   }).join(' ');
 
-const StyledLi = styled('li', {})();
+const StyledLi = styled('li', {})({});
 
 const RootElement = styled('ul', {
   name: 'MuiDiscreteColorLegend',
