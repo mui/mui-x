@@ -32,9 +32,9 @@ function App() {
 
 ### Key concepts
 
-There are some key concepts that make grid components different from the other [Data Grid subcomponents](http://localhost:3001/x/react-data-grid/components/):
+There are some key concepts that make grid components different from the other [Data Grid subcomponents](/x/react-data-grid/components/):
 
-- Each grid component is built of several parts. For example, `Grid.Toolbar.Root`, `Grid.Toolbar.Button` and `Grid.Toolbar.Separator` are parts of the [Toolbar component](http://localhost:3001/x/react-data-grid/components/toolbar/).
+- Each grid component is built of several parts. For example, `Grid.Toolbar.Root`, `Grid.Toolbar.Button` and `Grid.Toolbar.Separator` are parts of the [Toolbar component](/x/react-data-grid/components/toolbar/).
 - The component namespace, e.g. `Grid.Toolbar`, does not render anything by itself, but acts as a way to organize the various parts.
 - Highly customizable via the `className` and `render` prop. See the [customization](/x/react-data-grid/components/overview/#customization) section below to learn more.
 
