@@ -64,6 +64,14 @@ Same changes as in `@mui/x-date-pickers@7.23.2`.
 
 Same changes as in `@mui/x-charts@7.23.2`.
 
+#### `@mui/x-tree-view@v7.23.2`
+
+No changes, releasing to keep the versions in sync.
+
+#### `@mui/x-tree-view-pro@7.23.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Releasing to benefit from license package fix (#15818).
+
 ### Docs
 
 - [docs] Fix typo in charts axis documentation (#15746) @JCQuintas
