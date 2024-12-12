@@ -12,11 +12,11 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { ZoomProps } from '../context/ZoomProvider';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 
-export interface ScatterChartProProps extends ScatterChartProps, ZoomProps {}
+export interface ScatterChartProProps
+  extends ScatterChartProps,
+    Omit<ChartContainerProProps<'scatter'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -63,7 +63,6 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsAxisHighlight {...axisHighlightProps} />
         {!props.loading && <Tooltip {...props?.slotProps?.tooltip} />}
-        <ZoomSetup />
         {children}
       </ZAxisContextProvider>
     </ChartContainerPro>

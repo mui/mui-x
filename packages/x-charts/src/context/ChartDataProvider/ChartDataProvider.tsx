@@ -22,10 +22,11 @@ export type ChartDataProviderProps<
     AnimationProviderProps &
     ChartProviderProps<TSignatures, TSeries>['pluginParams'],
   'children'
-> & {
-  plugins?: ChartProviderProps<TSignatures, TSeries>['plugins'];
-  children?: React.ReactNode;
-};
+> &
+  Pick<ChartProviderProps<TSignatures, TSeries>, 'seriesConfig'> & {
+    plugins?: ChartProviderProps<TSignatures, TSeries>['plugins'];
+    children?: React.ReactNode;
+  };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.

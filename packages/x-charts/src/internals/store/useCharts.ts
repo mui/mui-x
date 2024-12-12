@@ -37,11 +37,10 @@ let globalId = 0;
 
 export function useCharts<
   TSignatures extends readonly ChartAnyPluginSignature[],
-  TProps extends Partial<UseChartBaseProps<TSignatures>>,
   TSeriesType extends ChartSeriesType,
 >(
   inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
-  props: TProps,
+  props: Partial<UseChartBaseProps<TSignatures>>,
   seriesConfig: ChartSeriesConfig<TSeriesType>,
 ) {
   type TSignaturesWithCorePluginSignatures = readonly [

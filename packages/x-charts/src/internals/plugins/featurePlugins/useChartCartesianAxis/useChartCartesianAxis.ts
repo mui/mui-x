@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import { ChartPlugin } from '../../models';
+import { ChartSeriesType } from '../../../../models/seriesType/config';
 import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { blueberryTwilightPalette } from '../../../../colorPalettes';
 import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesState } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeAxis } from './defaultizeAxis';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartCartesianAxis: ChartPlugin<
   UseChartCartesianAxisSignature<ChartSeriesType>

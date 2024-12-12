@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useDrawingArea, useSvgRef } from '@mui/x-charts/hooks';
 import {
   AxisId,
+  ChartSeriesType,
   DefaultizedZoomOption,
   getSVGPoint,
   UseChartCartesianAxisSignature,
@@ -11,7 +12,7 @@ import {
   useStore,
   ZoomData,
 } from '@mui/x-charts/internals';
-import { UseChartProZoomState } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
+import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
 import { selectorChartZoomOptions } from '../../internals/plugins/useChartProZoom';
 
 /**
@@ -24,7 +25,7 @@ const zoomAtPoint = (
   centerRatio: number,
   scaleRatio: number,
   currentZoomData: ZoomData,
-  options: Record<AxisId, DefaultizedZoomOption>,
+  options: DefaultizedZoomOption,
 ) => {
   const MIN_RANGE = options.minStart;
   const MAX_RANGE = options.maxEnd;
@@ -64,8 +65,8 @@ const zoomAtPoint = (
   return [newMinRange, newMaxRange];
 };
 
-export const useSetupZoom = () => {
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartProZoomState]>();
+export const useSetupZoom = <TSeries extends ChartSeriesType>() => {
+  const store = useStore<[UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature]>();
 
   const options = useSelector(store, selectorChartZoomOptions);
   const isZoomEnabled = Object.keys(options).length > 0;
@@ -284,7 +285,7 @@ function isSpanValid(
   minRange: number,
   maxRange: number,
   isZoomIn: boolean,
-  option: DefaultizedZoomOptions,
+  option: DefaultizedZoomOption,
 ) {
   const newSpanPercent = maxRange - minRange;
 

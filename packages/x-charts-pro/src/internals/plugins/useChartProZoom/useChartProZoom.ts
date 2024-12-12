@@ -4,7 +4,15 @@ import { ChartPlugin, AxisId, DefaultizedZoomOption } from '@mui/x-charts/intern
 import { UseChartProZoomSignature } from './useChartProZoom.types';
 import { defaultizeZoom } from './defaultizeZoom';
 import { createZoomMap } from './useChartProZoom.utils';
-import { initializeZoomData } from '../../../context/ZoomProvider/initializeZoomData';
+
+// It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
+function initializeZoomData(options: Record<AxisId, DefaultizedZoomOption>) {
+  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => ({
+    axisId,
+    start,
+    end,
+  }));
+}
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({ store, models }) => {
   useEnhancedEffect(() => {

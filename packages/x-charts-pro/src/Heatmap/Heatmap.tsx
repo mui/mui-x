@@ -13,6 +13,7 @@ import {
   ChartsXAxisProps,
   ChartsYAxisProps,
   AxisConfig,
+  ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
@@ -101,6 +102,8 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
+const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapPlugin };
+
 const Heatmap = React.forwardRef(function Heatmap(
   inProps: HeatmapProps,
   ref: React.Ref<SVGSVGElement>,
@@ -161,9 +164,9 @@ const Heatmap = React.forwardRef(function Heatmap(
   const Tooltip = props.slots?.tooltip ?? HeatmapTooltip;
 
   return (
-    <ChartContainerPro
+    <ChartContainerPro<'heatmap'>
       ref={ref}
-      plugins={[heatmapPlugin]}
+      seriesConfig={seriesConfig}
       series={series.map((s) => ({
         type: 'heatmap',
         ...s,

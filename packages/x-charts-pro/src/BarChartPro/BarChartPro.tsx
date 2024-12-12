@@ -12,10 +12,8 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { useZoomIsInteracting } from '../context/ZoomProvider/useZoom';
-import { ZoomProps } from '../context/ZoomProvider';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { useZoomIsInteracting } from '../hooks/zoom';
 
 function BarChartPlotZoom(props: BarPlotProps) {
   const isInteracting = useZoomIsInteracting();
@@ -63,7 +61,9 @@ BarChartPlotZoom.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-export interface BarChartProProps extends BarChartProps, ZoomProps {}
+export interface BarChartProProps
+  extends BarChartProps,
+    Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -111,7 +111,6 @@ const BarChartPro = React.forwardRef(function BarChartPro(
       {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
       {children}
     </ChartContainerPro>
   );

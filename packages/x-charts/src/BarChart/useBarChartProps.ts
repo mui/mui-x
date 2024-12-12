@@ -68,7 +68,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ),
   } as const;
 
-  const chartContainerProps: ChartContainerProps = {
+  const chartContainerProps: Omit<ChartContainerProps<'bar'>, 'plugins'> = {
     ...rest,
     series: series.map((s) => ({
       type: 'bar' as const,

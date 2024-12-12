@@ -21,10 +21,8 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useLineChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
-import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
-import { useZoomIsInteracting } from '../context/ZoomProvider/useZoom';
-import { ZoomProps } from '../context/ZoomProvider';
+import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
+import { useZoomIsInteracting } from '../hooks/zoom';
 
 function AreaPlotZoom(props: AreaPlotProps) {
   const isInteracting = useZoomIsInteracting();
@@ -131,7 +129,9 @@ MarkPlotZoom.propTypes = {
   slots: PropTypes.object,
 } as any;
 
-export interface LineChartProProps extends LineChartProps, ZoomProps {}
+export interface LineChartProProps
+  extends LineChartProps,
+    Omit<ChartContainerProProps<'line'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
  * Demos:
@@ -187,7 +187,6 @@ const LineChartPro = React.forwardRef(function LineChartPro(
       {!props.hideLegend && <ChartsLegend {...legendProps} />}
       {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
       {children}
     </ChartContainerPro>
   );

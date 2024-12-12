@@ -3,7 +3,10 @@ import * as React from 'react';
 import { useCharts } from '../../internals/store/useCharts';
 import { ChartProviderProps } from './ChartProvider.types';
 import { ChartContext } from './ChartContext';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models';
+import {
+  ChartAnyPluginSignature,
+  ConvertSignaturesIntoPlugins,
+} from '../../internals/plugins/models';
 import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import { plugin as barPlugin } from '../../BarChart/plugin';
 import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
@@ -22,9 +25,14 @@ function ChartProvider<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TSeriesType extends ChartSeriesType,
 >(props: ChartProviderProps<TSignatures, TSeriesType>) {
-  const { children, plugins = [], pluginParams = {}, seriesConfig = defaultSeriesConfig } = props;
+  const {
+    children,
+    plugins = [] as ConvertSignaturesIntoPlugins<TSignatures>,
+    pluginParams = {},
+    seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType>,
+  } = props;
 
-  const { contextValue } = useCharts(plugins, pluginParams, seriesConfig);
+  const { contextValue } = useCharts<TSignatures, TSeriesType>(plugins, pluginParams, seriesConfig);
 
   return <ChartContext.Provider value={contextValue}>{children}</ChartContext.Provider>;
 }

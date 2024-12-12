@@ -7,17 +7,21 @@ import {
   useChartCartesianAxis,
   UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { ChartSeriesType } from '../models/seriesType/config';
 
-export type UseChartContainerPropsReturnValue = {
-  chartDataProviderProps: ChartDataProviderProps<[UseChartCartesianAxisSignature]>;
+export type UseChartContainerPropsReturnValue<TSeries extends ChartSeriesType> = {
+  chartDataProviderProps: ChartDataProviderProps<
+    [UseChartCartesianAxisSignature<TSeries>],
+    TSeries
+  >;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
 
-export const useChartContainerProps = (
-  props: ChartContainerProps,
+export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSeriesType>(
+  props: ChartContainerProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
-): UseChartContainerPropsReturnValue => {
+): UseChartContainerPropsReturnValue<TSeries> => {
   const {
     width,
     height,
@@ -48,7 +52,10 @@ export const useChartContainerProps = (
     ...other,
   };
 
-  const chartDataProviderProps: ChartDataProviderProps<[UseChartCartesianAxisSignature]> = {
+  const chartDataProviderProps: Omit<
+    ChartDataProviderProps<[UseChartCartesianAxisSignature<TSeries>], TSeries>,
+    'children'
+  > = {
     margin,
     series,
     colors,
@@ -61,7 +68,7 @@ export const useChartContainerProps = (
     skipAnimation,
     width,
     height,
-    plugins: [useChartCartesianAxis],
+    plugins: [useChartCartesianAxis as any],
   };
 
   return {
