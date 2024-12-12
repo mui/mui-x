@@ -326,22 +326,12 @@ export function useGridDimensions(
   const isFirstSizing = React.useRef(true);
   const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
-      // Round to avoid issues with subpixel rendering
-      // https://github.com/mui/mui-x/issues/15721
-      rootDimensionsRef.current = {
-        width: Math.round(size.width),
-        height: Math.round(size.height),
-      };
+      rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
 
-      if (
-        rootDimensionsRef.current.height === 0 &&
-        !errorShown.current &&
-        !props.autoHeight &&
-        !isJSDOM
-      ) {
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty height.',
@@ -353,7 +343,7 @@ export function useGridDimensions(
         );
         errorShown.current = true;
       }
-      if (rootDimensionsRef.current.width === 0 && !errorShown.current && !isJSDOM) {
+      if (size.width === 0 && !errorShown.current && !isJSDOM) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty width.',
@@ -367,12 +357,13 @@ export function useGridDimensions(
       }
 
       if (isFirstSizing.current) {
-        setSavedSize(rootDimensionsRef.current);
+        // We want to initialize the grid dimensions as soon as possible to avoid flickering
+        setSavedSize(size);
         isFirstSizing.current = false;
         return;
       }
 
-      debouncedSetSavedSize(rootDimensionsRef.current);
+      debouncedSetSavedSize(size);
     },
     [props.autoHeight, debouncedSetSavedSize, logger],
   );

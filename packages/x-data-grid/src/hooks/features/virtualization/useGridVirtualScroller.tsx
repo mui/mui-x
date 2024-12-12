@@ -145,9 +145,12 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
+
+      // Round to avoid issues with subpixel rendering
+      // https://github.com/mui/mui-x/issues/15721
       let lastSize = {
-        width: initialRect.width,
-        height: initialRect.height,
+        width: Math.round(initialRect.width),
+        height: Math.round(initialRect.height),
       };
 
       apiRef.current.publishEvent('resize', lastSize);
@@ -163,8 +166,8 @@ export const useGridVirtualScroller = () => {
         }
 
         const newSize = {
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
+          width: Math.round(entry.contentRect.width),
+          height: Math.round(entry.contentRect.height),
         };
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
