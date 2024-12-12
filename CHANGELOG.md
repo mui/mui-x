@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.23.2
+
+_Dec 12, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Romanian and Turkish locales on the Data Grid
+- 🌍 Improve Romanian locale on the Pickers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@ihsanberkozcan, @k-rajat19, @lhilgert9, @nusr, @rares985.
+
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.2`
+
+- [DataGrid] Fix "No rows" displaying when all rows are pinned (#15851) @nusr
+- [DataGrid] Use `columnsManagement` slot (#15821) @k-rajat19
+- [l10n] Improve Romanian (ro-RO) locale (#15751) @rares985
+- [l10n] Improve Turkish (tr-TR) locale (#15748) @ihsanberkozcan
+
+#### `@mui/x-data-grid-pro@7.23.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.2`, plus:
+
+- [DataGridPro] Make Row reordering work with pagination (#15782) @k-rajat19
+
+#### `@mui/x-data-grid-premium@7.23.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.2`, plus:
+
+- [DataGridPremium] Fix group column ignoring `valueOptions` for `singleSelect` column type (#15754) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.2`
+
+- [l10n] Improve Romanian (ro-RO) locale (#15751) @rares985
+
+#### `@mui/x-date-pickers-pro@7.23.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.2`.
+
+### Charts
+
+#### `@mui/x-charts@7.23.2`
+
+- [charts] Fix key generation for the ChartsGrid (#15864) @alexfauquette
+- [charts] Fix scatter dataset with missing data (#15804) @alexfauquette
+
+#### `@mui/x-charts-pro@7.23.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@7.23.2`.
+
+#### `@mui/x-tree-view@v7.23.2`
+
+No changes, releasing to keep the versions in sync.
+
+#### `@mui/x-tree-view-pro@7.23.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Releasing to benefit from license package fix (#15818).
+
+### Docs
+
+- [docs] Fix typo in charts axis documentation (#15746) @JCQuintas
+- [docs] Improve Pickers accessible DOM structure description (#15752) @LukasTy
+- [docs] Use `updateRows` method for list view demos (#15824) @KenanYusuf
+- [docs] Use date library version from package dev dependencies for sandboxes (#15767) @LukasTy
+
+### Core
+
+- [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
+- [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15818) @arminmeh
+
 ## 7.23.1
 
 _Dec 5, 2024_
