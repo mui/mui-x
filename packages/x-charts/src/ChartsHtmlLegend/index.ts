@@ -3,7 +3,7 @@ export * from './direction';
 export * from './legendContext.types';
 export { ChartsLegendClasses, legendClasses } from './chartsLegendClasses';
 export * from './ContinuousColorLegend';
-export * from './continuousColorLegend.types';
+export * from './colorLegend.types';
 export {
   ContinuousColorLegendClasses,
   continuousColorLegendClasses,

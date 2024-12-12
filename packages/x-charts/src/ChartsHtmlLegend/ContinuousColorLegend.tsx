@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { AppendKeys } from '@mui/x-internals/types';
 import { AxisDefaultized } from '../models/axis';
 import { useAxis } from './useAxis';
-import { ColorLegendSelector } from './continuousColorLegend.types';
+import { ColorLegendSelector } from './colorLegend.types';
 import { ChartsLabel, ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel';
 import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';

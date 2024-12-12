@@ -4,7 +4,7 @@ import { useCartesianContext } from '../context/CartesianProvider/useCartesianCo
 
 import { ZAxisDefaultized } from '../models/z-axis';
 import { useZAxis } from '../hooks/useZAxis';
-import { ColorLegendSelector } from './continuousColorLegend.types';
+import { ColorLegendSelector } from './colorLegend.types';
 
 /**
  * Helper to select an axis definition according to its direction and id.
