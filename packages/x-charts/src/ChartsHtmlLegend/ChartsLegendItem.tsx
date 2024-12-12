@@ -20,7 +20,7 @@ const RootElement = styled(
   'li',
   {},
 )<{ ownerState: ChartsLegendItemProps }>(({ ownerState, theme }) => ({
-  display: ownerState.direction === 'row' ? 'inline-flex' : 'flex',
+  display: ownerState.direction === 'horizontal' ? 'inline-flex' : 'flex',
 
   button: {
     // Reset button styles
@@ -29,7 +29,7 @@ const RootElement = styled(
     padding: 0,
     cursor: ownerState.onClick ? 'pointer' : 'unset',
 
-    display: ownerState.direction === 'row' ? 'inline-flex' : 'flex',
+    display: ownerState.direction === 'horizontal' ? 'inline-flex' : 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
   },

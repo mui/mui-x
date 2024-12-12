@@ -1,1 +1,1 @@
-export type Direction = 'row' | 'column';
+export type Direction = 'vertical' | 'horizontal';

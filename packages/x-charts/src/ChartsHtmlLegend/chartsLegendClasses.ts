@@ -13,10 +13,10 @@ export interface ChartsLegendClasses {
   mark: string;
   /** Styles applied to the series label. */
   label: string;
-  /** Styles applied to the legend with column layout. */
-  column: string;
-  /** Styles applied to the legend with row layout. */
-  row: string;
+  /** Styles applied to the legend in column layout. */
+  vertical: string;
+  /** Styles applied to the legend in row layout. */
+  horizontal: string;
 }
 
 function getLegendUtilityClass(slot: string) {
@@ -40,6 +40,6 @@ export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiCha
   'series',
   'mark',
   'label',
-  'column',
-  'row',
+  'vertical',
+  'horizontal',
 ]);

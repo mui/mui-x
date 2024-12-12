@@ -12,10 +12,10 @@ export interface PiecewiseColorLegendClasses {
   maxLabel: string;
   /** Styles applied to the list items. */
   item: string;
-  /** Styles applied to the legend with column layout. */
-  column: string;
-  /** Styles applied to the legend with row layout. */
-  row: string;
+  /** Styles applied to the legend in column layout. */
+  vertical: string;
+  /** Styles applied to the legend in row layout. */
+  horizontal: string;
   /** Styles applied to the legend with the labels below the color marks. */
   below: string;
   /** Styles applied to the legend with the labels above the color marks. */
@@ -51,8 +51,8 @@ export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generate
     'minLabel',
     'maxLabel',
     'item',
-    'column',
-    'row',
+    'vertical',
+    'horizontal',
     'below',
     'above',
     'extremes',

@@ -25,7 +25,7 @@ export interface PiecewiseColorLegendProps
   /**
    * The direction of the legend layout.
    * The default depends on the chart.
-   * @default 'row'
+   * @default 'horizontal'
    */
   direction?: Direction;
   /**
@@ -66,7 +66,7 @@ const RootElement = styled('ul', {
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
   return {
     display: 'flex',
-    flexDirection: ownerState.direction ?? 'row',
+    flexDirection: ownerState.direction === 'horizontal' ? 'row' : 'column',
     gap: theme.spacing(0.5),
     listStyleType: 'none',
     paddingInlineStart: 0,
@@ -85,7 +85,7 @@ const RootElement = styled('ul', {
       gap: theme.spacing(0.5),
     },
 
-    [`&.${piecewiseColorLegendClasses.row}`]: {
+    [`&.${piecewiseColorLegendClasses.horizontal}`]: {
       alignItems: 'center',
 
       [`.${piecewiseColorLegendClasses.item}`]: {
@@ -113,7 +113,7 @@ const RootElement = styled('ul', {
       },
     },
 
-    [`&.${piecewiseColorLegendClasses.column}`]: {
+    [`&.${piecewiseColorLegendClasses.vertical}`]: {
       [`.${piecewiseColorLegendClasses.item}`]: {
         flexDirection: 'row',
       },
@@ -145,7 +145,7 @@ const PiecewiseColorLegend = consumeThemeProps(
   'MuiPiecewiseColorLegend',
   {
     defaultProps: {
-      direction: 'row',
+      direction: 'horizontal',
       labelPosition: 'below',
       labelFormatter: piecewiseColorDefaultLabelFormatter,
     },
@@ -168,8 +168,8 @@ const PiecewiseColorLegend = consumeThemeProps(
       ...other
     } = props;
 
-    const isColumn = direction === 'column';
-    const isReverse = isColumn;
+    const isVertical = direction === 'vertical';
+    const isReverse = isVertical;
     const axisItem = useAxis({ axisDirection, axisId });
 
     const colorMap = axisItem?.colorMap;
@@ -219,8 +219,8 @@ const PiecewiseColorLegend = consumeThemeProps(
             return null;
           }
 
-          const isTextBefore = (isColumn ? isBelow : isAbove) || (isExtremes && isFirst);
-          const isTextAfter = (isColumn ? isAbove : isBelow) || (isExtremes && isLast);
+          const isTextBefore = (isVertical ? isBelow : isAbove) || (isExtremes && isFirst);
+          const isTextAfter = (isVertical ? isAbove : isBelow) || (isExtremes && isLast);
 
           const clickObject = {
             type: 'piecewiseColor',
@@ -282,7 +282,7 @@ PiecewiseColorLegend.propTypes = {
    * The direction of the legend layout.
    * The default depends on the chart.
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * A unique identifier for the gradient.
    * @default auto-generated id

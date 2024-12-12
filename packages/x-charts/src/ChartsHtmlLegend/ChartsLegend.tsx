@@ -46,8 +46,8 @@ const RootElement = styled('ul', {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: Pick<ChartsLegendProps, 'direction'> }>(({ ownerState, theme }) => ({
   display: 'flex',
-  flexDirection: ownerState.direction ?? 'row',
-  alignItems: ownerState.direction === 'row' ? 'center' : undefined,
+  flexDirection: ownerState.direction === 'horizontal' ? 'row' : 'column',
+  alignItems: ownerState.direction === 'horizontal' ? 'center' : undefined,
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,
@@ -58,7 +58,7 @@ const ChartsLegend = consumeSlots(
   'MuiChartsLegend',
   'legend',
   {
-    defaultProps: { direction: 'row' },
+    defaultProps: { direction: 'horizontal' },
     classesResolver: useUtilityClasses,
   },
   function ChartsLegend(
@@ -113,7 +113,7 @@ ChartsLegend.propTypes = {
    * The direction of the legend layout.
    * The default depends on the chart.
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.

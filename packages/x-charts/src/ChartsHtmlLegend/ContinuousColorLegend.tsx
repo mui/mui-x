@@ -24,7 +24,7 @@ export interface ContinuousColorLegendProps
   /**
    * The direction of the legend layout.
    * The default depends on the chart.
-   * @default 'row'
+   * @default 'horizontal'
    */
   direction?: Direction;
   /**
@@ -103,7 +103,7 @@ const RootElement = styled('ul', {
   listStyleType: 'none',
   paddingInlineStart: 0,
 
-  [`&.${continuousColorLegendClasses.row}`]: {
+  [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
@@ -118,7 +118,7 @@ const RootElement = styled('ul', {
     },
   },
 
-  [`&.${continuousColorLegendClasses.column}`]: {
+  [`&.${continuousColorLegendClasses.vertical}`]: {
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
@@ -173,7 +173,7 @@ const ContinuousColorLegend = consumeThemeProps(
   'MuiContinuousColorLegend',
   {
     defaultProps: {
-      direction: 'row',
+      direction: 'horizontal',
       labelPosition: 'below',
     },
     classesResolver: useUtilityClasses,
@@ -272,7 +272,7 @@ ContinuousColorLegend.propTypes = {
    * The direction of the legend layout.
    * The default depends on the chart.
    */
-  direction: PropTypes.oneOf(['column', 'row']),
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * A unique identifier for the gradient.
    * @default auto-generated id

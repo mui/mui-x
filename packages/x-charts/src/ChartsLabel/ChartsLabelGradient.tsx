@@ -20,9 +20,9 @@ export interface ChartsLabelGradientProps {
   /**
    * The direction of the gradient.
    *
-   * @default 'row'
+   * @default 'horizontal'
    */
-  direction?: 'column' | 'row';
+  direction?: 'vertical' | 'horizontal';
   /**
    * If `true`, the gradient will be reversed.
    */
@@ -41,20 +41,24 @@ export interface ChartsLabelGradientProps {
   sx?: SxProps<Theme>;
 }
 
-const getRotation = (direction?: 'column' | 'row', reverse?: boolean, rotate?: boolean) => {
+const getRotation = (
+  direction?: 'vertical' | 'horizontal',
+  reverse?: boolean,
+  rotate?: boolean,
+) => {
   if (!rotate && reverse) {
-    return direction === 'column' ? 90 : 180;
+    return direction === 'vertical' ? 90 : 180;
   }
 
   if (rotate && !reverse) {
-    return direction === 'column' ? 0 : 90;
+    return direction === 'vertical' ? 0 : 90;
   }
 
   if (rotate && reverse) {
-    return direction === 'column' ? 180 : -90;
+    return direction === 'vertical' ? 180 : -90;
   }
 
-  return direction === 'column' ? -90 : 0;
+  return direction === 'vertical' ? -90 : 0;
 };
 
 const Root = styled('div', {
@@ -72,14 +76,14 @@ const Root = styled('div', {
       borderRadius: 2,
       overflow: 'hidden',
     },
-    [`&.${labelGradientClasses.row}`]: {
+    [`&.${labelGradientClasses.horizontal}`]: {
       width: '100%',
       [`.${labelGradientClasses.mask}`]: {
         height: 12,
         width: '100%',
       },
     },
-    [`&.${labelGradientClasses.column}`]: {
+    [`&.${labelGradientClasses.vertical}`]: {
       height: '100%',
       [`.${labelGradientClasses.mask}`]: {
         width: 12,
@@ -105,7 +109,7 @@ const ChartsLabelGradient = consumeThemeProps(
   'MuiChartsLabelGradient',
   {
     defaultProps: {
-      direction: 'row',
+      direction: 'horizontal',
     },
     classesResolver: useUtilityClasses,
   },

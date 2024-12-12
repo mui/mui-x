@@ -9,9 +9,9 @@ export interface ChartsLabelGradientClasses {
   /** Styles applied to the "mask" that gives shape to the gradient. */
   mask: string;
   /** Styles applied when direction is "column". */
-  column: string;
+  vertical: string;
   /** Styles applied when direction is "row". */
-  row: string;
+  horizontal: string;
 }
 
 export function getLabelGradientUtilityClass(slot: string) {
@@ -20,7 +20,7 @@ export function getLabelGradientUtilityClass(slot: string) {
 
 export const labelGradientClasses: ChartsLabelGradientClasses = generateUtilityClasses(
   'MuiChartsLabelGradient',
-  ['root', 'column', 'row', 'mask'],
+  ['root', 'vertical', 'horizontal', 'mask'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
