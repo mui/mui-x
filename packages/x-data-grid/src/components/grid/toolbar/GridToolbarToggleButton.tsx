@@ -35,7 +35,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const StyledGridToolbarToggleButton = styled(ToggleButton, {
   name: 'MuiDataGrid',
   slot: 'ToolbarToggleButton',
-  overridesResolver: (_, styles) => styles.toolbarToggleButton,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   gap: theme.spacing(0.5),
   minHeight: 34,

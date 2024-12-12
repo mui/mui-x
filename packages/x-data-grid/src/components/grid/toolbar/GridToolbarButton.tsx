@@ -41,7 +41,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const StyledGridToolbarButton = styled(ButtonBase, {
   name: 'MuiDataGrid',
   slot: 'ToolbarButton',
-  overridesResolver: (_, styles) => styles.toolbarButton,
 })<{ ownerState: OwnerState; selected?: boolean }>(({ theme }) => ({
   ...theme.typography.button,
   display: 'flex',

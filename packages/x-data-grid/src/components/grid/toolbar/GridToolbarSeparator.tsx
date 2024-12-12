@@ -37,8 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 const Separator = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'Separator',
-  overridesResolver: (_, styles) => styles.separator,
+  slot: 'ToolbarSeparator',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   height: 24,
   width: 1,
