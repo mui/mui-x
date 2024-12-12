@@ -72,7 +72,7 @@ const computeRowSpanningState = (
 
     for (
       let index = rangeToProcess.firstRowIndex;
-      index <= rangeToProcess.lastRowIndex;
+      index < rangeToProcess.lastRowIndex;
       index += 1
     ) {
       const row = visibleRows[index];
@@ -188,7 +188,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
     }
     const rangeToProcess = {
       firstRowIndex: 0,
-      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS - 1, Math.max(rowIds.length - 1, 0)),
+      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
     };
     const rows = rowIds.map((id) => ({
       id,
@@ -233,8 +233,8 @@ export const useGridRowSpanning = (
       ? {
           firstRowIndex: 0,
           lastRowIndex: Math.min(
-            DEFAULT_ROWS_TO_PROCESS - 1,
-            Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0),
+            DEFAULT_ROWS_TO_PROCESS,
+            Math.max(apiRef.current.state.rows.dataRowIds.length, 0),
           ),
         }
       : EMPTY_RANGE;
@@ -267,7 +267,7 @@ export const useGridRowSpanning = (
       const rangeToProcess = getUnprocessedRange(
         {
           firstRowIndex: renderContext.firstRowIndex,
-          lastRowIndex: Math.min(renderContext.lastRowIndex - 1, range.lastRowIndex),
+          lastRowIndex: Math.min(renderContext.lastRowIndex, range.lastRowIndex + 1),
         },
         processedRange.current,
       );
