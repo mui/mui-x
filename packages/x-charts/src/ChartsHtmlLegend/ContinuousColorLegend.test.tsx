@@ -27,6 +27,16 @@ describe('<ContinuousColorLegend />', () => {
                 data: [10, 20, 30, 40, 50],
               },
             ]}
+            zAxis={[
+              {
+                colorMap: {
+                  type: 'continuous',
+                  min: -0.5,
+                  max: 1.5,
+                  color: (t) => `${t}`,
+                },
+              },
+            ]}
           >
             {/* Has to be first as describeConformance picks the "first child" */}
             {/* https://github.com/mui/material-ui/blob/c0620e333641deda56f3cd68c7c3736098ee818c/packages-internal/test-utils/src/describeConformance.tsx#L257 */}
