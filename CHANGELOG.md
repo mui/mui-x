@@ -16,9 +16,16 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-From https://github.com/mui/mui-x/pull/15200
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @nusr, @rares985, @zivl.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi.
 
-### Breaking changes
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### Breaking changes
 
 - The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
 
@@ -33,59 +40,15 @@ From https://github.com/mui/mui-x/pull/15200
   -const output = useGridSelector(apiRef, selector, equals)
   +const output = useGridSelector(apiRef, selector, arguments, equals)
   ```
-
-From https://github.com/mui/mui-x/pull/15807
-
-### Breaking changes
-
 - The default variant for text fields and selects in the filter panel has been changed to `outlined`.
-
-From https://github.com/mui/mui-x/pull/15742
-
-### Breaking changes
-
-- The feature "row spanning" is now stable.
+- The "row spanning" feature is now stable.
   ```diff
    <DataGrid
   -  unstable_rowSpanning
   +  rowSpanning
    />
   ```
-
-From https://github.com/mui/mui-x/pull/15509
-` to create a description for this change in the next release. -->
-
-- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
-
-Closes https://github.com/mui/mui-x/issues/15487
-
-This allows to toggle row selection on click, however, Ctrl+ Click on a selected row still deselects the row.
-In case of Multiple row selection when a range of rows are already selected then by clicking on any of the selected rows would deselect all rows.
-
-Preview - https://deploy-preview-15509--material-ui-x.netlify.app/x/react-data-grid/row-selection/
-
-## Changelog
-
-### Breaking changes
-
-- Selected row is now deselected when clicked again
-From https://github.com/mui/mui-x/pull/15630
-
-- The default styling of the charts tooltip has been updated.
-From https://github.com/mui/mui-x/pull/15805
-
-Fixed a speling typos mistake in `ChartsAxisTooltipContent` component
-
-- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
-
-Special thanks go out to the community contributors who have helped make this release possible:
-@k-rajat19, @nusr, @rares985, @zivl.
-Following are all team members who have contributed to this release:
-@alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi.
-
-<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
-
-### Data Grid
+- Selected row is now deselected when clicked again.
 
 #### `@mui/x-data-grid@8.0.0-alpha.4`
 
@@ -93,7 +56,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Deselect selected row on click (#15509) @k-rajat19
 - [DataGrid] Fix "No rows" displaying when all rows are pinned (#15335) @nusr
 - [DataGrid] Make row spanning feature stable (#15742) @MBilalShafi
-- [DataGrid] Use `columnsManagement` slot  (#15817) @k-rajat19
+- [DataGrid] Use `columnsManagement` slot (#15817) @k-rajat19
 - [DataGrid] Use new selectors (#15200) @MBilalShafi
 - [l10n] Improve Romanian (ro-RO) locale (#15745) @rares985
 
@@ -125,6 +88,10 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.4`, plus:
 Same changes as in `@mui/x-date-pickers@8.0.0-alpha.4`.
 
 ### Charts
+
+#### Breaking changes
+
+- The default styling of the charts tooltip has been updated.
 
 #### `@mui/x-charts@8.0.0-alpha.4`
 

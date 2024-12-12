@@ -124,6 +124,7 @@ async function main(argv) {
         data: {
           body: bodyMessage,
           labels,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           author_association,
           user: { login },
         },
@@ -152,12 +153,15 @@ async function main(argv) {
         return;
       }
 
-      const changelogMotif = '# changelog';
-      const changelogIndex = bodyMessage.toLowerCase().indexOf(changelogMotif);
-      if (changelogIndex >= 0) {
+      const changelogMotif = '## changelog';
+      const lowercaseBody = bodyMessage.toLowerCase();
+      // Check if the body contains a line starting with '## changelog'
+      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
+      const changelogMatches = Array.from(matchedChangelog);
+      if (changelogMatches.length > 0) {
+        const changelogIndex = changelogMatches[0].index;
         changeLogMessages.push(
-          `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
-            searchPullRequestId[1]
+          `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${searchPullRequestId[1]
           }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`,
         );
       }
