@@ -370,6 +370,7 @@ DataGridRaw.propTypes = {
    * If `deselect`, it will deselect all the rows under it.
    * Works only if `checkboxSelection` is enabled.
    * @default "deselect"
+   * @deprecated `select` will be the default behavior from v8 onwards
    */
   indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
   /**

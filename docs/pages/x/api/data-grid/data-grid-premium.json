@@ -189,7 +189,9 @@
     },
     "indeterminateCheckboxAction": {
       "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
-      "default": "\"deselect\""
+      "default": "\"deselect\"",
+      "deprecated": true,
+      "deprecationInfo": "<code>select</code> will be the default behavior from v8 onwards"
     },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
