@@ -91,12 +91,12 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it(`should not deselect the selected row on click WITHOUT ctrl or meta pressed`, () => {
+    it(`should deselect the selected row on click`, () => {
       render(<TestDataGridSelection />);
       fireEvent.click(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
       fireEvent.click(getCell(0, 0));
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
     ['metaKey', 'ctrlKey'].forEach((key) => {

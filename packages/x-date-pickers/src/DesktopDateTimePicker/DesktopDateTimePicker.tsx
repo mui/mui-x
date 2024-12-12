@@ -198,7 +198,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
       toolbar: {
         hidden: true,
         ampmInClock,
-        toolbarVariant: 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {

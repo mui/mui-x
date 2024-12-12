@@ -82,6 +82,12 @@
   ],
   "classes": [
     {
+      "key": "axisValueCell",
+      "className": "MuiChartsTooltipContainer-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
       "key": "cell",
       "className": "MuiChartsTooltipContainer-cell",
       "description": "Styles applied to the cell element.",
