@@ -12,6 +12,20 @@ export interface ContinuousColorLegendClasses {
   maxLabel: string;
   /** Styles applied to the list item with the gradient. */
   gradient: string;
+  /** Styles applied to the legend with column layout. */
+  column: string;
+  /** Styles applied to the legend with row layout. */
+  row: string;
+  /** Styles applied to the legend with the labels below the gradient. */
+  below: string;
+  /** Styles applied to the legend with the labels above the gradient. */
+  above: string;
+  /** Styles applied to the legend with the labels on the extremes of the gradient. */
+  extremes: string;
+  /** Styles applied to the legend with the labels on the left of the gradient. */
+  left: string;
+  /** Styles applied to the legend with the labels on the right of the gradient. */
+  right: string;
 }
 
 export type ContinuousColorLegendClassKey = keyof ContinuousColorLegendClasses;
@@ -21,9 +35,9 @@ function getLegendUtilityClass(slot: string) {
 }
 
 export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
-  const { classes, direction } = props;
+  const { classes, direction, labelPosition } = props;
   const slots = {
-    root: ['root', direction],
+    root: ['root', direction, labelPosition],
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
     gradient: ['gradient'],
@@ -34,5 +48,17 @@ export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
 
 export const continuousColorLegendClasses: ContinuousColorLegendClasses = generateUtilityClasses(
   'MuiContinuousColorLegend',
-  ['root', 'minLabel', 'maxLabel', 'gradient'],
+  [
+    'root',
+    'minLabel',
+    'maxLabel',
+    'gradient',
+    'column',
+    'row',
+    'below',
+    'above',
+    'extremes',
+    'left',
+    'right',
+  ],
 );
