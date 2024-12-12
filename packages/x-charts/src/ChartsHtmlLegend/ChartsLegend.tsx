@@ -75,7 +75,7 @@ const ChartsLegend = consumeSlots(
         {...other}
         ownerState={{ direction }}
       >
-        {data.itemsToDisplay.map((item, i) => {
+        {data.items.map((item, i) => {
           return (
             <ChartsLegendItem
               key={item.id}

@@ -37,7 +37,7 @@ export interface LegendRendererProps
 function DefaultChartsLegend(props: LegendRendererProps) {
   const { hidden, onItemClick, ...other } = props;
 
-  const { itemsToDisplay } = useLegend();
+  const { items } = useLegend();
 
   if (hidden) {
     return null;
@@ -46,10 +46,10 @@ function DefaultChartsLegend(props: LegendRendererProps) {
   return (
     <LegendPerItem
       {...other}
-      itemsToDisplay={itemsToDisplay}
+      itemsToDisplay={items}
       onItemClick={
         onItemClick
-          ? (event, i) => onItemClick(event, seriesContextBuilder(itemsToDisplay[i]), i)
+          ? (event, i) => onItemClick(event, seriesContextBuilder(items[i]), i)
           : undefined
       }
     />

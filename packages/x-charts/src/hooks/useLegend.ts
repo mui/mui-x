@@ -28,6 +28,6 @@ function getSeriesToDisplay(series: FormattedSeries) {
 export const useLegend = () => {
   const series = useSeries();
   return {
-    itemsToDisplay: getSeriesToDisplay(series),
+    items: getSeriesToDisplay(series),
   };
 };
