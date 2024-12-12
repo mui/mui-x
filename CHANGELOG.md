@@ -11,8 +11,7 @@ _Dec 13, 2024_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Romanian and Turkish locales on the Data Grid
-- 🌍 Improve Romanian locale on the Pickers
+- 🌍 Improve Romanian locale on the Data Grid and Pickers
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
