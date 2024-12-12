@@ -4,3 +4,7 @@ export * from './legendContext.types';
 export { ChartsLegendClasses, legendClasses } from './chartsLegendClasses';
 export * from './ContinuousColorLegend';
 export * from './continuousColorLegend.types';
+export {
+  ContinuousColorLegendClasses,
+  continuousColorLegendClasses,
+} from './continuousColorLegendClasses';

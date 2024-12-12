@@ -94,7 +94,7 @@ const templateAreas = {
 };
 
 const RootElement = styled('ul', {
-  name: 'MuiChartsContinuousLegend',
+  name: 'MuiContinuousColorLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: Pick<ContinuousColorLegendProps, 'direction'> }>(({ theme }) => ({
@@ -178,7 +178,7 @@ const getText = (
 };
 
 const ContinuousColorLegend = consumeThemeProps(
-  'MuiChartsContinuousLegend',
+  'MuiContinuousColorLegend',
   {
     defaultProps: {
       direction: 'row',
@@ -186,7 +186,10 @@ const ContinuousColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function ContinuousColorLegend(props: ContinuousColorLegendProps) {
+  function ContinuousColorLegend(
+    props: ContinuousColorLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const {
       minLabel,
       maxLabel,
@@ -227,7 +230,12 @@ const ContinuousColorLegend = consumeThemeProps(
     const maxText = getText(maxLabel, maxValue, formattedMax);
 
     return (
-      <RootElement className={clsx(classes?.root, className)} ownerState={{ direction }} {...other}>
+      <RootElement
+        className={clsx(classes?.root, className)}
+        ref={ref}
+        {...other}
+        ownerState={{ direction }}
+      >
         <li className={classes?.minLabel}>
           <ChartsLabel>{minText}</ChartsLabel>
         </li>
