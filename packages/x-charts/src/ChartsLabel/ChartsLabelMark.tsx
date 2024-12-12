@@ -73,6 +73,7 @@ const Root = styled('div', {
 const ChartsLabelMark = consumeThemeProps(
   'MuiChartsLabelMark',
   {
+    defaultProps: { type: 'square' },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {

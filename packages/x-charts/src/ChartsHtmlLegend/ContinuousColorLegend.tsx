@@ -63,12 +63,12 @@ export interface ContinuousColorLegendProps
 const templateAreas = {
   row: {
     below: `
-      'gradient  gradient gradient'
-      'min-label     .    max-label'
+      'gradient gradient gradient'
+      'min-label . max-label'
     `,
     above: `
-      'min-label     .    max-label'
-      'gradient  gradient gradient'
+      'min-label . max-label'
+      'gradient gradient gradient'
     `,
     extremes: `
       'min-label gradient max-label'
@@ -77,12 +77,12 @@ const templateAreas = {
   column: {
     left: `
       'max-label gradient'
-      '.         gradient'
+      '. gradient'
       'min-label gradient'
     `,
     right: `
       'gradient max-label'
-      'gradient         .'
+      'gradient .'
       'gradient min-label'
     `,
     extremes: `
@@ -104,10 +104,6 @@ const RootElement = styled('ul', {
   paddingInlineStart: 0,
 
   [`&.${continuousColorLegendClasses.row}`]: {
-    [`.${continuousColorLegendClasses.gradient}`]: {
-      width: '100%',
-    },
-
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
@@ -123,10 +119,6 @@ const RootElement = styled('ul', {
   },
 
   [`&.${continuousColorLegendClasses.column}`]: {
-    [`.${continuousColorLegendClasses.gradient}`]: {
-      height: '100%',
-    },
-
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
