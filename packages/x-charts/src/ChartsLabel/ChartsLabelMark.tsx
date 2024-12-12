@@ -22,6 +22,7 @@ export interface ChartsLabelMarkProps {
   classes?: Partial<ChartsLabelMarkClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const Root = styled('div', {
@@ -75,7 +76,7 @@ const ChartsLabelMark = consumeThemeProps(
   {
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabelMark(props: ChartsLabelMarkProps, ref: React.Ref<HTMLDivElement>) {
+  function ChartsLabelMark(props: ChartsLabelMarkProps) {
     const { type, color, className, classes, ...other } = props;
 
     return (
@@ -83,7 +84,6 @@ const ChartsLabelMark = consumeThemeProps(
         className={clsx(classes?.root, className)}
         ownerState={props}
         aria-hidden="true"
-        ref={ref}
         {...other}
       >
         <div className={classes?.mask}>
