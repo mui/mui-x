@@ -5,6 +5,160 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.0-alpha.4
+
+_Dec 12, 2024_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Romanian and Turkish locales on the Data Grid
+- 🌍 Improve Romanian locale on the Pickers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+From https://github.com/mui/mui-x/pull/15200
+
+### Breaking changes
+
+- The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -mySelector(state, instanceId)
+  +mySelector(state, arguments, instanceId)
+  ```
+
+- The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -const output = useGridSelector(apiRef, selector, equals)
+  +const output = useGridSelector(apiRef, selector, arguments, equals)
+  ```
+
+From https://github.com/mui/mui-x/pull/15807
+
+### Breaking changes
+
+- The default variant for text fields and selects in the filter panel has been changed to `outlined`.
+
+From https://github.com/mui/mui-x/pull/15742
+
+### Breaking changes
+
+- The feature "row spanning" is now stable.
+  ```diff
+   <DataGrid
+  -  unstable_rowSpanning
+  +  rowSpanning
+   />
+  ```
+
+From https://github.com/mui/mui-x/pull/15509
+` to create a description for this change in the next release. -->
+
+- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
+
+Closes https://github.com/mui/mui-x/issues/15487
+
+This allows to toggle row selection on click, however, Ctrl+ Click on a selected row still deselects the row.
+In case of Multiple row selection when a range of rows are already selected then by clicking on any of the selected rows would deselect all rows.
+
+Preview - https://deploy-preview-15509--material-ui-x.netlify.app/x/react-data-grid/row-selection/
+
+## Changelog
+
+### Breaking changes
+
+- Selected row is now deselected when clicked again
+From https://github.com/mui/mui-x/pull/15630
+
+- The default styling of the charts tooltip has been updated.
+From https://github.com/mui/mui-x/pull/15805
+
+Fixed a speling typos mistake in `ChartsAxisTooltipContent` component
+
+- [x] I have followed (at least) the [PR section of the contributing guide](https://github.com/mui/mui-x/blob/HEAD/CONTRIBUTING.md#sending-a-pull-request).
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @nusr, @rares985, @zivl.
+Following are all team members who have contributed to this release:
+@alexfauquette, @arminmeh, @flaviendelangle, @JCQuintas, @KenanYusuf, @LukasTy, @MBilalShafi.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.0.0-alpha.4`
+
+- [data grid] Update filter panel input variant (#15807) @KenanYusuf
+- [DataGrid] Deselect selected row on click (#15509) @k-rajat19
+- [DataGrid] Fix "No rows" displaying when all rows are pinned (#15335) @nusr
+- [DataGrid] Make row spanning feature stable (#15742) @MBilalShafi
+- [DataGrid] Use `columnsManagement` slot  (#15817) @k-rajat19
+- [DataGrid] Use new selectors (#15200) @MBilalShafi
+- [l10n] Improve Romanian (ro-RO) locale (#15745) @rares985
+
+#### `@mui/x-data-grid-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.0.0-alpha.4`, plus:
+
+- [DataGridPro] Make Row reordering work with pagination (#15355) @k-rajat19
+
+#### `@mui/x-data-grid-premium@8.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.4`, plus:
+
+- [DataGridPremium] Fix group column ignoring `valueOptions` for `singleSelect` column type (#15739) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.0.0-alpha.4`
+
+- [l10n] Improve Romanian (ro-RO) locale (#15745) @rares985
+- [pickers] Clean `usePicker` logic (#15763) @flaviendelangle
+- [pickers] Rename layout `ownerState` property from `isRtl` to `layoutDirection` (#15803) @flaviendelangle
+- [pickers] Use the new `ownerState` in `useClearableField` (#15776) @flaviendelangle
+- [pickers] Use the new `ownerState` in the toolbar components (#15777) @flaviendelangle
+- [pickers] Use the new `ownerState` object for the clock components and the desktop / mobile wrappers (#15669) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.0.0-alpha.4`.
+
+### Charts
+
+#### `@mui/x-charts@8.0.0-alpha.4`
+
+- [charts] Fix hydration missmatch (#15647) @alexfauquette
+- [charts] Fix internal spelling typo (#15805) @zivl
+- [charts] Fix scatter dataset with missing data (#15802) @alexfauquette
+- [charts] HTML Labels (#15813) @JCQuintas
+- [charts] Only access store values by using hooks (#15764) @alexfauquette
+- [charts] Update Tooltip style (#15630) @alexfauquette
+
+#### `@mui/x-charts-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.0.0-alpha.4`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.0.0-alpha.4`
+
+No changes, releasing to keep the versions in sync.
+
+#### `@mui/x-tree-view-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Releasing to benefit from license package fix (#15818).
+
+### Docs
+
+- [docs] Clean Joy and Browser custom field demos (#15707) @flaviendelangle
+- [docs] Improve Pickers accessible DOM migration section description (#15596) @LukasTy
+- [docs] Use `updateRows` method for list view demos (#15732) @KenanYusuf
+- [docs] Use date library version from package dev dependencies for sandboxes (#15762) @LukasTy
+- [code-infra] Add Charts sandbox generation (#15830) @JCQuintas
+- [code-infra] Remove redundant `@type/react-test-renderer` dep (#15766) @LukasTy
+- [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15814) @arminmeh
+
 ## 8.0.0-alpha.3
 
 _Dec 5, 2024_
