@@ -88,8 +88,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           return filterModelItem;
         }
         const defaultItem = getGridFilter(colDef);
-        filterItemsCache[colDef.field] = defaultItem;
-        filterItemsCache[colDef.field].operator = filterModelItem.operator;
+        const updatedItem = { ...defaultItem, operator: filterModelItem.operator };
+        filterItemsCache[colDef.field] = updatedItem;
         return filterModelItem;
       }
 
