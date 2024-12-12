@@ -260,7 +260,10 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(rowSpanValueGetter.callCount).to.equal(2);
 
       act(() => {
-        apiRef.current.setRows([{ id: 1, code: 'A101' }, { id: 2, code: 'A102' }]);
+        apiRef.current.setRows([
+          { id: 1, code: 'A101' },
+          { id: 2, code: 'A102' },
+        ]);
       });
 
       expect(rowSpanValueGetter.callCount).to.equal(4);
