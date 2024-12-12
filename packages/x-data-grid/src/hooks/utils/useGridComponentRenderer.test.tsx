@@ -15,13 +15,12 @@ describe('useGridComponentRenderer', () => {
     },
   ) {
     const { render: renderProp, ...other } = props;
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       defaultElement: 'button',
       props: other,
       render: renderProp,
       state: { someState: 'state value' },
     });
-    return renderElement();
   }
 
   it('should render intrinsic element type as default element', () => {
@@ -35,11 +34,10 @@ describe('useGridComponentRenderer', () => {
       return <button {...props} />;
     }
     function TestComponentWithCustomButton(props: React.ComponentPropsWithoutRef<'button'>) {
-      const { renderElement } = useGridComponentRenderer({
+      return useGridComponentRenderer({
         defaultElement: CustomButton,
         props,
       });
-      return renderElement();
     }
     render(
       <TestComponentWithCustomButton data-testid="rendered-element">
@@ -114,12 +112,11 @@ describe('useGridComponentRenderer', () => {
       props: BoxProps & { render?: RenderProp<{ someState: string }> },
     ) {
       const { render: renderProp, ...other } = props;
-      const { renderElement } = useGridComponentRenderer({
+      return useGridComponentRenderer({
         defaultElement: Box,
         props: other as Omit<BoxProps, 'color'>,
         render: renderProp,
       });
-      return renderElement();
     }
     render(
       <TestComponentWithSxProp

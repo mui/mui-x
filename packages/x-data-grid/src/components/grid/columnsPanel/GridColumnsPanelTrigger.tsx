@@ -65,7 +65,7 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
       onClick?.(event);
     };
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: rootProps.slots.baseButton,
       props: {
@@ -81,8 +81,6 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
       },
       state,
     });
-
-    return renderElement();
   },
 );
 

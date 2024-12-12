@@ -80,7 +80,7 @@ const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerP
       onClick?.(event);
     };
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: rootProps.slots.baseButton,
       props: {
@@ -90,8 +90,6 @@ const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerP
         ...other,
       },
     });
-
-    return renderElement();
   },
 );
 

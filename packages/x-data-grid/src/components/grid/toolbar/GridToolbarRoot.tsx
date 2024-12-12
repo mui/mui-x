@@ -100,7 +100,7 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
     const { render, ...other } = props;
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: DefaultGridToolbarRoot,
       props: {
@@ -109,8 +109,6 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
         ...other,
       },
     });
-
-    return renderElement();
   },
 );
 

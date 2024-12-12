@@ -72,7 +72,7 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
       onClick?.(event);
     };
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: rootProps.slots.baseButton,
       props: {
@@ -88,8 +88,6 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
       },
       state,
     });
-
-    return renderElement();
   },
 );
 

@@ -95,7 +95,7 @@ const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparat
   function GridToolbarSeparator(props, ref) {
     const { render, ...other } = props;
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: DefaultGridToolbarSeparator,
       props: {
@@ -105,8 +105,6 @@ const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparat
         ...other,
       },
     });
-
-    return renderElement();
   },
 );
 

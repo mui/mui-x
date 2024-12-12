@@ -74,7 +74,7 @@ const GridToolbarToggleButtonGroup = React.forwardRef<
 >(function GridToolbarToggleButtonGroup(props, ref) {
   const { render, ...other } = props;
 
-  const { renderElement } = useGridComponentRenderer({
+  return useGridComponentRenderer({
     render,
     defaultElement: DefaultGridToolbarToggleButtonGroup as React.ComponentType<any>,
     props: {
@@ -82,8 +82,6 @@ const GridToolbarToggleButtonGroup = React.forwardRef<
       ...other,
     },
   });
-
-  return renderElement();
 });
 
 GridToolbarToggleButtonGroup.propTypes = {

@@ -19,7 +19,11 @@ type GridComponentRendererOptions<Props, State> = {
 };
 
 /**
- * Returns a function that renders a component.
+ * Resolves the rendering logic for a component.
+ * Handles three scenarios:
+ * 1. A render function that receives props and state
+ * 2. A React element
+ * 3. A default element
  *
  * @ignore - internal hook.
  */
@@ -32,22 +36,18 @@ export function useGridComponentRenderer<
   state = {} as State,
   render,
 }: GridComponentRendererOptions<Props, State>) {
-  const renderElement = () => {
-    if (typeof render === 'function') {
-      return render(props, state);
-    }
+  if (typeof render === 'function') {
+    return render(props, state);
+  }
 
-    if (render) {
-      const className = clsx(render.props.className, props.className);
-      const style = { ...render.props.style, ...props.style };
-      const sx = mergeSx(render.props.sx, (props as any).sx);
-      return React.cloneElement(render, { ...props, className, style, sx });
-    }
+  if (render) {
+    const className = clsx(render.props.className, props.className);
+    const style = { ...render.props.style, ...props.style };
+    const sx = mergeSx(render.props.sx, (props as any).sx);
+    return React.cloneElement(render, { ...props, className, style, sx });
+  }
 
-    return React.createElement(defaultElement, props);
-  };
-
-  return { renderElement };
+  return React.createElement(defaultElement, props);
 }
 
 function mergeSx(sx1: SxProps | undefined, sx2: SxProps | undefined) {

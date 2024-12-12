@@ -173,7 +173,7 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
 
-    const { renderElement } = useGridComponentRenderer({
+    return useGridComponentRenderer({
       render,
       defaultElement: DefaultGridToolbarButton,
       props: {
@@ -181,8 +181,6 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
         ...other,
       },
     });
-
-    return renderElement();
   },
 );
 
