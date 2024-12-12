@@ -8,4 +8,4 @@ const EnhancedPickersDayRaw = React.forwardRef(function EnhancedPickersDay() {
   return <div>EnhancedPickersDay</div>;
 });
 
-export const PickersDay = React.memo(EnhancedPickersDayRaw) as EnhancedPickersDayComponent;
+export const EnhancedPickersDay = React.memo(EnhancedPickersDayRaw) as EnhancedPickersDayComponent;
