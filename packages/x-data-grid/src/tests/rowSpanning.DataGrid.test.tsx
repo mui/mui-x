@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { getCell, getActiveCell } from 'test/utils/helperFn';
 
@@ -244,6 +245,25 @@ describe('<DataGrid /> - Row spanning', () => {
       const cell30 = getCell(3, 0);
       fireEvent.keyDown(cell30, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('3-1');
+    });
+  });
+
+  describe('rows update', () => {
+    it('should update the row spanning state when the rows are updated', () => {
+      const rowSpanValueGetter = spy();
+      render(
+        <TestDataGrid
+          columns={[{ field: 'code', rowSpanValueGetter }]}
+          rows={[{ id: 1, code: 'A101' }]}
+        />,
+      );
+      expect(rowSpanValueGetter.callCount).to.equal(2);
+
+      act(() => {
+        apiRef.current.setRows([{ id: 1, code: 'A101' }, { id: 2, code: 'A102' }]);
+      });
+
+      expect(rowSpanValueGetter.callCount).to.equal(4);
     });
   });
 
