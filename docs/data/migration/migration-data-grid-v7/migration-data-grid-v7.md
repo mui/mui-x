@@ -1,4 +1,5 @@
 ---
+title: React Data Grid - Migration from v7 to v8
 productId: x-data-grid
 ---
 
@@ -54,6 +55,15 @@ Below are described the steps you need to make to migrate from v7 to v8.
   +const rowId = apiRef.current.getRowId(rowsLookup[id]);
   ```
 
+- The feature row spanning is now stable.
+
+  ```diff
+   <DataGrid
+  -  unstable_rowSpanning
+  +  rowSpanning
+   />
+  ```
+
 ### Localization
 
 - If `estimatedRowCount` is used, the text provided to the [Table Pagination](/material-ui/api/table-pagination/) component from the Material UI library is updated and requires additional translations. Check the example at the end of [Index-based pagination section](/x/react-data-grid/pagination/#index-based-pagination).
@@ -61,6 +71,22 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Accessibility
 
 - The Grid is more aligned with the WAI-ARIA authoring practices and sets the `role` attribute to `treegrid` if the Data Grid is used with row grouping feature.
+
+### State
+
+- The selectors signature has been updated due to the support of arguments in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -mySelector(state, instanceId)
+  +mySelector(state, arguments, instanceId)
+  ```
+
+- The `useGridSelector` signature has been updated due to the introduction of arguments parameter in the selectors. Pass `undefined` as `arguments` if the selector doesn't use any arguments.
+
+  ```diff
+  -const output = useGridSelector(apiRef, selector, equals)
+  +const output = useGridSelector(apiRef, selector, arguments, equals)
+  ```
 
 ### Other exports
 

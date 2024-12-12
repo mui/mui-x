@@ -147,7 +147,7 @@ const GridFilterFormRoot = styled('div', {
   overridesResolver: (props, styles) => styles.filterForm,
 })<{ ownerState: OwnerState }>({
   display: 'flex',
-  padding: vars.spacing(1),
+  gap: vars.spacing(1.5),
 });
 
 const FilterFormDeleteIcon = styled('div', {
@@ -156,9 +156,7 @@ const FilterFormDeleteIcon = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
 })<{ ownerState: OwnerState }>({
   flexShrink: 0,
-  justifyContent: 'flex-end',
-  marginRight: vars.spacing(0.5),
-  marginBottom: vars.spacing(0.2),
+  justifyContent: 'center',
 });
 
 const FilterFormLogicOperatorInput = styled('div', {
@@ -166,8 +164,7 @@ const FilterFormLogicOperatorInput = styled('div', {
   slot: 'FilterFormLogicOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })<{ ownerState: OwnerState }>({
-  minWidth: 55,
-  marginRight: 5,
+  minWidth: 75,
   justifyContent: 'end',
 });
 
@@ -426,7 +423,6 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         {...other}
       >
         <FilterFormDeleteIcon
-          variant="standard"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...deleteIconProps}
@@ -449,7 +445,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseIconButton>
         </FilterFormDeleteIcon>
         <FilterFormLogicOperatorInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...logicOperatorInputProps}
@@ -501,7 +498,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormLogicOperatorInput>
         <FilterFormColumnInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...columnInputProps}
@@ -542,7 +540,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormColumnInput>
         <FilterFormOperatorInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...operatorInputProps}
@@ -587,7 +586,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>
         <FilterFormValueInput
-          variant="standard"
+          variant="outlined"
+          size="small"
           as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...valueInputPropsOther}
@@ -600,6 +600,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
         >
           {currentOperator?.InputComponent ? (
             <currentOperator.InputComponent
+              variant="outlined"
+              size="small"
               apiRef={apiRef}
               item={item}
               applyValue={applyFilterChanges}
