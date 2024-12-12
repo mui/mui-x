@@ -1,3 +1,4 @@
+import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIDivider from '@mui/material/Divider';
@@ -114,11 +115,9 @@ export default materialSlots;
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
   const { iconStart, iconEnd, children, ...other } = props;
-  return (
-    <MUIMenuItem {...other}>
-      {iconStart && <MUIListItemIcon>{iconStart}</MUIListItemIcon>}
-      <MUIListItemText>{children}</MUIListItemText>
-      {iconEnd && <MUIListItemIcon>{iconEnd}</MUIListItemIcon>}
-    </MUIMenuItem>
-  );
+  return React.createElement(MUIMenuItem, other, [
+    iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
+    <MUIListItemText key="2">{children}</MUIListItemText>,
+    iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
+  ]);
 }
