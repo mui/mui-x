@@ -1,5 +1,5 @@
 ---
-title: React Server-side row grouping
+title: React Data Grid - Server-side aggregation
 ---
 
 # Data Grid - Server-side aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧

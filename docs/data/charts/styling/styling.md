@@ -164,3 +164,22 @@ Chart components accept the `sx` props.
 From here, you can target any subcomponents with its class name.
 
 {{"demo": "SxStyling.js"}}
+
+### Gradients and patterns
+
+It is possible to use gradients and patterns to fill the charts.
+This can be done by passing your gradient or pattern definition as children of the chart component.
+
+Note that the gradient or pattern defined that way is only usable for SVG.
+So a direct definition like `color: "url(#Pattern)'` would cause undefined colors in HTML elements such as the tooltip.
+The demo solves this issue by using a CSS variable `'--my-custom-pattern': 'url(#Pattern)'` to specify fallback color with `color: 'var(--my-custom-pattern, #123456)'`.
+
+{{"demo": "PatternPie.js"}}
+
+#### Using gradients on tooltips
+
+Gradients defined as SVG elements are not directly supported in HTML.
+However you can use the [gradient functions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Functions#gradient_functions) to define a gradient in CSS.
+This gradient can be used in the tooltip by setting the `sx` prop on the tooltip component, instead of the fallback color used in the previous examples.
+
+{{"demo": "GradientTooltip.js"}}

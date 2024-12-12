@@ -7,6 +7,7 @@ import {
   GridGroupingColDefOverride,
   GridGroupNode,
   GridTreeNodeWithRender,
+  GridValueFormatter,
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -51,10 +52,7 @@ const GROUPING_COL_DEF_FORCED_PROPERTIES_DATA_SOURCE: Pick<
  * TODO: Make this index comparator depth invariant, the logic should not be inverted when sorting in the "desc" direction (but the current return format of `sortComparator` does not support this behavior).
  */
 const groupingFieldIndexComparator: GridComparatorFn = (v1, v2, cellParams1, cellParams2) => {
-  const model = gridRowGroupingSanitizedModelSelector(
-    cellParams1.api.state,
-    cellParams1.api.instanceId,
-  );
+  const model = gridRowGroupingSanitizedModelSelector({ current: cellParams1.api });
 
   const groupingField1 = (cellParams1.rowNode as GridGroupNode).groupingField ?? null;
   const groupingField2 = (cellParams2.rowNode as GridGroupNode).groupingField ?? null;
@@ -94,10 +92,19 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   },
 });
 
+const groupedByColValueFormatter: (
+  groupedByColDef: GridColDef,
+) => GridValueFormatter<any, any, any, never> =
+  (groupedByColDef: GridColDef) => (value, row, _, apiRef) =>
+    groupedByColDef.valueFormatter!(value, row, groupedByColDef, apiRef);
+
 const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
+    valueFormatter: groupedByColDef.valueFormatter
+      ? groupedByColValueFormatter(groupedByColDef)
+      : undefined,
     valueOptions: isSingleSelectColDef(groupedByColDef) ? groupedByColDef.valueOptions : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria

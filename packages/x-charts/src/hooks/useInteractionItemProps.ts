@@ -2,10 +2,11 @@
 import * as React from 'react';
 import { SeriesItemIdentifier } from '../models';
 import { useHighlighted } from '../context';
-import { useStore } from '../internals/useStore';
+import { useStore } from '../internals/store/useStore';
 
 export const useInteractionItemProps = (skip?: boolean) => {
   const store = useStore();
+
   const { setHighlighted, clearHighlighted } = useHighlighted();
 
   if (skip) {
@@ -31,7 +32,9 @@ export const useInteractionItemProps = (skip?: boolean) => {
       });
     };
     const onPointerLeave = (event: React.PointerEvent) => {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
 
       store.update((prev) => {
         const prevItem = prev.interaction.item;

@@ -3,13 +3,13 @@ import {
   DesktopTimePickerSlots,
   DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
-import { BaseSingleInputFieldProps, TimeViewWithMeridiem } from '../internals/models';
+import { BaseSingleInputFieldProps, PickerValue, TimeViewWithMeridiem } from '../internals/models';
 import {
   MobileTimePickerProps,
   MobileTimePickerSlots,
   MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import { FieldSection, PickerValidDate, TimeValidationError } from '../models';
+import { TimeValidationError } from '../models';
 import { ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots
@@ -46,9 +46,4 @@ export interface TimePickerProps<TEnableAccessibleFieldDOMStructure extends bool
  */
 export type TimePickerFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
   ValidateTimeProps &
-    BaseSingleInputFieldProps<
-      PickerValidDate | null,
-      FieldSection,
-      TEnableAccessibleFieldDOMStructure,
-      TimeValidationError
-    >;
+    BaseSingleInputFieldProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>;

@@ -1,8 +1,6 @@
 // Components
 export * from './components/ChartsAxesGradients';
 
-export * from '../ChartContainer/ResizableContainer';
-
 // hooks
 export { useSeries } from '../hooks/useSeries';
 export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
@@ -27,7 +25,6 @@ export * from './computeAxisValue';
 
 export * from '../context/CartesianProvider';
 export * from '../context/DrawingAreaProvider';
-export * from '../context/InteractionProvider';
 export * from '../context/SeriesProvider';
 export * from '../context/ZAxisContextProvider';
 export * from '../context/PluginProvider';
@@ -36,7 +33,7 @@ export type * from '../context/context.types';
 export { getAxisExtremum } from '../context/CartesianProvider/getAxisExtremum';
 export * from '../context/ChartDataProvider';
 export * from '../context/SizeProvider';
-export * from '../context/SvgRefProvider';
+export * from '../context/ChartProvider';
 
 // series configuration
 export * from '../models/seriesType/config';

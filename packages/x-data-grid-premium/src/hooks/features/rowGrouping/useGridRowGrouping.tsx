@@ -10,6 +10,7 @@ import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
+  GridStrategyGroup,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -275,7 +276,9 @@ export const useGridRowGrouping = (
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.getActiveStrategy('rowTree') === RowGroupingStrategy.Default) {
+      if (
+        apiRef.current.getActiveStrategy(GridStrategyGroup.RowTree) === RowGroupingStrategy.Default
+      ) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }
