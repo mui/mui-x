@@ -14,6 +14,7 @@ const Root = styled('div', {
 })<{ ownerState: ChartsWrapperProps }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: ownerState.direction === 'vertical' ? 'row' : 'column',
+  flex: 1,
 }));
 
 /**
