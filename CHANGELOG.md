@@ -56,14 +56,14 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Make row spanning feature stable (#15742) @MBilalShafi
 - [DataGrid] Update filter panel input variant (#15807) @KenanYusuf
 - [DataGrid] Use `columnsManagement` slot (#15817) @k-rajat19
-- [DataGrid] Use new selectors (#15200) @MBilalShafi
+- [DataGrid] Use new selector signature (#15200) @MBilalShafi
 - [l10n] Improve Romanian (ro-RO) locale (#15745) @rares985
 
 #### `@mui/x-data-grid-pro@8.0.0-alpha.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@8.0.0-alpha.4`, plus:
 
-- [DataGridPro] Make Row reordering work with pagination (#15355) @k-rajat19
+- [DataGridPro] Make row reordering work with pagination (#15355) @k-rajat19
 
 #### `@mui/x-data-grid-premium@8.0.0-alpha.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
