@@ -5,6 +5,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRenderContextSelector } from '../virtualization/gridVirtualizationSelectors';
 import { useGridSelector } from '../../utils/useGridSelector';
+import { gridRowTreeSelector } from './gridRowsSelector';
 import type { GridColDef } from '../../../models/colDef';
 import type { GridRowId, GridValidRowModel, GridRowEntry } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -71,7 +72,7 @@ const computeRowSpanningState = (
 
     for (
       let index = rangeToProcess.firstRowIndex;
-      index <= rangeToProcess.lastRowIndex;
+      index < rangeToProcess.lastRowIndex;
       index += 1
     ) {
       const row = visibleRows[index];
@@ -187,7 +188,7 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state, props, 
     }
     const rangeToProcess = {
       firstRowIndex: 0,
-      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS - 1, Math.max(rowIds.length - 1, 0)),
+      lastRowIndex: Math.min(DEFAULT_ROWS_TO_PROCESS, Math.max(rowIds.length, 0)),
     };
     const rows = rowIds.map((id) => ({
       id,
@@ -226,13 +227,14 @@ export const useGridRowSpanning = (
   const { range, rows: visibleRows } = useGridVisibleRows(apiRef, props);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
   const colDefs = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const processedRange = useLazyRef<RowRange, void>(() => {
     return Object.keys(apiRef.current.state.rowSpanning.spannedCells).length > 0
       ? {
           firstRowIndex: 0,
           lastRowIndex: Math.min(
-            DEFAULT_ROWS_TO_PROCESS - 1,
-            Math.max(apiRef.current.state.rows.dataRowIds.length - 1, 0),
+            DEFAULT_ROWS_TO_PROCESS,
+            Math.max(apiRef.current.state.rows.dataRowIds.length, 0),
           ),
         }
       : EMPTY_RANGE;
@@ -265,7 +267,7 @@ export const useGridRowSpanning = (
       const rangeToProcess = getUnprocessedRange(
         {
           firstRowIndex: renderContext.firstRowIndex,
-          lastRowIndex: Math.min(renderContext.lastRowIndex - 1, range.lastRowIndex),
+          lastRowIndex: Math.min(renderContext.lastRowIndex, range.lastRowIndex + 1),
         },
         processedRange.current,
       );
@@ -326,10 +328,16 @@ export const useGridRowSpanning = (
   const prevRenderContext = React.useRef(renderContext);
   const isFirstRender = React.useRef(true);
   const shouldResetState = React.useRef(false);
+  const previousTree = React.useRef(tree);
   React.useEffect(() => {
     const firstRender = isFirstRender.current;
     if (isFirstRender.current) {
       isFirstRender.current = false;
+    }
+    if (tree !== previousTree.current) {
+      previousTree.current = tree;
+      updateRowSpanningState(true);
+      return;
     }
     if (range && lastRange.current && isRowRangeUpdated(range, lastRange.current)) {
       lastRange.current = range;
@@ -344,5 +352,5 @@ export const useGridRowSpanning = (
       return;
     }
     updateRowSpanningState();
-  }, [updateRowSpanningState, renderContext, range, lastRange]);
+  }, [updateRowSpanningState, renderContext, range, lastRange, tree]);
 };
