@@ -400,7 +400,7 @@ const theme = createTheme({
 
 ### Slot: `actionBar`
 
-- The component passed to the `actionBar` slot no longer receives an `onClear`, `onSetToday`, `onAccept` and `onCancel` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+- The component passed to the `actionBar` slot no longer receives an `onClear`, `onSetToday`, `onAccept` and `onCancel` props. You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
