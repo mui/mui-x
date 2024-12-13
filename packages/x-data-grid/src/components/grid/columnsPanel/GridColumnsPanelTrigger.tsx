@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { ButtonProps } from '@mui/material/Button';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import {
   gridPreferencePanelStateSelector,
@@ -14,6 +13,7 @@ import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import type { GridSlotProps } from '../../../models';
 
 export interface GridColumnsPanelTriggerState {
   /**
@@ -22,7 +22,7 @@ export interface GridColumnsPanelTriggerState {
   open: boolean;
 }
 
-export interface GridColumnsPanelTriggerProps extends Omit<ButtonProps, 'className'> {
+export type GridColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
   /**
    * A function to customize rendering of the component.
    */
@@ -31,7 +31,7 @@ export interface GridColumnsPanelTriggerProps extends Omit<ButtonProps, 'classNa
    * Override or extend the styles applied to the component.
    */
   className?: string | ((state: GridColumnsPanelTriggerState) => string);
-}
+};
 
 /**
  * Demos:

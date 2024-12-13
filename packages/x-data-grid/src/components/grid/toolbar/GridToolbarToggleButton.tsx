@@ -1,81 +1,21 @@
 /* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import ToggleButton, { ToggleButtonProps } from '@mui/material/ToggleButton';
-import { styled } from '@mui/system';
-import composeClasses from '@mui/utils/composeClasses';
-import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { useGridToolbarItem } from './useGridToolbarItem';
+import type { GridSlotProps } from '../../../models';
 
-export interface GridToolbarToggleButtonProps extends ToggleButtonProps {
+export type GridToolbarToggleButtonProps = GridSlotProps['baseToggleButton'] & {
   /**
    * A function to customize rendering of the component.
    */
   render?: RenderProp<{}>;
-}
-
-type OwnerState = DataGridProcessedProps;
-
-const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['toolbarToggleButton'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
 };
-
-const StyledGridToolbarToggleButton = styled(ToggleButton, {
-  name: 'MuiDataGrid',
-  slot: 'ToolbarToggleButton',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  gap: theme.spacing(0.5),
-  minHeight: 34,
-  lineHeight: 'normal',
-}));
-
-const DefaultGridToolbarToggleButton = React.forwardRef<
-  HTMLButtonElement,
-  GridToolbarToggleButtonProps
->(function DefaultGridToolbarToggleButton(props, ref) {
-  const { children, className, size = 'small', ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
-
-  return (
-    <StyledGridToolbarToggleButton
-      ref={ref}
-      as={rootProps.slots.baseToggleButton}
-      ownerState={rootProps}
-      className={clsx(classes.root, className)}
-      size={size}
-      {...rootProps.slotProps?.baseToggleButton}
-      {...other}
-    >
-      {children}
-    </StyledGridToolbarToggleButton>
-  );
-});
-
-DefaultGridToolbarToggleButton.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * A function to customize rendering of the component.
-   */
-  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-} as any;
 
 /**
  * Demos:
@@ -89,13 +29,14 @@ DefaultGridToolbarToggleButton.propTypes = {
 const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarToggleButtonProps>(
   function GridToolbarToggleButton(props, ref) {
     const { render, ...other } = props;
-    const rootRef = React.useRef<HTMLButtonElement>(null);
-    const handleRef = useForkRef(rootRef, ref);
-    const itemProps = useGridToolbarItem(rootRef);
+    const rootProps = useGridRootProps();
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const handleRef = useForkRef(buttonRef, ref);
+    const itemProps = useGridToolbarItem(buttonRef);
 
     return useGridComponentRenderer({
       render,
-      defaultElement: DefaultGridToolbarToggleButton as React.ComponentType<any>,
+      defaultElement: rootProps.slots.baseToggleButton,
       props: {
         ref: handleRef,
         ...itemProps,

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { ButtonProps } from '@mui/material/Button';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import {
   gridFilterActiveItemsSelector,
@@ -15,6 +14,7 @@ import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import type { GridSlotProps } from '../../../models';
 
 export interface GridFilterPanelTriggerState {
   /**
@@ -27,7 +27,7 @@ export interface GridFilterPanelTriggerState {
   filterCount: number;
 }
 
-export interface GridFilterPanelTriggerProps extends Omit<ButtonProps, 'className'> {
+export type GridFilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
   /**
    * A function to customize rendering of the component.
    */
@@ -36,7 +36,7 @@ export interface GridFilterPanelTriggerProps extends Omit<ButtonProps, 'classNam
    * A function to customize rendering of the component.
    */
   className?: string | ((state: GridFilterPanelTriggerState) => string);
-}
+};
 
 /**
  * Demos:

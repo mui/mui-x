@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ButtonProps } from '@mui/material/Button';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
@@ -9,8 +8,9 @@ import {
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../../models/gridExport';
+import type { GridSlotProps } from '../../../models';
 
-export type GridExportTriggerProps = ButtonProps & {
+export type GridExportTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
   /**
    * A function to customize rendering of the component.
    */
