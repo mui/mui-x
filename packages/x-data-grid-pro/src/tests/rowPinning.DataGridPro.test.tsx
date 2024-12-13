@@ -70,14 +70,14 @@ describe('<DataGridPro /> - Row pinning', () => {
     );
   }
 
-  it('should render pinned rows in pinned containers', () => {
+  it('should render pinned rows in pinned containers', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should treat row as pinned even if row with the same id is present in `rows` prop', () => {
+  it('should treat row as pinned even if row with the same id is present in `rows` prop', async () => {
     const rowCount = 5;
 
     function TestCase({ pinRows = true }) {
@@ -102,21 +102,21 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const { setProps } = render(<TestCase />);
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
     expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
 
     setProps({ pinRows: false });
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 not pinned');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 not pinned'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 not pinned');
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
     expect(screen.getByText(`Total Rows: ${rowCount}`)).not.to.equal(null);
 
     setProps({ pinRows: true });
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
     expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
     expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
@@ -144,7 +144,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should update pinned rows when `pinnedRows` prop change', () => {
+  it('should update pinned rows when `pinnedRows` prop change', async () => {
     const data = getBasicGridData(20, 5);
     function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -166,7 +166,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const { setProps } = render(<TestCase />);
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
 
     const pinnedRows = { top: [data.rows[11]], bottom: [data.rows[3]] };
@@ -174,7 +174,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     setProps({ pinnedRows, rows });
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 pinned bottom');
 
     expect(isRowPinned(getRowById(11), 'top')).to.equal(true, '#11 pinned top');
@@ -183,7 +183,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should update pinned rows when calling `apiRef.current.setPinnedRows` method', async () => {
     const data = getBasicGridData(20, 5);
-    let apiRef!: React.MutableRefObject<GridApi>;
+    let apiRef!: React.RefObject<GridApi>;
 
     function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -214,8 +214,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     let rows = data.rows.filter((row) => row.id !== 11 && row.id !== 3);
 
     // should work when calling `setPinnedRows` before `setRows`
-    act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
-    act(() => apiRef.current.setRows(rows));
+    await act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
+    await act(() => apiRef.current.setRows(rows));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 pinned bottom');
@@ -227,8 +227,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     rows = data.rows.filter((row) => row.id !== 8 && row.id !== 5);
 
     // should work when calling `setPinnedRows` after `setRows`
-    act(() => apiRef.current.setRows(rows));
-    act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
+    await act(() => apiRef.current.setRows(rows));
+    await act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
 
     expect(isRowPinned(getRowById(11), 'top')).to.equal(false, '#11 pinned top');
     expect(isRowPinned(getRowById(3), 'bottom')).to.equal(false, '#3 pinned bottom');
@@ -297,7 +297,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getColumnValues(0)).to.deep.equal(['0', '4', '3', '2', '1']);
   });
 
-  it('should not be impacted by filtering', () => {
+  it('should not be impacted by filtering', async () => {
     const { setProps } = render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
@@ -309,7 +309,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       },
     });
 
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    await waitFor(() => expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top'));
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
 
     // should show pinned rows even if there's no filtering results
@@ -339,7 +339,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       return cell.parentElement!.getAttribute('data-id');
     }
 
-    it('should work with top pinned rows', () => {
+    it('should work with top pinned rows', async () => {
       function TestCase() {
         const data = getBasicGridData(20, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
@@ -357,27 +357,24 @@ describe('<DataGridPro /> - Row pinning', () => {
         );
       }
 
-      render(<TestCase />);
+      const { user } = render(<TestCase />);
 
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
 
-      fireUserEvent.mousePress(getCell(0, 0));
+      await user.click(getCell(0, 0));
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
-      fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       // second top pinned row
       expect(getActiveCellRowId()).to.equal('0');
 
-      fireEvent.keyDown(getCell(1, 0), { key: 'ArrowDown' });
+      await user.keyboard('{ArrowDown}');
       // first non-pinned row
       expect(getActiveCellRowId()).to.equal('2');
 
-      fireEvent.keyDown(getCell(2, 0), { key: 'ArrowRight' });
-      fireEvent.keyDown(getCell(2, 1), { key: 'ArrowUp' });
-      fireEvent.keyDown(getCell(1, 1), { key: 'ArrowUp' });
-      fireEvent.keyDown(getCell(0, 1), { key: 'ArrowUp' });
+      await user.keyboard('{ArrowRight}{ArrowUp}{ArrowUp}{ArrowUp}');
       expect(getActiveColumnHeader()).to.equal('1');
     });
 
@@ -627,8 +624,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(cell.querySelector(`.${gridClasses.rowReorderCell}`)).to.equal(null);
   });
 
-  it('should keep pinned rows on page change', () => {
-    render(
+  it('should keep pinned rows on page change', async () => {
+    const { user } = render(
       <BaselineTestCase
         rowCount={20}
         colCount={5}
@@ -642,12 +639,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
 
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
 
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    await user.click(screen.getByRole('button', { name: /next page/i }));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -720,10 +717,12 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(apiRef!.current.isRowSelected(0)).to.equal(false);
   });
 
-  it('should not render selection checkbox for pinned rows', () => {
+  it('should not render selection checkbox for pinned rows', async () => {
     render(<BaselineTestCase rowCount={20} colCount={5} checkboxSelection />);
 
-    expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null);
+    await waitFor(() =>
+      expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null),
+    );
     expect(getRowById(1)!.querySelector('input[type="checkbox"]')).to.equal(null);
   });
 
