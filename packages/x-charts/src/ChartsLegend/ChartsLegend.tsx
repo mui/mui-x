@@ -52,7 +52,6 @@ const RootElement = styled('ul', {
   paddingInlineStart: 0,
   flexWrap: 'wrap',
   justifyContent: 'center',
-
   '> button': {
     // Reset button styles
     background: 'none',
