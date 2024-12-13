@@ -1,7 +1,6 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
-import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes and merges the theme `defaultProps` and handles the `classes` and renders the component.
@@ -62,9 +61,9 @@ export const consumeThemeProps = <
       | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.ForwardRefRenderFunction<any, Props>,
-) => {
-  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+  InComponent: React.FunctionComponent<Props>,
+): React.FunctionComponent<Props> =>
+  function (props: Props) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -86,14 +85,5 @@ export const consumeThemeProps = <
       (InComponent as any).displayName = name;
     }
 
-    const OutComponent = ReactIs.isForwardRef(InComponent)
-      ? (InComponent as unknown as React.ElementType)
-      : // InComponent needs to be a function that accepts `(props, ref)`
-        // @ts-expect-error
-        React.forwardRef(InComponent);
-
-    return <OutComponent {...outProps} classes={classes} ref={ref} />;
-  }
-
-  return React.forwardRef(InternalComponent);
-};
+    return <InComponent {...outProps} classes={classes} />;
+  };
