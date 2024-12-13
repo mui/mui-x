@@ -235,14 +235,12 @@ interface FieldActiveDateManager<TValue extends PickerValidValue> {
    */
   getSections: (sections: InferFieldSection<TValue>[]) => InferFieldSection<TValue>[];
   /**
-   * Creates the new value and reference value based on the new active date and the current state.
+   * Creates the new value based on the new active date and the current value.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {PickerValidDate | null} newActiveDate The new value of the date containing the active section.
-   * @returns {Omit<PublishValueParameters<TValue>, 'sections'>} The new value and reference value to publish and store in the state.
+   * @returns {TValue} The new value to publish.
    */
-  getNewValuesFromNewActiveDate: (
-    newActiveDate: PickerValidDate | null,
-  ) => Omit<PublishValueParameters<TValue>, 'sections'>;
+  getNewValueFromNewActiveDate: (newActiveDate: PickerValidDate | null) => TValue;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
@@ -294,7 +292,6 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * @returns {FieldActiveDateManager<TValue>} The manager of the active date.
    */
   getActiveDateManager: (
-    utils: MuiPickersAdapter,
     state: UseFieldState<TValue>,
     value: TValue,
     activeSection: InferFieldSection<TValue>,
@@ -460,14 +457,4 @@ interface UseFieldTextFieldParams<
     UseFieldCharacterEditingResponse {
   areAllSectionsEmpty: boolean;
   sectionOrder: SectionOrdering;
-}
-
-export type PublishValueParameters<TValue extends PickerValidValue> = Pick<
-  UseFieldState<TValue>,
-  'referenceValue' | 'sections'
-> & { value: TValue };
-
-export interface PublishValueBisParameters<TValue extends PickerValidValue> {
-  value: TValue;
-  referenceValue: InferNonNullablePickerValue<TValue>;
 }

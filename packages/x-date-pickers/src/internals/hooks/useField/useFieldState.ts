@@ -11,7 +11,6 @@ import {
   FieldChangeHandlerContext,
   FieldSectionsValueBoundaries,
   UseFieldForwardedProps,
-  PublishValueParameters,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -155,6 +154,7 @@ export const useFieldState = <
     ],
   );
 
+  const sectionIndexToCleanOnNextEmptyValue = React.useRef<number | null>(null);
   const [state, setState] = React.useState<UseFieldState<TValue>>(() => {
     const sections = getSectionsFromValue(value);
     validateSections(sections, valueType);
@@ -181,35 +181,6 @@ export const useFieldState = <
       referenceValue,
     };
   });
-
-  // If `prop.value` changes, we update the state to reflect the new value
-  if (value !== state.lastValue) {
-    setState((prevState) => ({
-      ...prevState,
-      valueProp,
-      sections: getSectionsFromValue(value),
-      sectionsDependencies: { format, isRtl, locale: utils.locale },
-      referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
-        value,
-        prevState.referenceValue,
-      ),
-    }));
-  }
-
-  if (
-    isRtl !== state.lastSectionsDependencies.isRtl ||
-    format !== state.lastSectionsDependencies.format ||
-    utils.locale !== state.lastSectionsDependencies.locale
-  ) {
-    const sections = getSectionsFromValue(value);
-    validateSections(sections, valueType);
-    setState((prevState) => ({
-      ...prevState,
-      sectionsDependencies: { format, isRtl, locale: utils.locale },
-      sections,
-    }));
-  }
 
   const [selectedSections, innerSetSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
@@ -247,30 +218,6 @@ export const useFieldState = <
     handleValueChange(newValue, context);
   };
 
-  const publishValue = (parameters: PublishValueParameters<TValue>) => {
-    setState((prevState) => ({
-      ...prevState,
-      sections: parameters.sections,
-      referenceValue: parameters.referenceValue,
-      tempValueStrAndroid: null,
-    }));
-
-    if (valueManager.areValuesEqual(utils, value, parameters.value)) {
-      return;
-    }
-
-    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
-      validationError: validator({
-        adapter,
-        value,
-        timezone,
-        props: internalProps,
-      }),
-    };
-
-    handleValueChange(parameters.value, context);
-  };
-
   const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
     const newSections = [...state.sections];
 
@@ -283,16 +230,36 @@ export const useFieldState = <
     return newSections;
   };
 
+  const setSectionIndexToCleanOnNextEmptyValue = () => {
+    sectionIndexToCleanOnNextEmptyValue.current = activeSectionIndex;
+    setTimeout(() => {
+      sectionIndexToCleanOnNextEmptyValue.current = null;
+    });
+  };
+
   const clearValue = () => publishValueBis(valueManager.emptyValue);
 
   const clearActiveSection = () => {
-    console.log('HEY');
     if (activeSectionIndex == null) {
       return;
     }
 
-    publishValueBis(valueManager.emptyValue);
-    setState((prevState) => ({ ...prevState, sections: setSectionValue(activeSectionIndex, '') }));
+    setSectionIndexToCleanOnNextEmptyValue();
+
+    const activeDateManager = fieldValueManager.getActiveDateManager(
+      state,
+      value,
+      state.sections[activeSectionIndex],
+    );
+    if (activeDateManager.date == null) {
+      setState((prevState) => ({
+        ...prevState,
+        sections: setSectionValue(activeSectionIndex, ''),
+        tempValueStrAndroid: null,
+      }));
+    } else {
+      publishValueBis(valueManager.emptyValue);
+    }
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
@@ -335,25 +302,17 @@ export const useFieldState = <
     /**
      * 2. Try to build a valid date from the new section value
      */
-    const activeDateManager = fieldValueManager.getActiveDateManager(
-      utils,
-      state,
-      value,
-      activeSection,
-    );
+    const activeDateManager = fieldValueManager.getActiveDateManager(state, value, activeSection);
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
-    let values: Omit<PublishValueParameters<TValue>, 'sections'>;
-    let shouldPublish: boolean;
-
-    /**
-     * If the new date is valid,
-     * Then we merge the value of the modified sections into the reference date.
-     * This makes sure that we don't lose some information of the initial date (like the time on a date field).
-     */
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
+      /**
+       * If the new date is valid,
+       * Then we merge the value of the modified sections into the reference date.
+       * This makes sure that we don't lose some information of the initial date (like the time on a date field).
+       */
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
         newActiveDate,
@@ -362,32 +321,88 @@ export const useFieldState = <
         true,
       );
 
-      values = activeDateManager.getNewValuesFromNewActiveDate(mergedDate);
-      shouldPublish = true;
+      publishValueBis(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
+    } else if (activeDateManager.date != null) {
+      /**
+       * If the current date is not null, we publish a null value.
+       */
+      setSectionIndexToCleanOnNextEmptyValue();
+      publishValueBis(activeDateManager.getNewValueFromNewActiveDate(null));
     } else {
-      values = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
-      shouldPublish =
-        (newActiveDate != null && !utils.isValid(newActiveDate)) !==
-        (activeDateManager.date != null && !utils.isValid(activeDateManager.date));
+      /**
+       * If the current date is already null, we update the sections.
+       */
+      setState((prevState) => ({ ...prevState, sections: newSections, tempValueStrAndroid: null }));
     }
-
-    /**
-     * Publish or update the internal state with the new value and sections.
-     */
-    if (shouldPublish) {
-      return publishValue({ ...values, sections: newSections });
-    }
-
-    return setState((prevState) => ({
-      ...prevState,
-      ...values,
-      sections: newSections,
-      tempValueStrAndroid: null,
-    }));
   };
 
   const setTempAndroidValueStr = (tempValueStrAndroid: string | null) =>
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
+
+  // If `prop.value` changes, we update the state to reflect the new value
+  if (value !== state.lastValue) {
+    let shouldClearActiveSection: boolean = false;
+    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSectionIndex != null) {
+      const activeDateManager = fieldValueManager.getActiveDateManager(
+        state,
+        value,
+        state.sections[activeSectionIndex],
+      );
+
+      if (activeDateManager.date == null) {
+        shouldClearActiveSection = true;
+      }
+    }
+
+    const sections = shouldClearActiveSection
+      ? setSectionValue(activeSectionIndex!, '')
+      : getSectionsFromValue(value);
+
+    setState((prevState) => ({
+      ...prevState,
+      lastValue: value,
+      sections,
+      sectionsDependencies: { format, isRtl, locale: utils.locale },
+      referenceValue: fieldValueManager.updateReferenceValue(
+        utils,
+        value,
+        prevState.referenceValue,
+      ),
+    }));
+  }
+
+  if (state.sections.every((section) => section.value !== '') && value == null) {
+    console.log('OH');
+  }
+
+  if (activeSectionIndex != null) {
+    const activeDateManager = fieldValueManager.getActiveDateManager(
+      state,
+      value,
+      state.sections[activeSectionIndex],
+    );
+    const activeDateSections = activeDateManager.getSections(state.sections);
+    if (
+      activeDateSections.every((section) => section.value !== '') &&
+      activeDateManager.date == null
+    ) {
+      console.log('CLEAR ACTIVE DATE');
+    }
+  }
+
+  if (
+    isRtl !== state.lastSectionsDependencies.isRtl ||
+    format !== state.lastSectionsDependencies.format ||
+    utils.locale !== state.lastSectionsDependencies.locale
+  ) {
+    const sections = getSectionsFromValue(value);
+    validateSections(sections, valueType);
+    setState((prevState) => ({
+      ...prevState,
+      sectionsDependencies: { format, isRtl, locale: utils.locale },
+      sections,
+    }));
+  }
 
   return {
     state,

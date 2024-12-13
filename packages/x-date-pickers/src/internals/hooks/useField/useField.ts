@@ -183,7 +183,6 @@ export const useField = <
 
         const activeSection = state.sections[activeSectionIndex];
         const activeDateManager = fieldValueManager.getActiveDateManager(
-          utils,
           state,
           value,
           activeSection,

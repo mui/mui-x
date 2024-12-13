@@ -52,17 +52,11 @@ export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   },
   getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
   getV6InputValueFromSections: createDateStrForV6InputFromSections,
-  getActiveDateManager: (utils, state, value) => ({
+  getActiveDateManager: (state, value) => ({
     date: value,
     referenceDate: state.referenceValue,
     getSections: (sections) => sections,
-    getNewValuesFromNewActiveDate: (newActiveDate) => ({
-      value: newActiveDate,
-      referenceValue:
-        newActiveDate == null || !utils.isValid(newActiveDate)
-          ? state.referenceValue
-          : newActiveDate,
-    }),
+    getNewValueFromNewActiveDate: (newActiveDate) => newActiveDate,
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),

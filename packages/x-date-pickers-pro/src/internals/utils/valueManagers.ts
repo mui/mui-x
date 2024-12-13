@@ -163,7 +163,7 @@ export const getRangeFieldValueManager = ({
       return parseDate(dateStr.trim(), referenceValue[index]!);
     }) as PickerRangeValue;
   },
-  getActiveDateManager: (utils, state, value, activeSection) => {
+  getActiveDateManager: (state, value, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (newDate: PickerValidDate | null, prevDateRange: PickerRangeValue) =>
@@ -182,13 +182,7 @@ export const getRangeFieldValueManager = ({
 
         return dateRangeSections.endDate;
       },
-      getNewValuesFromNewActiveDate: (newActiveDate) => ({
-        value: updateDateInRange(newActiveDate, value),
-        referenceValue:
-          newActiveDate == null || !utils.isValid(newActiveDate)
-            ? state.referenceValue
-            : updateDateInRange(newActiveDate, state.referenceValue),
-      }),
+      getNewValueFromNewActiveDate: (newActiveDate) => updateDateInRange(newActiveDate, value),
     };
   },
 });
