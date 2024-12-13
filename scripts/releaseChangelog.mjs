@@ -53,6 +53,12 @@ function resolvePackagesByLabels(labels) {
       case 'component: pickers':
         resolvedPackages.push('pickers');
         break;
+      case 'component: charts':
+        resolvedPackages.push('charts');
+        break;
+      case 'component: tree view':
+        resolvedPackages.push('TreeView');
+        break;
       default:
         break;
     }
@@ -106,7 +112,7 @@ async function main(argv) {
 
   // Fetch all the pull Request and check if there is a section named changelog
 
-  const changeLogMessages = [];
+  const changeLogMessages = {};
   const prsLabelsMap = {};
   const community = {
     firstTimers: new Set(),
@@ -124,6 +130,7 @@ async function main(argv) {
         data: {
           body: bodyMessage,
           labels,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           author_association,
           user: { login },
         },
@@ -152,14 +159,23 @@ async function main(argv) {
         return;
       }
 
-      const changelogMotif = '# changelog';
-      const changelogIndex = bodyMessage.toLowerCase().indexOf(changelogMotif);
-      if (changelogIndex >= 0) {
-        changeLogMessages.push(
-          `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
-            searchPullRequestId[1]
-          }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`,
-        );
+      const changelogMotif = '## changelog';
+      const lowercaseBody = bodyMessage.toLowerCase();
+      // Check if the body contains a line starting with '## changelog'
+      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
+      const changelogMatches = Array.from(matchedChangelog);
+      if (changelogMatches.length > 0) {
+        const prLabels = prsLabelsMap[commitsItem.sha];
+        const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
+        const changelogIndex = changelogMatches[0].index;
+        const message = `From https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}/pull/${
+          searchPullRequestId[1]
+        }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
+        if (changeLogMessages[resolvedPackage || 'general']) {
+          changeLogMessages[resolvedPackage || 'general'].push(message);
+        } else {
+          changeLogMessages[resolvedPackage || 'general'] = [message];
+        }
       }
     }),
   );
@@ -288,6 +304,13 @@ async function main(argv) {
       .join('\n')}`;
   };
 
+  const logChangelogMessages = (product) => {
+    if (!changeLogMessages[product]?.length) {
+      return '';
+    }
+    return `${changeLogMessages[product].length > 0 ? '\n' : ''}${changeLogMessages[product].join('\n\n')}`;
+  };
+
   const nowFormatted = new Date().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -325,14 +348,14 @@ We'd like to offer a big thanks to the ${
   } contributors who made this release possible. Here are some highlights ✨:
 
 TODO INSERT HIGHLIGHTS
-${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
+${logChangelogMessages('general')}
 ${logCommunitySection()}
 ${logTeamSection()}
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
 ### Data Grid
-
+${logChangelogMessages('DataGrid')}
 #### \`@mui/x-data-grid@__VERSION__\`
 
 ${logChangelogSection(dataGridCommits) || `No changes since \`@mui/x-data-grid@${lastRelease}\`.`}
@@ -350,7 +373,7 @@ Same changes as in \`@mui/x-data-grid-pro@__VERSION__\`${
   }
 ${logChangelogSection(dataGridPremiumCommits)}${dataGridPremiumCommits.length > 0 ? '\n' : ''}
 ### Date and Time Pickers
-
+${logChangelogMessages('pickers')}
 #### \`@mui/x-date-pickers@__VERSION__\`
 
 ${logChangelogSection(pickersCommits) || `No changes since \`@mui/x-date-pickers@${lastRelease}\`.`}
@@ -362,7 +385,7 @@ Same changes as in \`@mui/x-date-pickers@__VERSION__\`${
   }
 ${logChangelogSection(pickersProCommits)}${pickersProCommits.length > 0 ? '\n' : ''}
 ### Charts
- 
+${logChangelogMessages('charts')}
 #### \`@mui/x-charts@__VERSION__\`
 
 ${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${lastRelease}\`.`}
@@ -372,7 +395,7 @@ ${logChangelogSection(chartsCommits) || `No changes since \`@mui/x-charts@${last
 Same changes as in \`@mui/x-charts@__VERSION__\`${chartsProCommits.length > 0 ? ', plus:\n' : '.'}
 ${logChangelogSection(chartsProCommits)}${chartsProCommits.length > 0 ? '\n' : ''}
 ### Tree View
-
+${logChangelogMessages('TreeView')}
 #### \`@mui/x-tree-view@__VERSION__\` 
 ${logChangelogSection(treeViewProCommits) || `No changes since \`@mui/x-tree-view-pro@${lastRelease}\`.`}
 
