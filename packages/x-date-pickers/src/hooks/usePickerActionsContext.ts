@@ -3,7 +3,7 @@ import * as React from 'react';
 import { PickerActionsContext } from '../internals/components/PickerProvider';
 
 /**
- * Returns a sub-set of the context passed by the picker that wraps the current component.
+ * Returns a subset of the context passed by the picker wrapping the current component.
  * If only contain the actions and never causes a re-render of the component using it.
  */
 export const usePickerActionsContext = () => {
