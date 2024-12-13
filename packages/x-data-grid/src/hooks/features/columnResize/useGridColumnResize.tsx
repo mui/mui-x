@@ -697,7 +697,6 @@ export const useGridColumnResize = (
    */
 
   const columnVirtualizationDisabled = useColumnVirtualizationDisabled(apiRef);
-  // const columnVirtualizationEnabled=useGridSelector(apiRef,gridVirtualizationColumnEnabledSelector)
   const isAutosizingRef = React.useRef(false);
   const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>(
     async (userOptions) => {
