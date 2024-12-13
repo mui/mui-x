@@ -121,14 +121,7 @@ const PieChart = React.forwardRef(function PieChart(
     >
       <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
       <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-      {!hideLegend && (
-        <ChartsLegend
-          direction="column"
-          position={{ vertical: 'middle', horizontal: isRtl ? 'left' : 'right' }}
-          slots={slots}
-          slotProps={slotProps}
-        />
-      )}
+      {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
       {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       {children}
     </ChartContainer>

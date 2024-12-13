@@ -223,7 +223,7 @@ const PiecewiseColorLegend = consumeThemeProps(
                 role={onItemClick ? 'button' : undefined}
                 type={onItemClick ? 'button' : undefined}
                 onClick={
-                  // @ts-expect-error onClick is only attached to a button
+                  // @ts-ignore onClick is only attached to a button
                   onItemClick ? (event) => onItemClick(event, clickObject, index) : undefined
                 }
                 className={clsx(classes?.item, {

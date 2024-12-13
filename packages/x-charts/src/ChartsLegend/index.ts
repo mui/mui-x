@@ -1,4 +1,5 @@
 export * from './ChartsLegend';
+export * from './chartsLegend.types';
 export * from './direction';
 export * from './legendContext.types';
 export { ChartsLegendClasses, legendClasses } from './chartsLegendClasses';

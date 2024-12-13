@@ -1,4 +1,4 @@
-import { LegendItemParams } from '../ChartsLegend/chartsLegend.types';
+import type { LegendItemParams } from '../ChartsLegend';
 import { LegendGetter } from '../context/PluginProvider';
 import { getLabel } from '../internals/getLabel';
 
