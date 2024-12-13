@@ -121,6 +121,13 @@ function GridActionsCell(props: GridActionsCellProps) {
   const hideMenu = () => {
     setOpen(false);
   };
+  const toggleMenu = () => {
+    if (open) {
+      hideMenu();
+    } else {
+      showMenu();
+    }
+  };
 
   const handleTouchRippleRef =
     (index: string | number) => (instance: TouchRippleActions | null) => {
@@ -213,7 +220,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           aria-controls={open ? menuId : undefined}
           role="menuitem"
           size="small"
-          onClick={showMenu}
+          onClick={toggleMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
           {...rootProps.slotProps?.baseIconButton}
