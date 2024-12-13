@@ -14,8 +14,7 @@ import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClass
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLegendSlotExtension } from './chartsLegend.types';
 
-export interface ChartsLegendProps
-  extends PrependKeys<Omit<ChartsLabelMarkProps, 'color'>, 'mark'> {
+export interface ChartsLegendProps extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
@@ -109,14 +108,20 @@ ChartsLegend.propTypes = {
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The direction of the legend layout.
    * The default depends on the chart.
    */
-  direction: PropTypes.oneOf(['vertical', 'horizontal']),
+  direction: PropTypes.oneOf(['horizontal', 'vertical']),
+  /**
+   * The type of the mark.
+   * @default 'square'
+   */
+  type: PropTypes.oneOf(['circle', 'line', 'square']),
   /**
    * Callback fired when a legend item is clicked.
-   * @param {React.MouseEvent<HTMLLIElement, MouseEvent>} event The click event.
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
    * @param {SeriesLegendItemContext} legendItem The legend item data.
    * @param {number} index The index of the clicked legend item.
    */
@@ -131,6 +136,11 @@ ChartsLegend.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChartsLegend };
