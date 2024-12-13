@@ -82,7 +82,7 @@
       "enabled": false
     },
     {
-      "groupName": "MUI Core",
+      "groupName": "Material UI",
       "matchPackageNames": [
         "@mui/icons-material",
         "@mui/joy",

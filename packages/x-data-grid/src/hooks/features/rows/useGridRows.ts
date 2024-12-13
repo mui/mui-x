@@ -359,7 +359,7 @@ export const useGridRows = (
       }
 
       apiRef.current.setState((state) => {
-        const group = gridRowTreeSelector(state, apiRef.current.instanceId)[
+        const group = gridRowTreeSelector(state, undefined, apiRef.current.instanceId)[
           GRID_ROOT_GROUP_ID
         ] as GridGroupNode;
         const allRows = group.children;
@@ -573,10 +573,10 @@ export const useGridRows = (
   const applyHydrateRowsProcessor = React.useCallback(() => {
     apiRef.current.setState((state) => {
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
-        tree: gridRowTreeSelector(state, apiRef.current.instanceId),
-        treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
-        dataRowIds: gridDataRowIdsSelector(state, apiRef.current.instanceId),
-        dataRowIdToModelLookup: gridRowsLookupSelector(state, apiRef.current.instanceId),
+        tree: gridRowTreeSelector(state, undefined, apiRef.current.instanceId),
+        treeDepths: gridRowTreeDepthsSelector(state, undefined, apiRef.current.instanceId),
+        dataRowIds: gridDataRowIdsSelector(state, undefined, apiRef.current.instanceId),
+        dataRowIdToModelLookup: gridRowsLookupSelector(state, undefined, apiRef.current.instanceId),
       });
 
       return {
