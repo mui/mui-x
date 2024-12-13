@@ -30,14 +30,14 @@ export interface ContinuousColorLegendProps
   /**
    * The label to display at the minimum side of the gradient.
    * Can either be a string, or a function.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   minLabel?: string | LabelFormatter;
   /**
    * The label to display at the maximum side of the gradient.
    * Can either be a string, or a function.
    * If not defined, the formatted maximal value is display.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   maxLabel?: string | LabelFormatter;
   /**
