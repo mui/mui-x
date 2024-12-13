@@ -59,6 +59,7 @@ export const useField = <
   const stateResponse = useFieldState(params);
   const {
     state,
+    value,
     activeSectionIndex,
     parsedSelectedSections,
     setSelectedSections,
@@ -82,11 +83,7 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(
-    utils,
-    state.value,
-    valueManager.emptyValue,
-  );
+  const areAllSectionsEmpty = valueManager.areValuesEqual(utils, value, valueManager.emptyValue);
 
   const useFieldTextField = (
     enableAccessibleFieldDOMStructure ? useFieldV7TextField : useFieldV6TextField
@@ -188,6 +185,7 @@ export const useField = <
         const activeDateManager = fieldValueManager.getActiveDateManager(
           utils,
           state,
+          value,
           activeSection,
         );
 
@@ -220,7 +218,7 @@ export const useField = <
     props: internalProps,
     validator,
     timezone,
-    value: state.value,
+    value,
     onError: internalProps.onError,
   });
 

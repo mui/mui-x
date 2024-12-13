@@ -220,11 +220,11 @@ export interface FieldChangeHandlerContext<TError> {
  */
 interface FieldActiveDateManager<TValue extends PickerValidValue> {
   /**
-   * Active date from `state.value`.
+   * Active date from the current value.
    */
   date: PickerValidDate | null;
   /**
-   * Active date from the `state.referenceValue`.
+   * Active date from the reference value.
    */
   referenceDate: PickerValidDate;
   /**
@@ -238,11 +238,11 @@ interface FieldActiveDateManager<TValue extends PickerValidValue> {
    * Creates the new value and reference value based on the new active date and the current state.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {PickerValidDate | null} newActiveDate The new value of the date containing the active section.
-   * @returns {Pick<UseFieldState<TValue>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
+   * @returns {Omit<PublishValueParameters<TValue>, 'sections'>} The new value and reference value to publish and store in the state.
    */
   getNewValuesFromNewActiveDate: (
     newActiveDate: PickerValidDate | null,
-  ) => Pick<UseFieldState<TValue>, 'value' | 'referenceValue'>;
+  ) => Omit<PublishValueParameters<TValue>, 'sections'>;
 }
 
 export type FieldParsedSelectedSections = number | 'all' | null;
@@ -289,12 +289,14 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @param {MuiPickersAdapter} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue>} state The current state of the field.
+   * @param {TValue} value The current value.
    * @param {InferFieldSection<TValue>} activeSection The active section.
    * @returns {FieldActiveDateManager<TValue>} The manager of the active date.
    */
   getActiveDateManager: (
     utils: MuiPickersAdapter,
     state: UseFieldState<TValue>,
+    value: TValue,
     activeSection: InferFieldSection<TValue>,
   ) => FieldActiveDateManager<TValue>;
   /**
@@ -328,7 +330,14 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
 }
 
 export interface UseFieldState<TValue extends PickerValidValue> {
-  value: TValue;
+  /**
+   * Last value returned by `useControlledValueWithTimezone`.
+   */
+  lastValue: TValue | undefined;
+  /**
+   * Last value of the parameters used to generate the sections.
+   */
+  lastSectionsDependencies: { format: string; isRtl: boolean; locale: any };
   /**
    * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
@@ -451,4 +460,14 @@ interface UseFieldTextFieldParams<
     UseFieldCharacterEditingResponse {
   areAllSectionsEmpty: boolean;
   sectionOrder: SectionOrdering;
+}
+
+export type PublishValueParameters<TValue extends PickerValidValue> = Pick<
+  UseFieldState<TValue>,
+  'referenceValue' | 'sections'
+> & { value: TValue };
+
+export interface PublishValueBisParameters<TValue extends PickerValidValue> {
+  value: TValue;
+  referenceValue: InferNonNullablePickerValue<TValue>;
 }
