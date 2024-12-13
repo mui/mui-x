@@ -207,10 +207,6 @@ export const useFieldState = <
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
   const publishValue = (newValue: TValue) => {
-    if (valueManager.areValuesEqual(utils, value, newValue)) {
-      return;
-    }
-
     const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
       validationError: validator({
         adapter,
@@ -243,16 +239,30 @@ export const useFieldState = <
     });
   };
 
-  const clearValue = () => publishValue(valueManager.emptyValue);
+  const clearValue = () => {
+    if (valueManager.areValuesEqual(utils, value, valueManager.emptyValue)) {
+      setState((prevState) => ({
+        ...prevState,
+        sections: prevState.sections.map((section) => ({ ...section, value: '' })),
+        tempValueStrAndroid: null,
+      }));
+    } else {
+      publishValue(valueManager.emptyValue);
+    }
+  };
 
   const clearActiveSection = () => {
     if (activeSectionIndex == null) {
       return;
     }
 
+    const activeSection = state.sections[activeSectionIndex];
+    if (activeSection.value === '') {
+      return;
+    }
+
     setSectionIndexToCleanOnNextEmptyValue();
 
-    const activeSection = state.sections[activeSectionIndex];
     if (fieldValueManager.getDateFromSection(value, activeSection!) == null) {
       setState((prevState) => ({
         ...prevState,
