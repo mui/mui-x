@@ -11,6 +11,7 @@ import {
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
+import { GridInitialStatePremium } from '../models/gridStatePremium';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -90,30 +91,36 @@ describe('<DataGridPremium /> - State persistence', () => {
       });
     });
 
-    it('should export the current version of the exportable state', () => {
+    it('should export the current version of the exportable state', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.setRowGroupingModel(['category']));
-      act(() =>
+      await act(() => apiRef.current.setRowGroupingModel(['category']));
+      await act(() =>
         apiRef.current.setAggregationModel({
           id: 'size',
         }),
       );
 
-      const exportedState = apiRef.current.exportState();
+      let exportedState: GridInitialStatePremium = {};
+      await act(() => {
+        exportedState = apiRef.current.exportState();
+      });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
-    it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
+    it('should export the current version of the exportable state when using exportOnlyDirtyModels', async () => {
       render(<TestCase />);
-      act(() => apiRef.current.setRowGroupingModel(['category']));
-      act(() =>
+      await act(() => apiRef.current.setRowGroupingModel(['category']));
+      await act(() =>
         apiRef.current.setAggregationModel({
           id: 'size',
         }),
       );
 
-      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
+      let exportedState: GridInitialStatePremium = {};
+      await act(() => {
+        exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
+      });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
