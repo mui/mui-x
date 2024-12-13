@@ -9,10 +9,9 @@ import { TreeItem, TreeItemLabel, TreeItemProps } from '@mui/x-tree-view/TreeIte
 import {
   UseTreeItemLabelInputSlotOwnProps,
   UseTreeItemLabelSlotOwnProps,
-  useTreeItem,
 } from '@mui/x-tree-view/useTreeItem';
-import { useTreeItemUtils } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { useTreeItemUtils, useTreeItemModel } from '@mui/x-tree-view/hooks';
+import { TreeViewBaseItem, TreeViewItemId } from '@mui/x-tree-view/models';
 
 const StyledLabelInput = styled('input')(({ theme }) => ({
   ...theme.typography.body1,
@@ -83,18 +82,20 @@ function Label({ children, ...other }: UseTreeItemLabelSlotOwnProps) {
 interface CustomLabelInputProps extends UseTreeItemLabelInputSlotOwnProps {
   handleCancelItemLabelEditing: (event: React.SyntheticEvent) => void;
   handleSaveItemLabel: (event: React.SyntheticEvent, label: string) => void;
-  item: TreeViewBaseItem<ExtendedTreeItemProps>;
+  itemId: TreeViewItemId;
 }
 
 const LabelInput = React.forwardRef(function LabelInput(
   {
-    item,
+    itemId,
     handleCancelItemLabelEditing,
     handleSaveItemLabel,
     ...props
   }: Omit<CustomLabelInputProps, 'ref'>,
   ref: React.Ref<HTMLInputElement>,
 ) {
+  const item = useTreeItemModel<ExtendedTreeItemProps>(itemId)!;
+
   const [initialNameValue, setInitialNameValue] = React.useState({
     firstName: item.firstName,
     lastName: item.lastName,
@@ -167,7 +168,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     itemId: props.itemId,
     children: props.children,
   });
-  const { publicAPI } = useTreeItem(props);
 
   const handleInputBlur: UseTreeItemLabelInputSlotOwnProps['onBlur'] = (event) => {
     event.defaultMuiPrevented = true;
@@ -186,7 +186,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
       slots={{ label: Label, labelInput: LabelInput }}
       slotProps={{
         labelInput: {
-          item: publicAPI.getItem(props.itemId),
+          itemId: props.itemId,
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
           handleCancelItemLabelEditing: interactions.handleCancelItemLabelEditing,

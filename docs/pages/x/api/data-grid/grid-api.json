@@ -246,7 +246,6 @@
       "isPremiumPlan": true
     },
     "resetRowHeights": { "type": { "description": "() =&gt; void" }, "required": true },
-    "resize": { "type": { "description": "() =&gt; void" }, "required": true },
     "restoreState": {
       "type": { "description": "(stateToRestore: InitialState) =&gt; void" },
       "required": true

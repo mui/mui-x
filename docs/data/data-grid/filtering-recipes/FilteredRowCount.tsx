@@ -31,7 +31,7 @@ const predefinedFilters: { label: string; filterModel: GridFilterModel }[] = [
 ];
 
 export default function FilteredRowCount() {
-  const { data } = useDemoData({
+  const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 1000,
     maxColumns: 10,
@@ -81,7 +81,7 @@ export default function FilteredRowCount() {
         })}
       </Stack>
       <Box sx={{ height: 520, width: '100%' }}>
-        <DataGridPro {...data} loading={data.rows.length === 0} apiRef={apiRef} />
+        <DataGridPro {...data} loading={loading} apiRef={apiRef} />
       </Box>
     </div>
   );

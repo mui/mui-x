@@ -8,14 +8,14 @@ To display a loading overlay and signify that the Data Grid is in a loading stat
 
 The Data Grid supports 3 loading overlay variants out of the box:
 
-- `circular-progress` (default): a circular loading spinner.
-- `linear-progress`: an indeterminate linear progress bar.
 - `skeleton`: an animated placeholder of the Data Grid.
+- `linear-progress`: an indeterminate linear progress bar.
+- `circular-progress`: a circular loading spinner.
 
 The type of loading overlay to display can be set via `slotProps.loadingOverlay` for the following two props:
 
-- `variant`: when `loading` and there are rows in the table.
-- `noRowsVariant`: when `loading` and there are not any rows in the table.
+- `variant` (default: `linear-progress`): when `loading` and there are rows in the table.
+- `noRowsVariant` (default: `skeleton`): when `loading` and there are not any rows in the table.
 
 ```tsx
 <DataGrid
@@ -30,11 +30,11 @@ The type of loading overlay to display can be set via `slotProps.loadingOverlay`
 />
 ```
 
-### Circular progress
+### Skeleton
 
-A circular loading spinner, the default loading overlay.
+An animated placeholder of the Data Grid.
 
-{{"demo": "LoadingOverlay.js", "bg": "inline"}}
+{{"demo": "LoadingOverlaySkeleton.js", "bg": "inline"}}
 
 ### Linear progress
 
@@ -42,11 +42,11 @@ An indeterminate linear progress bar.
 
 {{"demo": "LoadingOverlayLinearProgress.js", "bg": "inline"}}
 
-### Skeleton
+### Circular progress
 
-An animated placeholder of the Data Grid.
+A circular loading spinner.
 
-{{"demo": "LoadingOverlaySkeleton.js", "bg": "inline"}}
+{{"demo": "LoadingOverlayCircularProgress.js", "bg": "inline"}}
 
 ### Custom component
 

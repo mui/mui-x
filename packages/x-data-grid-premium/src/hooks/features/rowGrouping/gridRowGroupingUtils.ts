@@ -16,6 +16,10 @@ import {
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
   GridColumnRawLookup,
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  getRowGroupingCriteriaFromGroupingField,
+  isGroupingColumn,
+  GridStrategyGroup,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -27,7 +31,11 @@ import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
-export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
+export {
+  GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  getRowGroupingCriteriaFromGroupingField,
+  isGroupingColumn,
+};
 
 export enum RowGroupingStrategy {
   Default = 'grouping-columns',
@@ -41,20 +49,6 @@ export const getRowGroupingFieldFromGroupingCriteria = (groupingCriteria: string
 
   return `__row_group_by_columns_group_${groupingCriteria}__`;
 };
-
-export const getRowGroupingCriteriaFromGroupingField = (groupingColDefField: string) => {
-  const match = groupingColDefField.match(/^__row_group_by_columns_group_(.*)__$/);
-
-  if (!match) {
-    return null;
-  }
-
-  return match[1];
-};
-
-export const isGroupingColumn = (field: string) =>
-  field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD ||
-  getRowGroupingCriteriaFromGroupingField(field) !== null;
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
@@ -218,7 +212,7 @@ export const setStrategyAvailability = (
 
   const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
 
-  privateApiRef.current.setStrategyAvailability('rowTree', strategy, isAvailable);
+  privateApiRef.current.setStrategyAvailability(GridStrategyGroup.RowTree, strategy, isAvailable);
 };
 
 export const getCellGroupingCriteria = ({

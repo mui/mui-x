@@ -31,6 +31,18 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
+  // Prompt toolbar field
+  toolbarPromptControlPlaceholder: 'Prompt eingeben…',
+  toolbarPromptControlWithRecordingPlaceholder: 'Prompt eingeben oder aufnehmen…',
+  toolbarPromptControlRecordingPlaceholder: 'Hört Prompteingabe zu…',
+  toolbarPromptControlLabel: 'Prompteingabe',
+  toolbarPromptControlRecordButtonDefaultLabel: 'Aufnahme starten',
+  toolbarPromptControlRecordButtonActiveLabel: 'Aufnahme stoppen',
+  toolbarPromptControlSendActionLabel: 'Senden',
+  toolbarPromptControlSendActionAriaLabel: 'Prompt senden',
+  toolbarPromptControlErrorMessage:
+    'Ein Fehler ist während der Bearbeitung der Anfrage aufgetreten. Bitte versuche es nochmal mit einem anderen Prompt.',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
@@ -43,6 +55,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsManagementNoColumns: 'Keine Spalten',
   columnsManagementShowHideAllText: 'Alle anzeigen/verbergen',
   columnsManagementReset: 'Zurücksetzen',
+  columnsManagementDeleteIconLabel: 'Löschen',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',

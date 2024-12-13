@@ -144,6 +144,7 @@ function StylingApproachTabs({ value, onChange, options }: TabsProps) {
       <StyledTabs
         value={value}
         onChange={onChange}
+        // eslint-disable-next-line material-ui/no-hardcoded-labels
         aria-label="Customization option"
         TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
       >
@@ -240,6 +241,7 @@ function ColorSwitcher({
 }) {
   return (
     <React.Fragment>
+      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
       <ConfigItemLabel>Color</ConfigItemLabel>
       <StyledToggleButtonGroup
         size="small"
@@ -250,6 +252,7 @@ function ColorSwitcher({
             handleTokenChange('color', value);
           }
         }}
+        // eslint-disable-next-line material-ui/no-hardcoded-labels
         aria-label="color palette"
       >
         {(Object.keys(DEFAULT_COLORS) as Array<ColorKey>).map((color) => (
@@ -354,6 +357,7 @@ const CustomizationPlayground = function CustomizationPlayground({
           <BrandingProvider>
             <PlaygroundConfigArea>
               <ConfigSectionWrapper>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <ConfigLabel gutterBottom>Components</ConfigLabel>
                 <FormControl size="small" sx={{ backgroundColor: 'transparent', flexGrow: 1 }}>
                   <ComponentsSelect
@@ -371,6 +375,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                 </FormControl>
                 {availableSlots && (
                   <React.Fragment>
+                    {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                     <ConfigLabel gutterBottom>Slots</ConfigLabel>
                     <SlotItemsWrapper>
                       {(availableSlots as string[]).map((slot: string) => (
@@ -388,6 +393,7 @@ const CustomizationPlayground = function CustomizationPlayground({
                 )}
               </ConfigSectionWrapper>
               <ConfigSectionWrapper>
+                {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
                 <ConfigLabel gutterBottom>Playground</ConfigLabel>
                 <Stack sx={{ gap: 0.5 }}>
                   <ColorSwitcher {...{ handleTokenChange, selectedColor: selectedTokens.color }} />

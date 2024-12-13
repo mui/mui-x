@@ -56,19 +56,13 @@ export const getExpectedOnChangeCount = (
   return getChangeCountForComponentFamily(componentFamily);
 };
 
-export const getDateOffset = <TDate extends PickerValidDate>(
-  adapter: MuiPickersAdapter<TDate>,
-  date: TDate,
-) => {
+export const getDateOffset = (adapter: MuiPickersAdapter, date: PickerValidDate) => {
   const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
   const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
   return cleanUtcHour * 60;
 };
 
-export const formatFullTimeValue = <TDate extends PickerValidDate>(
-  adapter: MuiPickersAdapter<TDate>,
-  value: TDate,
-) => {
+export const formatFullTimeValue = (adapter: MuiPickersAdapter, value: PickerValidDate) => {
   const hasMeridiem = adapter.is12HourCycleInCurrentLocale();
   return adapter.format(value, hasMeridiem ? 'fullTime12h' : 'fullTime24h');
 };

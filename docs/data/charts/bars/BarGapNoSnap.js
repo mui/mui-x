@@ -47,7 +47,7 @@ export default function BarGapNoSnap() {
             },
           ]}
           yAxis={[{ valueFormatter: (v) => `$ ${v / 1000000}B` }]}
-          slotProps={{ legend: { hidden: true } }}
+          hideLegend
         />
       )}
       getCode={({ props }) => {

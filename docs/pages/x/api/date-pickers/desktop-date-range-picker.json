@@ -15,9 +15,9 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(date: TDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
+      "default": "(date: PickerValidDate) => adapter.format(date, 'weekdayShort').charAt(0).toUpperCase()",
       "signature": {
-        "type": "function(date: TDate) => string",
+        "type": "function(date: PickerValidDate) => string",
         "describedArgs": ["date"],
         "returned": "string"
       }
@@ -72,7 +72,10 @@
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+      "signature": {
+        "type": "function(month: PickerValidDate) => void",
+        "describedArgs": ["month"]
+      }
     },
     "onOpen": { "type": { "name": "func" } },
     "onRangePositionChange": {
@@ -91,6 +94,7 @@
     },
     "open": { "type": { "name": "bool" }, "default": "false" },
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
+    "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
@@ -117,7 +121,7 @@
     "shouldDisableDate": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(day: TDate, position: string) => boolean",
+        "type": "function(day: PickerValidDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
       }

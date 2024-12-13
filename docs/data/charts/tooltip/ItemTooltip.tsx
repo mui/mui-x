@@ -3,8 +3,6 @@ import NoSsr from '@mui/material/NoSsr';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useSvgRef } from '@mui/x-charts/hooks';
-import { CustomItemTooltipContent } from './CustomItemTooltipContent';
-import { generateVirtualElement } from './generateVirtualElement';
 
 type PointerState = {
   isActive: boolean;
@@ -15,7 +13,7 @@ type PointerState = {
 function usePointer(): PointerState & Pick<PopperProps, 'popperRef' | 'anchorEl'> {
   const svgRef = useSvgRef();
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
-  const virtualElement = React.useRef(generateVirtualElement({ x: 0, y: 0 }));
+  const positionRef = React.useRef({ x: 0, y: 0 });
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [pointer, setPointer] = React.useState<PointerState>({
@@ -48,10 +46,10 @@ function usePointer(): PointerState & Pick<PopperProps, 'popperRef' | 'anchorEl'
     };
 
     const handleMove = (event: PointerEvent) => {
-      virtualElement.current = generateVirtualElement({
+      positionRef.current = {
         x: event.clientX,
         y: event.clientY,
-      });
+      };
       popperRef.current?.update();
     };
 
@@ -66,10 +64,26 @@ function usePointer(): PointerState & Pick<PopperProps, 'popperRef' | 'anchorEl'
     };
   }, [svgRef]);
 
-  return { ...pointer, popperRef, anchorEl: virtualElement.current };
+  return {
+    ...pointer,
+    popperRef,
+    anchorEl: {
+      getBoundingClientRect: () => ({
+        x: positionRef.current.x,
+        y: positionRef.current.y,
+        top: positionRef.current.y,
+        left: positionRef.current.x,
+        right: positionRef.current.x,
+        bottom: positionRef.current.y,
+        width: 0,
+        height: 0,
+        toJSON: () => '',
+      }),
+    },
+  };
 }
 
-export function ItemTooltip() {
+export function ItemTooltip({ children }: React.PropsWithChildren) {
   const tooltipData = useItemTooltip();
   const { isActive, isMousePointer, pointerHeight, popperRef, anchorEl } =
     usePointer();
@@ -102,7 +116,7 @@ export function ItemTooltip() {
           },
         ]}
       >
-        <CustomItemTooltipContent {...tooltipData} />
+        {children}
       </Popper>
     </NoSsr>
   );

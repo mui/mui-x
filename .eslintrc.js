@@ -59,21 +59,22 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
 const buildPackageRestrictedImports = (packageName, root, allowRootImports = true) => [
   {
     files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],
-    excludedFiles: ['*.d.ts', '*.spec.ts', '*.spec.tsx', '**.test.tx', '**.test.tsx'],
+    excludedFiles: [
+      '*.d.ts',
+      '*.spec.ts',
+      '*.spec.tsx',
+      '**.test.tx',
+      '**.test.tsx',
+      `packages/${root}/src/index{.ts,.tsx,.js}`,
+    ],
     rules: {
       'no-restricted-imports': [
         'error',
         {
-          paths: [
-            {
-              name: packageName,
-              message: 'Use relative import instead',
-            },
-            {
-              name: '@mui/material',
-              message: 'Use @mui/utils or a more specific import instead',
-            },
-          ],
+          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+            name: pkName,
+            message: 'Use relative import instead',
+          })),
           patterns: [
             // TODO move rule into main repo to allow deep @mui/monorepo imports
             {
@@ -136,6 +137,7 @@ module.exports = {
     ...(ENABLE_REACT_COMPILER_PLUGIN ? { 'react-compiler/react-compiler': 'error' } : {}),
     // TODO move to @mui/monorepo, codebase is moving away from default exports https://github.com/mui/material-ui/issues/21862
     'import/prefer-default-export': 'off',
+    'import/no-relative-packages': 'error',
     'import/no-restricted-paths': [
       'error',
       {
@@ -147,6 +149,11 @@ module.exports = {
           }),
         ),
       },
+    ],
+    // TODO remove rule from here once it's merged in `@mui/monorepo/.eslintrc`
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { vars: 'all', args: 'after-used', ignoreRestSiblings: true, argsIgnorePattern: '^_' },
     ],
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',

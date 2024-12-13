@@ -6,8 +6,8 @@ import {
 } from '@mui/utils';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useTimeout from '@mui/utils/useTimeout';
-import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useRtl } from '@mui/system/RtlProvider';
+import reactMajor from '@mui/x-internals/reactMajor';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
@@ -33,10 +33,10 @@ import type {
   GridRowEntry,
   GridRowId,
 } from '../../../models';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
-import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
@@ -47,6 +47,7 @@ import {
 import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
+import { minimalContentHeight } from '../rows/gridRowsUtils';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -91,7 +92,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 let isJSDOM = false;
 try {
   if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
   }
 } catch (_) {
   /* ignore */
@@ -135,7 +136,52 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
-  useResizeObserver(mainRef, () => apiRef.current.resize());
+  const mainRefCallback = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      mainRef.current = node;
+
+      if (!node) {
+        return undefined;
+      }
+
+      const initialRect = node.getBoundingClientRect();
+
+      let lastSize = roundDimensions(initialRect);
+
+      apiRef.current.publishEvent('resize', lastSize);
+
+      if (typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
+
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        if (!entry) {
+          return;
+        }
+
+        const newSize = roundDimensions(entry.contentRect);
+
+        if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
+          return;
+        }
+
+        apiRef.current.publishEvent('resize', newSize);
+        lastSize = newSize;
+      });
+
+      observer.observe(node);
+
+      if (reactMajor >= 19) {
+        return () => {
+          mainRef.current = null;
+          observer.disconnect();
+        };
+      }
+      return undefined;
+    },
+    [apiRef, mainRef],
+  );
 
   /*
    * Scroll context logic
@@ -216,9 +262,14 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
     const newScroll = {
-      top: scrollerRef.current!.scrollTop,
-      left: scrollerRef.current!.scrollLeft,
+      top: scroller.scrollTop,
+      left: scroller.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -538,28 +589,16 @@ export const useGridVirtualScroller = () => {
       flexShrink: 0,
     };
 
-    if (rootProps.autoHeight && currentPage.rows.length === 0) {
-      size.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    if (size.flexBasis === 0) {
+      size.flexBasis = minimalContentHeight; // Give room to show the overlay when there no rows.
     }
 
     return size;
-  }, [
-    apiRef,
-    columnsTotalWidth,
-    contentHeight,
-    needsHorizontalScrollbar,
-    rootProps.autoHeight,
-    currentPage.rows.length,
-  ]);
+  }, [columnsTotalWidth, contentHeight, needsHorizontalScrollbar]);
 
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
   }, [apiRef, contentSize]);
-
-  useEnhancedEffect(() => {
-    // FIXME: Is this really necessary?
-    apiRef.current.resize();
-  }, [apiRef, rowsMeta.currentPageTotalHeight]);
 
   useEnhancedEffect(() => {
     // TODO a scroll reset should not be necessary
@@ -603,7 +642,7 @@ export const useGridVirtualScroller = () => {
     setPanels,
     getRows,
     getContainerProps: () => ({
-      ref: mainRef,
+      ref: mainRefCallback,
     }),
     getScrollerProps: () => ({
       ref: scrollerRef,
@@ -647,6 +686,7 @@ type RenderContextInputs = {
   visibleColumns: ReturnType<typeof gridVisibleColumnDefinitionsSelector>;
   hiddenCellsOriginMap: ReturnType<typeof gridRowSpanningHiddenCellsOriginMapSelector>;
   listView: boolean;
+  virtualizeColumnsWithAutoRowHeight: DataGridProcessedProps['virtualizeColumnsWithAutoRowHeight'];
 };
 
 function inputsSelector(
@@ -684,6 +724,7 @@ function inputsSelector(
     visibleColumns,
     hiddenCellsOriginMap,
     listView: rootProps.unstable_listView ?? false,
+    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
   };
 }
 
@@ -747,12 +788,14 @@ function computeRenderContext(
       lastSize: inputs.lastRowHeight,
     });
 
-    for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
-      const row = inputs.rows[i];
-      hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+    if (!inputs.virtualizeColumnsWithAutoRowHeight) {
+      for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
+        const row = inputs.rows[i];
+        hasRowWithAutoHeight = inputs.apiRef.current.rowHasAutoHeight(row.id);
+      }
     }
 
-    if (!hasRowWithAutoHeight) {
+    if (!hasRowWithAutoHeight || inputs.virtualizeColumnsWithAutoRowHeight) {
       firstColumnIndex = binarySearch(realLeft, inputs.columnPositions, {
         atStart: true,
         lastPosition: inputs.columnsTotalWidth,
@@ -1060,4 +1103,13 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
+}
+
+// Round to avoid issues with subpixel rendering
+// https://github.com/mui/mui-x/issues/15721
+function roundDimensions(dimensions: { width: number; height: number }) {
+  return {
+    width: Math.round(dimensions.width * 10) / 10,
+    height: Math.round(dimensions.height * 10) / 10,
+  };
 }

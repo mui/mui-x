@@ -11,9 +11,7 @@ import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
 
-export interface GridToolbarProps
-  extends GridToolbarContainerProps,
-    Omit<GridToolbarExportProps, 'color'> {
+export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
    * Show the quick filter component.
    * @default false
@@ -37,7 +35,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
       showQuickFilter = false,
       quickFilterProps = {},
       ...other
-    } = props;
+    } = props as typeof props & { excelOptions: any };
     const rootProps = useGridRootProps();
 
     if (
@@ -57,7 +55,7 @@ const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(
         <GridToolbarExport
           csvOptions={csvOptions}
           printOptions={printOptions}
-          // TODO: remove the reference to excelOptions in community package
+          // @ts-ignore
           excelOptions={excelOptions}
         />
         <div style={{ flex: 1 }} />
@@ -72,6 +70,8 @@ GridToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  csvOptions: PropTypes.object,
+  printOptions: PropTypes.object,
   /**
    * Props passed to the quick filter component.
    */
@@ -81,6 +81,11 @@ GridToolbar.propTypes = {
    * @default false
    */
   showQuickFilter: PropTypes.bool,
+  /**
+   * The props used for each slot inside.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

@@ -12,16 +12,12 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 <p class="description">Drag and drop your items to reorder them.</p>
 
 :::success
-To be able to reorder items, you first have to enable the `indentationAtItemLevel` and the `itemsReordering` experimental features:
+To be able to reorder items, you first have to enable the `itemsReordering` experimental feature:
 
 ```tsx
-<RichTreeViewPro
-  items={ITEMS}
-  experimentalFeatures={{ indentationAtItemLevel: true, itemsReordering: true }}
-/>
+<RichTreeViewPro items={ITEMS} experimentalFeatures={{ itemsReordering: true }} />
 ```
 
-See [Tree Item Customization—Apply the nested item's indentation at the item level](/x/react-tree-view/tree-item-customization/#apply-the-nested-items-indentation-at-the-item-level) for more details.
 :::
 
 ## Enable drag & drop re-ordering

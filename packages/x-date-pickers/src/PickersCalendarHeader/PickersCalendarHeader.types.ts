@@ -9,7 +9,7 @@ import {
   PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, DateView } from '../models';
+import { PickerValidDate, DateView, PickerOwnerState } from '../models';
 import { SlideDirection } from '../DateCalendar/PickersSlideTransition';
 import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
@@ -29,27 +29,23 @@ export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
 // We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderSlotPropsOverrides {}
 
-export type PickersCalendarHeaderOwnerState<TDate extends PickerValidDate> =
-  PickersCalendarHeaderProps<TDate>;
-
-export interface PickersCalendarHeaderSlotProps<TDate extends PickerValidDate>
-  extends PickersArrowSwitcherSlotProps {
+export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlotProps {
   switchViewButton?: SlotComponentProps<
     typeof IconButton,
     PickersCalendarHeaderSlotPropsOverrides,
-    PickersCalendarHeaderOwnerState<TDate>
+    PickerOwnerState
   >;
 
   switchViewIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersCalendarHeaderSlotPropsOverrides,
-    PickersCalendarHeaderOwnerState<TDate>
+    PickerOwnerState
   >;
 }
 
-export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
+export interface PickersCalendarHeaderProps
   extends ExportedPickersArrowSwitcherProps,
-    MonthValidationOptions<TDate> {
+    MonthValidationOptions {
   /**
    * Overridable component slots.
    * @default {}
@@ -59,11 +55,11 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: PickersCalendarHeaderSlotProps<TDate>;
-  currentMonth: TDate;
+  slotProps?: PickersCalendarHeaderSlotProps;
+  currentMonth: PickerValidDate;
   disabled?: boolean;
   views: readonly DateView[];
-  onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
+  onMonthChange: (date: PickerValidDate, slideDirection: SlideDirection) => void;
   view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
@@ -83,7 +79,7 @@ export interface PickersCalendarHeaderProps<TDate extends PickerValidDate>
   sx?: SxProps<Theme>;
 }
 
-export type ExportedPickersCalendarHeaderProps<TDate extends PickerValidDate> = Pick<
-  PickersCalendarHeaderProps<TDate>,
+export type ExportedPickersCalendarHeaderProps = Pick<
+  PickersCalendarHeaderProps,
   'classes' | 'slots' | 'slotProps'
 >;
