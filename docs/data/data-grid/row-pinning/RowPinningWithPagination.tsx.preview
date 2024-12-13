@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  loading={loading}
   rows={rowsData.rows}
   pinnedRows={rowsData.pinnedRows}
   initialState={{

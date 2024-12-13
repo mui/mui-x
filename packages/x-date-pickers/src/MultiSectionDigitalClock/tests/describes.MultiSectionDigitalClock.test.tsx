@@ -12,7 +12,7 @@ import {
   MultiSectionDigitalClock,
   multiSectionDigitalClockClasses as classes,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { formatMeridiem } from '@mui/x-date-pickers/internals';
+import { formatMeridiem, PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
@@ -35,7 +35,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
 
-  describeValue(MultiSectionDigitalClock, () => ({
+  describeValue<PickerValue, 'multi-section-digital-clock'>(MultiSectionDigitalClock, () => ({
     render,
     componentFamily: 'multi-section-digital-clock',
     type: 'time',
@@ -64,7 +64,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value!, 1), 5);
       multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;

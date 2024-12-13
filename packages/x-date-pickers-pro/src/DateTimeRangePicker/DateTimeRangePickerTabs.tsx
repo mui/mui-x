@@ -6,14 +6,15 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TimeIcon, DateRangeIcon, ArrowLeftIcon, ArrowRightIcon } from '@mui/x-date-pickers/icons';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
 import {
   DateOrTimeViewWithMeridiem,
   BaseTabsProps,
   ExportedBaseTabsProps,
   isDatePickerView,
+  usePickerPrivateContext,
 } from '@mui/x-date-pickers/internals';
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {
@@ -68,8 +69,7 @@ export interface DateTimeRangePickerTabsProps
     BaseTabsProps<DateOrTimeViewWithMeridiem>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
-const useUtilityClasses = (ownerState: DateTimeRangePickerTabsProps) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (classes: Partial<DateTimeRangePickerTabsClasses> | undefined) => {
   const slots = {
     root: ['root'],
     tabButton: ['tabButton'],
@@ -84,7 +84,7 @@ const DateTimeRangePickerTabsRoot = styled('div', {
   name: 'MuiDateTimeRangePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateTimeRangePickerTabsProps }>(({ theme }) => ({
+})<{ ownerState: PickerOwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -108,7 +108,7 @@ const DateTimeRangePickerTabFiller = styled('div', {
 
 const tabOptions: TabValue[] = ['start-date', 'start-time', 'end-date', 'end-time'];
 
-const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends PickerValidDate>(
+const DateTimeRangePickerTabs = function DateTimeRangePickerTabs(
   inProps: DateTimeRangePickerTabsProps,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerTabs' });
@@ -121,11 +121,13 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends P
     rangePosition,
     onRangePositionChange,
     className,
+    classes: classesProp,
     sx,
   } = props;
 
-  const translations = usePickersTranslations<TDate>();
-  const classes = useUtilityClasses(props);
+  const translations = usePickerTranslations();
+  const { ownerState } = usePickerPrivateContext();
+  const classes = useUtilityClasses(classesProp);
   const value = React.useMemo(() => viewToTab(view, rangePosition), [view, rangePosition]);
   const isPreviousHidden = value === 'start-date';
   const isNextHidden = value === 'end-time';
@@ -176,7 +178,7 @@ const DateTimeRangePickerTabs = function DateTimeRangePickerTabs<TDate extends P
 
   return (
     <DateTimeRangePickerTabsRoot
-      ownerState={props}
+      ownerState={ownerState}
       className={clsx(classes.root, className)}
       sx={sx}
     >

@@ -12,6 +12,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { PickerValue } from '@mui/x-date-pickers/internals';
 import { describeConformance } from 'test/utils/describeConformance';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
@@ -46,7 +47,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     ],
   }));
 
-  describeValue(MobileDateTimePicker, () => ({
+  describeValue<PickerValue, 'picker'>(MobileDateTimePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-time',
@@ -76,8 +77,8 @@ describe('<MobileDateTimePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue
-        ? value
-        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
+        ? value!
+        : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value!, 1), 1), 5);
       fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );

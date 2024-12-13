@@ -29,6 +29,7 @@ export function ZoomProvider({ children, xAxis, yAxis, zoom, onZoomChange }: Zoo
 
   const [zoomData, setZoomData] = useControlled<ZoomData[]>({
     controlled: zoom,
+    // eslint-disable-next-line react-compiler/react-compiler
     default: defaultZoomData.current,
     name: 'ZoomProvider',
     state: 'zoom',

@@ -3,11 +3,10 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
-import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickerProvider } from '../../components/PickerProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { FieldSection, PickerValidDate } from '../../../models';
-import { DateOrTimeViewWithMeridiem } from '../../models';
+import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -22,21 +21,18 @@ const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
  * - StaticTimePicker
  */
 export const useStaticPicker = <
-  TDate extends PickerValidDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
+  TExternalProps extends UseStaticPickerProps<TView, any, TExternalProps>,
 >({
   props,
   ref,
   ...pickerParams
-}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
+}: UseStaticPickerParams<TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, renderCurrentView } = usePicker<
-    TDate | null,
-    TDate,
+  const { layoutProps, providerProps, renderCurrentView } = usePicker<
+    PickerValue,
     TView,
-    FieldSection,
     TExternalProps,
     {}
   >({
@@ -44,14 +40,15 @@ export const useStaticPicker = <
     props,
     autoFocusView: autoFocus ?? false,
     fieldRef: undefined,
+    localeText,
     additionalViewProps: {},
-    wrapperVariant: displayStaticWrapperAs,
+    variant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
-    <LocalizationProvider localeText={localeText}>
+    <PickerProvider {...providerProps}>
       <Layout
         {...layoutProps}
         {...slotProps?.layout}
@@ -68,7 +65,7 @@ export const useStaticPicker = <
       >
         {renderCurrentView()}
       </Layout>
-    </LocalizationProvider>
+    </PickerProvider>
   );
 
   return { renderPicker };

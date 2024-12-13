@@ -40,10 +40,10 @@ export const TreeItemContent = styled('div', {
   name: 'MuiTreeItem',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-  shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'status' && prop !== 'indentationAtItemLevel',
-})<{ status: UseTreeItemStatus; indentationAtItemLevel?: true }>(({ theme }) => ({
+  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'status',
+})<{ status: UseTreeItemStatus }>(({ theme }) => ({
   padding: theme.spacing(0.5, 1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
   width: '100%',
   boxSizing: 'border-box', // prevent width + padding to overflow
@@ -61,12 +61,6 @@ export const TreeItemContent = styled('div', {
     },
   },
   variants: [
-    {
-      props: { indentationAtItemLevel: true },
-      style: {
-        paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
-      },
-    },
     {
       props: ({ status }: UseTreeItemContentSlotOwnProps) => status.disabled,
       style: {
@@ -155,17 +149,9 @@ export const TreeItemGroupTransition = styled(Collapse, {
   name: 'MuiTreeItem',
   slot: 'GroupTransition',
   overridesResolver: (props, styles) => styles.groupTransition,
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'indentationAtItemLevel',
-})<{ indentationAtItemLevel?: true }>({
+})({
   margin: 0,
   padding: 0,
-  paddingLeft: 'var(--TreeView-itemChildrenIndentation)',
-  variants: [
-    {
-      props: { indentationAtItemLevel: true },
-      style: { paddingLeft: 0 },
-    },
-  ],
 });
 
 export const TreeItemCheckbox = styled(
@@ -234,6 +220,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const { id, itemId, label, disabled, children, slots = {}, slotProps = {}, ...other } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -343,7 +330,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   });
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <Root {...rootProps}>
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
@@ -367,7 +354,7 @@ TreeItem.propTypes = {
   /**
    * The content of the component.
    */
-  children: PropTypes.node,
+  children: PropTypes /* @typescript-to-proptypes-ignore */.any,
   /**
    * Override or extend the styles applied to the component.
    */

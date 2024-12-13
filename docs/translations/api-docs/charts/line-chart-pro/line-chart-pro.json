@@ -25,6 +25,7 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The item currently highlighted. Turns highlighting into a controlled prop."
     },
@@ -53,9 +54,6 @@
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": { "zoomData": "Updated zoom data." }
     },
-    "resolveSizeBeforeRender": {
-      "description": "The chart will try to wait for the parent container to resolve its size before it renders for the first time.<br>This can be useful in some scenarios where the chart appear to grow after the first render, like when used inside a grid."
-    },
     "rightAxis": {
       "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>."
     },
@@ -65,10 +63,6 @@
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltip": {
-      "description": "The configuration of the tooltip.",
-      "seeMoreText": "See {{link}} for more details."
-    },
     "topAxis": {
       "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>."
     },

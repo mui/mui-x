@@ -11,7 +11,10 @@ import {
   useGridApiOptionHandler,
   GridRowId,
 } from '@mui/x-data-grid';
-import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
+import {
+  gridEditRowsStateSelector,
+  gridSortedRowIndexLookupSelector,
+} from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -63,6 +66,7 @@ export const useGridRowReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
+  const sortedRowIndexLookup = useGridSelector(apiRef, gridSortedRowIndexLookupSelector);
 
   React.useEffect(() => {
     return () => {
@@ -91,17 +95,16 @@ export const useGridRowReorder = (
 
       dragRowNode.current = event.currentTarget;
       dragRowNode.current.classList.add(classes.rowDragging);
-
       setDragRowId(params.id);
 
       removeDnDStylesTimeout.current = setTimeout(() => {
         dragRowNode.current!.classList.remove(classes.rowDragging);
       });
 
-      originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+      originRowIndex.current = sortedRowIndexLookup[params.id];
       apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
     },
-    [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
+    [apiRef, isRowReorderDisabled, logger, classes.rowDragging, sortedRowIndexLookup],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
@@ -127,7 +130,7 @@ export const useGridRowReorder = (
         : event.clientY;
 
       if (params.id !== dragRowId) {
-        const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+        const targetRowIndex = sortedRowIndexLookup[params.id];
 
         const dragDirection = mouseMovementDiff > 0 ? Direction.DOWN : Direction.UP;
         const currentReorderState: ReorderStateProps = {
@@ -149,7 +152,7 @@ export const useGridRowReorder = (
 
       previousMousePosition = { x: event.clientX, y: event.clientY };
     },
-    [apiRef, logger, dragRowId],
+    [dragRowId, apiRef, logger, sortedRowIndexLookup],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
@@ -179,7 +182,7 @@ export const useGridRowReorder = (
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
           row: apiRef.current.getRow(dragRowId)!,
-          targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
+          targetIndex: sortedRowIndexLookup[params.id],
           oldIndex: originRowIndex.current!,
         };
 
@@ -188,7 +191,7 @@ export const useGridRowReorder = (
 
       setDragRowId('');
     },
-    [isRowReorderDisabled, logger, apiRef, dragRowId],
+    [apiRef, dragRowId, isRowReorderDisabled, logger, sortedRowIndexLookup],
   );
 
   useGridApiEventHandler(apiRef, 'rowDragStart', handleDragStart);

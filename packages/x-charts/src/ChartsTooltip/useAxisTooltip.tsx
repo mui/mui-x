@@ -1,21 +1,27 @@
 'use client';
-import * as React from 'react';
-import { AxisInteractionData, InteractionContext } from '../context/InteractionProvider';
 import { useSeries } from '../hooks/useSeries';
 import { useCartesianContext } from '../context/CartesianProvider';
-import { ZAxisContext } from '../context/ZAxisContextProvider';
 import { useColorProcessor } from '../context/PluginProvider/useColorProcessor';
 import { SeriesId } from '../models/seriesType/common';
 import { CartesianChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
+import { useStore } from '../internals/store/useStore';
+import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
+import { useXAxis, useYAxis } from '../hooks/useAxis';
+import { useZAxis } from '../hooks/useZAxis';
+import {
+  selectorChartsInteractionXAxis,
+  selectorChartsInteractionYAxis,
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 
 export interface UseAxisTooltipReturnValue<
   SeriesT extends CartesianChartSeriesType = CartesianChartSeriesType,
   AxisValueT extends string | number | Date = string | number | Date,
 > {
-  identifier: AxisInteractionData;
+  axisDirection: 'x' | 'y';
+  dataIndex: number;
   seriesItems: SeriesItem<SeriesT>[];
   axisValue: AxisValueT;
   axisFormattedValue: string;
@@ -30,17 +36,23 @@ interface SeriesItem<T extends CartesianChartSeriesType> {
 }
 
 export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
-  const { axis } = React.useContext(InteractionContext);
+  const defaultXAxis = useXAxis();
+  const defaultYAxis = useYAxis();
+
+  const xAxisHasData = defaultXAxis.data !== undefined && defaultXAxis.data.length !== 0;
+
+  const store = useStore();
+  const axisData = useSelector(
+    store,
+    xAxisHasData ? selectorChartsInteractionXAxis : selectorChartsInteractionYAxis,
+  );
+
   const series = useSeries();
 
-  const { xAxis, yAxis, xAxisIds, yAxisIds } = useCartesianContext();
-  const { zAxis, zAxisIds } = React.useContext(ZAxisContext);
+  const { xAxis, yAxis } = useCartesianContext();
+
+  const { zAxis, zAxisIds } = useZAxis();
   const colorProcessors = useColorProcessor();
-
-  // By default use the x-axis
-  const isXaxis = axis.x !== null && axis.x.index !== -1;
-
-  const axisData = isXaxis ? axis.x && axis.x : axis.y && axis.y;
 
   if (axisData === null) {
     return null;
@@ -48,8 +60,8 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
 
   const { index: dataIndex, value: axisValue } = axisData;
 
-  const USED_AXIS_ID = isXaxis ? xAxisIds[0] : yAxisIds[0];
-  const usedAxis = isXaxis ? xAxis[USED_AXIS_ID] : yAxis[USED_AXIS_ID];
+  const USED_AXIS_ID = xAxisHasData ? defaultXAxis.id : defaultYAxis.id;
+  const usedAxis = xAxisHasData ? defaultXAxis : defaultYAxis;
 
   const relevantSeries = Object.keys(series)
     .filter(isCartesianSeriesType)
@@ -61,24 +73,23 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
       return seriesOfType.seriesOrder.map((seriesId) => {
         const seriesToAdd = seriesOfType.series[seriesId]!;
 
-        const providedXAxisId = seriesToAdd.xAxisId ?? seriesToAdd.xAxisKey;
-        const providedYAxisId = seriesToAdd.yAxisId ?? seriesToAdd.yAxisKey;
+        const providedXAxisId = seriesToAdd.xAxisId;
+        const providedYAxisId = seriesToAdd.yAxisId;
 
-        const axisKey = isXaxis ? providedXAxisId : providedYAxisId;
+        const axisKey = xAxisHasData ? providedXAxisId : providedYAxisId;
 
         // Test if the series uses the default axis
         if (axisKey === undefined || axisKey === USED_AXIS_ID) {
-          const xAxisId = providedXAxisId ?? xAxisIds[0];
-          const yAxisId = providedYAxisId ?? yAxisIds[0];
-          const zAxisId =
-            (seriesToAdd as any).zAxisId ?? (seriesToAdd as any).zAxisKey ?? zAxisIds[0];
+          const xAxisId = providedXAxisId ?? defaultXAxis.id;
+          const yAxisId = providedYAxisId ?? defaultYAxis.id;
+          const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
 
           const color =
             colorProcessors[seriesType]?.(
               seriesToAdd,
               xAxis[xAxisId],
               yAxis[yAxisId],
-              zAxisId && zAxis[zAxisId],
+              zAxisId ? zAxis[zAxisId] : undefined,
             )(dataIndex) ?? '';
 
           const value = seriesToAdd.data[dataIndex] ?? null;
@@ -108,7 +119,8 @@ export function useAxisTooltip(): null | UseAxisTooltipReturnValue {
   const axisFormattedValue = axisFormatter(axisValue, { location: 'tooltip' });
 
   return {
-    identifier: axis as AxisInteractionData,
+    axisDirection: xAxisHasData ? 'x' : 'y',
+    dataIndex,
     seriesItems: relevantSeries,
     axisValue,
     axisFormattedValue,

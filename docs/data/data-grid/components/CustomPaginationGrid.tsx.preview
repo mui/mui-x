@@ -1,4 +1,5 @@
 <DataGrid
+  loading={loading}
   pagination
   slots={{
     pagination: CustomPagination,

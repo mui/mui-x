@@ -129,10 +129,6 @@
       },
       "default": "false"
     },
-    "indeterminateCheckboxAction": {
-      "type": { "name": "enum", "description": "'deselect'<br>&#124;&nbsp;'select'" },
-      "default": "\"deselect\""
-    },
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": {
       "type": { "name": "func" },
@@ -439,11 +435,6 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
-    "rowPositionsDebounceMs": {
-      "type": { "name": "number" },
-      "default": "166",
-      "deprecated": true
-    },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "default": "[]"
@@ -459,6 +450,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -485,7 +477,7 @@
       },
       "additionalInfo": { "sx": true }
     },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" }
+    "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGrid",
   "imports": [
@@ -1266,6 +1258,12 @@
       "isGlobal": false
     },
     {
+      "key": "columnsManagementSearchInput",
+      "className": "MuiDataGrid-columnsManagementSearchInput",
+      "description": "Styles applied to the columns management search input element.",
+      "isGlobal": false
+    },
+    {
       "key": "container--bottom",
       "className": "MuiDataGrid-container--bottom",
       "description": "Styles applied to the bottom container.",
@@ -1677,6 +1675,36 @@
       "key": "toolbarFilterList",
       "className": "MuiDataGrid-toolbarFilterList",
       "description": "Styles applied to the toolbar filter list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl",
+      "className": "MuiDataGrid-toolbarPromptControl",
+      "description": "Styles applied to the toolbar prompt control element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControl--recording",
+      "className": "MuiDataGrid-toolbarPromptControl--recording",
+      "description": "Styles applied to the toolbar prompt control element when recording.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordButton",
+      "className": "MuiDataGrid-toolbarPromptControlRecordButton",
+      "description": "Styles applied to the toolbar prompt control record button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlRecordingIndicator",
+      "className": "MuiDataGrid-toolbarPromptControlRecordingIndicator",
+      "description": "Styles applied to the toolbar prompt control recording indicator element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbarPromptControlSendButton",
+      "className": "MuiDataGrid-toolbarPromptControlSendButton",
+      "description": "Styles applied to the toolbar prompt control send button element.",
       "isGlobal": false
     },
     {

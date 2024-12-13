@@ -10,8 +10,15 @@ import {
   pickersSlideTransitionClasses,
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
+import { PickerOwnerState } from '../models/pickers';
+import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 
 export type SlideDirection = 'right' | 'left';
+
+interface PickerSlideTransitionOwnerState extends PickerOwnerState {
+  slideDirection: SlideDirection;
+}
+
 export interface ExportedSlideTransitionProps {
   /**
    * Override or extend the styles applied to the component.
@@ -28,8 +35,12 @@ export interface SlideTransitionProps
   transKey: React.Key;
 }
 
-const useUtilityClasses = (ownerState: SlideTransitionProps) => {
-  const { classes, slideDirection } = ownerState;
+const useUtilityClasses = (
+  classes: Partial<PickersSlideTransitionClasses> | undefined,
+  ownerState: PickerSlideTransitionOwnerState,
+) => {
+  const { slideDirection } = ownerState;
+
   const slots = {
     root: ['root'],
     exit: ['slideExit'],
@@ -117,11 +128,13 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
     reduceAnimations,
     slideDirection,
     transKey,
-    // extracting `classes` from `other`
-    classes: providedClasses,
+    classes: classesProp,
     ...other
   } = props;
-  const classes = useUtilityClasses(props);
+
+  const { ownerState: pickerOwnerState } = usePickerPrivateContext();
+  const ownerState = { ...pickerOwnerState, slideDirection };
+  const classes = useUtilityClasses(classesProp, ownerState);
   const theme = useTheme();
   if (reduceAnimations) {
     return <div className={clsx(classes.root, className)}>{children}</div>;

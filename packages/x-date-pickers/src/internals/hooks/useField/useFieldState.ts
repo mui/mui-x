@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useRtl } from '@mui/system/RtlProvider';
-import { usePickersTranslations } from '../../../hooks/usePickersTranslations';
+import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
 import {
   UseFieldInternalProps,
@@ -22,23 +22,24 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import {
-  FieldSection,
   FieldSelectedSections,
   PickersTimezone,
   PickerValidDate,
   InferError,
+  InferFieldSection,
 } from '../../../models';
 import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
+import { PickerValidValue } from '../../models';
 
-export interface UpdateSectionValueParams<TSection extends FieldSection> {
+export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
   /**
    * The section on which we want to apply the new value.
    */
-  activeSection: TSection;
+  activeSection: InferFieldSection<TValue>;
   /**
    * Value to apply to the active section.
    */
@@ -49,46 +50,41 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
   shouldGoToNextSection: boolean;
 }
 
-export interface UseFieldStateResponse<
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
-> {
-  state: UseFieldState<TValue, TSection>;
+export interface UseFieldStateResponse<TValue extends PickerValidValue> {
+  state: UseFieldState<TValue>;
   activeSectionIndex: number | null;
   parsedSelectedSections: FieldParsedSelectedSections;
   setSelectedSections: (sections: FieldSelectedSections) => void;
   clearValue: () => void;
   clearActiveSection: () => void;
-  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
+  updateSectionValue: (params: UpdateSectionValueParams<TValue>) => void;
   updateValueFromValueStr: (valueStr: string) => void;
   setTempAndroidValueStr: (tempAndroidValueStr: string | null) => void;
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
-  getSectionsFromValue: (value: TValue, fallbackSections?: TSection[] | null) => TSection[];
+  sectionsValueBoundaries: FieldSectionsValueBoundaries;
+  getSectionsFromValue: (
+    value: TValue,
+    fallbackSections?: InferFieldSection<TValue>[] | null,
+  ) => InferFieldSection<TValue>[];
   localizedDigits: string[];
   timezone: PickersTimezone;
 }
 
 export const useFieldState = <
-  TValue,
-  TDate extends PickerValidDate,
-  TSection extends FieldSection,
+  TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TForwardedProps extends UseFieldForwardedProps<TEnableAccessibleFieldDOMStructure>,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<TValue, TEnableAccessibleFieldDOMStructure, any>,
 >(
   params: UseFieldParams<
     TValue,
-    TDate,
-    TSection,
     TEnableAccessibleFieldDOMStructure,
     TForwardedProps,
     TInternalProps
   >,
-): UseFieldStateResponse<TValue, TDate, TSection> => {
-  const utils = useUtils<TDate>();
-  const translations = usePickersTranslations<TDate>();
-  const adapter = useLocalizationContext<TDate>();
+): UseFieldStateResponse<TValue> => {
+  const utils = useUtils();
+  const translations = usePickerTranslations();
+  const adapter = useLocalizationContext();
   const isRtl = useRtl();
 
   const {
@@ -120,6 +116,7 @@ export const useFieldState = <
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     onChange,
     valueManager,
   });
@@ -127,12 +124,12 @@ export const useFieldState = <
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
   const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate>(utils, localizedDigits, timezone),
+    () => getSectionsBoundaries(utils, localizedDigits, timezone),
     [utils, localizedDigits, timezone],
   );
 
   const getSectionsFromValue = React.useCallback(
-    (value: TValue, fallbackSections: TSection[] | null = null) =>
+    (value: TValue, fallbackSections: InferFieldSection<TValue>[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
         buildSectionsFromFormat({
           utils,
@@ -159,14 +156,13 @@ export const useFieldState = <
     ],
   );
 
-  const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
+  const [state, setState] = React.useState<UseFieldState<TValue>>(() => {
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
-    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
+    const stateWithoutReferenceDate: Omit<UseFieldState<TValue>, 'referenceValue'> = {
       sections,
       value: valueFromTheOutside,
-      referenceValue: valueManager.emptyValue,
       tempValueStrAndroid: null,
     };
 
@@ -175,7 +171,7 @@ export const useFieldState = <
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       utils,
-      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      props: internalProps as GetDefaultReferenceDateProps,
       granularity,
       timezone,
     });
@@ -209,7 +205,7 @@ export const useFieldState = <
     value,
     referenceValue,
     sections,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue' | 'sections'>) => {
+  }: Pick<UseFieldState<TValue>, 'value' | 'referenceValue' | 'sections'>) => {
     setState((prevState) => ({
       ...prevState,
       sections,
@@ -276,7 +272,7 @@ export const useFieldState = <
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
-    const parseDateStr = (dateStr: string, referenceDate: TDate) => {
+    const parseDateStr = (dateStr: string, referenceDate: PickerValidDate) => {
       const date = utils.parse(dateStr, format);
       if (date == null || !utils.isValid(date)) {
         return null;
@@ -315,7 +311,7 @@ export const useFieldState = <
     activeSection,
     newSectionValue,
     shouldGoToNextSection,
-  }: UpdateSectionValueParams<TSection>) => {
+  }: UpdateSectionValueParams<TValue>) => {
     /**
      * 1. Decide which section should be focused
      */
@@ -331,7 +327,7 @@ export const useFieldState = <
     const newActiveDateSections = activeDateManager.getSections(newSections);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
-    let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
+    let values: Pick<UseFieldState<TValue>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
 
     /**

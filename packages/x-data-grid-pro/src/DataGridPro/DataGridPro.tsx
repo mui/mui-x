@@ -438,14 +438,6 @@ DataGridProRaw.propTypes = {
     PropTypes.bool,
   ]),
   /**
-   * If `select`, a group header checkbox in indeterminate state (like "Select All" checkbox)
-   * will select all the rows under it.
-   * If `deselect`, it will deselect all the rows under it.
-   * Works only if `checkboxSelection` is enabled.
-   * @default "deselect"
-   */
-  indeterminateCheckboxAction: PropTypes.oneOf(['deselect', 'select']),
-  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -869,14 +861,6 @@ DataGridProRaw.propTypes = {
    */
   rowModesModel: PropTypes.object,
   /**
-   * The milliseconds delay to wait after measuring the row height before recalculating row positions.
-   * Setting it to a lower value could be useful when using dynamic row height,
-   * but might reduce performance when displaying a large number of rows.
-   * @default 166
-   * @deprecated
-   */
-  rowPositionsDebounceMs: PropTypes.number,
-  /**
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
@@ -909,7 +893,7 @@ DataGridProRaw.propTypes = {
    * - Deselecting a descendant of a selected parent deselects the parent automatically.
    *
    * Works with tree data and row grouping on the client-side only.
-   * @default { parents: false, descendants: false }
+   * @default { parents: true, descendants: true }
    */
   rowSelectionPropagation: PropTypes.shape({
     descendants: PropTypes.bool,
@@ -919,7 +903,7 @@ DataGridProRaw.propTypes = {
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
-   * * @default "client"
+   * @default "client"
    */
   rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
@@ -928,11 +912,17 @@ DataGridProRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
+  /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * If combined with `unstable_lazyLoading`, it defines the area where the next data request is triggered.
    * @default 80
    */
   scrollEndThreshold: PropTypes.number,
@@ -1006,6 +996,18 @@ DataGridProRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
+   * Used together with `unstable_dataSource` to enable lazy loading.
+   * If enabled, the grid stops adding `paginationModel` to the data requests (`getRows`)
+   * and starts sending `start` and `end` values depending on the loading mode and the scroll position.
+   * @default false
+   */
+  unstable_lazyLoading: PropTypes.bool,
+  /**
+   * If positive, the Data Grid will throttle data source requests on rendered rows interval change.
+   * @default 500
+   */
+  unstable_lazyLoadingRequestThrottleMs: PropTypes.number,
+  /**
    * Definition of the column rendered when the `unstable_listView` prop is enabled.
    */
   unstable_listColumn: PropTypes.shape({
@@ -1022,8 +1024,11 @@ DataGridProRaw.propTypes = {
   unstable_listView: PropTypes.bool,
   unstable_onDataSourceError: PropTypes.func,
   /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
+   * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
+   * For datasets with a large number of columns, this can cause performance issues.
+   * The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally.
    * @default false
    */
-  unstable_rowSpanning: PropTypes.bool,
+  virtualizeColumnsWithAutoRowHeight: PropTypes.bool,
 } as any;

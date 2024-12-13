@@ -1,6 +1,9 @@
 {
   "name": "ScatterSeriesType",
-  "imports": ["import { ScatterSeriesType } from '@mui/x-charts'"],
+  "imports": [
+    "import { ScatterSeriesType } from '@mui/x-charts-pro'",
+    "import { ScatterSeriesType } from '@mui/x-charts'"
+  ],
   "properties": {
     "type": { "type": { "description": "'scatter'" }, "required": true },
     "color": { "type": { "description": "string" } },
@@ -19,10 +22,7 @@
     "markerSize": { "type": { "description": "number" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "xAxisId": { "type": { "description": "string" } },
-    "xAxisKey": { "type": { "description": "string" } },
     "yAxisId": { "type": { "description": "string" } },
-    "yAxisKey": { "type": { "description": "string" } },
-    "zAxisId": { "type": { "description": "string" } },
-    "zAxisKey": { "type": { "description": "string" } }
+    "zAxisId": { "type": { "description": "string" } }
   }
 }

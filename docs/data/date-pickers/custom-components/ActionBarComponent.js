@@ -9,11 +9,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-import { usePickersTranslations } from '@mui/x-date-pickers/hooks';
+import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 
 function CustomActionBar(props) {
   const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
-  const translations = usePickersTranslations();
+  const translations = usePickerTranslations();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = useId();

@@ -33,6 +33,7 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
   color: theme.palette.text.secondary,
   borderRadius: theme.spacing(2),
   paddingRight: theme.spacing(1),
+  paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   fontWeight: theme.typography.fontWeightMedium,
   '&.expanded': {
     fontWeight: theme.typography.fontWeightRegular,
@@ -49,15 +50,6 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
 const CustomTreeItemIconContainer = styled(TreeItemIconContainer)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
-
-const CustomTreeItemGroupTransition = styled(TreeItemGroupTransition)(
-  ({ theme }) => ({
-    marginLeft: 0,
-    [`& .content`]: {
-      paddingLeft: theme.spacing(2),
-    },
-  }),
-);
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   const theme = useTheme();
@@ -77,6 +69,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   } = props;
 
   const {
+    getContextProviderProps,
     getRootProps,
     getContentProps,
     getIconContainerProps,
@@ -92,7 +85,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
   };
 
   return (
-    <TreeItemProvider itemId={itemId}>
+    <TreeItemProvider {...getContextProviderProps()}>
       <CustomTreeItemRoot {...getRootProps({ ...other, style })}>
         <CustomTreeItemContent
           {...getContentProps({
@@ -127,9 +120,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(props, ref) {
             </Typography>
           </Box>
         </CustomTreeItemContent>
-        {children && (
-          <CustomTreeItemGroupTransition {...getGroupTransitionProps()} />
-        )}
+        {children && <TreeItemGroupTransition {...getGroupTransitionProps()} />}
       </CustomTreeItemRoot>
     </TreeItemProvider>
   );
@@ -151,6 +142,7 @@ export default function GmailTreeView() {
         endIcon: EndIcon,
       }}
       sx={{ flexGrow: 1, maxWidth: 400 }}
+      itemChildrenIndentation={20}
     >
       <CustomTreeItem itemId="1" label="All Mail" labelIcon={MailIcon} />
       <CustomTreeItem itemId="2" label="Trash" labelIcon={DeleteIcon} />

@@ -29,15 +29,6 @@ export type HighlightedProviderProps = {
   onHighlightChange?: (highlightedItem: HighlightItemData | null) => void;
 };
 
-const mergeDeprecatedOptions = (options?: Partial<HighlightScope>): HighlightScope => {
-  const { highlighted, faded, ...other } = options ?? {};
-  return {
-    highlight: highlighted,
-    fade: faded,
-    ...other,
-  };
-};
-
 function HighlightedProvider({
   children,
   highlightedItem: highlightedItemProps,
@@ -58,7 +49,7 @@ function HighlightedProvider({
       const seriesData = series[seriesType as ChartSeriesType];
       Object.keys(seriesData?.series ?? {}).forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, mergeDeprecatedOptions(seriesItem?.highlightScope));
+        map.set(seriesId, seriesItem?.highlightScope);
       });
     });
     return map;
