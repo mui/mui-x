@@ -195,10 +195,10 @@ const useUtilityClasses = (
   classes: Partial<PickersFilledInputClasses> | undefined,
   ownerState: PickersFilledInputOwnerState,
 ) => {
-  const { disableUnderline } = ownerState;
+  const { inputHasUnderline } = ownerState;
 
   const slots = {
-    root: ['root', !disableUnderline && 'underline'],
+    root: ['root', inputHasUnderline && 'underline'],
     input: ['input'],
   };
 

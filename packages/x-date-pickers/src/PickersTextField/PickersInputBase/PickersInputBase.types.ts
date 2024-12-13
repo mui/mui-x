@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BoxProps } from '@mui/material/Box';
 import { PickersSectionListProps } from '../../PickersSectionList';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
 
 export interface PickersInputPropsUsedByField
   extends Pick<
@@ -39,10 +38,7 @@ export interface PickersInputPropsUsedByField
 export interface PickersInputBaseProps
   extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
     PickersInputPropsUsedByField {
-  /**
-   * The ownerState to use if it's not PickersTextFieldOwnerState
-   */
-  ownerState?: PickersTextFieldOwnerState & Record<string, any>;
+  ownerState?: any;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
     disabled?: boolean;
