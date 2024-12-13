@@ -142,11 +142,10 @@ const GridHeaderCheckbox = React.forwardRef<HTMLButtonElement, GridColumnHeaderP
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        inputProps={{ 'aria-label': label, name: 'select_all_rows' }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
         disabled={!isMultipleRowSelectionEnabled(rootProps)}
-        id={'checkbox_header'}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />

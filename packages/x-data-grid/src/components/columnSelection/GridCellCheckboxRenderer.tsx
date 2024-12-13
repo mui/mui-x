@@ -102,8 +102,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       isChecked && !isIndeterminate ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
 
-    const checkBoxId = `checkbox_${id}`;
-
     return (
       <rootProps.slots.baseCheckbox
         ref={handleRef}
@@ -111,12 +109,11 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         className={classes.root}
-        inputProps={{ 'aria-label': label }}
+        inputProps={{ 'aria-label': label, name: 'select_row' }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
         disabled={!isSelectable}
         touchRippleRef={rippleRef as any /* FIXME: typing error */}
-        id={checkBoxId}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
