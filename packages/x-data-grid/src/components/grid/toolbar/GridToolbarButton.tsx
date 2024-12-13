@@ -5,6 +5,7 @@ import { alpha, styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -12,6 +13,7 @@ import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import { useGridToolbarItem } from './useGridToolbarItem';
 
 export interface GridToolbarButtonProps extends ButtonBaseProps {
   /**
@@ -171,12 +173,16 @@ DefaultGridToolbarButton.propTypes = {
 const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
+    const rootRef = React.useRef<HTMLButtonElement>(null);
+    const handleRef = useForkRef(rootRef, ref);
+    const itemProps = useGridToolbarItem(rootRef);
 
     return useGridComponentRenderer({
       render,
       defaultElement: DefaultGridToolbarButton,
       props: {
-        ref,
+        ref: handleRef,
+        ...itemProps,
         ...other,
       },
     });

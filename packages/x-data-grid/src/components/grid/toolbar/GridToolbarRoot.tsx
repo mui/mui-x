@@ -11,6 +11,7 @@ import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import { GridToolbarRootContext } from './GridToolbarRootContext';
 
 export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -21,6 +22,12 @@ export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElemen
    * A function to customize rendering of the component.
    */
   render?: RenderProp<{}>;
+  /**
+   * Orientation of the toolbar.
+   *
+   * @default 'horizontal'
+   */
+  orientation?: 'horizontal' | 'vertical';
 }
 
 type OwnerState = DataGridProcessedProps;
@@ -97,17 +104,96 @@ DefaultGridToolbarRoot.propTypes = {
  */
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
-    const { render, ...other } = props;
+    const { render, orientation = 'horizontal', ...other } = props;
 
-    return useGridComponentRenderer({
+    const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
+    const [items, setItems] = React.useState<string[]>([]);
+
+    const registerItem = React.useCallback((item: string) => {
+      setItems((prevItems) => [...prevItems, item]);
+    }, []);
+
+    const unregisterItem = React.useCallback(
+      (item: string) => {
+        setItems((prevItems) => prevItems.filter((i) => i !== item));
+
+        if (focusableItemId === item) {
+          setFocusableItemId(null);
+        }
+      },
+      [focusableItemId],
+    );
+
+    const onItemKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        if (!focusableItemId) {
+          return;
+        }
+
+        if (
+          (orientation === 'horizontal' && event.key === 'ArrowRight') ||
+          (orientation === 'vertical' && event.key === 'ArrowDown')
+        ) {
+          event.preventDefault();
+          const nextIndex = items.indexOf(focusableItemId) + 1;
+          setFocusableItemId(items[nextIndex < items.length ? nextIndex : 0]);
+        }
+
+        if (
+          (orientation === 'horizontal' && event.key === 'ArrowLeft') ||
+          (orientation === 'vertical' && event.key === 'ArrowUp')
+        ) {
+          event.preventDefault();
+          const prevIndex = items.indexOf(focusableItemId) - 1;
+          setFocusableItemId(items[prevIndex < 0 ? items.length - 1 : prevIndex]);
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault();
+          setFocusableItemId(items[0]);
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault();
+          setFocusableItemId(items[items.length - 1]);
+        }
+      },
+      [items, focusableItemId, orientation],
+    );
+
+    const contextValue = React.useMemo(
+      () => ({
+        orientation,
+        focusableItemId,
+        registerItem,
+        unregisterItem,
+        onItemKeyDown,
+      }),
+      [registerItem, unregisterItem, focusableItemId, onItemKeyDown, orientation],
+    );
+
+    const element = useGridComponentRenderer({
       render,
       defaultElement: DefaultGridToolbarRoot,
       props: {
         ref,
         role: 'toolbar',
+        'aria-orientation': orientation,
         ...other,
       },
     });
+
+    React.useEffect(() => {
+      if (items.length > 0) {
+        setFocusableItemId(items[0]);
+      }
+    }, [items]);
+
+    return (
+      <GridToolbarRootContext.Provider value={contextValue}>
+        {element}
+      </GridToolbarRootContext.Provider>
+    );
   },
 );
 

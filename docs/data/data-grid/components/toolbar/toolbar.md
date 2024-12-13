@@ -54,25 +54,25 @@ The top level component that positions items in a row.
 
 A button item that can be used to perform actions from the toolbar.
 
-{{"demo": "GridToolbarButton.js"}}
+<!-- {{"demo": "GridToolbarButton.js"}} -->
 
 ### ToggleButtonGroup
 
 A toggle button group that can be used to switch between multiple states.
 
-{{"demo": "GridToolbarToggleButtonGroup.js"}}
+<!-- {{"demo": "GridToolbarToggleButtonGroup.js"}} -->
 
 ### ToggleButton
 
 A toggle button item that can be used to switch between two states.
 
-{{"demo": "GridToolbarToggleButton.js"}}
+<!-- {{"demo": "GridToolbarToggleButton.js"}} -->
 
 ### Separator
 
 Separate items and groups in the toolbar.
 
-{{"demo": "GridToolbarSeparator.js"}}
+<!-- {{"demo": "GridToolbarSeparator.js"}} -->
 
 ## Examples
 
