@@ -37,8 +37,8 @@ Below are described the steps you need to make to migrate from v7 to v8.
 ### Props
 
 - Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`.
-  - For `.root` element, use `slotProps.root`
-  - For `.main` or `role="grid"` element, use `slotProps.main`
+  - For the `.root` element, use `slotProps.root`
+  - For the `.main` element (the one with `role="grid"`), use `slotProps.main`
 
 ### Selection
 
