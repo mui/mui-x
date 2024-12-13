@@ -363,14 +363,12 @@ const theme = createTheme({
   +}
 
    // This contains a small behavior change.
-   // `onDismiss` was only calling the onAccept prop of your picker if the value had changed since the opening of the picker.
-   // With this code snippet, the onAccept prop will always be called.
+   // If the picker is not controlled and has a default value,
+   // Then opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
+   // Whereas before, opening it and calling `onDimiss` without any change would not have called `onAccept`.
   -const { onDismiss } = props;
-  +const { acceptValueChanges, setOpen } = usePickerActionsContext();
-  +const onDismiss = event => {
-  +  acceptValueChanges();
-  +  setOpen(false);
-  +}
+  +const { acceptValueChanges } = usePickerActionsContext();
+  +const onDismiss = acceptValueChanges
   ```
 
   :::success
