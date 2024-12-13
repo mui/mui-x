@@ -70,7 +70,6 @@ const RootElement = styled('ul', {
     listStyleType: 'none',
     paddingInlineStart: 0,
     width: 'max-content',
-
     button: {
       // Reset button styles
       background: 'none',
@@ -78,31 +77,24 @@ const RootElement = styled('ul', {
       padding: 0,
       cursor: ownerState.onItemClick ? 'pointer' : 'unset',
     },
-
     [`.${piecewiseColorLegendClasses.item}`]: {
       display: 'flex',
       gap: theme.spacing(0.5),
     },
-
     [`&.${piecewiseColorLegendClasses.horizontal}`]: {
       alignItems: 'center',
-
       [`.${piecewiseColorLegendClasses.item}`]: {
         flexDirection: 'column',
       },
-
       [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
         alignItems: 'start',
       },
-
       [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
         alignItems: 'end',
       },
-
       [`.${piecewiseColorLegendClasses.minLabel}`]: {
         alignItems: 'end',
       },
-
       [`&.${piecewiseColorLegendClasses.extremes}`]: {
         [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
           alignItems: 'center',
@@ -111,25 +103,19 @@ const RootElement = styled('ul', {
         },
       },
     },
-
     [`&.${piecewiseColorLegendClasses.vertical}`]: {
       [`.${piecewiseColorLegendClasses.item}`]: {
         flexDirection: 'row',
       },
-
       [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
         alignItems: 'end',
       },
-
       [`&.${piecewiseColorLegendClasses.above}, &.${piecewiseColorLegendClasses.right}`]: {
         alignItems: 'start',
       },
-
       [`.${piecewiseColorLegendClasses.minLabel}`]: {},
-
       [`&.${piecewiseColorLegendClasses.extremes}`]: {
         alignItems: 'center',
-
         [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
           alignItems: 'center',
           display: 'flex',

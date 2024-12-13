@@ -103,7 +103,6 @@ const RootElement = styled('ul', {
   gap: theme.spacing(0.5),
   listStyleType: 'none',
   paddingInlineStart: 0,
-
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
@@ -118,20 +117,17 @@ const RootElement = styled('ul', {
       gridTemplateRows: 'min-content',
     },
   },
-
   [`&.${continuousColorLegendClasses.vertical}`]: {
     gridTemplateRows: 'min-content auto min-content',
     gridTemplateColumns: 'min-content min-content',
     [`&.${continuousColorLegendClasses.below}, &.${continuousColorLegendClasses.left}`]: {
       gridTemplateAreas: templateAreas.column.left,
-
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'end',
       },
     },
     [`&.${continuousColorLegendClasses.above}, &.${continuousColorLegendClasses.right}`]: {
       gridTemplateAreas: templateAreas.column.right,
-
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'start',
       },
@@ -139,21 +135,17 @@ const RootElement = styled('ul', {
     [`&.${continuousColorLegendClasses.extremes}`]: {
       gridTemplateAreas: templateAreas.column.extremes,
       gridTemplateColumns: 'min-content',
-
       [`.${continuousColorLegendClasses.maxLabel}, .${continuousColorLegendClasses.minLabel}`]: {
         justifySelf: 'center',
       },
     },
   },
-
   [`.${continuousColorLegendClasses.gradient}`]: {
     gridArea: 'gradient',
   },
-
   [`.${continuousColorLegendClasses.maxLabel}`]: {
     gridArea: 'max-label',
   },
-
   [`.${continuousColorLegendClasses.minLabel}`]: {
     gridArea: 'min-label',
   },
