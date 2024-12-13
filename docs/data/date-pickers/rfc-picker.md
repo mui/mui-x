@@ -583,6 +583,10 @@ Formats the value based on the provided format.
 
 - `format`: `string` - **required**
 
+#### Usages in the styled version
+
+- The title / individual sections in all the toolbar components (in combination with `<Picker.SetActiveSection />`)
+
 ### `Picker.ContextValue`
 
 Utility component to access the picker public context.
@@ -599,7 +603,6 @@ The user can also use `usePickerContext()`, but a component allows to not create
 ### `Picker.SetValue`
 
 Renders a button to set the current value.
-The button is disabled if the value is invalid (this could be configurable through an `acceptInvalidValue` prop).
 
 #### Props
 
@@ -607,7 +610,15 @@ The button is disabled if the value is invalid (this could be configurable throu
 
 - `target`: `PickerValidDate` - **required**
 
-- `importance`: `'set' | 'accept'`, default: `'accept'`
+- `importance`: `'set' | 'accept'`, default: `'accept'` (equivalent of the `changeImportance` prop on the `shortcut` slot)
+
+- `skipValidation`: `boolean`, default: `false` (by default the button is disabled is the target value is not passing validation)
+
+#### Usages in the styled version
+
+- The List Item of `<PickersShortcuts />` (people creating custom UIs can also use this component)
+
+- The Button of `<PickersActionBar />` that sets the value to today or clear the value
 
 ### `Picker.AcceptValue`
 
@@ -617,6 +628,10 @@ Renders a button to accept the current value.
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
+#### Usages in the styled version
+
+- The Button of `<PickersActionBar />` that accepts the value
+
 ### `Picker.CancelValue`
 
 Renders a button to cancel the current value.
@@ -625,12 +640,26 @@ Renders a button to cancel the current value.
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
+#### Usages in the styled version
+
+- The Button of `<PickersActionBar />` that cancels the value
+
 ### `Picker.SetActiveSection`
 
 Renders a button to set the active section.
+
+#### Usages in the styled version
+
+- The Tab in `<DateTimePickerTabs />`
+
+- The Tab in `<DateTimeRangePickerTabs />` (might require manually using `usePickerContext` to make the range position change work)
 
 #### Props
 
 - Extends `React.HTMLAttributes<HTMLButtonELement>`
 
 - `target`: `PickerSectionType` (current `FieldSectionType` that would be renamed) - **required**
+
+#### Usages in the styled version
+
+- The title / individual sections in all the toolbar components (in combination with `<Picker.FormattedValue />`)
