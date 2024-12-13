@@ -11,6 +11,7 @@ import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import { useGridToolbarRootContext } from './GridToolbarRootContext';
 
 export interface GridToolbarSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -93,6 +94,7 @@ DefaultGridToolbarSeparator.propTypes = {
 const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparatorProps>(
   function GridToolbarSeparator(props, ref) {
     const { render, ...other } = props;
+    const { orientation } = useGridToolbarRootContext();
 
     return useGridComponentRenderer({
       render,
@@ -100,7 +102,7 @@ const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparat
       props: {
         ref,
         role: 'separator',
-        'aria-orientation': 'vertical',
+        'aria-orientation': orientation === 'horizontal' ? 'vertical' : 'vertical',
         ...other,
       },
     });
