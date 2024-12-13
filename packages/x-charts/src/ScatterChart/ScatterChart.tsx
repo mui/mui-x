@@ -133,6 +133,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper direction="horizontal">
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ZAxisContextProvider {...zAxisProps}>
             {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
@@ -148,7 +149,6 @@ const ScatterChart = React.forwardRef(function ScatterChart(
             {children}
           </ZAxisContextProvider>
         </ChartsSurface>
-        {!props.hideLegend && <ChartsLegend {...legendProps} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );

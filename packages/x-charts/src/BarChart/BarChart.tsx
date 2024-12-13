@@ -126,6 +126,7 @@ const BarChart = React.forwardRef(function BarChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper direction="horizontal">
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
@@ -139,7 +140,6 @@ const BarChart = React.forwardRef(function BarChart(
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
-        {!props.hideLegend && <ChartsLegend {...legendProps} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );

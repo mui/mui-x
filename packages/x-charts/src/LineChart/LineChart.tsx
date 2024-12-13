@@ -158,6 +158,7 @@ const LineChart = React.forwardRef(function LineChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper direction="horizontal">
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
           <ChartsGrid {...gridProps} />
@@ -177,7 +178,6 @@ const LineChart = React.forwardRef(function LineChart(
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
-        {!props.hideLegend && <ChartsLegend {...legendProps} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );
