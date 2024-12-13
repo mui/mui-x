@@ -114,7 +114,10 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
 export default materialSlots;
 
 function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
-  const { iconStart, iconEnd, children, ...other } = props;
+  const { inert, iconStart, iconEnd, children, ...other } = props;
+  if (inert) {
+    (other as any).disableRipple = true;
+  }
   return React.createElement(MUIMenuItem, other, [
     iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
     <MUIListItemText key="2">{children}</MUIListItemText>,

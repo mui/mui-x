@@ -38,7 +38,8 @@ type DividerProps = {};
 type MenuItemProps = {
   autoFocus?: boolean;
   children: React.ReactNode;
-  disableRipple?: boolean; // FIXME: consider removing these
+  /** For items that aren't interactive themselves (but may contain an interactive widget) */
+  inert?: boolean;
   disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLElement>;
   iconStart?: React.ReactNode;
