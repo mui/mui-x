@@ -15,6 +15,7 @@ import {
   ContinuousColorLegendClasses,
   useUtilityClasses,
 } from './continuousColorLegendClasses';
+import { useChartGradientObjectBound } from '../internals/components/ChartsAxesGradients';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
@@ -175,6 +176,7 @@ const ContinuousColorLegend = consumeThemeProps(
     defaultProps: {
       direction: 'horizontal',
       labelPosition: 'below',
+      axisDirection: 'z',
     },
     classesResolver: useUtilityClasses,
   },
@@ -197,6 +199,7 @@ const ContinuousColorLegend = consumeThemeProps(
       ...other
     } = props;
 
+    const generateGradientId = useChartGradientObjectBound();
     const axisItem = useAxis({ axisDirection, axisId });
 
     const colorMap = axisItem?.colorMap;
@@ -236,8 +239,7 @@ const ContinuousColorLegend = consumeThemeProps(
             direction={direction}
             rotate={rotateGradient}
             reverse={reverseGradient}
-            // TODO: Change gradientId
-            gradientId={gradientId ?? ''}
+            gradientId={gradientId ?? generateGradientId(axisItem.id, axisDirection!)}
           />
         </li>
         <li className={classes?.maxLabel}>

@@ -114,7 +114,7 @@ const ChartsLabelGradient = consumeThemeProps(
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
-    const { gradientId, direction, classes, className, ...other } = props;
+    const { gradientId, direction, classes, className, rotate, reverse, ...other } = props;
 
     return (
       <Root
