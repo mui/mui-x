@@ -6,13 +6,15 @@ import {
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { useGridToolbarRootContext } from './GridToolbarRootContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import type { GridSlotProps } from '../../../models';
 
-export interface GridToolbarSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
+export type GridToolbarSeparatorProps = GridSlotProps['baseToolbarSeparator'] & {
   /**
    * A function to customize rendering of the component.
    */
   render?: RenderProp<{}>;
-}
+};
 
 /**
  * Demos:
@@ -27,10 +29,11 @@ const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparat
   function GridToolbarSeparator(props, ref) {
     const { render, ...other } = props;
     const { orientation } = useGridToolbarRootContext();
+    const rootProps = useGridRootProps();
 
     return useGridComponentRenderer({
       render,
-      defaultElement: 'div',
+      defaultElement: rootProps.slots.baseToolbarSeparator,
       props: {
         ref,
         role: 'separator',

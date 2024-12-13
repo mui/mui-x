@@ -891,6 +891,21 @@
       "class": null
     },
     {
+      "name": "baseToolbarRoot",
+      "description": "The custom ToolbarRoot component used in the grid.",
+      "class": null
+    },
+    {
+      "name": "baseToolbarButton",
+      "description": "The custom ToolbarButton component used in the grid.",
+      "class": null
+    },
+    {
+      "name": "baseToolbarSeparator",
+      "description": "The custom ToolbarSeparator component used in the grid.",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",

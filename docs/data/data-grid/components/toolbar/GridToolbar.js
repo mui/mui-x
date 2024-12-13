@@ -30,8 +30,8 @@ export default function GridToolbar() {
           <FileDownloadIcon fontSize="small" />
         </Grid.Toolbar.Button>
 
-        <GridToolbarQuickFilter sx={{ ml: 'auto', mr: 0.5 }} />
-        <Grid.Toolbar.ToggleButtonGroup value={view}>
+        <GridToolbarQuickFilter sx={{ ml: 'auto', mr: 0.25 }} />
+        <Grid.Toolbar.ToggleButtonGroup value={view} size="small" color="primary">
           <Grid.Toolbar.ToggleButton
             value="grid"
             aria-label="Grid view"

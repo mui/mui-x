@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import { DemoContainer } from '@mui/x-data-grid/internals/demo';
 import { Grid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
@@ -9,54 +8,28 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import GridViewIcon from '@mui/icons-material/ViewModule';
 import ListViewIcon from '@mui/icons-material/ViewList';
 
-const GridToolbarRoot = styled(Grid.Toolbar.Root)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  height: 45,
-  width: '100%',
-  padding: theme.spacing(0.5),
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const GridToolbarSeparator = styled(Grid.Toolbar.Separator)(({ theme }) => ({
-  height: 24,
-  width: 1,
-  margin: theme.spacing(0.25),
-  backgroundColor: theme.palette.divider,
-}));
-
-const GridToolbarButton = styled(Grid.Toolbar.Button)(({ theme }) => ({
-  minWidth: 0,
-  color: theme.palette.action.active,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
 export default function GridToolbar() {
   const [view, setView] = React.useState<'grid' | 'list'>('grid');
   return (
     <DemoContainer>
-      <GridToolbarRoot>
-        <GridToolbarButton aria-label="Columns">
+      <Grid.Toolbar.Root sx={demoStyles}>
+        <Grid.Toolbar.Button aria-label="Columns">
           <ViewColumnIcon fontSize="small" />
-        </GridToolbarButton>
+        </Grid.Toolbar.Button>
 
-        <GridToolbarButton aria-label="Filters">
+        <Grid.Toolbar.Button aria-label="Filters">
           <FilterListIcon fontSize="small" />
-        </GridToolbarButton>
+        </Grid.Toolbar.Button>
 
-        <GridToolbarSeparator />
+        <Grid.Toolbar.Separator />
 
-        <GridToolbarButton aria-label="Print">
+        <Grid.Toolbar.Button aria-label="Print">
           <PrintIcon fontSize="small" />
-        </GridToolbarButton>
+        </Grid.Toolbar.Button>
 
-        <GridToolbarButton aria-label="Download">
+        <Grid.Toolbar.Button aria-label="Download">
           <FileDownloadIcon fontSize="small" />
-        </GridToolbarButton>
+        </Grid.Toolbar.Button>
 
         <GridToolbarQuickFilter sx={{ ml: 'auto', mr: 0.25 }} />
 
@@ -76,7 +49,14 @@ export default function GridToolbar() {
             <ListViewIcon fontSize="small" />
           </Grid.Toolbar.ToggleButton>
         </Grid.Toolbar.ToggleButtonGroup>
-      </GridToolbarRoot>
+      </Grid.Toolbar.Root>
     </DemoContainer>
   );
 }
+
+const demoStyles = {
+  flex: 1,
+  border: '1px solid',
+  borderColor: 'divider',
+  borderRadius: 1,
+};

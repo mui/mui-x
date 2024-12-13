@@ -6,7 +6,6 @@ import {
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { styled } from '@mui/material/styles';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
@@ -17,39 +16,14 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuItem from '@mui/material/MenuItem';
 
-const GridToolbarRoot = styled(Grid.Toolbar.Root)(({ theme }) => ({
-  flex: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  padding: theme.spacing(0.5),
-  height: 45,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const GridToolbarSeparator = styled(Grid.Toolbar.Separator)(({ theme }) => ({
-  height: 24,
-  width: 1,
-  margin: theme.spacing(0.25),
-  backgroundColor: theme.palette.divider,
-}));
-
-const GridToolbarButton = styled(Grid.Toolbar.Button)(({ theme }) => ({
-  minWidth: 0,
-  color: theme.palette.action.active,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
 function Toolbar() {
   const [downloadMenuOpen, setDownloadMenuOpen] = React.useState(false);
   const downloadMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <GridToolbarRoot>
+    <Grid.Toolbar.Root>
       <Tooltip title="Columns">
-        <Grid.ColumnsPanel.Trigger render={<GridToolbarButton />}>
+        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
           <ViewColumnIcon fontSize="small" />
         </Grid.ColumnsPanel.Trigger>
       </Tooltip>
@@ -57,25 +31,25 @@ function Toolbar() {
       <Tooltip title="Filters">
         <Grid.FilterPanel.Trigger
           render={(props, state) => (
-            <GridToolbarButton {...(props as GridToolbarButtonProps)}>
+            <Grid.Toolbar.Button {...(props as GridToolbarButtonProps)}>
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
-            </GridToolbarButton>
+            </Grid.Toolbar.Button>
           )}
         />
       </Tooltip>
 
-      <GridToolbarSeparator />
+      <Grid.Toolbar.Separator />
 
       <Tooltip title="Print">
-        <Grid.Export.Trigger exportType="print" render={<GridToolbarButton />}>
+        <Grid.Export.Trigger exportType="print" render={<Grid.Toolbar.Button />}>
           <PrintIcon fontSize="small" />
         </Grid.Export.Trigger>
       </Tooltip>
 
       <Tooltip title="Download">
-        <GridToolbarButton
+        <Grid.Toolbar.Button
           ref={downloadMenuTriggerRef}
           id="export-menu-trigger"
           aria-controls="export-menu"
@@ -85,7 +59,7 @@ function Toolbar() {
         >
           <FileDownloadIcon fontSize="small" />
           <ArrowDropDownIcon fontSize="small" />
-        </GridToolbarButton>
+        </Grid.Toolbar.Button>
       </Tooltip>
 
       <Menu
@@ -107,7 +81,7 @@ function Toolbar() {
       </Menu>
 
       <GridToolbarQuickFilter sx={{ ml: 'auto' }} />
-    </GridToolbarRoot>
+    </Grid.Toolbar.Root>
   );
 }
 

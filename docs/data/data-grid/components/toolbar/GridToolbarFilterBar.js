@@ -12,13 +12,13 @@ import Chip from '@mui/material/Chip';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-function Toolbar({ onRemoveFilter, ...other }) {
+function Toolbar({ onRemoveFilter }) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <Grid.Toolbar.Root {...other}>
+    <Grid.Toolbar.Root>
       <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
         <GridFilterListIcon fontSize="small" />
       </Grid.FilterPanel.Trigger>

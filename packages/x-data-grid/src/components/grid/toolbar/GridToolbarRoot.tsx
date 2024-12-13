@@ -6,8 +6,10 @@ import {
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
 import { GridToolbarRootContext } from './GridToolbarRootContext';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import type { GridSlotProps } from '../../../models';
 
-export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElement> {
+export type GridToolbarRootProps = GridSlotProps['baseToolbarRoot'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -18,11 +20,12 @@ export interface GridToolbarRootProps extends React.HTMLAttributes<HTMLDivElemen
    * @default 'horizontal'
    */
   orientation?: 'horizontal' | 'vertical';
-}
+};
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
     const { render, orientation = 'horizontal', ...other } = props;
+    const rootProps = useGridRootProps();
 
     const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
     const [items, setItems] = React.useState<string[]>([]);
@@ -92,7 +95,7 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
 
     const element = useGridComponentRenderer({
       render,
-      defaultElement: 'div',
+      defaultElement: rootProps.slots.baseToolbarRoot,
       props: {
         ref,
         role: 'toolbar',

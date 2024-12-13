@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { MUIStyledCommonProps } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
 import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { MenuListProps } from '@mui/material/MenuList';
@@ -77,6 +79,9 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
+export interface BaseToolbarRootPropsOverrides {}
+export interface BaseToolbarButtonPropsOverrides {}
+export interface BaseToolbarSeparatorPropsOverrides {}
 
 export interface GridSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -102,6 +107,13 @@ export interface GridSlotProps {
   baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
   baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
+  baseToolbarRoot: MUIStyledCommonProps<Theme> &
+    React.ComponentPropsWithRef<'div'> &
+    BaseToolbarRootPropsOverrides;
+  baseToolbarButton: ButtonProps & BaseToolbarButtonPropsOverrides;
+  baseToolbarSeparator: MUIStyledCommonProps<Theme> &
+    React.ComponentPropsWithRef<'div'> &
+    BaseToolbarSeparatorPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &

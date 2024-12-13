@@ -6,8 +6,11 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
-        <ViewColumnIcon fontSize="small" />
+      <Grid.ColumnsPanel.Trigger
+        render={
+          <Grid.Toolbar.Button startIcon={<ViewColumnIcon fontSize="small" />} />
+        }
+      >
         Columns
       </Grid.ColumnsPanel.Trigger>
     </Grid.Toolbar.Root>

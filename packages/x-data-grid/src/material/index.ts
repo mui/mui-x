@@ -15,6 +15,8 @@ import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
 import MUIToggleButton from '@mui/material/ToggleButton';
 import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { styled } from '@mui/material/styles';
+
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -85,6 +87,28 @@ const iconSlots: GridIconSlotsComponent = {
   columnReorderIcon: GridDragIcon,
 };
 
+const BaseToolbarRoot = styled('div')(({ theme }) => ({
+  flex: 0,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.25),
+  padding: theme.spacing(0.5),
+  height: 45,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const BaseToolbarSeparator = styled('div')(({ theme }) => ({
+  height: 24,
+  width: 1,
+  margin: theme.spacing(0.25),
+  backgroundColor: theme.palette.divider,
+}));
+
+const BaseToolbarButton = styled(MUIButton)(({ theme }) => ({
+  minWidth: 0,
+  color: theme.palette.action.active,
+}));
+
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
   baseBadge: MUIBadge,
@@ -105,6 +129,9 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseChip: MUIChip,
   baseToggleButton: MUIToggleButton,
   baseToggleButtonGroup: MUIToggleButtonGroup,
+  baseToolbarRoot: BaseToolbarRoot,
+  baseToolbarButton: BaseToolbarButton,
+  baseToolbarSeparator: BaseToolbarSeparator,
 };
 
 export default materialSlots;

@@ -26,10 +26,7 @@ function Toolbar() {
       <Tooltip title="Filters">
         <Grid.FilterPanel.Trigger
           render={(props, state) => (
-            <Grid.Toolbar.Button
-              {...props}
-              color={state.filterCount ? 'primary' : 'standard'}
-            >
+            <Grid.Toolbar.Button {...props}>
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
@@ -55,7 +52,7 @@ function Toolbar() {
           onClick={() => setDownloadMenuOpen(true)}
         >
           <FileDownloadIcon fontSize="small" />
-          <ArrowDropDownIcon fontSize="small" sx={{ ml: -1, mr: -0.5 }} />
+          <ArrowDropDownIcon fontSize="small" />
         </Grid.Toolbar.Button>
       </Tooltip>
 

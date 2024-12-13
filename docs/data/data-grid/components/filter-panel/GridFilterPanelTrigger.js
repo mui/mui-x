@@ -6,8 +6,11 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
-        <FilterListIcon fontSize="small" />
+      <Grid.FilterPanel.Trigger
+        render={
+          <Grid.Toolbar.Button startIcon={<FilterListIcon fontSize="small" />} />
+        }
+      >
         Filters
       </Grid.FilterPanel.Trigger>
     </Grid.Toolbar.Root>

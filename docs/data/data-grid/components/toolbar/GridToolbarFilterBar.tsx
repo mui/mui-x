@@ -11,7 +11,6 @@ import {
   GridFilterListIcon,
   GridToolbarProps,
 } from '@mui/x-data-grid-pro';
-import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -26,32 +25,14 @@ type ToolbarProps = GridToolbarProps & {
   onRemoveFilter: (filterId: GridFilterItem['id']) => void;
 };
 
-const GridToolbarRoot = styled(Grid.Toolbar.Root)(({ theme }) => ({
-  flex: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  padding: theme.spacing(0.5),
-  height: 45,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const GridToolbarButton = styled(Grid.Toolbar.Button)(({ theme }) => ({
-  minWidth: 0,
-  color: theme.palette.action.active,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
 function Toolbar({ onRemoveFilter }: ToolbarProps) {
   const apiRef = useGridApiContext();
   const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
   const columns = useGridSelector(apiRef, gridColumnLookupSelector);
 
   return (
-    <GridToolbarRoot>
-      <Grid.FilterPanel.Trigger render={<GridToolbarButton />}>
+    <Grid.Toolbar.Root>
+      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
         <GridFilterListIcon fontSize="small" />
       </Grid.FilterPanel.Trigger>
 
@@ -75,7 +56,7 @@ function Toolbar({ onRemoveFilter }: ToolbarProps) {
           />
         );
       })}
-    </GridToolbarRoot>
+    </Grid.Toolbar.Root>
   );
 }
 

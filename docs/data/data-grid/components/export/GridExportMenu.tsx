@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import { DataGridPremium, Grid } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Menu from '@mui/material/Menu';
@@ -7,31 +6,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-const GridToolbarRoot = styled(Grid.Toolbar.Root)(({ theme }) => ({
-  flex: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  padding: theme.spacing(0.5),
-  height: 45,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const GridToolbarButton = styled(Grid.Toolbar.Button)(({ theme }) => ({
-  minWidth: 0,
-  color: theme.palette.action.active,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-}));
-
 function ExportMenu() {
   const [open, setOpen] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <React.Fragment>
-      <GridToolbarButton
+      <Grid.Toolbar.Button
         ref={triggerRef}
         id="export-menu-trigger"
         aria-controls="export-menu"
@@ -42,7 +23,7 @@ function ExportMenu() {
         endIcon={<ArrowDropDownIcon fontSize="small" />}
       >
         Export
-      </GridToolbarButton>
+      </Grid.Toolbar.Button>
       <Menu
         id="export-menu"
         anchorEl={triggerRef.current}
@@ -68,9 +49,9 @@ function ExportMenu() {
 
 function Toolbar() {
   return (
-    <GridToolbarRoot>
+    <Grid.Toolbar.Root>
       <ExportMenu />
-    </GridToolbarRoot>
+    </Grid.Toolbar.Root>
   );
 }
 

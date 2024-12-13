@@ -10,7 +10,7 @@ import {
 import { useGridToolbarItem } from './useGridToolbarItem';
 import type { GridSlotProps } from '../../../models';
 
-export type GridToolbarButtonProps = GridSlotProps['baseButton'] & {
+export type GridToolbarButtonProps = GridSlotProps['baseToolbarButton'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -30,13 +30,13 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
     const rootProps = useGridRootProps();
-    const rootRef = React.useRef<HTMLButtonElement>(null);
-    const handleRef = useForkRef(rootRef, ref);
-    const itemProps = useGridToolbarItem(rootRef);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const handleRef = useForkRef(buttonRef, ref);
+    const itemProps = useGridToolbarItem(buttonRef);
 
     return useGridComponentRenderer({
       render,
-      defaultElement: rootProps.slots.baseButton,
+      defaultElement: rootProps.slots.baseToolbarButton,
       props: {
         ref: handleRef,
         ...itemProps,
