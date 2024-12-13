@@ -5,14 +5,14 @@ import { PrependKeys } from '@mui/x-internals/types';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
-import { ChartsLegendItem } from './ChartsLegendItem';
 import type { Direction } from './direction';
 import { SeriesLegendItemContext } from './legendContext.types';
-import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
-import { useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
+import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLegendSlotExtension } from './chartsLegend.types';
+import { ChartsLabel } from '../ChartsLabel';
 
 export interface ChartsLegendProps extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
@@ -43,14 +43,28 @@ const RootElement = styled('ul', {
   name: 'MuiChartsLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: Pick<ChartsLegendProps, 'direction'> }>(({ ownerState, theme }) => ({
+})<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
   display: 'flex',
-  flexDirection: ownerState.direction === 'horizontal' ? 'row' : 'column',
-  alignItems: ownerState.direction === 'horizontal' ? 'center' : undefined,
+  flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
+  alignItems: ownerState.direction === 'vertical' ? undefined : 'center',
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,
   flexWrap: 'wrap',
+  justifyContent: 'center',
+
+  '> button': {
+    // Reset button styles
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: ownerState.onItemClick ? 'pointer' : 'unset',
+  },
+  [`.${legendClasses.series}`]: {
+    display: ownerState.direction === 'vertical' ? 'flex' : 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+  },
 }));
 
 const ChartsLegend = consumeSlots(
@@ -67,31 +81,41 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const { direction, markType, onItemClick, className, classes, ...other } = props;
 
+    if (data.items.length === 0) {
+      return null;
+    }
+
+    const Element = onItemClick ? 'button' : 'div';
+
     return (
       <RootElement
         className={clsx(classes?.root, className)}
         ref={ref}
         {...other}
-        ownerState={{ direction }}
+        ownerState={props}
       >
         {data.items.map((item, i) => {
           return (
-            <ChartsLegendItem
-              key={item.id}
-              classes={classes}
-              direction={direction}
-              onClick={
-                onItemClick
-                  ? (event) => onItemClick(event, seriesContextBuilder(item), i)
-                  : undefined
-              }
-              mark={{
-                color: item.color,
-                type: markType ?? item.markType,
-              }}
-            >
-              {item.label}
-            </ChartsLegendItem>
+            <li key={item.id}>
+              <Element
+                className={classes?.series}
+                role={onItemClick ? 'button' : undefined}
+                type={onItemClick ? 'button' : undefined}
+                onClick={
+                  onItemClick
+                    ? // @ts-expect-error onClick is only attached to a button
+                      (event) => onItemClick(event, seriesContextBuilder(item), i)
+                    : undefined
+                }
+              >
+                <ChartsLabelMark
+                  classes={{ root: classes?.mark }}
+                  color={item.color}
+                  type={item.markType}
+                />
+                <ChartsLabel classes={{ root: classes?.label }}>{item.label}</ChartsLabel>
+              </Element>
+            </li>
           );
         })}
       </RootElement>

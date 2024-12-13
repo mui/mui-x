@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useRtl } from '@mui/system/RtlProvider';
 import { useThemeProps } from '@mui/material/styles';
 import { MakeOptional } from '@mui/x-internals/types';
 import { ChartContainerProps } from '../ChartContainer';
@@ -20,6 +19,7 @@ import {
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../context';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
+import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -62,8 +62,7 @@ export interface PieChartProps
   slotProps?: PieChartSlotProps;
 }
 
-const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
-const defaultRTLMargin = { top: 5, bottom: 5, left: 100, right: 5 };
+const defaultMargin = { top: 5, bottom: 5, left: 5, right: 5 };
 
 /**
  * Demos:
@@ -101,8 +100,7 @@ const PieChart = React.forwardRef(function PieChart(
     className,
     ...other
   } = props;
-  const isRtl = useRtl();
-  const margin = { ...(isRtl ? defaultRTLMargin : defaultMargin), ...marginProps };
+  const margin = { ...defaultMargin, ...marginProps };
 
   const { chartDataProviderProps, chartsSurfaceProps } = useChartContainerProps(
     {
@@ -125,13 +123,15 @@ const PieChart = React.forwardRef(function PieChart(
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>
-        <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
-        <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
-        {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
-        {children}
-      </ChartsSurface>
-      {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
+      <ChartsWrapper direction="vertical">
+        <ChartsSurface {...chartsSurfaceProps}>
+          <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+          <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
+          {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
+          {children}
+        </ChartsSurface>
+        {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
+      </ChartsWrapper>
     </ChartDataProvider>
   );
 });

@@ -35,6 +35,7 @@ import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../context';
 import { ChartsSurface } from '../ChartsSurface';
+import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
 export interface LineChartSlots
   extends ChartsAxisSlots,
@@ -156,26 +157,28 @@ const LineChart = React.forwardRef(function LineChart(
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>
-        {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-        <ChartsGrid {...gridProps} />
-        <g {...clipPathGroupProps}>
-          <AreaPlot {...areaPlotProps} />
-          <LinePlot {...linePlotProps} />
-          <ChartsOverlay {...overlayProps} />
-          <ChartsAxisHighlight {...axisHighlightProps} />
-        </g>
-        <ChartsAxis {...chartsAxisProps} />
-        <g data-drawing-container>
-          {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-          <MarkPlot {...markPlotProps} />
-        </g>
-        <LineHighlightPlot {...lineHighlightPlotProps} />
-        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-        <ChartsClipPath {...clipPathProps} />
-        {children}
-      </ChartsSurface>
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      <ChartsWrapper direction="horizontal">
+        <ChartsSurface {...chartsSurfaceProps}>
+          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <AreaPlot {...areaPlotProps} />
+            <LinePlot {...linePlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          <g data-drawing-container>
+            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+            <MarkPlot {...markPlotProps} />
+          </g>
+          <LineHighlightPlot {...lineHighlightPlotProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          {children}
+        </ChartsSurface>
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      </ChartsWrapper>
     </ChartDataProvider>
   );
 });

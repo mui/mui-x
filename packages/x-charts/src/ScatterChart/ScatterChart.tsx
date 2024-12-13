@@ -33,6 +33,7 @@ import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../context';
 import { ChartsSurface } from '../ChartsSurface';
+import { ChartsWrapper } from '../internals/components/ChartsWrapper';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -131,22 +132,24 @@ const ScatterChart = React.forwardRef(function ScatterChart(
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsSurface {...chartsSurfaceProps}>
-        <ZAxisContextProvider {...zAxisProps}>
-          {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsGrid {...gridProps} />
-          <g data-drawing-container>
-            {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
-            <ScatterPlot {...scatterPlotProps} />
-          </g>
-          <ChartsOverlay {...overlayProps} />
-          <ChartsAxisHighlight {...axisHighlightProps} />
-          {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
-          {children}
-        </ZAxisContextProvider>
-      </ChartsSurface>
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      <ChartsWrapper direction="horizontal">
+        <ChartsSurface {...chartsSurfaceProps}>
+          <ZAxisContextProvider {...zAxisProps}>
+            {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsGrid {...gridProps} />
+            <g data-drawing-container>
+              {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
+              <ScatterPlot {...scatterPlotProps} />
+            </g>
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+            {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
+            {children}
+          </ZAxisContextProvider>
+        </ChartsSurface>
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+      </ChartsWrapper>
     </ChartDataProvider>
   );
 });

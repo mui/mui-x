@@ -65,12 +65,12 @@ const RootElement = styled('ul', {
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
   return {
     display: 'flex',
-    flexDirection: ownerState.direction === 'horizontal' ? 'row' : 'column',
+    flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
     gap: theme.spacing(0.5),
     listStyleType: 'none',
     paddingInlineStart: 0,
     width: 'max-content',
-    button: {
+    '> button': {
       // Reset button styles
       background: 'none',
       border: 'none',
