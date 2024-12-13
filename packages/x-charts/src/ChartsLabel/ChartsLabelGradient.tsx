@@ -13,13 +13,11 @@ import { consumeThemeProps } from '../internals/consumeThemeProps';
 export interface ChartsLabelGradientProps {
   /**
    * A unique identifier for the gradient.
-   *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: string;
   /**
    * The direction of the gradient.
-   *
    * @default 'horizontal'
    */
   direction?: 'vertical' | 'horizontal';
@@ -29,7 +27,6 @@ export interface ChartsLabelGradientProps {
   reverse?: boolean;
   /**
    * If provided, the gradient will be rotated by 90deg.
-   *
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotate?: boolean;
@@ -145,13 +142,11 @@ ChartsLabelGradient.propTypes = {
   classes: PropTypes.object,
   /**
    * The direction of the gradient.
-   *
    * @default 'horizontal'
    */
   direction: PropTypes.oneOf(['vertical', 'horizontal']),
   /**
    * A unique identifier for the gradient.
-   *
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    */
   gradientId: PropTypes.string.isRequired,
@@ -161,7 +156,6 @@ ChartsLabelGradient.propTypes = {
   reverse: PropTypes.bool,
   /**
    * If provided, the gradient will be rotated by 90deg.
-   *
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotate: PropTypes.bool,

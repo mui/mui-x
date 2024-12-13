@@ -248,11 +248,6 @@ ContinuousColorLegend.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The alignment of the texts with the gradient bar.
-   * @default 'middle'
-   */
-  align: PropTypes.oneOf(['end', 'middle', 'start']),
-  /**
    * The axis direction containing the color configuration to represent.
    * @default 'z'
    */
@@ -263,72 +258,55 @@ ContinuousColorLegend.propTypes = {
    */
   axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
-   * The direction of the legend layout.
-   * The default depends on the chart.
+   * Override or extend the styles applied to the component.
    */
-  direction: PropTypes.oneOf(['vertical', 'horizontal']),
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
-   * A unique identifier for the gradient.
+   * The direction of the legend layout.
+   * @default 'horizontal'
+   */
+  direction: PropTypes.oneOf(['horizontal', 'vertical']),
+  /**
+   * The id for the gradient to use.
+   * If not provided, it will use the generated gradient from the axis configuration.
+   * The `gradientId` will be used as `fill="url(#gradientId)"`.
    * @default auto-generated id
    */
-  id: PropTypes.string,
+  gradientId: PropTypes.string,
   /**
-   * The position of the legend.
+   * Where to position the labels relative to the gradient.
+   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
    * @default 'below'
    */
-  labelPosition: PropTypes.oneOf(['below', 'above', 'extremes']),
-  /**
-   * The length of the gradient bar.
-   * Can be a number (in px) or a string with a percentage such as '50%'.
-   * The '100%' is the length of the svg.
-   * @default '50%'
-   */
-  length: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  labelPosition: PropTypes.oneOf(['above', 'below', 'extremes', 'left', 'right']),
   /**
    * The label to display at the maximum side of the gradient.
    * Can either be a string, or a function.
    * If not defined, the formatted maximal value is display.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   maxLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
    * The label to display at the minimum side of the gradient.
    * Can either be a string, or a function.
-   * @default ({ formattedValue }) => formattedValue
+   * @default formattedValue
    */
   minLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   /**
-   * The position of the legend.
-   */
-  position: PropTypes.shape({
-    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-  }),
-  /**
    * If `true`, the gradient will be reversed.
    */
-  reverse: PropTypes.bool,
+  reverseGradient: PropTypes.bool,
   /**
    * If provided, the gradient will be rotated by 90deg.
-   *
    * Useful for linear gradients that are not in the correct orientation.
    */
-  rotate: PropTypes.bool,
-  /**
-   * The scale used to display gradient colors.
-   * @default 'linear'
-   */
-  scaleType: PropTypes.oneOf(['linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
-  /**
-   * The space between the gradient bar and the labels.
-   * @default 4
-   */
-  spacing: PropTypes.number,
-  /**
-   * The thickness of the gradient bar.
-   * @default 5
-   */
-  thickness: PropTypes.number,
+  rotateGradient: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ContinuousColorLegend };
