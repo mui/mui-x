@@ -93,6 +93,8 @@ export type {
   UseStaticPickerSlots,
   UseStaticPickerSlotProps,
 } from './hooks/useStaticPicker';
+export { useToolbarOwnerState } from './hooks/useToolbarOwnerState';
+export type { PickerToolbarOwnerState } from './hooks/useToolbarOwnerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useNow } from './hooks/useUtils';
 export type { ExportedUseViewsOptions, UseViewsOptions } from './hooks/useViews';
 export { useViews } from './hooks/useViews';
@@ -170,6 +172,8 @@ export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.typ
 export { useCalendarState } from '../DateCalendar/useCalendarState';
 
 export { isInternalTimeView, isTimeView } from './utils/time-utils';
+
+export { DateTimePickerToolbarForceDesktopVariant } from '../DateTimePicker/DateTimePickerToolbar';
 
 export { getDateFieldInternalPropsDefaults } from '../managers/useDateManager';
 export { getTimeFieldInternalPropsDefaults } from '../managers/useTimeManager';
