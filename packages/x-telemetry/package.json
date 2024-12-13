@@ -8,7 +8,7 @@
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/introduction/licensing/",
+  "homepage": "https://mui.com/x/guide/telemetry/",
   "publishConfig": {
     "access": "public",
     "directory": "build"
@@ -21,7 +21,6 @@
     "build:stable": "node ../../scripts/build.mjs stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs && node ./scripts/addPackageScripts.js",
     "build:types": "node ../../scripts/buildTypes.mjs",
-
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "bin": {
@@ -38,14 +37,16 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@mui/utils": "^5.15.20",
-    "node-machine-id": "^1.1.12",
-    "is-docker": "^2.2.1",
-    "conf": "^5.0.0",
     "ci-info": "^4.0.0",
+    "conf": "^5.0.0",
+    "device-uuid": "^1.0.4",
+    "is-docker": "^2.2.1",
+    "node-machine-id": "^1.1.12",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "1.0.0",
+    "@types/device-uuid": "^1.0.3",
     "rimraf": "^5.0.7"
   },
   "engines": {

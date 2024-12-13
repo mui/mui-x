@@ -39,19 +39,18 @@ import { TelemetryStorage } from './storage';
 
   writeContextData('modern', (content) => `export default ${content};`);
   writeContextData('esm', (content) => `export default ${content};`);
-  writeContextData(
-    '',
-    (content) => [
+  writeContextData('', (content) =>
+    [
       `"use strict";`,
       `Object.defineProperty(exports, "__esModule", { value: true });`,
       `exports.default = void 0;`,
-      `var _default = exports.default = ${content};`
+      `var _default = exports.default = ${content};`,
     ].join('\n'),
   );
 })().catch((error) => {
   console.error(
     '[telemetry] Failed to make initialization. Please, report error to MUI X team:\n' +
-      'https://github.com/mui/mui-x/issues/new/choose\n',
+      'https://mui.com/r/x-telemetry-postinstall-troubleshoot\n',
     error,
   );
 });

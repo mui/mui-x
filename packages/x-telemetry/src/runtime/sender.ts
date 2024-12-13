@@ -1,16 +1,10 @@
-import getTelemetryContext, { TelemetryContextType } from './get-context';
+import type { TelemetryContextType } from './get-context';
 import { getTelemetryEnvConfigValue } from './config';
 import { TelemetryEvent } from '../types';
-import { fetchWithRetry } from "./fetcher";
+import { fetchWithRetry } from './fetcher';
 import * as packageJson from '../../package.json';
 
 function shouldSendTelemetry(telemetryContext: TelemetryContextType): boolean {
-  // Disable collection of the telemetry
-  // in production environment
-  if (process.env.NODE_ENV === 'production') {
-    return false;
-  }
-
   // Priority to the config (e.g. in code, env)
   const envIsCollecting = getTelemetryEnvConfigValue('IS_COLLECTING');
   if (typeof envIsCollecting === 'boolean') {
@@ -35,6 +29,13 @@ const sendMuiXTelemetryRetries = 3;
 
 async function sendMuiXTelemetryEvent(event: TelemetryEvent | null) {
   try {
+    // Disable collection of the telemetry
+    // in production environment
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+
+    const { default: getTelemetryContext } = await import('./get-context');
     const telemetryContext = getTelemetryContext();
     if (!event || !shouldSendTelemetry(telemetryContext)) {
       return;

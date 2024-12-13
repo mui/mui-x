@@ -41,14 +41,13 @@ function getBooleanEnvFromEnvObject(envKey: string, envObj: Record<string, any>)
 function getIsTelemetryCollecting(): boolean | undefined {
   try {
     if (typeof process !== 'undefined' && process.env && typeof process.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', process.env)
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', process.env);
       if (typeof result === 'boolean') {
         // If disabled=true, telemetry is disabled
         // If disabled=false, telemetry is enabled
         return !result;
       }
     }
-
   } catch (_) {
     // If there is an error, return the default value
   }
@@ -56,7 +55,10 @@ function getIsTelemetryCollecting(): boolean | undefined {
   try {
     // e.g. Vite.js
     if (typeof (import.meta as any)?.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DISABLED', (import.meta as any).env)
+      const result = getBooleanEnvFromEnvObject(
+        'MUI_X_TELEMETRY_DISABLED',
+        (import.meta as any).env,
+      );
       if (typeof result === 'boolean') {
         // If disabled=true, telemetry is disabled
         // If disabled=false, telemetry is enabled
@@ -69,14 +71,13 @@ function getIsTelemetryCollecting(): boolean | undefined {
 
   try {
     // e.g. Next.js, webpack EnvironmentPlugin
-    const envValue = (
+    const envValue =
       process.env.MUI_X_TELEMETRY_DISABLED ||
       process.env.NEXT_PUBLIC_MUI_X_TELEMETRY_DISABLED ||
       process.env.GATSBY_MUI_X_TELEMETRY_DISABLED ||
       process.env.REACT_APP_MUI_X_TELEMETRY_DISABLED ||
-      process.env.PUBLIC_MUI_X_TELEMETRY_DISABLED
-    )
-    const result = getBooleanEnv(envValue)
+      process.env.PUBLIC_MUI_X_TELEMETRY_DISABLED;
+    const result = getBooleanEnv(envValue);
     if (typeof result === 'boolean') {
       // If disabled=true, telemetry is disabled
       // If disabled=false, telemetry is enabled
@@ -99,7 +100,7 @@ function getIsDebugModeEnabled(): boolean {
     }
 
     if (typeof process !== 'undefined' && process.env && typeof process.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', process.env)
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', process.env);
       if (typeof result === 'boolean') {
         return result;
       }
@@ -119,7 +120,7 @@ function getIsDebugModeEnabled(): boolean {
   try {
     // e.g. Vite.js
     if (typeof (import.meta as any)?.env === 'object') {
-      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', (import.meta as any).env)
+      const result = getBooleanEnvFromEnvObject('MUI_X_TELEMETRY_DEBUG', (import.meta as any).env);
       if (typeof result === 'boolean') {
         return result;
       }
@@ -130,14 +131,13 @@ function getIsDebugModeEnabled(): boolean {
 
   try {
     // e.g. Next.js, webpack EnvironmentPlugin
-    const envValue = (
+    const envValue =
       process.env.MUI_X_TELEMETRY_DEBUG ||
       process.env.NEXT_PUBLIC_MUI_X_TELEMETRY_DEBUG ||
       process.env.GATSBY_MUI_X_TELEMETRY_DEBUG ||
       process.env.REACT_APP_MUI_X_TELEMETRY_DEBUG ||
-      process.env.PUBLIC_MUI_X_TELEMETRY_DEBUG
-    )
-    const result = getBooleanEnv(envValue)
+      process.env.PUBLIC_MUI_X_TELEMETRY_DEBUG;
+    const result = getBooleanEnv(envValue);
     if (typeof result === 'boolean') {
       return result;
     }
@@ -170,7 +170,9 @@ export function getTelemetryEnvConfig(skipCache: boolean = false): TelemetryEnvC
   return cachedEnv;
 }
 
-export function getTelemetryEnvConfigValue<K extends keyof TelemetryEnvConfig>(key: K): TelemetryEnvConfig[K] {
+export function getTelemetryEnvConfigValue<K extends keyof TelemetryEnvConfig>(
+  key: K,
+): TelemetryEnvConfig[K] {
   return getTelemetryEnvConfig()[key];
 }
 

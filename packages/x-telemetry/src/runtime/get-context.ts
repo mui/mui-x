@@ -1,3 +1,4 @@
+import { DeviceUUID } from 'device-uuid';
 import telemetryContext from '../context';
 import type { TelemetryContextType } from '../context';
 import {
@@ -16,6 +17,11 @@ function generateId(length: number): string {
     counter += 1;
   }
   return result;
+}
+
+function getMachineId(): string {
+  const deviceUUID = new DeviceUUID();
+  return deviceUUID.get();
 }
 
 function getAnonymousId(): string {
@@ -58,6 +64,7 @@ function getTelemetryContext(): TelemetryContextType {
   if (!telemetryContext.config.isInitialized) {
     telemetryContext.traits.anonymousId = getAnonymousId();
     telemetryContext.traits.sessionId = getSessionId();
+    telemetryContext.traits.machineId = getMachineId();
     telemetryContext.config.isInitialized = true;
   }
 

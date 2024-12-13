@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { ponyfillGlobal } from '@mui/utils';
