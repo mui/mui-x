@@ -60,7 +60,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         style={props.style}
         sx={props.sx}
         ref={ref}
-        {...props.forwardedProps}
+        {...props.slotProps?.root}
       >
         <GridHeader />
         <GridBody>

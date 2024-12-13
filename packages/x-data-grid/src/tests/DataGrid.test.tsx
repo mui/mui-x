@@ -26,7 +26,7 @@ describe('<DataGrid />', () => {
     ],
   };
 
-  it('should accept aria & data attributes props', () => {
+  it('should accept aria & data attributes props using `slotProps`', () => {
     const gridRef = React.createRef<HTMLDivElement>();
     render(
       <div style={{ width: 300, height: 500 }}>
@@ -34,8 +34,12 @@ describe('<DataGrid />', () => {
           {...baselineProps}
           ref={gridRef}
           columns={[{ field: 'brand' }]}
-          data-custom-id="grid-1"
-          aria-label="Grid one"
+          slotProps={{
+            main: {
+              'data-custom-id': 'grid-1',
+              'aria-label': 'Grid one',
+            },
+          }}
         />
       </div>,
     );
