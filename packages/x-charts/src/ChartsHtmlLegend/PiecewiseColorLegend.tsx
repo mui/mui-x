@@ -249,11 +249,6 @@ PiecewiseColorLegend.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The alignment of the texts with the gradient bar.
-   * @default 'middle'
-   */
-  align: PropTypes.oneOf(['end', 'middle', 'start']),
-  /**
    * The axis direction containing the color configuration to represent.
    * @default 'z'
    */
@@ -264,72 +259,44 @@ PiecewiseColorLegend.propTypes = {
    */
   axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
    * The direction of the legend layout.
-   * The default depends on the chart.
+   * @default 'horizontal'
    */
-  direction: PropTypes.oneOf(['vertical', 'horizontal']),
+  direction: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
-   * A unique identifier for the gradient.
-   * @default auto-generated id
+   * Format the legend labels.
+   * @param {PiecewiseLabelFormatterParams} params The bound of the piece to format.
+   * @returns {string|null} The displayed label, `''` to skip the label but show the color mark, or `null` to skip it entirely.
    */
-  id: PropTypes.string,
+  labelFormatter: PropTypes.func,
   /**
-   * The position of the legend.
+   * Where to position the labels relative to the gradient.
+   * The positions `'below'` and `'left'`, as well as `'above'` and `'right'` are equivalent.
    * @default 'below'
    */
-  labelPosition: PropTypes.oneOf(['below', 'above', 'extremes']),
+  labelPosition: PropTypes.oneOf(['above', 'below', 'extremes', 'left', 'right']),
   /**
-   * The length of the gradient bar.
-   * Can be a number (in px) or a string with a percentage such as '50%'.
-   * The '100%' is the length of the svg.
-   * @default '50%'
+   * The type of the mark.
+   * @default 'square'
    */
-  length: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  markType: PropTypes.oneOf(['square', 'circle', 'line']),
   /**
-   * The label to display at the maximum side of the gradient.
-   * Can either be a string, or a function.
-   * If not defined, the formatted maximal value is display.
-   * @default ({ formattedValue }) => formattedValue
+   * Callback fired when a legend item is clicked.
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
+   * @param {PiecewiseColorLegendItemContext} legendItem The legend item data.
+   * @param {number} index The index of the clicked legend item.
    */
-  maxLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  /**
-   * The label to display at the minimum side of the gradient.
-   * Can either be a string, or a function.
-   * @default ({ formattedValue }) => formattedValue
-   */
-  minLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  /**
-   * The position of the legend.
-   */
-  position: PropTypes.shape({
-    horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-    vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-  }),
-  /**
-   * If `true`, the gradient will be reversed.
-   */
-  reverse: PropTypes.bool,
-  /**
-   * If provided, the gradient will be rotated by 90deg.
-   *
-   * Useful for linear gradients that are not in the correct orientation.
-   */
-  rotate: PropTypes.bool,
-  /**
-   * The scale used to display gradient colors.
-   * @default 'linear'
-   */
-  scaleType: PropTypes.oneOf(['linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
-  /**
-   * The space between the gradient bar and the labels.
-   * @default 4
-   */
-  spacing: PropTypes.number,
-  /**
-   * The thickness of the gradient bar.
-   * @default 5
-   */
-  thickness: PropTypes.number,
+  onItemClick: PropTypes.func,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { PiecewiseColorLegend };
