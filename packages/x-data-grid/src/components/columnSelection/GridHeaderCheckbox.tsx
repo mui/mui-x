@@ -1,19 +1,19 @@
-import composeClasses from '@mui/utils/composeClasses';
-import PropTypes from 'prop-types';
 import * as React from 'react';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
-import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
+import PropTypes from 'prop-types';
+import composeClasses from '@mui/utils/composeClasses';
 import { isMultipleRowSelectionEnabled } from '../../hooks/features/rowSelection/utils';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import type { GridRowId } from '../../models/gridRows';
+import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
 import type { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import type { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
+import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
+import type { GridRowId } from '../../models/gridRows';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
