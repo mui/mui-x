@@ -24,7 +24,6 @@ export interface ContinuousColorLegendProps
     AppendKeys<Pick<ChartsLabelGradientProps, 'reverse' | 'rotate'>, 'gradient'> {
   /**
    * The direction of the legend layout.
-   * The default depends on the chart.
    * @default 'horizontal'
    */
   direction?: Direction;
@@ -42,7 +41,8 @@ export interface ContinuousColorLegendProps
    */
   maxLabel?: string | LabelFormatter;
   /**
-   * A unique identifier for the gradient.
+   * The id for the gradient to use.
+   * If not provided, it will use the generated gradient from the axis configuration.
    * The `gradientId` will be used as `fill="url(#gradientId)"`.
    * @default auto-generated id
    */

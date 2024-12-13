@@ -24,7 +24,6 @@ export interface PiecewiseColorLegendProps
     PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
-   * The default depends on the chart.
    * @default 'horizontal'
    */
   direction?: Direction;
