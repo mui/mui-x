@@ -250,12 +250,11 @@ describe('<DataGrid /> - Row spanning', () => {
 
   describe('rows update', () => {
     it('should update the row spanning state when the rows are updated', () => {
-      const rowSpanValueGetter = spy();
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};
       render(
         <TestDataGrid
-          columns={[{ field: 'code', rowSpanValueGetter }]}
+          columns={[{ field: 'code' }]}
           rows={[{ id: 1, code: 'A101' }]}
           onStateChange={(newState) => {
             const newSpannedCells = newState.rowSpanning.spannedCells;
