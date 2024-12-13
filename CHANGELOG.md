@@ -55,7 +55,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix "No rows" displaying when all rows are pinned (#15335) @nusr
 - [DataGrid] Make row spanning feature stable (#15742) @MBilalShafi
 - [DataGrid] Round dimensions to avoid subpixel rendering error (#15850) @KenanYusuf
-- [DataGrid] Toggle menu on click in `GridActionsCell` (#15867) @k-rajat19
+- [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15867) @k-rajat19
 - [DataGrid] Trigger row spanning computation on rows update (#15858) @MBilalShafi
 - [DataGrid] Update filter panel input variant (#15807) @KenanYusuf
 - [DataGrid] Use `columnsManagement` slot (#15817) @k-rajat19
