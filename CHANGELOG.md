@@ -51,10 +51,10 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@8.0.0-alpha.4`
 
-- [data grid] Update filter panel input variant (#15807) @KenanYusuf
 - [DataGrid] Deselect selected row on click (#15509) @k-rajat19
 - [DataGrid] Fix "No rows" displaying when all rows are pinned (#15335) @nusr
 - [DataGrid] Make row spanning feature stable (#15742) @MBilalShafi
+- [DataGrid] Update filter panel input variant (#15807) @KenanYusuf
 - [DataGrid] Use `columnsManagement` slot (#15817) @k-rajat19
 - [DataGrid] Use new selectors (#15200) @MBilalShafi
 - [l10n] Improve Romanian (ro-RO) locale (#15745) @rares985
@@ -118,9 +118,13 @@ Releasing to benefit from license package fix (#15814).
 ### Docs
 
 - [docs] Clean Joy and Browser custom field demos (#15707) @flaviendelangle
+- [docs] Fix outdated link to handbook (#15855) @oliviertassinari
 - [docs] Improve Pickers accessible DOM migration section description (#15596) @LukasTy
 - [docs] Use `updateRows` method for list view demos (#15732) @KenanYusuf
 - [docs] Use date library version from package dev dependencies for sandboxes (#15762) @LukasTy
+
+### Core
+
 - [code-infra] Add Charts sandbox generation (#15830) @JCQuintas
 - [code-infra] Remove redundant `@type/react-test-renderer` dep (#15766) @LukasTy
 - [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15814) @arminmeh
