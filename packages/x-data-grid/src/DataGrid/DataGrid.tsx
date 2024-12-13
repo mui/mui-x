@@ -133,6 +133,7 @@ DataGridRaw.propTypes = {
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
+    resizeAll: PropTypes.bool,
   }),
   /**
    * Controls the modes of the cells.
