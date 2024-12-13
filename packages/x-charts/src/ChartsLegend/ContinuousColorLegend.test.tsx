@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
-import {
-  ContinuousColorLegend,
-  continuousColorLegendClasses,
-} from '@mui/x-charts/ChartsHtmlLegend';
+import { ContinuousColorLegend, continuousColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartDataProvider } from '@mui/x-charts/context';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
