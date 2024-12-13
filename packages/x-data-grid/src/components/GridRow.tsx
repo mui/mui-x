@@ -398,11 +398,16 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       ),
     );
   }
+  let firstColumnIndex;
+  let lastColumnIndex;
+  if (!hasVirtualization) {
+    firstColumnIndex = 0;
+    lastColumnIndex = visibleColumns.length;
+  } else {
+    firstColumnIndex = renderContext.firstColumnIndex;
+    lastColumnIndex = renderContext.lastColumnIndex;
+  }
 
-  const firstColumnIndex = renderContext.firstColumnIndex;
-  const lastColumnIndex = !hasVirtualization
-    ? visibleColumns.length
-    : renderContext.lastColumnIndex;
   for (let i = firstColumnIndex; i < lastColumnIndex; i += 1) {
     const column = visibleColumns[i];
     const indexInSection = i - pinnedColumns.left.length;
