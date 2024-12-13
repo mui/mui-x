@@ -12,9 +12,17 @@ import {
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
 import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
+}
+
+interface PickersInputOwnerState extends PickersTextFieldOwnerState {
+  /**
+   * If `true`, the input  have an underline, `false` otherwise.
+   */
+  inputHasUnderline: boolean;
 }
 
 const PickersInputRoot = styled(PickersInputBaseRoot, {
@@ -22,7 +30,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => {
+})<{ ownerState: PickersInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   if (theme.vars) {
@@ -102,9 +110,14 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
   };
 });
 
-const useUtilityClasses = (classes: Partial<PickersInputClasses> | undefined) => {
+const useUtilityClasses = (
+  classes: Partial<PickersInputClasses> | undefined,
+  ownerState: PickersInputOwnerState,
+) => {
+  const { inputHasUnderline } = ownerState;
+
   const slots = {
-    root: ['root'],
+    root: ['root', !inputHasUnderline && 'underline'],
     input: ['input'],
   };
 
@@ -137,7 +150,12 @@ const PickersInput = React.forwardRef(function PickersInput(
     ...other
   } = props;
 
-  const classes = useUtilityClasses(classesProp);
+  const pickerTextFieldOwnerState = usePickerTextFieldOwnerState();
+  const ownerState: PickersInputOwnerState = {
+    ...pickerTextFieldOwnerState,
+    inputHasUnderline: !disableUnderline,
+  };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   return (
     <PickersInputBase

@@ -15,10 +15,18 @@ import {
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
 import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
   hiddenLabel?: boolean;
+}
+
+export interface PickersFilledInputOwnerState extends PickersTextFieldOwnerState {
+  /**
+   * If `true`, the input  have an underline, `false` otherwise.
+   */
+  inputHasUnderline: boolean;
 }
 
 const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
@@ -26,7 +34,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => {
+})<{ ownerState: PickersFilledInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
@@ -141,7 +149,7 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   slot: 'sectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'hiddenLabel',
-})<{ ownerState: PickersTextFieldOwnerState }>({
+})<{ ownerState: PickersFilledInputOwnerState }>({
   paddingTop: 25,
   paddingRight: 12,
   paddingBottom: 8,
@@ -183,9 +191,14 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   ],
 });
 
-const useUtilityClasses = (classes: Partial<PickersFilledInputClasses> | undefined) => {
+const useUtilityClasses = (
+  classes: Partial<PickersFilledInputClasses> | undefined,
+  ownerState: PickersFilledInputOwnerState,
+) => {
+  const { disableUnderline } = ownerState;
+
   const slots = {
-    root: ['root'],
+    root: ['root', !disableUnderline && 'underline'],
     input: ['input'],
   };
 
@@ -215,11 +228,15 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     disableUnderline = false,
     hiddenLabel = false,
     classes: classesProp,
-    ownerState: ownerStateProp,
     ...other
   } = props;
 
-  const classes = useUtilityClasses(classesProp);
+  const pickerTextFieldOwnerState = usePickerTextFieldOwnerState();
+  const ownerState: PickersFilledInputOwnerState = {
+    ...pickerTextFieldOwnerState,
+    inputHasUnderline: !disableUnderline,
+  };
+  const classes = useUtilityClasses(classesProp, ownerState);
 
   return (
     <PickersInputBase
@@ -229,6 +246,7 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
       label={label}
       classes={classes}
       ref={ref as any}
+      ownerState={ownerState}
     />
   );
 });

@@ -197,7 +197,6 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     props: inProps,
     name: 'MuiPickersInputBase',
   });
-  const ownerState = usePickerTextFieldOwnerState();
 
   const {
     elements,
@@ -227,9 +226,11 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     onFocus,
     onBlur,
     classes: classesProp,
+    ownerState: ownerStateProp,
     ...other
   } = props;
 
+  const ownerStateCtx = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
@@ -239,6 +240,8 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
       'MUI X: PickersInputBase should always be used inside a PickersTextField component',
     );
   }
+
+  const ownerState = ownerStateProp ?? ownerStateCtx;
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onFocus?.(event);
