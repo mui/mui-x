@@ -111,7 +111,7 @@ export const useFieldState = <
   } = params;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'DateCalendar',
+    name: 'useFieldState',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
@@ -206,11 +206,6 @@ export const useFieldState = <
 
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
-  const activeSection = activeSectionIndex === null ? null : state.sections[activeSectionIndex];
-  // const activeDateManager = React.useMemo(() => {
-  //   return fieldValueManager.getActiveDateManager(activeSection);
-  // }, [fieldValueManager, activeSection]);
-
   const publishValue = (newValue: TValue) => {
     if (valueManager.areValuesEqual(utils, value, newValue)) {
       return;
@@ -257,6 +252,7 @@ export const useFieldState = <
 
     setSectionIndexToCleanOnNextEmptyValue();
 
+    const activeSection = state.sections[activeSectionIndex];
     if (fieldValueManager.getDateFromSection(value, activeSection!) == null) {
       setState((prevState) => ({
         ...prevState,
@@ -361,8 +357,8 @@ export const useFieldState = <
   // If `prop.value` changes, we update the state to reflect the new value
   if (value !== state.lastValue) {
     let shouldClearActiveSection: boolean = false;
-    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSection != null) {
-      if (fieldValueManager.getDateFromSection(value, activeSection) == null) {
+    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSectionIndex != null) {
+      if (fieldValueManager.getDateFromSection(value, state.sections[activeSectionIndex]) == null) {
         shouldClearActiveSection = true;
       }
     }
