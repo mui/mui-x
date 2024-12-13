@@ -87,12 +87,6 @@ export interface ChartsAxisProps extends TickParams {
    */
   fill?: string;
   /**
-   * The font size of the axis ticks text.
-   * @default 12
-   * @deprecated Consider using `tickLabelStyle.fontSize` instead.
-   */
-  tickFontSize?: number;
-  /**
    * The style applied to ticks text.
    */
   tickLabelStyle?: ChartsTextProps['style'];
@@ -111,12 +105,6 @@ export interface ChartsAxisProps extends TickParams {
    * The label of the axis.
    */
   label?: string;
-  /**
-   * The font size of the axis label.
-   * @default 14
-   * @deprecated Consider using `labelStyle.fontSize` instead.
-   */
-  labelFontSize?: number;
   /**
    * The stroke color of the axis line.
    * @default 'currentColor'

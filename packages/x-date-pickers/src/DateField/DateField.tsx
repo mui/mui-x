@@ -10,6 +10,7 @@ import { useDateField } from './useDateField';
 import { useClearableField } from '../hooks';
 import { PickersTextField } from '../PickersTextField';
 import { convertFieldResponseIntoMuiTextFieldProps } from '../internals/utils/convertFieldResponseIntoMuiTextFieldProps';
+import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 
 type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateFieldProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
@@ -35,7 +36,7 @@ const DateField = React.forwardRef(function DateField<
 
   const { slots, slotProps, InputProps, inputProps, ...other } = themeProps;
 
-  const ownerState = themeProps;
+  const ownerState = useFieldOwnerState(themeProps);
 
   const TextField =
     slots?.textField ??

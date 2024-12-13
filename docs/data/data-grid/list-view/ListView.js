@@ -8,8 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import MessageIcon from '@mui/icons-material/Message';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import GridIcon from '@mui/icons-material/GridOn';
-import ListIcon from '@mui/icons-material/TableRowsOutlined';
+import GridViewIcon from '@mui/icons-material/ViewModule';
+import ListViewIcon from '@mui/icons-material/ViewList';
 
 function MessageAction(params) {
   const handleMessage = (event) => {
@@ -77,7 +77,7 @@ function Toolbar({ view, onChangeView }) {
           value="grid"
           selected={view === 'grid'}
         >
-          <GridIcon fontSize="small" /> Grid
+          <GridViewIcon fontSize="small" /> Grid
         </ToggleButton>
         <ToggleButton
           size="small"
@@ -86,7 +86,7 @@ function Toolbar({ view, onChangeView }) {
           value="list"
           selected={view === 'list'}
         >
-          <ListIcon fontSize="small" /> List
+          <ListViewIcon fontSize="small" /> List
         </ToggleButton>
       </ToggleButtonGroup>
     </GridToolbarContainer>

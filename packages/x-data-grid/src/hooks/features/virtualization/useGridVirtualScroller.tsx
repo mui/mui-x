@@ -92,7 +92,7 @@ type ScrollCache = ReturnType<typeof createScrollCache>;
 let isJSDOM = false;
 try {
   if (typeof window !== 'undefined') {
-    isJSDOM = /jsdom/.test(window.navigator.userAgent);
+    isJSDOM = /jsdom|HappyDOM/.test(window.navigator.userAgent);
   }
 } catch (_) {
   /* ignore */
@@ -145,10 +145,8 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-      let lastSize = {
-        width: initialRect.width,
-        height: initialRect.height,
-      };
+
+      let lastSize = roundDimensions(initialRect);
 
       apiRef.current.publishEvent('resize', lastSize);
 
@@ -162,10 +160,7 @@ export const useGridVirtualScroller = () => {
           return;
         }
 
-        const newSize = {
-          width: entry.contentRect.width,
-          height: entry.contentRect.height,
-        };
+        const newSize = roundDimensions(entry.contentRect);
 
         if (newSize.width === lastSize.width && newSize.height === lastSize.height) {
           return;
@@ -267,9 +262,14 @@ export const useGridVirtualScroller = () => {
   );
 
   const triggerUpdateRenderContext = useEventCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) {
+      return undefined;
+    }
+
     const newScroll = {
-      top: scrollerRef.current!.scrollTop,
-      left: scrollerRef.current!.scrollLeft,
+      top: scroller.scrollTop,
+      left: scroller.scrollLeft,
     };
 
     const dx = newScroll.left - scrollPosition.current.left;
@@ -1103,4 +1103,13 @@ function bufferForDirection(
       // eslint unable to figure out enum exhaustiveness
       throw new Error('unreachable');
   }
+}
+
+// Round to avoid issues with subpixel rendering
+// https://github.com/mui/mui-x/issues/15721
+function roundDimensions(dimensions: { width: number; height: number }) {
+  return {
+    width: Math.round(dimensions.width * 10) / 10,
+    height: Math.round(dimensions.height * 10) / 10,
+  };
 }
