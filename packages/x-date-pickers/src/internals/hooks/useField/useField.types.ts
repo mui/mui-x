@@ -214,35 +214,6 @@ export interface FieldChangeHandlerContext<TError> {
   validationError: TError;
 }
 
-/**
- * Object used to access and update the active date (i.e: the date containing the active section).
- * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
- */
-interface FieldActiveDateManager<TValue extends PickerValidValue> {
-  /**
-   * Active date from the current value.
-   */
-  date: PickerValidDate | null;
-  /**
-   * Active date from the reference value.
-   */
-  referenceDate: PickerValidDate;
-  /**
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param  {InferFieldSection<TValue>[]} sections The sections of the full value.
-   * @returns {InferFieldSection<TValue>[]} The sections of the active date.
-   * Get the sections of the active date.
-   */
-  getSections: (sections: InferFieldSection<TValue>[]) => InferFieldSection<TValue>[];
-  /**
-   * Creates the new value based on the new active date and the current value.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {PickerValidDate | null} newActiveDate The new value of the date containing the active section.
-   * @returns {TValue} The new value to publish.
-   */
-  getNewValueFromNewActiveDate: (newActiveDate: PickerValidDate | null) => TValue;
-}
-
 export type FieldParsedSelectedSections = number | 'all' | null;
 
 export interface FieldValueManager<TValue extends PickerValidValue> {
@@ -283,20 +254,6 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    */
   getV7HiddenInputValueFromSections: (sections: InferFieldSection<TValue>[]) => string;
   /**
-   * Returns the manager of the active date.
-   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The utils to manipulate the date.
-   * @param {UseFieldState<TValue>} state The current state of the field.
-   * @param {TValue} value The current value.
-   * @param {InferFieldSection<TValue>} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue>} The manager of the active date.
-   */
-  getActiveDateManager: (
-    state: UseFieldState<TValue>,
-    value: TValue,
-    activeSection: InferFieldSection<TValue>,
-  ) => FieldActiveDateManager<TValue>;
-  /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
@@ -324,6 +281,47 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
     value: TValue,
     prevReferenceValue: InferNonNullablePickerValue<TValue>,
   ) => InferNonNullablePickerValue<TValue>;
+  /**
+   * Extract from the given value the date that contains the given section.
+   * @param {TValue} value The value to extract the date from.
+   * @param {InferFieldSection<TValue>} section The section to get the date from.
+   * @returns {PickerValidDate | null} The date that contains the section.
+   */
+  getDateFromSection: (value: TValue, section: InferFieldSection<TValue>) => PickerValidDate | null;
+  /**
+   * Get the sections of the date that contains the given section.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param  {InferFieldSection<TValue>[]} sections The sections of the full value.
+   * @param {InferFieldSection<TValue>} section A section of the date from which we want to get all the sections.
+   * @returns {InferFieldSection<TValue>[]} The sections of the date that contains the section.
+   */
+  getDateSections: (
+    sections: InferFieldSection<TValue>[],
+    section: InferFieldSection<TValue>,
+  ) => InferFieldSection<TValue>[];
+  /**
+   * Creates a new value based on the provided date and the current value.
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {TValue} value The value to update the date in.
+   * @param {InferFieldSection<TValue>} section A section of the date we want to update in the value.
+   * @param {PickerValidDate | null} date The date that contains the section.
+   * @returns {TValue} The updated value.
+   */
+  updateDateInValue: (
+    value: TValue,
+    section: InferFieldSection<TValue>,
+    date: PickerValidDate | null,
+  ) => TValue;
+  /**
+   * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
+   * @param {InferFieldSection<TValue>[]} sections The sections of the full value.
+   * @param {InferFieldSection<TValue>} section A section of the date from which we want to clear all the sections.
+   * @returns {InferFieldSection<TValue>[]} The sections of the full value with all the sections of the target date cleared.
+   */
+  clearDateSections: (
+    sections: InferFieldSection<TValue>[],
+    section: InferFieldSection<TValue>,
+  ) => InferFieldSection<TValue>[];
 }
 
 export interface UseFieldState<TValue extends PickerValidValue> {

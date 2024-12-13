@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
+import useTimeout from '@mui/utils/useTimeout';
 import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerTranslations } from '../../../hooks/usePickerTranslations';
 import { useUtils, useLocalizationContext } from '../useUtils';
@@ -39,7 +40,7 @@ export interface UpdateSectionValueParams<TValue extends PickerValidValue> {
   /**
    * The section on which we want to apply the new value.
    */
-  activeSection: InferFieldSection<TValue>;
+  section: InferFieldSection<TValue>;
   /**
    * Value to apply to the active section.
    */
@@ -118,6 +119,10 @@ export const useFieldState = <
     onChange,
     valueManager,
   });
+  const valueRef = React.useRef(value);
+  React.useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
 
   const localizedDigits = React.useMemo(() => getLocalizedDigits(utils), [utils]);
 
@@ -201,7 +206,12 @@ export const useFieldState = <
 
   const activeSectionIndex = parsedSelectedSections === 'all' ? 0 : parsedSelectedSections;
 
-  const publishValueBis = (newValue: TValue) => {
+  const activeSection = activeSectionIndex === null ? null : state.sections[activeSectionIndex];
+  // const activeDateManager = React.useMemo(() => {
+  //   return fieldValueManager.getActiveDateManager(activeSection);
+  // }, [fieldValueManager, activeSection]);
+
+  const publishValue = (newValue: TValue) => {
     if (valueManager.areValuesEqual(utils, value, newValue)) {
       return;
     }
@@ -209,7 +219,7 @@ export const useFieldState = <
     const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
       validationError: validator({
         adapter,
-        value,
+        value: newValue,
         timezone,
         props: internalProps,
       }),
@@ -230,14 +240,15 @@ export const useFieldState = <
     return newSections;
   };
 
+  const timeoutToCleanSectionOnNextEmptyValue = useTimeout();
   const setSectionIndexToCleanOnNextEmptyValue = () => {
     sectionIndexToCleanOnNextEmptyValue.current = activeSectionIndex;
-    setTimeout(() => {
+    timeoutToCleanSectionOnNextEmptyValue.start(0, () => {
       sectionIndexToCleanOnNextEmptyValue.current = null;
     });
   };
 
-  const clearValue = () => publishValueBis(valueManager.emptyValue);
+  const clearValue = () => publishValue(valueManager.emptyValue);
 
   const clearActiveSection = () => {
     if (activeSectionIndex == null) {
@@ -246,19 +257,14 @@ export const useFieldState = <
 
     setSectionIndexToCleanOnNextEmptyValue();
 
-    const activeDateManager = fieldValueManager.getActiveDateManager(
-      state,
-      value,
-      state.sections[activeSectionIndex],
-    );
-    if (activeDateManager.date == null) {
+    if (fieldValueManager.getDateFromSection(value, activeSection!) == null) {
       setState((prevState) => ({
         ...prevState,
         sections: setSectionValue(activeSectionIndex, ''),
         tempValueStrAndroid: null,
       }));
     } else {
-      publishValueBis(valueManager.emptyValue);
+      publishValue(valueManager.emptyValue);
     }
   };
 
@@ -284,14 +290,17 @@ export const useFieldState = <
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
-    publishValueBis(newValue);
+    publishValue(newValue);
   };
 
+  const timeoutToCleanActiveDateSectionsIfValueNull = useTimeout();
   const updateSectionValue = ({
-    activeSection,
+    section,
     newSectionValue,
     shouldGoToNextSection,
   }: UpdateSectionValueParams<TValue>) => {
+    const activeDate = fieldValueManager.getDateFromSection(value, section);
+
     /**
      * 1. Decide which section should be focused
      */
@@ -302,9 +311,8 @@ export const useFieldState = <
     /**
      * 2. Try to build a valid date from the new section value
      */
-    const activeDateManager = fieldValueManager.getActiveDateManager(state, value, activeSection);
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
-    const newActiveDateSections = activeDateManager.getSections(newSections);
+    const newActiveDateSections = fieldValueManager.getDateSections(newSections, section);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
@@ -317,17 +325,28 @@ export const useFieldState = <
         utils,
         newActiveDate,
         newActiveDateSections,
-        activeDateManager.referenceDate,
+        fieldValueManager.getDateFromSection(state.referenceValue as any, section)!,
         true,
       );
 
-      publishValueBis(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
-    } else if (activeDateManager.date != null) {
+      publishValue(fieldValueManager.updateDateInValue(value, section, mergedDate));
+
+      if (activeDate == null) {
+        timeoutToCleanActiveDateSectionsIfValueNull.start(0, () => {
+          if (valueRef.current === value) {
+            setState((prevState) => ({
+              ...prevState,
+              sections: fieldValueManager.clearDateSections(state.sections, section),
+            }));
+          }
+        });
+      }
+    } else if (activeDate != null) {
       /**
        * If the current date is not null, we publish a null value.
        */
       setSectionIndexToCleanOnNextEmptyValue();
-      publishValueBis(activeDateManager.getNewValueFromNewActiveDate(null));
+      publishValue(fieldValueManager.updateDateInValue(value, section, null));
     } else {
       /**
        * If the current date is already null, we update the sections.
@@ -342,14 +361,8 @@ export const useFieldState = <
   // If `prop.value` changes, we update the state to reflect the new value
   if (value !== state.lastValue) {
     let shouldClearActiveSection: boolean = false;
-    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSectionIndex != null) {
-      const activeDateManager = fieldValueManager.getActiveDateManager(
-        state,
-        value,
-        state.sections[activeSectionIndex],
-      );
-
-      if (activeDateManager.date == null) {
+    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSection != null) {
+      if (fieldValueManager.getDateFromSection(value, activeSection) == null) {
         shouldClearActiveSection = true;
       }
     }
@@ -369,25 +382,6 @@ export const useFieldState = <
         prevState.referenceValue,
       ),
     }));
-  }
-
-  if (state.sections.every((section) => section.value !== '') && value == null) {
-    console.log('OH');
-  }
-
-  if (activeSectionIndex != null) {
-    const activeDateManager = fieldValueManager.getActiveDateManager(
-      state,
-      value,
-      state.sections[activeSectionIndex],
-    );
-    const activeDateSections = activeDateManager.getSections(state.sections);
-    if (
-      activeDateSections.every((section) => section.value !== '') &&
-      activeDateManager.date == null
-    ) {
-      console.log('CLEAR ACTIVE DATE');
-    }
   }
 
   if (

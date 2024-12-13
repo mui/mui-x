@@ -163,26 +163,37 @@ export const getRangeFieldValueManager = ({
       return parseDate(dateStr.trim(), referenceValue[index]!);
     }) as PickerRangeValue;
   },
-  getActiveDateManager: (state, value, activeSection) => {
-    const index = activeSection.dateName === 'start' ? 0 : 1;
+  getDateFromSection: (value, activeSection) => value[getActiveDateIndex(activeSection)],
+  getDateSections: (sections, activeSection) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    if (getActiveDateIndex(activeSection) === 0) {
+      return removeLastSeparator(dateRangeSections.startDate);
+    }
 
-    const updateDateInRange = (newDate: PickerValidDate | null, prevDateRange: PickerRangeValue) =>
-      (index === 0
-        ? [newDate, prevDateRange[1]]
-        : [prevDateRange[0], newDate]) as PickerNonNullableRangeValue;
+    return dateRangeSections.endDate;
+  },
+  updateDateInValue: (value, activeSection, activeDate) => {
+    if (getActiveDateIndex(activeSection) === 0) {
+      return [activeDate, value[1]];
+    }
+    return [value[0], activeDate];
+  },
+  clearDateSections: (sections, activeSection) => {
+    const dateRangeSections = splitDateRangeSections(sections);
+    if (getActiveDateIndex(activeSection) === 0) {
+      return [
+        ...dateRangeSections.startDate.map((section) => ({ ...section, value: '' })),
+        ...dateRangeSections.endDate,
+      ];
+    }
 
-    return {
-      date: value[index],
-      referenceDate: state.referenceValue[index]!,
-      getSections: (sections) => {
-        const dateRangeSections = splitDateRangeSections(sections);
-        if (index === 0) {
-          return removeLastSeparator(dateRangeSections.startDate);
-        }
-
-        return dateRangeSections.endDate;
-      },
-      getNewValueFromNewActiveDate: (newActiveDate) => updateDateInRange(newActiveDate, value),
-    };
+    return [
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate.map((section) => ({ ...section, value: '' })),
+    ];
   },
 });
+
+function getActiveDateIndex(activeSection: FieldRangeSection | null): 0 | 1 {
+  return activeSection == null || activeSection.dateName === 'start' ? 0 : 1;
+}

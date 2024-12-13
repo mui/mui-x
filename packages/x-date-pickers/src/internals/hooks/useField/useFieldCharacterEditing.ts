@@ -398,7 +398,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
   };
 
   const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
-    const activeSection = sections[params.sectionIndex];
+    const section = sections[params.sectionIndex];
     const isNumericEditing = isStringNumber(params.keyPressed, localizedDigits);
     const response = isNumericEditing
       ? applyNumericEditing({
@@ -412,7 +412,7 @@ export const useFieldCharacterEditing = <TValue extends PickerValidValue>({
     }
 
     updateSectionValue({
-      activeSection,
+      section,
       newSectionValue: response.sectionValue,
       shouldGoToNextSection: response.shouldGoToNextSection,
     });

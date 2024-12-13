@@ -182,11 +182,6 @@ export const useField = <
         }
 
         const activeSection = state.sections[activeSectionIndex];
-        const activeDateManager = fieldValueManager.getActiveDateManager(
-          state,
-          value,
-          activeSection,
-        );
 
         const newSectionValue = adjustSectionValue(
           utils,
@@ -195,12 +190,12 @@ export const useField = <
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           localizedDigits,
-          activeDateManager.date,
+          fieldValueManager.getDateFromSection(value, activeSection),
           { minutesStep },
         );
 
         updateSectionValue({
-          activeSection,
+          section: activeSection,
           newSectionValue,
           shouldGoToNextSection: false,
         });
