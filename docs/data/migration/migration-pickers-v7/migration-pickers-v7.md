@@ -375,7 +375,7 @@ const theme = createTheme({
 
   :::success
   The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
-  The only difference is that `usePickerActionsContext` only contain variables with stable references that won't cause a re-render of your component.
+  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
 ### Slot: `toolbar`
