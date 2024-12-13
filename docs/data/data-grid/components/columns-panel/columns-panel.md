@@ -25,8 +25,6 @@ The Columns Panel component is comprised of the following parts:
 
 A button that opens the columns panel.
 
-Renders a [Button](/material-ui/react-button/) component or a custom button provided to `slots.baseButton`.
-
 ## Examples
 
 Below are some ways the Columns Panel component can be used.
