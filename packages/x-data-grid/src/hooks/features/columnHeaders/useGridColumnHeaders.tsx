@@ -101,7 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const isRtl = useRtl();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -164,7 +164,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     let firstColumnToRender;
     let lastColumnToRender;
-    if (!hasVirtualization) {
+    if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
       firstColumnToRender = 0;
       lastColumnToRender = maxLastColumn;
     } else {
