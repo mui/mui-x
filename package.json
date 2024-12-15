@@ -109,7 +109,7 @@
     "@types/karma": "^6.3.9",
     "@types/lodash": "^4.17.13",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.17.9",
+    "@types/node": "^20.17.10",
     "@types/react": "^18.3.14",
     "@types/react-dom": "^18.3.2",
     "@types/requestidlecallback": "^0.3.7",
@@ -198,7 +198,7 @@
   },
   "resolutions": {
     "react-is": "^18.3.1",
-    "@types/node": "^20.17.9"
+    "@types/node": "^20.17.10"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
