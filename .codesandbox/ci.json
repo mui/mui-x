@@ -32,6 +32,6 @@
     "@mui/x-tree-view-pro": "packages/x-tree-view-pro/build",
     "@mui/x-internals": "packages/x-internals/build"
   },
-  "sandboxes": ["/bug-reproductions/x-data-grid"],
+  "sandboxes": ["/bug-reproductions/x-data-grid", "/bug-reproductions/x-charts"],
   "silent": true
 }

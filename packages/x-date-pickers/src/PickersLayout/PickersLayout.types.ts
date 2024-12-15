@@ -40,11 +40,13 @@ export interface ExportedPickersLayoutSlots<
 }
 
 export interface PickerLayoutOwnerState extends PickerOwnerState {
-  // isRTL cannot be part of PickerOwnerState because we need to have the correct isRTL value even when there is not picker above for some components.
+  // The direction cannot be part of PickerOwnerState because we need to have the correct direction value even when there is no picker above for standalone components.
   /**
-   * `true` if the application is in right-to-left direction.
+   * The direction of the layout.
+   * Is equal to "ltr" when the layout is in left-to-right direction.
+   * Is equal to "rtl" when the layout is in right-to-left direction.
    */
-  isRtl: boolean;
+  layoutDirection: 'ltr' | 'rtl';
 }
 
 export interface ExportedPickersLayoutSlotProps<

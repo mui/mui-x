@@ -4,6 +4,7 @@ import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { gridExpandedRowCountSelector } from '../filter';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
+import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { GridLoadingOverlayVariant } from '../../../components/GridLoadingOverlay';
 import { GridOverlayWrapper } from '../../../components/base/GridOverlays';
 import type { GridOverlayType } from '../../../components/base/GridOverlays';
@@ -18,7 +19,8 @@ export const useGridOverlays = () => {
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
-  const noRows = totalRowCount === 0;
+  const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
+  const noRows = totalRowCount === 0 && pinnedRowsCount === 0;
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && noRows;
