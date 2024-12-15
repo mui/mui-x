@@ -96,7 +96,7 @@ export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 
-interface GridBaseSlotProps {
+interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
@@ -120,12 +120,12 @@ interface GridBaseSlotProps {
   baseChip: ChipProps & BaseChipPropsOverrides;
 }
 
-interface GridMaterialSlotProps {
+interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
   baseMenuItem: MUIMenuItemProps;
 }
 
-interface GridElementSlotProps {
+interface ElementSlotProps {
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &
@@ -159,7 +159,7 @@ type Merge<A, B> = {
         ? A[K]
         : never;
 };
-export type GridSlotProps = Merge<GridBaseSlotProps, GridMaterialSlotProps> & GridElementSlotProps;
+export type GridSlotProps = Merge<BaseSlotProps, MaterialSlotProps> & ElementSlotProps;
 
 /**
  * Overridable components props dynamically passed to the component at rendering.
