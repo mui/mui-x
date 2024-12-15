@@ -795,7 +795,7 @@ importers:
         specifier: ^15.7.14
         version: 15.7.14
       '@types/react-is':
-        specifier: ^18.3.0
+        specifier: ^18.3.1
         version: 18.3.1
       '@types/use-sync-external-store':
         specifier: ^0.0.6
