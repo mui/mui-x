@@ -48,7 +48,7 @@
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
-    "@types/react-transition-group": "^4.4.11",
+    "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5",
