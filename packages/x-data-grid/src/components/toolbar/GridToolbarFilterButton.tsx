@@ -8,7 +8,7 @@ import {
 } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { BadgeProps } from '../../models/gridSlotsComponentsProps';
+import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
