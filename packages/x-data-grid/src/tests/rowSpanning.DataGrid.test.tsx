@@ -247,5 +247,35 @@ describe('<DataGrid /> - Row spanning', () => {
     });
   });
 
+  describe('rows update', () => {
+    it('should update the row spanning state when the rows are updated', () => {
+      let rowSpanningStateUpdates = 0;
+      let spannedCells = {};
+      render(
+        <TestDataGrid
+          columns={[{ field: 'code' }]}
+          rows={[{ id: 1, code: 'A101' }]}
+          onStateChange={(newState) => {
+            const newSpannedCells = newState.rowSpanning.spannedCells;
+            if (newSpannedCells !== spannedCells) {
+              rowSpanningStateUpdates += 1;
+              spannedCells = newSpannedCells;
+            }
+          }}
+        />,
+      );
+
+      // First update by initializer
+      expect(rowSpanningStateUpdates).to.equal(1);
+
+      act(() => {
+        apiRef.current.setRows([{ id: 1, code: 'A101' }]);
+      });
+
+      // Second update on row update
+      expect(rowSpanningStateUpdates).to.equal(2);
+    });
+  });
+
   // TODO: Add tests for row reordering
 });
