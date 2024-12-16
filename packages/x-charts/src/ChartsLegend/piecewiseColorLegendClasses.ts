@@ -27,6 +27,10 @@ export interface PiecewiseColorLegendClasses {
   left: string;
   /** Styles applied to the legend with the labels on the right of the color marks. */
   right: string;
+  /** Styles applied to the marks. */
+  mark: string;
+  /** Styles applied to the series label. */
+  label: string;
 }
 
 function getLegendUtilityClass(slot: string) {
@@ -40,6 +44,8 @@ export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegen
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
     item: ['item'],
+    mark: ['mark'],
+    label: ['label'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -59,5 +65,7 @@ export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generate
     'extremes',
     'left',
     'right',
+    'mark',
+    'label',
   ],
 );

@@ -106,11 +106,11 @@ const ChartsLegend = consumeSlots(
                 }
               >
                 <ChartsLabelMark
-                  classes={{ root: classes?.mark }}
+                  className={classes?.mark}
                   color={item.color}
                   type={item.markType}
                 />
-                <ChartsLabel classes={{ root: classes?.label }}>{item.label}</ChartsLabel>
+                <ChartsLabel className={classes?.label}>{item.label}</ChartsLabel>
               </Element>
             </li>
           );

@@ -27,6 +27,8 @@ export interface ContinuousColorLegendClasses {
   left: string;
   /** Styles applied to the legend with the labels on the right of the gradient. */
   right: string;
+  /** Styles applied to the series label. */
+  label: string;
 }
 
 function getLegendUtilityClass(slot: string) {
@@ -42,6 +44,8 @@ export const useUtilityClasses = (
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
     gradient: ['gradient'],
+    mark: ['mark'],
+    label: ['label'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -61,5 +65,6 @@ export const continuousColorLegendClasses: ContinuousColorLegendClasses = genera
     'extremes',
     'left',
     'right',
+    'label',
   ],
 );

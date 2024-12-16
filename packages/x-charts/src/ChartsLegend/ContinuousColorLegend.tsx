@@ -225,7 +225,7 @@ const ContinuousColorLegend = consumeThemeProps(
         ownerState={{ direction }}
       >
         <li className={classes?.minLabel}>
-          <ChartsLabel>{minText}</ChartsLabel>
+          <ChartsLabel className={classes?.label}>{minText}</ChartsLabel>
         </li>
         <li className={classes?.gradient}>
           <ChartsLabelGradient
@@ -236,7 +236,7 @@ const ContinuousColorLegend = consumeThemeProps(
           />
         </li>
         <li className={classes?.maxLabel}>
-          <ChartsLabel>{maxText}</ChartsLabel>
+          <ChartsLabel className={classes?.label}>{maxText}</ChartsLabel>
         </li>
       </RootElement>
     );

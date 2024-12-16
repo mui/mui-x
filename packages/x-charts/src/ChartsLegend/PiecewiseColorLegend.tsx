@@ -232,9 +232,9 @@ const PiecewiseColorLegend = consumeThemeProps(
                   [`${endClass}`]: index === orderedColors.length - 1,
                 })}
               >
-                {isTextBefore && <ChartsLabel>{label}</ChartsLabel>}
-                <ChartsLabelMark type={markType} color={color} />
-                {isTextAfter && <ChartsLabel>{label}</ChartsLabel>}
+                {isTextBefore && <ChartsLabel className={classes?.label}>{label}</ChartsLabel>}
+                <ChartsLabelMark className={classes?.mark} type={markType} color={color} />
+                {isTextAfter && <ChartsLabel className={classes?.label}>{label}</ChartsLabel>}
               </Element>
             </li>
           );
