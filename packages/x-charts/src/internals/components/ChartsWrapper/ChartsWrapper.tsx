@@ -1,10 +1,51 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { ChartsLegendPosition, Direction, LegendPosition } from '../../../ChartsLegend';
 
-type ChartsWrapperProps = {
+interface ChartsWrapperProps extends ChartsLegendPosition {
   // eslint-disable-next-line react/no-unused-prop-types
-  direction: 'horizontal' | 'vertical';
+  legendDirection?: Direction;
   children: React.ReactNode;
+}
+
+const getDirection = (direction?: Direction, position?: LegendPosition) => {
+  if (direction === 'vertical') {
+    if (position?.horizontal === 'left') {
+      return 'row';
+    }
+
+    return 'row-reverse';
+  }
+
+  if (position?.vertical === 'bottom') {
+    return 'column-reverse';
+  }
+
+  return 'column';
+};
+
+const getAlign = (direction?: Direction, position?: LegendPosition) => {
+  if (direction === 'vertical') {
+    if (position?.vertical === 'top') {
+      return 'flex-start';
+    }
+
+    if (position?.vertical === 'bottom') {
+      return 'flex-end';
+    }
+  }
+
+  if (direction === 'horizontal') {
+    if (position?.horizontal === 'left') {
+      return 'flex-start';
+    }
+
+    if (position?.horizontal === 'right') {
+      return 'flex-end';
+    }
+  }
+
+  return 'center';
 };
 
 const Root = styled('div', {
@@ -13,8 +54,10 @@ const Root = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsWrapperProps }>(({ ownerState }) => ({
   display: 'flex',
-  flexDirection: ownerState.direction === 'vertical' ? 'row' : 'column',
+  flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
   flex: 1,
+  justifyContent: 'center',
+  alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
 }));
 
 /**

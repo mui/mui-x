@@ -15,3 +15,4 @@ export {
   piecewiseColorLegendClasses,
 } from './piecewiseColorLegendClasses';
 export { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
+export * from './legend.types';
