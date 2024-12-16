@@ -30,6 +30,10 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
+import {
+  EnhancedPickersDay,
+  EnhancedPickersDayProps,
+} from '@mui/x-date-pickers/EnhancedPickersDay';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   DateRangeCalendarClasses,
@@ -75,6 +79,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
   slot: 'Container',
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
+  zIndex: 1,
   '&:not(:last-of-type)': {
     borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -211,6 +216,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     view: inView,
     openTo,
     onViewChange,
+    daySlot,
     ...other
   } = props;
 
@@ -457,54 +463,98 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
     },
   );
 
+  const getOriginalDaySlotProps = (dayOwnerState) => {
+    const { day, isDaySelected } = dayOwnerState;
+    const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
+    const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
+    const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
+    const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
+    let datePosition: RangePosition | undefined;
+    if (isSelectedStartDate) {
+      datePosition = 'start';
+    } else if (isSelectedEndDate) {
+      datePosition = 'end';
+    }
+
+    const isStartOfHighlighting = isDragging
+      ? isStartOfRange(utils, day, draggingRange)
+      : isSelectedStartDate;
+    const isEndOfHighlighting = isDragging
+      ? isEndOfRange(utils, day, draggingRange)
+      : isSelectedEndDate;
+
+    return {
+      isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
+      isStartOfPreviewing: shouldHavePreview ? isStartOfRange(utils, day, previewingRange) : false,
+      isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
+      isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
+      isStartOfHighlighting,
+      isEndOfHighlighting: isDragging ? isEndOfRange(utils, day, draggingRange) : isSelectedEndDate,
+      onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
+      // apply selected styling to the dragging start or end day
+      isVisuallySelected:
+        isDaySelected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
+      'data-position': datePosition,
+      ...dragEventHandlers,
+      draggable: isElementDraggable ? true : undefined,
+      ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
+    };
+  };
+
+  const getEnhancedDaySlotProps = (dayOwnerState) => {
+    const { day } = dayOwnerState;
+    const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
+    const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
+    const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
+    const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
+    let datePosition: RangePosition | undefined;
+    if (isSelectedStartDate) {
+      datePosition = 'start';
+    } else if (isSelectedEndDate) {
+      datePosition = 'end';
+    }
+
+    const isStartOfSelectedRange = isDragging
+      ? isStartOfRange(utils, day, draggingRange)
+      : isSelectedStartDate;
+    const isEndOfSelectedRange = isDragging
+      ? isEndOfRange(utils, day, draggingRange)
+      : isSelectedEndDate;
+
+    const isStartOfPreviewing = shouldHavePreview
+      ? isStartOfRange(utils, day, previewingRange)
+      : false;
+    const isEndOfPreviewing = shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false;
+    return {
+      isStartOfPreviewing,
+      isEndOfPreviewing,
+      isPreviewing: shouldHavePreview
+        ? isWithinRange(utils, day, previewingRange) && (!isStartOfPreviewing || !isEndOfPreviewing)
+        : false,
+      isStartOfSelectedRange,
+      isEndOfSelectedRange,
+      isWithinSelectedRange:
+        isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange) &&
+        !isStartOfSelectedRange &&
+        !isEndOfSelectedRange,
+      onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
+      // apply selected styling to the dragging start or end day
+      isDragSelected: isDragging && (isStartOfSelectedRange || isEndOfSelectedRange),
+      'data-position': datePosition,
+      ...dragEventHandlers,
+      draggable: isElementDraggable ? true : undefined,
+      ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
+    };
+  };
+
   const slotsForDayCalendar = {
-    day: DateRangePickerDay,
+    day: daySlot === 'original' ? DateRangePickerDay : EnhancedPickersDay,
     ...slots,
   } as DayCalendarSlots;
 
   const slotPropsForDayCalendar = {
     ...slotProps,
-    day: (dayOwnerState) => {
-      const { day, isDaySelected } = dayOwnerState;
-      const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
-      const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
-      const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
-      const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
-      let datePosition: RangePosition | undefined;
-      if (isSelectedStartDate) {
-        datePosition = 'start';
-      } else if (isSelectedEndDate) {
-        datePosition = 'end';
-      }
-
-      const isStartOfHighlighting = isDragging
-        ? isStartOfRange(utils, day, draggingRange)
-        : isSelectedStartDate;
-      const isEndOfHighlighting = isDragging
-        ? isEndOfRange(utils, day, draggingRange)
-        : isSelectedEndDate;
-
-      return {
-        isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
-        isStartOfPreviewing: shouldHavePreview
-          ? isStartOfRange(utils, day, previewingRange)
-          : false,
-        isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
-        isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
-        isStartOfHighlighting,
-        isEndOfHighlighting: isDragging
-          ? isEndOfRange(utils, day, draggingRange)
-          : isSelectedEndDate,
-        onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
-        // apply selected styling to the dragging start or end day
-        isVisuallySelected:
-          isDaySelected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
-        'data-position': datePosition,
-        ...dragEventHandlers,
-        draggable: isElementDraggable ? true : undefined,
-        ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
-      };
-    },
+    day: daySlot === 'original' ? getOriginalDaySlotProps : getEnhancedDaySlotProps,
   } as DayCalendarSlotProps;
 
   const calendarMonths = React.useMemo(

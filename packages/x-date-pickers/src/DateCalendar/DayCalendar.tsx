@@ -235,6 +235,7 @@ const PickersCalendarWeek = styled('div', {
   overridesResolver: (_, styles) => styles.weekContainer,
 })({
   margin: `${DAY_MARGIN}px 0`,
+  gap: `${2 * DAY_MARGIN}px`,
   display: 'flex',
   justifyContent: 'center',
 });
@@ -256,6 +257,7 @@ function WrappedDay({
   isDateDisabled: (date: PickerValidDate | null) => boolean;
   currentMonthNumber: number;
   isViewFocused: boolean;
+  dayOfWeek: number;
 }) {
   const {
     disabled,
@@ -643,6 +645,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
                     isViewFocused={internalHasFocus}
+                    dayOfWeek={dayIndex + 1}
                     // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
                     aria-colindex={dayIndex + 1}
                   />

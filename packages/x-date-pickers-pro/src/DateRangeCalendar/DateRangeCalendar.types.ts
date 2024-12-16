@@ -141,6 +141,7 @@ export interface DateRangeCalendarProps
    * @default ['start', 'end']
    */
   availableRangePositions?: RangePosition[];
+  daySlot?: 'original' | 'enhanced';
 }
 
 export interface DateRangeCalendarOwnerState extends PickerOwnerState {

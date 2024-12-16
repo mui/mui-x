@@ -59,6 +59,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
     calendars: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
+    daySlot: 'enhanced',
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,
