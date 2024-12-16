@@ -63,7 +63,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         rowBufferPx={0}
         initialState={{
           detailPanel: {
-            expandedRowIds: [0, 1],
+            expandedRowIds: new Set([0, 1]),
           },
         }}
       />,
@@ -173,7 +173,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         rowHeight={rowHeight}
         initialState={{
           detailPanel: {
-            expandedRowIds: [0, 1],
+            expandedRowIds: new Set([0, 1]),
           },
         }}
       />,
@@ -194,7 +194,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         pagination
         pageSizeOptions={[1]}
         initialState={{
-          detailPanel: { expandedRowIds: [0] },
+          detailPanel: { expandedRowIds: new Set([0]) },
           pagination: { paginationModel: { pageSize: 1 } },
         }}
       />,
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         columnHeaderHeight={columnHeaderHeight}
         initialState={{
           detailPanel: {
-            expandedRowIds: [0],
+            expandedRowIds: new Set([0]),
           },
         }}
         hideFooter
@@ -244,7 +244,7 @@ describe('<DataGridPro /> - Detail panel', () => {
           getDetailPanelContent={() => <div />}
           initialState={{
             detailPanel: {
-              expandedRowIds: [0],
+              expandedRowIds: new Set([0]),
             },
           }}
           hideFooter
@@ -508,10 +508,13 @@ describe('<DataGridPro /> - Detail panel', () => {
       return <div data-testid="detail-panel-content">{counter}</div>;
     }
     const { setProps } = render(
-      <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
+      <TestCase
+        getDetailPanelContent={() => <DetailPanel />}
+        detailPanelExpandedRowIds={new Set([0])}
+      />,
     );
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
-    setProps({ detailPanelExpandedRowIds: [1] });
+    setProps({ detailPanelExpandedRowIds: new Set([1]) });
     expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
@@ -548,13 +551,15 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([0]);
+      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([0]));
       fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([0, 1]);
+      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(
+        new Set([0, 1]),
+      );
       fireEvent.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([1]);
+      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([1]));
       fireEvent.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([]);
+      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
     });
 
     it('should not change the open detail panels when called while detailPanelsExpandedRowIds is the same', () => {
@@ -562,13 +567,13 @@ describe('<DataGridPro /> - Detail panel', () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-          detailPanelExpandedRowIds={[0]}
+          detailPanelExpandedRowIds={new Set([0])}
           onDetailPanelExpandedRowIdsChange={handleDetailPanelsExpandedRowIdsChange}
         />,
       );
       expect(screen.getByText('Row 0')).not.to.equal(null);
       fireEvent.click(screen.getByRole('button', { name: 'Collapse' }));
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([]);
+      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
       expect(screen.getByText('Row 0')).not.to.equal(null);
     });
   });
@@ -578,7 +583,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-          detailPanelExpandedRowIds={[0, 1]}
+          detailPanelExpandedRowIds={new Set([0, 1])}
         />,
       );
       expect(screen.queryByText('Row 0')).not.to.equal(null);
@@ -590,7 +595,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-          detailPanelExpandedRowIds={[0]}
+          detailPanelExpandedRowIds={new Set([0])}
         />,
       );
       expect(screen.queryByText('Row 0')).not.to.equal(null);
@@ -604,7 +609,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-          detailPanelExpandedRowIds={[0, 0]}
+          detailPanelExpandedRowIds={new Set([0, 0])}
         />,
       );
       expect(screen.queryAllByText('Row 0').length).to.equal(1);
@@ -645,18 +650,18 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
 
     describe('getExpandedDetailPanels', () => {
-      it('should return an array of ids', () => {
+      it('should return a set of ids', () => {
         render(
           <TestCase
             getDetailPanelContent={() => <div>Detail</div>}
             initialState={{
               detailPanel: {
-                expandedRowIds: [0, 1],
+                expandedRowIds: new Set([0, 1]),
               },
             }}
           />,
         );
-        act(() => expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal([0, 1]));
+        act(() => expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal(new Set([0, 1])));
       });
     });
 
@@ -667,7 +672,7 @@ describe('<DataGridPro /> - Detail panel', () => {
             getDetailPanelContent={({ id }) => <div>Row {id}</div>}
             initialState={{
               detailPanel: {
-                expandedRowIds: [0],
+                expandedRowIds: new Set([0]),
               },
             }}
           />,
@@ -675,7 +680,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 0')).not.to.equal(null);
         expect(screen.queryByText('Row 1')).to.equal(null);
         expect(screen.queryByText('Row 2')).to.equal(null);
-        act(() => apiRef.current.setExpandedDetailPanels([1, 2]));
+        act(() => apiRef.current.setExpandedDetailPanels(new Set([1, 2])));
         expect(screen.queryByText('Row 0')).to.equal(null);
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);
