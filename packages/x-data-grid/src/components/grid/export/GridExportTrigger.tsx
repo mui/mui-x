@@ -10,7 +10,7 @@ import {
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../../models/gridExport';
 import type { GridSlotProps } from '../../../models';
 
-export type GridExportTriggerProps = Omit<GridSlotProps['baseButton'], 'className'> & {
+export type GridExportTriggerProps = GridSlotProps['baseButton'] & {
   /**
    * A function to customize rendering of the component.
    */

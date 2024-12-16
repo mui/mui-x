@@ -1,18 +1,18 @@
 /* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ButtonProps } from '@mui/material/Button';
 import {
   GridCsvExportOptions,
   GridPrintExportOptions,
   useGridComponentRenderer,
   RenderProp,
+  GridSlotProps,
 } from '@mui/x-data-grid';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridExcelExportOptions } from '../../../hooks/features/export';
 
-export type GridExportTriggerProps = ButtonProps & {
+export type GridExportTriggerProps = GridSlotProps['baseButton'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -80,15 +80,11 @@ const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerP
       onClick?.(event);
     };
 
-    return useGridComponentRenderer({
-      render,
-      defaultElement: rootProps.slots.baseButton,
-      props: {
-        ref,
-        onClick: handleClick,
-        ...rootProps.slotProps?.baseButton,
-        ...other,
-      },
+    return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+      ref,
+      onClick: handleClick,
+      ...rootProps.slotProps?.baseButton,
+      ...other,
     });
   },
 );
