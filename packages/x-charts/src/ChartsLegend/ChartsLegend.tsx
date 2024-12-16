@@ -44,6 +44,10 @@ const RootElement = styled('ul', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: ChartsLegendProps }>(({ ownerState, theme }) => ({
+  ...theme.typography.caption,
+  color: (theme.vars || theme).palette.text.primary,
+  lineHeight: undefined,
+
   display: 'flex',
   flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
   alignItems: ownerState.direction === 'vertical' ? undefined : 'center',

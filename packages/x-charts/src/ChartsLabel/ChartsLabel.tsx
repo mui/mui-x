@@ -21,12 +21,7 @@ const Root = styled('span', {
   name: 'MuiChartsLabel',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ChartsLabelProps }>(({ theme }) => ({
-  ...theme.typography.caption,
-  color: (theme.vars || theme).palette.text.primary,
-  lineHeight: undefined,
-  display: 'flex',
-}));
+})<{ ownerState: ChartsLabelProps }>(() => ({}));
 
 /**
  * Generates the label mark for the tooltip and legend.

@@ -101,6 +101,10 @@ const RootElement = styled('ul', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: Pick<ContinuousColorLegendProps, 'direction'> }>(({ theme }) => ({
+  ...theme.typography.caption,
+  color: (theme.vars || theme).palette.text.primary,
+  lineHeight: undefined,
+
   display: 'grid',
   flexShrink: 0,
   gap: theme.spacing(0.5),

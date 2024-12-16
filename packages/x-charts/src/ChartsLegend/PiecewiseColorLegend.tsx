@@ -65,6 +65,10 @@ const RootElement = styled('ul', {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
   return {
+    ...theme.typography.caption,
+    color: (theme.vars || theme).palette.text.primary,
+    lineHeight: undefined,
+
     display: 'flex',
     flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
     flexShrink: 0,
