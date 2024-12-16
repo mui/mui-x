@@ -621,6 +621,9 @@
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>."
     },
+    "rowSpanning": {
+      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
+    },
     "scrollbarSize": {
       "description": "Override the height/width of the Data Grid inner scrollbar."
     },
@@ -666,9 +669,6 @@
     },
     "unstable_listView": {
       "description": "If <code>true</code>, displays the data in a list view. Use in combination with <code>unstable_listColumn</code>."
-    },
-    "unstable_rowSpanning": {
-      "description": "If <code>true</code>, the Data Grid will auto span the cells over the rows having the same value."
     },
     "virtualizeColumnsWithAutoRowHeight": {
       "description": "If <code>true</code>, the Data Grid enables column virtualization when <code>getRowHeight</code> is set to <code>() =&gt; &#39;auto&#39;</code>. By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly. For datasets with a large number of columns, this can cause performance issues. The downside of enabling this prop is that the row height will be estimated based the cells that are currently rendered, which can cause row height change when scrolling horizontally."

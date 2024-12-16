@@ -750,6 +750,11 @@ DataGridRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
+   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
+   * @default false
+   */
+  rowSpanning: PropTypes.bool,
+  /**
    * Override the height/width of the Data Grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
@@ -800,11 +805,6 @@ DataGridRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * If `true`, the Data Grid will auto span the cells over the rows having the same value.
-   * @default false
-   */
-  unstable_rowSpanning: PropTypes.bool,
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.

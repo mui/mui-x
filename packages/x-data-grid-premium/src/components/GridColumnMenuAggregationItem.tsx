@@ -1,8 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
@@ -67,38 +65,36 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
   return (
-    <rootProps.slots.baseMenuItem disableRipple>
-      <ListItemIcon>
-        <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>
-        <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
-          <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <rootProps.slots.baseSelect
-            labelId={`${id}-label`}
-            id={`${id}-input`}
-            value={selectedAggregationRule}
-            label={label}
-            color="primary"
-            onChange={handleAggregationItemChange as any}
-            onBlur={(event) => event.stopPropagation()}
-            fullWidth
-          >
-            <rootProps.slots.baseMenuItem value="">...</rootProps.slots.baseMenuItem>
-            {availableAggregationFunctions.map((aggFunc) => (
-              <rootProps.slots.baseMenuItem key={aggFunc} value={aggFunc}>
-                {getAggregationFunctionLabel({
-                  apiRef,
-                  aggregationRule: {
-                    aggregationFunctionName: aggFunc,
-                    aggregationFunction: rootProps.aggregationFunctions[aggFunc],
-                  },
-                })}
-              </rootProps.slots.baseMenuItem>
-            ))}
-          </rootProps.slots.baseSelect>
-        </FormControl>
-      </ListItemText>
+    <rootProps.slots.baseMenuItem
+      inert
+      iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
+    >
+      <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
+        <InputLabel id={`${id}-label`}>{label}</InputLabel>
+        <rootProps.slots.baseSelect
+          labelId={`${id}-label`}
+          id={`${id}-input`}
+          value={selectedAggregationRule}
+          label={label}
+          color="primary"
+          onChange={handleAggregationItemChange as any}
+          onBlur={(event) => event.stopPropagation()}
+          fullWidth
+        >
+          <rootProps.slots.baseMenuItem value="">...</rootProps.slots.baseMenuItem>
+          {availableAggregationFunctions.map((aggFunc) => (
+            <rootProps.slots.baseMenuItem key={aggFunc} value={aggFunc}>
+              {getAggregationFunctionLabel({
+                apiRef,
+                aggregationRule: {
+                  aggregationFunctionName: aggFunc,
+                  aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+                },
+              })}
+            </rootProps.slots.baseMenuItem>
+          ))}
+        </rootProps.slots.baseSelect>
+      </FormControl>
     </rootProps.slots.baseMenuItem>
   );
 }
