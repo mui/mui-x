@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export interface ToolbarSeparatorProps extends React.ComponentPropsWithRef<'div'> {}
+export interface ToolbarSeparatorProps extends React.ComponentPropsWithRef<'div'> {
+  sx?: SxProps<Theme>;
+}
 
 type OwnerState = DataGridProcessedProps;
 

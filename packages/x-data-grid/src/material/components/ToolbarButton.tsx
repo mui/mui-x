@@ -12,6 +12,11 @@ export interface ToolbarButtonProps extends MUIButtonBaseProps {
    * @default 'standard'
    */
   color?: 'standard' | 'primary';
+  /**
+   * If `true`, the base button will have a keyboard focus ripple.
+   * @default true
+   */
+  disableRipple?: boolean;
 }
 
 type OwnerState = Pick<ToolbarButtonProps, 'color'> & DataGridProcessedProps;
@@ -37,6 +42,7 @@ const StyledToolbarButton = styled(MUIButtonBase, {
   borderRadius: (theme.vars || theme).shape.borderRadius,
   padding: 7,
   height: 36,
+  minWidth: 36,
   fontSize: theme.typography.pxToRem(13),
   lineHeight: 'normal',
   color: (theme.vars || theme).palette.action.active,
@@ -77,6 +83,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         color={color}
         className={classes.button}
         ownerState={ownerState}
+        focusRipple
         {...other}
       />
     );

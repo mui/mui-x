@@ -33,7 +33,7 @@ export default function GridToolbar() {
 
         <GridToolbarQuickFilter sx={{ ml: 'auto', mr: 0.25 }} />
 
-        <Grid.Toolbar.ToggleButtonGroup value={view} size="small" color="primary">
+        <Grid.Toolbar.ToggleButtonGroup value={view} color="primary">
           <Grid.Toolbar.ToggleButton
             value="grid"
             aria-label="Grid view"

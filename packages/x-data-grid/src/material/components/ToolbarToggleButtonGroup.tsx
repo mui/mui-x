@@ -7,7 +7,13 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export interface ToolbarToggleButtonGroupProps extends MUIToggleButtonGroupProps {}
+export interface ToolbarToggleButtonGroupProps extends MUIToggleButtonGroupProps {
+  /**
+   * The size of the component.
+   * @default 'small'
+   */
+  size?: 'small' | 'medium' | 'large';
+}
 
 type OwnerState = DataGridProcessedProps;
 
@@ -22,10 +28,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function ToolbarToggleButtonGroup(props: ToolbarToggleButtonGroupProps) {
+  const { size = 'small', ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
-  return <MUIToggleButtonGroup className={classes.toggleButtonGroup} {...props} />;
+  return <MUIToggleButtonGroup className={classes.toggleButtonGroup} size={size} {...other} />;
 }
 
 export { ToolbarToggleButtonGroup };

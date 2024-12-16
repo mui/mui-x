@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export interface ToolbarProps extends React.ComponentPropsWithRef<'div'> {}
+export interface ToolbarProps extends React.ComponentPropsWithRef<'div'> {
+  sx?: SxProps<Theme>;
+}
 
 type OwnerState = DataGridProcessedProps;
 
@@ -33,15 +35,10 @@ const StyledToolbar = styled('div', {
 }));
 
 const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
-  const { children, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
-  return (
-    <StyledToolbar ref={ref} className={classes.root} ownerState={rootProps} {...other}>
-      {children}
-    </StyledToolbar>
-  );
+  return <StyledToolbar ref={ref} className={classes.root} ownerState={rootProps} {...props} />;
 });
 
 export { Toolbar };

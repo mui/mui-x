@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MUIToggleButton, {
   ToggleButtonProps as MUIToggleButtonProps,
+  toggleButtonClasses,
 } from '@mui/material/ToggleButton';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -27,7 +28,10 @@ const StyledToolbarToggleButton = styled(MUIToggleButton, {
   slot: 'ToggleButton',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   gap: theme.spacing(1),
-  height: 36,
+  [`&.${toggleButtonClasses.sizeSmall}`]: {
+    minWidth: 36,
+    height: 36,
+  },
 }));
 
 const ToolbarToggleButton = React.forwardRef<HTMLButtonElement, ToolbarToggleButtonProps>(
