@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { BadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { MenuListProps } from '@mui/material/MenuList';
-import type { MenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
@@ -37,6 +36,19 @@ import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/
 type DividerProps = {};
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
+
+type MenuItemProps = {
+  autoFocus?: boolean;
+  children: React.ReactNode;
+  /** For items that aren't interactive themselves (but may contain an interactive widget) */
+  inert?: boolean;
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+  iconStart?: React.ReactNode;
+  iconEnd?: React.ReactNode;
+  selected?: boolean;
+  value?: number | string | readonly string[];
+};
 
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}
