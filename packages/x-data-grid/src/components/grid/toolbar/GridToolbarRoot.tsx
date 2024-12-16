@@ -93,15 +93,12 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
       [registerItem, unregisterItem, focusableItemId, onItemKeyDown, orientation],
     );
 
-    const element = useGridComponentRenderer({
-      render,
-      defaultElement: rootProps.slots.baseToolbar,
-      props: {
-        ref,
-        role: 'toolbar',
-        'aria-orientation': orientation,
-        ...other,
-      },
+    const element = useGridComponentRenderer(rootProps.slots.baseToolbar, render, {
+      ref,
+      role: 'toolbar',
+      'aria-orientation': orientation,
+      ...rootProps.slotProps?.baseToolbar,
+      ...other,
     });
 
     React.useEffect(() => {

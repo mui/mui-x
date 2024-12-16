@@ -65,15 +65,11 @@ const GridExportTrigger = React.forwardRef<HTMLButtonElement, GridExportTriggerP
       onClick?.(event);
     };
 
-    return useGridComponentRenderer({
-      render,
-      defaultElement: rootProps.slots.baseButton,
-      props: {
-        ref,
-        onClick: handleClick,
-        ...rootProps.slotProps?.baseButton,
-        ...other,
-      },
+    return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+      ref,
+      onClick: handleClick,
+      ...rootProps.slotProps?.baseButton,
+      ...other,
     });
   },
 );

@@ -55,7 +55,7 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
     const state = { open };
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
-    const toggleColumnsPanel = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (open) {
         apiRef.current.hidePreferences();
       } else {
@@ -65,22 +65,22 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
       onClick?.(event);
     };
 
-    return useGridComponentRenderer({
+    return useGridComponentRenderer(
+      rootProps.slots.baseButton,
       render,
-      defaultElement: rootProps.slots.baseButton,
-      props: {
+      {
         ref,
         id: buttonId,
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
         'aria-controls': open ? panelId : undefined,
-        onClick: toggleColumnsPanel,
+        onClick: handleClick,
         className: resolvedClassName,
         ...rootProps.slotProps?.baseButton,
         ...other,
       },
       state,
-    });
+    );
   },
 );
 

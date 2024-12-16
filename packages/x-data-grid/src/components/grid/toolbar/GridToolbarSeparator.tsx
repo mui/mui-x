@@ -31,15 +31,12 @@ const GridToolbarSeparator = React.forwardRef<HTMLDivElement, GridToolbarSeparat
     const { orientation } = useGridToolbarRootContext();
     const rootProps = useGridRootProps();
 
-    return useGridComponentRenderer({
-      render,
-      defaultElement: rootProps.slots.baseToolbarSeparator,
-      props: {
-        ref,
-        role: 'separator',
-        'aria-orientation': orientation === 'horizontal' ? 'vertical' : 'vertical',
-        ...other,
-      },
+    return useGridComponentRenderer(rootProps.slots.baseToolbarSeparator, render, {
+      ref,
+      role: 'separator',
+      'aria-orientation': orientation === 'horizontal' ? 'vertical' : 'vertical',
+      ...rootProps.slotProps?.baseToolbarSeparator,
+      ...other,
     });
   },
 );

@@ -34,14 +34,11 @@ const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonP
     const handleRef = useForkRef(buttonRef, ref);
     const itemProps = useGridToolbarItem(buttonRef);
 
-    return useGridComponentRenderer({
-      render,
-      defaultElement: rootProps.slots.baseToolbarButton,
-      props: {
-        ref: handleRef,
-        ...itemProps,
-        ...other,
-      },
+    return useGridComponentRenderer(rootProps.slots.baseToolbarButton, render, {
+      ref: handleRef,
+      ...itemProps,
+      ...rootProps.slotProps?.baseToolbarButton,
+      ...other,
     });
   },
 );

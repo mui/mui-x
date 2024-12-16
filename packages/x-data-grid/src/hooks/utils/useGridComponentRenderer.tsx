@@ -11,13 +11,6 @@ export type RenderProp<State> =
   | ComponentRenderFn<React.HTMLAttributes<any>, State>
   | React.ReactElement;
 
-type GridComponentRendererOptions<Props, State> = {
-  defaultElement: keyof JSX.IntrinsicElements | React.ComponentType<Props>;
-  props: Props;
-  state?: State;
-  render?: RenderProp<State>;
-};
-
 /**
  * Resolves the rendering logic for a component.
  * Handles three scenarios:
@@ -30,12 +23,12 @@ type GridComponentRendererOptions<Props, State> = {
 export function useGridComponentRenderer<
   Props extends React.HTMLAttributes<any>,
   State extends Record<string, any>,
->({
-  defaultElement,
-  props,
-  state = {} as State,
-  render,
-}: GridComponentRendererOptions<Props, State>) {
+>(
+  defaultElement: keyof JSX.IntrinsicElements | React.ComponentType<Props>,
+  render: RenderProp<State> | undefined,
+  props: Props,
+  state: State = {} as State,
+) {
   if (typeof render === 'function') {
     return render(props, state);
   }

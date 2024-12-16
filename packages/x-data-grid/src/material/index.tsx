@@ -93,8 +93,7 @@ const iconSlots: GridIconSlotsComponent = {
   columnReorderIcon: GridDragIcon,
 };
 
-const baseSlots: GridBaseSlots & GridIconSlotsComponent = {
-  ...iconSlots,
+const baseSlots: GridBaseSlots = {
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
   baseDivider: MUIDivider,

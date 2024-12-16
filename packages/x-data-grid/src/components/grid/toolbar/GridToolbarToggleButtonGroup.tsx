@@ -31,13 +31,10 @@ const GridToolbarToggleButtonGroup = React.forwardRef<
   const { render, ...other } = props;
   const rootProps = useGridRootProps();
 
-  return useGridComponentRenderer({
-    render,
-    defaultElement: rootProps.slots.baseToolbarToggleButtonGroup,
-    props: {
-      ref,
-      ...other,
-    },
+  return useGridComponentRenderer(rootProps.slots.baseToolbarToggleButtonGroup, render, {
+    ref,
+    ...rootProps.slotProps?.baseToolbarToggleButtonGroup,
+    ...other,
   });
 });
 

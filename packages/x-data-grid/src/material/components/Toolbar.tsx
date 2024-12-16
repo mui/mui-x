@@ -5,7 +5,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface ToolbarProps extends React.ComponentPropsWithRef<'div'> {}
 
 type OwnerState = DataGridProcessedProps;
 
