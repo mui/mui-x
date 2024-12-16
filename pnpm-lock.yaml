@@ -1104,6 +1104,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+      '@formkit/auto-animate':
+        specifier: ^0.8.1
+        version: 0.8.2
       '@mui/utils':
         specifier: ^5.16.6 || ^6.0.0
         version: 5.16.8(@types/react@18.3.14)(react@18.3.1)
