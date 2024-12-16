@@ -21,7 +21,8 @@ type LabelFormatter = (params: { value: number | Date; formattedValue: string })
 
 export interface ContinuousColorLegendProps
   extends ColorLegendSelector,
-    AppendKeys<Pick<ChartsLabelGradientProps, 'reverse' | 'rotate'>, 'gradient'> {
+    AppendKeys<Pick<ChartsLabelGradientProps, 'reverse' | 'rotate'>, 'gradient'>,
+    Pick<ChartsLabelGradientProps, 'thickness'> {
   /**
    * The direction of the legend layout.
    * @default 'horizontal'
@@ -106,6 +107,7 @@ const RootElement = styled('ul', {
   listStyleType: 'none',
   paddingInlineStart: 0,
   marginBlock: theme.spacing(1),
+  marginInline: theme.spacing(1),
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
@@ -189,6 +191,7 @@ const ContinuousColorLegend = consumeThemeProps(
       gradientId,
       labelPosition,
       ref,
+      thickness,
       ...other
     } = props;
 
@@ -232,6 +235,7 @@ const ContinuousColorLegend = consumeThemeProps(
             direction={direction}
             rotate={rotateGradient}
             reverse={reverseGradient}
+            thickness={thickness}
             gradientId={gradientId ?? generateGradientId(axisItem.id, axisDirection!)}
           />
         </li>
@@ -303,6 +307,11 @@ ContinuousColorLegend.propTypes = {
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotateGradient: PropTypes.bool,
+  /**
+   * The thickness of the gradient
+   * @default 12
+   */
+  thickness: PropTypes.number,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

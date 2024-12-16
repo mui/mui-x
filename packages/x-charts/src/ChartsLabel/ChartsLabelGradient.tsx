@@ -31,6 +31,11 @@ export interface ChartsLabelGradientProps {
    */
   rotate?: boolean;
   /**
+   * The thickness of the gradient
+   * @default 12
+   */
+  thickness?: number;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLabelGradientClasses>;
@@ -77,14 +82,14 @@ const Root = styled('div', {
     [`&.${labelGradientClasses.horizontal}`]: {
       width: '100%',
       [`.${labelGradientClasses.mask}`]: {
-        height: 12,
+        height: ownerState.thickness,
         width: '100%',
       },
     },
     [`&.${labelGradientClasses.vertical}`]: {
       height: '100%',
       [`.${labelGradientClasses.mask}`]: {
-        width: 12,
+        width: ownerState.thickness,
         height: '100%',
         '> svg': {
           height: '100%',
@@ -106,11 +111,13 @@ const ChartsLabelGradient = consumeThemeProps(
   {
     defaultProps: {
       direction: 'horizontal',
+      thickness: 12,
     },
     classesResolver: useUtilityClasses,
   },
   function ChartsLabelGradient(props: ChartsLabelGradientProps) {
-    const { gradientId, direction, classes, className, rotate, reverse, ref, ...other } = props;
+    const { gradientId, direction, classes, className, rotate, reverse, ref, thickness, ...other } =
+      props;
 
     return (
       <Root
@@ -158,6 +165,11 @@ ChartsLabelGradient.propTypes = {
    * Useful for linear gradients that are not in the correct orientation.
    */
   rotate: PropTypes.bool,
+  /**
+   * The thickness of the gradient
+   * @default 12
+   */
+  thickness: PropTypes.number,
 } as any;
 
 export { ChartsLabelGradient };

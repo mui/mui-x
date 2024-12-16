@@ -51,6 +51,7 @@ const RootElement = styled('ul', {
   listStyleType: 'none',
   paddingInlineStart: 0,
   marginBlock: theme.spacing(1),
+  marginInline: theme.spacing(1),
   flexWrap: 'wrap',
   justifyContent: 'center',
   [`button.${legendClasses.series}`]: {
