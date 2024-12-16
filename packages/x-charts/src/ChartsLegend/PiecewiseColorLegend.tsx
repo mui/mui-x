@@ -69,6 +69,8 @@ const RootElement = styled('ul', {
     gap: theme.spacing(0.5),
     listStyleType: 'none',
     paddingInlineStart: 0,
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
     width: 'max-content',
     '> button': {
       // Reset button styles

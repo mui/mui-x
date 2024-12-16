@@ -103,6 +103,8 @@ const RootElement = styled('ul', {
   gap: theme.spacing(0.5),
   listStyleType: 'none',
   paddingInlineStart: 0,
+  marginBlockStart: 0,
+  marginBlockEnd: 0,
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',

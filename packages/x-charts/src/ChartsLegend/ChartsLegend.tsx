@@ -50,6 +50,8 @@ const RootElement = styled('ul', {
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,
+  marginBlockStart: 0,
+  marginBlockEnd: 0,
   flexWrap: 'wrap',
   justifyContent: 'center',
   '> button': {
