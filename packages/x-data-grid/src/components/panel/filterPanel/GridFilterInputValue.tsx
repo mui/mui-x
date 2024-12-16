@@ -47,7 +47,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   } = props;
 
   const filterTimeout = useTimeout();
-  const [filterValueState, setFilterValueState] = React.useState(
+  const [filterValueState, setFilterValueState] = React.useState<string | number | undefined>(
     sanitizeFilterItemValue(item.value, type),
   );
   const [applying, setIsApplying] = React.useState(false);
