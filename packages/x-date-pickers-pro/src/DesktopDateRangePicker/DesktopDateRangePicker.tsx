@@ -58,7 +58,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
-    daySlot: 'enhanced',
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,

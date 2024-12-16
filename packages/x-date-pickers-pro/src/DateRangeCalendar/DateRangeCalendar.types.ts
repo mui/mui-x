@@ -88,6 +88,11 @@ export interface ExportedDateRangeCalendarProps
    * @default false
    */
   disableDragEditing?: boolean;
+  /**
+   * If `enhanced`, day slot will use the v8 version.
+   * @default original
+   */
+  daySlot?: 'original' | 'enhanced';
 }
 
 export interface DateRangeCalendarProps

@@ -30,10 +30,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { PickerValidDate } from '@mui/x-date-pickers/models';
-import {
-  EnhancedPickersDay,
-  EnhancedPickersDayProps,
-} from '@mui/x-date-pickers/EnhancedPickersDay';
+import { EnhancedPickersDay } from '@mui/x-date-pickers/EnhancedPickersDay';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   DateRangeCalendarClasses,
@@ -529,7 +526,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       isStartOfPreviewing,
       isEndOfPreviewing,
       isPreviewing: shouldHavePreview
-        ? isWithinRange(utils, day, previewingRange) && (!isStartOfPreviewing || !isEndOfPreviewing)
+        ? isWithinRange(utils, day, previewingRange) && !isStartOfPreviewing && !isEndOfPreviewing
         : false,
       isStartOfSelectedRange,
       isEndOfSelectedRange,

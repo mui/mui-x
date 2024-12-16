@@ -46,7 +46,6 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker(
     displayStaticWrapperAs,
     views: ['day'] as const,
     openTo: 'day' as const,
-    daySlot: 'enhanced',
     calendars: defaultizedProps.calendars ?? (displayStaticWrapperAs === 'mobile' ? 1 : 2),
     slotProps: {
       ...defaultizedProps.slotProps,
