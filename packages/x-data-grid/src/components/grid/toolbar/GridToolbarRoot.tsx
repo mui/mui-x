@@ -9,7 +9,7 @@ import { GridToolbarRootContext } from './GridToolbarRootContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import type { GridSlotProps } from '../../../models';
 
-export type GridToolbarRootProps = GridSlotProps['baseToolbarRoot'] & {
+export type GridToolbarRootProps = GridSlotProps['baseToolbar'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -95,7 +95,7 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
 
     const element = useGridComponentRenderer({
       render,
-      defaultElement: rootProps.slots.baseToolbarRoot,
+      defaultElement: rootProps.slots.baseToolbar,
       props: {
         ref,
         role: 'toolbar',

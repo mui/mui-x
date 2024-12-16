@@ -10,7 +10,7 @@ import {
 import { useGridToolbarItem } from './useGridToolbarItem';
 import type { GridSlotProps } from '../../../models';
 
-export type GridToolbarToggleButtonProps = GridSlotProps['baseToggleButton'] & {
+export type GridToolbarToggleButtonProps = GridSlotProps['baseToolbarToggleButton'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -36,7 +36,7 @@ const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarT
 
     return useGridComponentRenderer({
       render,
-      defaultElement: rootProps.slots.baseToggleButton,
+      defaultElement: rootProps.slots.baseToolbarToggleButton,
       props: {
         ref: handleRef,
         ...itemProps,

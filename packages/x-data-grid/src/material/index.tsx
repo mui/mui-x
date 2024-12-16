@@ -16,9 +16,6 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
-import MUIToggleButton from '@mui/material/ToggleButton';
-import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { styled } from '@mui/material/styles';
 
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -52,6 +49,11 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
+import { Toolbar } from './components/Toolbar';
+import { ToolbarSeparator } from './components/ToolbarSeparator';
+import { ToolbarButton } from './components/ToolbarButton';
+import { ToolbarToggleButton } from './components/ToolbarToggleButton';
+import { ToolbarToggleButtonGroup } from './components/ToolbarToggleButtonGroup';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -91,28 +93,6 @@ const iconSlots: GridIconSlotsComponent = {
   columnReorderIcon: GridDragIcon,
 };
 
-const BaseToolbarRoot = styled('div')(({ theme }) => ({
-  flex: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  padding: theme.spacing(0.5),
-  height: 45,
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const BaseToolbarSeparator = styled('div')(({ theme }) => ({
-  height: 24,
-  width: 1,
-  margin: theme.spacing(0.25),
-  backgroundColor: theme.palette.divider,
-}));
-
-const BaseToolbarButton = styled(MUIButton)(({ theme }) => ({
-  minWidth: 0,
-  color: theme.palette.action.active,
-}));
-
 const baseSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
   baseBadge: MUIBadge,
@@ -131,11 +111,11 @@ const baseSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseInputLabel: MUIInputLabel,
   baseSelectOption: MUISelectOption,
   baseChip: MUIChip,
-  baseToggleButton: MUIToggleButton,
-  baseToggleButtonGroup: MUIToggleButtonGroup,
-  baseToolbarRoot: BaseToolbarRoot,
-  baseToolbarButton: BaseToolbarButton,
-  baseToolbarSeparator: BaseToolbarSeparator,
+  baseToolbar: Toolbar,
+  baseToolbarButton: ToolbarButton,
+  baseToolbarSeparator: ToolbarSeparator,
+  baseToolbarToggleButton: ToolbarToggleButton,
+  baseToolbarToggleButtonGroup: ToolbarToggleButtonGroup,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {

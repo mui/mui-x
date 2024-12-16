@@ -1,19 +1,19 @@
 /* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
+import type { GridSlotProps } from '../../../models';
 
-export interface GridToolbarToggleButtonGroupProps extends ToggleButtonGroupProps {
+export type GridToolbarToggleButtonGroupProps = GridSlotProps['baseToolbarToggleButtonGroup'] & {
   /**
    * A function to customize rendering of the component.
    */
   render?: RenderProp<{}>;
-}
+};
 
 /**
  * Demos:
@@ -33,7 +33,7 @@ const GridToolbarToggleButtonGroup = React.forwardRef<
 
   return useGridComponentRenderer({
     render,
-    defaultElement: rootProps.slots.baseToggleButtonGroup,
+    defaultElement: rootProps.slots.baseToolbarToggleButtonGroup,
     props: {
       ref,
       ...other,

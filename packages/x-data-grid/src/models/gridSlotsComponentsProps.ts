@@ -18,6 +18,7 @@ import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
 import type { ToggleButtonProps } from '@mui/material/ToggleButton';
 import type { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
+import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -70,8 +71,6 @@ export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
-export interface BaseToggleButtonPropsOverrides {}
-export interface BaseToggleButtonGroupPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -91,9 +90,11 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
-export interface BaseToolbarRootPropsOverrides {}
-export interface BaseToolbarButtonPropsOverrides {}
+export interface BaseToolbarPropsOverrides {}
 export interface BaseToolbarSeparatorPropsOverrides {}
+export interface BaseToolbarButtonPropsOverrides {}
+export interface BaseToolbarToggleButtonPropsOverrides {}
+export interface BaseToolbarToggleButtonGroupPropsOverrides {}
 
 export interface GridSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -116,16 +117,16 @@ export interface GridSlotProps {
     value: any;
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
-  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
-  baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
-  baseToolbarRoot: MUIStyledCommonProps<Theme> &
+  baseToolbar: MUIStyledCommonProps<Theme> &
     React.ComponentPropsWithRef<'div'> &
-    BaseToolbarRootPropsOverrides;
-  baseToolbarButton: ButtonProps & BaseToolbarButtonPropsOverrides;
+    BaseToolbarPropsOverrides;
+  baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
   baseToolbarSeparator: MUIStyledCommonProps<Theme> &
     React.ComponentPropsWithRef<'div'> &
     BaseToolbarSeparatorPropsOverrides;
+  baseToolbarToggleButton: ToggleButtonProps & BaseToolbarToggleButtonPropsOverrides;
+  baseToolbarToggleButtonGroup: ToggleButtonGroupProps & BaseToolbarToggleButtonGroupPropsOverrides;
   cell: GridCellProps & CellPropsOverrides;
   columnHeaders: GridColumnHeadersProps;
   columnHeaderFilterIconButton: ColumnHeaderFilterIconButtonProps &

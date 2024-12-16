@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "color": { "description": "The color of the button." },
     "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {

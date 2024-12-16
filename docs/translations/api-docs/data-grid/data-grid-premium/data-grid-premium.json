@@ -1194,10 +1194,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the sort icon element"
     },
-    "toolbarButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar button element"
-    },
     "toolbarContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar container element"
@@ -1226,22 +1222,6 @@
     "toolbarPromptControlSendButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar prompt control send button element"
-    },
-    "toolbarRoot": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar root element"
-    },
-    "toolbarSeparator": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar separator element"
-    },
-    "toolbarToggleButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar toggle button element"
-    },
-    "toolbarToggleButtonGroup": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the toolbar toggle button group element"
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1293,11 +1273,11 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
-    "baseToggleButton": "The custom ToggleButton component used in the grid.",
-    "baseToggleButtonGroup": "The custom ToggleButtonGroup component used in the grid.",
+    "baseToolbar": "The custom Toolbar component used in the grid.",
     "baseToolbarButton": "The custom ToolbarButton component used in the grid.",
-    "baseToolbarRoot": "The custom ToolbarRoot component used in the grid.",
     "baseToolbarSeparator": "The custom ToolbarSeparator component used in the grid.",
+    "baseToolbarToggleButton": "The custom ToolbarToggleButton component used in the grid.",
+    "baseToolbarToggleButtonGroup": "The custom ToolbarToggleButtonGroup component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",

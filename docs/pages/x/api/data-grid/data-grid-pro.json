@@ -814,30 +814,33 @@
       "class": null
     },
     {
-      "name": "baseToggleButton",
-      "description": "The custom ToggleButton component used in the grid.",
-      "default": "ToggleButton",
-      "class": null
-    },
-    {
-      "name": "baseToggleButtonGroup",
-      "description": "The custom ToggleButtonGroup component used in the grid.",
-      "default": "ToggleButtonGroup",
-      "class": null
-    },
-    {
-      "name": "baseToolbarRoot",
-      "description": "The custom ToolbarRoot component used in the grid.",
-      "class": null
-    },
-    {
-      "name": "baseToolbarButton",
-      "description": "The custom ToolbarButton component used in the grid.",
+      "name": "baseToolbar",
+      "description": "The custom Toolbar component used in the grid.",
+      "default": "Toolbar",
       "class": null
     },
     {
       "name": "baseToolbarSeparator",
       "description": "The custom ToolbarSeparator component used in the grid.",
+      "default": "ToolbarSeparator",
+      "class": null
+    },
+    {
+      "name": "baseToolbarButton",
+      "description": "The custom ToolbarButton component used in the grid.",
+      "default": "ToolbarButton",
+      "class": null
+    },
+    {
+      "name": "baseToolbarToggleButton",
+      "description": "The custom ToolbarToggleButton component used in the grid.",
+      "default": "ToolbarToggleButton",
+      "class": null
+    },
+    {
+      "name": "baseToolbarToggleButtonGroup",
+      "description": "The custom ToolbarToggleButtonGroup component used in the grid.",
+      "default": "ToolbarToggleButtonGroup",
       "class": null
     },
     {
@@ -1821,12 +1824,6 @@
       "isGlobal": false
     },
     {
-      "key": "toolbarButton",
-      "className": "MuiDataGridPro-toolbarButton",
-      "description": "Styles applied to the toolbar button element.",
-      "isGlobal": false
-    },
-    {
       "key": "toolbarContainer",
       "className": "MuiDataGridPro-toolbarContainer",
       "description": "Styles applied to the toolbar container element.",
@@ -1866,30 +1863,6 @@
       "key": "toolbarPromptControlSendButton",
       "className": "MuiDataGridPro-toolbarPromptControlSendButton",
       "description": "Styles applied to the toolbar prompt control send button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarRoot",
-      "className": "MuiDataGridPro-toolbarRoot",
-      "description": "Styles applied to the toolbar root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarSeparator",
-      "className": "MuiDataGridPro-toolbarSeparator",
-      "description": "Styles applied to the toolbar separator element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarToggleButton",
-      "className": "MuiDataGridPro-toolbarToggleButton",
-      "description": "Styles applied to the toolbar toggle button element.",
-      "isGlobal": false
-    },
-    {
-      "key": "toolbarToggleButtonGroup",
-      "className": "MuiDataGridPro-toolbarToggleButtonGroup",
-      "description": "Styles applied to the toolbar toggle button group element.",
       "isGlobal": false
     },
     {

@@ -1,5 +1,12 @@
 {
   "props": {
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'inherit'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+      },
+      "default": "'inherit'"
+    },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "GridToolbarButton",

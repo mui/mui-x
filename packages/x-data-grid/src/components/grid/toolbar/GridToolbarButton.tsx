@@ -52,6 +52,19 @@ GridToolbarButton.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * The color of the button.
+   * @default 'inherit'
+   */
+  color: PropTypes.oneOf([
+    'error',
+    'info',
+    'inherit',
+    'primary',
+    'secondary',
+    'success',
+    'warning',
+  ]),
+  /**
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
