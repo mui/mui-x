@@ -1,6 +1,9 @@
+import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUIDivider from '@mui/material/Divider';
+import MUIListItemIcon from '@mui/material/ListItemIcon';
+import MUIListItemText from '@mui/material/ListItemText';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
@@ -47,6 +50,7 @@ import {
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
+import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
 
 const iconSlots: GridIconSlotsComponent = {
@@ -109,13 +113,13 @@ const BaseToolbarButton = styled(MUIButton)(({ theme }) => ({
   color: theme.palette.action.active,
 }));
 
-const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
+const baseSlots: GridBaseSlots & GridIconSlotsComponent = {
   ...iconSlots,
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
   baseDivider: MUIDivider,
   baseMenuList: MUIMenuList,
-  baseMenuItem: MUIMenuItem,
+  baseMenuItem: BaseMenuItem,
   baseTextField: MUITextField,
   baseFormControl: MUIFormControl,
   baseSelect: MUISelect,
@@ -134,4 +138,21 @@ const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
   baseToolbarSeparator: BaseToolbarSeparator,
 };
 
+const materialSlots: GridBaseSlots & GridIconSlotsComponent = {
+  ...baseSlots,
+  ...iconSlots,
+};
+
 export default materialSlots;
+
+function BaseMenuItem(props: GridSlotProps['baseMenuItem']) {
+  const { inert, iconStart, iconEnd, children, ...other } = props;
+  if (inert) {
+    (other as any).disableRipple = true;
+  }
+  return React.createElement(MUIMenuItem, other, [
+    iconStart && <MUIListItemIcon key="1">{iconStart}</MUIListItemIcon>,
+    <MUIListItemText key="2">{children}</MUIListItemText>,
+    iconEnd && <MUIListItemIcon key="3">{iconEnd}</MUIListItemIcon>,
+  ]);
+}
