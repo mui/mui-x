@@ -96,7 +96,6 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }}} */
         { props },
       ) => {
-        // @ts-ignore
         return `
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
@@ -110,9 +109,7 @@ import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
       direction: '${props.direction}',
       markType: '${props.markType}',
       labelPosition: '${props.labelPosition}',
-      sx: {
-        padding: ${props.padding},
-      },
+      sx: { padding: ${props.padding} },
     },
   }}
 />
