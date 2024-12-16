@@ -100,7 +100,7 @@ export default function LegendClickNoSnap() {
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
         </ChartDataProvider>
-        <Typography>Pie Chart Legend</Typography>
+        <Typography>Piecewise Color Legend</Typography>
         <ChartDataProvider
           // @ts-ignore
           series={lineSeries}

@@ -84,6 +84,10 @@ const RootElement = styled('ul', {
       display: 'flex',
       gap: theme.spacing(0.5),
     },
+    [`li :not(.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}) .${piecewiseColorLegendClasses?.mark}`]:
+      {
+        alignSelf: 'center',
+      },
     [`&.${piecewiseColorLegendClasses.horizontal}`]: {
       alignItems: 'center',
       [`.${piecewiseColorLegendClasses.item}`]: {
@@ -134,7 +138,7 @@ const PiecewiseColorLegend = consumeThemeProps(
   {
     defaultProps: {
       direction: 'horizontal',
-      labelPosition: 'below',
+      labelPosition: 'extremes',
       labelFormatter: piecewiseColorDefaultLabelFormatter,
     },
     classesResolver: useUtilityClasses,
