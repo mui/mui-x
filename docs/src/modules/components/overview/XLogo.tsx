@@ -22,8 +22,14 @@ export default function XLogo() {
         }),
       ]}
     >
-      {/* eslint-disable-next-line material-ui/no-hardcoded-labels */}
-      <IconImage width={28} height={28} loading="eager" name="product-advanced" /> MUI X
+      <IconImage
+        width={28}
+        height={28}
+        loading="eager"
+        name="product-advanced"
+        // eslint-disable-next-line material-ui/no-hardcoded-labels
+      />{' '}
+      MUI X
     </Typography>
   );
 }

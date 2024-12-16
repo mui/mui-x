@@ -73,6 +73,12 @@
   ],
   "classes": [
     {
+      "key": "axisValueCell",
+      "className": "MuiHeatmapTooltip-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
       "key": "cell",
       "className": "MuiHeatmapTooltip-cell",
       "description": "Styles applied to the cell element.",

@@ -7,6 +7,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../icons';
 import { usePickerTranslations } from './usePickerTranslations';
+import { FieldOwnerState } from '../models/fields';
+import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
+import { FormProps } from '../internals/models';
 
 export interface ExportedUseClearableFieldProps {
   /**
@@ -34,11 +37,11 @@ export interface UseClearableFieldSlots {
 }
 
 export interface UseClearableFieldSlotProps {
-  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
-  clearButton?: SlotComponentProps<typeof MuiIconButton, {}, {}>;
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, FieldOwnerState>;
+  clearButton?: SlotComponentProps<typeof MuiIconButton, {}, FieldOwnerState>;
 }
 
-interface UseClearableFieldProps extends ExportedUseClearableFieldProps {
+interface UseClearableFieldProps extends ExportedUseClearableFieldProps, FormProps {
   InputProps?: { endAdornment?: React.ReactNode };
   sx?: SxProps<any>;
   slots?: UseClearableFieldSlots;
@@ -54,15 +57,16 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   props: TFieldProps,
 ): UseClearableFieldResponse<TFieldProps> => {
   const translations = usePickerTranslations();
+  const ownerState = useFieldOwnerState(props);
 
   const { clearable, onClear, InputProps, sx, slots, slotProps, ...other } = props;
 
   const IconButton = slots?.clearButton ?? MuiIconButton;
   // The spread is here to avoid this bug mui/material-ui#34056
-  const { ownerState, ...iconButtonProps } = useSlotProps({
+  const { ownerState: iconButtonOwnerState, ...iconButtonProps } = useSlotProps({
     elementType: IconButton,
     externalSlotProps: slotProps?.clearButton,
-    ownerState: {},
+    ownerState,
     className: 'clearButton',
     additionalProps: {
       title: translations.fieldClearLabel,
@@ -73,7 +77,7 @@ export const useClearableField = <TFieldProps extends UseClearableFieldProps>(
   const endClearIconProps = useSlotProps({
     elementType: EndClearIcon,
     externalSlotProps: slotProps?.clearIcon,
-    ownerState: {},
+    ownerState,
   });
 
   return {

@@ -439,7 +439,6 @@
   { "name": "GridRowProApi", "kind": "Interface" },
   { "name": "GridRowProPrivateApi", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
-  { "name": "gridRowsDataRowIdToIdLookupSelector", "kind": "Variable" },
   { "name": "GridRowSelectionApi", "kind": "Interface" },
   { "name": "GridRowSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridRowSelectionModel", "kind": "TypeAlias" },

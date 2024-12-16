@@ -41,14 +41,7 @@
     },
     {
       "groupName": "React",
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "react-is",
-        "react-test-renderer",
-        "@types/react",
-        "@types/react-dom"
-      ]
+      "matchPackageNames": ["react", "react-dom", "react-is", "@types/react", "@types/react-dom"]
     },
     {
       "groupName": "React router",
@@ -89,7 +82,7 @@
       "enabled": false
     },
     {
-      "groupName": "MUI Core",
+      "groupName": "Material UI",
       "matchPackageNames": [
         "@mui/icons-material",
         "@mui/joy",
@@ -109,7 +102,7 @@
     },
     {
       "groupName": "Playwright",
-      "matchPackageNames": ["playwright", "@playwright/test"]
+      "matchPackageNames": ["playwright", "@playwright/test", "mcr.microsoft.com/playwright"]
     },
     {
       "matchDepTypes": ["action"],
