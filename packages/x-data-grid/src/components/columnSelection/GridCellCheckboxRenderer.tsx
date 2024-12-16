@@ -98,14 +98,14 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       return null;
     }
 
-    const label = apiRef.current.getLocaleText(
-      isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
-    );
-
     const checked =
       rootProps.indeterminateCheckboxAction === 'select'
         ? isChecked && !isIndeterminate
         : isChecked;
+
+    const label = apiRef.current.getLocaleText(
+      checked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
+    );
 
     return (
       <rootProps.slots.baseCheckbox
