@@ -9,12 +9,7 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import {
-  ChartsLegend,
-  ChartsLegendSlots,
-  ChartsLegendSlotProps,
-  ChartsLegendPosition,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlots, ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
@@ -53,7 +48,6 @@ export interface BarChartProps
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsLegendPosition,
     ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the bar chart.
@@ -132,7 +126,7 @@ const BarChart = React.forwardRef(function BarChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={props.legendPosition}
+        legendPosition={props.slotProps?.legend?.position}
         legendDirection={props.slotProps?.legend?.direction}
       >
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

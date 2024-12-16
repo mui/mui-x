@@ -1,5 +1,3 @@
-// position: { vertical: 'top', horizontal: 'middle' },
-
 export type LegendPosition = {
   /**
    * The vertical position of the legend.
@@ -14,6 +12,8 @@ export type LegendPosition = {
 export type ChartsLegendPosition = {
   /**
    * The position of the legend in relation to the chart.
+   * This property is only passed to the Chart components, e.g. `ScatterChart`, and not the slots themselves.
+   * If customization is needed, simply use the composition pattern.
    */
-  legendPosition?: LegendPosition;
+  position?: LegendPosition;
 };

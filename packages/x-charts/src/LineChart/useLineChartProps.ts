@@ -54,7 +54,6 @@ export const useLineChartProps = (props: LineChartProps) => {
     onHighlightChange,
     className,
     experimentalMarkRendering,
-    legendPosition,
     ...other
   } = props;
 

@@ -40,6 +40,7 @@ import * as React from 'react';
  * @param {object} options Options for the HOC.
  * @param {boolean} options.propagateSlots Whether to propagate the slots to the component, this is always false if the slot is provided.
  * @param {Record<string, any>} options.defaultProps A set of defaults for the component, will be deep merged with the props.
+ * @param {Array<keyof Props>} options.omitProps An array of props to omit from the component.
  * @param {Function} options.classesResolver A function that returns the classes for the component. It receives the props, after theme props and defaults have been applied. And the theme object as the second argument.
  * @param InComponent The component to render if the slot is not provided.
  */
@@ -53,6 +54,7 @@ export const consumeSlots = <
     defaultProps?:
       | Omit<Partial<Props>, 'slots' | 'slotProps'>
       | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
+    omitProps?: Array<keyof Props>;
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
   InComponent: React.FunctionComponent<Props>,
@@ -93,6 +95,10 @@ export const consumeSlots = <
       },
       ownerState: {},
     });
+
+    for (const prop of options.omitProps ?? []) {
+      delete (outProps as unknown as Props)[prop];
+    }
 
     return <OutComponent {...outProps} />;
   };

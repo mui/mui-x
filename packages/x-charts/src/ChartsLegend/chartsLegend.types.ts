@@ -1,5 +1,6 @@
 import type { ChartsLegendProps } from './ChartsLegend';
 import { ContinuousColorLegendProps } from './ContinuousColorLegend';
+import { ChartsLegendPosition } from './legend.types';
 import { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
 
 export interface ChartsLegendSlots {
@@ -14,7 +15,9 @@ export interface ChartsLegendSlots {
 }
 
 export interface ChartsLegendSlotProps {
-  legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps>;
+  legend?: Partial<ChartsLegendProps | ContinuousColorLegendProps | PiecewiseColorLegendProps> &
+    // We allow position only on slots.
+    ChartsLegendPosition;
 }
 
 export interface ChartsLegendSlotExtension {

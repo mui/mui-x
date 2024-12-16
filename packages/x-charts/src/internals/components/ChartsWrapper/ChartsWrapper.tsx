@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ChartsLegendPosition, Direction, LegendPosition } from '../../../ChartsLegend';
+import { Direction, LegendPosition } from '../../../ChartsLegend';
 
-interface ChartsWrapperProps extends ChartsLegendPosition {
+interface ChartsWrapperProps {
+  // eslint-disable-next-line react/no-unused-prop-types
+  legendPosition?: LegendPosition;
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   children: React.ReactNode;

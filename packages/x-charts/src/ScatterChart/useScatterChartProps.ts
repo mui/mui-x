@@ -45,7 +45,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     highlightedItem,
     onHighlightChange,
     className,
-    legendPosition,
     ...other
   } = props;
 

@@ -7,12 +7,7 @@ import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import {
-  ChartsLegend,
-  ChartsLegendPosition,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
 import {
@@ -41,8 +36,7 @@ export interface PieChartSlotProps
 export interface PieChartProps
   extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Pick<PiePlotProps, 'skipAnimation'>,
-    ChartsLegendPosition {
+    Pick<PiePlotProps, 'skipAnimation'> {
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
@@ -104,7 +98,6 @@ const PieChart = React.forwardRef(function PieChart(
     highlightedItem,
     onHighlightChange,
     className,
-    legendPosition,
     ...other
   } = props;
   const margin = { ...defaultMargin, ...marginProps };
@@ -131,7 +124,7 @@ const PieChart = React.forwardRef(function PieChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={legendPosition}
+        legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
       >
         {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}

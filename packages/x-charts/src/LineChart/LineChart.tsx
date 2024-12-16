@@ -11,12 +11,7 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import {
-  ChartsLegend,
-  ChartsLegendPosition,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
-} from '../ChartsLegend';
+import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
@@ -65,8 +60,7 @@ export interface LineChartProps
   extends Omit<ChartContainerProps, 'series' | 'plugins' | 'zAxis'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    ChartsOnAxisClickHandlerProps,
-    ChartsLegendPosition {
+    ChartsOnAxisClickHandlerProps {
   /**
    * The series to display in the line chart.
    * An array of [[LineSeriesType]] objects.
@@ -164,7 +158,7 @@ const LineChart = React.forwardRef(function LineChart(
   return (
     <ChartDataProvider {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={props.legendPosition}
+        legendPosition={props.slotProps?.legend?.position}
         legendDirection={props.slotProps?.legend?.direction}
       >
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

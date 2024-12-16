@@ -72,6 +72,9 @@ const ChartsLegend = consumeSlots(
   'legend',
   {
     defaultProps: { direction: 'horizontal' },
+    // @ts-expect-error position is used only in the slots, but it is passed to the SVG wrapper.
+    // We omit it here to avoid passing to slots.
+    omitProps: ['position'],
     classesResolver: useUtilityClasses,
   },
   function ChartsLegend(props: ChartsLegendProps) {
