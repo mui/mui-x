@@ -12,30 +12,31 @@ export default function PiecewiseInteractiveDemoNoSnap() {
       componentName="Legend"
       data={[
         {
-          propName: 'hideFirst',
-          knob: 'switch',
-        },
-        {
           propName: 'direction',
           knob: 'select',
           defaultValue: 'horizontal',
           options: ['horizontal', 'vertical'],
         },
         {
+          propName: 'labelPosition',
+          knob: 'select',
+          defaultValue: 'extremes',
+          options: ['above', 'right', 'extremes', 'below', 'left'],
+        },
+        {
+          propName: 'markType',
+          knob: 'select',
+          defaultValue: 'square',
+          options: ['square', 'circle', 'line'],
+        },
+        {
           propName: 'padding',
           knob: 'number',
           defaultValue: 0,
         },
-        {
-          propName: 'fontSize',
-          knob: 'number',
-          defaultValue: 10,
-          min: 8,
-          max: 20,
-        },
       ]}
       renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; padding: any; fontSize: any; hideFirst: any; }} */
+        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }} */
         props,
       ) => (
         <div style={{ width: '100%' }}>
@@ -71,15 +72,7 @@ export default function PiecewiseInteractiveDemoNoSnap() {
             ]}
             grid={{ horizontal: true }}
             height={300}
-            margin={{
-              top: props.direction === 'horizontal' ? 50 : 20,
-              right: props.direction === 'horizontal' ? 20 : 150,
-            }}
-            legendPosition={
-              props.direction === 'horizontal'
-                ? { vertical: 'top', horizontal: 'middle' }
-                : { vertical: 'middle', horizontal: 'right' }
-            }
+            margin={{ top: 20, right: 20 }}
             slots={{
               legend: PiecewiseColorLegend,
             }}
@@ -87,6 +80,11 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               legend: {
                 axisDirection: 'x',
                 direction: props.direction,
+                markType: props.markType,
+                labelPosition: props.labelPosition,
+                sx: {
+                  padding: props.padding,
+                },
               },
             }}
           >
@@ -95,33 +93,30 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         </div>
       )}
       getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; padding: any; fontSize: any; hideFirst: any; }}} */
+        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }}} */
         { props },
       ) => {
-        return [
-          `import { LineChart } from '@mui/x-charts/LineChart';`,
-          `import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';`,
-          '',
-          `<LineChart`,
-          `  margin={{ top: ${props.direction === 'horizontal' ? 50 : 20}, right: ${
-            props.direction === 'horizontal' ? 20 : 150
-          } }}`,
-          '  {/** ... */}',
-          '>',
-          `  <PiecewiseColorLegend`,
-          `      axisDirection="x"`,
-          `      position={${
-            props.direction === 'horizontal'
-              ? `{ vertical: 'top', horizontal: 'middle' }`
-              : `{ vertical: 'middle', horizontal: 'right' }`
-          }}`,
-          `      direction="${props.direction}"`,
-          ...(props.hideFirst ? ['      hideFirst'] : []),
-          `      padding={${props.padding}}`,
-          `      labelStyle={{ fontSize: ${props.fontSize} }}`,
-          `    />`,
-          '</LineChart>',
-        ].join('\n');
+        // @ts-ignore
+        return `
+import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+
+<LineChart
+  {/** ... */}
+  margin={{ top: 20, right: 20 }}
+  slots={{ legend: PiecewiseColorLegend }}
+  slotProps={{
+    legend: {
+      axisDirection: 'x',
+      direction: '${props.direction}',
+      markType: '${props.markType}',
+      labelPosition: '${props.labelPosition}',
+      sx: {
+        padding: ${props.padding},
+      },
+    },
+  }}
+/>
+`;
       }}
     />
   );
