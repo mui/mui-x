@@ -2,7 +2,10 @@
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+import {
+  piecewiseColorDefaultLabelFormatter,
+  PiecewiseColorLegend,
+} from '@mui/x-charts/ChartsLegend';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { dataset } from './tempAnomaly';
 
@@ -30,13 +33,18 @@ export default function PiecewiseInteractiveDemoNoSnap() {
           options: ['square', 'circle', 'line'],
         },
         {
+          propName: 'onlyShowExtremes',
+          knob: 'switch',
+          defaultValue: false,
+        },
+        {
           propName: 'padding',
           knob: 'number',
           defaultValue: 0,
         },
       ]}
       renderDemo={(
-        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }} */
+        /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }} */
         props,
       ) => (
         <LineChart
@@ -81,6 +89,12 @@ export default function PiecewiseInteractiveDemoNoSnap() {
               direction: props.direction,
               markType: props.markType,
               labelPosition: props.labelPosition,
+              labelFormatter: props.onlyShowExtremes
+                ? (params) =>
+                    params.index === 0 || params.index === params.length
+                      ? piecewiseColorDefaultLabelFormatter(params)
+                      : ''
+                : undefined,
               sx: {
                 padding: props.padding,
               },
@@ -91,11 +105,14 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         </LineChart>
       )}
       getCode={(
-        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }}} */
+        /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; onlyShowExtremes: boolean; }}} */
         { props },
       ) => {
         return `
-import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+import { 
+  PiecewiseColorLegend,
+  piecewiseColorDefaultLabelFormatter,
+} from '@mui/x-charts/ChartsLegend';
 
 <LineChart
   {/** ... */}
@@ -107,7 +124,7 @@ import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
       direction: '${props.direction}',
       markType: '${props.markType}',
       labelPosition: '${props.labelPosition}',
-      sx: { padding: ${props.padding} },
+      sx: { padding: ${props.padding} },${props.onlyShowExtremes ? "\n      labelFormatter: (params) =>\n        params.index === 0 || params.index === params.length\n          ? piecewiseColorDefaultLabelFormatter(params) \n          : ''" : ''}
     },
   }}
 />

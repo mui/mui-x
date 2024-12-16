@@ -118,6 +118,7 @@ const RootElement = styled('ul', {
     [`&.${piecewiseColorLegendClasses.vertical}`]: {
       [`.${piecewiseColorLegendClasses.item}`]: {
         flexDirection: 'row',
+        alignItems: 'center',
       },
       [`&.${piecewiseColorLegendClasses.below}, &.${piecewiseColorLegendClasses.left}`]: {
         alignItems: 'end',
