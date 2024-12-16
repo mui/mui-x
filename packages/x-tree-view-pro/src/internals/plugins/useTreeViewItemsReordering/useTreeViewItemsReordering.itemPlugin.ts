@@ -6,7 +6,8 @@ import {
   UseTreeViewItemsSignature,
   isTargetInDescendants,
   useSelector,
-  selectorIsItemBeingEdited,
+  selectorIsAnItemEdited,
+  UseTreeViewLabelSignature,
 } from '@mui/x-tree-view/internals';
 import {
   UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering,
@@ -16,7 +17,6 @@ import {
   UseTreeItemContentSlotPropsFromItemsReordering,
 } from './useTreeViewItemsReordering.types';
 import {
-  selectorDraggedItem,
   selectorItemsReorderingDraggedItemProperties,
   selectorItemsReorderingIsValidTarget,
 } from './useTreeViewItemsReordering.selectors';
@@ -25,7 +25,9 @@ export const isAndroid = () => navigator.userAgent.toLowerCase().includes('andro
 
 export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { instance, store, itemsReordering } =
-    useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature]>();
+    useTreeViewContext<
+      [UseTreeViewItemsSignature, UseTreeViewItemsReorderingSignature, UseTreeViewLabelSignature]
+    >();
   const { itemId } = props;
 
   const validActionsRef = React.useRef<TreeViewItemItemReorderingValidActions | null>(null);
@@ -36,9 +38,8 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
     itemId,
   );
   const isValidTarget = useSelector(store, selectorItemsReorderingIsValidTarget, itemId);
-  const draggedItemId = useSelector(store, selectorDraggedItem);
 
-  const isBeingEdited = useSelector(store, selectorIsItemBeingEdited, draggedItemId);
+  const isEditing = useSelector(store, selectorIsAnItemEdited);
 
   return {
     propsEnhancers: {
@@ -50,7 +51,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         if (
           !itemsReordering.enabled ||
           (itemsReordering.isItemReorderable && !itemsReordering.isItemReorderable(itemId)) ||
-          isBeingEdited
+          isEditing
         ) {
           return {};
         }
@@ -114,7 +115,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItemContentSlotPropsFromItemsReordering => {
-        if (!isValidTarget || isBeingEdited) {
+        if (!isValidTarget) {
           return {};
         }
 
