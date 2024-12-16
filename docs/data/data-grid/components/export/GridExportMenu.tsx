@@ -19,10 +19,10 @@ function ExportMenu() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={() => setOpen(true)}
-        startIcon={<FileDownloadIcon fontSize="small" />}
-        endIcon={<ArrowDropDownIcon fontSize="small" />}
       >
+        <FileDownloadIcon fontSize="small" />
         Export
+        <ArrowDropDownIcon fontSize="small" sx={{ ml: -0.5, mr: -0.25 }} />
       </Grid.Toolbar.Button>
       <Menu
         id="export-menu"

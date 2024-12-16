@@ -53,17 +53,9 @@ GridToolbarButton.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The color of the button.
-   * @default 'inherit'
+   * @default 'standard'
    */
-  color: PropTypes.oneOf([
-    'error',
-    'info',
-    'inherit',
-    'primary',
-    'secondary',
-    'success',
-    'warning',
-  ]),
+  color: PropTypes.oneOf(['primary', 'standard']),
   /**
    * A function to customize rendering of the component.
    */

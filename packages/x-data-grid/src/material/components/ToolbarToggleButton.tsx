@@ -26,7 +26,8 @@ const StyledToolbarToggleButton = styled(MUIToggleButton, {
   name: 'MuiDataGridToolbar',
   slot: 'ToggleButton',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
+  height: 36,
 }));
 
 const ToolbarToggleButton = React.forwardRef<HTMLButtonElement, ToolbarToggleButtonProps>(

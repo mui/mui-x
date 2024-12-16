@@ -7,18 +7,12 @@ import PrintIcon from '@mui/icons-material/Print';
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.Export.Trigger
-        exportType="csv"
-        render={
-          <Grid.Toolbar.Button startIcon={<FileDownloadIcon fontSize="small" />} />
-        }
-      >
+      <Grid.Export.Trigger exportType="csv" render={<Grid.Toolbar.Button />}>
+        <FileDownloadIcon fontSize="small" />
         CSV
       </Grid.Export.Trigger>
-      <Grid.Export.Trigger
-        exportType="print"
-        render={<Grid.Toolbar.Button startIcon={<PrintIcon fontSize="small" />} />}
-      >
+      <Grid.Export.Trigger exportType="print" render={<Grid.Toolbar.Button />}>
+        <PrintIcon fontSize="small" />
         Print
       </Grid.Export.Trigger>
     </Grid.Toolbar.Root>
