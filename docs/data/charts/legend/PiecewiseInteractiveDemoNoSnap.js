@@ -39,58 +39,56 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         /** @type {{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }} */
         props,
       ) => (
-        <div style={{ width: '100%' }}>
-          <LineChart
-            dataset={dataset}
-            series={[
-              {
-                label: 'Global temperature anomaly relative to 1961-1990',
-                dataKey: 'anomaly',
-                showMark: false,
-                valueFormatter: (value) => `${value?.toFixed(2)}°`,
+        <LineChart
+          dataset={dataset}
+          series={[
+            {
+              label: 'Global temperature anomaly relative to 1961-1990',
+              dataKey: 'anomaly',
+              showMark: false,
+              valueFormatter: (value) => `${value?.toFixed(2)}°`,
+            },
+          ]}
+          xAxis={[
+            {
+              scaleType: 'time',
+              dataKey: 'year',
+              disableLine: true,
+              valueFormatter: (value) => value.getFullYear().toString(),
+              colorMap: {
+                type: 'piecewise',
+                thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+                colors: ['blue', 'gray', 'red'],
               },
-            ]}
-            xAxis={[
-              {
-                scaleType: 'time',
-                dataKey: 'year',
-                disableLine: true,
-                valueFormatter: (value) => value.getFullYear().toString(),
-                colorMap: {
-                  type: 'piecewise',
-                  thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
-                  colors: ['blue', 'gray', 'red'],
-                },
+            },
+          ]}
+          yAxis={[
+            {
+              disableLine: true,
+              disableTicks: true,
+              valueFormatter: (value) => `${value}°`,
+            },
+          ]}
+          grid={{ horizontal: true }}
+          height={300}
+          margin={{ top: 20, right: 20 }}
+          slots={{
+            legend: PiecewiseColorLegend,
+          }}
+          slotProps={{
+            legend: {
+              axisDirection: 'x',
+              direction: props.direction,
+              markType: props.markType,
+              labelPosition: props.labelPosition,
+              sx: {
+                padding: props.padding,
               },
-            ]}
-            yAxis={[
-              {
-                disableLine: true,
-                disableTicks: true,
-                valueFormatter: (value) => `${value}°`,
-              },
-            ]}
-            grid={{ horizontal: true }}
-            height={300}
-            margin={{ top: 20, right: 20 }}
-            slots={{
-              legend: PiecewiseColorLegend,
-            }}
-            slotProps={{
-              legend: {
-                axisDirection: 'x',
-                direction: props.direction,
-                markType: props.markType,
-                labelPosition: props.labelPosition,
-                sx: {
-                  padding: props.padding,
-                },
-              },
-            }}
-          >
-            <ChartsReferenceLine y={0} />
-          </LineChart>
-        </div>
+            },
+          }}
+        >
+          <ChartsReferenceLine y={0} />
+        </LineChart>
       )}
       getCode={(
         /** @type {{props:{ direction: "vertical" | "horizontal"; markType: 'square' | 'circle' | 'line'; labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; padding: number; }}} */

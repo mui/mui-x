@@ -48,59 +48,57 @@ export default function ContinuousInteractiveDemoNoSnap() {
         /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; reverseGradient: boolean; }} */
         props,
       ) => (
-        <div style={{ width: '100%' }}>
-          <LineChart
-            dataset={dataset}
-            series={[
-              {
-                label: 'Global temperature anomaly relative to 1961-1990',
-                dataKey: 'anomaly',
-                showMark: false,
-                valueFormatter: (value) => `${value?.toFixed(2)}°`,
+        <LineChart
+          dataset={dataset}
+          series={[
+            {
+              label: 'Global temperature anomaly relative to 1961-1990',
+              dataKey: 'anomaly',
+              showMark: false,
+              valueFormatter: (value) => `${value?.toFixed(2)}°`,
+            },
+          ]}
+          xAxis={[
+            {
+              scaleType: 'time',
+              dataKey: 'year',
+              disableLine: true,
+              valueFormatter: (value) => value.getFullYear().toString(),
+            },
+          ]}
+          yAxis={[
+            {
+              disableLine: true,
+              disableTicks: true,
+              valueFormatter: (value) => `${value}°`,
+              colorMap: {
+                type: 'continuous',
+                min: -0.5,
+                max: 1.5,
+                color: (t) => interpolateRdYlBu(1 - t),
               },
-            ]}
-            xAxis={[
-              {
-                scaleType: 'time',
-                dataKey: 'year',
-                disableLine: true,
-                valueFormatter: (value) => value.getFullYear().toString(),
+            },
+          ]}
+          grid={{ horizontal: true }}
+          height={300}
+          margin={{ top: 20, right: 20 }}
+          slots={{ legend: ContinuousColorLegend }}
+          slotProps={{
+            legend: {
+              axisDirection: 'y',
+              direction: props.direction,
+              thickness: props.thickness,
+              labelPosition: props.labelPosition,
+              reverseGradient: props.reverseGradient,
+              sx: {
+                [props.direction === 'horizontal' ? 'width' : 'height']:
+                  `${props.length}%`,
               },
-            ]}
-            yAxis={[
-              {
-                disableLine: true,
-                disableTicks: true,
-                valueFormatter: (value) => `${value}°`,
-                colorMap: {
-                  type: 'continuous',
-                  min: -0.5,
-                  max: 1.5,
-                  color: (t) => interpolateRdYlBu(1 - t),
-                },
-              },
-            ]}
-            grid={{ horizontal: true }}
-            height={300}
-            margin={{ top: 20, right: 20 }}
-            slots={{ legend: ContinuousColorLegend }}
-            slotProps={{
-              legend: {
-                axisDirection: 'y',
-                direction: props.direction,
-                thickness: props.thickness,
-                labelPosition: props.labelPosition,
-                reverseGradient: props.reverseGradient,
-                sx: {
-                  [props.direction === 'horizontal' ? 'width' : 'height']:
-                    `${props.length}%`,
-                },
-              },
-            }}
-          >
-            <ChartsReferenceLine y={0} />
-          </LineChart>
-        </div>
+            },
+          }}
+        >
+          <ChartsReferenceLine y={0} />
+        </LineChart>
       )}
       getCode={(
         /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; reverseGradient: boolean; }}} */
