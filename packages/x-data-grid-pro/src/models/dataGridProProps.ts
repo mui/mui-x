@@ -229,13 +229,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds?: GridRowId[];
+  detailPanelExpandedRowIds?: Set<GridRowId>;
   /**
    * Callback fired when the detail panel of a row is opened or closed.
    * @param {GridRowId[]} ids The ids of the rows which have the detail panel open.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onDetailPanelExpandedRowIdsChange?: (ids: GridRowId[], details: GridCallbackDetails) => void;
+  onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
