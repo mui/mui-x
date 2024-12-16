@@ -18,7 +18,7 @@ export default function HiddenLegend() {
   const [isHidden, setIsHidden] = React.useState(false);
 
   return (
-    <Stack>
+    <Stack flex={1} flexDirection="column" alignItems={'center'}>
       <FormControlLabel
         checked={isHidden}
         control={
@@ -27,12 +27,7 @@ export default function HiddenLegend() {
         label="hide the legend"
         labelPlacement="end"
       />
-      <PieChart
-        series={series}
-        slotProps={{ legend: { hidden: isHidden } }}
-        width={400}
-        height={200}
-      />
+      <PieChart series={series} hideLegend={isHidden} width={400} height={200} />
     </Stack>
   );
 }

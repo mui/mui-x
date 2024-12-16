@@ -6,9 +6,4 @@
   label="hide the legend"
   labelPlacement="end"
 />
-<PieChart
-  series={series}
-  slotProps={{ legend: { hidden: isHidden } }}
-  width={400}
-  height={200}
-/>
+<PieChart series={series} hideLegend={isHidden} width={400} height={200} />

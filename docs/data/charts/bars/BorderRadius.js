@@ -75,11 +75,10 @@ const chartSettingsH = {
       transform: 'translateX(-10px)',
     },
   },
+  legendPosition: { vertical: 'bottom', horizontal: 'middle' },
   slotProps: {
     legend: {
-      direction: 'row',
-      position: { vertical: 'bottom', horizontal: 'middle' },
-      padding: -5,
+      direction: 'horizontal',
     },
   },
 };

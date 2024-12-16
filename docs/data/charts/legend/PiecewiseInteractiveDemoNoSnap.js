@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -17,8 +18,8 @@ export default function PiecewiseInteractiveDemoNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'row',
-          options: ['row', 'column'],
+          defaultValue: 'horizontal',
+          options: ['horizontal', 'vertical'],
         },
         {
           propName: 'padding',
@@ -33,7 +34,10 @@ export default function PiecewiseInteractiveDemoNoSnap() {
           max: 20,
         },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ direction: "vertical" | "horizontal"; padding: any; fontSize: any; hideFirst: any; }} */
+        props,
+      ) => (
         <div style={{ width: '100%' }}>
           <LineChart
             dataset={dataset}
@@ -68,42 +72,46 @@ export default function PiecewiseInteractiveDemoNoSnap() {
             grid={{ horizontal: true }}
             height={300}
             margin={{
-              top: props.direction === 'row' ? 50 : 20,
-              right: props.direction === 'row' ? 20 : 150,
+              top: props.direction === 'horizontal' ? 50 : 20,
+              right: props.direction === 'horizontal' ? 20 : 150,
             }}
-            hideLegend
+            legendPosition={
+              props.direction === 'horizontal'
+                ? { vertical: 'top', horizontal: 'middle' }
+                : { vertical: 'middle', horizontal: 'right' }
+            }
+            slots={{
+              legend: PiecewiseColorLegend,
+            }}
+            slotProps={{
+              legend: {
+                axisDirection: 'x',
+                direction: props.direction,
+              },
+            }}
           >
             <ChartsReferenceLine y={0} />
-            <PiecewiseColorLegend
-              axisDirection="x"
-              position={
-                props.direction === 'row'
-                  ? { vertical: 'top', horizontal: 'middle' }
-                  : { vertical: 'middle', horizontal: 'right' }
-              }
-              direction={props.direction}
-              padding={props.padding}
-              labelStyle={{ fontSize: props.fontSize }}
-              hideFirst={props.hideFirst}
-            />
           </LineChart>
         </div>
       )}
-      getCode={({ props }) => {
+      getCode={(
+        /** @type {{props:{ direction: "vertical" | "horizontal"; padding: any; fontSize: any; hideFirst: any; }}} */
+        { props },
+      ) => {
         return [
           `import { LineChart } from '@mui/x-charts/LineChart';`,
           `import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';`,
           '',
           `<LineChart`,
-          `  margin={{ top: ${props.direction === 'row' ? 50 : 20}, right: ${
-            props.direction === 'row' ? 20 : 150
+          `  margin={{ top: ${props.direction === 'horizontal' ? 50 : 20}, right: ${
+            props.direction === 'horizontal' ? 20 : 150
           } }}`,
           '  {/** ... */}',
           '>',
           `  <PiecewiseColorLegend`,
           `      axisDirection="x"`,
           `      position={${
-            props.direction === 'row'
+            props.direction === 'horizontal'
               ? `{ vertical: 'top', horizontal: 'middle' }`
               : `{ vertical: 'middle', horizontal: 'right' }`
           }}`,

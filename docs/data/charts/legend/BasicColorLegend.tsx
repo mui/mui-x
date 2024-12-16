@@ -44,13 +44,16 @@ export default function BasicColorLegend() {
         grid={{ horizontal: true }}
         height={300}
         margin={{ top: 30, right: 150 }}
-        hideLegend
+        slotProps={{
+          legend: {
+            axisDirection: 'x',
+            direction: 'vertical',
+          },
+        }}
+        slots={{
+          legend: PiecewiseColorLegend,
+        }}
       >
-        <PiecewiseColorLegend
-          axisDirection="x"
-          position={{ vertical: 'top', horizontal: 'right' }}
-          direction="column"
-        />
         <ChartsReferenceLine y={0} />
       </LineChart>
     </div>

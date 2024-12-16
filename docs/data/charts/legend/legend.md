@@ -62,10 +62,7 @@ Which can lead to label overflow.
 
 ### Rounded symbol
 
-To create a rounded symbol, use the `legendClasses.mark` to apply CSS on marks.
-Notice that SVG `rect` uses `ry` property to control the symbol's corner radius instead of `border-radius`.
-
-{{"demo": "LegendRoundedSymbol.js"}}
+<!-- REPLACE WITH Mark types example & custom mark types -->
 
 ## Color legend
 

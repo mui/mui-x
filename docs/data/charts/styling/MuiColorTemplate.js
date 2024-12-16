@@ -38,11 +38,7 @@ function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
 const legendPlacement = {
   slotProps: {
     legend: {
-      position: {
-        vertical: 'middle',
-        horizontal: 'right',
-      },
-      direction: 'column',
+      direction: 'vertical',
       itemGap: 2,
     },
   },

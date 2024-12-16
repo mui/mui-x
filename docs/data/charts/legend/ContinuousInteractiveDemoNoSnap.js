@@ -1,3 +1,4 @@
+// @ts-check
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
@@ -14,8 +15,8 @@ export default function ContinuousInteractiveDemoNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'row',
-          options: ['row', 'column'],
+          defaultValue: 'horizontal',
+          options: ['horizontal', 'vertical'],
         },
         {
           propName: 'length',
@@ -45,7 +46,10 @@ export default function ContinuousInteractiveDemoNoSnap() {
           max: 20,
         },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ direction: "horizontal" | "vertical"; length: number; thickness: number; align: "start" | "middle" | "end"; fontSize: number }} */
+        props,
+      ) => (
         <div style={{ width: '100%' }}>
           <LineChart
             dataset={dataset}
@@ -81,52 +85,39 @@ export default function ContinuousInteractiveDemoNoSnap() {
             grid={{ horizontal: true }}
             height={300}
             margin={{
-              top: props.direction === 'row' ? 50 : 20,
-              right: props.direction === 'row' ? 20 : 50,
+              top: props.direction === 'horizontal' ? 50 : 20,
+              right: props.direction === 'horizontal' ? 20 : 50,
             }}
-            hideLegend
+            legendPosition={
+              props.direction === 'horizontal'
+                ? { vertical: 'top', horizontal: 'middle' }
+                : { vertical: 'middle', horizontal: 'right' }
+            }
+            slotProps={{
+              legend: {
+                direction: props.direction,
+                axisDirection: 'y',
+              },
+            }}
+            slots={{
+              legend: ContinuousColorLegend,
+            }}
+            sx={{}}
           >
             <ChartsReferenceLine y={0} />
-            <ContinuousColorLegend
-              axisDirection="y"
-              position={
-                props.direction === 'row'
-                  ? { vertical: 'top', horizontal: 'middle' }
-                  : { vertical: 'middle', horizontal: 'right' }
-              }
-              direction={props.direction}
-              length={`${props.length}%`}
-              thickness={props.thickness}
-              align={props.align}
-              labelStyle={{ fontSize: props.fontSize }}
-            />
           </LineChart>
         </div>
       )}
-      getCode={({ props }) => {
+      getCode={(
+        /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number; align: "start" | "middle" | "end"; fontSize: number }}} */
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        { props },
+      ) => {
         return [
           `import { LineChart } from '@mui/x-charts/LineChart';`,
           `import { ContinuousColorLegend } from '@mui/x-charts/ChartsLegend';`,
           '',
           `<LineChart`,
-          `  margin={{ top: ${props.direction === 'row' ? 50 : 20}, right: ${
-            props.direction === 'row' ? 20 : 50
-          } }}`,
-          '  {/** ... */}',
-          '>',
-          `  <ContinuousColorLegend`,
-          `      axisDirection="x"`,
-          `      position={${
-            props.direction === 'row'
-              ? `{ vertical: 'top', horizontal: 'middle' }`
-              : `{ vertical: 'middle', horizontal: 'right' }`
-          }}`,
-          `      direction="${props.direction}"`,
-          `      length="${props.length}%"`,
-          `      thickness={${props.thickness}}`,
-          `      align="${props.align}"`,
-          `      labelStyle={{ fontSize: ${props.fontSize} }}`,
-          `    />`,
           '</LineChart>',
         ].join('\n');
       }}

@@ -1,3 +1,5 @@
+// @ts-check
+
 import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -28,8 +30,8 @@ export default function LegendPositionNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'row',
-          options: ['row', 'column'],
+          defaultValue: 'horizontal',
+          options: ['horizontal', 'vertical'],
         },
         {
           propName: 'vertical',
@@ -56,18 +58,23 @@ export default function LegendPositionNoSnap() {
           max: data.length,
         },
       ]}
-      renderDemo={(props) => (
+      renderDemo={(
+        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; padding: unknown; }} */
+        props,
+      ) => (
         <PieChart
           series={[
             {
               data: data.slice(0, props.itemsNumber),
             },
           ]}
+          legendPosition={{
+            vertical: props.vertical,
+            horizontal: props.horizontal,
+          }}
           slotProps={{
             legend: {
               direction: props.direction,
-              position: { vertical: props.vertical, horizontal: props.horizontal },
-              padding: Number.isNaN(props.padding) ? 0 : props.padding,
             },
           }}
           margin={{
@@ -80,7 +87,10 @@ export default function LegendPositionNoSnap() {
           height={400}
         />
       )}
-      getCode={({ props }) => {
+      getCode={(
+        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; padding: unknown; }}} */
+        { props },
+      ) => {
         return [
           `import { PieChart } from '@mui/x-charts/PieChart';`,
           '',

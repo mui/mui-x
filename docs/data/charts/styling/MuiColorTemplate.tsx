@@ -42,11 +42,7 @@ function getGaussianSeriesData(
 const legendPlacement = {
   slotProps: {
     legend: {
-      position: {
-        vertical: 'middle',
-        horizontal: 'right',
-      },
-      direction: 'column',
+      direction: 'vertical',
       itemGap: 2,
     },
   },
