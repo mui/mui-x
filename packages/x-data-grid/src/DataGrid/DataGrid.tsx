@@ -59,7 +59,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         style={props.style}
         sx={props.sx}
         ref={ref}
-        {...props.forwardedProps}
+        {...props.slotProps?.root}
       >
         <GridHeader />
         <GridBody />
@@ -284,11 +284,6 @@ DataGridRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
