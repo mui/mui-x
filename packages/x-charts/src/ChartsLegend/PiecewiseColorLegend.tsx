@@ -72,7 +72,7 @@ const RootElement = styled('ul', {
     marginBlockStart: 0,
     marginBlockEnd: 0,
     width: 'max-content',
-    '> button': {
+    [`button.${piecewiseColorLegendClasses.item}`]: {
       // Reset button styles
       background: 'none',
       border: 'none',
