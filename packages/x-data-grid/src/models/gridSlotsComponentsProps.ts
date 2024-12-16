@@ -39,6 +39,8 @@ import type { ToolbarToggleButtonProps } from '../material/components/ToolbarTog
 import type { ToolbarToggleButtonGroupProps } from '../material/components/ToolbarToggleButtonGroup';
 
 type DividerProps = {};
+type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
+type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 
 type MenuItemProps = {
   autoFocus?: boolean;
@@ -145,6 +147,14 @@ export interface GridSlotProps {
   row: GridRowProps & RowPropsOverrides;
   skeletonCell: GridSkeletonCellProps & SkeletonCellPropsOverrides;
   toolbar: GridToolbarProps & ToolbarPropsOverrides;
+  /**
+   * Props passed to the `.main` (role="grid") element
+   */
+  main: MainProps;
+  /**
+   * Props passed to the `.root` element
+   */
+  root: RootProps;
 }
 
 /**
