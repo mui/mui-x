@@ -14,7 +14,12 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendPosition,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
+} from '../ChartsLegend';
 import {
   ChartsOverlay,
   ChartsOverlayProps,
@@ -53,7 +58,8 @@ export interface ScatterChartProps
     Omit<ZAxisContextProviderProps, 'children' | 'dataset'>,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Omit<ChartsVoronoiHandlerProps, 'onItemClick'> {
+    Omit<ChartsVoronoiHandlerProps, 'onItemClick'>,
+    ChartsLegendPosition {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeriesType]] objects.
@@ -132,7 +138,10 @@ const ScatterChart = React.forwardRef(function ScatterChart(
 
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsWrapper direction="horizontal">
+      <ChartsWrapper
+        legendPosition={props.legendPosition}
+        legendDirection={props.slotProps?.legend?.direction}
+      >
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ZAxisContextProvider {...zAxisProps}>

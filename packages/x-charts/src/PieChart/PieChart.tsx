@@ -7,7 +7,12 @@ import { ChartContainerProps } from '../ChartContainer';
 import { PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
 import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendPosition,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
+} from '../ChartsLegend';
 import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
 import {
@@ -36,7 +41,8 @@ export interface PieChartSlotProps
 export interface PieChartProps
   extends Omit<ChartContainerProps, 'series' | 'leftAxis' | 'bottomAxis' | 'plugins' | 'zAxis'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
-    Pick<PiePlotProps, 'skipAnimation'> {
+    Pick<PiePlotProps, 'skipAnimation'>,
+    ChartsLegendPosition {
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeriesType]] objects.
@@ -98,6 +104,7 @@ const PieChart = React.forwardRef(function PieChart(
     highlightedItem,
     onHighlightChange,
     className,
+    legendPosition,
     ...other
   } = props;
   const margin = { ...defaultMargin, ...marginProps };
@@ -123,14 +130,17 @@ const PieChart = React.forwardRef(function PieChart(
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
   return (
     <ChartDataProvider {...chartDataProviderProps}>
-      <ChartsWrapper direction="vertical">
+      <ChartsWrapper
+        legendPosition={legendPosition}
+        legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+      >
+        {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
           {children}
         </ChartsSurface>
-        {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
       </ChartsWrapper>
     </ChartDataProvider>
   );
