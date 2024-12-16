@@ -46,7 +46,7 @@
     "@babel/runtime": "^7.26.0",
     "@mui/utils": "^5.16.6 || ^6.0.0",
     "@mui/x-internals": "workspace:*",
-    "@types/react-transition-group": "^4.4.11",
+    "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5",
