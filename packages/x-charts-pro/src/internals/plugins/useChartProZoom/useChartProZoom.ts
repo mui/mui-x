@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import useControlled from '@mui/utils/useControlled';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   ChartPlugin,
   AxisId,
@@ -36,7 +34,6 @@ function initializeZoomData(options: Record<AxisId, DefaultizedZoomOption>) {
 
 export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   store,
-  // models,
   instance,
   svgRef,
   params,
@@ -57,37 +54,139 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     [store],
   );
 
-  // Default zoom data is initialized only once when uncontrolled. If the user changes the options
-  // after the initial render, the zoom data will not be updated until the next zoom interaction.
-  // This is required to avoid warnings about controlled/uncontrolled components.
-  const defaultZoomData = React.useRef<ZoomData[]>(initializeZoomData(options));
-
-  const [zoomData, setZoomData] = useControlled<ZoomData[]>({
-    controlled: params.zoom,
-    // eslint-disable-next-line react-compiler/react-compiler
-    default: defaultZoomData.current,
-    name: 'ZoomProvider',
-    state: 'zoom',
-  });
-
-  useEnhancedEffect(() => {
-    store.update((prevState) => ({
-      ...prevState,
-      zoom: {
-        ...prevState.zoom,
-        zoomData,
-      },
-    }));
-  }, [store, zoomData]);
-
   const setZoomDataCallback = React.useCallback(
-    (newZoomData) => {
-      setZoomData(newZoomData);
-      params.onZoomChange?.(newZoomData);
+    (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
+      store.update((prevState) => {
+        const newZoomData =
+          typeof zoomData === 'function' ? zoomData(prevState.zoom.zoomData) : zoomData;
+        params.onZoomChange?.(newZoomData);
+
+        return {
+          ...prevState,
+          zoom: {
+            ...prevState.zoom,
+            zoomData: newZoomData,
+          },
+        };
+      });
     },
-    [setZoomData, params],
+
+    [params, store],
   );
 
+  // Add event for chart panning
+  const isPanEnabled = React.useMemo(
+    () => Object.values(options).some((v) => v.panning) || false,
+    [options],
+  );
+  const isDraggingRef = React.useRef(false);
+  const touchStartRef = React.useRef<{ x: number; y: number; zoomData: ZoomData[] } | null>(null);
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null || !isPanEnabled) {
+      return () => {};
+    }
+    const handlePan = (event: PointerEvent) => {
+      if (element === null || !isDraggingRef.current || eventCacheRef.current.length > 1) {
+        return;
+      }
+      if (touchStartRef.current == null) {
+        return;
+      }
+      const point = getSVGPoint(element, event);
+      const movementX = point.x - touchStartRef.current.x;
+      const movementY = (point.y - touchStartRef.current.y) * -1;
+      const newZoomData = touchStartRef.current.zoomData.map((zoom) => {
+        const option = options[zoom.axisId];
+        if (!option || !option.panning) {
+          return zoom;
+        }
+        const min = zoom.start;
+        const max = zoom.end;
+        const span = max - min;
+        const MIN_PERCENT = option.minStart;
+        const MAX_PERCENT = option.maxEnd;
+        const movement = option.axisDirection === 'x' ? movementX : movementY;
+        const dimension = option.axisDirection === 'x' ? drawingArea.width : drawingArea.height;
+        let newMinPercent = min - (movement / dimension) * span;
+        let newMaxPercent = max - (movement / dimension) * span;
+        if (newMinPercent < MIN_PERCENT) {
+          newMinPercent = MIN_PERCENT;
+          newMaxPercent = newMinPercent + span;
+        }
+        if (newMaxPercent > MAX_PERCENT) {
+          newMaxPercent = MAX_PERCENT;
+          newMinPercent = newMaxPercent - span;
+        }
+        if (
+          newMinPercent < MIN_PERCENT ||
+          newMaxPercent > MAX_PERCENT ||
+          span < option.minSpan ||
+          span > option.maxSpan
+        ) {
+          return zoom;
+        }
+        return {
+          ...zoom,
+          start: newMinPercent,
+          end: newMaxPercent,
+        };
+      });
+      setZoomDataCallback(newZoomData);
+    };
+    const handleDown = (event: PointerEvent) => {
+      eventCacheRef.current.push(event);
+      const point = getSVGPoint(element, event);
+      if (!instance.isPointInside(point)) {
+        return;
+      }
+      // If there is only one pointer, prevent selecting text
+      if (eventCacheRef.current.length === 1) {
+        event.preventDefault();
+      }
+      isDraggingRef.current = true;
+      setIsInteracting(true);
+      touchStartRef.current = {
+        x: point.x,
+        y: point.y,
+        zoomData: store.getSnapshot().zoom.zoomData,
+      };
+    };
+    const handleUp = (event: PointerEvent) => {
+      eventCacheRef.current.splice(
+        eventCacheRef.current.findIndex((cachedEvent) => cachedEvent.pointerId === event.pointerId),
+        1,
+      );
+      setIsInteracting(false);
+      isDraggingRef.current = false;
+      touchStartRef.current = null;
+    };
+    element.addEventListener('pointerdown', handleDown);
+    document.addEventListener('pointermove', handlePan);
+    document.addEventListener('pointerup', handleUp);
+    document.addEventListener('pointercancel', handleUp);
+    document.addEventListener('pointerleave', handleUp);
+    return () => {
+      element.removeEventListener('pointerdown', handleDown);
+      document.removeEventListener('pointermove', handlePan);
+      document.removeEventListener('pointerup', handleUp);
+      document.removeEventListener('pointercancel', handleUp);
+      document.removeEventListener('pointerleave', handleUp);
+    };
+  }, [
+    instance,
+    svgRef,
+    isDraggingRef,
+    setIsInteracting,
+    isPanEnabled,
+    options,
+    drawingArea.width,
+    drawingArea.height,
+    setZoomDataCallback,
+    store,
+  ]);
+
+  // Add event for chart zoom in/out
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null || !isZoomEnabled) {
@@ -243,7 +342,6 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     };
   }, [
     svgRef,
-    setZoomData,
     drawingArea,
     isZoomEnabled,
     options,
@@ -252,7 +350,11 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
     setZoomDataCallback,
   ]);
 
-  return {};
+  return {
+    instance: {
+      setZoomData: setZoomDataCallback,
+    },
+  };
 };
 
 useChartProZoom.params = {
@@ -285,12 +387,6 @@ useChartProZoom.getDefaultizedParams = ({ params }) => {
     options,
   };
 };
-
-// useChartProZoom.models = {
-//   zoom: {
-//     getDefaultValue: (params) => initializeZoomData(params.options),
-//   },
-// };
 
 useChartProZoom.getInitialState = (params) => {
   return {

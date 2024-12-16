@@ -37,7 +37,7 @@ export interface UseChartProZoomState {
     options: Record<AxisId, DefaultizedZoomOption>;
     /**
      * Whether the user is currently interacting with the chart.
-     * This is useful to prevent animations from running while the user is interacting.
+     * This is useful to disable animations while the user is interacting.
      */
     isInteracting: boolean;
     /**
@@ -47,7 +47,14 @@ export interface UseChartProZoomState {
   };
 }
 
-export interface UseChartProZoomInstance {}
+export interface UseChartProZoomInstance {
+  /**
+   * Set the zoom data state.
+   * @param {ZoomData[] | ((prev: ZoomData[]) => ZoomData[])} value  The new value. Can either be the new zoom data, or an updater function.
+   * @returns {void}
+   */
+  setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
+}
 
 export type UseChartProZoomSignature = ChartPluginSignature<{
   params: UseChartProZoomParameters;
