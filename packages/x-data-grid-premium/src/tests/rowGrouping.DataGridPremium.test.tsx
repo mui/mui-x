@@ -2632,6 +2632,85 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
   });
 
+  describe('column pinning', () => {
+    clock.withFakeTimers();
+
+    it('should work correctly with column pinning when groupingColumnMode = "single"', () => {
+      const { setProps } = render(
+        <Test
+          checkboxSelection
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      setProps({ pinnedColumns: { left: ['id'], right: ['__check__'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'id',
+        'category1',
+        'category1',
+        'category2',
+        '',
+      ]);
+      setProps({ pinnedColumns: { left: [], right: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'category1',
+        'id',
+        'category1',
+        'category2',
+      ]);
+    });
+
+    it('should work correctly with column pinning when when groupingColumnMode = "multiple"', () => {
+      const { setProps } = render(
+        <Test
+          checkboxSelection
+          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+          rowGroupingColumnMode="multiple"
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'category1',
+        'category2',
+        'id',
+        'category1',
+        'category2',
+      ]);
+      setProps({
+        pinnedColumns: {
+          left: ['__row_group_by_columns_group_category2__', 'id'],
+          right: ['__check__'],
+        },
+      });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'category2',
+        'id',
+        'category1',
+        'category1',
+        'category2',
+        '',
+      ]);
+      setProps({ pinnedColumns: { left: [], right: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        'category1',
+        'category2',
+        'id',
+        'category1',
+        'category2',
+      ]);
+    });
+  });
+
   describe('apiRef: addRowGroupingCriteria', () => {
     clock.withFakeTimers();
 
