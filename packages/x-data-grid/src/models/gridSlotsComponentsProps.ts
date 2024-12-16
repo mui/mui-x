@@ -35,8 +35,8 @@ import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
 type DividerProps = {};
-type RootProps = React.HTMLAttributes<HTMLDivElement>;
-type MainProps = React.HTMLAttributes<HTMLDivElement>;
+type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
+type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
 
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}

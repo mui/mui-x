@@ -360,11 +360,6 @@ DataGridPremiumRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
-  /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).

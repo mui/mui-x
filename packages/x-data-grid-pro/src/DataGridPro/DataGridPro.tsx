@@ -323,11 +323,6 @@ DataGridProRaw.propTypes = {
     quickFilterValues: PropTypes.array,
   }),
   /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
-  /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @returns {string} The CSS class to apply to the cell.
