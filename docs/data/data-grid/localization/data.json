@@ -157,7 +157,7 @@
     "localeName": "Korean",
     "missingKeysCount": 0,
     "totalKeysCount": 123,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/koKR.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v7.x/packages/x-data-grid/src/locales/koKR.ts"
   },
   {
     "languageTag": "nb-NO",
