@@ -77,13 +77,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const filterModelItem = filterModel?.items.find(
         (it) => it.field === colDef.field && it.operator !== 'isAnyOf',
       );
-
       if (filterModelItem != null) {
+        // there's a valid `filterModelItem` for this column
         return filterModelItem;
       }
-
       const defaultCachedItem = filterItemsCache[colDef.field];
-
       if (defaultCachedItem != null) {
         // there's a cached `defaultItem` for this column
         return defaultCachedItem;
