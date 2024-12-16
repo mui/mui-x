@@ -34,8 +34,8 @@ import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 
 type DividerProps = {};
-type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
-type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, unknown>;
+type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
+type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 
 type MenuItemProps = {
   autoFocus?: boolean;
