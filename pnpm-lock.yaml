@@ -84,8 +84,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/icons-material':
-        specifier: ^5.16.9
-        version: 5.16.9(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/internal-babel-plugin-resolve-imports':
         specifier: 1.0.18
         version: 1.0.18(@babel/core@7.26.0)
@@ -96,8 +96,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/monorepo':
         specifier: github:mui/material-ui#454a4c081a3cda665d5e608e1fc3d600d14eee53
         version: https://codeload.github.com/mui/material-ui/tar.gz/454a4c081a3cda665d5e608e1fc3d600d14eee53(encoding@0.1.13)
@@ -427,25 +427,25 @@ importers:
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/docs':
         specifier: 6.2.0
-        version: 6.2.0(ikedorg3yulccwuobrpdnur4wa)
+        version: 6.2.0(dqk2aawoph3j7fvors7uyn3v3u)
       '@mui/icons-material':
-        specifier: ^5.16.9
-        version: 5.16.9(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.48
         version: 5.0.0-beta.48(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/lab':
         specifier: ^5.0.0-alpha.173
-        version: 5.0.0-alpha.174(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 5.0.0-alpha.174(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material-nextjs':
         specifier: ^5.16.8
-        version: 5.16.8(@emotion/cache@11.14.0)(@emotion/server@11.11.0)(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(next@14.2.20(@babel/core@7.26.0)(@playwright/test@1.49.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 5.16.8(@emotion/cache@11.14.0)(@emotion/server@11.11.0)(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(next@14.2.20(@babel/core@7.26.0)(@playwright/test@1.49.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@mui/styles':
-        specifier: ^5.16.9
-        version: 5.16.9(@types/react@18.3.14)(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@types/react@18.3.14)(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -780,8 +780,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -854,8 +854,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1036,8 +1036,8 @@ importers:
         specifier: ^5.0.0-beta.48
         version: 5.0.0-beta.48(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1080,11 +1080,11 @@ importers:
         version: 18.3.1
     devDependencies:
       '@mui/icons-material':
-        specifier: ^5.16.9
-        version: 5.16.9(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/chance':
         specifier: ^1.1.6
         version: 1.1.6
@@ -1145,8 +1145,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1207,8 +1207,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1260,8 +1260,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1355,8 +1355,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1472,8 +1472,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1540,8 +1540,8 @@ importers:
         specifier: ^1.0.22
         version: 1.0.22(@babel/core@7.26.0)(@types/react-dom@18.3.2)(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system':
         specifier: ^5.16.8
         version: 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
@@ -1568,8 +1568,8 @@ importers:
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.14)(react@18.3.1)
       '@mui/material':
-        specifier: ^5.16.9
-        version: 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.16.11
+        version: 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/x-charts':
         specifier: workspace:*
         version: link:../packages/x-charts/build
@@ -3101,8 +3101,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/core-downloads-tracker@5.16.9':
-    resolution: {integrity: sha512-ue3j79XJ56+F6DlTtFTM+n//5AvNENOvl3MFruZZP5iZzz+hOq6WBwnr+YxiMlr+kvmMHuHxgOHFdPR8+mElDw==}
+  '@mui/core-downloads-tracker@5.16.11':
+    resolution: {integrity: sha512-2eVDGg9OvIXNRmfDUQyKYH+jNcjdv1JkCH5F2YDgUye5fMX5nxGiYHAUe1BXaXyDMaLSwXC7LRksEKMiIQsFdw==}
 
   '@mui/docs@6.2.0':
     resolution: {integrity: sha512-M4OioRcyRAn3v7R5+7cCK03EtzqpU/9YW0Ev6mW5efrXriFxc3LGZ9MVZVen1RQqtWcKPL4IE8oX7s6C8hOIwQ==}
@@ -3121,8 +3121,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/icons-material@5.16.9':
-    resolution: {integrity: sha512-nnOJIqan6FS6zEsLX3vf8LZ4vXpZjP5xfCFezeXmqfQConypCOZG4nangoVwKwROlas7b6/bqOdacFUb/HuM/g==}
+  '@mui/icons-material@5.16.11':
+    resolution: {integrity: sha512-LjIiDVGGPzessDd5uSGFYZNqrXqECLiJ9hESE6Xkk8CtGTN2m2h6iImKJpkoryNXYxulv87WLeqfTMWAfA4Igg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
@@ -3205,8 +3205,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/material@5.16.9':
-    resolution: {integrity: sha512-XC0oHFm7mrWV0tvhed9uv/o6kLNClnLj1eo/ufuKbj+rgk47ek8Y6HjHe3cGvMn4Bcq8KyoQPgzdwqvS2ZzYrA==}
+  '@mui/material@5.16.11':
+    resolution: {integrity: sha512-uoc67oecKdnVKaMHBVE433YrMuxQs22xY5nIjRb5sAPB+GaeZQWp8brQ3/adeH6k2IDa8+9i2IVd4fNLuvHSvA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -3250,8 +3250,8 @@ packages:
       '@emotion/styled':
         optional: true
 
-  '@mui/styles@5.16.9':
-    resolution: {integrity: sha512-7Lxn2Bk8tRv5k8Pq0eZ/bNQ2CQr6hIU1sWGjuIK5cUI62bQTx6s+VtJ+x9IjqLKjDJAz99f4/ba+t8RmwQsoRA==}
+  '@mui/styles@5.16.11':
+    resolution: {integrity: sha512-sBAkVkcudptL2P0+0vktzn7KTUxW20X5si+TbgFz537xi/sewmrS+xuGV7M03veMKv1T6Vd7R3lvuChMtJLPtA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12042,15 +12042,15 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.14
 
-  '@mui/core-downloads-tracker@5.16.9': {}
+  '@mui/core-downloads-tracker@5.16.11': {}
 
-  '@mui/docs@6.2.0(ikedorg3yulccwuobrpdnur4wa)':
+  '@mui/docs@6.2.0(dqk2aawoph3j7fvors7uyn3v3u)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/icons-material': 5.16.9(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
+      '@mui/icons-material': 5.16.11(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/internal-markdown': 1.0.22
-      '@mui/material': 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system': 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       chai: 5.1.2
       clipboard-copy: 4.0.1
@@ -12063,10 +12063,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.14
 
-  '@mui/icons-material@5.16.9(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)':
+  '@mui/icons-material@5.16.11(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/material': 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.14
@@ -12140,7 +12140,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/core-downloads-tracker': 5.16.9
+      '@mui/core-downloads-tracker': 5.16.11
       '@mui/system': 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/types': 7.2.19(@types/react@18.3.14)
       '@mui/utils': 5.16.8(@types/react@18.3.14)(react@18.3.1)
@@ -12153,11 +12153,11 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@types/react': 18.3.14
 
-  '@mui/lab@5.0.0-alpha.174(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mui/lab@5.0.0-alpha.174(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@mui/base': 5.0.0-beta.40(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@mui/material': 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mui/system': 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/types': 7.2.19(@types/react@18.3.14)
       '@mui/utils': 5.16.8(@types/react@18.3.14)(react@18.3.1)
@@ -12170,10 +12170,10 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@types/react': 18.3.14
 
-  '@mui/material-nextjs@5.16.8(@emotion/cache@11.14.0)(@emotion/server@11.11.0)(@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(next@14.2.20(@babel/core@7.26.0)(@playwright/test@1.49.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@mui/material-nextjs@5.16.8(@emotion/cache@11.14.0)(@emotion/server@11.11.0)(@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.14)(next@14.2.20(@babel/core@7.26.0)(@playwright/test@1.49.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/material': 5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next: 14.2.20(@babel/core@7.26.0)(@playwright/test@1.49.1)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
@@ -12181,10 +12181,10 @@ snapshots:
       '@emotion/server': 11.11.0
       '@types/react': 18.3.14
 
-  '@mui/material@5.16.9(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@mui/material@5.16.11(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@mui/core-downloads-tracker': 5.16.9
+      '@mui/core-downloads-tracker': 5.16.11
       '@mui/system': 5.16.8(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
       '@mui/types': 7.2.19(@types/react@18.3.14)
       '@mui/utils': 5.16.8(@types/react@18.3.14)(react@18.3.1)
@@ -12236,7 +12236,7 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@18.3.14)(react@18.3.1)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.14)(react@18.3.1))(@types/react@18.3.14)(react@18.3.1)
 
-  '@mui/styles@5.16.9(@types/react@18.3.14)(react@18.3.1)':
+  '@mui/styles@5.16.11(@types/react@18.3.14)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/hash': 0.9.2
