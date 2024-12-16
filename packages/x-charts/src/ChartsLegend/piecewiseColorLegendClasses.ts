@@ -1,7 +1,8 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import type { ContinuousColorLegendProps } from './ContinuousColorLegend';
+import type { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
+import type { ChartsLegendSlotExtension } from './chartsLegend.types';
 
 export interface PiecewiseColorLegendClasses {
   /** Styles applied to the root element. */
@@ -32,7 +33,7 @@ function getLegendUtilityClass(slot: string) {
   return generateUtilityClass('MuiPiecewiseColorLegendClasses', slot);
 }
 
-export const useUtilityClasses = (props: ContinuousColorLegendProps) => {
+export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegendSlotExtension) => {
   const { classes, direction, labelPosition } = props;
   const slots = {
     root: ['root', direction, labelPosition],

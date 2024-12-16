@@ -14,6 +14,7 @@ export interface ChartsLabelProps {
   children?: React.ReactNode;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLSpanElement>;
 }
 
 const Root = styled('span', {
@@ -28,8 +29,6 @@ const Root = styled('span', {
 }));
 
 /**
- * @ignore - internal component.
- *
  * Generates the label mark for the tooltip and legend.
  */
 const ChartsLabel = consumeThemeProps(
@@ -37,8 +36,8 @@ const ChartsLabel = consumeThemeProps(
   {
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLSpanElement>) {
-    const { children, className, classes, ...other } = props;
+  function ChartsLabel(props: ChartsLabelProps) {
+    const { children, className, classes, ref, ...other } = props;
 
     return (
       <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>

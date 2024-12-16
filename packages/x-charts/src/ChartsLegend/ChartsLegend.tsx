@@ -11,7 +11,6 @@ import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabe
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
-import { ChartsLegendSlotExtension } from './chartsLegend.types';
 import { ChartsLabel } from '../ChartsLabel';
 
 export interface ChartsLegendProps extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
@@ -37,6 +36,7 @@ export interface ChartsLegendProps extends PrependKeys<Pick<ChartsLabelMarkProps
   classes?: Partial<ChartsLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLUListElement>;
 }
 
 const RootElement = styled('ul', {
@@ -50,11 +50,10 @@ const RootElement = styled('ul', {
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,
-  marginBlockStart: 0,
-  marginBlockEnd: 0,
+  marginBlock: theme.spacing(1),
   flexWrap: 'wrap',
   justifyContent: 'center',
-  '> button': {
+  [`button.${legendClasses.series}`]: {
     // Reset button styles
     background: 'none',
     border: 'none',
@@ -75,12 +74,9 @@ const ChartsLegend = consumeSlots(
     defaultProps: { direction: 'horizontal' },
     classesResolver: useUtilityClasses,
   },
-  function ChartsLegend(
-    props: ChartsLegendProps & ChartsLegendSlotExtension,
-    ref: React.Ref<HTMLUListElement>,
-  ) {
+  function ChartsLegend(props: ChartsLegendProps) {
     const data = useLegend();
-    const { direction, markType, onItemClick, className, classes, ...other } = props;
+    const { direction, markType, onItemClick, className, classes, ref, ...other } = props;
 
     if (data.items.length === 0) {
       return null;

@@ -56,6 +56,7 @@ export interface PiecewiseColorLegendProps
   classes?: Partial<PiecewiseColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLUListElement>;
 }
 
 const RootElement = styled('ul', {
@@ -66,11 +67,11 @@ const RootElement = styled('ul', {
   return {
     display: 'flex',
     flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
+    flexShrink: 0,
     gap: theme.spacing(0.5),
     listStyleType: 'none',
     paddingInlineStart: 0,
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
+    marginBlock: theme.spacing(1),
     width: 'max-content',
     [`button.${piecewiseColorLegendClasses.item}`]: {
       // Reset button styles
@@ -138,10 +139,7 @@ const PiecewiseColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function PiecewiseColorLegend(
-    props: PiecewiseColorLegendProps,
-    ref: React.Ref<HTMLUListElement>,
-  ) {
+  function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
     const {
       direction,
       classes,
@@ -152,6 +150,7 @@ const PiecewiseColorLegend = consumeThemeProps(
       axisId,
       labelFormatter,
       onItemClick,
+      ref,
       ...other
     } = props;
 

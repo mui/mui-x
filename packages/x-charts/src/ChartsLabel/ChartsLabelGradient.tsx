@@ -36,6 +36,7 @@ export interface ChartsLabelGradientProps {
   classes?: Partial<ChartsLabelGradientClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const getRotation = (
@@ -98,8 +99,6 @@ const Root = styled('div', {
 });
 
 /**
- * @ignore - internal component.
- *
  * Generates the label Gradient for the tooltip and legend.
  */
 const ChartsLabelGradient = consumeThemeProps(
@@ -110,8 +109,8 @@ const ChartsLabelGradient = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
-    const { gradientId, direction, classes, className, rotate, reverse, ...other } = props;
+  function ChartsLabelGradient(props: ChartsLabelGradientProps) {
+    const { gradientId, direction, classes, className, rotate, reverse, ref, ...other } = props;
 
     return (
       <Root

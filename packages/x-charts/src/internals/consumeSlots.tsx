@@ -2,7 +2,6 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import * as React from 'react';
-import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes a slot from the props and renders the component provided in the slot.
@@ -56,9 +55,9 @@ export const consumeSlots = <
       | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.JSXElementConstructor<Props>,
-) => {
-  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+  InComponent: React.FunctionComponent<Props>,
+): React.FunctionComponent<Props> =>
+  function (props: Props) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -76,16 +75,11 @@ export const consumeSlots = <
     const theme = useTheme();
     const classes = options.classesResolver?.(defaultizedProps, theme);
 
-    const Component = slots?.[slotPropName] ?? InComponent;
+    const OutComponent = slots?.[slotPropName] ?? InComponent;
 
     if (process.env.NODE_ENV !== 'production') {
-      Component.displayName = `${name}.slots.${slotPropName}`;
+      OutComponent.displayName = `${name}.slots.${slotPropName}`;
     }
-
-    const OutComponent = ReactIs.isForwardRef(Component)
-      ? (Component as unknown as React.ElementType)
-      : // Component needs to be a function that accepts `(props, ref)`
-        React.forwardRef(Component);
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 
@@ -100,8 +94,5 @@ export const consumeSlots = <
       ownerState: {},
     });
 
-    return <OutComponent {...outProps} ref={ref} />;
-  }
-
-  return React.forwardRef(InternalComponent);
-};
+    return <OutComponent {...outProps} />;
+  };

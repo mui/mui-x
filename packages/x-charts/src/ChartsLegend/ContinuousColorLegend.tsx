@@ -59,6 +59,7 @@ export interface ContinuousColorLegendProps
   classes?: Partial<ContinuousColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
+  ref?: React.Ref<HTMLUListElement>;
 }
 
 const templateAreas = {
@@ -100,11 +101,11 @@ const RootElement = styled('ul', {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: Pick<ContinuousColorLegendProps, 'direction'> }>(({ theme }) => ({
   display: 'grid',
+  flexShrink: 0,
   gap: theme.spacing(0.5),
   listStyleType: 'none',
   paddingInlineStart: 0,
-  marginBlockStart: 0,
-  marginBlockEnd: 0,
+  marginBlock: theme.spacing(1),
   [`&.${continuousColorLegendClasses.horizontal}`]: {
     gridTemplateRows: 'min-content min-content',
     gridTemplateColumns: 'min-content auto min-content',
@@ -174,10 +175,7 @@ const ContinuousColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function ContinuousColorLegend(
-    props: ContinuousColorLegendProps,
-    ref: React.Ref<HTMLUListElement>,
-  ) {
+  function ContinuousColorLegend(props: ContinuousColorLegendProps) {
     const {
       minLabel,
       maxLabel,
@@ -190,6 +188,7 @@ const ContinuousColorLegend = consumeThemeProps(
       className,
       gradientId,
       labelPosition,
+      ref,
       ...other
     } = props;
 
