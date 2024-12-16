@@ -114,7 +114,7 @@
     "@types/moment-hijri": "^2.1.4",
     "@types/moment-jalaali": "^0.7.9",
     "@types/prop-types": "^15.7.14",
-    "@types/react-dom": "^18.3.2",
+    "@types/react-dom": "^18.3.5",
     "@types/react-router-dom": "^5.3.3",
     "@types/stylis": "^4.2.7",
     "@types/webpack-bundle-analyzer": "^4.7.0",
