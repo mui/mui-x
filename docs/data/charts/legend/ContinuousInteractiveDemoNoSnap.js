@@ -21,7 +21,7 @@ export default function ContinuousInteractiveDemoNoSnap() {
         {
           propName: 'labelPosition',
           knob: 'select',
-          defaultValue: 'extremes',
+          defaultValue: 'below',
           options: ['above', 'right', 'extremes', 'below', 'left'],
         },
         {
