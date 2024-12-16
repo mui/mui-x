@@ -14,7 +14,6 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
-import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -33,10 +32,11 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import { ToolbarSeparatorProps } from '../material/components/ToolbarSeparator';
-import { ToolbarProps } from '../material/components/Toolbar';
-import { ToolbarToggleButtonProps } from '../material/components/ToolbarToggleButton';
-import { ToolbarToggleButtonGroupProps } from '../material/components/ToolbarToggleButtonGroup';
+import type { ToolbarProps } from '../material/components/Toolbar';
+import type { ToolbarSeparatorProps } from '../material/components/ToolbarSeparator';
+import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
+import type { ToolbarToggleButtonProps } from '../material/components/ToolbarToggleButton';
+import type { ToolbarToggleButtonGroupProps } from '../material/components/ToolbarToggleButtonGroup';
 
 type DividerProps = {};
 
