@@ -17,7 +17,7 @@ import Alert from '@mui/material/Alert';
 
 export default function ControlMasterDetail() {
   const [detailPanelExpandedRowIds, setDetailPanelExpandedRowIds] = React.useState(
-    new Set<GridRowId>(),
+    () => new Set<GridRowId>(),
   );
 
   const handleDetailPanelExpandedRowIdsChange = React.useCallback<
