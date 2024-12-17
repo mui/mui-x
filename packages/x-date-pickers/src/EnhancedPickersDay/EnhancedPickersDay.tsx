@@ -146,121 +146,166 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   },
-  [`&.${enhancedPickersDayClasses.selected}`]: {
-    ...selectedDayStyles(theme),
-  },
-  [`&.${enhancedPickersDayClasses.disabled}:not(.${enhancedPickersDayClasses.selected})`]: {
-    color: (theme.vars || theme).palette.text.disabled,
-  },
-  [`&.${enhancedPickersDayClasses.hiddenDay}`]: {
-    visibility: 'hidden',
-  },
-  [`&.${enhancedPickersDayClasses.dayOutsideMonth}`]: {
-    color: (theme.vars || theme).palette.text.secondary,
-  },
-  [`&.${enhancedPickersDayClasses.today}`]: {
-    borderColor: (theme.vars || theme).palette.text.secondary,
-  },
-  [`&.${enhancedPickersDayClasses.startOfPreviewing}`]: {
-    '::after': {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-      right: -(DAY_MARGIN + 1),
+
+  variants: [
+    {
+      props: { selected: true },
+      style: {
+        ...selectedDayStyles(theme),
+      },
     },
-    [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::after`]: {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderRightColor: 'transparent',
-      borderTopLeftRadius: '50%',
-      borderBottomLeftRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      left: -1,
+    {
+      props: { disabled: true },
+      style: {
+        color: (theme.vars || theme).palette.text.disabled,
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.endOfPreviewing}`]: {
-    '::after': {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-      left: -(DAY_MARGIN + 1),
+    {
+      props: { isDayHidden: true },
+      style: {
+        visibility: 'hidden',
+      },
     },
-    [`&:not(.${enhancedPickersDayClasses.startOfSelectedRange})::after`]: {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderTopRightRadius: '50%',
-      borderBottomRightRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      right: -1,
+    {
+      props: { outsideCurrentMonth: true },
+      style: {
+        color: (theme.vars || theme).palette.text.secondary,
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.previewing}`]: {
-    '::after': {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      left: -(DAY_MARGIN + 1),
+    {
+      props: { today: true },
+      style: {
+        borderColor: (theme.vars || theme).palette.text.secondary,
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.startOfSelectedRange}`]: {
-    '::before': {
-      ...highlightStyles(theme),
-      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-      left: `${DAY_SIZE / 2 - 1}px`,
+    {
+      props: { isStartOfPreviewing: true },
+      style: {
+        '::after': {
+          ...previewStyles,
+          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+          borderLeftColor: 'transparent',
+          borderRightColor: 'transparent',
+          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+          right: -(DAY_MARGIN + 1),
+        },
+        [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::after`]: {
+          ...previewStyles,
+          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+          borderRightColor: 'transparent',
+          borderTopLeftRadius: '50%',
+          borderBottomLeftRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          left: -1,
+        },
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.endOfSelectedRange}`]: {
-    '::before': {
-      ...highlightStyles(theme),
-      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
-      left: -(DAY_MARGIN + 1),
+    {
+      props: { isEndOfPreviewing: true },
+      style: {
+        '::after': {
+          ...previewStyles,
+          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+          borderLeftColor: 'transparent',
+          borderRightColor: 'transparent',
+          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+          left: -(DAY_MARGIN + 1),
+        },
+        [`&:not(.${enhancedPickersDayClasses.startOfSelectedRange})::after`]: {
+          ...previewStyles,
+          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+          borderLeftColor: 'transparent',
+          borderTopRightRadius: '50%',
+          borderBottomRightRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          right: -1,
+        },
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.withinSelectedRange}`]: {
-    '::before': {
-      ...highlightStyles(theme),
-      left: -(DAY_MARGIN + 1),
+    {
+      props: { isPreviewing: true },
+      style: {
+        '::after': {
+          ...previewStyles,
+          border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+          borderLeftColor: 'transparent',
+          borderRightColor: 'transparent',
+          left: -(DAY_MARGIN + 1),
+        },
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.dragSelected}`]: {
-    ...selectedDayStyles(theme),
-  },
-  [`&.${enhancedPickersDayClasses.lastDayOfWeek}`]: {
-    '::after': {
-      borderTopRightRadius: '50%',
-      borderBottomRightRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      right: -1,
-      borderRightColor: (theme.vars || theme).palette.divider,
+    {
+      props: { isStartOfSelectedRange: true },
+      style: {
+        '::before': {
+          ...highlightStyles(theme),
+          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+          left: `${DAY_SIZE / 2 - 1}px`,
+        },
+      },
     },
-    '::before': {
-      borderTopRightRadius: '50%',
-      borderBottomRightRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      right: -1,
+    {
+      props: { isEndOfSelectedRange: true },
+      style: {
+        '::before': {
+          ...highlightStyles(theme),
+          width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+          left: -(DAY_MARGIN + 1),
+        },
+      },
     },
-  },
-  [`&.${enhancedPickersDayClasses.firstDayOfWeek}`]: {
-    '::after': {
-      borderTopLeftRadius: '50%',
-      borderBottomLeftRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      left: -1,
-      borderLeftColor: (theme.vars || theme).palette.divider,
+    {
+      props: { isWithinSelectedRange: true },
+      style: {
+        '::before': {
+          ...highlightStyles(theme),
+          left: -(DAY_MARGIN + 1),
+        },
+      },
     },
-    '::before': {
-      borderTopLeftRadius: '50%',
-      borderBottomLeftRadius: '50%',
-      width: `${DAY_SIZE + DAY_MARGIN}px`,
-      left: -1,
+    {
+      props: { isDragSelected: true },
+      style: {
+        ...selectedDayStyles(theme),
+      },
     },
-  },
+    {
+      props: { lastDayOfWeek: true },
+      style: {
+        '::after': {
+          borderTopRightRadius: '50%',
+          borderBottomRightRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          right: -1,
+          borderRightColor: (theme.vars || theme).palette.divider,
+        },
+        '::before': {
+          borderTopRightRadius: '50%',
+          borderBottomRightRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          right: -1,
+        },
+      },
+    },
+    {
+      props: { firstDayOfWeek: true },
+      style: {
+        '::after': {
+          borderTopLeftRadius: '50%',
+          borderBottomLeftRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          left: -1,
+          borderLeftColor: (theme.vars || theme).palette.divider,
+        },
+        '::before': {
+          borderTopLeftRadius: '50%',
+          borderBottomLeftRadius: '50%',
+          width: `${DAY_SIZE + DAY_MARGIN}px`,
+          left: -1,
+        },
+      },
+    },
+  ],
 });
 
 const EnhancedPickersDayRoot = styled(ButtonBase, {
