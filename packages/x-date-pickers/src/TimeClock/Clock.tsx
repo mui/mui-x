@@ -40,11 +40,13 @@ export interface ClockProps<TDate extends PickerValidDate>
   /**
    * The current full date value.
    */
-  value: PickerValidDate | null;
+  value: TDate | null;
   /**
    * Minimum and maximum value of the clock.
    */
   viewRange: [number, number];
+  disabled?: boolean;
+  readOnly?: boolean;
   className?: string;
   classes?: Partial<ClockClasses>;
 }
