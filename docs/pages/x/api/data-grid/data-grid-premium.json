@@ -800,7 +800,7 @@
     },
     {
       "name": "baseCircularProgress",
-      "description": "The custom CircularProgress component used in the grid for both header and cells.",
+      "description": "The custom CircularProgress component used in the grid.",
       "default": "CircularProgress",
       "class": null
     },
@@ -812,7 +812,7 @@
     },
     {
       "name": "baseLinearProgress",
-      "description": "The custom LinearProgress component used in the grid for both header and cells.",
+      "description": "The custom LinearProgress component used in the grid.",
       "default": "LinearProgress",
       "class": null
     },
