@@ -251,8 +251,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     ],
   );
 
+  const selectedId = useId();
+
   const viewProps = React.useMemo<
-    Pick<ClockProps, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
+    Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
   >(() => {
     switch (view) {
       case 'hours': {
