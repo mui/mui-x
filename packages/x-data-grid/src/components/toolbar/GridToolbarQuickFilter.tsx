@@ -2,7 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import composeClasses from '@mui/utils/composeClasses';
