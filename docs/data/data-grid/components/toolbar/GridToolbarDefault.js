@@ -10,6 +10,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 
 function Toolbar() {
   const [downloadMenuOpen, setDownloadMenuOpen] = React.useState(false);
@@ -18,7 +19,7 @@ function Toolbar() {
   return (
     <Grid.Toolbar.Root>
       <Tooltip title="Columns">
-        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
+        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
           <ViewColumnIcon fontSize="small" />
         </Grid.ColumnsPanel.Trigger>
       </Tooltip>
@@ -26,7 +27,7 @@ function Toolbar() {
       <Tooltip title="Filters">
         <Grid.FilterPanel.Trigger
           render={(props, state) => (
-            <Grid.Toolbar.Button {...props}>
+            <Grid.Toolbar.Button {...props} size="small">
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
@@ -35,11 +36,11 @@ function Toolbar() {
         />
       </Tooltip>
 
-      <Grid.Toolbar.Separator />
+      <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
       <Tooltip title="Print">
-        <Grid.Export.Trigger exportType="print" render={<Grid.Toolbar.Button />}>
+        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button size="small" />}>
           <PrintIcon fontSize="small" />
-        </Grid.Export.Trigger>
+        </Grid.Export.PrintTrigger>
       </Tooltip>
 
       <Tooltip title="Download">
@@ -50,6 +51,7 @@ function Toolbar() {
           aria-haspopup="true"
           aria-expanded={downloadMenuOpen ? 'true' : undefined}
           onClick={() => setDownloadMenuOpen(true)}
+          size="small"
         >
           <FileDownloadIcon fontSize="small" />
           <ArrowDropDownIcon fontSize="small" sx={{ ml: -1, mr: -0.5 }} />
@@ -65,13 +67,16 @@ function Toolbar() {
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <Grid.Export.Trigger exportType="csv" render={<MenuItem />}>
+        <Grid.Export.CsvTrigger
+          render={<MenuItem />}
+          onClick={() => setDownloadMenuOpen(false)}
+        >
           Download as CSV
-        </Grid.Export.Trigger>
+        </Grid.Export.CsvTrigger>
         {/* Available to MUI X Premium users */}
-        {/* <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
+        {/* <Grid.Export.ExcelTrigger render={<MenuItem />}>
            Download as Excel
-          </Grid.Export.Trigger> */}
+          </Grid.Export.ExcelTrigger> */}
       </Menu>
 
       <GridToolbarQuickFilter sx={{ ml: 'auto' }} />

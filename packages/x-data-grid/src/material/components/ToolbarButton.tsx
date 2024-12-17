@@ -8,10 +8,10 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface ToolbarButtonProps extends MUIButtonBaseProps {
   /**
-   * The color of the button.
-   * @default 'standard'
+   * The size of the component.
+   * @default 'small'
    */
-  color?: 'standard' | 'primary';
+  size?: 'small' | 'medium' | 'large';
   /**
    * If `true`, the base button will have a keyboard focus ripple.
    * @default true
@@ -34,18 +34,14 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const StyledToolbarButton = styled(MUIButtonBase, {
   name: 'MuiDataGridToolbar',
   slot: 'Button',
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<ToolbarButtonProps & { ownerState: OwnerState }>(({ theme }) => ({
   ...theme.typography.button,
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
   borderRadius: (theme.vars || theme).shape.borderRadius,
-  padding: 7,
-  height: 36,
-  minWidth: 36,
-  fontSize: theme.typography.pxToRem(13),
-  lineHeight: 'normal',
+  padding: 12,
   color: (theme.vars || theme).palette.action.active,
+  gap: theme.spacing(1),
+  lineHeight: 'normal',
+  whiteSpace: 'nowrap',
   '&:disabled': {
     color: (theme.vars || theme).palette.action.disabled,
     border: `1px solid ${(theme.vars || theme).palette.action.disabledBackground}`,
@@ -62,9 +58,23 @@ const StyledToolbarButton = styled(MUIButtonBase, {
   },
   variants: [
     {
-      props: { color: 'primary' },
+      props: { fullWidth: true },
       style: {
-        color: (theme.vars || theme).palette.primary.main,
+        width: '100%',
+      },
+    },
+    {
+      props: { size: 'small' },
+      style: {
+        padding: 8,
+        fontSize: theme.typography.pxToRem(13),
+      },
+    },
+    {
+      props: { size: 'large' },
+      style: {
+        padding: 16,
+        fontSize: theme.typography.pxToRem(15),
       },
     },
   ],
@@ -72,17 +82,23 @@ const StyledToolbarButton = styled(MUIButtonBase, {
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { color = 'standard', ...other } = props;
+    const { size = 'medium', focusRipple = true, ...other } = props;
     const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+
+    const ownerState = {
+      ...rootProps,
+      size,
+    };
+
+    const classes = useUtilityClasses(ownerState);
 
     return (
       <StyledToolbarButton
         ref={ref}
-        color={color}
         className={classes.button}
-        ownerState={rootProps}
-        focusRipple
+        ownerState={ownerState}
+        focusRipple={focusRipple}
+        size={size}
         {...other}
       />
     );

@@ -19,6 +19,7 @@ function ExportMenu() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={() => setOpen(true)}
+        size="small"
       >
         <FileDownloadIcon fontSize="small" />
         Export

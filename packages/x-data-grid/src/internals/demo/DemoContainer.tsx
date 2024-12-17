@@ -4,6 +4,10 @@ import { useDataGridProps } from '../../DataGrid/useDataGridProps';
 import { useDataGridComponent } from '../../DataGrid/useDataGridComponent';
 import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../../hooks/features/rows/useGridRowAriaAttributes';
+import {
+  GridToolbarRootContext,
+  GridToolbarRootContextValue,
+} from '../../components/grid/toolbar/GridToolbarRootContext';
 import { DataGridProps } from '../../models/props/DataGridProps';
 import { GridValidRowModel } from '../../models/gridRows';
 import { GridColDef } from '../../models/colDef';
@@ -21,6 +25,13 @@ const CONFIGURATION = {
 
 const DEFAULT_COLUMNS: GridColDef[] = [];
 
+const TOOLBAR_CONTEXT: GridToolbarRootContextValue = {
+  focusableItemId: null,
+  registerItem: () => {},
+  unregisterItem: () => {},
+  onItemKeyDown: () => {},
+};
+
 /**
  * WARNING: This is an internal component used in documentation to provide the required context for demos.
  * Please do not use it in your application.
@@ -33,7 +44,9 @@ export function DemoContainer<R extends GridValidRowModel>(inProps: DemoContaine
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} configuration={CONFIGURATION} props={props}>
-      {children}
+      <GridToolbarRootContext.Provider value={TOOLBAR_CONTEXT}>
+        {children}
+      </GridToolbarRootContext.Provider>
     </GridContextProvider>
   );
 }

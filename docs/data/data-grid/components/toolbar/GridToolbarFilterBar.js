@@ -19,7 +19,7 @@ function Toolbar({ onRemoveFilter }) {
 
   return (
     <Grid.Toolbar.Root>
-      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button />}>
+      <Grid.FilterPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
         <GridFilterListIcon fontSize="small" />
       </Grid.FilterPanel.Trigger>
 

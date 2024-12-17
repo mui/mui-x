@@ -16,6 +16,8 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUIToggleButton from '@mui/material/ToggleButton';
+import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -50,10 +52,7 @@ import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
 import { Toolbar } from './components/Toolbar';
-import { ToolbarSeparator } from './components/ToolbarSeparator';
 import { ToolbarButton } from './components/ToolbarButton';
-import { ToolbarToggleButton } from './components/ToolbarToggleButton';
-import { ToolbarToggleButtonGroup } from './components/ToolbarToggleButtonGroup';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
@@ -112,9 +111,8 @@ const baseSlots: GridBaseSlots = {
   baseChip: MUIChip,
   baseToolbar: Toolbar,
   baseToolbarButton: ToolbarButton,
-  baseToolbarSeparator: ToolbarSeparator,
-  baseToolbarToggleButton: ToolbarToggleButton,
-  baseToolbarToggleButtonGroup: ToolbarToggleButtonGroup,
+  baseToggleButton: MUIToggleButton,
+  baseToggleButtonGroup: MUIToggleButtonGroup,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {

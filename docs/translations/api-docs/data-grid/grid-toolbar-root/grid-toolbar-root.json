@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "orientation": { "description": "Orientation of the toolbar." },
     "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {}

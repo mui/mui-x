@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 export interface GridToolbarRootContextValue {
-  orientation: 'horizontal' | 'vertical';
   focusableItemId: string | null;
   registerItem: (itemId: string) => void;
   unregisterItem: (itemId: string) => void;

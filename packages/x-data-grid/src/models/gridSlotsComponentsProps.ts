@@ -15,6 +15,8 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
+import type { ToggleButtonProps } from '@mui/material/ToggleButton';
+import type { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -36,8 +38,6 @@ import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/
 import type { ToolbarProps } from '../material/components/Toolbar';
 import type { ToolbarSeparatorProps } from '../material/components/ToolbarSeparator';
 import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
-import type { ToolbarToggleButtonProps } from '../material/components/ToolbarToggleButton';
-import type { ToolbarToggleButtonGroupProps } from '../material/components/ToolbarToggleButtonGroup';
 import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -83,8 +83,8 @@ export interface RowPropsOverrides {}
 export interface BaseToolbarPropsOverrides {}
 export interface BaseToolbarSeparatorPropsOverrides {}
 export interface BaseToolbarButtonPropsOverrides {}
-export interface BaseToolbarToggleButtonPropsOverrides {}
-export interface BaseToolbarToggleButtonGroupPropsOverrides {}
+export interface BaseToggleButtonPropsOverrides {}
+export interface BaseToggleButtonGroupPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -111,9 +111,8 @@ interface BaseSlotProps {
   baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
   baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
   baseToolbarSeparator: ToolbarSeparatorProps & BaseToolbarSeparatorPropsOverrides;
-  baseToolbarToggleButton: ToolbarToggleButtonProps & BaseToolbarToggleButtonPropsOverrides;
-  baseToolbarToggleButtonGroup: ToolbarToggleButtonGroupProps &
-    BaseToolbarToggleButtonGroupPropsOverrides;
+  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
+  baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
 }
 
 interface MaterialSlotProps {

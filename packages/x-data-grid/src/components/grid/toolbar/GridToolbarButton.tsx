@@ -49,19 +49,19 @@ GridToolbarButton.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The color of the button.
-   * @default 'standard'
-   */
-  color: PropTypes.oneOf(['primary', 'standard']),
-  /**
    * If `true`, the base button will have a keyboard focus ripple.
    * @default true
    */
-  disableRipple: PropTypes.bool,
+  focusRipple: PropTypes.bool,
   /**
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The size of the component.
+   * @default 'small'
+   */
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
 } as any;
 
 export { GridToolbarButton };

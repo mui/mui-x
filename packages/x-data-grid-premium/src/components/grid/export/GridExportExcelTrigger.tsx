@@ -54,52 +54,24 @@ GridExportExcelTrigger.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Configure how the export is generated.
+   * The options to apply on the Excel export.
+   * @demos
+   *   - [Excel export](/x/react-data-grid/export/#excel-export)
    */
-  exportOptions: PropTypes.oneOfType([
-    PropTypes.shape({
-      allColumns: PropTypes.bool,
-      columnsStyles: PropTypes.object,
-      escapeFormulas: PropTypes.bool,
-      exceljsPostProcess: PropTypes.func,
-      exceljsPreProcess: PropTypes.func,
-      fields: PropTypes.arrayOf(PropTypes.string),
-      fileName: PropTypes.string,
-      getRowsToExport: PropTypes.func,
-      includeColumnGroupsHeaders: PropTypes.bool,
-      includeHeaders: PropTypes.bool,
-      valueOptionsSheetName: PropTypes.string,
-      worker: PropTypes.func,
-    }),
-    PropTypes.shape({
-      allColumns: PropTypes.bool,
-      delimiter: PropTypes.string,
-      escapeFormulas: PropTypes.bool,
-      fields: PropTypes.arrayOf(PropTypes.string),
-      fileName: PropTypes.string,
-      getRowsToExport: PropTypes.func,
-      includeColumnGroupsHeaders: PropTypes.bool,
-      includeHeaders: PropTypes.bool,
-      shouldAppendQuotes: PropTypes.bool,
-      utf8WithBom: PropTypes.bool,
-    }),
-    PropTypes.shape({
-      allColumns: PropTypes.bool,
-      bodyClassName: PropTypes.string,
-      copyStyles: PropTypes.bool,
-      fields: PropTypes.arrayOf(PropTypes.string),
-      fileName: PropTypes.string,
-      getRowsToExport: PropTypes.func,
-      hideFooter: PropTypes.bool,
-      hideToolbar: PropTypes.bool,
-      includeCheckboxes: PropTypes.bool,
-      pageStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-    }),
-  ]),
-  /**
-   * The type of export to trigger.
-   */
-  exportType: PropTypes.oneOf(['csv', 'excel', 'print']).isRequired,
+  options: PropTypes.shape({
+    allColumns: PropTypes.bool,
+    columnsStyles: PropTypes.object,
+    escapeFormulas: PropTypes.bool,
+    exceljsPostProcess: PropTypes.func,
+    exceljsPreProcess: PropTypes.func,
+    fields: PropTypes.arrayOf(PropTypes.string),
+    fileName: PropTypes.string,
+    getRowsToExport: PropTypes.func,
+    includeColumnGroupsHeaders: PropTypes.bool,
+    includeHeaders: PropTypes.bool,
+    valueOptionsSheetName: PropTypes.string,
+    worker: PropTypes.func,
+  }),
   /**
    * A function to customize rendering of the component.
    */

@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  Grid,
-  GridToolbarButtonProps,
-  GridToolbarQuickFilter,
-} from '@mui/x-data-grid';
+import { DataGrid, Grid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
@@ -15,6 +10,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 
 function Toolbar() {
   const [downloadMenuOpen, setDownloadMenuOpen] = React.useState(false);
@@ -23,7 +19,7 @@ function Toolbar() {
   return (
     <Grid.Toolbar.Root>
       <Tooltip title="Columns">
-        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button />}>
+        <Grid.ColumnsPanel.Trigger render={<Grid.Toolbar.Button size="small" />}>
           <ViewColumnIcon fontSize="small" />
         </Grid.ColumnsPanel.Trigger>
       </Tooltip>
@@ -31,7 +27,7 @@ function Toolbar() {
       <Tooltip title="Filters">
         <Grid.FilterPanel.Trigger
           render={(props, state) => (
-            <Grid.Toolbar.Button {...(props as GridToolbarButtonProps)}>
+            <Grid.Toolbar.Button {...props} size="small">
               <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                 <FilterListIcon fontSize="small" />
               </Badge>
@@ -40,10 +36,10 @@ function Toolbar() {
         />
       </Tooltip>
 
-      <Grid.Toolbar.Separator />
+      <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
 
       <Tooltip title="Print">
-        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button />}>
+        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button size="small" />}>
           <PrintIcon fontSize="small" />
         </Grid.Export.PrintTrigger>
       </Tooltip>
@@ -56,6 +52,7 @@ function Toolbar() {
           aria-haspopup="true"
           aria-expanded={downloadMenuOpen ? 'true' : undefined}
           onClick={() => setDownloadMenuOpen(true)}
+          size="small"
         >
           <FileDownloadIcon fontSize="small" />
           <ArrowDropDownIcon fontSize="small" sx={{ ml: -1, mr: -0.5 }} />

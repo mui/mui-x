@@ -19,6 +19,7 @@ function ExportMenu() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={() => setOpen(true)}
+        size="small"
       >
         <FileDownloadIcon fontSize="small" />
         Export
@@ -33,15 +34,15 @@ function ExportMenu() {
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <Grid.Export.Trigger exportType="csv" render={<MenuItem />}>
+        <Grid.Export.CsvTrigger render={<MenuItem />}>
           Download as CSV
-        </Grid.Export.Trigger>
-        <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
+        </Grid.Export.CsvTrigger>
+        <Grid.Export.ExcelTrigger render={<MenuItem />}>
           Download as Excel
-        </Grid.Export.Trigger>
-        <Grid.Export.Trigger exportType="print" render={<MenuItem />}>
+        </Grid.Export.ExcelTrigger>
+        <Grid.Export.PrintTrigger render={<MenuItem />}>
           Print
-        </Grid.Export.Trigger>
+        </Grid.Export.PrintTrigger>
       </Menu>
     </React.Fragment>
   );

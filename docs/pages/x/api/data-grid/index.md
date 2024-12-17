@@ -12,7 +12,6 @@
 - [GridFilterPanelTrigger](/x/api/data-grid/grid-filter-panel-trigger/)
 - [GridToolbarRoot](/x/api/data-grid/grid-toolbar-root/)
 - [GridToolbarButton](/x/api/data-grid/grid-toolbar-button/)
-- [GridToolbarSeparator](/x/api/data-grid/grid-toolbar-separator/)
 - [GridToolbarToggleButton](/x/api/data-grid/grid-toolbar-toggle-button/)
 - [GridToolbarToggleButtonGroup](/x/api/data-grid/grid-toolbar-toggle-button-group/)
 - [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)

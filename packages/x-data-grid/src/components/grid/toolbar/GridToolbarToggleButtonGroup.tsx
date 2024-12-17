@@ -8,7 +8,7 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../../models';
 
-export type GridToolbarToggleButtonGroupProps = GridSlotProps['baseToolbarToggleButtonGroup'] & {
+export type GridToolbarToggleButtonGroupProps = GridSlotProps['baseToggleButtonGroup'] & {
   /**
    * A function to customize rendering of the component.
    */
@@ -31,9 +31,9 @@ const GridToolbarToggleButtonGroup = React.forwardRef<
   const { render, ...other } = props;
   const rootProps = useGridRootProps();
 
-  return useGridComponentRenderer(rootProps.slots.baseToolbarToggleButtonGroup, render, {
+  return useGridComponentRenderer(rootProps.slots.baseToggleButtonGroup, render, {
     ref,
-    ...rootProps.slotProps?.baseToolbarToggleButtonGroup,
+    ...rootProps.slotProps?.baseToggleButtonGroup,
     ...other,
   });
 });
@@ -47,11 +47,6 @@ GridToolbarToggleButtonGroup.propTypes = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
-  /**
-   * The size of the component.
-   * @default 'small'
-   */
-  size: PropTypes.oneOf(['large', 'medium', 'small']),
 } as any;
 
 export { GridToolbarToggleButtonGroup };

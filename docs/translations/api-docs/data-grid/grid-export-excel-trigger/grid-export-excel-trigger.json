@@ -1,8 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "exportOptions": { "description": "Configure how the export is generated." },
-    "exportType": { "description": "The type of export to trigger." },
+    "options": { "description": "The options to apply on the Excel export." },
     "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {

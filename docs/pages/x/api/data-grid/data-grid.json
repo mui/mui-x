@@ -704,27 +704,21 @@
       "class": null
     },
     {
-      "name": "baseToolbarSeparator",
-      "description": "The custom ToolbarSeparator component used in the grid.",
-      "default": "ToolbarSeparator",
-      "class": null
-    },
-    {
       "name": "baseToolbarButton",
       "description": "The custom ToolbarButton component used in the grid.",
       "default": "ToolbarButton",
       "class": null
     },
     {
-      "name": "baseToolbarToggleButton",
-      "description": "The custom ToolbarToggleButton component used in the grid.",
-      "default": "ToolbarToggleButton",
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
       "class": null
     },
     {
-      "name": "baseToolbarToggleButtonGroup",
-      "description": "The custom ToolbarToggleButtonGroup component used in the grid.",
-      "default": "ToolbarToggleButtonGroup",
+      "name": "baseToggleButtonGroup",
+      "description": "The custom ToggleButtonGroup component used in the grid.",
+      "default": "ToggleButtonGroup",
       "class": null
     },
     {

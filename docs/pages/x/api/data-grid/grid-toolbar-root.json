@@ -1,9 +1,5 @@
 {
   "props": {
-    "orientation": {
-      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
-      "default": "'horizontal'"
-    },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "GridToolbarRoot",

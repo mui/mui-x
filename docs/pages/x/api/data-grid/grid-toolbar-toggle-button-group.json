@@ -1,13 +1,6 @@
 {
   "props": {
-    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
-    "size": {
-      "type": {
-        "name": "enum",
-        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
-      },
-      "default": "'small'"
-    }
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "GridToolbarToggleButtonGroup",
   "imports": [

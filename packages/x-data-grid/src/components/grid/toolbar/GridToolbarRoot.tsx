@@ -13,17 +13,11 @@ export type GridToolbarRootProps = GridSlotProps['baseToolbar'] & {
    * A function to customize rendering of the component.
    */
   render?: RenderProp<{}>;
-  /**
-   * Orientation of the toolbar.
-   *
-   * @default 'horizontal'
-   */
-  orientation?: 'horizontal' | 'vertical';
 };
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
   function GridToolbarRoot(props, ref) {
-    const { render, orientation = 'horizontal', ...other } = props;
+    const { render, ...other } = props;
     const rootProps = useGridRootProps();
 
     const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
@@ -50,19 +44,13 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
           return;
         }
 
-        if (
-          (orientation === 'horizontal' && event.key === 'ArrowRight') ||
-          (orientation === 'vertical' && event.key === 'ArrowDown')
-        ) {
+        if (event.key === 'ArrowRight') {
           event.preventDefault();
           const nextIndex = items.indexOf(focusableItemId) + 1;
           setFocusableItemId(items[nextIndex < items.length ? nextIndex : 0]);
         }
 
-        if (
-          (orientation === 'horizontal' && event.key === 'ArrowLeft') ||
-          (orientation === 'vertical' && event.key === 'ArrowUp')
-        ) {
+        if (event.key === 'ArrowLeft') {
           event.preventDefault();
           const prevIndex = items.indexOf(focusableItemId) - 1;
           setFocusableItemId(items[prevIndex < 0 ? items.length - 1 : prevIndex]);
@@ -78,24 +66,23 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
           setFocusableItemId(items[items.length - 1]);
         }
       },
-      [items, focusableItemId, orientation],
+      [items, focusableItemId],
     );
 
     const contextValue = React.useMemo(
       () => ({
-        orientation,
         focusableItemId,
         registerItem,
         unregisterItem,
         onItemKeyDown,
       }),
-      [registerItem, unregisterItem, focusableItemId, onItemKeyDown, orientation],
+      [registerItem, unregisterItem, focusableItemId, onItemKeyDown],
     );
 
     const element = useGridComponentRenderer(rootProps.slots.baseToolbar, render, {
       ref,
       role: 'toolbar',
-      'aria-orientation': orientation,
+      'aria-orientation': 'horizontal',
       ...rootProps.slotProps?.baseToolbar,
       ...other,
     });
@@ -119,12 +106,6 @@ GridToolbarRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Orientation of the toolbar.
-   *
-   * @default 'horizontal'
-   */
-  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * A function to customize rendering of the component.
    */

@@ -57,10 +57,6 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridToolbarRoot',
   },
   {
-    pathname: '/x/api/data-grid/grid-toolbar-separator',
-    title: 'GridToolbarSeparator',
-  },
-  {
     pathname: '/x/api/data-grid/grid-toolbar-toggle-button',
     title: 'GridToolbarToggleButton',
   },

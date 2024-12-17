@@ -30,7 +30,6 @@ const StyledToolbar = styled('div', {
   alignItems: 'center',
   gap: theme.spacing(0.25),
   padding: theme.spacing(0.5),
-  height: 45,
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
