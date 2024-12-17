@@ -84,7 +84,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   headerFilterOperatorContains: 'Bevat',
   headerFilterOperatorDoesNotContain: 'Bevat niet',
   headerFilterOperatorEquals: 'Gelijk aan',
-  // headerFilterOperatorDoesNotEqual: 'Niet gelijk aan',
+  headerFilterOperatorDoesNotEqual: 'Niet gelijk aan',
   headerFilterOperatorStartsWith: 'Begint met',
   headerFilterOperatorEndsWith: 'Eindigt met',
   headerFilterOperatorIs: 'Is',
