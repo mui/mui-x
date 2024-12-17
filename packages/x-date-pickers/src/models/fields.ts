@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import { ExportedPickersSectionListProps } from '../PickersSectionList';
+import type { ExportedPickersSectionListProps } from '../PickersSectionList';
 import type { UseFieldInternalProps, UseFieldResponse } from '../internals/hooks/useField';
 import type { PickersTextFieldProps } from '../PickersTextField';
 import {
@@ -139,6 +139,16 @@ export interface FieldOwnerState extends PickerOwnerState {
    * `true` if the field is read-only, `false` otherwise.
    */
   isFieldReadOnly: boolean;
+  /**
+   * `true` if the field is required, `false` otherwise.
+   */
+  isFieldRequired: boolean;
+  /**
+   * The direction of the field.
+   * Is equal to "ltr" when the field is in left-to-right direction.
+   * Is equal to "rtl" when the field is in right-to-left direction.
+   */
+  fieldDirection: 'ltr' | 'rtl';
 }
 
 /**

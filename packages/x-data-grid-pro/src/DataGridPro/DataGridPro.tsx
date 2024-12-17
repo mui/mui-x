@@ -47,7 +47,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         style={props.style}
         sx={props.sx}
         ref={ref}
-        {...props.forwardedProps}
+        {...props.slotProps?.root}
       >
         <GridHeader />
         <GridBody>
@@ -187,9 +187,7 @@ DataGridProRaw.propTypes = {
   /**
    * The row ids to show the detail panel.
    */
-  detailPanelExpandedRowIds: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  ),
+  detailPanelExpandedRowIds: PropTypes /* @typescript-to-proptypes-ignore */.instanceOf(Set),
   /**
    * If `true`, column autosizing on header separator double-click is disabled.
    * @default false
@@ -322,11 +320,6 @@ DataGridProRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
