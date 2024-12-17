@@ -146,7 +146,7 @@ export const getRangeFieldValueManager = ({
     }) as PickerRangeValue;
   },
   getDateFromSection: (value, activeSection) => value[getActiveDateIndex(activeSection)],
-  getDateSections: (sections, activeSection) => {
+  getDateSectionsFromValue: (sections, activeSection) => {
     const dateRangeSections = splitDateRangeSections(sections);
     if (getActiveDateIndex(activeSection) === 0) {
       return removeLastSeparator(dateRangeSections.startDate);
