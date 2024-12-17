@@ -36,9 +36,6 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
   [`.${outlinedInputClasses.root}`]: {
     fontSize: theme.typography.body2.fontSize,
   },
-  [`.${outlinedInputClasses.notchedOutline}`]: {
-    borderColor: theme.palette.divider,
-  },
   [`& input[type="search"]::-webkit-search-decoration,
   & input[type="search"]::-webkit-search-cancel-button,
   & input[type="search"]::-webkit-search-results-button,
@@ -155,15 +152,16 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       {...other}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start" sx={{ pointerEvents: 'none' }}>
+          <rootProps.slots.baseInputAdornment position="start">
             <rootProps.slots.quickFilterIcon fontSize="small" />
-          </InputAdornment>
+          </rootProps.slots.baseInputAdornment>
         ),
         endAdornment: (
-          <InputAdornment position="end">
+          <rootProps.slots.baseInputAdornment position="end">
             <rootProps.slots.baseIconButton
               aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
               size="small"
+              edge="end"
               sx={[
                 searchValue
                   ? {
@@ -174,12 +172,11 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                     },
               ]}
               onClick={handleSearchReset}
-              edge="end"
               {...rootProps.slotProps?.baseIconButton}
             >
               <rootProps.slots.quickFilterClearIcon fontSize="small" />
             </rootProps.slots.baseIconButton>
-          </InputAdornment>
+          </rootProps.slots.baseInputAdornment>
         ),
         ...other.InputProps,
       }}
