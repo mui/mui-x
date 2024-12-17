@@ -111,7 +111,7 @@ export const useFieldState = <
   } = params;
 
   const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
-    name: 'useFieldState',
+    name: 'a field component',
     timezone: timezoneProp,
     value: valueProp,
     defaultValue,
