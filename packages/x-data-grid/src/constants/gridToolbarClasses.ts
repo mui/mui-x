@@ -13,10 +13,6 @@ export interface GridToolbarClasses {
    */
   button: string;
   /**
-   * Styles applied to the toolbar separator element.
-   */
-  separator: string;
-  /**
    * Styles applied to the toolbar toggle button element.
    */
   toggleButton: string;
@@ -34,5 +30,5 @@ export function getDataGridToolbarUtilityClass(slot: string): string {
 
 export const gridToolbarClasses = generateUtilityClasses<GridToolbarClassKey>(
   'MuiDataGridToolbar',
-  ['root', 'button', 'separator', 'toggleButton', 'toggleButtonGroup'],
+  ['root', 'button', 'toggleButton', 'toggleButtonGroup'],
 );
