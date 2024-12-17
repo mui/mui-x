@@ -54,6 +54,11 @@ GridToolbarButton.propTypes = {
    */
   color: PropTypes.oneOf(['primary', 'standard']),
   /**
+   * If `true`, the base button will have a keyboard focus ripple.
+   * @default true
+   */
+  disableRipple: PropTypes.bool,
+  /**
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),

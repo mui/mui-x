@@ -73,7 +73,9 @@ export default dataGridApiPages;
       'src/components/grid/toolbar/GridToolbarToggleButtonGroup.tsx',
       'src/components/grid/filterPanel/GridFilterPanelTrigger.tsx',
       'src/components/grid/columnsPanel/GridColumnsPanelTrigger.tsx',
-      // 'src/components/grid/export/GridExportTrigger.tsx',
+      'src/components/grid/export/GridExportPrintTrigger.tsx',
+      'src/components/grid/export/GridExportCsvTrigger.tsx',
+      'src/components/grid/export/GridExportExcelTrigger.tsx',
     ].every((validPath) => !filename.endsWith(validPath));
   },
   skipAnnotatingComponentDefinition: true,

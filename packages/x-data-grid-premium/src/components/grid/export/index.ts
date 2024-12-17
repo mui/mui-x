@@ -1,1 +1,1 @@
-export * from './GridExportTrigger';
+export * from './GridExportExcelTrigger';

@@ -47,6 +47,11 @@ GridToolbarToggleButtonGroup.propTypes = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  /**
+   * The size of the component.
+   * @default 'small'
+   */
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
 } as any;
 
 export { GridToolbarToggleButtonGroup };

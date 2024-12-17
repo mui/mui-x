@@ -20,6 +20,19 @@ const dataGridApiPages: MuiPage[] = [
     title: 'GridColumnsPanelTrigger',
   },
   {
+    pathname: '/x/api/data-grid/grid-export-csv-trigger',
+    title: 'GridExportCsvTrigger',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-export-excel-trigger',
+    title: 'GridExportExcelTrigger',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-export-print-trigger',
+    title: 'GridExportPrintTrigger',
+  },
+  {
     pathname: '/x/api/data-grid/grid-filter-form',
     title: 'GridFilterForm',
   },

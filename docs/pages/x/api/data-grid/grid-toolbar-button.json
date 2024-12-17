@@ -4,6 +4,7 @@
       "type": { "name": "enum", "description": "'primary'<br>&#124;&nbsp;'standard'" },
       "default": "'standard'"
     },
+    "disableRipple": { "type": { "name": "bool" }, "default": "true" },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
   },
   "name": "GridToolbarButton",

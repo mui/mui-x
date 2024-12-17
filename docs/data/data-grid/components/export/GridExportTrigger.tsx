@@ -7,14 +7,14 @@ import PrintIcon from '@mui/icons-material/Print';
 function Toolbar() {
   return (
     <Grid.Toolbar.Root>
-      <Grid.Export.Trigger exportType="csv" render={<Grid.Toolbar.Button />}>
+      <Grid.Export.CsvTrigger render={<Grid.Toolbar.Button />}>
         <FileDownloadIcon fontSize="small" />
         CSV
-      </Grid.Export.Trigger>
-      <Grid.Export.Trigger exportType="print" render={<Grid.Toolbar.Button />}>
+      </Grid.Export.CsvTrigger>
+      <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button />}>
         <PrintIcon fontSize="small" />
         Print
-      </Grid.Export.Trigger>
+      </Grid.Export.PrintTrigger>
     </Grid.Toolbar.Root>
   );
 }

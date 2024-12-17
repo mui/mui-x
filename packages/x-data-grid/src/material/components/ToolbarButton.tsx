@@ -16,16 +16,16 @@ export interface ToolbarButtonProps extends MUIButtonBaseProps {
    * If `true`, the base button will have a keyboard focus ripple.
    * @default true
    */
-  disableRipple?: boolean;
+  focusRipple?: boolean;
 }
 
 type OwnerState = Pick<ToolbarButtonProps, 'color'> & DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, color } = ownerState;
+  const { classes } = ownerState;
 
   const slots = {
-    button: ['button', color],
+    button: ['button'],
   };
 
   return composeClasses(slots, getDataGridToolbarUtilityClass, classes);
@@ -74,15 +74,14 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
     const { color = 'standard', ...other } = props;
     const rootProps = useGridRootProps();
-    const ownerState = { ...rootProps, color };
-    const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(rootProps);
 
     return (
       <StyledToolbarButton
         ref={ref}
         color={color}
         className={classes.button}
-        ownerState={ownerState}
+        ownerState={rootProps}
         focusRipple
         {...other}
       />

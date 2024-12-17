@@ -50,6 +50,11 @@ GridToolbarSeparator.propTypes = {
    * A function to customize rendering of the component.
    */
   render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { GridToolbarSeparator };

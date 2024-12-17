@@ -7,7 +7,9 @@
 The Export component is comprised of the following parts:
 
 ```tsx
-<Grid.Export.Trigger />
+<Grid.Export.PrintTrigger />
+<Grid.Export.CsvTrigger />
+<Grid.Export.ExcelTrigger />
 ```
 
 ### Trigger
@@ -34,4 +36,6 @@ Display export options within a menu on the toolbar.
 
 ## API
 
-- TBC
+- [GridExportPrintTrigger](/x/api/data-grid/grid-export-print-trigger/)
+- [GridExportCsvTrigger](/x/api/data-grid/grid-export-csv-trigger/)
+- [GridExportExcelTrigger](/x/api/data-grid/grid-export-excel-trigger/)

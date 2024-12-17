@@ -2,6 +2,9 @@
   "componentDescription": "",
   "propDescriptions": {
     "color": { "description": "The color of the button." },
+    "disableRipple": {
+      "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
+    },
     "render": { "description": "A function to customize rendering of the component." }
   },
   "classDescriptions": {

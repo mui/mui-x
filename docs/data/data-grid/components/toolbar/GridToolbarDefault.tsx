@@ -43,9 +43,9 @@ function Toolbar() {
       <Grid.Toolbar.Separator />
 
       <Tooltip title="Print">
-        <Grid.Export.Trigger exportType="print" render={<Grid.Toolbar.Button />}>
+        <Grid.Export.PrintTrigger render={<Grid.Toolbar.Button />}>
           <PrintIcon fontSize="small" />
-        </Grid.Export.Trigger>
+        </Grid.Export.PrintTrigger>
       </Tooltip>
 
       <Tooltip title="Download">
@@ -71,13 +71,16 @@ function Toolbar() {
           'aria-labelledby': 'export-menu-trigger',
         }}
       >
-        <Grid.Export.Trigger exportType="csv" render={<MenuItem />}>
+        <Grid.Export.CsvTrigger
+          render={<MenuItem />}
+          onClick={() => setDownloadMenuOpen(false)}
+        >
           Download as CSV
-        </Grid.Export.Trigger>
+        </Grid.Export.CsvTrigger>
         {/* Available to MUI X Premium users */}
-        {/* <Grid.Export.Trigger exportType="excel" render={<MenuItem />}>
+        {/* <Grid.Export.ExcelTrigger render={<MenuItem />}>
           Download as Excel
-        </Grid.Export.Trigger> */}
+        </Grid.Export.ExcelTrigger> */}
       </Menu>
 
       <GridToolbarQuickFilter sx={{ ml: 'auto' }} />
