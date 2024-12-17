@@ -43,7 +43,7 @@ export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProp
    */
   value: PickerValidDate | null;
   /**
-   * Minimal and maximal value of the clock.
+   * Minimum and maximum value of the clock.
    */
   viewRange: [number, number];
   className?: string;
