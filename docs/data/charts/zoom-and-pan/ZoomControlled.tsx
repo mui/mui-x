@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { ZoomData } from '@mui/x-charts-pro/context';
+import { ZoomData } from '@mui/x-charts-pro/models';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
