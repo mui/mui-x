@@ -28,6 +28,7 @@ export const useChartDataProviderProps = <
     children,
     skipAnimation,
     plugins,
+    seriesConfig,
     ...other
   } = props;
 
@@ -35,6 +36,7 @@ export const useChartDataProviderProps = <
 
   const chartProviderProps: Omit<ChartProviderProps<TSignatures, TSeries>, 'children'> = {
     plugins,
+    seriesConfig,
     pluginParams: {
       width,
       height,

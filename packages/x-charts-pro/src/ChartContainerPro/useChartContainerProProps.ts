@@ -49,7 +49,6 @@ export const useChartContainerProProps = <TSeries extends ChartSeriesType = Char
     chartDataProviderProProps: {
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
-
       plugins: [
         // eslint-disable-next-line react-compiler/react-compiler
         useChartCartesianAxis as unknown as ChartPlugin<UseChartCartesianAxisSignature<TSeries>>,

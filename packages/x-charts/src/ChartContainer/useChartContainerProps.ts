@@ -40,6 +40,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     yAxis,
     zAxis,
     skipAnimation,
+    seriesConfig,
     ...other
   } = props;
 
@@ -68,6 +69,7 @@ export const useChartContainerProps = <TSeries extends ChartSeriesType = ChartSe
     skipAnimation,
     width,
     height,
+    seriesConfig,
     plugins: [useChartCartesianAxis as any],
   };
 
