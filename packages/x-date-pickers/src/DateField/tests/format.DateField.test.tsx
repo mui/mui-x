@@ -16,6 +16,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
       enableAccessibleFieldDOMStructure: true,
       // For Day.js: "[Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
+      value: null,
     });
     expectFieldValueV7(view.getSectionsContainer(), 'Escaped YYYY');
 
@@ -26,9 +27,10 @@ describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProp
 
     // Test with non-accessible DOM structure
     view = renderWithProps({
+      enableAccessibleFieldDOMStructure: false,
       // For Day.js: "[Escaped] YYYY"
       format: `${startChar}Escaped${endChar} ${adapter.formats.year}`,
-      enableAccessibleFieldDOMStructure: false,
+      value: null,
     });
     const input = getTextbox();
     expectFieldPlaceholderV6(input, 'Escaped YYYY');

@@ -140,7 +140,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first and last section of each date', () => {
+    it('should call `onChange` when clearing the first section of each date', () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -155,27 +155,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Start date
       fireEvent.keyDown(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
+      expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
+      expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(1), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
+
       fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(2), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(2);
-      expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+      expect(onChangeV7.callCount).to.equal(1);
 
       // End date
       fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
       fireEvent.keyDown(view.getActiveSection(3), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(3);
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
-      fireEvent.keyDown(view.getActiveSection(5), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(4);
+      expect(onChangeV7.callCount).to.equal(2);
       expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
+
+      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(4), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(2);
+
+      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
+      fireEvent.keyDown(view.getActiveSection(5), { key: 'Delete' });
+      expect(onChangeV7.callCount).to.equal(2);
 
       view.unmount();
 
@@ -194,27 +198,31 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
       // Start date
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
+      expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
+      expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
+
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(2);
-      expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
-      expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(adapter.addYears(adapter.date(), 1));
+      expect(onChangeV6.callCount).to.equal(1);
 
       // End date
       fireEvent.keyDown(input, { key: 'ArrowRight' });
       fireEvent.keyDown(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(3);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(3);
-      fireEvent.keyDown(input, { key: 'ArrowRight' });
-      fireEvent.keyDown(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(4);
+      expect(onChangeV6.callCount).to.equal(2);
       expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
       expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(2);
+
+      fireEvent.keyDown(input, { key: 'ArrowRight' });
+      fireEvent.keyDown(input, { key: 'Delete' });
+      expect(onChangeV6.callCount).to.equal(2);
     });
 
     it('should not call `onChange` if the section is already empty', () => {
@@ -392,7 +400,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expect(onChangeV6.callCount).to.equal(0);
       });
 
-      it('should call `onChange` when clearing the first and last section of each date (Backspace)', () => {
+      it('should call `onChange` when clearing the first section of each date (Backspace)', () => {
         // Test with accessible DOM structure
         const onChangeV7 = spy();
 
@@ -407,29 +415,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Start date
         view.pressKey(0, '');
         expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
-        view.pressKey(1, '');
-        expect(onChangeV7.callCount).to.equal(1);
-        fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
-        view.pressKey(2, '');
-        expect(onChangeV7.callCount).to.equal(2);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).toEqualDateTime(
           adapter.addYears(adapter.date(), 1),
         );
 
+        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+        view.pressKey(1, '');
+        expect(onChangeV7.callCount).to.equal(1);
+
+        fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
+        view.pressKey(2, '');
+        expect(onChangeV7.callCount).to.equal(1);
+
         // End date
         fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
         view.pressKey(3, '');
-        expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
-        view.pressKey(4, '');
-        expect(onChangeV7.callCount).to.equal(3);
-        fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
-        view.pressKey(5, '');
-        expect(onChangeV7.callCount).to.equal(4);
+        expect(onChangeV7.callCount).to.equal(2);
         expect(onChangeV7.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV7.lastCall.firstArg[1]).to.equal(null);
+
+        fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
+        view.pressKey(4, '');
+        expect(onChangeV7.callCount).to.equal(2);
+
+        fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
+        view.pressKey(5, '');
+        expect(onChangeV7.callCount).to.equal(2);
 
         view.unmount();
 
@@ -448,29 +460,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         // Start date
         fireEvent.change(input, { target: { value: '/15/2022 – 06/15/2023' } });
         expect(onChangeV6.callCount).to.equal(1);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM//2022 – 06/15/2023' } });
-        expect(onChangeV6.callCount).to.equal(1);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } });
-        expect(onChangeV6.callCount).to.equal(2);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).toEqualDateTime(
           adapter.addYears(adapter.date(), 1),
         );
 
+        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        fireEvent.change(input, { target: { value: 'MM//2022 – 06/15/2023' } });
+        expect(onChangeV6.callCount).to.equal(1);
+
+        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        fireEvent.change(input, { target: { value: 'MM/DD/ – 06/15/2023' } });
+        expect(onChangeV6.callCount).to.equal(1);
+
         // End date
         fireEvent.keyDown(input, { key: 'ArrowRight' });
         fireEvent.change(input, { target: { value: 'MM/DD/YYYY – /15/2023' } });
-        expect(onChangeV6.callCount).to.equal(3);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });
-        expect(onChangeV6.callCount).to.equal(3);
-        fireEvent.keyDown(input, { key: 'ArrowRight' });
-        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } });
-        expect(onChangeV6.callCount).to.equal(4);
+        expect(onChangeV6.callCount).to.equal(2);
         expect(onChangeV6.lastCall.firstArg[0]).to.equal(null);
         expect(onChangeV6.lastCall.firstArg[1]).to.equal(null);
+
+        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM//2023' } });
+        expect(onChangeV6.callCount).to.equal(2);
+
+        fireEvent.keyDown(input, { key: 'ArrowRight' });
+        fireEvent.change(input, { target: { value: 'MM/DD/YYYY – MM/DD/' } });
+        expect(onChangeV6.callCount).to.equal(2);
       });
 
       it('should not call `onChange` if the section is already empty (Backspace)', () => {

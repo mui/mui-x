@@ -273,14 +273,14 @@ export const useFieldState = <
 
     setSectionUpdateToApplyOnNextEmptyValue('');
 
-    if (fieldValueManager.getDateFromSection(value, activeSection!) == null) {
+    if (fieldValueManager.getDateFromSection(value, activeSection!) === null) {
       setState((prevState) => ({
         ...prevState,
         sections: setSectionValue(activeSectionIndex, ''),
         tempValueStrAndroid: null,
       }));
     } else {
-      publishValue(valueManager.emptyValue);
+      publishValue(fieldValueManager.updateDateInValue(value, activeSection, null));
     }
   };
 
