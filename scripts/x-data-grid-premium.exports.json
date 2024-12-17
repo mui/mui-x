@@ -19,7 +19,6 @@
   { "name": "BaseToggleButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseToolbarButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseToolbarPropsOverrides", "kind": "Interface" },
-  { "name": "BaseToolbarSeparatorPropsOverrides", "kind": "Interface" },
   { "name": "BaseTooltipPropsOverrides", "kind": "Interface" },
   { "name": "CellPropsOverrides", "kind": "Interface" },
   { "name": "checkGridRowIdIsValid", "kind": "Function" },

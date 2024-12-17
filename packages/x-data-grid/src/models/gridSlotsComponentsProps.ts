@@ -36,7 +36,6 @@ import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type { ToolbarProps } from '../material/components/Toolbar';
-import type { ToolbarSeparatorProps } from '../material/components/ToolbarSeparator';
 import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
 import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
 
@@ -81,7 +80,6 @@ export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 export interface BaseToolbarPropsOverrides {}
-export interface BaseToolbarSeparatorPropsOverrides {}
 export interface BaseToolbarButtonPropsOverrides {}
 export interface BaseToggleButtonPropsOverrides {}
 export interface BaseToggleButtonGroupPropsOverrides {}
@@ -110,7 +108,6 @@ interface BaseSlotProps {
   baseChip: ChipProps & BaseChipPropsOverrides;
   baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
   baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
-  baseToolbarSeparator: ToolbarSeparatorProps & BaseToolbarSeparatorPropsOverrides;
   baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
   baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
 }
