@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
-import { ChartSeriesType } from '../../models/seriesType/config';
-import { useChartContext } from './useChartContext';
-import { DefaultizedSeriesType } from '../../models/seriesType';
-import { AxisDefaultized } from '../../models/axis';
-import { ZAxisDefaultized } from '../../models/z-axis';
+import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { DefaultizedSeriesType } from '../../../../models/seriesType';
+import { AxisDefaultized } from '../../../../models/axis';
+import { ZAxisDefaultized } from '../../../../models/z-axis';
+import { useSelector } from '../../../store/useSelector';
+import { useStore } from '../../../store/useStore';
+import { selectorChartSeriesConfig } from './useChartSeries.selectors';
 
 export type ColorProcessor<T extends ChartSeriesType> = (
   series: DefaultizedSeriesType<T>,
@@ -22,15 +24,18 @@ export function useColorProcessor<T extends ChartSeriesType>(
 ): ColorProcessorsConfig<T>[T];
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
-  const context = useChartContext();
+  const store = useStore();
+  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
 
   const colorProcessors = React.useMemo(() => {
     const rep: ColorProcessorsConfig<ChartSeriesType> = {};
-    Object.keys(context.seriesConfig).forEach((seriesT) => {
-      rep[seriesT as ChartSeriesType] = context.seriesConfig[seriesT].colorProcessor;
-    });
+    (Object.keys(seriesConfig) as ChartSeriesType[]).forEach(
+      <T extends ChartSeriesType>(seriesT: T) => {
+        rep[seriesT] = seriesConfig[seriesT].colorProcessor;
+      },
+    );
     return rep;
-  }, [context.seriesConfig]);
+  }, [seriesConfig]);
 
   if (!seriesType) {
     return colorProcessors;

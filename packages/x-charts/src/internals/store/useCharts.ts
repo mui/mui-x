@@ -125,9 +125,8 @@ export function useCharts<
       publicAPI,
       instance,
       svgRef: innerSvgRef,
-      seriesConfig,
     }),
-    [instance, publicAPI, seriesConfig],
+    [instance, publicAPI],
   );
 
   return { contextValue };

@@ -1,6 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import { useColorProcessor } from '../context/ChartProvider/useColorProcessor';
+import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import {
   ChartItemIdentifier,
   ChartSeriesDefaultized,
