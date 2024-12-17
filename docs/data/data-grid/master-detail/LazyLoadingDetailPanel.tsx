@@ -12,9 +12,11 @@ import {
   randomTraderName,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { DataGridProps } from '@mui/x-data-grid';
+import { DataGridProps, GridRowId } from '@mui/x-data-grid';
 
-const DetailPanelDataCache = React.createContext<Map<string, any>>(new Map());
+type Products = Awaited<ReturnType<typeof getProducts>>;
+
+const DetailPanelDataCache = React.createContext(new Map<GridRowId, Products>());
 
 async function getProducts(orderId: Customer['id']) {
   await new Promise((resolve) => {
@@ -48,7 +50,8 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
         // Store the data in cache so that when detail panel unmounts due to virtualization, the data is not lost
         detailPanelDataCache.set(rowProp.id, response);
       }
-      const result = detailPanelDataCache.get(rowProp.id);
+
+      const result = detailPanelDataCache.get(rowProp.id)!;
 
       if (!isMounted) {
         return;
@@ -127,21 +130,18 @@ const getDetailPanelContent: DataGridProps['getDetailPanelContent'] = (params) =
 const getDetailPanelHeight = () => 240;
 
 export default function LazyLoadingDetailPanel() {
-  const detailPanelDataCache = React.useRef(new Map()).current;
+  const detailPanelDataCache = React.useRef(new Map<GridRowId, Products>()).current;
 
   const handleDetailPanelExpansionChange = React.useCallback<
     NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
   >(
     (newExpandedRowIds) => {
       // Only keep cached data for detail panels that are still expanded
-      const preservedEntries = newExpandedRowIds.map((id) => [
-        id,
-        detailPanelDataCache.get(id),
-      ]);
-      detailPanelDataCache.clear();
-      preservedEntries.forEach(
-        ([id, value]) => value && detailPanelDataCache.set(id, value),
-      );
+      for (const [id] of detailPanelDataCache) {
+        if (!newExpandedRowIds.has(id)) {
+          detailPanelDataCache.delete(id);
+        }
+      }
     },
     [detailPanelDataCache],
   );
