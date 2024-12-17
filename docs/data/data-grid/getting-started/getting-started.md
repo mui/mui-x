@@ -158,7 +158,7 @@ const theme = createTheme({
 
 ## Licenses
 
-While MUI Core is entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
+While our Core libraries are entirely licensed under MIT, MUI X serves a part of its components under a commercial license.
 Please pay attention to the license.
 
 ### Plans

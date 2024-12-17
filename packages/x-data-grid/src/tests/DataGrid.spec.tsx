@@ -219,8 +219,6 @@ function ApiRefPrivateMethods() {
     apiRef.current.applyStrategyProcessor;
     // @ts-expect-error Property 'storeDetailPanelHeight' does not exist on type 'GridApiCommunity'
     apiRef.current.storeDetailPanelHeight;
-    // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiCommunity'
-    apiRef.current.detailPanelHasAutoHeight;
     // @ts-expect-error Property 'calculateColSpan' does not exist on type 'GridApiCommunity'
     apiRef.current.calculateColSpan;
     // @ts-expect-error Property 'rowHasAutoHeight' does not exist on type 'GridApiCommunity'

@@ -35,7 +35,7 @@ const formatter: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset)
         {
           ...seriesData,
           data,
-          valueFormatter: seriesData.valueFormatter ?? ((v) => `(${v.x}, ${v.y})`),
+          valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];
     }),

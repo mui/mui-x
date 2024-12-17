@@ -16,12 +16,12 @@ export interface GridDetailPanelApi {
    * Returns the rows whose detail panel is open.
    * @returns {GridRowId[]} An array of row ids.
    */
-  getExpandedDetailPanels: () => GridRowId[];
+  getExpandedDetailPanels: () => Set<GridRowId>;
   /**
    * Changes which rows to expand the detail panel.
    * @param {GridRowId[]} ids The ids of the rows to open the detail panel.
    */
-  setExpandedDetailPanels: (ids: GridRowId[]) => void;
+  setExpandedDetailPanels: (ids: Set<GridRowId>) => void;
 }
 
 export interface GridDetailPanelPrivateApi {
@@ -31,16 +31,10 @@ export interface GridDetailPanelPrivateApi {
    * @param {number} height The new height.
    */
   storeDetailPanelHeight: (id: GridRowId, height: number) => void;
-  /**
-   * Determines if the height of a detail panel is "auto".
-   * @param {GridRowId} id The id of the row.
-   * @returns {boolean} `true` if the detail panel height is "auto".
-   */
-  detailPanelHasAutoHeight: (id: GridRowId) => boolean;
 }
 
 export interface GridDetailPanelState {
-  expandedRowIds: GridRowId[];
+  expandedRowIds: Set<GridRowId>;
   contentCache: Record<GridRowId, React.ReactNode>;
   heightCache: DetailPanelHeightCache;
 }

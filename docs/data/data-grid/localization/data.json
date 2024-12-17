@@ -155,7 +155,7 @@
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 45,
+    "missingKeysCount": 0,
     "totalKeysCount": 132,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/koKR.ts"
   },
