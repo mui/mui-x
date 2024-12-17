@@ -14,7 +14,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersFilledInputProps extends PickersInputBaseProps {
@@ -22,9 +22,9 @@ export interface PickersFilledInputProps extends PickersInputBaseProps {
   hiddenLabel?: boolean;
 }
 
-export interface PickersFilledInputOwnerState extends PickersTextFieldOwnerState {
+export interface PickerFilledInputOwnerState extends PickerTextFieldOwnerState {
   /**
-   * If `true`, the input  have an underline, `false` otherwise.
+   * `true` if the input  has an underline, `false` otherwise.
    */
   inputHasUnderline: boolean;
 }
@@ -34,7 +34,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
-})<{ ownerState: PickersFilledInputOwnerState }>(({ theme }) => {
+})<{ ownerState: PickerFilledInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   const backgroundColor = light ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.09)';
@@ -129,13 +129,13 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
         },
       },
       {
-        props: { isInputAdornedStart: true },
+        props: { hasStartAdornment: true },
         style: {
           paddingLeft: 12,
         },
       },
       {
-        props: { isInputAdornedEnd: true },
+        props: { hasEndAdornment: true },
         style: {
           paddingRight: 12,
         },
@@ -149,7 +149,7 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
   slot: 'sectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'hiddenLabel',
-})<{ ownerState: PickersFilledInputOwnerState }>({
+})<{ ownerState: PickerFilledInputOwnerState }>({
   paddingTop: 25,
   paddingRight: 12,
   paddingBottom: 8,
@@ -163,13 +163,13 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
       },
     },
     {
-      props: { isInputAdornedStart: true },
+      props: { hasStartAdornment: true },
       style: {
         paddingLeft: 0,
       },
     },
     {
-      props: { isInputAdornedEnd: true },
+      props: { hasEndAdornment: true },
       style: {
         paddingRight: 0,
       },
@@ -193,7 +193,7 @@ const PickersFilledSectionsContainer = styled(PickersInputBaseSectionsContainer,
 
 const useUtilityClasses = (
   classes: Partial<PickersFilledInputClasses> | undefined,
-  ownerState: PickersFilledInputOwnerState,
+  ownerState: PickerFilledInputOwnerState,
 ) => {
   const { inputHasUnderline } = ownerState;
 
@@ -232,7 +232,7 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
   } = props;
 
   const pickerTextFieldOwnerState = usePickerTextFieldOwnerState();
-  const ownerState: PickersFilledInputOwnerState = {
+  const ownerState: PickerFilledInputOwnerState = {
     ...pickerTextFieldOwnerState,
     inputHasUnderline: !disableUnderline,
   };

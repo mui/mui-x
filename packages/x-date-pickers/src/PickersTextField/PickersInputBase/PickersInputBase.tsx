@@ -22,7 +22,7 @@ import {
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -30,7 +30,7 @@ export const PickersInputBaseRoot = styled('div', {
   name: 'MuiPickersInputBase',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   ...theme.typography.body1,
   color: (theme.vars || theme).palette.text.primary,
   cursor: 'text',
@@ -43,7 +43,7 @@ export const PickersInputBaseRoot = styled('div', {
   letterSpacing: `${round(0.15 / 16)}em`,
   variants: [
     {
-      props: { inputFullWidth: true },
+      props: { isInputInFullWidth: true },
       style: { width: '100%' },
     },
   ],
@@ -53,7 +53,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
   name: 'MuiPickersInputBase',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => ({
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => ({
   padding: '4px 0 5px',
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -80,16 +80,15 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
       },
     },
     {
-      props: { isInputAdornedStart: false, isFieldFocused: false, isFieldValueEmpty: true },
+      props: { hasStartAdornment: false, isFieldFocused: false, isFieldValueEmpty: true },
       style: {
         color: 'currentColor',
         opacity: 0,
       },
     },
     {
-      // Can't use the object notation because label can be null or undefined
       props: {
-        isInputAdornedStart: false,
+        hasStartAdornment: false,
         isFieldFocused: false,
         isFieldValueEmpty: true,
         inputHasLabel: false,
@@ -148,7 +147,7 @@ const PickersInputBaseInput = styled('input', {
 
 const useUtilityClasses = (
   classes: Partial<PickersInputBaseClasses> | undefined,
-  ownerState: PickersTextFieldOwnerState,
+  ownerState: PickerTextFieldOwnerState,
 ) => {
   const {
     isFieldFocused,
@@ -156,10 +155,10 @@ const useUtilityClasses = (
     isFieldReadOnly,
     hasFieldError,
     inputSize,
-    inputFullWidth,
+    isInputInFullWidth,
     inputColor,
-    isInputAdornedStart,
-    isInputAdornedEnd,
+    hasStartAdornment,
+    hasEndAdornment,
   } = ownerState;
 
   const slots = {
@@ -169,11 +168,11 @@ const useUtilityClasses = (
       isFieldDisabled && 'disabled',
       isFieldReadOnly && 'readOnly',
       hasFieldError && 'error',
-      inputFullWidth && 'fullWidth',
+      isInputInFullWidth && 'fullWidth',
       `color${capitalize(inputColor!)}`,
       inputSize === 'small' && 'inputSizeSmall',
-      isInputAdornedStart && 'adornedStart',
-      isInputAdornedEnd && 'adornedEnd',
+      hasStartAdornment && 'adornedStart',
+      hasEndAdornment && 'adornedEnd',
     ],
     notchedOutline: ['notchedOutline'],
     input: ['input'],
@@ -230,7 +229,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     ...other
   } = props;
 
-  const ownerStateCtx = usePickerTextFieldOwnerState();
+  const ownerStateContext = usePickerTextFieldOwnerState();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const handleRootRef = useForkRef(ref, rootRef);
   const handleInputRef = useForkRef(inputProps?.ref, inputRef);
@@ -241,7 +240,7 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
     );
   }
 
-  const ownerState = ownerStateProp ?? ownerStateCtx;
+  const ownerState = ownerStateProp ?? ownerStateContext;
 
   const handleInputFocus = (event: React.FocusEvent<HTMLDivElement>) => {
     muiFormControl.onFocus?.(event);

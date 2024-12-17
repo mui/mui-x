@@ -122,9 +122,9 @@ const PickersTextField = React.forwardRef(function PickersTextField(
       hasFieldError: error ?? false,
       inputSize: props.size ?? 'medium',
       inputColor: color ?? 'primary',
-      inputFullWidth: fullWidth ?? false,
-      isInputAdornedStart: Boolean(startAdornment ?? InputProps?.startAdornment),
-      isInputAdornedEnd: Boolean(endAdornment ?? InputProps?.endAdornment),
+      isInputInFullWidth: fullWidth ?? false,
+      hasStartAdornment: Boolean(startAdornment ?? InputProps?.startAdornment),
+      hasEndAdornment: Boolean(endAdornment ?? InputProps?.endAdornment),
       inputHasLabel: !!label,
     }),
     [

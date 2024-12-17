@@ -15,7 +15,7 @@ import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;
@@ -25,7 +25,7 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
   name: 'MuiPickersOutlinedInput',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => {
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -77,7 +77,7 @@ const PickersOutlinedInputSectionsContainer = styled(PickersInputBaseSectionsCon
   name: 'MuiPickersOutlinedInput',
   slot: 'SectionsContainer',
   overridesResolver: (props, styles) => styles.sectionsContainer,
-})<{ ownerState: PickersTextFieldOwnerState }>({
+})<{ ownerState: PickerTextFieldOwnerState }>({
   padding: '16.5px 0',
   variants: [
     {

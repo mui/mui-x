@@ -11,16 +11,16 @@ import {
 } from './pickersInputClasses';
 import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
 import { PickersInputBaseRoot } from '../PickersInputBase/PickersInputBase';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 
 export interface PickersInputProps extends PickersInputBaseProps {
   disableUnderline?: boolean;
 }
 
-interface PickersInputOwnerState extends PickersTextFieldOwnerState {
+interface PickerInputOwnerState extends PickerTextFieldOwnerState {
   /**
-   * If `true`, the input  have an underline, `false` otherwise.
+   * `true` if the input has an underline, `false` otherwise.
    */
   inputHasUnderline: boolean;
 }
@@ -30,7 +30,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'disableUnderline',
-})<{ ownerState: PickersInputOwnerState }>(({ theme }) => {
+})<{ ownerState: PickerInputOwnerState }>(({ theme }) => {
   const light = theme.palette.mode === 'light';
   let bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
   if (theme.vars) {
@@ -112,7 +112,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
 
 const useUtilityClasses = (
   classes: Partial<PickersInputClasses> | undefined,
-  ownerState: PickersInputOwnerState,
+  ownerState: PickerInputOwnerState,
 ) => {
   const { inputHasUnderline } = ownerState;
 
@@ -151,7 +151,7 @@ const PickersInput = React.forwardRef(function PickersInput(
   } = props;
 
   const pickerTextFieldOwnerState = usePickerTextFieldOwnerState();
-  const ownerState: PickersInputOwnerState = {
+  const ownerState: PickerInputOwnerState = {
     ...pickerTextFieldOwnerState,
     inputHasUnderline: !disableUnderline,
   };

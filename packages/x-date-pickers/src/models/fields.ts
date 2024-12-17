@@ -148,8 +148,8 @@ export interface FieldOwnerState extends PickerOwnerState {
   isFieldRequired: boolean;
   /**
    * The direction of the field.
-   * Is equal to "ltr" when the toolbar is in left-to-right direction.
-   * Is equal to "rtl" when the toolbar is in right-to-left direction.
+   * Is equal to "ltr" when the field is in left-to-right direction.
+   * Is equal to "rtl" when the field is in right-to-left direction.
    */
   fieldDirection: 'ltr' | 'rtl';
 }

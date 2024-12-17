@@ -81,7 +81,7 @@ export type PickersTextFieldProps<Variant extends TextFieldVariants = TextFieldV
       ? PickersStandardTextFieldProps
       : PickersOutlinedTextFieldProps;
 
-export interface PickersTextFieldOwnerState extends FieldOwnerState {
+export interface PickerTextFieldOwnerState extends FieldOwnerState {
   // Should be moved to FieldOwnerState once we drop the textField slot.
   /**
    * `true` if the value of the field is currently empty.
@@ -108,15 +108,15 @@ export interface PickersTextFieldOwnerState extends FieldOwnerState {
   /**
    * `true` if the input takes up the full width of its container.
    */
-  inputFullWidth: boolean;
+  isInputInFullWidth: boolean;
   /**
    * `true` if the input has a start adornment, `false` otherwise.
    */
-  isInputAdornedStart: boolean;
+  hasStartAdornment: boolean;
   /**
    * `true` if the input has an end adornment, `false` otherwise.
    */
-  isInputAdornedEnd: boolean;
+  hasEndAdornment: boolean;
   /**
    * `true` if the input has a label, `false` otherwise.
    */
