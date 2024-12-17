@@ -8,6 +8,7 @@ import { ChartSeriesConfig } from '../../models/seriesConfig';
 import { getAxisExtremum } from './getAxisExtremum';
 import { DefaultizedZoomOption, ExtremumFilter } from './useChartCartesianAxis.types';
 import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
+import { getScale } from '../../../getScale';
 
 type CreateAxisFilterMapperParams = {
   zoomMap: Map<AxisId, ZoomData>;
@@ -50,8 +51,10 @@ export const createAxisFilterMapper =
     let min: number | Date;
     let max: number | Date;
 
-    // @ts-expect-error The function defaults to linear scale if the scaleType is not recognized.
-    [min, max] = getScale(scaleType, extremums, [0, 100]).nice().domain();
+    const continuousScaleType =
+      !scaleType || scaleType === 'band' || scaleType === 'point' ? 'linear' : scaleType;
+
+    [min, max] = getScale(continuousScaleType, extremums, [0, 100]).nice().domain();
 
     min = min instanceof Date ? min.getTime() : min;
     max = max instanceof Date ? max.getTime() : max;
