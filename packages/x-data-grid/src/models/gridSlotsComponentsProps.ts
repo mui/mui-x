@@ -1,6 +1,8 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
 import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
+import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
 import type { TextFieldProps } from '@mui/material/TextField';
@@ -113,6 +115,8 @@ interface BaseSlotProps {
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
+  baseCircularProgress: MUICircularProgressProps;
+  baseLinearProgress: MUILinearProgressProps;
   baseMenuItem: MUIMenuItemProps;
 }
 
