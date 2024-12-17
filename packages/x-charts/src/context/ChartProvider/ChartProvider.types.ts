@@ -41,6 +41,9 @@ export interface ChartProviderProps<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TSeries extends ChartSeriesType = ChartSeriesType,
 > {
+  /**
+   * Array of plugins used to add features to the chart.
+   */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
   seriesConfig?: ChartSeriesConfig<TSeries>;

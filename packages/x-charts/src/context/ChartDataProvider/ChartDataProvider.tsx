@@ -23,8 +23,7 @@ export type ChartDataProviderProps<
     ChartProviderProps<TSignatures, TSeries>['pluginParams'],
   'children'
 > &
-  Pick<ChartProviderProps<TSignatures, TSeries>, 'seriesConfig'> & {
-    plugins?: ChartProviderProps<TSignatures, TSeries>['plugins'];
+  Pick<ChartProviderProps<TSignatures, TSeries>, 'seriesConfig' | 'plugins'> & {
     children?: React.ReactNode;
   };
 
@@ -118,7 +117,6 @@ ChartDataProvider.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.any,
-  plugins: PropTypes.object,
   /**
    * The array of series to display.
    * Each type of series has its own specificity.

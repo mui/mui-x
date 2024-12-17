@@ -8,6 +8,8 @@ import {
   ConvertSignaturesIntoPlugins,
 } from '../../internals/plugins/models';
 import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { plugin as barPlugin } from '../../BarChart/plugin';
 import { plugin as scatterPlugin } from '../../ScatterChart/plugin';
 import { plugin as linePlugin } from '../../LineChart/plugin';
@@ -21,13 +23,17 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
   pie: piePlugin,
 };
 
+// For consistency with the v7, the cartesian axes are set by default.
+// To remove them, you can provide a `plugins` props.
+const defaultPlugins = [useChartCartesianAxis, useChartInteraction];
+
 function ChartProvider<
   TSignatures extends readonly ChartAnyPluginSignature[],
   TSeriesType extends ChartSeriesType,
 >(props: ChartProviderProps<TSignatures, TSeriesType>) {
   const {
     children,
-    plugins = [] as ConvertSignaturesIntoPlugins<TSignatures>,
+    plugins = defaultPlugins as unknown as ConvertSignaturesIntoPlugins<TSignatures>,
     pluginParams = {},
     seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType>,
   } = props;

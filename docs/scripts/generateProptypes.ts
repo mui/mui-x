@@ -117,6 +117,9 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
           return false;
         }
+        if (['plugins'].includes(prop.name) && component.name.startsWith('Chart')) {
+          return false;
+        }
         let shouldExclude = false;
 
         if (prop.propType.type === 'InterfaceNode') {
