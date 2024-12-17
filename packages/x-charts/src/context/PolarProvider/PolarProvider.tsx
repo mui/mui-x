@@ -1,3 +1,4 @@
+'use client';
 // 'use client';
 // import * as React from 'react';
 // import { computeAxisValue } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/computeAxisValue';
