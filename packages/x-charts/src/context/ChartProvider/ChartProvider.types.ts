@@ -31,6 +31,10 @@ export type ChartContextValue<
    * The ref to the <svg />.
    */
   svgRef: React.RefObject<SVGSVGElement>;
+  /**
+   * The mapping of series type to their processors (extremum getter, color getter, formatter).
+   */
+  seriesConfig: ChartSeriesConfig<any>;
 };
 
 export interface ChartProviderProps<
