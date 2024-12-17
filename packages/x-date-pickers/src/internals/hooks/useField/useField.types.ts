@@ -221,17 +221,13 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
-   * @param {MuiPickersAdapter} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
-   * @param {InferFieldSection<TValue>[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
-   * @param {(date: PickerValidDate) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
+   * @param {(date: PickerValidDate | null) => FieldSection[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {InferFieldSection<TValue>[]}  The new section list.
    */
   getSectionsFromValue: (
-    utils: MuiPickersAdapter,
     value: TValue,
-    fallbackSections: InferFieldSection<TValue>[] | null,
-    getSectionsFromDate: (date: PickerValidDate) => FieldSection[],
+    getSectionsFromDate: (date: PickerValidDate | null) => FieldSection[],
   ) => InferFieldSection<TValue>[];
   /**
    * Creates the string value to render in the input based on the current section list.
@@ -295,7 +291,7 @@ export interface FieldValueManager<TValue extends PickerValidValue> {
    * @param {InferFieldSection<TValue>} section A section of the date from which we want to get all the sections.
    * @returns {InferFieldSection<TValue>[]} The sections of the date that contains the section.
    */
-  getDateSections: (
+  getDateSectionsFromValue: (
     sections: InferFieldSection<TValue>[],
     section: InferFieldSection<TValue>,
   ) => InferFieldSection<TValue>[];

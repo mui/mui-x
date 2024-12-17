@@ -41,21 +41,13 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
 export const singleItemFieldValueManager: FieldValueManager<PickerValue> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
-    const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
-
-    if (shouldReUsePrevDateSections) {
-      return prevSections;
-    }
-
-    return getSectionsFromDate(date!);
-  },
+  getSectionsFromValue: (date, getSectionsFromDate) => getSectionsFromDate(date),
   getV7HiddenInputValueFromSections: createDateStrForV7HiddenInputFromSections,
   getV6InputValueFromSections: createDateStrForV6InputFromSections,
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   getDateFromSection: (value) => value,
-  getDateSections: (sections) => sections,
+  getDateSectionsFromValue: (sections) => sections,
   updateDateInValue: (value, activeSection, activeDate) => activeDate,
   clearDateSections: (sections) => sections.map((section) => ({ ...section, value: '' })),
 };

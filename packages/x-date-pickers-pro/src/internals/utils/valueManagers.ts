@@ -96,23 +96,8 @@ export const getRangeFieldValueManager = ({
 
     return [prevReferenceValue[1]!, value[1]!];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
-    const separatedFallbackSections =
-      fallbackSections == null
-        ? { startDate: null, endDate: null }
-        : splitDateRangeSections(fallbackSections);
-
-    const getSections = (
-      newDate: PickerValidDate | null,
-      fallbackDateSections: FieldRangeSection[] | null,
-      position: RangePosition,
-    ) => {
-      const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!fallbackDateSections;
-
-      if (shouldReUsePrevDateSections) {
-        return fallbackDateSections;
-      }
-
+  getSectionsFromValue: ([start, end], getSectionsFromDate) => {
+    const getSections = (newDate: PickerValidDate | null, position: RangePosition) => {
       const sections = getSectionsFromDate(newDate!);
       return sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1 && position === 'start') {
@@ -131,10 +116,7 @@ export const getRangeFieldValueManager = ({
       });
     };
 
-    return [
-      ...getSections(start, separatedFallbackSections.startDate, 'start'),
-      ...getSections(end, separatedFallbackSections.endDate, 'end'),
-    ];
+    return [...getSections(start, 'start'), ...getSections(end, 'end')];
   },
   getV7HiddenInputValueFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);

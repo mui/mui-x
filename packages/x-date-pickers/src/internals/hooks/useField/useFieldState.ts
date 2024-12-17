@@ -132,8 +132,8 @@ export const useFieldState = <
   );
 
   const getSectionsFromValue = React.useCallback(
-    (valueToAnalyze: TValue, fallbackSections: InferFieldSection<TValue>[] | null = null) =>
-      fieldValueManager.getSectionsFromValue(utils, valueToAnalyze, fallbackSections, (date) =>
+    (valueToAnalyze: TValue) =>
+      fieldValueManager.getSectionsFromValue(valueToAnalyze, (date) =>
         buildSectionsFromFormat({
           utils,
           localeText: translations,
@@ -159,7 +159,6 @@ export const useFieldState = <
     ],
   );
 
-  const sectionIndexToCleanOnNextEmptyValue = React.useRef<number | null>(null);
   const [state, setState] = React.useState<UseFieldState<TValue>>(() => {
     const sections = getSectionsFromValue(value);
     validateSections(sections, valueType);
@@ -231,11 +230,22 @@ export const useFieldState = <
     return newSections;
   };
 
-  const timeoutToCleanSectionOnNextEmptyValue = useTimeout();
-  const setSectionIndexToCleanOnNextEmptyValue = () => {
-    sectionIndexToCleanOnNextEmptyValue.current = activeSectionIndex;
-    timeoutToCleanSectionOnNextEmptyValue.start(0, () => {
-      sectionIndexToCleanOnNextEmptyValue.current = null;
+  const sectionToUpdateOnNextEmptyValueRef = React.useRef<{
+    sectionIndex: number;
+    value: string;
+  } | null>(null);
+  const timeoutToUpdateSectionValueOnNextEmptyValue = useTimeout();
+  const setSectionUpdateToApplyOnNextEmptyValue = (newSectionValue: string) => {
+    if (activeSectionIndex == null) {
+      return;
+    }
+
+    sectionToUpdateOnNextEmptyValueRef.current = {
+      sectionIndex: activeSectionIndex,
+      value: newSectionValue,
+    };
+    timeoutToUpdateSectionValueOnNextEmptyValue.start(0, () => {
+      sectionToUpdateOnNextEmptyValueRef.current = null;
     });
   };
 
@@ -261,7 +271,7 @@ export const useFieldState = <
       return;
     }
 
-    setSectionIndexToCleanOnNextEmptyValue();
+    setSectionUpdateToApplyOnNextEmptyValue('');
 
     if (fieldValueManager.getDateFromSection(value, activeSection!) == null) {
       setState((prevState) => ({
@@ -305,6 +315,9 @@ export const useFieldState = <
     newSectionValue,
     shouldGoToNextSection,
   }: UpdateSectionValueParams<TValue>) => {
+    timeoutToUpdateSectionValueOnNextEmptyValue.clear();
+    timeoutToCleanActiveDateSectionsIfValueNull.clear();
+
     const activeDate = fieldValueManager.getDateFromSection(value, section);
 
     /**
@@ -318,7 +331,7 @@ export const useFieldState = <
      * 2. Try to build a valid date from the new section value
      */
     const newSections = setSectionValue(activeSectionIndex!, newSectionValue);
-    const newActiveDateSections = fieldValueManager.getDateSections(newSections, section);
+    const newActiveDateSections = fieldValueManager.getDateSectionsFromValue(newSections, section);
     const newActiveDate = getDateFromDateSections(utils, newActiveDateSections, localizedDigits);
 
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
@@ -343,6 +356,7 @@ export const useFieldState = <
             setState((prevState) => ({
               ...prevState,
               sections: fieldValueManager.clearDateSections(state.sections, section),
+              tempValueStrAndroid: null,
             }));
           }
         });
@@ -351,13 +365,17 @@ export const useFieldState = <
       /**
        * If the current date is not null, we publish a null value.
        */
-      setSectionIndexToCleanOnNextEmptyValue();
+      setSectionUpdateToApplyOnNextEmptyValue(newSectionValue);
       publishValue(fieldValueManager.updateDateInValue(value, section, null));
     } else {
       /**
        * If the current date is already null, we update the sections.
        */
-      setState((prevState) => ({ ...prevState, sections: newSections, tempValueStrAndroid: null }));
+      setState((prevState) => ({
+        ...prevState,
+        sections: newSections,
+        tempValueStrAndroid: null,
+      }));
     }
   };
 
@@ -366,16 +384,21 @@ export const useFieldState = <
 
   // If `prop.value` changes, we update the state to reflect the new value
   if (value !== state.lastValue) {
-    let shouldClearActiveSection: boolean = false;
-    if (sectionIndexToCleanOnNextEmptyValue.current != null && activeSectionIndex != null) {
-      if (fieldValueManager.getDateFromSection(value, state.sections[activeSectionIndex]) == null) {
-        shouldClearActiveSection = true;
-      }
+    let sections: InferFieldSection<TValue>[];
+    if (
+      sectionToUpdateOnNextEmptyValueRef.current != null &&
+      fieldValueManager.getDateFromSection(
+        value,
+        state.sections[sectionToUpdateOnNextEmptyValueRef.current.sectionIndex],
+      ) == null
+    ) {
+      sections = setSectionValue(
+        sectionToUpdateOnNextEmptyValueRef.current.sectionIndex,
+        sectionToUpdateOnNextEmptyValueRef.current.value,
+      );
+    } else {
+      sections = getSectionsFromValue(value);
     }
-
-    const sections = shouldClearActiveSection
-      ? setSectionValue(activeSectionIndex!, '')
-      : getSectionsFromValue(value);
 
     setState((prevState) => ({
       ...prevState,
@@ -387,6 +410,7 @@ export const useFieldState = <
         value,
         prevState.referenceValue,
       ),
+      tempValueStrAndroid: null,
     }));
   }
 
@@ -401,6 +425,7 @@ export const useFieldState = <
       ...prevState,
       sectionsDependencies: { format, isRtl, locale: utils.locale },
       sections,
+      tempValueStrAndroid: null,
     }));
   }
 
