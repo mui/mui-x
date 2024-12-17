@@ -11,7 +11,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
