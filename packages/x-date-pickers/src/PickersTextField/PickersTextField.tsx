@@ -14,7 +14,7 @@ import {
   getPickersTextFieldUtilityClass,
   PickersTextFieldClasses,
 } from './pickersTextFieldClasses';
-import { PickersTextFieldOwnerState, PickersTextFieldProps } from './PickersTextField.types';
+import { PickerTextFieldOwnerState, PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
@@ -31,11 +31,11 @@ const PickersTextFieldRoot = styled(FormControl, {
   name: 'MuiPickersTextField',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: PickersTextFieldOwnerState }>({});
+})<{ ownerState: PickerTextFieldOwnerState }>({});
 
 const useUtilityClasses = (
   classes: Partial<PickersTextFieldClasses> | undefined,
-  ownerState: PickersTextFieldOwnerState,
+  ownerState: PickerTextFieldOwnerState,
 ) => {
   const { isFieldFocused, isFieldDisabled, isFieldRequired } = ownerState;
 
@@ -114,7 +114,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     required: props.required,
     readOnly: InputProps?.readOnly,
   });
-  const ownerState = React.useMemo<PickersTextFieldOwnerState>(
+  const ownerState = React.useMemo<PickerTextFieldOwnerState>(
     () => ({
       ...fieldOwnerState,
       isFieldValueEmpty: areAllSectionsEmpty,

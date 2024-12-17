@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
-import { PickersTextFieldOwnerState } from '../PickersTextField.types';
+import { PickerTextFieldOwnerState } from '../PickersTextField.types';
 
 interface OutlineProps extends React.HTMLAttributes<HTMLFieldSetElement> {
   notched: boolean;
@@ -14,7 +14,7 @@ const OutlineRoot = styled('fieldset', {
   name: 'MuiPickersOutlinedInput',
   slot: 'NotchedOutline',
   overridesResolver: (props, styles) => styles.notchedOutline,
-})<{ ownerState: PickersTextFieldOwnerState }>(({ theme }) => {
+})<{ ownerState: PickerTextFieldOwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)';
   return {
@@ -45,7 +45,7 @@ const OutlineLabel = styled('span')(({ theme }) => ({
 
 const OutlineLegend = styled('legend', {
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
-})<{ ownerState: PickersTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
+})<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap
   width: 'auto', // Fix conflict with bootstrap
   overflow: 'hidden', // Fix Horizontal scroll when label too long
