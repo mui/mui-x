@@ -523,13 +523,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       : false;
     const isEndOfPreviewing = shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false;
     return {
-      isStartOfPreviewing,
-      isEndOfPreviewing,
+      isStartOfPreviewing: isStartOfPreviewing && !isEndOfPreviewing,
+      isEndOfPreviewing: isEndOfPreviewing && !isStartOfPreviewing,
       isPreviewing: shouldHavePreview
         ? isWithinRange(utils, day, previewingRange) && !isStartOfPreviewing && !isEndOfPreviewing
         : false,
-      isStartOfSelectedRange,
-      isEndOfSelectedRange,
+      isStartOfSelectedRange: isStartOfSelectedRange && !isEndOfSelectedRange,
+      isEndOfSelectedRange: isEndOfSelectedRange && !isStartOfSelectedRange,
       isWithinSelectedRange:
         isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange) &&
         !isStartOfSelectedRange &&

@@ -97,4 +97,8 @@ export interface EnhancedPickersDayProps
   dayOfWeek: number;
 }
 
-export type OwnerState = Partial<EnhancedPickersDayProps> & { isDayHidden?: boolean };
+export type OwnerState = Partial<EnhancedPickersDayProps> & {
+  isDayHidden?: boolean;
+  lastDayOfWeek?: boolean;
+  firstDayOfWeek?: boolean;
+};

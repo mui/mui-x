@@ -25,6 +25,8 @@ export interface EnhancedPickersDayClasses {
   endOfSelectedRange: string;
   withinSelectedRange: string;
   dragSelected: string;
+  firstDayOfWeek: string;
+  lastDayOfWeek: string;
 }
 
 export type EnhancedPickersDayClassKey = keyof EnhancedPickersDayClasses;
@@ -50,5 +52,7 @@ export const enhancedPickersDayClasses = generateUtilityClasses<EnhancedPickersD
     'endOfSelectedRange',
     'withinSelectedRange',
     'dragSelected',
+    'firstDayOfWeek',
+    'lastDayOfWeek',
   ],
 );

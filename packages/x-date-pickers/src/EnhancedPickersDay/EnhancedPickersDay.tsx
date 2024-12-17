@@ -8,12 +8,14 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { useUtils } from '../internals/hooks/useUtils';
-import { DAY_MARGIN, DAY_SIZE } from '../internals/constants/dimensions';
+import { DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   enhancedPickersDayClasses,
   getEnhancedPickersDayUtilityClass,
 } from './enhancedPickersDayClasses';
 import { EnhancedPickersDayProps, OwnerState } from './EnhancedPickersDay.types';
+
+const DAY_SIZE = 40;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const {
@@ -30,6 +32,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isEndOfSelectedRange,
     isWithinSelectedRange,
     isDragSelected,
+    firstDayOfWeek,
+    lastDayOfWeek,
   } = ownerState;
 
   const slots = {
@@ -47,6 +51,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEndOfSelectedRange && 'endOfSelectedRange',
       isWithinSelectedRange && 'withinSelectedRange',
       isDragSelected && 'dragSelected',
+      lastDayOfWeek && 'lastDayOfWeek',
+      firstDayOfWeek && 'firstDayOfWeek',
     ],
   };
 
@@ -67,6 +73,8 @@ const overridesResolver = (props: { ownerState: any }, styles: Record<any, CSSIn
     ownerState.isEndOfSelectedRange && styles.endOfSelectedRange,
     ownerState.isWithinSelectedRange && styles.withinSelectedRange,
     ownerState.isDragSelected && styles.dragSelected,
+    ownerState.firstDayOfWeek && styles.firstDayOfWeek,
+    ownerState.lastDayOfWeek && styles.lastDayOfWeek,
   ];
 };
 
@@ -74,21 +82,42 @@ const highlightStyles = (theme) => ({
   zIndex: -1,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
-  width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+  width: `${DAY_SIZE + 2 * DAY_MARGIN}px`,
   height: `${DAY_SIZE}px`,
+  boxSizing: 'border-box',
+  border: '1px solid transparent',
   backgroundColor: theme.vars
     ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
     : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-  top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
+  // top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
 });
 const previewStyles = {
   zIndex: -1,
   content: '""' /* Creates an empty element */,
   position: 'absolute',
-  width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+  width: `${DAY_SIZE + 2 * DAY_MARGIN}px`,
   height: `${DAY_SIZE}px`,
-  top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
+  boxSizing: 'border-box',
+  border: '1px solid transparent',
+  // top: -1 /* Aligns the top of the pseudo-element with the top of the div */,
 };
+
+const selectedDayStyles = (theme) => ({
+  color: (theme.vars || theme).palette.primary.contrastText,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
+  fontWeight: theme.typography.fontWeightMedium,
+  '&:focus': {
+    willChange: 'background-color',
+    backgroundColor: (theme.vars || theme).palette.primary.dark,
+  },
+  '&:hover': {
+    willChange: 'background-color',
+    backgroundColor: (theme.vars || theme).palette.primary.dark,
+  },
+  [`&.${enhancedPickersDayClasses.disabled}`]: {
+    opacity: 0.6,
+  },
+});
 
 const styleArg = ({ theme }: { theme: Theme }) => ({
   ...theme.typography.caption,
@@ -118,20 +147,7 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
       : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
   },
   [`&.${enhancedPickersDayClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.contrastText,
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    '&:focus': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
-    '&:hover': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
-    },
-    [`&.${enhancedPickersDayClasses.disabled}`]: {
-      opacity: 0.6,
-    },
+    ...selectedDayStyles(theme),
   },
   [`&.${enhancedPickersDayClasses.disabled}:not(.${enhancedPickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
@@ -146,78 +162,105 @@ const styleArg = ({ theme }: { theme: Theme }) => ({
     borderColor: (theme.vars || theme).palette.text.secondary,
   },
   [`&.${enhancedPickersDayClasses.startOfPreviewing}`]: {
-    [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::before`]: {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderRightColor: 'transparent',
-      borderTopLeftRadius: '50px',
-      borderBottomLeftRadius: '50px',
-      left: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
-    },
     '::after': {
       ...previewStyles,
       border: `1px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      right: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+      right: -(DAY_MARGIN + 1),
+    },
+    [`&:not(.${enhancedPickersDayClasses.endOfSelectedRange})::after`]: {
+      ...previewStyles,
+      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+      borderRightColor: 'transparent',
+      borderTopLeftRadius: '50%',
+      borderBottomLeftRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      left: -1,
     },
   },
   [`&.${enhancedPickersDayClasses.endOfPreviewing}`]: {
+    '::after': {
+      ...previewStyles,
+      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
+      borderLeftColor: 'transparent',
+      borderRightColor: 'transparent',
+      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+      left: -(DAY_MARGIN + 1),
+    },
     [`&:not(.${enhancedPickersDayClasses.startOfSelectedRange})::after`]: {
       ...previewStyles,
       border: `1px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
-      borderTopRightRadius: '50px',
-      borderBottomRightRadius: '50px',
-      right: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
-    },
-    '::before': {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      left: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      borderTopRightRadius: '50%',
+      borderBottomRightRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      right: -1,
     },
   },
   [`&.${enhancedPickersDayClasses.previewing}`]: {
-    '::before': {
-      ...previewStyles,
-      border: `1px dashed ${(theme.vars || theme).palette.divider}`,
-      borderLeftColor: 'transparent',
-      borderRightColor: 'transparent',
-      left: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
-    },
     '::after': {
       ...previewStyles,
       border: `1px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      right: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      left: -(DAY_MARGIN + 1),
     },
   },
   [`&.${enhancedPickersDayClasses.startOfSelectedRange}`]: {
-    '::after': {
+    '::before': {
       ...highlightStyles(theme),
-      right: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+      left: `${DAY_SIZE / 2 - 1}px`,
     },
   },
   [`&.${enhancedPickersDayClasses.endOfSelectedRange}`]: {
     '::before': {
       ...highlightStyles(theme),
-      left: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      width: `${DAY_SIZE / 2 + DAY_MARGIN}px`,
+      left: -(DAY_MARGIN + 1),
     },
   },
   [`&.${enhancedPickersDayClasses.withinSelectedRange}`]: {
     '::before': {
       ...highlightStyles(theme),
-      left: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
-    },
-    '::after': {
-      ...highlightStyles(theme),
-      right: -(DAY_MARGIN + 1) /* Positions the pseudo-element 20px to the left */,
+      left: -(DAY_MARGIN + 1),
     },
   },
-  [`&.${enhancedPickersDayClasses.dragSelected}`]: {},
+  [`&.${enhancedPickersDayClasses.dragSelected}`]: {
+    ...selectedDayStyles(theme),
+  },
+  [`&.${enhancedPickersDayClasses.lastDayOfWeek}`]: {
+    '::after': {
+      borderTopRightRadius: '50%',
+      borderBottomRightRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      right: -1,
+      borderRightColor: (theme.vars || theme).palette.divider,
+    },
+    '::before': {
+      borderTopRightRadius: '50%',
+      borderBottomRightRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      right: -1,
+    },
+  },
+  [`&.${enhancedPickersDayClasses.firstDayOfWeek}`]: {
+    '::after': {
+      borderTopLeftRadius: '50%',
+      borderBottomLeftRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      left: -1,
+      borderLeftColor: (theme.vars || theme).palette.divider,
+    },
+    '::before': {
+      borderTopLeftRadius: '50%',
+      borderBottomLeftRadius: '50%',
+      width: `${DAY_SIZE + DAY_MARGIN}px`,
+      left: -1,
+    },
+  },
 });
 
 const EnhancedPickersDayRoot = styled(ButtonBase, {
