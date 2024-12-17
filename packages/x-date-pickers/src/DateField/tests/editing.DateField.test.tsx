@@ -436,7 +436,7 @@ describe('<DateField /> - Editing', () => {
       expect(onChangeV6.callCount).to.equal(0);
     });
 
-    it('should call `onChange` when clearing the first and last section', () => {
+    it('should call `onChange` when clearing the first section', () => {
       // Test with accessible DOM structure
       const onChangeV7 = spy();
 
@@ -451,14 +451,12 @@ describe('<DateField /> - Editing', () => {
 
       fireUserEvent.keyPress(view.getActiveSection(0), { key: 'Delete' });
       expect(onChangeV7.callCount).to.equal(1);
-      expect(onChangeV7.lastCall.args[1].validationError).to.equal('invalidDate');
+      expect(onChangeV7.lastCall.firstArg).to.equal(null);
 
       fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
 
       fireUserEvent.keyPress(view.getActiveSection(1), { key: 'Delete' });
-      expect(onChangeV7.callCount).to.equal(2);
-      expect(onChangeV7.lastCall.firstArg).to.equal(null);
-      expect(onChangeV7.lastCall.args[1].validationError).to.equal(null);
+      expect(onChangeV7.callCount).to.equal(1);
 
       view.unmount();
 
@@ -477,14 +475,12 @@ describe('<DateField /> - Editing', () => {
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
       expect(onChangeV6.callCount).to.equal(1);
-      expect(onChangeV6.lastCall.args[1].validationError).to.equal('invalidDate');
+      expect(onChangeV6.lastCall.firstArg).to.equal(null);
 
       fireUserEvent.keyPress(input, { key: 'ArrowRight' });
 
       fireUserEvent.keyPress(input, { key: 'Delete' });
-      expect(onChangeV6.callCount).to.equal(2);
-      expect(onChangeV6.lastCall.firstArg).to.equal(null);
-      expect(onChangeV6.lastCall.args[1].validationError).to.equal(null);
+      expect(onChangeV6.callCount).to.equal(1);
     });
 
     it('should not call `onChange` if the section is already empty', () => {
@@ -1661,7 +1657,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
       firePasteEventV7(view.getActiveSection(0), '12');
 
-      expect(onChangeV7.callCount).to.equal(1);
+      expect(onChangeV7.callCount).to.equal(0);
       expectFieldValueV7(view.getSectionsContainer(), '12/DD/YYYY');
 
       view.unmount();
@@ -1680,7 +1676,7 @@ describe('<DateField /> - Editing', () => {
       expectFieldValueV6(input, 'MM/DD/YYYY');
       firePasteEventV6(input, '12');
 
-      expect(onChangeV6.callCount).to.equal(1);
+      expect(onChangeV6.callCount).to.equal(0);
       expectFieldValueV6(input, '12/DD/YYYY');
     });
 
