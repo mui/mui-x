@@ -47,7 +47,7 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <ChartProvider pluginParams={{ series: [] }}>
+      <ChartProvider pluginParams={{ series: [], width: 200, height: 200 }}>
         <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
           <UseHighlighted />
         </HighlightedProvider>
