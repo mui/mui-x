@@ -51,8 +51,8 @@ import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps } from '../models/gridSlotsComponentsProps';
 import MUISelectOption from './components/MUISelectOption';
-import { Toolbar } from './components/Toolbar';
-import { ToolbarButton } from './components/ToolbarButton';
+import { Toolbar } from './components/Toolbar/Toolbar';
+import { ToolbarButton } from './components/ToolbarButton/ToolbarButton';
 
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,

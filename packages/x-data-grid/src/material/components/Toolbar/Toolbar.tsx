@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getDataGridToolbarUtilityClass } from './gridToolbarClasses';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export interface ToolbarProps extends React.ComponentPropsWithRef<'div'> {
   sx?: SxProps<Theme>;

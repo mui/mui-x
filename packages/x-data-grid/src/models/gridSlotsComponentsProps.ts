@@ -35,8 +35,8 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { ToolbarProps } from '../material/components/Toolbar';
-import type { ToolbarButtonProps } from '../material/components/ToolbarButton';
+import type { ToolbarProps } from '../material/components/Toolbar/Toolbar';
+import type { ToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
 import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;

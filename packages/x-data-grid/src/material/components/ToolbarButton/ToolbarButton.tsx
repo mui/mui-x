@@ -2,9 +2,10 @@ import * as React from 'react';
 import MUIButtonBase, { ButtonBaseProps as MUIButtonBaseProps } from '@mui/material/ButtonBase';
 import { alpha, styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getDataGridToolbarUtilityClass } from '../../constants/gridToolbarClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { capitalize } from '@mui/material/utils';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { getDataGridToolbarButtonUtilityClass } from './gridToolbarButtonClasses';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export interface ToolbarButtonProps extends MUIButtonBaseProps {
   /**
@@ -19,21 +20,26 @@ export interface ToolbarButtonProps extends MUIButtonBaseProps {
   focusRipple?: boolean;
 }
 
-type OwnerState = Pick<ToolbarButtonProps, 'color'> & DataGridProcessedProps;
+type OwnerState = Pick<ToolbarButtonProps, 'size' | 'disabled'> & DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes } = ownerState;
+  const { classes, size, disabled } = ownerState;
 
   const slots = {
-    button: ['button'],
+    root: ['root', disabled && 'disabled', size && `size${capitalize(size)}`],
   };
 
-  return composeClasses(slots, getDataGridToolbarUtilityClass, classes);
+  return composeClasses(slots, getDataGridToolbarButtonUtilityClass, classes);
 };
 
 const StyledToolbarButton = styled(MUIButtonBase, {
-  name: 'MuiDataGridToolbar',
-  slot: 'Button',
+  name: 'MuiDataGridToolbarButton',
+  slot: 'Root',
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+
+    return [styles.root, styles[`size${capitalize(ownerState.size)}`]];
+  },
 })<ToolbarButtonProps & { ownerState: OwnerState }>(({ theme }) => ({
   ...theme.typography.button,
   borderRadius: (theme.vars || theme).shape.borderRadius,
@@ -44,7 +50,6 @@ const StyledToolbarButton = styled(MUIButtonBase, {
   whiteSpace: 'nowrap',
   '&:disabled': {
     color: (theme.vars || theme).palette.action.disabled,
-    border: `1px solid ${(theme.vars || theme).palette.action.disabledBackground}`,
   },
   '&:hover': {
     textDecoration: 'none',
@@ -82,11 +87,12 @@ const StyledToolbarButton = styled(MUIButtonBase, {
 
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
-    const { size = 'medium', focusRipple = true, ...other } = props;
+    const { size = 'medium', focusRipple = true, disabled, ...other } = props;
     const rootProps = useGridRootProps();
 
     const ownerState = {
       ...rootProps,
+      disabled,
       size,
     };
 
@@ -95,9 +101,10 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     return (
       <StyledToolbarButton
         ref={ref}
-        className={classes.button}
+        className={classes.root}
         ownerState={ownerState}
         focusRipple={focusRipple}
+        disabled={disabled}
         size={size}
         {...other}
       />
