@@ -33,7 +33,13 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
+import type {
+  BadgeProps,
+  CircularProgressProps,
+  DividerProps,
+  LinearProgressProps,
+  MenuItemProps,
+} from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -41,7 +47,9 @@ type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`,
 // Overrides for module augmentation
 export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
+export interface BaseCircularProgressPropsOverrides {}
 export interface BaseDividerPropsOverrides {}
+export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
@@ -56,6 +64,7 @@ export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
 export interface BaseChipPropsOverrides {}
+
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -79,7 +88,9 @@ export interface RowPropsOverrides {}
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
   baseCheckbox: CheckboxProps & BaseCheckboxPropsOverrides;
+  baseCircularProgress: CircularProgressProps & BaseCircularProgressPropsOverrides;
   baseDivider: DividerProps & BaseDividerPropsOverrides;
+  baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
