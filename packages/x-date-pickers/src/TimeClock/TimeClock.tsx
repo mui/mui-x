@@ -203,6 +203,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
         case 'hours': {
           const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
           const dateWithNewHours = utils.setHours(valueOrReferenceDate, valueWithMeridiem);
+
+          if (utils.getHours(dateWithNewHours) !== valueWithMeridiem) {
+            return true;
+          }
+
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
@@ -246,10 +251,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
     ],
   );
 
-  const selectedId = useId();
-
   const viewProps = React.useMemo<
-    Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
+    Pick<ClockProps, 'onChange' | 'viewValue' | 'viewRange' | 'children'>
   >(() => {
     switch (view) {
       case 'hours': {
@@ -262,9 +265,22 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
           );
         };
 
+        const viewValue = utils.getHours(valueOrReferenceDate);
+
+        let viewRange: [number, number];
+        if (ampm) {
+          if (viewValue > 12) {
+            viewRange = [12, 23];
+          } else {
+            viewRange = [0, 11];
+          }
+        } else {
+          viewRange = [0, 23];
+        }
+
         return {
           onChange: handleHoursChange,
-          viewValue: utils.getHours(valueOrReferenceDate),
+          viewValue,
           children: getHourNumbers({
             value,
             utils,
@@ -274,6 +290,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
+          viewRange,
         };
       }
 
@@ -298,6 +315,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
@@ -322,6 +340,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends Picke
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
+          viewRange: [0, 59],
         };
       }
 
