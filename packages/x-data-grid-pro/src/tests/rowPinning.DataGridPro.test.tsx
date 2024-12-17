@@ -277,20 +277,20 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
-  it('should not be impacted by sorting', () => {
-    render(<BaselineTestCase rowCount={5} colCount={5} />);
+  it('should not be impacted by sorting', async () => {
+    const { user } = render(<BaselineTestCase rowCount={5} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
     expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
 
-    fireEvent.click(getColumnHeaderCell(0));
+    await user.click(getColumnHeaderCell(0));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
     expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
 
-    fireEvent.click(getColumnHeaderCell(0));
+    await user.click(getColumnHeaderCell(0));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');

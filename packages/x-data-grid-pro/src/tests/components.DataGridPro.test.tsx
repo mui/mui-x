@@ -78,17 +78,17 @@ describe('<DataGridPro/> - Components', () => {
       });
     });
 
-    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, () => {
+    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, async () => {
       const propHandler = spy();
       const eventHandler = spy();
-      render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
+      const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      fireUserEvent.mousePress(getCell(0, 0));
-      fireEvent.keyDown(getCell(0, 0));
+      await user.click(getCell(0, 0));
+      await user.keyboard('a');
 
       expect(propHandler.callCount).to.equal(1);
       expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
