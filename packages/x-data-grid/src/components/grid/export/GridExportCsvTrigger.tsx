@@ -44,9 +44,9 @@ const GridExportCsvTrigger = React.forwardRef<HTMLButtonElement, GridExportCsvTr
     };
 
     return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+      ...rootProps.slotProps?.baseButton,
       ref,
       onClick: handleClick,
-      ...rootProps.slotProps?.baseButton,
       ...other,
     });
   },

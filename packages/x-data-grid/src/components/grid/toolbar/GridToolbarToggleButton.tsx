@@ -32,11 +32,12 @@ const GridToolbarToggleButton = React.forwardRef<HTMLButtonElement, GridToolbarT
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const itemProps = useGridToolbarItem(buttonRef);
+    const { tabIndex, onKeyDown } = useGridToolbarItem(buttonRef);
 
     return useGridComponentRenderer(rootProps.slots.baseToggleButton, render, {
       ref: handleRef,
-      ...itemProps,
+      tabIndex,
+      onKeyDown,
       ...rootProps.slotProps?.baseToggleButton,
       ...other,
     });

@@ -69,6 +69,7 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
       rootProps.slots.baseButton,
       render,
       {
+        ...rootProps.slotProps?.baseButton,
         ref,
         id: buttonId,
         'aria-haspopup': 'true',
@@ -76,7 +77,6 @@ const GridColumnsPanelTrigger = React.forwardRef<HTMLButtonElement, GridColumnsP
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,
         className: resolvedClassName,
-        ...rootProps.slotProps?.baseButton,
         ...other,
       },
       state,

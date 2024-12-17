@@ -44,9 +44,9 @@ const GridExportPrintTrigger = React.forwardRef<HTMLButtonElement, GridExportPri
     };
 
     return useGridComponentRenderer(rootProps.slots.baseButton, render, {
+      ...rootProps.slotProps?.baseButton,
       ref,
       onClick: handleClick,
-      ...rootProps.slotProps?.baseButton,
       ...other,
     });
   },

@@ -15,8 +15,8 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
-import type { ToggleButtonProps } from '@mui/material/ToggleButton';
-import type { ToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
+import type { ToggleButtonProps as MUIToggleButtonProps } from '@mui/material/ToggleButton';
+import type { ToggleButtonGroupProps as MUIToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -35,9 +35,17 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { ToolbarProps } from '../material/components/Toolbar/Toolbar';
-import type { ToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
-import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
+import type { ToolbarProps as MUIToolbarProps } from '../material/components/Toolbar/Toolbar';
+import type { ToolbarButtonProps as MUIToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
+import type {
+  BadgeProps,
+  DividerProps,
+  MenuItemProps,
+  ToggleButtonGroupProps,
+  ToggleButtonProps,
+  ToolbarButtonProps,
+  ToolbarProps,
+} from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -115,6 +123,10 @@ interface BaseSlotProps {
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
   baseMenuItem: MUIMenuItemProps;
+  baseToggleButton: MUIToggleButtonProps;
+  baseToggleButtonGroup: MUIToggleButtonGroupProps;
+  baseToolbar: MUIToolbarProps;
+  baseToolbarButton: MUIToolbarButtonProps;
 }
 
 interface ElementSlotProps {

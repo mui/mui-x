@@ -80,10 +80,10 @@ const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(
     );
 
     const element = useGridComponentRenderer(rootProps.slots.baseToolbar, render, {
+      ...rootProps.slotProps?.baseToolbar,
       ref,
       role: 'toolbar',
       'aria-orientation': 'horizontal',
-      ...rootProps.slotProps?.baseToolbar,
       ...other,
     });
 

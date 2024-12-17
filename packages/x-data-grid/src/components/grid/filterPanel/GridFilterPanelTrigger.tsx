@@ -76,6 +76,7 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
       rootProps.slots.baseButton,
       render,
       {
+        ...rootProps.slotProps?.baseButton,
         ref,
         id: buttonId,
         'aria-haspopup': 'true',
@@ -83,7 +84,6 @@ const GridFilterPanelTrigger = React.forwardRef<HTMLButtonElement, GridFilterPan
         'aria-controls': open ? panelId : undefined,
         onClick: handleClick,
         className: resolvedClassName,
-        ...rootProps.slotProps?.baseButton,
         ...other,
       },
       state,

@@ -21,3 +21,25 @@ export type MenuItemProps = {
   selected?: boolean;
   value?: number | string | readonly string[];
 };
+
+export type ToolbarProps = {
+  ref?: React.Ref<HTMLDivElement>;
+  role?: string;
+  'aria-orientation'?: string;
+};
+
+export type ToolbarButtonProps = {
+  ref?: React.Ref<HTMLButtonElement>;
+  tabIndex?: number;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+};
+
+export type ToggleButtonProps = {
+  ref?: React.Ref<HTMLButtonElement>;
+  tabIndex?: number;
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
+};
+
+export type ToggleButtonGroupProps = {
+  ref?: React.Ref<HTMLDivElement>;
+};
