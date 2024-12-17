@@ -40,8 +40,8 @@
     "lru-cache": "^11.0.2"
   },
   "devDependencies": {
-    "@mui/icons-material": "^5.16.9",
-    "@mui/material": "^5.16.9",
+    "@mui/icons-material": "^5.16.11",
+    "@mui/material": "^5.16.11",
     "@types/chance": "^1.1.6",
     "rimraf": "^6.0.1"
   },
