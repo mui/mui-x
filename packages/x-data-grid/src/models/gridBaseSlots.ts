@@ -24,7 +24,7 @@ export type MenuItemProps = {
 
 export type CircularProgressProps = {
   /**
-   * Pixels or CSS value
+   * Pixels or CSS value.
    * @default 40
    */
   size?: number | string;
