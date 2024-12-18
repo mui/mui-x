@@ -7,6 +7,14 @@ export type BadgeProps = {
   invisible?: boolean;
 };
 
+export type ButtonProps = {
+  children?: React.ReactNode;
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+  size?: 'small' | 'medium' | 'large';
+  startIcon?: React.ReactNode;
+};
+
 export type DividerProps = {};
 
 export type MenuItemProps = {
