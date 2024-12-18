@@ -138,6 +138,9 @@ BarChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.

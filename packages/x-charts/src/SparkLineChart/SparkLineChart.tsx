@@ -229,6 +229,9 @@ SparkLineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object,
+  }),
   /**
    * Set to `true` to fill spark line area.
    * Has no effect if plotType='bar'.

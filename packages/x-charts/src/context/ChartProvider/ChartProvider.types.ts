@@ -9,6 +9,7 @@ import {
 import { ChartStore } from '../../internals/plugins/utils/ChartStore';
 import { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import { UseChartBaseProps } from '../../internals/store/useCharts.types';
 import { ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartContextValue<
@@ -41,7 +42,8 @@ export interface ChartProviderProps<
    * Array of plugins used to add features to the chart.
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
-  pluginParams?: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+  pluginParams?: UseChartBaseProps<TSignatures> &
+    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
   /**
    * The configuration helpers used to compute attributes according to the serries type.
    * @ignore Unstable props for internal usage.

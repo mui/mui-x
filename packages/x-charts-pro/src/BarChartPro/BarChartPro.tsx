@@ -62,7 +62,7 @@ BarChartPlotZoom.propTypes = {
 } as any;
 
 export interface BarChartProProps
-  extends BarChartProps,
+  extends Omit<BarChartProps, 'apiRef'>,
     Omit<ChartContainerProProps<'bar'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
@@ -81,7 +81,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
-  const { zoom, onZoomChange, ...other } = props;
+  const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
     chartContainerProps,
     barPlotProps,
@@ -99,7 +99,13 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
+    <ChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      apiRef={apiRef}
+      initialZoom={initialZoom}
+      onZoomChange={onZoomChange}
+    >
       {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
       <ChartsGrid {...gridProps} />
       <g {...clipPathGroupProps}>
@@ -121,6 +127,11 @@ BarChartPro.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
@@ -194,6 +205,16 @@ BarChartPro.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * The direction of the bar elements.
    * @default 'vertical'
@@ -498,16 +519,6 @@ BarChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
-    }),
-  ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

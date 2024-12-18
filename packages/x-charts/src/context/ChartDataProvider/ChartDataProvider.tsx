@@ -82,6 +82,7 @@ ChartDataProvider.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.any,
   children: PropTypes.node,
   /**
    * Color palette used to colorize multiple series.

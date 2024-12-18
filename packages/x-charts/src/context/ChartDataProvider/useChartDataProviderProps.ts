@@ -16,6 +16,7 @@ export const useChartDataProviderProps = <
   props: ChartDataProviderProps<TSignatures, TSeries>,
 ) => {
   const {
+    apiRef,
     width,
     height,
     series,
@@ -38,6 +39,7 @@ export const useChartDataProviderProps = <
     plugins,
     seriesConfig,
     pluginParams: {
+      apiRef,
       width,
       height,
       margin,

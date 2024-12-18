@@ -12,7 +12,7 @@ export interface UseChartProZoomParameters {
   /**
    * The list of zoom data related to each axis.
    */
-  zoom?: ZoomData[];
+  initialZoom?: ZoomData[];
   /**
    * Callback fired when the zoom has changed.
    *
@@ -47,7 +47,7 @@ export interface UseChartProZoomState {
   };
 }
 
-export interface UseChartProZoomInstance {
+export interface UseChartProZoomPublicApi {
   /**
    * Set the zoom data state.
    * @param {ZoomData[] | ((prev: ZoomData[]) => ZoomData[])} value  The new value. Can either be the new zoom data, or an updater function.
@@ -56,11 +56,13 @@ export interface UseChartProZoomInstance {
   setZoomData: (value: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => void;
 }
 
+export interface UseChartProZoomInstance extends UseChartProZoomPublicApi {}
+
 export type UseChartProZoomSignature = ChartPluginSignature<{
   params: UseChartProZoomParameters;
   defaultizedParams: UseChartProZoomDefaultizedParameters;
   state: UseChartProZoomState;
+  publicAPI: UseChartProZoomPublicApi;
   instance: UseChartProZoomInstance;
-  modelNames: 'zoom';
   dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
 }>;

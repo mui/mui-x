@@ -351,6 +351,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   ]);
 
   return {
+    publicAPI: {
+      setZoomData: setZoomDataCallback,
+    },
     instance: {
       setZoomData: setZoomDataCallback,
     },
@@ -358,7 +361,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
 };
 
 useChartProZoom.params = {
-  zoom: true,
+  initialZoom: true,
   onZoomChange: true,
 };
 
@@ -392,7 +395,8 @@ useChartProZoom.getInitialState = (params) => {
   return {
     zoom: {
       options: params.options,
-      zoomData: params.zoom === undefined ? initializeZoomData(params.options) : params.zoom,
+      zoomData:
+        params.initialZoom === undefined ? initializeZoomData(params.options) : params.initialZoom,
       isInteracting: false,
     },
   };

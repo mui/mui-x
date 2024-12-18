@@ -15,7 +15,7 @@ import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartContainerPro, ChartContainerProProps } from '../ChartContainerPro';
 
 export interface ScatterChartProProps
-  extends ScatterChartProps,
+  extends Omit<ScatterChartProps, 'apiRef'>,
     Omit<ChartContainerProProps<'scatter'>, 'series' | 'plugins' | 'seriesConfig'> {}
 
 /**
@@ -33,7 +33,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
-  const { zoom, onZoomChange, ...other } = props;
+  const { initialZoom, onZoomChange, apiRef, ...other } = props;
   const {
     chartContainerProps,
     zAxisProps,
@@ -50,7 +50,13 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
+    <ChartContainerPro
+      ref={ref}
+      {...chartContainerProps}
+      apiRef={apiRef}
+      initialZoom={initialZoom}
+      onZoomChange={onZoomChange}
+    >
       <ZAxisContextProvider {...zAxisProps}>
         {!props.disableVoronoi && <ChartsVoronoiHandler {...voronoiHandlerProps} />}
         <ChartsAxis {...chartsAxisProps} />
@@ -74,6 +80,11 @@ ScatterChartPro.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.shape({
+      setZoomData: PropTypes.func.isRequired,
+    }),
+  }),
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
@@ -139,6 +150,16 @@ ScatterChartPro.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -436,16 +457,6 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
-    }),
-  ),
-  /**
-   * The list of zoom data related to each axis.
-   */
-  zoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
     }),
   ),
 } as any;

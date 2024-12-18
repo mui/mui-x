@@ -27,16 +27,16 @@ export const useChartContainerProProps = <TSeries extends ChartSeriesType = Char
   props: ChartContainerProProps<TSeries>,
   ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerProPropsReturnValue<TSeries> => {
-  const { zoom, onZoomChange, plugins, ...baseProps } = props;
+  const { initialZoom, onZoomChange, plugins, apiRef, ...baseProps } = props;
 
   const chartDataProviderProProps: Pick<
     ChartDataProviderProps<
       [UseChartCartesianAxisSignature<TSeries>, UseChartProZoomSignature],
       TSeries
     >,
-    'zoom' | 'onZoomChange'
+    'initialZoom' | 'onZoomChange'
   > = {
-    zoom,
+    initialZoom,
     onZoomChange,
   };
 
@@ -49,6 +49,7 @@ export const useChartContainerProProps = <TSeries extends ChartSeriesType = Char
     chartDataProviderProProps: {
       ...chartDataProviderProps,
       ...chartDataProviderProProps,
+      apiRef,
       plugins: plugins ?? [
         // eslint-disable-next-line react-compiler/react-compiler
         useChartCartesianAxis as unknown as ChartPlugin<UseChartCartesianAxisSignature<TSeries>>,
