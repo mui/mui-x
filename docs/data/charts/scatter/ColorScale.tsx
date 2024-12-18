@@ -264,7 +264,8 @@ const series = [
   },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v: ScatterValueType | null) =>
+    v && `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 function getGaussianSeriesData(
