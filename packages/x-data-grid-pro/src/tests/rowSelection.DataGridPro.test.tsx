@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, screen, act, reactMajor, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -376,19 +376,13 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('prop: checkboxSelectionVisibleOnly = true', () => {
-    it('should throw a console error if used without pagination', async () => {
-      await waitFor(() =>
-        expect(() => {
-          render(
-            <TestDataGridSelection
-              checkboxSelection
-              checkboxSelectionVisibleOnly
-              rowLength={100}
-            />,
-          );
-        }).toErrorDev(
-          'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-        ),
+    it('should throw a console error if used without pagination', () => {
+      expect(() => {
+        render(
+          <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
+        );
+      }).toErrorDev(
+        'MUI X: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
       );
     });
 
@@ -743,7 +737,7 @@ describe('<DataGridPro /> - Row selection', () => {
       const { user } = render(<SelectionPropagationGrid />);
 
       await user.click(getCell(1, 0).querySelector('input')!);
-      await waitFor(() => expect(apiRef.current.getSelectedRows()).to.have.keys([1]));
+      expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
     });
 
     it('should deselect the parent only when deselecting it', async () => {
