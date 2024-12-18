@@ -156,7 +156,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
               {...rootProps.slotProps?.baseBadge}
               {...badgeProps}
             >
-              <rootProps.slots.openFilterButtonIcon fontSize="small" />
+              <rootProps.slots.openFilterButtonIcon />
             </rootProps.slots.baseBadge>
           }
           onClick={toggleFilter}
