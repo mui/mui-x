@@ -27,7 +27,6 @@ export type GridPrintExportMenuItemProps = GridExportMenuItemProps<GridPrintExpo
 export interface GridToolbarExportProps {
   csvOptions?: GridCsvExportOptions & GridExportDisplayOptions;
   printOptions?: GridPrintExportOptions & GridExportDisplayOptions;
-  // FIXME(v8:romgrk): override slotProps
   /**
    * The props used for each slot inside.
    * @default {}
