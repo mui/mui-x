@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import { MenuItemProps } from '@mui/material/MenuItem';
+import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
@@ -13,7 +12,10 @@ interface GridActionsCellItemCommonProps {
 
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
-    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<IconButtonProps, 'component'>)
+    | ({ showInMenu?: false; icon: React.ReactElement } & Omit<
+        GridSlotProps['baseIconButton'],
+        'component'
+      >)
     | ({
         showInMenu: true;
         /**
@@ -22,7 +24,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
          */
         closeMenuOnClick?: boolean;
         closeMenu?: () => void;
-      } & Omit<MenuItemProps, 'component'>)
+      } & Omit<GridSlotProps['baseMenuItem'], 'component'>)
   );
 
 const GridActionsCellItem = React.forwardRef<HTMLElement, GridActionsCellItemProps>(
