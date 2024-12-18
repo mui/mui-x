@@ -41,6 +41,10 @@ export interface ClockProps<TDate extends PickerValidDate>
    * The current full date value.
    */
   value: TDate | null;
+  /**
+   * Minimum and maximum value of the clock.
+   */
+  viewRange: [number, number];
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
@@ -217,6 +221,7 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     selectedId,
     type,
     viewValue,
+    viewRange: [minViewValue, maxViewValue],
     disabled = false,
     readOnly,
     className,
@@ -309,6 +314,10 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     }
   }, [autoFocus]);
 
+  const clampValue = (newValue: number) => Math.max(minViewValue, Math.min(maxViewValue, newValue));
+
+  const circleValue = (newValue: number) => (newValue + (maxViewValue + 1)) % (maxViewValue + 1);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // TODO: Why this early exit?
     if (isMoving.current) {
@@ -318,27 +327,27 @@ export function Clock<TDate extends PickerValidDate>(inProps: ClockProps<TDate>)
     switch (event.key) {
       case 'Home':
         // reset both hours and minutes
-        handleValueChange(0, 'partial');
+        handleValueChange(minViewValue, 'partial');
         event.preventDefault();
         break;
       case 'End':
-        handleValueChange(type === 'minutes' ? 59 : 23, 'partial');
+        handleValueChange(maxViewValue, 'partial');
         event.preventDefault();
         break;
       case 'ArrowUp':
-        handleValueChange(viewValue + keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue + keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'ArrowDown':
-        handleValueChange(viewValue - keyboardControlStep, 'partial');
+        handleValueChange(circleValue(viewValue - keyboardControlStep), 'partial');
         event.preventDefault();
         break;
       case 'PageUp':
-        handleValueChange(viewValue + 5, 'partial');
+        handleValueChange(clampValue(viewValue + 5), 'partial');
         event.preventDefault();
         break;
       case 'PageDown':
-        handleValueChange(viewValue - 5, 'partial');
+        handleValueChange(clampValue(viewValue - 5), 'partial');
         event.preventDefault();
         break;
       case 'Enter':
