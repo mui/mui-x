@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { IconButtonProps } from '@mui/material/IconButton';
+import { GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-interface GridHeaderFilterClearIconProps extends IconButtonProps {}
+type BaseIconButtonProps = GridSlotProps['baseIconButton'];
+
+// FIXME(v8:romgrk): Make parametric
+interface GridHeaderFilterClearIconProps extends BaseIconButtonProps {}
 
 const style = { padding: '2px' };
 
