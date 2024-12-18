@@ -688,6 +688,7 @@ export const useGridColumnResize = (
 
       apiRef.current.autosizeColumns({
         ...props.autosizeOptions,
+        disableColumnVirtualization: false,
         columns: [column.field],
       });
     });
@@ -720,7 +721,7 @@ export const useGridColumnResize = (
       const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
-        if (!props.disableVirtualization && options.resizeAll) {
+        if (!props.disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
         }
