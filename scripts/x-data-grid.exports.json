@@ -272,7 +272,6 @@
   { "name": "GridExportPrintTriggerProps", "kind": "TypeAlias" },
   { "name": "GridExportStateParams", "kind": "Interface" },
   { "name": "GridFeatureMode", "kind": "TypeAlias" },
-  { "name": "GridFileDownloadIcon", "kind": "Variable" },
   { "name": "GridFileExportOptions", "kind": "Interface" },
   { "name": "gridFilterableColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridFilterableColumnLookupSelector", "kind": "Variable" },
