@@ -79,7 +79,7 @@ DataGridPremiumRaw.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` when `unstable_dataSource` is provided
+   * @default GRID_AGGREGATION_FUNCTIONS when `unstable_dataSource` is not provided, `{}` otherwise
    */
   aggregationFunctions: PropTypes.object,
   /**

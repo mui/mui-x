@@ -9,7 +9,7 @@ title: React Data Grid - Server-side aggregation
 To dynamically load tree data from the server, you must create a data source and pass the `unstable_dataSource` prop to the Data Grid, as detailed in the [overview section](/x/react-data-grid/server-side-data/).
 
 :::info
-If you are looking for aggregation on the client-side, see [client-side aggregation](/x/react-data-grid/aggregation/).
+If you are looking for aggregation on the client-side, see [Aggregation](/x/react-data-grid/aggregation/).
 :::
 
 The server-side aggregation requires some additional steps which are listed below.
@@ -25,7 +25,7 @@ The server-side aggregation requires some additional steps which are listed belo
    <DataGridPremium aggregationFunctions={aggregationFunctions} />
    ```
 
-   The `GridAggregationFunctionDataSource` has a similar structure to `GridAggregationFunction`, but it doesn't have the properties that correspond to the computation of the aggregation, as the computation is done on the server. These properties are `apply` and `getCellValue`.
+   The `GridAggregationFunctionDataSource` interface is similar to `GridAggregationFunction`, but it doesn't have `apply` and `getCellValue` properties as the computation is done on the server.
 
    See the [GridAggregationFunctionDataSource API page](/x/api/data-grid/grid-aggregation-function-data-source/) for more details.
 
@@ -72,7 +72,7 @@ The following example demonstrates a basic server-side aggregation.
 {{"demo": "ServerSideDataGridAggregation.js", "bg": "inline"}}
 
 :::info
-The data source mock server (`useMockServer`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
+The data source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
 :::
 
 ## Customize the aggregation rows scope
@@ -113,13 +113,13 @@ const dataSource = {
 
 ## Usage with row grouping
 
-As [mentioned](/x/react-data-grid/aggregation/#usage-with-row-grouping) in the client-side aggregation section, the server-side aggregation can be used with row grouping. The aggregated values are acquired from the parent rows using the `getAggregatedValue` method.
+Server-side aggregation works with row grouping in a similar way as described in [Aggregation—usage with row grouping](/x/react-data-grid/aggregation/#usage-with-row-grouping). The aggregated values are acquired from the parent rows using the `getAggregatedValue` method.
 
 {{"demo": "ServerSideDataGridAggregationRowGrouping.js", "bg": "inline"}}
 
 ## Usage with tree data
 
-Similar to the row grouping, the server-side aggregation can be used with tree data, as [mentioned](/x/react-data-grid/aggregation/#usage-with-tree-data) in the client-side aggregation section.
+Server-side aggregation can be used with tree data in a similar way as described in [Aggregation—usage with tree data](/x/react-data-grid/aggregation/#usage-with-tree-data).
 The aggregated values are acquired from the parent rows using the `getAggregatedValue` method.
 
 {{"demo": "ServerSideDataGridAggregationTreeData.js", "bg": "inline"}}
