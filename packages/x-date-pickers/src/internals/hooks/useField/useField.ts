@@ -50,7 +50,6 @@ export const useField = <
     },
     forwardedProps: { onKeyDown, error, clearable, onClear },
     fieldValueManager,
-    valueManager,
     validator,
   } = params;
 
