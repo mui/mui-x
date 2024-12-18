@@ -264,7 +264,7 @@ const theme = createTheme({
 
 ### Month Calendar
 
-To simplify the theme and class structure, the `<PickersMonth />` component has been inlined inside the Month Calendar component.
+To simplify the theme and class structure, the `<PickersMonth />` component has been moved inside the Month Calendar component.
 This change causes a few breaking changes:
 
 - The classes from `pickersMonthClasses` have been moved inside `monthCalendarClasses`:
@@ -305,7 +305,7 @@ This change causes a few breaking changes:
 
 ### Year Calendar
 
-To simplify the theme and class structure, the `<PickersYear />` component has been inlined inside the Year Calendar component.
+To simplify the theme and class structure, the `<PickersYear />` component has been moved inside the Year Calendar component.
 This change causes a few breaking changes:
 
 - The classes from `pickersYearClasses` have been moved inside `yearCalendarClasses`:

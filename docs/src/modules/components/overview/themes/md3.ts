@@ -245,7 +245,6 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             height: 'fit-content',
             maxHeight: 'initial',
           },
-
           viewTransitionContainer: ({ theme }) => ({
             height: theme.mixins.density.height * 7 + theme.mixins.density.spacing * 6,
           }),
@@ -258,6 +257,7 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             borderBottom: `1px solid ${theme.palette.divider}`,
             alignContent: 'flex-start',
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 40,
+            columnGap: '12px',
           }),
           button: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
