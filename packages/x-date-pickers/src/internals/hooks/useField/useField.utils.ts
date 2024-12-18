@@ -19,7 +19,6 @@ import {
 } from '../../../models';
 import { getMonthsInYear } from '../../utils/date-utils';
 import { PickerValidValue } from '../../models';
-import { format } from 'path';
 
 export const getDateSectionConfigFromFormatToken = (
   utils: MuiPickersAdapter,
