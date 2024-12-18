@@ -86,30 +86,8 @@ export interface GridAggregationFunction<V = any, AV = V> {
  * @demos
  *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
  */
-export interface GridAggregationFunctionDataSource {
-  /**
-   * Label of the aggregation function.
-   * Will be used to add a label on the footer of the grouping column when this aggregation function is the only one being used.
-   * @default apiRef.current.getLocaleText('aggregationFunctionLabel{capitalize(name)})
-   */
-  label?: string;
-  /**
-   * Column types supported by this aggregation function.
-   * If not defined, all types are supported (in most cases this property should be defined).
-   */
-  columnTypes?: string[];
-  /**
-   * Function that allows to apply a formatter to the aggregated value.
-   * If not defined, the grid will use the formatter of the column.
-   */
-  valueFormatter?: GridValueFormatter;
-  /**
-   * Indicates if the aggregated value have the same unit as the cells used to generate it.
-   * It can be used to apply a custom cell renderer only if the aggregated value has the same unit.
-   * @default true
-   */
-  hasCellUnit?: boolean;
-}
+export interface GridAggregationFunctionDataSource
+  extends Omit<GridAggregationFunction, 'apply' | 'getCellValue'> {}
 
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
