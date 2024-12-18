@@ -722,8 +722,6 @@ async function initializeEnvironment(
         it('should focus the first field section after clearing a value', async () => {
           await renderFixture('DatePicker/BasicDesktopDatePicker');
 
-          await page.locator(`.${pickersSectionListClasses.root}`).click();
-
           const monthSection = page.getByRole('spinbutton', { name: 'Month' });
           await monthSection.press('2');
           await page.getByRole('button', { name: 'Clear' }).click();

@@ -83,7 +83,10 @@ export const useField = <
 
   const { resetCharacterQuery } = characterEditingResponse;
 
-  const areAllSectionsEmpty = valueManager.areValuesEqual(utils, value, valueManager.emptyValue);
+  const areAllSectionsEmpty = React.useMemo(
+    () => state.sections.every((section) => section.value === ''),
+    [state.sections],
+  );
 
   const useFieldTextField = (
     enableAccessibleFieldDOMStructure ? useFieldV7TextField : useFieldV6TextField
