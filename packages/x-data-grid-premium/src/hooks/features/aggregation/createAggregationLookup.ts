@@ -36,7 +36,7 @@ const getAggregationCellValue = ({
   isDataSource: boolean;
 }) => {
   if (isDataSource) {
-    return apiRef.current.internal_getAggregatedValue(groupId, field);
+    return apiRef.current.resolveGroupAggregation(groupId, field);
   }
 
   const clientSideAggregationFunction = aggregationFunction as GridAggregationFunction;

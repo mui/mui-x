@@ -52,8 +52,8 @@ export const useGridDataSourcePremium = (
     [apiRef, aggregationModel],
   );
 
-  const getAggregatedValue = React.useCallback<
-    GridDataSourcePremiumPrivateApi['internal_getAggregatedValue']
+  const resolveGroupAggregation = React.useCallback<
+    GridDataSourcePremiumPrivateApi['resolveGroupAggregation']
   >(
     (groupId, field) => {
       if (groupId === GRID_ROOT_GROUP_ID) {
@@ -67,7 +67,7 @@ export const useGridDataSourcePremium = (
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,
-    internal_getAggregatedValue: getAggregatedValue,
+    resolveGroupAggregation,
   };
 
   useGridApiMethod(apiRef, api.public, 'public');

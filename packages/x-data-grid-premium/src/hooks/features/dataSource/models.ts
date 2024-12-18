@@ -60,5 +60,5 @@ export interface GridDataSourceApiPremium {
 }
 
 export interface GridDataSourcePremiumPrivateApi extends GridDataSourcePrivateApi {
-  internal_getAggregatedValue: (groupId: GridRowId, field: string) => any;
+  resolveGroupAggregation: (groupId: GridRowId, field: string) => any;
 }
