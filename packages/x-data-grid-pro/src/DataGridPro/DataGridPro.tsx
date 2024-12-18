@@ -120,6 +120,7 @@ DataGridProRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
