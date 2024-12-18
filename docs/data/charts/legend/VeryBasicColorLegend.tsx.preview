@@ -11,5 +11,5 @@
     },
   ]}
   slots={{ legend: PiecewiseColorLegend }}
-  slotProps={{ legend: { axisDirection: 'x', direction: 'vertical' } }}
+  slotProps={{ legend: { axisDirection: 'x' } }}
 />

@@ -37,12 +37,6 @@ const data = {
   grid: { horizontal: true },
   height: 300,
   margin: { top: 20, right: 20 },
-  slotProps: {
-    legend: {
-      axisDirection: 'x',
-      direction: 'vertical',
-    },
-  },
 };
 
 export default function VeryBasicColorLegend() {
@@ -61,7 +55,7 @@ export default function VeryBasicColorLegend() {
           },
         ]}
         slots={{ legend: PiecewiseColorLegend }}
-        slotProps={{ legend: { axisDirection: 'x', direction: 'vertical' } }}
+        slotProps={{ legend: { axisDirection: 'x' } }}
       />
     </Stack>
   );
