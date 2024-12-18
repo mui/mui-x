@@ -258,7 +258,7 @@ export const getMD3Theme = (mode: PaletteMode, config: Config): ThemeOptions => 
             alignContent: 'flex-start',
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6 + 40,
             columnGap: '12px',
-         columnGap:'12px' }),
+          }),
           button: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
             height: theme.mixins.density.height,
