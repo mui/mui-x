@@ -58,12 +58,20 @@ const RootElement = styled('ul', {
   marginInline: theme.spacing(1),
   flexWrap: 'wrap',
   justifyContent: 'center',
+  li: {
+    display: ownerState.direction === 'horizontal' ? 'inline-flex' : undefined,
+  },
   [`button.${legendClasses.series}`]: {
     // Reset button styles
     background: 'none',
     border: 'none',
     padding: 0,
     cursor: ownerState.onItemClick ? 'pointer' : 'unset',
+    fontFamily: 'inherit',
+    fontWeight: 'inherit',
+    fontSize: 'inherit',
+    letterSpacing: 'inherit',
+    color: 'inherit',
   },
   [`.${legendClasses.series}`]: {
     display: ownerState.direction === 'vertical' ? 'flex' : 'inline-flex',

@@ -84,6 +84,11 @@ const RootElement = styled('ul', {
       border: 'none',
       padding: 0,
       cursor: ownerState.onItemClick ? 'pointer' : 'unset',
+      fontFamily: 'inherit',
+      fontWeight: 'inherit',
+      fontSize: 'inherit',
+      letterSpacing: 'inherit',
+      color: 'inherit',
     },
     [`.${piecewiseColorLegendClasses.item}`]: {
       display: 'flex',
