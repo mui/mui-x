@@ -889,18 +889,6 @@
       "class": null
     },
     {
-      "name": "baseToggleButton",
-      "description": "The custom ToggleButton component used in the grid.",
-      "default": "ToggleButton",
-      "class": null
-    },
-    {
-      "name": "baseToggleButtonGroup",
-      "description": "The custom ToggleButtonGroup component used in the grid.",
-      "default": "ToggleButtonGroup",
-      "class": null
-    },
-    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",

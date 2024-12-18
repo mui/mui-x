@@ -19,7 +19,6 @@ function Toolbar() {
   return (
     <Grid.Toolbar.Root>
       <Grid.Toolbar.Button>New row</Grid.Toolbar.Button>
-      <Grid.Toolbar.Button>Columns</Grid.Toolbar.Button>
     </Grid.Toolbar.Root>
   );
 }
@@ -38,9 +37,6 @@ The Toolbar component is comprised of the following parts:
 ```tsx
 <Grid.Toolbar.Root>
   <Grid.Toolbar.Button />
-  <Grid.Toolbar.ToggleButtonGroup>
-    <Grid.Toolbar.ToggleButton />
-  </Grid.Toolbar.ToggleButtonGroup>
 </Grid.Toolbar.Root>
 ```
 
@@ -50,15 +46,7 @@ The top level toolbar component.
 
 ### Button
 
-A button item that can be used to perform actions from the toolbar.
-
-### ToggleButtonGroup
-
-A toggle button group that can be used to switch between multiple states.
-
-### ToggleButton
-
-A toggle button item that can be used to switch between two states.
+A button that can be used to perform actions from the toolbar.
 
 ## Examples
 
@@ -82,5 +70,3 @@ Show active filter chips in the toolbar.
 
 - [GridToolbarRoot](/x/api/data-grid/grid-toolbar-root/)
 - [GridToolbarButton](/x/api/data-grid/grid-toolbar-button/)
-- [GridToolbarToggleButtonGroup](/x/api/data-grid/grid-toolbar-toggle-button-group/)
-- [GridToolbarToggleButton](/x/api/data-grid/grid-toolbar-toggle-button/)

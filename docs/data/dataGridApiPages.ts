@@ -56,13 +56,5 @@ const dataGridApiPages: MuiPage[] = [
     pathname: '/x/api/data-grid/grid-toolbar-root',
     title: 'GridToolbarRoot',
   },
-  {
-    pathname: '/x/api/data-grid/grid-toolbar-toggle-button',
-    title: 'GridToolbarToggleButton',
-  },
-  {
-    pathname: '/x/api/data-grid/grid-toolbar-toggle-button-group',
-    title: 'GridToolbarToggleButtonGroup',
-  },
 ];
 export default dataGridApiPages;

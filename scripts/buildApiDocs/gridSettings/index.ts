@@ -68,8 +68,6 @@ export default dataGridApiPages;
       'src/components/toolbar/GridToolbarQuickFilter.tsx',
       'src/components/grid/toolbar/GridToolbarRoot.tsx',
       'src/components/grid/toolbar/GridToolbarButton.tsx',
-      'src/components/grid/toolbar/GridToolbarToggleButton.tsx',
-      'src/components/grid/toolbar/GridToolbarToggleButtonGroup.tsx',
       'src/components/grid/filterPanel/GridFilterPanelTrigger.tsx',
       'src/components/grid/columnsPanel/GridColumnsPanelTrigger.tsx',
       'src/components/grid/export/GridExportPrintTrigger.tsx',

@@ -16,8 +16,6 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
-import MUIToggleButton from '@mui/material/ToggleButton';
-import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
@@ -111,8 +109,6 @@ const baseSlots: GridBaseSlots = {
   baseChip: MUIChip,
   baseToolbar: Toolbar,
   baseToolbarButton: ToolbarButton,
-  baseToggleButton: MUIToggleButton,
-  baseToggleButtonGroup: MUIToggleButtonGroup,
 };
 
 const materialSlots: GridBaseSlots & GridIconSlotsComponent = {

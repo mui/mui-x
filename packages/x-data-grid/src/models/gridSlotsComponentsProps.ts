@@ -15,8 +15,6 @@ import type { InputLabelProps } from '@mui/material/InputLabel';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { ChipProps } from '@mui/material/Chip';
-import type { ToggleButtonProps as MUIToggleButtonProps } from '@mui/material/ToggleButton';
-import type { ToggleButtonGroupProps as MUIToggleButtonGroupProps } from '@mui/material/ToggleButtonGroup';
 import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -41,8 +39,6 @@ import type {
   BadgeProps,
   DividerProps,
   MenuItemProps,
-  ToggleButtonGroupProps,
-  ToggleButtonProps,
   ToolbarButtonProps,
   ToolbarProps,
 } from './gridBaseSlots';
@@ -89,8 +85,6 @@ export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
 export interface BaseToolbarPropsOverrides {}
 export interface BaseToolbarButtonPropsOverrides {}
-export interface BaseToggleButtonPropsOverrides {}
-export interface BaseToggleButtonGroupPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -116,15 +110,11 @@ interface BaseSlotProps {
   baseChip: ChipProps & BaseChipPropsOverrides;
   baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
   baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
-  baseToggleButton: ToggleButtonProps & BaseToggleButtonPropsOverrides;
-  baseToggleButtonGroup: ToggleButtonGroupProps & BaseToggleButtonGroupPropsOverrides;
 }
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
   baseMenuItem: MUIMenuItemProps;
-  baseToggleButton: MUIToggleButtonProps;
-  baseToggleButtonGroup: MUIToggleButtonGroupProps;
   baseToolbar: MUIToolbarProps;
   baseToolbarButton: MUIToolbarButtonProps;
 }
