@@ -60,6 +60,12 @@ This example can be used as a starting point for customizing the toolbar by addi
 
 {{"demo": "GridToolbarDefault.js", "bg": "inline"}}
 
+### Settings menu
+
+Allow users to customize the data grid appearance from the toolbar.
+
+{{"demo": "GridToolbarSettingsMenu.js", "bg": "inline"}}
+
 ### Filter bar
 
 Show active filter chips in the toolbar.
