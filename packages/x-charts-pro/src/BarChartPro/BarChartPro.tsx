@@ -11,57 +11,22 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartContainerPro } from '../ChartContainerPro';
+import { useBarChartProps, ChartsWrapper } from '@mui/x-charts/internals';
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ZoomSetup } from '../context/ZoomProvider/ZoomSetup';
 import { useZoom } from '../context/ZoomProvider/useZoom';
 import { ZoomProps } from '../context/ZoomProvider';
+import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+import { ChartDataProviderPro } from '../context/ChartDataProviderPro';
 
+/**
+ * @ignore - internal component.
+ */
 function BarChartPlotZoom(props: BarPlotProps) {
   const { isInteracting } = useZoom();
 
   return <BarPlot {...props} skipAnimation={isInteracting || undefined} />;
 }
-
-BarChartPlotZoom.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  /**
-   * If provided, the function will be used to format the label of the bar.
-   * It can be set to 'value' to display the current value.
-   * @param {BarItem} item The item to format.
-   * @param {BarLabelContext} context data about the bar.
-   * @returns {string} The formatted label.
-   */
-  barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
-  /**
-   * Defines the border radius of the bar element.
-   */
-  borderRadius: PropTypes.number,
-  /**
-   * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
-   */
-  onItemClick: PropTypes.func,
-  /**
-   * If `true`, animations are skipped.
-   * @default undefined
-   */
-  skipAnimation: PropTypes.bool,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-} as any;
 
 export interface BarChartProProps extends BarChartProps, ZoomProps {}
 
@@ -95,25 +60,36 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     legendProps,
     children,
   } = useBarChartProps(other);
+  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
+    chartContainerProps,
+    ref,
+  );
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartContainerPro ref={ref} {...chartContainerProps} zoom={zoom} onZoomChange={onZoomChange}>
-      {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
-      <ChartsGrid {...gridProps} />
-      <g {...clipPathGroupProps}>
-        <BarChartPlotZoom {...barPlotProps} />
-        <ChartsOverlay {...overlayProps} />
-        <ChartsAxisHighlight {...axisHighlightProps} />
-      </g>
-      <ChartsAxis {...chartsAxisProps} />
-      {!props.hideLegend && <ChartsLegend {...legendProps} />}
-      {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
-      <ChartsClipPath {...clipPathProps} />
-      <ZoomSetup />
-      {children}
-    </ChartContainerPro>
+    <ChartDataProviderPro {...chartDataProviderProProps} zoom={zoom} onZoomChange={onZoomChange}>
+      <ChartsWrapper
+        legendPosition={props.slotProps?.legend?.position}
+        legendDirection={props.slotProps?.legend?.direction}
+      >
+        {!props.hideLegend && <ChartsLegend {...legendProps} />}
+        <ChartsSurface {...chartsSurfaceProps}>
+          {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}
+          <ChartsGrid {...gridProps} />
+          <g {...clipPathGroupProps}>
+            <BarChartPlotZoom {...barPlotProps} />
+            <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
+          </g>
+          <ChartsAxis {...chartsAxisProps} />
+          {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+          <ChartsClipPath {...clipPathProps} />
+          <ZoomSetup />
+          {children}
+        </ChartsSurface>
+      </ChartsWrapper>
+    </ChartDataProviderPro>
   );
 });
 
