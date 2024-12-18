@@ -75,42 +75,6 @@ The following example demonstrates a basic server-side aggregation.
 The data source mock server (`useMockServer()`) mocks the built-in aggregation functions listed in the [built-in functions](/x/react-data-grid/aggregation/#built-in-functions) section of the client-side aggregation. Provide the function names and minimal configuration to demonstrate the aggregation, as shown in the demo.
 :::
 
-## Customize the aggregation rows scope
-
-Even though it depends on the business logic on the server, in general, the aggregation is computed for the filtered rows only, as obvious from the default value of the prop `aggregationRowsScope`.
-
-```ts
-/**
- * Rows used to generate the aggregated value.
- * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
- * If `all`, the aggregated values are generated using all the rows.
- * @default "filtered"
- */
-aggregationRowsScope: 'filtered' | 'all';
-```
-
-To make it customizable on the server, the Data Grid passes the `aggregationRowsScope` prop to the `getRows` method of `GridDataSource`.
-Use it to define the rows used to compute the aggregation.
-
-```tsx
-const dataSource = {
-  getRows: async ({ aggregationRowsScope, ...otherParams }) => {
-    const response = await fetchRows({
-      ...otherParams,
-      aggregationRowsScope,
-    });
-    return {
-      rows: response.rows,
-      rowCount: rows.length,
-      // The values computed for the aggregation based on the rows scope
-      aggregateRow: rows.aggregateRow,
-    };
-  },
-};
-```
-
-{{"demo": "ServerSideDataGridAggregationScope.js", "bg": "inline"}}
-
 ## Usage with row grouping
 
 Server-side aggregation works with row grouping in a similar way as described in [Aggregation—usage with row grouping](/x/react-data-grid/aggregation/#usage-with-row-grouping). The aggregated values are acquired from the parent rows using the `getAggregatedValue` method.

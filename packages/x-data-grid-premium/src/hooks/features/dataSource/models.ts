@@ -22,7 +22,6 @@ export interface GridGetRowsResponsePremium extends GridGetRowsResponse {
 
 export interface GridGetRowsParamsPremium extends GridGetRowsParams {
   aggregationModel?: GridAggregationModel;
-  aggregationRowsScope?: 'filtered' | 'all';
 }
 
 export interface GridDataSourcePremium extends Omit<GridDataSource, 'getRows'> {

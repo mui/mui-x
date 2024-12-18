@@ -60,7 +60,6 @@ export interface QueryOptions {
   pageSize?: number;
   filterModel?: GridFilterModel;
   aggregationModel?: GridAggregationModel;
-  aggregationRowsScope?: 'all' | 'filtered';
   sortModel?: GridSortModel;
   start?: number;
   end?: number;
@@ -73,7 +72,6 @@ export interface ServerSideQueryOptions {
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
   aggregationModel?: GridAggregationModel;
-  aggregationRowsScope?: 'all' | 'filtered';
   start?: number;
   end?: number;
   groupFields?: string[];
@@ -349,11 +347,10 @@ export const loadServerRows = (
 
   let aggregateRow = {};
   if (queryOptions.aggregationModel) {
-    const rowsToAggregate = queryOptions.aggregationRowsScope === 'all' ? rows : filteredRows;
     aggregateRow = applyAggregation(
       queryOptions.aggregationModel,
       columnsWithDefaultColDef,
-      rowsToAggregate,
+      filteredRows,
     );
   }
 

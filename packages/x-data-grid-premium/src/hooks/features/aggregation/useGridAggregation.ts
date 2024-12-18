@@ -111,10 +111,9 @@ export const useGridAggregation = (
       return {
         ...params,
         aggregationModel: gridAggregationModelSelector(apiRef),
-        aggregationRowsScope: props.aggregationRowsScope,
       };
     },
-    [apiRef, props.aggregationRowsScope],
+    [apiRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'getRowsParams', addGetRowsParams);
