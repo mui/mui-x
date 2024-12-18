@@ -46,11 +46,6 @@ export default function LegendPositionNoSnap() {
           options: ['left', 'middle', 'right'],
         },
         {
-          propName: 'padding',
-          knob: 'number',
-          defaultValue: 0,
-        },
-        {
           propName: 'itemsNumber',
           knob: 'number',
           defaultValue: 5,
@@ -59,7 +54,7 @@ export default function LegendPositionNoSnap() {
         },
       ]}
       renderDemo={(
-        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; padding: unknown; }} */
+        /** @type {{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; }} */
         props,
       ) => (
         <PieChart
@@ -68,40 +63,34 @@ export default function LegendPositionNoSnap() {
               data: data.slice(0, props.itemsNumber),
             },
           ]}
-          legendPosition={{
-            vertical: props.vertical,
-            horizontal: props.horizontal,
+          height={400}
+          margin={{
+            top: 20,
+            bottom: 20,
+            left: 40,
+            right: 40,
           }}
           slotProps={{
             legend: {
               direction: props.direction,
+              position: { vertical: props.vertical, horizontal: props.horizontal },
             },
           }}
-          margin={{
-            top: 100,
-            bottom: 100,
-            left: 100,
-            right: 100,
-          }}
-          width={400}
-          height={400}
         />
       )}
       getCode={(
-        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right"; padding: unknown; }}} */
+        /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right";}}} */
         { props },
       ) => {
         return [
           `import { PieChart } from '@mui/x-charts/PieChart';`,
           '',
           `<PieChart`,
-          '  margin={{ top: 100, bottom: 100, left: 100, right:100 }}',
           '  {/** ... */}',
           `  slotProps={{`,
           `    legend: {`,
           `      direction: '${props.direction}',`,
           `      position: { vertical: '${props.vertical}', horizontal: '${props.horizontal}' },`,
-          `      padding: ${props.padding},`,
           `    },`,
           `  }}`,
           '/>',
