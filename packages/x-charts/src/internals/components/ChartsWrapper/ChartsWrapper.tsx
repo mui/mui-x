@@ -60,6 +60,7 @@ const Root = styled('div', {
   flex: 1,
   justifyContent: 'center',
   height: '100%',
+  width: '100%',
   alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
 }));
 

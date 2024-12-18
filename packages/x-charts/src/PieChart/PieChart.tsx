@@ -127,7 +127,13 @@ const PieChart = React.forwardRef(function PieChart(
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
       >
-        {!hideLegend && <ChartsLegend direction="vertical" slots={slots} slotProps={slotProps} />}
+        {!hideLegend && (
+          <ChartsLegend
+            direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+            slots={slots}
+            slotProps={slotProps}
+          />
+        )}
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
