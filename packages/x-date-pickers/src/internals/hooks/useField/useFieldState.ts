@@ -423,7 +423,7 @@ export const useFieldState = <
     validateSections(sections, valueType);
     setState((prevState) => ({
       ...prevState,
-      sectionsDependencies: { format, isRtl, locale: utils.locale },
+      lastSectionsDependencies: { format, isRtl, locale: utils.locale },
       sections,
       tempValueStrAndroid: null,
     }));
