@@ -8,7 +8,7 @@ import {
 } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { BadgeProps } from '@mui/material/Badge';
+import { BadgeProps } from '../../models/gridBaseSlots';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -42,6 +42,7 @@ const GridToolbarFilterListRoot = styled('ul', {
   padding: theme.spacing(0, 1),
 }));
 
+// FIXME(v8:romgrk): override slotProps
 export interface GridToolbarFilterButtonProps {
   /**
    * The props used for each slot inside.

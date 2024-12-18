@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensitySelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
@@ -99,8 +98,8 @@ const GridToolbarDensitySelector = React.forwardRef<
       key={index}
       onClick={() => handleDensityUpdate(option.value)}
       selected={option.value === density}
+      iconStart={option.icon}
     >
-      <ListItemIcon>{option.icon}</ListItemIcon>
       {option.label}
     </rootProps.slots.baseMenuItem>
   ));

@@ -49,9 +49,7 @@
       },
       "default": "\"standard\""
     },
-    "detailPanelExpandedRowIds": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
-    },
+    "detailPanelExpandedRowIds": { "type": { "name": "instanceOf", "description": "Set" } },
     "disableAggregation": { "type": { "name": "bool" }, "default": "false" },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
