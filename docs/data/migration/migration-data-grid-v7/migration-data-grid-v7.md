@@ -34,6 +34,12 @@ Since v8 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v7 to v8.
 
+### Props
+
+- Passing additional props (like `data-*`, `aria-*`) directly on the Data Grid component is no longer supported. To pass the props, use `slotProps`.
+  - For the `.root` element, use `slotProps.root`
+  - For the `.main` element (the one with `role="grid"`), use `slotProps.main`
+
 ### Selection
 
 - The default value of the `rowSelectionPropagation` prop has been changed to `{ parents: true, descendants: true }` which means that the selection will be propagated to the parents and descendants by default.
