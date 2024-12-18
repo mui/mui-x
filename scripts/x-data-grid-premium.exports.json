@@ -567,7 +567,7 @@
   { "name": "GridSkeletonCell", "kind": "Variable" },
   { "name": "GridSkeletonCellProps", "kind": "Interface" },
   { "name": "GridSkeletonRowNode", "kind": "Interface" },
-  { "name": "GridSlotProps", "kind": "Interface" },
+  { "name": "GridSlotProps", "kind": "TypeAlias" },
   { "name": "GridSlots", "kind": "Interface" },
   { "name": "GridSlotsComponent", "kind": "Interface" },
   { "name": "GridSlotsComponentsProps", "kind": "TypeAlias" },
