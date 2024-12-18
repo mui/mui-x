@@ -11,6 +11,264 @@ import {
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing', () => {
+  describeAdapters(
+    'value props (value, defaultValue, onChange',
+    DateField,
+    ({ adapter, renderWithProps, clock }) => {
+      it('should not render any value when nio value and no default value are defined', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should use the default value when defined', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should use the controlled value instead of the default value when both are defined', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should react to controlled value update (from non null to another non null)', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: adapter.date('2023-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+      });
+
+      it('should react to a controlled value update (from non null to null)', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        view.setProps({
+          value: null,
+        });
+        expectFieldValueV6(getTextbox(), '');
+      });
+
+      it('should react to a controlled value update (from null to non null', () => {
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        view.unmount();
+
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+
+        view.setProps({
+          value: adapter.date('2022-06-04'),
+        });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+      });
+
+      it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', () => {
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2022');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        const input = getTextbox();
+        fireUserEvent.keyPress(input, { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2022');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', () => {
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV7,
+        });
+
+        view.selectSection('year');
+
+        view.pressKey(2, 'ArrowUp');
+        expectFieldValueV7(view.getSectionsContainer(), '06/04/2023');
+
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+
+        view.unmount();
+
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          defaultValue: adapter.date('2022-06-04'),
+          onChange: onChangeV6,
+        });
+
+        view.selectSection('year');
+        fireUserEvent.keyPress(getTextbox(), { key: 'ArrowUp' });
+        expectFieldValueV6(getTextbox(), '06/04/2023');
+
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2023, 5, 4));
+      });
+
+      it('should not call the onChange callback before filling the last section when starting from a null value', () => {
+        const onChangeV7 = spy();
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          onChange: onChangeV7,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+
+        view.pressKey(0, '4');
+        expect(onChangeV7.callCount).to.equal(0);
+        expectFieldValueV7(view.getSectionsContainer(), '04 MMMM');
+
+        view.pressKey(1, 'S');
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        expect(onChangeV7.callCount).to.equal(1);
+        expect(onChangeV7.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        clock.runToLast();
+        expectFieldValueV7(view.getSectionsContainer(), 'DD MMMM');
+
+        view.unmount();
+
+        const onChangeV6 = spy();
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          onChange: onChangeV6,
+          format: `${adapter.formats.dayOfMonth} ${adapter.formats.monthShort}`,
+        });
+
+        view.selectSection('day');
+        const input = getTextbox();
+
+        fireEvent.change(input, { target: { value: '4 MMMM' } }); // Press 4
+        expect(onChangeV6.callCount).to.equal(0);
+        expectFieldValueV6(input, '04 MMMM');
+
+        fireEvent.change(input, { target: { value: '04 S' } }); // Press S
+        expect(onChangeV6.callCount).to.equal(1);
+        expect(onChangeV6.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
+        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        clock.runToLast();
+        expectFieldValueV6(input, 'DD MMMM');
+      });
+    },
+  );
+
   describeAdapters('key: ArrowDown', DateField, ({ adapter, testFieldKeyPress }) => {
     it("should set the year to today's value when no value is provided (ArrowDown)", () => {
       testFieldKeyPress({
