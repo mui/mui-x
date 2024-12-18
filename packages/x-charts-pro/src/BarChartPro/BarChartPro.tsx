@@ -257,14 +257,6 @@ BarChartPro.propTypes = {
    * An array of [[BarSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
-  seriesConfig: PropTypes.shape({
-    bar: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-      xExtremumGetter: PropTypes.func.isRequired,
-      yExtremumGetter: PropTypes.func.isRequired,
-    }).isRequired,
-  }),
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

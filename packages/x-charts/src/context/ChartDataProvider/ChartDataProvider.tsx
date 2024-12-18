@@ -123,7 +123,6 @@ ChartDataProvider.propTypes = {
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.any,
-  seriesConfig: PropTypes.object,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

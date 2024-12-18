@@ -296,36 +296,11 @@ Heatmap.propTypes = {
    * An array of [[HeatmapSeriesType]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
-  seriesConfig: PropTypes.shape({
-    bar: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-      xExtremumGetter: PropTypes.func.isRequired,
-      yExtremumGetter: PropTypes.func.isRequired,
-    }).isRequired,
-    heatmap: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-      xExtremumGetter: PropTypes.func.isRequired,
-      yExtremumGetter: PropTypes.func.isRequired,
-    }).isRequired,
-    line: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-      xExtremumGetter: PropTypes.func.isRequired,
-      yExtremumGetter: PropTypes.func.isRequired,
-    }).isRequired,
-    pie: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-    }).isRequired,
-    scatter: PropTypes.shape({
-      colorProcessor: PropTypes.func.isRequired,
-      seriesProcessor: PropTypes.func.isRequired,
-      xExtremumGetter: PropTypes.func.isRequired,
-      yExtremumGetter: PropTypes.func.isRequired,
-    }).isRequired,
-  }),
+  /**
+   * The configuration helpers used to compute attributes according to the serries type.
+   * @ignore Unstable props for internal usage.
+   */
+  seriesConfig: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

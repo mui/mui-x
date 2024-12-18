@@ -65,6 +65,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
 ) => React.JSX.Element;
 
 // @ts-ignore
+
 ChartContainerPro.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -133,7 +134,6 @@ ChartContainerPro.propTypes = {
    * Please refer to the appropriate docs page to learn more about it.
    */
   series: PropTypes.arrayOf(PropTypes.object),
-  seriesConfig: PropTypes.object,
   /**
    * If `true`, animations are skipped.
    * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.

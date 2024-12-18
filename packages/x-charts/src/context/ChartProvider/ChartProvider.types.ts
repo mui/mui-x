@@ -42,6 +42,10 @@ export interface ChartProviderProps<
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
   pluginParams?: MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+  /**
+   * The configuration helpers used to compute attributes according to the serries type.
+   * @ignore Unstable props for internal usage.
+   */
   seriesConfig?: ChartSeriesConfig<TSeries>;
   children: React.ReactNode;
 }
