@@ -30,13 +30,13 @@ export default function LegendPositionNoSnap() {
         {
           propName: 'direction',
           knob: 'select',
-          defaultValue: 'horizontal',
+          defaultValue: 'vertical',
           options: ['horizontal', 'vertical'],
         },
         {
           propName: 'vertical',
           knob: 'select',
-          defaultValue: 'top',
+          defaultValue: 'middle',
           options: ['top', 'middle', 'bottom'],
         },
         {
@@ -48,7 +48,7 @@ export default function LegendPositionNoSnap() {
         {
           propName: 'itemsNumber',
           knob: 'number',
-          defaultValue: 5,
+          defaultValue: 3,
           min: 1,
           max: data.length,
         },
@@ -82,19 +82,22 @@ export default function LegendPositionNoSnap() {
         /** @type {{props:{ itemsNumber: number | undefined; direction: "horizontal" | "vertical";  vertical: "top" | "middle" | "bottom"; horizontal: "left" | "middle" | "right";}}} */
         { props },
       ) => {
-        return [
-          `import { PieChart } from '@mui/x-charts/PieChart';`,
-          '',
-          `<PieChart`,
-          '  {/** ... */}',
-          `  slotProps={{`,
-          `    legend: {`,
-          `      direction: '${props.direction}',`,
-          `      position: { vertical: '${props.vertical}', horizontal: '${props.horizontal}' },`,
-          `    },`,
-          `  }}`,
-          '/>',
-        ].join('\n');
+        return `
+import { PieChart } from '@mui/x-charts/PieChart';
+
+<PieChart
+  {/** ... */}
+  slotProps={{
+    legend: {
+      direction: '${props.direction}',
+      position: { 
+        vertical: '${props.vertical}',
+        horizontal: '${props.horizontal}'
+      }
+    }
+  }}
+/>
+`;
       }}
     />
   );

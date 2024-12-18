@@ -1,19 +1,18 @@
 'use client';
 import * as React from 'react';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { PrependKeys } from '@mui/x-internals/types';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
 import { SeriesLegendItemContext } from './legendContext.types';
-import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';
 import { consumeSlots } from '../internals/consumeSlots';
 import { ChartsLabel } from '../ChartsLabel';
 
-export interface ChartsLegendProps extends PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
+export interface ChartsLegendProps {
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
@@ -58,7 +57,6 @@ const RootElement = styled('ul', {
   marginBlock: theme.spacing(1),
   marginInline: theme.spacing(1),
   flexWrap: 'wrap',
-  justifyContent: 'center',
   li: {
     display: ownerState.direction === 'horizontal' ? 'inline-flex' : undefined,
   },
@@ -93,7 +91,7 @@ const ChartsLegend = consumeSlots(
   },
   function ChartsLegend(props: ChartsLegendProps) {
     const data = useLegend();
-    const { direction, markType, onItemClick, className, classes, ref, ...other } = props;
+    const { direction, onItemClick, className, classes, ref, ...other } = props;
 
     if (data.items.length === 0) {
       return null;
@@ -152,11 +150,6 @@ ChartsLegend.propTypes = {
    * The default depends on the chart.
    */
   direction: PropTypes.oneOf(['horizontal', 'vertical']),
-  /**
-   * The type of the mark.
-   * @default 'square'
-   */
-  type: PropTypes.oneOf(['circle', 'line', 'square']),
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.

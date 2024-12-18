@@ -3,11 +3,12 @@ import Typography from '@mui/material/Typography';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
+import Stack from '@mui/material/Stack';
 import { dataset } from './tempAnomaly';
 
 export default function BasicColorLegend() {
   return (
-    <div style={{ width: '100%' }}>
+    <Stack width={'100%'}>
       <Typography variant="body1">
         Global temperature anomaly relative to 1961-1990 average
       </Typography>
@@ -56,6 +57,6 @@ export default function BasicColorLegend() {
       >
         <ChartsReferenceLine y={0} />
       </LineChart>
-    </div>
+    </Stack>
   );
 }

@@ -77,11 +77,13 @@ import { legendClasses } from '@mui/x-charts/ChartsLegend';
       direction: props.direction,
       sx: {
         gap: '${props.itemGap}px',
+        // CSS-in-JS
         [\`.\${legendClasses.mark}\`]: {
           height: ${props.markSize},
           width: ${props.markSize},
         },
-        [\`.\${legendClasses.series}\`]: {
+        // CSS class
+        ['.${legendClasses.series}']: {
           gap: '${props.markGap}px',
         },
       },
