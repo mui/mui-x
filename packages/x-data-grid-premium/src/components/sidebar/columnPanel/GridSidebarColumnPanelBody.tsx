@@ -112,7 +112,7 @@ export function GridSidebarColumnPanelBody({
   columns: GridColDef[];
   onPivotModelChange: React.Dispatch<React.SetStateAction<PivotModel>>;
 }) {
-  const [fields] = React.useState(() => columns.map((col) => col.field));
+  const fields = React.useMemo(() => columns.map((col) => col.field), [columns]);
   const rootProps = useGridRootProps();
   const [drag, setDrag] = React.useState<{
     active: boolean;
