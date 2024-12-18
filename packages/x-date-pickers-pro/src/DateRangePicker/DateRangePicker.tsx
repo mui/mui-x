@@ -7,6 +7,7 @@ import { refType } from '@mui/utils';
 import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '@mui/x-date-pickers/internals';
 
 type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
   props: DateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
@@ -31,7 +32,7 @@ const DateRangePicker = React.forwardRef(function DateRangePicker<
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
