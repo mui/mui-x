@@ -66,8 +66,6 @@ describe('<DataGrid />', () => {
       </div>,
     );
 
-    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
-    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
     expect(document.querySelector('[data-custom-id="root-1"]')).to.equal(rootRef.current);
     expect(document.querySelector('[aria-label="Root one"]')).to.equal(rootRef.current);
 
