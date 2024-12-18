@@ -104,7 +104,6 @@ const RootElement = styled('ul', {
   ...theme.typography.caption,
   color: (theme.vars || theme).palette.text.primary,
   lineHeight: undefined,
-
   display: 'grid',
   flexShrink: 0,
   gap: theme.spacing(0.5),
