@@ -1,16 +1,5 @@
 {
   "props": {
-    "direction": {
-      "type": { "name": "enum", "description": "'column'<br>&#124;&nbsp;'row'" },
-      "required": true
-    },
-    "position": {
-      "type": {
-        "name": "shape",
-        "description": "{ horizontal: 'left'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'right', vertical: 'bottom'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'top' }"
-      },
-      "required": true
-    },
     "axisDirection": {
       "type": { "name": "enum", "description": "'x'<br>&#124;&nbsp;'y'<br>&#124;&nbsp;'z'" },
       "default": "'z'"
@@ -20,11 +9,10 @@
       "default": "The first axis item."
     },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "hideFirst": { "type": { "name": "bool" }, "default": "false" },
-    "hideLast": { "type": { "name": "bool" }, "default": "false" },
-    "itemGap": { "type": { "name": "number" }, "default": "10" },
-    "itemMarkHeight": { "type": { "name": "number" }, "default": "20" },
-    "itemMarkWidth": { "type": { "name": "number" }, "default": "20" },
+    "direction": {
+      "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
+      "default": "'horizontal'"
+    },
     "labelFormatter": {
       "type": { "name": "func" },
       "signature": {
@@ -33,21 +21,26 @@
         "returned": "string | null"
       }
     },
-    "labelStyle": { "type": { "name": "object" }, "default": "theme.typography.subtitle1" },
-    "markGap": { "type": { "name": "number" }, "default": "5" },
+    "labelPosition": {
+      "type": {
+        "name": "enum",
+        "description": "'above'<br>&#124;&nbsp;'below'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'"
+      },
+      "default": "'below'"
+    },
+    "markType": {
+      "type": {
+        "name": "enum",
+        "description": "'square'<br>&#124;&nbsp;'circle'<br>&#124;&nbsp;'line'"
+      },
+      "default": "'square'"
+    },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGRectElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
+        "type": "function(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, legendItem: PiecewiseColorLegendItemContext, index: number) => void",
         "describedArgs": ["event", "legendItem", "index"]
       }
-    },
-    "padding": {
-      "type": {
-        "name": "union",
-        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
-      },
-      "default": "10"
     }
   },
   "name": "PiecewiseColorLegend",
@@ -58,15 +51,33 @@
   ],
   "classes": [
     {
-      "key": "column",
-      "className": "MuiPiecewiseColorLegend-column",
-      "description": "Styles applied to the legend with column layout.",
+      "key": "above",
+      "className": "MuiPiecewiseColorLegend-above",
+      "description": "Styles applied to the legend with the labels above the color marks.",
       "isGlobal": false
     },
     {
-      "key": "itemBackground",
-      "className": "MuiPiecewiseColorLegend-itemBackground",
-      "description": "Styles applied to the item background.",
+      "key": "below",
+      "className": "MuiPiecewiseColorLegend-below",
+      "description": "Styles applied to the legend with the labels below the color marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "extremes",
+      "className": "MuiPiecewiseColorLegend-extremes",
+      "description": "Styles applied to the legend with the labels on the extremes of the color marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "horizontal",
+      "className": "MuiPiecewiseColorLegend-horizontal",
+      "description": "Styles applied to the legend in row layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "item",
+      "className": "MuiPiecewiseColorLegend-item",
+      "description": "Styles applied to the list items.",
       "isGlobal": false
     },
     {
@@ -76,9 +87,33 @@
       "isGlobal": false
     },
     {
+      "key": "left",
+      "className": "MuiPiecewiseColorLegend-left",
+      "description": "Styles applied to the legend with the labels on the left of the color marks.",
+      "isGlobal": false
+    },
+    {
       "key": "mark",
       "className": "MuiPiecewiseColorLegend-mark",
-      "description": "Styles applied to series mark element.",
+      "description": "Styles applied to the marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "maxLabel",
+      "className": "MuiPiecewiseColorLegend-maxLabel",
+      "description": "Styles applied to the list item that renders the `maxLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "minLabel",
+      "className": "MuiPiecewiseColorLegend-minLabel",
+      "description": "Styles applied to the list item that renders the `minLabel`.",
+      "isGlobal": false
+    },
+    {
+      "key": "right",
+      "className": "MuiPiecewiseColorLegend-right",
+      "description": "Styles applied to the legend with the labels on the right of the color marks.",
       "isGlobal": false
     },
     {
@@ -88,19 +123,16 @@
       "isGlobal": false
     },
     {
-      "key": "row",
-      "className": "MuiPiecewiseColorLegend-row",
-      "description": "Styles applied to the legend with row layout.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiPiecewiseColorLegend-series",
-      "description": "Styles applied to a series element.",
+      "key": "vertical",
+      "className": "MuiPiecewiseColorLegend-vertical",
+      "description": "Styles applied to the legend in column layout.",
       "isGlobal": false
     }
   ],
+  "spread": true,
+  "themeDefaultProps": true,
   "muiName": "MuiPiecewiseColorLegend",
+  "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-charts/src/ChartsLegend/PiecewiseColorLegend.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",

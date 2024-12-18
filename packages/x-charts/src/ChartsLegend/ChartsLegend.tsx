@@ -114,7 +114,7 @@ const ChartsLegend = consumeSlots(
                 type={onItemClick ? 'button' : undefined}
                 onClick={
                   onItemClick
-                    ? // @ts-expect-error onClick is only attached to a button
+                    ? // @ts-ignore onClick is only attached to a button
                       (event) => onItemClick(event, seriesContextBuilder(item), i)
                     : undefined
                 }

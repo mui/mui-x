@@ -1,7 +1,7 @@
 ---
 title: Charts - Legend
 productId: x-charts
-components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend
+components: ChartsLegend, DefaultChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegend, ChartsLabel, ChartsLabelMark, ChartsLabelGradient
 ---
 
 # Charts - Legend

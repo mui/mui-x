@@ -1,0 +1,65 @@
+{
+  "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "color": { "type": { "name": "string" } },
+    "type": {
+      "type": {
+        "name": "enum",
+        "description": "'circle'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'square'"
+      },
+      "default": "'square'"
+    }
+  },
+  "name": "ChartsLabelMark",
+  "imports": [
+    "import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';",
+    "import { ChartsLabelMark } from '@mui/x-charts';",
+    "import { ChartsLabelMark } from '@mui/x-charts-pro';"
+  ],
+  "classes": [
+    {
+      "key": "circle",
+      "className": "MuiChartsLabelMark-circle",
+      "description": "Styles applied to the mark type \"circle\".",
+      "isGlobal": false
+    },
+    {
+      "key": "fill",
+      "className": "MuiChartsLabelMark-fill",
+      "description": "Styles applied to the element containing the fill value",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiChartsLabelMark-line",
+      "description": "Styles applied to the mark type \"line\".",
+      "isGlobal": false
+    },
+    {
+      "key": "mask",
+      "className": "MuiChartsLabelMark-mask",
+      "description": "Styles applied to the \"mask\" that gives shape to the marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChartsLabelMark-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "square",
+      "className": "MuiChartsLabelMark-square",
+      "description": "Styles applied to the mark type \"square\".",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": true,
+  "muiName": "MuiChartsLabelMark",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-charts/src/ChartsLabel/ChartsLabelMark.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/legend/\">Charts - Legend</a></li></ul>",
+  "cssComponent": false
+}
