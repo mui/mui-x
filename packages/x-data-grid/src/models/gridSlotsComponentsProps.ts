@@ -33,7 +33,7 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
+import type { BadgeProps, DividerProps, MenuItemProps, SkeletonProps } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -55,6 +55,7 @@ export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
+export interface BaseSkeletonPropsOverrides {}
 export interface BaseChipPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
@@ -97,6 +98,7 @@ interface BaseSlotProps {
     value: any;
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
+  baseSkeleton: SkeletonProps & BaseSkeletonPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
 }
 

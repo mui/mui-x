@@ -21,3 +21,9 @@ export type MenuItemProps = {
   selected?: boolean;
   value?: number | string | readonly string[];
 };
+
+export type SkeletonProps = {
+  variant?: 'circular' | 'text';
+  width?: number | string;
+  height?: number | string;
+};
