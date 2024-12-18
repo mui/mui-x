@@ -1,7 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "colors": { "description": "Color palette used to colorize multiple series." },
     "cornerRadius": {
       "description": "The radius applied to arc corners (similar to border radius). Set it to &#39;50%&#39; to get rounded arc."
     },

@@ -49,11 +49,6 @@ Gauge.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
-   */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
    * The radius applied to arc corners (similar to border radius).
    * Set it to '50%' to get rounded arc.
    * @default 0
@@ -71,7 +66,6 @@ Gauge.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -129,7 +123,6 @@ Gauge.propTypes = {
     PropTypes.object,
   ]),
   text: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The value of the gauge.

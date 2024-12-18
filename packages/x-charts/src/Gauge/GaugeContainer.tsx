@@ -10,7 +10,10 @@ import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 
 export interface GaugeContainerProps
   extends Omit<ChartsSurfaceProps, 'children'>,
-    Omit<MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>, 'series'>,
+    Omit<
+      MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
+      'series' | 'dataset' | 'colors' | 'theme'
+    >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
   children?: React.ReactNode;
@@ -92,11 +95,6 @@ GaugeContainer.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
-   * Color palette used to colorize multiple series.
-   * @default blueberryTwilightPalette
-   */
-  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
-  /**
    * The radius applied to arc corners (similar to border radius).
    * Set it to '50%' to get rounded arc.
    * @default 0
@@ -114,7 +112,6 @@ GaugeContainer.propTypes = {
    * The '100%' is the height the drawing area.
    */
   cy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   /**
    * If `true`, the charts will not listen to the mouse move event.
@@ -171,7 +168,6 @@ GaugeContainer.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
    * The value of the gauge.

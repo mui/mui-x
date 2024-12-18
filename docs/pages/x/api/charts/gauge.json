@@ -1,9 +1,5 @@
 {
   "props": {
-    "colors": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
-      "default": "blueberryTwilightPalette"
-    },
     "cornerRadius": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "0"
