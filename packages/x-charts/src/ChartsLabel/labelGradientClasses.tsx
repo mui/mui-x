@@ -12,6 +12,8 @@ export interface ChartsLabelGradientClasses {
   vertical: string;
   /** Styles applied when direction is "row". */
   horizontal: string;
+  /** Styles applied to the element containing the gradient's fill value */
+  fill: string;
 }
 
 export function getLabelGradientUtilityClass(slot: string) {
@@ -20,7 +22,7 @@ export function getLabelGradientUtilityClass(slot: string) {
 
 export const labelGradientClasses: ChartsLabelGradientClasses = generateUtilityClasses(
   'MuiChartsLabelGradient',
-  ['root', 'vertical', 'horizontal', 'mask'],
+  ['root', 'vertical', 'horizontal', 'mask', 'fill'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
@@ -29,6 +31,7 @@ export const useUtilityClasses = (props: ChartsLabelGradientProps) => {
   const slots = {
     root: ['root', direction],
     mask: ['mask'],
+    fill: ['fill'],
   };
 
   return composeClasses(slots, getLabelGradientUtilityClass, props.classes);

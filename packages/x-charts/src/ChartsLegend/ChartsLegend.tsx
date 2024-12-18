@@ -51,6 +51,7 @@ const RootElement = styled('ul', {
   display: 'flex',
   flexDirection: ownerState.direction === 'vertical' ? 'column' : 'row',
   alignItems: ownerState.direction === 'vertical' ? undefined : 'center',
+  flexShrink: 0,
   gap: theme.spacing(2),
   listStyleType: 'none',
   paddingInlineStart: 0,

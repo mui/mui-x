@@ -14,6 +14,8 @@ export interface ChartsLabelMarkClasses {
   square: string;
   /** Styles applied to the mark type "circle". */
   circle: string;
+  /** Styles applied to the element containing the fill value */
+  fill: string;
 }
 
 export function getLabelMarkUtilityClass(slot: string) {
@@ -22,7 +24,7 @@ export function getLabelMarkUtilityClass(slot: string) {
 
 export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
   'MuiChartsLabelMark',
-  ['root', 'line', 'square', 'circle', 'mask'],
+  ['root', 'line', 'square', 'circle', 'mask', 'fill'],
 );
 
 export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
@@ -30,6 +32,7 @@ export const useUtilityClasses = (props: ChartsLabelMarkProps) => {
   const slots = {
     root: ['root', type],
     mask: ['mask'],
+    fill: ['fill'],
   };
 
   return composeClasses(slots, getLabelMarkUtilityClass, props.classes);
