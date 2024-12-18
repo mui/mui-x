@@ -10,6 +10,7 @@ interface GridActionsCellItemCommonProps {
   component?: React.ElementType;
 }
 
+// FIXME(v8:romgrk): Make parametric
 export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   (
     | ({ showInMenu?: false; icon: React.ReactElement } & Omit<
