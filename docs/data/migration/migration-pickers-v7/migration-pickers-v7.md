@@ -385,7 +385,7 @@ This change causes a few breaking changes:
   +  const isRtl = useRtl();
   ```
 
-- The component passed to the `layout` slot no longer receives an `orientation` and the `isLandscape` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
