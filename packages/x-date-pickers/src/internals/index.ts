@@ -68,13 +68,13 @@ export { useFieldOwnerState } from './hooks/useFieldOwnerState';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
 export type {
-  UsePickerResponse,
   UsePickerParams,
   UsePickerProps,
   UsePickerValueFieldResponse,
   PickerViewsRendererProps,
 } from './hooks/usePicker';
 export type {
+  UsePickerValueContextValue,
   UsePickerValueNonStaticProps,
   PickerValueManager,
   PickerSelectionState,
