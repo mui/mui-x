@@ -95,6 +95,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const { isIndeterminate, isChecked } = useGridSelector(
       apiRef,
       checkboxPropsSelector,
+      undefined,
       objectShallowCompare,
     );
 
