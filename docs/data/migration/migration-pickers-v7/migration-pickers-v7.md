@@ -331,7 +331,7 @@ const theme = createTheme({
   +console.log(variant);
   ```
 
-- The component passed to the `layout` slot no longer receives an `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` and `onDismiss` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
+- The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` and `onDismiss` props, instead you can use the `usePickerActionsContext` or the `usePickerContext` hooks:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
