@@ -49,7 +49,7 @@ describe('useSvgRef', () => {
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <ChartProvider>
+        <ChartProvider pluginParams={{ width: 200, height: 200 }}>
           <UseSvgRef />
         </ChartProvider>
       );

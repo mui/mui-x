@@ -18,6 +18,7 @@
         "description": "{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string }"
       }
     },
+    "id": { "type": { "name": "string" } },
     "margin": {
       "type": {
         "name": "shape",
