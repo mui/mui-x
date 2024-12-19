@@ -91,7 +91,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiPieChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

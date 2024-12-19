@@ -168,7 +168,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiLineChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",

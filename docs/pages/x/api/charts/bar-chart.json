@@ -173,7 +173,7 @@
   ],
   "classes": [],
   "spread": true,
-  "themeDefaultProps": true,
+  "themeDefaultProps": false,
   "muiName": "MuiBarChart",
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
