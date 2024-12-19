@@ -1087,6 +1087,48 @@
       "class": null
     },
     {
+      "name": "pivotMenuAddIcon",
+      "description": "Icon displayed in the pivot menu for adding a field to a pivot section.",
+      "default": "GridAddIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveUpIcon",
+      "description": "Icon displayed in the pivot menu for moving a field up.",
+      "default": "GridExpandLessIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveDownIcon",
+      "description": "Icon displayed in the pivot menu for moving a field down.",
+      "default": "GridExpandMoreIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToTopIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the top.",
+      "default": "GridMoveToTopIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuMoveToBottomIcon",
+      "description": "Icon displayed in the pivot menu for moving a field to the bottom.",
+      "default": "GridMoveToBottomIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuCheckIcon",
+      "description": "Icon displayed in the pivot menu to signify a pivot section is selected.",
+      "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "pivotMenuRemoveIcon",
+      "description": "Icon displayed in the pivot menu for removing a field from the pivot.",
+      "default": "GridDeleteIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
@@ -1878,6 +1920,12 @@
       "key": "selectedRowCount",
       "className": "MuiDataGridPremium-selectedRowCount",
       "description": "Styles applied to the footer selected row count element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sidePanel",
+      "className": "MuiDataGridPremium-sidePanel",
+      "description": "",
       "isGlobal": false
     },
     {
