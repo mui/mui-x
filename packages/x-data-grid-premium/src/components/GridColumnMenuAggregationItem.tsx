@@ -33,9 +33,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   );
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isBaseSelectNative = baseSelectProps.native ?? false;
-  const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
+
   const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
-  const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
   const selectedAggregationRule = React.useMemo(() => {
     if (!colDef || !aggregationModel[colDef.field]) {
@@ -65,6 +64,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
+    apiRef.current.hideColumnMenu();
   };
 
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
@@ -81,10 +81,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
       onKeyDown={handleKeyDown}
     >
-      <FormControl {...baseFormControlProps} size="small" fullWidth sx={{ minWidth: 150 }}>
-        <InputLabel {...baseInputLabelProps} id={`${id}-label`}>
-          {label}
-        </InputLabel>
+      <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
+        <InputLabel id={`${id}-label`}>{label}</InputLabel>
         <rootProps.slots.baseSelect
           labelId={`${id}-label`}
           inputRef={inputRef}
