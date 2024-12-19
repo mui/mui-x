@@ -232,7 +232,7 @@ describe('<DataGridPro /> - Data source', () => {
       const onDataSourceError = spy();
       render(<TestDataSource unstable_onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
-        expect(onDataSourceError.called).to.be.true;
+        expect(onDataSourceError.callCount).to.equal(1);
       });
     });
   });
