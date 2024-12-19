@@ -1,5 +1,6 @@
 import { GridRowId } from '@mui/x-data-grid';
-import { GridPrivateApiPro, GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { GridGetRowsParams, GridGetRowsResponse } from '@mui/x-data-grid/internals';
+import { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
