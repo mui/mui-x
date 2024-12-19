@@ -38,6 +38,7 @@ describe('<ScatterChart />', () => {
         'themeStyleOverrides',
         'themeVariants',
         'themeCustomPalette',
+        'themeDefaultProps',
       ],
     }),
   );
