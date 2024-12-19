@@ -12,10 +12,11 @@ import { fireUserEvent } from 'test/utils/fireUserEvent';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(
-    'value props (value, defaultValue, onChange',
+    'value props (value, defaultValue, onChange)',
     DateField,
     ({ adapter, renderWithProps, clock }) => {
-      it('should not render any value when nio value and no default value are defined', () => {
+      it('should not render any value when no value and no default value are defined', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
         });
@@ -24,6 +25,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
         });
@@ -32,6 +34,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should use the default value when defined', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           defaultValue: adapter.date('2022-06-04'),
@@ -41,6 +44,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           defaultValue: adapter.date('2022-06-04'),
@@ -50,6 +54,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should use the controlled value instead of the default value when both are defined', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           value: adapter.date('2022-06-04'),
@@ -60,6 +65,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           value: adapter.date('2022-06-04'),
@@ -69,7 +75,30 @@ describe('<DateField /> - Editing', () => {
         expectFieldValueV6(getTextbox(), '06/04/2022');
       });
 
+      it('should use the controlled value instead of the default value when both are defined and the controlled value is null', () => {
+        // Test with accessible DOM structure
+        let view = renderWithProps({
+          enableAccessibleFieldDOMStructure: true,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV7(view.getSectionsContainer(), 'MM/DD/YYYY');
+
+        view.unmount();
+
+        // Test with non-accessible DOM structure
+        view = renderWithProps({
+          enableAccessibleFieldDOMStructure: false,
+          value: null,
+          defaultValue: adapter.date('2023-06-04'),
+        });
+
+        expectFieldValueV6(getTextbox(), '');
+      });
+
       it('should react to controlled value update (from non null to another non null)', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           value: adapter.date('2022-06-04'),
@@ -84,6 +113,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           value: adapter.date('2022-06-04'),
@@ -98,6 +128,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should react to a controlled value update (from non null to null)', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           value: adapter.date('2022-06-04'),
@@ -112,6 +143,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           value: adapter.date('2022-06-04'),
@@ -126,6 +158,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should react to a controlled value update (from null to non null', () => {
+        // Test with accessible DOM structure
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
           value: null,
@@ -140,6 +173,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
           value: null,
@@ -154,6 +188,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated but should not change the displayed value if the value is controlled', () => {
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -171,6 +206,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
@@ -188,6 +224,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should call the onChange callback when the value is updated and should change the displayed value if the value is not controlled', () => {
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -205,6 +242,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
@@ -221,6 +259,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should not call the onChange callback before filling the last section when starting from a null value', () => {
+        // Test with accessible DOM structure
         const onChangeV7 = spy();
         let view = renderWithProps({
           enableAccessibleFieldDOMStructure: true,
@@ -244,6 +283,7 @@ describe('<DateField /> - Editing', () => {
 
         view.unmount();
 
+        // Test with non-accessible DOM structure
         const onChangeV6 = spy();
         view = renderWithProps({
           enableAccessibleFieldDOMStructure: false,
