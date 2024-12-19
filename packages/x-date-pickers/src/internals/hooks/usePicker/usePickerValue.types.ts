@@ -352,7 +352,8 @@ export interface UsePickerValueActionsContextValue {
   setValueToToday: () => void;
   /**
    * Accept the current value of the picker.
-   * Will call `onAccept` if defined, and if the picker is closed, this value will be retained.
+   * Will call `onAccept` if defined.
+   * If the picker is re-opened, this value will be the one used to initialize the views.
    */
   acceptValueChanges: () => void;
   /**
