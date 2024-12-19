@@ -28,7 +28,7 @@ export type CircularProgressProps = {
    * @default 40
    */
   size?: number | string;
-  /** @default 'primaty' */
+  /** @default 'primary' */
   color?: 'inherit' | 'primary';
 };
 
