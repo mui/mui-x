@@ -1,65 +1,22 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { clsx } from 'clsx';
-import Stack, { StackProps } from '@mui/material/Stack';
-import MuiTextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
-import useSlotProps from '@mui/utils/useSlotProps';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_generateUtilityClass as generateUtilityClass,
-  unstable_generateUtilityClasses as generateUtilityClasses,
-} from '@mui/utils';
-import {
-  convertFieldResponseIntoMuiTextFieldProps,
-  useFieldOwnerState,
-} from '@mui/x-date-pickers/internals';
-import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
-import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
-import {
-  MultiInputTimeRangeFieldProps,
-  MultiInputTimeRangeFieldSlotProps,
-} from './MultiInputTimeRangeField.types';
-import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
-import { MultiInputRangeFieldClasses, RangePosition } from '../models';
+import useThemeProps from '@mui/system/useThemeProps';
+import { useTimeRangeManager, UseTimeRangeManagerReturnValue } from '../managers';
+import { MultiInputRangeField } from '../MultiInputRangeField/MultiInputRangeField';
+import { MultiInputRangeFieldProps, MultiInputRangeFieldClasses } from '../MultiInputRangeField';
 
-export const multiInputTimeRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
-  'MuiMultiInputTimeRangeField',
-  ['root', 'separator'],
-);
-
-export const getMultiInputTimeRangeFieldUtilityClass = (slot: string) =>
-  generateUtilityClass('MuiMultiInputTimeRangeField', slot);
-
-const useUtilityClasses = (classes: Partial<MultiInputRangeFieldClasses> | undefined) => {
-  const slots = {
-    root: ['root'],
-    separator: ['separator'],
-  };
-
-  return composeClasses(slots, getMultiInputTimeRangeFieldUtilityClass, classes);
-};
-
-const MultiInputTimeRangeFieldRoot = styled(
-  React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} spacing={2} direction="row" alignItems="center" {...props} />
-  )),
-  {
-    name: 'MuiMultiInputTimeRangeField',
-    slot: 'Root',
-    overridesResolver: (props, styles) => styles.root,
-  },
-)({});
-
-const MultiInputTimeRangeFieldSeparator = styled(Typography, {
-  name: 'MuiMultiInputTimeRangeField',
-  slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
-})({
-  lineHeight: '1.4375em', // 23px
-});
+export interface MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+  extends Omit<
+    MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>>,
+    'manager'
+  > {
+  // We need to redefine the classes here, otherwise we don't have the doc generation.
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
+}
 
 type MultiInputTimeRangeFieldComponent = (<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
@@ -81,102 +38,17 @@ type MultiInputTimeRangeFieldComponent = (<
 const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeField<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
 >(
-  inProps: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
+  props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const manager = useTimeRangeManager(props);
+
   const themeProps = useThemeProps({
-    props: inProps,
+    props,
     name: 'MuiMultiInputTimeRangeField',
   });
 
-  const { internalProps, forwardedProps } = useSplitFieldProps(themeProps, 'time');
-
-  const {
-    slots,
-    slotProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-    className,
-    classes: classesProp,
-    ...otherForwardedProps
-  } = forwardedProps;
-
-  const ownerState = useFieldOwnerState(themeProps);
-  const classes = useUtilityClasses(classesProp);
-
-  const Root = slots?.root ?? MultiInputTimeRangeFieldRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    externalForwardedProps: otherForwardedProps,
-    additionalProps: {
-      ref,
-    },
-    ownerState,
-    className: clsx(className, classes.root),
-  });
-
-  const TextField =
-    slots?.textField ??
-    (inProps.enableAccessibleFieldDOMStructure === false ? MuiTextField : PickersTextField);
-  const startTextFieldProps = useSlotProps<
-    typeof TextField,
-    MultiInputTimeRangeFieldSlotProps['textField'],
-    {},
-    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
-      position: RangePosition;
-    }
-  >({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...ownerState, position: 'start' },
-  });
-
-  const endTextFieldProps = useSlotProps<
-    typeof TextField,
-    MultiInputTimeRangeFieldSlotProps['textField'],
-    {},
-    MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> & {
-      position: RangePosition;
-    }
-  >({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField,
-    ownerState: { ...ownerState, position: 'end' },
-  });
-
-  const Separator = slots?.separator ?? MultiInputTimeRangeFieldSeparator;
-  const separatorProps = useSlotProps({
-    elementType: Separator,
-    externalSlotProps: slotProps?.separator,
-    additionalProps: {
-      children: ` ${internalProps.dateSeparator ?? '–'} `,
-    },
-    ownerState,
-    className: classes.separator,
-  });
-
-  const fieldResponse = useMultiInputTimeRangeField<
-    TEnableAccessibleFieldDOMStructure,
-    typeof startTextFieldProps
-  >({
-    sharedProps: internalProps,
-    startTextFieldProps,
-    endTextFieldProps,
-    unstableStartFieldRef,
-    unstableEndFieldRef,
-  });
-
-  const startDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.startDate);
-  const endDateProps = convertFieldResponseIntoMuiTextFieldProps(fieldResponse.endDate);
-
-  return (
-    <Root {...rootProps}>
-      <TextField fullWidth {...startDateProps} />
-      <Separator {...separatorProps} />
-      <TextField fullWidth {...endDateProps} />
-    </Root>
-  );
+  return <MultiInputRangeField {...themeProps} manager={manager} ref={ref} />;
 }) as MultiInputTimeRangeFieldComponent;
 
 MultiInputTimeRangeField.propTypes = {
@@ -191,6 +63,7 @@ MultiInputTimeRangeField.propTypes = {
   ampm: PropTypes.bool,
   /**
    * If `true`, the `input` element is focused during the first mount.
+   * @default false
    */
   autoFocus: PropTypes.bool,
   /**
@@ -359,7 +232,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overridable slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
