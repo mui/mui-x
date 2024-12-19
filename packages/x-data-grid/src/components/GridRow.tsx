@@ -5,7 +5,7 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
-import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
+import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -23,13 +23,28 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../internals/constants';
 import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
-import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
+import {
+  gridEditRowsStateSelector,
+  gridRowIsEditingSelector,
+} from '../hooks/features/editing/gridEditingSelectors';
 import { PinnedPosition, gridPinnedColumnPositionLookup } from './cell/GridCell';
 import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { gridVirtualizationColumnEnabledSelector } from '../hooks';
+import { createSelector } from '../utils/createSelector';
+
+const gridIsRowReorderingEnabledSelector = createSelector(
+  gridEditRowsStateSelector,
+  (editRows, rowReordering: boolean) => {
+    if (!rowReordering) {
+      return false;
+    }
+    const isEditingRows = Object.keys(editRows).length > 0;
+    return !isEditingRows;
+  },
+);
 
 export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   row: GridRowModel;
@@ -52,11 +67,6 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
    * If `null`, no cell in this row has focus.
    */
   focusedColumnIndex: number | undefined;
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: string | null;
   isFirstVisible: boolean;
   isLastVisible: boolean;
   isNotVisible: boolean;
@@ -88,7 +98,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isLastVisible,
     isNotVisible,
     showBottomBorder,
-    tabbableCell,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -105,12 +114,17 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const rowReordering = (rootProps as any).rowReordering as boolean;
+  const isRowReorderingEnabled = useGridSelector(
+    apiRef,
+    gridIsRowReorderingEnabledSelector,
+    rowReordering,
+  );
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
   const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
   const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
-  const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
+  const editing = useGridSelector(apiRef, gridRowIsEditingSelector, rowId);
   const editable = rootProps.editMode === GridEditModes.Row;
   const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const hasFocusCell = focusedColumnIndex !== undefined;
@@ -220,8 +234,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const { slots, slotProps, disableColumnReorder } = rootProps;
 
-  const rowReordering = (rootProps as any).rowReordering as boolean;
-
   const heightEntry = useGridSelector(
     apiRef,
     () => ({ ...apiRef.current.getRowHeightEntry(rowId) }),
@@ -279,6 +291,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
+  /* Start of rendering */
+  if (!rowNode) {
+    return null;
+  }
+
   const getCell = (
     column: GridStateColDef,
     indexInSection: number,
@@ -319,15 +336,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       );
     }
 
-    const editCellState = editRowsState[rowId]?.[column.field] ?? null;
-
     // when the cell is a reorder cell we are not allowing to reorder the col
     // fixes https://github.com/mui/mui-x/issues/11126
     const isReorderCell = column.field === '__reorder__';
-    const isEditingRows = Object.keys(editRowsState).length > 0;
 
     const canReorderColumn = !(disableColumnReorder || column.disableReorder);
-    const canReorderRow = rowReordering && !sortModel.length && treeDepth <= 1 && !isEditingRows;
+    const canReorderRow = isRowReorderingEnabled && !sortModel.length && treeDepth <= 1;
 
     const disableDragEvents = !(canReorderColumn || (isReorderCell && canReorderRow));
 
@@ -343,23 +357,18 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         colIndex={indexRelativeToAllColumns}
         colSpan={colSpan}
         disableDragEvents={disableDragEvents}
-        editCellState={editCellState}
         isNotVisible={cellIsNotVisible}
         pinnedOffset={pinnedOffset}
         pinnedPosition={pinnedPosition}
         sectionIndex={indexInSection}
         sectionLength={sectionLength}
         gridHasFiller={gridHasFiller}
+        row={row}
+        rowNode={rowNode}
         {...slotProps?.cell}
       />
     );
   };
-
-  /* Start of rendering */
-
-  if (!rowNode) {
-    return null;
-  }
 
   const leftCells = pinnedColumns.left.map((column, i) => {
     const indexRelativeToAllColumns = i;
@@ -541,11 +550,6 @@ GridRow.propTypes = {
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
   showBottomBorder: PropTypes.bool.isRequired,
-  /**
-   * Determines which cell should be tabbable by having tabIndex=0.
-   * If `null`, no cell in this row is in the tab sequence.
-   */
-  tabbableCell: PropTypes.string,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
