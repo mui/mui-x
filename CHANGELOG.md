@@ -30,7 +30,7 @@ Following are all team members who have contributed to this release:
   - For `.root` element, use `slotProps.root`.
   - For `.main` element (the one with `role="grid"`), use `slotProps.main`.
 
-- `detailPanelExpandedRowIds` and `onDetailPanelExpandedRowIdsChange` props use [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array:
+- `detailPanelExpandedRowIds` and `onDetailPanelExpandedRowIdsChange` props use a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array:
 
   ```diff
   -detailPanelExpandedRowIds?: GridRowId[];
@@ -40,8 +40,8 @@ Following are all team members who have contributed to this release:
   +onDetailPanelExpandedRowIdsChange?: (ids: Set<GridRowId>, details: GridCallbackDetails) => void;
   ```
 
-- `apiRef.current.getExpandedDetailPanels` and `apiRef.current.setExpandedDetailPanels` methods receive and return [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
-- `gridDetailPanelExpandedRowIdsSelector` returns [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
+- `apiRef.current.getExpandedDetailPanels` and `apiRef.current.setExpandedDetailPanels` methods receive and return a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
+- `gridDetailPanelExpandedRowIdsSelector` returns a [`Set`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) instead of an array.
 - `gridDetailPanelExpandedRowsHeightCacheSelector` was removed.
 
 #### `@mui/x-data-grid@8.0.0-alpha.5`
@@ -49,8 +49,8 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15915) @k-rajat19
 - [DataGrid] Fix autosizing with virtualized columns (#15116) @k-rajat19
 - [DataGrid] Move Badge to leaf import (#15879) @romgrk
-- [DataGrid] Move ListItemText and ListItemIcon to leaf import (#15869) @romgrk
-- [DataGrid] Remove joy-ui (#15913) @romgrk
+- [DataGrid] Move `<ListItemText />` and `<ListItemIcon />` to leaf import (#15869) @romgrk
+- [DataGrid] Remove the Joy UI demo (#15913) @romgrk
 - [DataGrid] Update quick filter input variant (#15909) @KenanYusuf
 - [DataGrid] Use `slotProps` to forward props to `.main` and `.root` elements (#15870) @MBilalShafi
 - [l10n] Improve Korean(ko-KR) locale (#15878) @good-jinu
