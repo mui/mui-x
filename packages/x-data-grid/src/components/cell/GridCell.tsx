@@ -511,12 +511,6 @@ GridCell.propTypes = {
   colSpan: PropTypes.number,
   column: PropTypes.object.isRequired,
   disableDragEvents: PropTypes.bool,
-  editCellState: PropTypes.shape({
-    changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
-    isProcessingProps: PropTypes.bool,
-    isValidating: PropTypes.bool,
-    value: PropTypes.any,
-  }),
   gridHasFiller: PropTypes.bool.isRequired,
   isNotVisible: PropTypes.bool.isRequired,
   pinnedOffset: PropTypes.number.isRequired,
