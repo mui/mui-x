@@ -364,7 +364,7 @@ const theme = createTheme({
 
    // This contains a small behavior change.
    // If the picker is not controlled and has a default value,
-   // Then opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
+   // opening it and calling `acceptValueChanges` without any change will call `onAccept` with the default value.
    // Whereas before, opening it and calling `onDimiss` without any change would not have called `onAccept`.
   -const { onDismiss } = props;
   +const { acceptValueChanges } = usePickerActionsContext();
