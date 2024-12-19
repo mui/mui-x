@@ -40,8 +40,8 @@ export function getValueFromValueOptions(
  * Find the option matching the given value in valueOptions and get its label
  * @param {string} value is used to extract label from valueOptions.
  * @param {any[] | undeinfed} valueOptions is used to extract label.
- * @param {NonNullable<GridSingleSelectColDef['getOptionLabel']>} getOptionLabel is used to get label from valueOption (default: (valueOption) => (typeof valueOption === 'object' ? valueOption.label : valueOption))
- * @param {NonNullable<GridSingleSelectColDef['getOptionValue']>} getOptionValue is used to get value from valueOption (default: (valueOption) => (typeof valueOption === 'object' ? valueOption.value : valueOption))
+ * @param {NonNullable<GridSingleSelectColDef['getOptionLabel']>} getOptionLabel is used to get label from valueOption
+ * @param {NonNullable<GridSingleSelectColDef['getOptionValue']>} getOptionValue is used to get value from valueOption
  * @returns {string | undefined} The label matching with the value.
  */
 export function getLabelFromValueOptions(
