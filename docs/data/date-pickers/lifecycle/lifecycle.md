@@ -51,7 +51,7 @@ In all the below scenarios, the picker closes when `onClose` is called, except i
 #### When the last view is completed
 
 When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
-The default value of `closeOnSelect` depends on the component used:
+The default value of `closeOnSelect` depends on the component:
 
 - Date Picker and Date Range Picker: `true` on desktop and `false` on mobile variants;
 - Time Picker, Date Time Picker and Date Time Range Picker: `false` on both desktop and mobile variants.
@@ -115,9 +115,9 @@ The examples below are using the desktop and mobile variants of the pickers, but
   ```
 
   - Default `views` prop: `['hours', 'minutes']` (plus a `meridiem` view if the locale is in 12-hours format)
-  - Default `closeOnSelect` prop: `true`
+  - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker will close when selecting the minutes or meridiem (if a 12-hour clock is used).
+  **Behavior:** The picker won't close when selecting the minutes or meridiem (if a 12-hour clock is used).
 
 :::info
 You don't have to fill all the views for the picker to close automatically.
