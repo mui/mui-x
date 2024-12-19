@@ -89,10 +89,9 @@ const getPivotedData = ({
   const initialColumns = new Map<string, GridColDef>();
   for (let i = 0; i < columns.length; i += 1) {
     const column = columns[i];
-    initialColumns.set(column.field, column);
-
-    pivotColumns.push(column);
     if (!isGroupingColumn(column.field)) {
+      initialColumns.set(column.field, column);
+      pivotColumns.push(column);
       columnVisibilityModel[column.field] = false;
     }
   }
@@ -309,7 +308,9 @@ export const useGridPivoting = ({
     props,
     pivotModel,
     onPivotModelChange,
-    initialColumns: nonPivotDataRef.current?.columns,
+    initialColumns: nonPivotDataRef.current?.columns.filter(
+      (column) => !isGroupingColumn(column.field),
+    ),
     pivotSettingsOpen,
     onPivotSettingsOpenChange: setPivotSettingsOpen,
   };
