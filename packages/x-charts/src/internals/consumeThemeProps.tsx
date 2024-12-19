@@ -1,6 +1,7 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
+import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes and merges the theme `defaultProps` and handles the `classes` and renders the component.
