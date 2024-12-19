@@ -26,8 +26,9 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
         colDef,
+        isDataSource: !!rootProps.unstable_dataSource,
       }),
-    [colDef, rootProps.aggregationFunctions],
+    [colDef, rootProps.aggregationFunctions, rootProps.unstable_dataSource],
   );
 
   const selectedAggregationRule = React.useMemo(() => {
@@ -41,13 +42,14 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         colDef,
         aggregationFunctionName,
         aggregationFunction: rootProps.aggregationFunctions[aggregationFunctionName],
+        isDataSource: !!rootProps.unstable_dataSource,
       })
     ) {
       return aggregationFunctionName;
     }
 
     return '';
-  }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
+  }, [rootProps.aggregationFunctions, rootProps.unstable_dataSource, aggregationModel, colDef]);
 
   const handleAggregationItemChange = (event: Event) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;

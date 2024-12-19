@@ -8,10 +8,11 @@ import {
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationPosition,
   GridAggregationRules,
@@ -25,13 +26,21 @@ const getAggregationCellValue = ({
   field,
   aggregationFunction,
   aggregationRowsScope,
+  isDataSource,
 }: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
   groupId: GridRowId;
   field: string;
-  aggregationFunction: GridAggregationFunction;
+  aggregationFunction: GridAggregationFunction | GridAggregationFunctionDataSource;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
+  isDataSource: boolean;
 }) => {
+  if (isDataSource) {
+    return apiRef.current.resolveGroupAggregation(groupId, field);
+  }
+
+  const clientSideAggregationFunction = aggregationFunction as GridAggregationFunction;
+
   const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
   const rowIds: GridRowId[] = apiRef.current.getRowGroupChildren({ groupId });
 
@@ -53,15 +62,15 @@ const getAggregationCellValue = ({
       return;
     }
 
-    if (typeof aggregationFunction.getCellValue === 'function') {
+    if (typeof clientSideAggregationFunction.getCellValue === 'function') {
       const row = apiRef.current.getRow(rowId);
-      values.push(aggregationFunction.getCellValue({ row }));
+      values.push(clientSideAggregationFunction.getCellValue({ row }));
     } else {
       values.push(apiRef.current.getCellValue(rowId, field));
     }
   });
 
-  return aggregationFunction.apply({
+  return clientSideAggregationFunction.apply({
     values,
     groupId,
     field, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
@@ -75,13 +84,15 @@ const getGroupAggregatedValue = ({
   aggregatedFields,
   aggregationRules,
   position,
+  isDataSource,
 }: {
   groupId: GridRowId;
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   aggregatedFields: string[];
   aggregationRules: GridAggregationRules;
   position: GridAggregationPosition;
+  isDataSource: boolean;
 }) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
 
@@ -97,6 +108,7 @@ const getGroupAggregatedValue = ({
         field: aggregatedField,
         aggregationFunction: columnAggregationRules.aggregationFunction,
         aggregationRowsScope,
+        isDataSource,
       }),
     };
   }
@@ -109,16 +121,21 @@ export const createAggregationLookup = ({
   aggregationFunctions,
   aggregationRowsScope,
   getAggregationPosition,
+  isDataSource,
 }: {
-  apiRef: React.MutableRefObject<GridApiPremium>;
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+  aggregationFunctions:
+    | Record<string, GridAggregationFunction>
+    | Record<string, GridAggregationFunctionDataSource>;
   aggregationRowsScope: DataGridPremiumProcessedProps['aggregationRowsScope'];
   getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
+  isDataSource: boolean;
 }): GridAggregationLookup => {
   const aggregationRules = getAggregationRules({
     columnsLookup: gridColumnLookupSelector(apiRef),
     aggregationModel: gridAggregationModelSelector(apiRef),
     aggregationFunctions,
+    isDataSource,
   });
 
   const aggregatedFields = Object.keys(aggregationRules);
@@ -140,7 +157,7 @@ export const createAggregationLookup = ({
     }
 
     const hasAggregableChildren = groupNode.children.length;
-    if (hasAggregableChildren) {
+    if (hasAggregableChildren || isDataSource) {
       const position = getAggregationPosition(groupNode);
       if (position != null) {
         aggregationLookup[groupNode.id] = getGroupAggregatedValue({
@@ -150,6 +167,7 @@ export const createAggregationLookup = ({
           aggregationRowsScope,
           aggregationRules,
           position,
+          isDataSource,
         });
       }
     }

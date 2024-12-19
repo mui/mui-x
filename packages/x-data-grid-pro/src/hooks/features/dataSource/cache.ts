@@ -1,4 +1,4 @@
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models';
+import { GridGetRowsParams, GridGetRowsResponse } from '@mui/x-data-grid/internals';
 
 export type GridDataSourceCacheDefaultConfig = {
   /**
