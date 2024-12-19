@@ -407,7 +407,7 @@ This change causes a few breaking changes:
   +const { variant } = usePickerContext();
   ```
 
-- The component passed to the `layout` slot no longer receives a `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `view`, `views` and `onViewChange` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
