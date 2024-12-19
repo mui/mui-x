@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { shouldForwardProp } from '@mui/system/createStyled';
-import { MakeOptional } from '@mui/x-internals/types';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -39,7 +38,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
-    MakeOptional<BaseToolbarProps<PickerValue, DateOrTimeViewWithMeridiem>, 'view'> {
+    BaseToolbarProps<PickerValue> {
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -235,10 +234,15 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
 });
 
 /**
- * If this context value is set to true, the toolbar will always be rendered in the desktop mode.
+ * If `forceDesktopVariant` is set to `true`, the toolbar will always be rendered in the desktop mode.
+ * If `onViewChange` is defined, the toolbar will call it instead of calling the default handler from `usePickerContext`.
  * This is used by the Date Time Range Picker Toolbar.
  */
-export const DateTimePickerToolbarForceDesktopVariant = React.createContext(false);
+export const DateTimePickerToolbarOverrideContext = React.createContext<{
+  forceDesktopVariant: boolean;
+  onViewChange: (view: DateOrTimeViewWithMeridiem) => void;
+  view: DateOrTimeViewWithMeridiem | null;
+} | null>(null);
 
 /**
  * Demos:
@@ -257,30 +261,37 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
     ampmInClock,
     value,
     onChange,
-    view,
     isLandscape,
-    onViewChange,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    views,
     toolbarTitle: inToolbarTitle,
     className,
     classes: classesProp,
     ...other
   } = props;
 
-  const { disabled, readOnly, variant } = usePickerContext();
+  const {
+    disabled,
+    readOnly,
+    variant,
+    view: viewCtx,
+    onViewChange: onViewChangeCtx,
+    views,
+  } = usePickerContext();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
   const utils = useUtils();
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
   const translations = usePickerTranslations();
-  const forceDesktopVariant = React.useContext(DateTimePickerToolbarForceDesktopVariant);
+  const overrides = React.useContext(DateTimePickerToolbarOverrideContext);
 
-  const toolbarVariant = forceDesktopVariant ? 'desktop' : variant;
+  const toolbarVariant = overrides?.forceDesktopVariant ? 'desktop' : variant;
   const isDesktop = toolbarVariant === 'desktop';
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
+
+  const view = overrides ? overrides.view : viewCtx;
+  const onViewChange = overrides ? overrides.onViewChange : onViewChangeCtx;
 
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -447,12 +458,6 @@ DateTimePickerToolbar.propTypes = {
   isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -475,16 +480,6 @@ DateTimePickerToolbar.propTypes = {
    */
   toolbarTitle: PropTypes.node,
   value: PropTypes.object,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
 } as any;
 
 export { DateTimePickerToolbar };

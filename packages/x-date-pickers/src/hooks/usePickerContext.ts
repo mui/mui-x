@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
-import { PickerContext } from '../internals/components/PickerProvider';
+import { PickerContext, PickerContextValue } from '../internals/components/PickerProvider';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 /**
  * Returns the context passed by the picker that wraps the current component.
  */
-export const usePickerContext = () => {
-  const value = React.useContext(PickerContext);
+export const usePickerContext = <
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
+>() => {
+  const value = React.useContext(PickerContext) as PickerContextValue<TView>;
   if (value == null) {
     throw new Error(
       [
