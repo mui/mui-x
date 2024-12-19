@@ -73,15 +73,8 @@ DesktopDateTimePickerLayout.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   isValid: PropTypes.func.isRequired,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
   onSelectShortcut: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
