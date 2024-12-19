@@ -2,17 +2,14 @@ export * from './ChartsLegend';
 export * from './chartsLegend.types';
 export * from './direction';
 export * from './legendContext.types';
-export { ChartsLegendClasses, legendClasses } from './chartsLegendClasses';
+export { legendClasses } from './chartsLegendClasses';
+export type { ChartsLegendClasses } from './chartsLegendClasses';
 export * from './ContinuousColorLegend';
 export * from './colorLegend.types';
-export {
-  ContinuousColorLegendClasses,
-  continuousColorLegendClasses,
-} from './continuousColorLegendClasses';
+export { continuousColorLegendClasses } from './continuousColorLegendClasses';
+export type { ContinuousColorLegendClasses } from './continuousColorLegendClasses';
 export * from './PiecewiseColorLegend';
-export {
-  PiecewiseColorLegendClasses,
-  piecewiseColorLegendClasses,
-} from './piecewiseColorLegendClasses';
+export { piecewiseColorLegendClasses } from './piecewiseColorLegendClasses';
+export type { PiecewiseColorLegendClasses } from './piecewiseColorLegendClasses';
 export { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
 export * from './legend.types';
