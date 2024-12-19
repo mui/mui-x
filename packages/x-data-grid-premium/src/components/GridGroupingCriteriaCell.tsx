@@ -42,7 +42,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     gridFilteredDescendantCountLookupSelector,
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
-  const pivotMode = rootProps.pivotParams;
+  const pivotMode = rootProps.pivotParams?.pivotMode;
   const maxTreeDepth = gridRowMaximumTreeDepthSelector(apiRef);
   const shouldShowToggleContainer = !pivotMode || maxTreeDepth > 2;
   const shouldShowToggleButton = !pivotMode || rowNode.depth < maxTreeDepth - 2;
