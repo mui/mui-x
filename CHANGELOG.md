@@ -11,7 +11,7 @@ _Dec 19, 2024_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Korean locale on the Data Grid
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -87,7 +87,7 @@ Same changes as in `@mui/x-date-pickers@8.0.0-alpha.5`.
 
 #### `@mui/x-charts@8.0.0-alpha.5`
 
-- [charts] Fix scatter the chart value type if `null` (#15917) @alexfauquette
+- [charts] Fix `<ScatterChart />` value type if `null` (#15917) @alexfauquette
 
 #### `@mui/x-charts-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
