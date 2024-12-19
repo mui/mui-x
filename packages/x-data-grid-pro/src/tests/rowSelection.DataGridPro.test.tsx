@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { createRenderer, screen, act, reactMajor } from '@mui/internal-test-utils';
+import { createRenderer, screen, act, reactMajor, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
   useGridApiRef,
@@ -685,8 +685,8 @@ describe('<DataGridPro /> - Row selection', () => {
     });
 
     describe('prop: isRowSelectable', () => {
-      it("should not select a parent or it's descendants if not allowed", async () => {
-        const { user } = render(
+      it("should not select a parent or it's descendants if not allowed", () => {
+        render(
           <SelectionPropagationGrid
             defaultGroupingExpansionDepth={-1}
             density="compact"
@@ -694,7 +694,7 @@ describe('<DataGridPro /> - Row selection', () => {
           />,
         );
 
-        await user.click(getCell(1, 0).querySelector('input')!);
+        fireEvent.click(getCell(1, 0).querySelector('input')!);
         expect(apiRef.current.getSelectedRows().size).to.equal(0);
       });
 

@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  waitFor,
-  getByRole as rtlQueryByRole,
-} from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
   DataGridProps,
@@ -408,7 +401,7 @@ describe('<DataGrid /> - Row selection', () => {
       if (isJSDOM) {
         this.skip();
       }
-      const { user } = render(
+      render(
         <TestDataGridSelection
           checkboxSelection
           initialState={{
@@ -420,11 +413,13 @@ describe('<DataGrid /> - Row selection', () => {
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      await user.click(selectAllCheckbox);
+      fireEvent.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
-      await user.type(screen.getByRole('spinbutton', { name: 'Value' }), '1');
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
       await waitFor(() => {
         // Previous selection is cleaned with only the filtered rows
         expect(getSelectedRowIds()).to.deep.equal([1]);
@@ -433,29 +428,42 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     it('should only select filtered items when "select all" is toggled after applying a filter', async () => {
-      const { user } = render(<TestDataGridSelection checkboxSelection />);
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
-      await user.click(selectAllCheckbox);
-      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      fireEvent.click(selectAllCheckbox);
+      await waitFor(() => {
+        expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
+      });
       expect(grid('selectedRowCount')?.textContent).to.equal('4 rows selected');
 
       // Click on Menu in id header column
-      await user.click(rtlQueryByRole(getColumnHeaderCell(1), 'button', { name: 'Menu' }));
-      await user.click(screen.getByRole('menuitem', { name: 'Filter' }));
-      await user.keyboard('[Digit1]');
+      fireEvent.change(screen.getByRole('spinbutton', { name: 'Value' }), {
+        target: { value: 1 },
+      });
       await waitFor(() => {
         // Previous selection is cleared and only the filtered row is selected
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
       expect(grid('selectedRowCount')?.textContent).to.equal('1 row selected');
 
-      await user.click(selectAllCheckbox); // Unselect all
+      fireEvent.click(selectAllCheckbox); // Unselect all
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([]);
       });
       expect(grid('selectedRowCount')).to.equal(null);
 
-      await user.click(selectAllCheckbox); // Select all filtered rows
+      fireEvent.click(selectAllCheckbox); // Select all filtered rows
       await waitFor(() => {
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
