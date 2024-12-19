@@ -55,7 +55,7 @@ export function useGridParamsApi(
   );
 
   const getCellParamsForRow = React.useCallback<GridParamsPrivateApi['getCellParamsForRow']>(
-    (id, field, row, rowNode) => {
+    (id, field, row, { cellMode, hasFocus, rowNode, tabIndex }) => {
       const colDef = (
         props.unstable_listView
           ? gridListColumnSelector(apiRef.current.state)
@@ -66,8 +66,6 @@ export function useGridParamsApi(
       const value = colDef?.valueGetter
         ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
         : rawValue;
-      const cellFocus = gridFocusCellSelector(apiRef);
-      const cellTabIndex = gridTabIndexCellSelector(apiRef);
 
       const params: GridCellParams<any, any, any, any> = {
         id,
@@ -75,9 +73,9 @@ export function useGridParamsApi(
         row,
         rowNode,
         colDef,
-        cellMode: apiRef.current.getCellMode(id, field),
-        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
-        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
+        cellMode,
+        hasFocus,
+        tabIndex,
         value,
         formattedValue: value,
         isEditable: false,
@@ -102,7 +100,16 @@ export function useGridParamsApi(
         throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
-      return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, rowNode);
+      const cellFocus = gridFocusCellSelector(apiRef);
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
+      const cellMode = apiRef.current.getCellMode(id, field);
+
+      return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
+        rowNode,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
+        cellMode,
+      });
     },
     [apiRef],
   );

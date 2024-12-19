@@ -22,7 +22,7 @@ import {
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
-import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import * as platform from '../../../utils/platform';
@@ -37,7 +37,6 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
-import { GridRowProps } from '../../../components/GridRow';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
@@ -123,7 +122,6 @@ export const useGridVirtualScroller = () => {
 
   const isRtl = useRtl();
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
-  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -509,12 +507,6 @@ export const useGridVirtualScroller = () => {
       const isVirtualRow = rowIndexInPage === virtualRowIndex;
       const isNotVisible = isVirtualRow;
 
-      let tabbableCell: GridRowProps['tabbableCell'] = null;
-      if (cellTabIndex !== null && cellTabIndex.id === id) {
-        const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
-        tabbableCell = cellParams.cellMode === 'view' ? cellTabIndex.field : null;
-      }
-
       let currentRenderContext = baseRenderContext;
       if (
         !isPinnedSection &&
@@ -543,7 +535,6 @@ export const useGridVirtualScroller = () => {
           offsetLeft={offsetLeft}
           dimensions={dimensions}
           rowHeight={baseRowHeight}
-          tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
           renderContext={currentRenderContext}

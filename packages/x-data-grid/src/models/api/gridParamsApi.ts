@@ -1,4 +1,5 @@
 import { GridColDef } from '../colDef';
+import { GridCellMode } from '../gridCell';
 import { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
@@ -100,6 +101,16 @@ export interface GridParamsPrivateApi {
     id: GridRowId,
     field: string,
     row: R,
-    rowNode: N,
+    {
+      cellMode,
+      hasFocus,
+      rowNode,
+      tabIndex,
+    }: {
+      cellMode: GridCellMode;
+      hasFocus: boolean;
+      rowNode: N;
+      tabIndex: 0 | -1;
+    },
   ) => GridCellParams<R, V, F, N>;
 }

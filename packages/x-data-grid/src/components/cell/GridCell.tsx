@@ -40,6 +40,7 @@ import {
   gridRowSpanningSpannedCellsSelector,
 } from '../../hooks/features/rows/gridRowSpanningSelectors';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 
 export enum PinnedPosition {
   NONE,
@@ -67,7 +68,6 @@ export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   colSpan?: number;
   disableDragEvents?: boolean;
   isNotVisible: boolean;
-  editCellState: GridEditCellProps<any> | null;
   pinnedOffset: number;
   pinnedPosition: PinnedPosition;
   sectionIndex: number;
@@ -138,7 +138,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
     row,
     rowId,
     rowNode,
-    editCellState,
     align,
     children: childrenProp,
     colIndex,
@@ -171,19 +170,33 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
 
   const field = column.field;
 
+  const editCellState: GridEditCellProps<any> | null = useGridSelector(
+    apiRef,
+    gridEditCellStateSelector,
+    {
+      rowId,
+      field,
+    },
+  );
+
+  const cellMode: GridCellModes = editCellState ? GridCellModes.Edit : GridCellModes.View;
+
   const cellParams: GridCellParams<any, any, any, any> = apiRef.current.getCellParamsForRow<
     any,
     any,
     any,
     GridTreeNodeWithRender
-  >(rowId, field, row, rowNode as GridTreeNodeWithRender);
-  cellParams.tabIndex = useGridSelector(apiRef, () => {
-    const cellTabIndex = gridTabIndexCellSelector(apiRef);
-    return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
-  });
-  cellParams.hasFocus = useGridSelector(apiRef, () => {
-    const focus = gridFocusCellSelector(apiRef);
-    return focus?.id === rowId && focus.field === field;
+  >(rowId, field, row, {
+    cellMode,
+    rowNode: rowNode as GridTreeNodeWithRender,
+    tabIndex: useGridSelector(apiRef, () => {
+      const cellTabIndex = gridTabIndexCellSelector(apiRef);
+      return cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === rowId ? 0 : -1;
+    }),
+    hasFocus: useGridSelector(apiRef, () => {
+      const focus = gridFocusCellSelector(apiRef);
+      return focus?.id === rowId && focus.field === field;
+    }),
   });
   cellParams.api = apiRef.current;
 
@@ -197,7 +210,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
   const hiddenCells = useGridSelector(apiRef, gridRowSpanningHiddenCellsSelector);
   const spannedCells = useGridSelector(apiRef, gridRowSpanningSpannedCellsSelector);
 
-  const { cellMode, hasFocus, isEditable = false, value } = cellParams;
+  const { hasFocus, isEditable = false, value } = cellParams;
 
   const canManageOwnFocus =
     column.type === 'actions' &&
