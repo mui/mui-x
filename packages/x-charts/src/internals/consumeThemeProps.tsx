@@ -1,7 +1,6 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
-import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes and merges the theme `defaultProps` and handles the `classes` and renders the component.
@@ -48,17 +47,24 @@ import * as ReactIs from 'react-is';
  * @param {Function} options.classesResolver A function that returns the classes for the component. It receives the props, after theme props and defaults have been applied. And the theme object as the second argument.
  * @param InComponent The component to render if the slot is not provided.
  */
-export const consumeThemeProps = <Props extends {}>(
+export const consumeThemeProps = <
+  Props extends {},
+  Ref extends {},
+  RenderFunction = (props: Props, ref: React.Ref<Ref>) => JSX.Element,
+>(
   name: string,
   options: {
     defaultProps?:
       | Omit<Partial<Props>, 'slots' | 'slotProps'>
-      | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
+      | (<T extends Props>(props: T) => Omit<Partial<T>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.JSXElementConstructor<Props>,
-) => {
-  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+  InComponent: RenderFunction,
+) =>
+  React.forwardRef<Ref, Props>(function ConsumeThemeInternal(
+    props: React.PropsWithoutRef<Props>,
+    ref: React.ForwardedRef<Ref>,
+  ) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -70,22 +76,18 @@ export const consumeThemeProps = <Props extends {}>(
         ? options.defaultProps(themedProps as Props)
         : (options.defaultProps ?? {});
 
-    const outProps = resolveProps(defaultProps, themedProps) as Props;
+    const outProps = resolveProps(defaultProps, themedProps) as React.PropsWithoutRef<Props>;
 
     const theme = useTheme();
-    const classes = options.classesResolver?.(outProps, theme);
+    const classes = options.classesResolver?.(outProps as Props, theme);
+
+    const OutComponent = React.forwardRef<Ref, Props>(
+      InComponent as React.ForwardRefRenderFunction<Ref, React.PropsWithoutRef<Props>>,
+    );
 
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line react-compiler/react-compiler
-      (InComponent as any).displayName = name;
+      OutComponent.displayName = `consumeThemeProps(${name})`;
     }
 
-    if (ref !== null && ReactIs.isForwardRef(InComponent)) {
-      return <InComponent {...outProps} classes={classes} ref={ref} />;
-    }
-
-    return <InComponent {...outProps} classes={classes} />;
-  }
-
-  return React.forwardRef(InternalComponent);
-};
+    return <OutComponent {...outProps} classes={classes} ref={ref} />;
+  });

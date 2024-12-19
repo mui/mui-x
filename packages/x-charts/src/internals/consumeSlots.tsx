@@ -2,7 +2,6 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import * as React from 'react';
-import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes a slot from the props and renders the component provided in the slot.
@@ -45,7 +44,11 @@ import * as ReactIs from 'react-is';
  * @param {Function} options.classesResolver A function that returns the classes for the component. It receives the props, after theme props and defaults have been applied. And the theme object as the second argument.
  * @param InComponent The component to render if the slot is not provided.
  */
-export const consumeSlots = <Props extends {}>(
+export const consumeSlots = <
+  Props extends {},
+  Ref extends {},
+  RenderFunction = (props: Props, ref: React.Ref<Ref>) => JSX.Element,
+>(
   name: string,
   slotPropName: string,
   options: {
@@ -56,9 +59,9 @@ export const consumeSlots = <Props extends {}>(
     omitProps?: Array<keyof Props>;
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.JSXElementConstructor<Props>,
+  InComponent: RenderFunction,
 ) => {
-  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
+  function ConsumeSlotsInternal(props: React.PropsWithoutRef<Props>, ref: React.ForwardedRef<Ref>) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -79,11 +82,8 @@ export const consumeSlots = <Props extends {}>(
     const theme = useTheme();
     const classes = options.classesResolver?.(defaultizedProps, theme);
 
-    const Component = (slots?.[slotPropName] as React.JSXElementConstructor<Props>) ?? InComponent;
-
-    if (process.env.NODE_ENV !== 'production') {
-      (Component as any).displayName = `${name}.slots.${slotPropName}`;
-    }
+    // Can be a function component or a forward ref component.
+    const Component = slots?.[slotPropName] ?? InComponent;
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 
@@ -104,12 +104,18 @@ export const consumeSlots = <Props extends {}>(
       delete (outProps as unknown as Props)[prop];
     }
 
-    if (ref !== null && ReactIs.isForwardRef(Component)) {
-      return <Component {...outProps} classes={classes} ref={ref} />;
+    // Component can be wrapped in React.forwardRef or just a function that accepts (props, ref).
+    // If it is a plain function which accepts two arguments, we need to wrap it in React.forwardRef.
+    const OutComponent = (
+      Component.length >= 2 ? React.forwardRef(Component) : Component
+    ) as React.FunctionComponent<Props>;
+
+    if (process.env.NODE_ENV !== 'production') {
+      OutComponent.displayName = `${name}.slots.${slotPropName}`;
     }
 
-    return <Component {...outProps} ref={ref} />;
+    return <OutComponent {...outProps} ref={ref} />;
   }
 
-  return React.forwardRef(InternalComponent);
+  return React.forwardRef<Ref, Props>(ConsumeSlotsInternal);
 };
