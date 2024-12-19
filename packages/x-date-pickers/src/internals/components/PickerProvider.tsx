@@ -3,9 +3,15 @@ import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
 import { PickerOrientation, PickerVariant } from '../models';
-import type { UsePickerValueContextValue } from '../hooks/usePicker/usePickerValue.types';
+import type {
+  UsePickerValueActionsContextValue,
+  UsePickerValueContextValue,
+  UsePickerValuePrivateContextValue,
+} from '../hooks/usePicker/usePickerValue.types';
 
 export const PickerContext = React.createContext<PickerContextValue | null>(null);
+
+export const PickerActionsContext = React.createContext<PickerActionsContextValue | null>(null);
 
 export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
   ownerState: {
@@ -16,6 +22,7 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
     pickerVariant: 'desktop',
     pickerOrientation: 'portrait',
   },
+  dismissViews: () => {},
 });
 
 /**
@@ -26,19 +33,22 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
  * @ignore - do not document.
  */
 export function PickerProvider(props: PickerProviderProps) {
-  const { contextValue, privateContextValue, localeText, children } = props;
+  const { contextValue, actionsContextValue, privateContextValue, localeText, children } = props;
 
   return (
     <PickerContext.Provider value={contextValue}>
-      <PickerPrivateContext.Provider value={privateContextValue}>
-        <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
-      </PickerPrivateContext.Provider>
+      <PickerActionsContext.Provider value={actionsContextValue}>
+        <PickerPrivateContext.Provider value={privateContextValue}>
+          <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+        </PickerPrivateContext.Provider>
+      </PickerActionsContext.Provider>
     </PickerContext.Provider>
   );
 }
 
 export interface PickerProviderProps {
   contextValue: PickerContextValue;
+  actionsContextValue: PickerActionsContextValue;
   privateContextValue: PickerPrivateContextValue;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
@@ -71,7 +81,10 @@ export interface PickerContextValue extends UsePickerValueContextValue {
    */
   orientation: PickerOrientation;
 }
-export interface PickerPrivateContextValue {
+
+export interface PickerActionsContextValue extends UsePickerValueActionsContextValue {}
+
+export interface PickerPrivateContextValue extends UsePickerValuePrivateContextValue {
   /**
    * The ownerState of the picker.
    */

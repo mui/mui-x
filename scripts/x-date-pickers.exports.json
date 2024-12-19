@@ -300,6 +300,7 @@
   { "name": "UseDateFieldProps", "kind": "Interface" },
   { "name": "UseDateTimeFieldProps", "kind": "Interface" },
   { "name": "useParsedFormat", "kind": "Variable" },
+  { "name": "usePickerActionsContext", "kind": "Variable" },
   { "name": "usePickerContext", "kind": "Variable" },
   { "name": "usePickerLayout", "kind": "ExportAssignment" },
   { "name": "usePickerTranslations", "kind": "Variable" },
