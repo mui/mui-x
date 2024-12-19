@@ -512,6 +512,13 @@ export const useGridVirtualScroller = () => {
       );
       const showBottomBorder = isLastVisibleInSection && params.position === 'top';
 
+      const isVirtualizationDisabled = rootProps.disableVirtualization && !enabledForColumns;
+
+      const firstColumnIndex = isVirtualizationDisabled ? 0 : currentRenderContext.firstColumnIndex;
+      const lastColumnIndex = isVirtualizationDisabled
+        ? visibleColumns.length
+        : currentRenderContext.lastColumnIndex;
+
       rows.push(
         <rootProps.slots.row
           key={id}
@@ -525,8 +532,8 @@ export const useGridVirtualScroller = () => {
           rowHeight={baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          firstColumnIndex={currentRenderContext.firstColumnIndex}
-          lastColumnIndex={currentRenderContext.lastColumnIndex}
+          firstColumnIndex={firstColumnIndex}
+          lastColumnIndex={lastColumnIndex}
           focusedColumnIndex={isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
