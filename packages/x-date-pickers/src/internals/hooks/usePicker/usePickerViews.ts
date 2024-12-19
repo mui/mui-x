@@ -24,7 +24,7 @@ export type PickerViewsRendererProps<
   TAdditionalProps extends {},
 > = Omit<TExternalProps, 'className' | 'sx'> &
   TAdditionalProps &
-  UsePickerValueViewsResponse<TValue> & {
+  Pick<UsePickerValueViewsResponse<TValue>, 'value' | 'onChange'> & {
     view: TView;
     views: readonly TView[];
     focusedView: TView | null;
@@ -170,7 +170,7 @@ export const usePickerViews = <
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onClose } = propsFromPickerValue;
+  const { onChange, value, open, setOpen } = propsFromPickerValue;
   const { view: inView, views, openTo, onViewChange, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
@@ -231,7 +231,7 @@ export const usePickerViews = <
   useEnhancedEffect(() => {
     // Handle case of `DateTimePicker` without time renderers
     if (currentViewMode === 'field' && open) {
-      onClose();
+      setOpen(false);
       setTimeout(() => {
         fieldRef?.current?.setSelectedSections(view);
         // focusing the input before the range selection is done
@@ -304,9 +304,9 @@ export const usePickerViews = <
       > = {
         ...propsToForwardToView,
         ...additionalViewProps,
-        ...propsFromPickerValue,
         views,
         timezone,
+        value,
         onChange: setValueAndGoToNextView,
         view: popperView,
         onViewChange: setView,
