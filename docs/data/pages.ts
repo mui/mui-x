@@ -178,6 +178,21 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
           { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
+          {
+            pathname: '/x/react-data-grid/components/',
+            title: 'Grid components',
+            unstable: true,
+            children: [
+              { pathname: '/x/react-data-grid/components/overview', title: 'Overview' },
+              { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
+              {
+                pathname: '/x/react-data-grid/components/columns-panel',
+                title: 'Columns Panel',
+              },
+              { pathname: '/x/react-data-grid/components/filter-panel', title: 'Filter Panel' },
+              { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+            ],
+          },
         ],
       },
       {

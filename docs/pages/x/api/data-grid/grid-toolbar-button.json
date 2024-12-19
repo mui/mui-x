@@ -1,0 +1,46 @@
+{
+  "props": {
+    "focusRipple": { "type": { "name": "bool" }, "default": "true" },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } },
+    "size": {
+      "type": {
+        "name": "enum",
+        "description": "'large'<br>&#124;&nbsp;'medium'<br>&#124;&nbsp;'small'"
+      },
+      "default": "'small'"
+    }
+  },
+  "name": "GridToolbarButton",
+  "imports": [
+    "import { GridToolbarButton } from '@mui/x-data-grid/components';",
+    "import { GridToolbarButton } from '@mui/x-data-grid';",
+    "import { GridToolbarButton } from '@mui/x-data-grid-pro';",
+    "import { GridToolbarButton } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "focusVisible",
+      "className": "Mui-focusVisible",
+      "description": "State class applied to the root element if keyboard focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "root",
+      "className": "MuiGridToolbarButton-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiGridToolbarButton",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/grid/toolbar/GridToolbarButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

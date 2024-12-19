@@ -66,6 +66,13 @@ export default dataGridApiPages;
       'src/components/panel/filterPanel/GridFilterForm.tsx',
       'src/components/panel/filterPanel/GridFilterPanel.tsx',
       'src/components/toolbar/GridToolbarQuickFilter.tsx',
+      'src/components/grid/toolbar/GridToolbarRoot.tsx',
+      'src/components/grid/toolbar/GridToolbarButton.tsx',
+      'src/components/grid/filterPanel/GridFilterPanelTrigger.tsx',
+      'src/components/grid/columnsPanel/GridColumnsPanelTrigger.tsx',
+      'src/components/grid/export/GridExportPrintTrigger.tsx',
+      'src/components/grid/export/GridExportCsvTrigger.tsx',
+      'src/components/grid/export/GridExportExcelTrigger.tsx',
     ].every((validPath) => !filename.endsWith(validPath));
   },
   skipAnnotatingComponentDefinition: true,

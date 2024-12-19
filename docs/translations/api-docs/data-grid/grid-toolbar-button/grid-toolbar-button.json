@@ -1,0 +1,23 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "focusRipple": {
+      "description": "If <code>true</code>, the base button will have a keyboard focus ripple."
+    },
+    "render": { "description": "A function to customize rendering of the component." },
+    "size": { "description": "The size of the component." }
+  },
+  "classDescriptions": {
+    "disabled": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>disabled={true}</code>"
+    },
+    "focusVisible": {
+      "description": "State class applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "keyboard focused"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}
