@@ -64,25 +64,38 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
-    apiRef.current.hideColumnMenu();
   };
 
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
-  const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+  const handleMenuItemKeyDown = React.useCallback((event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       inputRef.current.focus();
     }
   }, []);
 
+  const handleSelectKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.stopPropagation();
+      }
+      if (event.key === 'Enter') {
+        apiRef.current.hideColumnMenu();
+      }
+    },
+    [apiRef],
+  );
+
   return (
     <rootProps.slots.baseMenuItem
       inert
       iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
-      onKeyDown={handleKeyDown}
+      onKeyDown={handleMenuItemKeyDown}
     >
       <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
-        <InputLabel id={`${id}-label`}>{label}</InputLabel>
+        <InputLabel id={`${id}-label`} htmlFor={`${id}-input`}>
+          {label}
+        </InputLabel>
         <rootProps.slots.baseSelect
           labelId={`${id}-label`}
           inputRef={inputRef}
@@ -91,6 +104,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
           label={label}
           color="primary"
           onChange={handleAggregationItemChange}
+          MenuProps={{
+            PaperProps: {
+              onKeyDown: handleSelectKeyDown,
+            },
+          }}
           onBlur={(event) => event.stopPropagation()}
           native={isBaseSelectNative}
           fullWidth
