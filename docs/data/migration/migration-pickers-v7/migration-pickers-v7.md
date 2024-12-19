@@ -309,7 +309,7 @@ const theme = createTheme({
    }
   ```
 
-- The component passed to the `layout` slot no longer receives an `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
+- The component passed to the `layout` slot no longer receives the `orientation` and `isLandscape` props, instead you can use the `usePickerContext` hook:
 
   ```diff
   -console.log(props.orientation);
