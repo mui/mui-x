@@ -54,6 +54,8 @@ const PivotFieldRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotField',
   overridesResolver: (props, styles) => styles.root,
+  shouldForwardProp: (prop) =>
+    prop !== 'dropPosition' && prop !== 'section' && prop !== 'ownerState',
 })<{
   ownerState: OwnerState;
   dropPosition: DropPosition;
