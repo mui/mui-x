@@ -12,14 +12,11 @@ import {
 
 export interface MobileDateRangePickerSlots
   extends BaseDateRangePickerSlots,
-    MakeOptional<UseMobileRangePickerSlots<'day'>, 'field'> {}
+    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileDateRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends BaseDateRangePickerSlotProps,
-    Omit<
-      UseMobileRangePickerSlotProps<'day', TEnableAccessibleFieldDOMStructure>,
-      'tabs' | 'toolbar'
-    > {}
+    Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileDateRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
