@@ -101,7 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const isRtl = useRtl();
   const rootProps = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
-  const hasVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
+  const hasColumnVirtualization = useGridSelector(apiRef, gridVirtualizationColumnEnabledSelector);
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -162,8 +162,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     const { renderContext: currentContext = renderContext, maxLastColumn = visibleColumns.length } =
       params || {};
 
-    const firstColumnToRender = currentContext.firstColumnIndex;
-    const lastColumnToRender = !hasVirtualization ? maxLastColumn : currentContext.lastColumnIndex;
+    let firstColumnToRender;
+    let lastColumnToRender;
+    if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
+      firstColumnToRender = 0;
+      lastColumnToRender = maxLastColumn;
+    } else {
+      firstColumnToRender = currentContext.firstColumnIndex;
+      lastColumnToRender = currentContext.lastColumnIndex;
+    }
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     return {
