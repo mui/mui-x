@@ -71,7 +71,6 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
     <rootProps.slots.baseIconButton
       id={labelId}
       onClick={toggleFilter}
-      color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
