@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { IconButtonProps } from '@mui/material/IconButton';
+import { GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-interface GridHeaderFilterClearIconProps extends IconButtonProps {}
+type BaseIconButtonProps = GridSlotProps['baseIconButton'];
 
-const sx = { padding: '2px' };
+// FIXME(v8:romgrk): Make parametric
+interface GridHeaderFilterClearIconProps extends BaseIconButtonProps {}
+
+const style = { padding: '2px' };
 
 function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
   const rootProps = useGridRootProps();
@@ -13,7 +16,7 @@ function GridHeaderFilterClearButton(props: GridHeaderFilterClearIconProps) {
       tabIndex={-1}
       aria-label="Clear filter"
       size="small"
-      sx={sx}
+      style={style}
       {...props}
       {...rootProps.slotProps?.baseIconButton}
     >

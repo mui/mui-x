@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
+import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { MenuListProps } from '@mui/material/MenuList';
 import type { MenuItemProps as MUIMenuItemProps } from '@mui/material/MenuItem';
@@ -7,8 +8,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
-import type { ButtonProps } from '@mui/material/Button';
-import type { IconButtonProps } from '@mui/material/IconButton';
+import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
@@ -33,7 +33,13 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
+import type {
+  BadgeProps,
+  ButtonProps,
+  DividerProps,
+  IconButtonProps,
+  MenuItemProps,
+} from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -102,6 +108,8 @@ interface BaseSlotProps {
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
+  baseButton: MUIButtonProps;
+  baseIconButton: MUIIconButtonProps;
   baseMenuItem: MUIMenuItemProps;
 }
 
