@@ -101,15 +101,23 @@ export function usePickerProvider<
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue>(
+  const contextValue = React.useMemo<PickerContextValue<TView>>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
+      ...paramsFromUsePickerViews.contextValue,
       disabled: props.disabled ?? false,
       readOnly: props.readOnly ?? false,
       variant,
       orientation,
     }),
-    [paramsFromUsePickerValue.contextValue, variant, orientation, props.disabled, props.readOnly],
+    [
+      paramsFromUsePickerValue.contextValue,
+      paramsFromUsePickerViews.contextValue,
+      variant,
+      orientation,
+      props.disabled,
+      props.readOnly,
+    ],
   );
 
   const privateContextValue = React.useMemo<PickerPrivateContextValue>(
