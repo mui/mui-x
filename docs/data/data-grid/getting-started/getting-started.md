@@ -1,10 +1,10 @@
 # Data Grid - Getting started
 
-<p class="description">Install the MUI X Data Grid package, configure rows and columns, and start building your React data table.</p>
+<p class="description">Install the MUI X Data Grid package, configure rows and columns, and start building your React data table.</p>
 
 ## Installation
 
-Run one of the following commands to install the MUI X Data Grid package that best suits your needs—the free Community version or the paid Pro or Premium version:
+Run one of the following commands to install the MUI X Data Grid package that best suits your needs—the free Community version or the paid Pro or Premium version:
 
 <!-- #default-branch-switch -->
 
