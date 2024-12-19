@@ -48,6 +48,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         sx={props.sx}
         ref={ref}
         {...props.forwardedProps}
+        {...props.slotProps?.root}
       >
         <GridHeader />
         <GridBody>
@@ -119,6 +120,7 @@ DataGridProRaw.propTypes = {
    */
   autosizeOptions: PropTypes.shape({
     columns: PropTypes.arrayOf(PropTypes.string),
+    disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,

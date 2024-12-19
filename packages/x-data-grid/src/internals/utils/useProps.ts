@@ -7,6 +7,10 @@ function groupForwardedProps<
     [key: string]: any;
   },
 >(props: T): T {
+  if (props.slotProps?.root) {
+    return props;
+  }
+
   const keys = Object.keys(props);
 
   if (!keys.some((key) => key.startsWith('aria-') || key.startsWith('data-'))) {
