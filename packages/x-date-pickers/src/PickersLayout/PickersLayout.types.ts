@@ -69,7 +69,7 @@ export interface PickersLayoutSlots<TValue extends PickerValidValue>
    * Custom component for the toolbar.
    * It is placed above the picker views.
    */
-  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue>>;
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps>;
 }
 
 export interface PickersLayoutSlotProps<TValue extends PickerValidValue>

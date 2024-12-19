@@ -2,7 +2,12 @@ import * as React from 'react';
 import { PickerOwnerState } from '../../models';
 import { PickersInputLocaleText } from '../../locales';
 import { LocalizationProvider } from '../../LocalizationProvider';
-import { DateOrTimeViewWithMeridiem, PickerOrientation, PickerVariant } from '../models';
+import {
+  DateOrTimeViewWithMeridiem,
+  PickerOrientation,
+  PickerValidValue,
+  PickerVariant,
+} from '../models';
 import type {
   UsePickerValueActionsContextValue,
   UsePickerValueContextValue,
@@ -10,9 +15,13 @@ import type {
 } from '../hooks/usePicker/usePickerValue.types';
 import { UsePickerViewsContextValue } from '../hooks/usePicker/usePickerViews';
 
-export const PickerContext = React.createContext<PickerContextValue<any> | null>(null);
+export const PickerContext = React.createContext<PickerContextValue<PickerValidValue, any> | null>(
+  null,
+);
 
-export const PickerActionsContext = React.createContext<PickerActionsContextValue | null>(null);
+export const PickerActionsContext = React.createContext<PickerActionsContextValue<any> | null>(
+  null,
+);
 
 export const PickerPrivateContext = React.createContext<PickerPrivateContextValue>({
   ownerState: {
@@ -48,7 +57,7 @@ export function PickerProvider(props: PickerProviderProps) {
 }
 
 export interface PickerProviderProps {
-  contextValue: PickerContextValue<any>;
+  contextValue: PickerContextValue<PickerValidValue, any>;
   actionsContextValue: PickerActionsContextValue;
   privateContextValue: PickerPrivateContextValue;
   localeText: PickersInputLocaleText | undefined;
@@ -56,8 +65,9 @@ export interface PickerProviderProps {
 }
 
 export interface PickerContextValue<
+  TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem = DateOrTimeViewWithMeridiem,
-> extends UsePickerValueContextValue,
+> extends UsePickerValueContextValue<TValue>,
     UsePickerViewsContextValue<TView> {
   /**
    * `true` if the picker is disabled, `false` otherwise.
@@ -86,7 +96,8 @@ export interface PickerContextValue<
   orientation: PickerOrientation;
 }
 
-export interface PickerActionsContextValue extends UsePickerValueActionsContextValue {}
+export interface PickerActionsContextValue<TValue extends PickerValidValue>
+  extends UsePickerValueActionsContextValue<TValue> {}
 
 export interface PickerPrivateContextValue extends UsePickerValuePrivateContextValue {
   /**

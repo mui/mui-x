@@ -7,6 +7,8 @@ import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { PickerValidValue } from '../internals/models';
+import { PickerChangeImportance } from '../internals/hooks/usePicker/usePickerValue.types';
+import { usePickerActionsContext } from '../hooks';
 
 interface PickersShortcutsItemGetValueParams<TValue extends PickerValidValue> {
   isValid: (value: TValue) => boolean;
@@ -24,8 +26,6 @@ export interface PickersShortcutsItem<TValue extends PickerValidValue> {
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
-export type PickerShortcutChangeImportance = 'set' | 'accept';
-
 export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
   extends Omit<ListProps, 'onChange'> {
   /**
@@ -40,17 +40,12 @@ export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
    * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
    * @default "accept"
    */
-  changeImportance?: PickerShortcutChangeImportance;
+  changeImportance?: PickerChangeImportance;
 }
 
 export interface PickersShortcutsProps<TValue extends PickerValidValue>
   extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (
-    newValue: TValue,
-    changeImportance: PickerShortcutChangeImportance,
-    shortcut: PickersShortcutsItemContext,
-  ) => void;
   isValid: (value: TValue) => boolean;
 }
 
@@ -70,7 +65,9 @@ const PickersShortcutsRoot = styled(List, {
  * - [PickersShortcuts API](https://mui.com/x/api/date-pickers/pickers-shortcuts/)
  */
 function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance = 'accept', isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'accept', isLandscape, isValid, ...other } = props;
+
+  const { setValue } = usePickerActionsContext<TValue>();
 
   if (items == null || items.length === 0) {
     return null;
@@ -83,7 +80,7 @@ function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcu
       ...item,
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance, item);
+        setValue(newValue, { changeImportance, shortcut: item });
       },
       disabled: !isValid(newValue),
     };

@@ -12,9 +12,7 @@ import { PickerValidValue } from '../internals/models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { usePickerContext } from '../hooks';
 
-function toolbarHasView<TValue extends PickerValidValue>(
-  toolbarProps: BaseToolbarProps<TValue> | any,
-): toolbarProps is BaseToolbarProps<TValue> {
+function toolbarHasView(toolbarProps: BaseToolbarProps | any): toolbarProps is BaseToolbarProps {
   return toolbarProps.view !== null;
 }
 
@@ -50,7 +48,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const {
     value,
     onChange,
-    onSelectShortcut,
     isValid,
     children,
     slots,
@@ -86,11 +83,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
     externalSlotProps: slotProps?.toolbar,
-    additionalProps: {
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange,
-      value,
-    },
     className: classes.toolbar,
     ownerState,
   });
@@ -111,7 +103,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
     additionalProps: {
       isValid,
       isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-      onChange: onSelectShortcut,
     },
     className: classes.shortcuts,
     ownerState,

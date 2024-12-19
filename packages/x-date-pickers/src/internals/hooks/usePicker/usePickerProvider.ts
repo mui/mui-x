@@ -101,7 +101,7 @@ export function usePickerProvider<
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue<TView>>(
+  const contextValue = React.useMemo<PickerContextValue<TValue, TView>>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
       ...paramsFromUsePickerViews.contextValue,
