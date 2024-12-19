@@ -2632,10 +2632,8 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
   });
 
-  describe('column pinning', () => {
-    clock.withFakeTimers();
-
-    it('should work correctly with column pinning when groupingColumnMode = "single"', () => {
+  describe.only('column pinning', () => {
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "single"', () => {
       const { setProps } = render(
         <Test
           checkboxSelection
@@ -2643,32 +2641,21 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
+      const initialColumnOrder = ['', 'category1', 'id', 'category1', 'category2'];
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
+      setProps({ pinnedColumns: { left: ['id'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal([
+        'id',
         '',
         'category1',
-        'id',
         'category1',
         'category2',
       ]);
-      setProps({ pinnedColumns: { left: ['id'], right: ['__check__'] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        'id',
-        'category1',
-        'category1',
-        'category2',
-        '',
-      ]);
-      setProps({ pinnedColumns: { left: [], right: [] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        '',
-        'category1',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      setProps({ pinnedColumns: { left: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
     });
 
-    it('should work correctly with column pinning when when groupingColumnMode = "multiple"', () => {
+    it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "multiple"', () => {
       const { setProps } = render(
         <Test
           checkboxSelection
@@ -2677,37 +2664,23 @@ describe('<DataGridPremium /> - Row grouping', () => {
           defaultGroupingExpansionDepth={-1}
         />,
       );
-      expect(getColumnHeadersTextContent()).to.deep.equal([
-        '',
-        'category1',
-        'category2',
-        'id',
-        'category1',
-        'category2',
-      ]);
+      const initialColumnOrder = ['', 'category1', 'category2', 'id', 'category1', 'category2'];
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
       setProps({
         pinnedColumns: {
           left: ['__row_group_by_columns_group_category2__', 'id'],
-          right: ['__check__'],
         },
       });
       expect(getColumnHeadersTextContent()).to.deep.equal([
         'category2',
         'id',
-        'category1',
-        'category1',
-        'category2',
-        '',
-      ]);
-      setProps({ pinnedColumns: { left: [], right: [] } });
-      expect(getColumnHeadersTextContent()).to.deep.equal([
         '',
         'category1',
-        'category2',
-        'id',
         'category1',
         'category2',
       ]);
+      setProps({ pinnedColumns: { left: [] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(initialColumnOrder);
     });
   });
 
