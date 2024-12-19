@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.23.3
+
+_Dec 19, 2024_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
+- 🐞 Bugfixes
+
+Special thanks go out to the community contributors who have helped make this release possible:
+@k-rajat19, @good-jinu.
+Following are all team members who have contributed to this release:
+@KenanYusuf, @MBilalShafi, @arminmeh, @flaviendelangle.
+
+<!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
+
+### Data Grid
+
+#### `@mui/x-data-grid@7.23.3`
+
+- [DataGrid] Allow passing custom props to `.main` element (#15919) @MBilalShafi
+- [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15927) @k-rajat19
+- [DataGrid] Deprecate `indeterminateCheckboxAction` prop (#15862) @MBilalShafi
+- [DataGrid] Fix `aria-label` value for group checkboxes (#15861) @MBilalShafi
+- [DataGrid] Fix autosizing with virtualized columns (#15929) @k-rajat19
+- [DataGrid] Round dimensions to avoid subpixel rendering error (#15873) @KenanYusuf
+- [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15871) @k-rajat19
+- [DataGrid] Trigger row spanning computation on rows update (#15872) @MBilalShafi
+- [l10n] Improve Korean (ko-KR) locale (#15906) @good-jinu
+
+#### `@mui/x-data-grid-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@7.23.3`.
+
+#### `@mui/x-data-grid-premium@7.23.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@7.23.3`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@7.23.3`
+
+- [pickers] Add verification to disable skipped hours in spring forward DST (#15918) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@7.23.3`.
+
 ## 7.23.2
 
 _Dec 12, 2024_
