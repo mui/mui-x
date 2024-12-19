@@ -48,7 +48,7 @@ Following are all team members who have contributed to this release:
 
 - [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15915) @k-rajat19
 - [DataGrid] Fix autosizing with virtualized columns (#15116) @k-rajat19
-- [DataGrid] Move Badge to leaf import (#15879) @romgrk
+- [DataGrid] Move `<Badge />` to leaf import (#15879) @romgrk
 - [DataGrid] Move `<ListItemText />` and `<ListItemIcon />` to leaf import (#15869) @romgrk
 - [DataGrid] Remove the Joy UI demo (#15913) @romgrk
 - [DataGrid] Update quick filter input variant (#15909) @KenanYusuf
@@ -67,9 +67,16 @@ Same changes as in `@mui/x-data-grid-pro@8.0.0-alpha.5`.
 
 ### Date and Time Pickers
 
+#### Breaking changes
+
+- The `<PickersMonth />` component has been moved inside the Month Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#month-calendar).
+
+- The `<PickersYear />` component has been moved inside the Year Calendar component — [Learn more](https://next.mui.com/x/migration/migration-pickers-v7/#year-calendar).
+
 #### `@mui/x-date-pickers@8.0.0-alpha.5`
 
 - [pickers] Add verification to disable skipped hours in spring forward DST (#15849) @flaviendelangle
+- [pickers] Remove `PickersMonth` and `PickersYear` from the theme and remove the `div` wrapping each button (#15806) @flaviendelangle 
 - [pickers] Use the new `ownerState` object on the `<PickersTextField />` component (#15863) @flaviendelangle
 
 #### `@mui/x-date-pickers-pro@8.0.0-alpha.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
