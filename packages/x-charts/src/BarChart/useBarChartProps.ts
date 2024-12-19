@@ -10,7 +10,8 @@ import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -86,7 +87,6 @@ export const useBarChartProps = (props: BarChartProps) => {
     yAxis:
       yAxis ??
       (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined),
-    sx,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
@@ -143,12 +143,19 @@ export const useBarChartProps = (props: BarChartProps) => {
     ...axisHighlight,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
 
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+
   return {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
     axisClickHandlerProps,

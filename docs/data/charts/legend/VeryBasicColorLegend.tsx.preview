@@ -1,0 +1,15 @@
+<LineChart
+  {...data}
+  xAxis={[
+    {
+      ...data.xAxis![0],
+      colorMap: {
+        type: 'piecewise',
+        thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+        colors: ['blue', 'gray', 'red'],
+      },
+    },
+  ]}
+  slots={{ legend: PiecewiseColorLegend }}
+  slotProps={{ legend: { axisDirection: 'x' } }}
+/>
