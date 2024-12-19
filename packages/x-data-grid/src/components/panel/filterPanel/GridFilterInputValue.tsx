@@ -20,16 +20,6 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
 
 type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
-const sanitizeFilterItemValue = (value: any, type: GridTypeFilterInputValueProps['type']) => {
-  if (value == null || value === '') {
-    return undefined;
-  }
-  if (type === 'number') {
-    return Number(value);
-  }
-  return String(value);
-};
-
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
     item,
@@ -114,6 +104,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       {...rootProps.slotProps?.baseTextField}
     />
   );
+}
+
+function sanitizeFilterItemValue(value: any, type: GridTypeFilterInputValueProps['type']) {
+  if (value == null || value === '') {
+    return undefined;
+  }
+  if (type === 'number') {
+    return Number(value);
+  }
+  return String(value);
 }
 
 GridFilterInputValue.propTypes = {
