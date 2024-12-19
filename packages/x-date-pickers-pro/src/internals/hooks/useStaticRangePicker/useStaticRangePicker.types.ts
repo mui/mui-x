@@ -13,11 +13,10 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { UseRangePositionProps } from '../useRangePosition';
 
-export interface UseStaticRangePickerSlots<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlots<PickerRangeValue, TView> {}
+export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
-export interface UseStaticRangePickerSlotProps<TView extends DateOrTimeViewWithMeridiem>
-  extends ExportedPickersLayoutSlotProps<PickerRangeValue, TView> {
+export interface UseStaticRangePickerSlotProps
+  extends ExportedPickersLayoutSlotProps<PickerRangeValue> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -33,12 +32,12 @@ export interface UseStaticRangePickerProps<
    * Overridable components.
    * @default {}
    */
-  slots?: UseStaticRangePickerSlots<TView>;
+  slots?: UseStaticRangePickerSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseStaticRangePickerSlotProps<TView>;
+  slotProps?: UseStaticRangePickerSlotProps;
 }
 
 export interface UseStaticRangePickerParams<

@@ -11,7 +11,7 @@ import {
   PickersLayoutClasses,
 } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeViewWithMeridiem, PickerValidValue } from '../internals/models';
+import { PickerValidValue } from '../internals/models';
 import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (
@@ -87,11 +87,8 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-type PickersLayoutComponent = (<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(
-  props: PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersLayoutComponent = (<TValue extends PickerValidValue>(
+  props: PickersLayoutProps<TValue> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -103,10 +100,10 @@ type PickersLayoutComponent = (<
  *
  * - [PickersLayout API](https://mui.com/x/api/date-pickers/pickers-layout/)
  */
-const PickersLayout = React.forwardRef(function PickersLayout<
-  TValue extends PickerValidValue,
-  TView extends DateOrTimeViewWithMeridiem,
->(inProps: PickersLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
+const PickersLayout = React.forwardRef(function PickersLayout<TValue extends PickerValidValue>(
+  inProps: PickersLayoutProps<TValue>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts, ownerState } = usePickerLayout(props);
@@ -156,7 +153,6 @@ PickersLayout.propTypes = {
   isValid: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onSelectShortcut: PropTypes.func.isRequired,
-  onViewChange: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
@@ -176,10 +172,6 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
 } as any;
 
 export { PickersLayout };

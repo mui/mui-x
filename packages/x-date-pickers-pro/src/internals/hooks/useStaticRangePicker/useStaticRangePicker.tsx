@@ -57,7 +57,7 @@ export const useStaticRangePicker = <
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,

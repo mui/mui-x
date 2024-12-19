@@ -33,7 +33,7 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 
 export interface DateRangePickerToolbarProps
   extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps<PickerRangeValue, 'day'>, 'onChange' | 'isLandscape'>,
+    Omit<BaseToolbarProps<PickerRangeValue>, 'onChange' | 'isLandscape'>,
     Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -87,9 +87,6 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar(
     toolbarFormat,
     className,
     classes: classesProp,
-    onViewChange,
-    view,
-    views,
     ...other
   } = props;
 
@@ -149,12 +146,6 @@ DateRangePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
-  /**
-   * Callback called when a toolbar is clicked
-   * @template TView
-   * @param {TView} view The view to open
-   */
-  onViewChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -175,14 +166,6 @@ DateRangePickerToolbar.propTypes = {
    */
   toolbarPlaceholder: PropTypes.node,
   value: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * Currently visible picker view.
-   */
-  view: PropTypes.oneOf(['day']).isRequired,
-  /**
-   * Available views.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day'])).isRequired,
 } as any;
 
 export { DateRangePickerToolbar };

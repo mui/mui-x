@@ -19,11 +19,11 @@ import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots
   extends DesktopDateTimePickerSlots,
-    MobileDateTimePickerSlots<DateOrTimeViewWithMeridiem> {}
+    MobileDateTimePickerSlots {}
 
 export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
   extends DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileDateTimePickerSlotProps<DateOrTimeViewWithMeridiem, TEnableAccessibleFieldDOMStructure> {}
+    MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
   extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,

@@ -110,8 +110,8 @@ export const useDesktopRangePicker = <
   });
 
   React.useEffect(() => {
-    if (layoutProps.view) {
-      initialView.current = layoutProps.view;
+    if (providerProps.contextValue.view) {
+      initialView.current = providerProps.contextValue.view;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -186,12 +186,15 @@ export const useDesktopRangePicker = <
     startFieldRef,
     endFieldRef,
     singleInputFieldRef,
-    currentView: layoutProps.view !== props.openTo ? layoutProps.view : undefined,
+    currentView:
+      providerProps.contextValue.view !== props.openTo
+        ? providerProps.contextValue.view
+        : undefined,
     initialView: initialView.current ?? undefined,
-    onViewChange: layoutProps.onViewChange,
+    onViewChange: providerProps.contextValue.onViewChange,
   });
 
-  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotProps<PickerRangeValue> = {
     ...slotProps,
     tabs: {
       ...slotProps?.tabs,

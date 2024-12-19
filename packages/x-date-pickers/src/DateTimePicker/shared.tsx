@@ -11,11 +11,7 @@ import {
 import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import {
-  DateTimePickerTabs,
-  DateTimePickerTabsProps,
-  ExportedDateTimePickerTabsProps,
-} from './DateTimePickerTabs';
+import { DateTimePickerTabs, DateTimePickerTabsProps } from './DateTimePickerTabs';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -50,7 +46,7 @@ export interface BaseDateTimePickerSlotProps extends DateCalendarSlotProps, Time
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: ExportedDateTimePickerTabsProps;
+  tabs?: DateTimePickerTabsProps;
   /**
    * Props passed down to the toolbar component.
    */

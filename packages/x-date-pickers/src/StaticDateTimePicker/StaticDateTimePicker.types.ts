@@ -11,13 +11,11 @@ import {
 } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView } from '../models';
 
-export interface StaticDateTimePickerSlots
-  extends BaseDateTimePickerSlots,
-    UseStaticPickerSlots<DateOrTimeView> {}
+export interface StaticDateTimePickerSlots extends BaseDateTimePickerSlots, UseStaticPickerSlots {}
 
 export interface StaticDateTimePickerSlotProps
   extends BaseDateTimePickerSlotProps,
-    UseStaticPickerSlotProps<DateOrTimeView> {}
+    UseStaticPickerSlotProps {}
 
 export interface StaticDateTimePickerProps
   extends BaseDateTimePickerProps<DateOrTimeView>,

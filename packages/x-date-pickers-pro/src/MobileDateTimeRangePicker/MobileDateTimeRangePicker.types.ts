@@ -9,19 +9,15 @@ import {
   BaseDateTimeRangePickerSlots,
   BaseDateTimeRangePickerSlotProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerView } from '../internals/models';
 
 export interface MobileDateTimeRangePickerSlots
   extends BaseDateTimeRangePickerSlots,
-    MakeOptional<UseMobileRangePickerSlots<DateTimeRangePickerView>, 'field'> {}
+    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileDateTimeRangePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
 > extends BaseDateTimeRangePickerSlotProps,
-    Omit<
-      UseMobileRangePickerSlotProps<DateTimeRangePickerView, TEnableAccessibleFieldDOMStructure>,
-      'tabs' | 'toolbar'
-    > {}
+    Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileDateTimeRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
