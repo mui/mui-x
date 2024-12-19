@@ -409,6 +409,23 @@ export const GridRootStyles = styled('div', {
       zIndex: 4, // Should be above the column separator
       background: 'var(--DataGrid-pinnedBackground)',
     },
+    [`& .${c['headerFilterInput--compact']}`]: {
+      [`& input`]: {
+        fontSize: 14,
+        marginTop: '-4px',
+        paddingTop: 3,
+        paddingBottom: 3,
+        height: 20,
+      },
+      [`& label[data-shrink="false"]`]: {
+        fontSize: 14,
+        marginTop: '-8px',
+      },
+      [`& div[role="combobox"]`]: {
+        fontSize: 14,
+        padding: 0,
+      },
+    },
     [`& .${c.columnSeparator}`]: {
       position: 'absolute',
       overflow: 'hidden',

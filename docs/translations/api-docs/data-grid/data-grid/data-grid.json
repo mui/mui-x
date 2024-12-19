@@ -813,6 +813,9 @@
     "groupingCriteriaCellToggle": {
       "description": "Styles applied to the toggle of the grouping criteria cell"
     },
+    "headerFilterInput--compact": {
+      "description": "Styles applied the form control of the header filter cell with density=&quot;compact&quot;."
+    },
     "headerFilterRow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header filter row"

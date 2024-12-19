@@ -1372,6 +1372,12 @@
       "isGlobal": false
     },
     {
+      "key": "headerFilterInput--compact",
+      "className": "MuiDataGrid-headerFilterInput--compact",
+      "description": "Styles applied the form control of the header filter cell with density=\"compact\".",
+      "isGlobal": false
+    },
+    {
       "key": "headerFilterRow",
       "className": "MuiDataGrid-headerFilterRow",
       "description": "Styles applied to the column header filter row.",
