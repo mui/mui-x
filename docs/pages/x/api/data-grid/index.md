@@ -9,6 +9,11 @@
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [GridFilterPanelTrigger](/x/api/data-grid/grid-filter-panel-trigger/)
+- [GridToolbarRoot](/x/api/data-grid/grid-toolbar-root/)
+- [GridToolbarButton](/x/api/data-grid/grid-toolbar-button/)
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
+- [GridColumnsPanelTrigger](/x/api/data-grid/grid-columns-panel-trigger/)
 
 ## Interfaces
 

@@ -1273,6 +1273,8 @@
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToolbar": "The custom Toolbar component used in the grid.",
+    "baseToolbarButton": "The custom ToolbarButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
