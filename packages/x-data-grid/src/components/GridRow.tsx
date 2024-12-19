@@ -467,49 +467,14 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  dimensions: PropTypes.shape({
-    bottomContainerHeight: PropTypes.number.isRequired,
-    columnsTotalWidth: PropTypes.number.isRequired,
-    contentSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    groupHeaderHeight: PropTypes.number.isRequired,
-    hasScrollX: PropTypes.bool.isRequired,
-    hasScrollY: PropTypes.bool.isRequired,
-    headerFilterHeight: PropTypes.number.isRequired,
-    headerHeight: PropTypes.number.isRequired,
-    headersTotalHeight: PropTypes.number.isRequired,
-    isReady: PropTypes.bool.isRequired,
-    leftPinnedWidth: PropTypes.number.isRequired,
-    minimumSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rightPinnedWidth: PropTypes.number.isRequired,
-    root: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    rowWidth: PropTypes.number.isRequired,
-    scrollbarSize: PropTypes.number.isRequired,
-    topContainerHeight: PropTypes.number.isRequired,
-    viewportInnerSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-    viewportOuterSize: PropTypes.shape({
-      height: PropTypes.number.isRequired,
-      width: PropTypes.number.isRequired,
-    }).isRequired,
-  }).isRequired,
+  columnsTotalWidth: PropTypes.number.isRequired,
   firstColumnIndex: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
    */
   focusedColumnIndex: PropTypes.number,
+  gridHasFiller: PropTypes.bool.isRequired,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
@@ -529,6 +494,7 @@ GridRow.propTypes = {
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  scrollbarWidth: PropTypes.number.isRequired,
   selected: PropTypes.bool.isRequired,
   showBottomBorder: PropTypes.bool.isRequired,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
