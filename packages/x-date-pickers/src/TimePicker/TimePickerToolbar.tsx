@@ -268,8 +268,6 @@ TimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -288,7 +286,6 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
 } as any;
 
 export { TimePickerToolbar };

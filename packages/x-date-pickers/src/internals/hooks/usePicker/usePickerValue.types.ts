@@ -12,12 +12,10 @@ import {
   OnErrorProps,
   InferError,
   PickerValueType,
+  PickerChangeImportance,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import {
-  PickerShortcutChangeImportance,
-  PickersShortcutsItemContext,
-} from '../../../PickersShortcuts';
+import type { PickersShortcutsItemContext } from '../../../PickersShortcuts';
 import { InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
 export interface PickerValueManager<TValue extends PickerValidValue, TError> {
@@ -290,20 +288,6 @@ export interface UsePickerValueViewsResponse<TValue extends PickerValidValue> {
 }
 
 /**
- * Props passed to `usePickerLayoutProps`.
- */
-export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue> {
-  value: TValue;
-  onChange: (newValue: TValue) => void;
-  onSelectShortcut: (
-    newValue: TValue,
-    changeImportance: PickerShortcutChangeImportance,
-    shortcut: PickersShortcutsItemContext,
-  ) => void;
-  isValid: (value: TValue) => boolean;
-}
-
-/**
  * Params passed to `usePickerProvider`.
  */
 export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
@@ -311,12 +295,12 @@ export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
   contextValue: UsePickerValueContextValue<TValue>;
   actionsContextValue: UsePickerValueActionsContextValue<TValue>;
   privateContextValue: UsePickerValuePrivateContextValue;
+  isValidContextValue: (value: TValue) => boolean;
 }
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
-  layoutProps: UsePickerValueLayoutResponse<TValue>;
   provider: UsePickerValueProviderParams<TValue>;
 }
 
@@ -384,8 +368,12 @@ export interface UsePickerValuePrivateContextValue {
 }
 
 export interface SetValueActionOptions {
+  /**
+   * Importance of the change when picking a value:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
   changeImportance?: PickerChangeImportance;
   shortcut?: PickersShortcutsItemContext;
 }
-
-export type PickerChangeImportance = 'set' | 'accept';

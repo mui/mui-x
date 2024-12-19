@@ -13,9 +13,7 @@ export const usePickerContext = <
   const value = React.useContext(PickerContext) as PickerContextValue<TValue, TView>;
   if (value == null) {
     throw new Error(
-      [
-        'MUI X: The `usePickerContext` can only be called in fields that are used as a slot of a picker component',
-      ].join('\n'),
+      'MUI X: The `usePickerContext` hook can only be called inside the context of a picker component',
     );
   }
 

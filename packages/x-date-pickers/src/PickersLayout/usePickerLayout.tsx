@@ -42,22 +42,10 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   props: PickersLayoutProps<TValue>,
 ): UsePickerLayoutResponse<TValue> => {
   const { ownerState: pickerOwnerState } = usePickerPrivateContext();
-  const { variant, orientation, view } = usePickerContext();
+  const { variant, view } = usePickerContext();
   const isRtl = useRtl();
 
-  const {
-    value,
-    onChange,
-    isValid,
-    children,
-    slots,
-    slotProps,
-    classes: classesProp,
-    // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
-    // The true type should be
-    // - For pickers value: PickerValidDate | null
-    // - For range pickers value: [PickerValidDate | null, PickerValidDate | null]
-  } = props;
+  const { children, slots, slotProps, classes: classesProp } = props;
 
   const ownerState = React.useMemo<PickerLayoutOwnerState>(
     () => ({ ...pickerOwnerState, layoutDirection: isRtl ? 'rtl' : 'ltr' }),
@@ -100,10 +88,6 @@ const usePickerLayout = <TValue extends PickerValidValue>(
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
     externalSlotProps: slotProps?.shortcuts,
-    additionalProps: {
-      isValid,
-      isLandscape: orientation === 'landscape', // Will be removed in a follow up PR?
-    },
     className: classes.shortcuts,
     ownerState,
   });

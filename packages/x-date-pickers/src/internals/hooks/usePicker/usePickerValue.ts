@@ -12,7 +12,6 @@ import {
   PickerValueUpdateAction,
   UsePickerValueState,
   UsePickerValueFieldResponse,
-  UsePickerValueLayoutResponse,
   UsePickerValueViewsResponse,
   PickerSelectionState,
   PickerValueUpdaterParams,
@@ -377,13 +376,7 @@ export const usePickerValue = <
     return !valueManager.hasError(error);
   };
 
-  const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
-    value: valueWithoutError,
-    onChange: handleChange,
-    isValid,
-  };
-
-  const setValue = useEventCallback((newValue: TValue, options: SetValueActionOptions) =>
+  const setValue = useEventCallback((newValue: TValue, options?: SetValueActionOptions) =>
     updateDate({
       name: 'setExplicitValue',
       value: newValue,
@@ -462,12 +455,12 @@ export const usePickerValue = <
     contextValue,
     actionsContextValue,
     privateContextValue,
+    isValidContextValue: isValid,
   };
 
   return {
     fieldProps: fieldResponse,
     viewProps: viewResponse,
-    layoutProps: layoutResponse,
     provider: providerParams,
   };
 };

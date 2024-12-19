@@ -12,7 +12,6 @@ import {
 } from '../PickersShortcuts/PickersShortcuts';
 import { PickerOwnerState } from '../models';
 import { PickerValidValue } from '../internals/models';
-import { UsePickerValueLayoutResponse } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface ExportedPickersLayoutSlots<TValue extends PickerValidValue> {
   /**
@@ -84,8 +83,7 @@ export interface PickersLayoutSlotProps<TValue extends PickerValidValue>
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickersLayoutProps<TValue extends PickerValidValue>
-  extends UsePickerValueLayoutResponse<TValue> {
+export interface PickersLayoutProps<TValue extends PickerValidValue> {
   className?: string;
   children?: React.ReactNode;
   /**

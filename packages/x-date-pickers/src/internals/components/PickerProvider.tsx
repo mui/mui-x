@@ -14,10 +14,9 @@ import type {
   UsePickerValuePrivateContextValue,
 } from '../hooks/usePicker/usePickerValue.types';
 import { UsePickerViewsContextValue } from '../hooks/usePicker/usePickerViews';
+import { IsValidValueContext } from '../../hooks/useIsValidValue';
 
-export const PickerContext = React.createContext<PickerContextValue<PickerValidValue, any> | null>(
-  null,
-);
+export const PickerContext = React.createContext<PickerContextValue<any, any> | null>(null);
 
 export const PickerActionsContext = React.createContext<PickerActionsContextValue<any> | null>(
   null,
@@ -42,24 +41,36 @@ export const PickerPrivateContext = React.createContext<PickerPrivateContextValu
  *
  * @ignore - do not document.
  */
-export function PickerProvider(props: PickerProviderProps) {
-  const { contextValue, actionsContextValue, privateContextValue, localeText, children } = props;
+export function PickerProvider<TValue extends PickerValidValue>(
+  props: PickerProviderProps<TValue>,
+) {
+  const {
+    contextValue,
+    actionsContextValue,
+    privateContextValue,
+    isValidContextValue,
+    localeText,
+    children,
+  } = props;
 
   return (
     <PickerContext.Provider value={contextValue}>
       <PickerActionsContext.Provider value={actionsContextValue}>
         <PickerPrivateContext.Provider value={privateContextValue}>
-          <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+          <IsValidValueContext.Provider value={isValidContextValue}>
+            <LocalizationProvider localeText={localeText}>{children}</LocalizationProvider>
+          </IsValidValueContext.Provider>
         </PickerPrivateContext.Provider>
       </PickerActionsContext.Provider>
     </PickerContext.Provider>
   );
 }
 
-export interface PickerProviderProps {
-  contextValue: PickerContextValue<PickerValidValue, any>;
-  actionsContextValue: PickerActionsContextValue;
+export interface PickerProviderProps<TValue extends PickerValidValue> {
+  contextValue: PickerContextValue<any, any>;
+  actionsContextValue: PickerActionsContextValue<any>;
   privateContextValue: PickerPrivateContextValue;
+  isValidContextValue: (value: TValue) => boolean;
   localeText: PickersInputLocaleText | undefined;
   children: React.ReactNode;
 }
