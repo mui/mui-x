@@ -50,6 +50,7 @@ export const renderDateRangeViewCalendar = ({
   views,
   view,
   onViewChange,
+  daySlot,
 }: DateRangeViewRendererProps<'day'>) => (
   <DateRangeCalendar
     value={value}
@@ -90,5 +91,6 @@ export const renderDateRangeViewCalendar = ({
     view={view}
     views={views}
     onViewChange={onViewChange}
+    daySlot={daySlot}
   />
 );

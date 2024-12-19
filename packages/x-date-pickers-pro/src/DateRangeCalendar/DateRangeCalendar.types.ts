@@ -88,6 +88,11 @@ export interface ExportedDateRangeCalendarProps
    * @default false
    */
   disableDragEditing?: boolean;
+  /**
+   * If `enhanced`, day slot will use the v8 version.
+   * @default original
+   */
+  daySlot?: 'original' | 'enhanced';
 }
 
 export interface DateRangeCalendarProps
@@ -141,6 +146,7 @@ export interface DateRangeCalendarProps
    * @default ['start', 'end']
    */
   availableRangePositions?: RangePosition[];
+  daySlot?: 'original' | 'enhanced';
 }
 
 export interface DateRangeCalendarOwnerState extends PickerOwnerState {
