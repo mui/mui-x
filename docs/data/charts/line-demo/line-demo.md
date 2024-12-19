@@ -43,3 +43,7 @@ To do so, the `slots.line` is set with a custom components that render the defau
 - The second one is clipped to show predictions (from the limit to the right of the chart) with dash styling.
 
 {{"demo": "LineWithPrediction.js"}}
+
+## CustomeLineMarks
+
+{{"demo": "CustomeLineMarks.js"}}
