@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import {
-  unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
+  unstable_composeClasses as composeClasses,
   unstable_useId as useId,
 } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
@@ -20,6 +20,12 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { GridSingleSelectColDef, ValueOptions } from '../../models';
+import {
+  getLabelFromValueOptions,
+  getValueOptions,
+  isSingleSelectColDef,
+} from '../panel/filterPanel/filterPanelUtils';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -85,12 +91,48 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
           .toString();
 
+      const getSingleSelectLabels = (
+        value: any,
+        valueOptions: ValueOptions[],
+        column: GridSingleSelectColDef,
+      ) => {
+        if (Array.isArray(value)) {
+          return value.map(
+            (singleValue) =>
+              getLabelFromValueOptions(
+                String(singleValue),
+                valueOptions,
+                column.getOptionLabel,
+                column.getOptionValue,
+              ) ?? singleValue,
+          );
+        }
+
+        return (
+          getLabelFromValueOptions(
+            String(value),
+            valueOptions,
+            column.getOptionLabel,
+            column.getOptionValue,
+          ) ?? value
+        );
+      };
+
       const getFilterItemValue = (item: GridFilterItem): string => {
-        const { getValueAsString } = lookup[item.field!].filterOperators!.find(
+        let itemValue = item.value;
+        let valueOptions: ValueOptions[] | undefined;
+        const column = lookup[item.field!];
+
+        if (isSingleSelectColDef(column)) {
+          valueOptions = getValueOptions(column as GridSingleSelectColDef);
+          itemValue = getSingleSelectLabels(itemValue, valueOptions ?? [], column);
+        }
+
+        const { getValueAsString } = column.filterOperators!.find(
           (operator) => operator.value === item.operator,
         )!;
 
-        return getValueAsString ? getValueAsString(item.value) : item.value;
+        return getValueAsString ? getValueAsString(itemValue) : itemValue;
       };
 
       return (
