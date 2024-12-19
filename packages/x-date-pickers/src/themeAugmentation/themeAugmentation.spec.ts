@@ -18,7 +18,6 @@ import { pickersArrowSwitcherClasses } from '../internals/components/PickersArro
 import { pickersPopperClasses } from '../internals/components/pickersPopperClasses';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
-import { pickersMonthClasses } from '../MonthCalendar';
 import { digitalClockClasses } from '../DigitalClock';
 import {
   multiSectionDigitalClockClasses,
@@ -355,25 +354,6 @@ createTheme({
         },
       },
     },
-    MuiPickersMonth: {
-      defaultProps: {
-        classes: { selected: 'test' },
-        // @ts-expect-error invalid MuiPickersMonth prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${pickersMonthClasses.monthButton}`]: {
-            backgroundColor: 'green',
-          },
-        },
-        // @ts-expect-error invalid MuiPickersMonth class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
     MuiPickersPopper: {
       defaultProps: {
         open: true,
@@ -474,22 +454,6 @@ createTheme({
           backgroundColor: 'red',
         },
         // @ts-expect-error invalid MuiPickersLayout class key
-        content: {
-          backgroundColor: 'blue',
-        },
-      },
-    },
-    MuiPickersYear: {
-      defaultProps: {
-        classes: { yearButton: 'test' },
-        // @ts-expect-error invalid MuiPickersYear prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        yearButton: {
-          backgroundColor: 'red',
-        },
-        // @ts-expect-error invalid MuiPickersYear class key
         content: {
           backgroundColor: 'blue',
         },
