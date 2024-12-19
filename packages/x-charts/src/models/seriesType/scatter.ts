@@ -11,7 +11,9 @@ export type ScatterValueType = {
   id: string | number;
 };
 
-export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
+export interface ScatterSeriesType
+  extends CommonSeriesType<ScatterValueType | null>,
+    CartesianSeriesType {
   type: 'scatter';
   data?: ScatterValueType[];
   markerSize?: number;
