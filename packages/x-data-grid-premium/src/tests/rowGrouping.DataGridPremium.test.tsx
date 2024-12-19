@@ -2632,7 +2632,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
   });
 
-  describe.only('column pinning', () => {
+  describe('column pinning', () => {
     it('should keep the checkbox selection column position after column is unpinned when groupingColumnMode = "single"', () => {
       const { setProps } = render(
         <Test
