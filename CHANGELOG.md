@@ -9,7 +9,7 @@ _Dec 19, 2024_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Korean locale on the Data Grid
+- 🌍 Improve Korean (ko-KR) locale on the Data Grid
 - 🐞 Bugfixes
 
 Special thanks go out to the community contributors who have helped make this release possible:
@@ -23,7 +23,7 @@ Following are all team members who have contributed to this release:
 
 #### `@mui/x-data-grid@7.23.3`
 
-- [DataGrid] Allow to pass custom props to `.main` element (#15919) @MBilalShafi
+- [DataGrid] Allow passing custom props to `.main` element (#15919) @MBilalShafi
 - [DataGrid] Consider `columnGroupHeaderHeight` prop in `getTotalHeaderHeight` method (#15927) @k-rajat19
 - [DataGrid] Deprecate `indeterminateCheckboxAction` prop (#15862) @MBilalShafi
 - [DataGrid] Fix `aria-label` value for group checkboxes (#15861) @MBilalShafi
@@ -31,7 +31,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Round dimensions to avoid subpixel rendering error (#15873) @KenanYusuf
 - [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15871) @k-rajat19
 - [DataGrid] Trigger row spanning computation on rows update (#15872) @MBilalShafi
-- [l10n] Improve Korean(ko-KR) locale (#15906) @good-jinu
+- [l10n] Improve Korean (ko-KR) locale (#15906) @good-jinu
 
 #### `@mui/x-data-grid-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -50,26 +50,6 @@ Same changes as in `@mui/x-data-grid-pro@7.23.3`.
 #### `@mui/x-date-pickers-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@7.23.3`.
-
-### Charts
-
-#### `@mui/x-charts@7.23.3`
-
-No changes since `@mui/x-charts@v7.23.2`.
-
-#### `@mui/x-charts-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-charts@7.23.3`.
-
-### Tree View
-
-#### `@mui/x-tree-view@7.23.3`
-
-No changes since `@mui/x-tree-view-pro@v7.23.2`.
-
-#### `@mui/x-tree-view-pro@7.23.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@7.23.3`.
 
 ## 7.23.2
 
