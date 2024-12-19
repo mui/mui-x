@@ -22,22 +22,20 @@ import {
 import { gridDimensionsSelector } from '../dimensions/gridDimensionsSelectors';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { GridPinnedRowsPosition } from '../rows/gridRowsInterfaces';
-import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows, getVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiEventHandler } from '../../utils';
 import * as platform from '../../../utils/platform';
 import { clamp, range } from '../../../utils/utils';
-import type {
-  GridRenderContext,
-  GridColumnsRenderContext,
-  GridRowEntry,
-  GridRowId,
+import {
+  type GridRenderContext,
+  type GridColumnsRenderContext,
+  type GridRowEntry,
+  type GridRowId,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
-import { GridRowProps } from '../../../components/GridRow';
 import { GridInfiniteLoaderPrivateApi } from '../../../models/api/gridInfiniteLoaderApi';
 import {
   gridRenderContextSelector,
@@ -48,6 +46,7 @@ import { EMPTY_RENDER_CONTEXT } from './useGridVirtualization';
 import { gridRowSpanningHiddenCellsOriginMapSelector } from '../rows/gridRowSpanningSelectors';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { minimalContentHeight } from '../rows/gridRowsUtils';
+import { gridFocusedVirtualCellSelector } from './gridFocusedVirtualCellSelector';
 
 const MINIMUM_COLUMN_WIDTH = 50;
 
@@ -122,8 +121,6 @@ export const useGridVirtualScroller = () => {
   const [panels, setPanels] = React.useState(EMPTY_DETAIL_PANELS);
 
   const isRtl = useRtl();
-  const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
-  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -202,6 +199,9 @@ export const useGridVirtualScroller = () => {
   const previousContextScrollPosition = React.useRef(EMPTY_SCROLL_POSITION);
   const previousRowContext = React.useRef(EMPTY_RENDER_CONTEXT);
   const renderContext = useGridSelector(apiRef, gridRenderContextSelector);
+
+  const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
+
   const scrollTimeout = useTimeout();
   const frozenContext = React.useRef<GridRenderContext | undefined>(undefined);
   const scrollCache = useLazyRef(() =>
@@ -213,18 +213,6 @@ export const useGridVirtualScroller = () => {
       MINIMUM_COLUMN_WIDTH * 6,
     ),
   ).current;
-
-  const focusedCell = {
-    rowIndex: React.useMemo(
-      () => (cellFocus ? currentPage.rows.findIndex((row) => row.id === cellFocus.id) : -1),
-      [cellFocus, currentPage.rows],
-    ),
-    columnIndex: React.useMemo(
-      () =>
-        cellFocus ? visibleColumns.findIndex((column) => column.field === cellFocus.field) : -1,
-      [cellFocus, visibleColumns],
-    ),
-  };
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
@@ -423,14 +411,14 @@ export const useGridVirtualScroller = () => {
       : range(firstRowToRender, lastRowToRender);
 
     let virtualRowIndex = -1;
-    if (!isPinnedSection && focusedCell.rowIndex !== -1) {
-      if (focusedCell.rowIndex < firstRowToRender) {
-        virtualRowIndex = focusedCell.rowIndex;
-        rowIndexes.unshift(virtualRowIndex);
+    if (!isPinnedSection && focusedVirtualCell) {
+      if (focusedVirtualCell.rowIndex < firstRowToRender) {
+        rowIndexes.unshift(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedCell.rowIndex >= lastRowToRender) {
-        virtualRowIndex = focusedCell.rowIndex;
-        rowIndexes.push(virtualRowIndex);
+      if (focusedVirtualCell.rowIndex > lastRowToRender) {
+        rowIndexes.push(focusedVirtualCell.rowIndex);
+        virtualRowIndex = focusedVirtualCell.rowIndex;
       }
     }
 
@@ -473,8 +461,6 @@ export const useGridVirtualScroller = () => {
         }
       }
 
-      const hasFocus = cellFocus?.id === id;
-
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
@@ -506,15 +492,6 @@ export const useGridVirtualScroller = () => {
         }
       }
 
-      const isVirtualRow = rowIndexInPage === virtualRowIndex;
-      const isNotVisible = isVirtualRow;
-
-      let tabbableCell: GridRowProps['tabbableCell'] = null;
-      if (cellTabIndex !== null && cellTabIndex.id === id) {
-        const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
-        tabbableCell = cellParams.cellMode === 'view' ? cellTabIndex.field : null;
-      }
-
       let currentRenderContext = baseRenderContext;
       if (
         !isPinnedSection &&
@@ -525,12 +502,22 @@ export const useGridVirtualScroller = () => {
         currentRenderContext = frozenContext.current;
       }
 
+      const isVirtualFocusRow = rowIndexInPage === virtualRowIndex;
+      const isVirtualFocusColumn = focusedVirtualCell?.rowIndex === rowIndex;
+
       const offsetLeft = computeOffsetLeft(
         columnPositions,
         currentRenderContext,
         pinnedColumns.left.length,
       );
       const showBottomBorder = isLastVisibleInSection && params.position === 'top';
+
+      const isVirtualizationDisabled = rootProps.disableVirtualization && !enabledForColumns;
+
+      const firstColumnIndex = isVirtualizationDisabled ? 0 : currentRenderContext.firstColumnIndex;
+      const lastColumnIndex = isVirtualizationDisabled
+        ? visibleColumns.length
+        : currentRenderContext.lastColumnIndex;
 
       rows.push(
         <rootProps.slots.row
@@ -541,22 +528,24 @@ export const useGridVirtualScroller = () => {
           selected={isSelected}
           offsetTop={params.rows ? undefined : rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
-          dimensions={dimensions}
+          columnsTotalWidth={dimensions.columnsTotalWidth}
           rowHeight={baseRowHeight}
-          tabbableCell={tabbableCell}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
-          renderContext={currentRenderContext}
-          focusedColumnIndex={hasFocus ? focusedCell.columnIndex : undefined}
+          firstColumnIndex={firstColumnIndex}
+          lastColumnIndex={lastColumnIndex}
+          focusedColumnIndex={isVirtualFocusColumn ? focusedVirtualCell!.columnIndex : undefined}
           isFirstVisible={isFirstVisible}
           isLastVisible={isLastVisible}
-          isNotVisible={isNotVisible}
+          isNotVisible={isVirtualFocusRow}
           showBottomBorder={showBottomBorder}
+          scrollbarWidth={dimensions.hasScrollY ? dimensions.scrollbarSize : 0}
+          gridHasFiller={dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width}
           {...rowProps}
         />,
       );
 
-      if (isNotVisible) {
+      if (isVirtualFocusRow) {
         return;
       }
 

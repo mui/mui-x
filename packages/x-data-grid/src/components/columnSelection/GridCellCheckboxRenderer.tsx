@@ -7,7 +7,7 @@ import {
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { objectShallowCompare, useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getCheckboxPropsSelector } from '../../hooks/features/rowSelection/utils';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
@@ -92,7 +92,11 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       id,
       rootProps.rowSelectionPropagation?.parents ?? false,
     );
-    const { isIndeterminate, isChecked } = useGridSelector(apiRef, checkboxPropsSelector);
+    const { isIndeterminate, isChecked } = useGridSelector(
+      apiRef,
+      checkboxPropsSelector,
+      objectShallowCompare,
+    );
 
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;

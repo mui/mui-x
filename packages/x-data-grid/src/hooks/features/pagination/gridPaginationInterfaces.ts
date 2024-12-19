@@ -1,9 +1,12 @@
+import { GridFeatureMode } from '../../../models/gridFeatureMode';
 import { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
   rowCount: number;
   meta: GridPaginationMeta;
+  enabled: boolean;
+  paginationMode: GridFeatureMode;
 }
 
 export interface GridPaginationInitialState {
