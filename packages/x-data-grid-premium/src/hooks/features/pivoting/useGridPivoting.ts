@@ -17,6 +17,7 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
+import { isGroupingColumn } from '../rowGrouping';
 
 export interface PivotModel {
   columns: { field: GridColDef['field']; sort?: 'asc' | 'desc' }[];
@@ -91,7 +92,9 @@ const getPivotedData = ({
     initialColumns.set(column.field, column);
 
     pivotColumns.push(column);
-    columnVisibilityModel[column.field] = false;
+    if (!isGroupingColumn(column.field)) {
+      columnVisibilityModel[column.field] = false;
+    }
   }
 
   const getAttributesFromInitialColumn = (field: string) => {
