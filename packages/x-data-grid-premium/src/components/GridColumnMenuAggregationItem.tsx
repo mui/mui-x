@@ -22,7 +22,6 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
-
   const availableAggregationFunctions = React.useMemo(
     () =>
       getAvailableAggregationFunctions({
@@ -64,6 +63,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
+    apiRef.current.hideColumnMenu();
   };
 
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
@@ -74,17 +74,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     }
   }, []);
 
-  const handleSelectKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        event.stopPropagation();
-      }
-      if (event.key === 'Enter') {
-        apiRef.current.hideColumnMenu();
-      }
-    },
-    [apiRef],
-  );
+  const handleSelectKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.stopPropagation();
+    }
+  }, []);
 
   return (
     <rootProps.slots.baseMenuItem
