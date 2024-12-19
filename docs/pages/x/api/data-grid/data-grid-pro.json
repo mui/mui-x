@@ -18,7 +18,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -38,9 +38,7 @@
       },
       "default": "\"standard\""
     },
-    "detailPanelExpandedRowIds": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
-    },
+    "detailPanelExpandedRowIds": { "type": { "name": "instanceOf", "description": "Set" } },
     "disableAutosize": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenFiltering": { "type": { "name": "bool" }, "default": "false" },
     "disableChildrenSorting": { "type": { "name": "bool" }, "default": "false" },
@@ -543,6 +541,7 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
+    "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
@@ -581,7 +580,6 @@
       }
     },
     "unstable_listView": { "type": { "name": "bool" } },
-    "unstable_rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "virtualizeColumnsWithAutoRowHeight": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "DataGridPro",

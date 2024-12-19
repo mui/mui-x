@@ -1318,4 +1318,24 @@ describe('<DataGrid /> - Layout & warnings', () => {
       </div>,
     );
   });
+
+  // See https://github.com/mui/mui-x/issues/15721
+  it('should not exceed maximum call stack size caused by subpixel rendering', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ width: 702.37 }}>
+        <DataGrid
+          columns={[
+            { field: '1', flex: 1 },
+            { field: '2', flex: 1 },
+          ]}
+          rows={[]}
+        />
+      </div>,
+    );
+  });
 });

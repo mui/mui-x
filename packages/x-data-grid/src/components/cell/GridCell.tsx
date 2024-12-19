@@ -207,6 +207,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>(function GridCe
       result.api = apiRef.current;
       return result;
     },
+    undefined,
     objectShallowCompare,
   );
 

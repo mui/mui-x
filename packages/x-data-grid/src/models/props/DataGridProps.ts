@@ -379,7 +379,7 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * If `true`, the Data Grid will auto span the cells over the rows having the same value.
    * @default false
    */
-  unstable_rowSpanning: boolean;
+  rowSpanning: boolean;
   /**
    * If `true`, the Data Grid enables column virtualization when `getRowHeight` is set to `() => 'auto'`.
    * By default, column virtualization is disabled when dynamic row height is enabled to measure the row height correctly.
@@ -399,11 +399,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
-  /**
-   * Forwarded props for the Data Grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the Data Grid is exposed [[GridSignature]].

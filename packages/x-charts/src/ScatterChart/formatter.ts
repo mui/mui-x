@@ -23,8 +23,8 @@ const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset)
         ? (seriesData.data ?? [])
         : (dataset?.map((d) => {
             return {
-              x: d[datasetKeys.x],
-              y: d[datasetKeys.y],
+              x: d[datasetKeys.x] ?? null,
+              y: d[datasetKeys.y] ?? null,
               z: datasetKeys.z && d[datasetKeys.z],
               id: d[datasetKeys.id],
             } as ScatterValueType;
@@ -35,7 +35,7 @@ const formatter: SeriesFormatter<'scatter'> = ({ series, seriesOrder }, dataset)
         {
           ...seriesData,
           data,
-          valueFormatter: seriesData.valueFormatter ?? ((v) => `(${v.x}, ${v.y})`),
+          valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];
     }),

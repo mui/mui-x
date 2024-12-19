@@ -58,24 +58,21 @@ export const usePicker = <
     localeText,
     valueManager,
     variant,
-    views: pickerViewsResponse.views,
     paramsFromUsePickerValue: pickerValueResponse.provider,
+    paramsFromUsePickerViews: pickerViewsResponse.provider,
   });
 
   return {
     // Picker value
-    open: pickerValueResponse.open,
-    actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
 
     // Picker views
     renderCurrentView: pickerViewsResponse.renderCurrentView,
-    hasUIView: pickerViewsResponse.hasUIView,
+    hasUIView: pickerViewsResponse.provider.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
     layoutProps: {
-      ...pickerViewsResponse.layoutProps,
       ...pickerValueResponse.layoutProps,
     },
 
