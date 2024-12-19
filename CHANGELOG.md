@@ -29,7 +29,7 @@ Following are all team members who have contributed to this release:
 - [DataGrid] Fix `aria-label` value for group checkboxes (#15861) @MBilalShafi
 - [DataGrid] Fix autosizing with virtualized columns (#15929) @k-rajat19
 - [DataGrid] Round dimensions to avoid subpixel rendering error (#15873) @KenanYusuf
-- [DataGrid] Toggle menu on click in `GridActionsCell` (#15871) @k-rajat19
+- [DataGrid] Toggle menu on click in `<GridActionsCell />` (#15871) @k-rajat19
 - [DataGrid] Trigger row spanning computation on rows update (#15872) @MBilalShafi
 - [l10n] Improve Korean(ko-KR) locale (#15906) @good-jinu
 
