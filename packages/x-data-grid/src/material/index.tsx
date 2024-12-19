@@ -1,7 +1,9 @@
 import * as React from 'react';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
+import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
+import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText from '@mui/material/ListItemText';
 import MUIMenuList from '@mui/material/MenuList';
@@ -90,7 +92,9 @@ const iconSlots: GridIconSlotsComponent = {
 const baseSlots: GridBaseSlots = {
   baseBadge: MUIBadge,
   baseCheckbox: MUICheckbox,
+  baseCircularProgress: MUICircularProgress,
   baseDivider: MUIDivider,
+  baseLinearProgress: MUILinearProgress,
   baseMenuList: MUIMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: MUITextField,

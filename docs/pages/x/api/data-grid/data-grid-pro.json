@@ -734,9 +734,21 @@
       "class": null
     },
     {
+      "name": "baseCircularProgress",
+      "description": "The custom CircularProgress component used in the grid.",
+      "default": "CircularProgress",
+      "class": null
+    },
+    {
       "name": "baseDivider",
       "description": "The custom Divider component used in the grid.",
       "default": "Divider",
+      "class": null
+    },
+    {
+      "name": "baseLinearProgress",
+      "description": "The custom LinearProgress component used in the grid.",
+      "default": "LinearProgress",
       "class": null
     },
     {
