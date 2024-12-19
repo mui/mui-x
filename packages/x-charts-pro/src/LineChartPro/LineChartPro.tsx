@@ -152,6 +152,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     axisClickHandlerProps,
     gridProps,
@@ -176,10 +177,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps} zoom={zoom} onZoomChange={onZoomChange}>
-      <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props.slotProps?.legend?.direction}
-      >
+      <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}

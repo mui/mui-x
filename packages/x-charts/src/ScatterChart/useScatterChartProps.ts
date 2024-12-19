@@ -9,6 +9,7 @@ import { ChartContainerProps } from '../ChartContainer';
 import { ZAxisContextProviderProps } from '../context';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -57,7 +58,6 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     colors,
     xAxis,
     yAxis,
-    sx,
     highlightedItem,
     onHighlightChange,
     className,
@@ -106,7 +106,14 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     ...axisHighlight,
   };
 
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+
   return {
+    chartsWrapperProps,
     chartContainerProps,
     zAxisProps,
     voronoiHandlerProps,

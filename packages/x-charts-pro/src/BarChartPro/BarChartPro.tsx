@@ -85,6 +85,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
     axisClickHandlerProps,
@@ -106,10 +107,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps} zoom={zoom} onZoomChange={onZoomChange}>
-      <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props.slotProps?.legend?.direction}
-      >
+      <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           {props.onAxisClick && <ChartsOnAxisClickHandler {...axisClickHandlerProps} />}

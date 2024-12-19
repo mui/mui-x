@@ -14,6 +14,7 @@ import type { LineChartProps } from './LineChart';
 import { LineHighlightPlotProps } from './LineHighlightPlot';
 import { LinePlotProps } from './LinePlot';
 import { MarkPlotProps } from './MarkPlot';
+import type { ChartsWrapperProps } from '../internals/components/ChartsWrapper';
 
 /**
  * A helper function that extracts LineChartProps from the input props
@@ -83,7 +84,6 @@ export const useLineChartProps = (props: LineChartProps) => {
       },
     ],
     yAxis,
-    sx,
     highlightedItem,
     onHighlightChange,
     disableAxisListener:
@@ -162,7 +162,14 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    sx,
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+  };
+
   return {
+    chartsWrapperProps,
     chartContainerProps,
     axisClickHandlerProps,
     gridProps,

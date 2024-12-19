@@ -110,7 +110,6 @@ const PieChart = React.forwardRef(function PieChart(
       height,
       margin,
       colors,
-      sx,
       disableAxisListener: true,
       highlightedItem,
       onHighlightChange,
@@ -126,6 +125,7 @@ const PieChart = React.forwardRef(function PieChart(
       <ChartsWrapper
         legendPosition={props.slotProps?.legend?.position}
         legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+        sx={sx}
       >
         {!hideLegend && (
           <ChartsLegend

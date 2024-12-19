@@ -29,6 +29,9 @@ export default function ScrollableLegend() {
     <Stack height={200} width={200}>
       <PieChart
         series={series}
+        sx={{
+          height: '100%',
+        }}
         slotProps={{
           legend: {
             sx: {

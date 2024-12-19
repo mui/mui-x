@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { Direction, LegendPosition } from '../../../ChartsLegend';
 
-interface ChartsWrapperProps {
+export interface ChartsWrapperProps {
   // eslint-disable-next-line react/no-unused-prop-types
   legendPosition?: LegendPosition;
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   children: React.ReactNode;
+  sx?: SxProps<Theme>;
 }
 
 const getDirection = (direction?: Direction, position?: LegendPosition) => {
@@ -59,8 +60,6 @@ const Root = styled('div', {
   flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
   flex: 1,
   justifyContent: 'center',
-  height: '100%',
-  width: '100%',
   alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
 }));
 
@@ -71,9 +70,13 @@ const Root = styled('div', {
  * Its main purpose is to position the HTML legend in the correct place.
  */
 function ChartsWrapper(props: ChartsWrapperProps) {
-  const { children } = props;
+  const { children, sx } = props;
 
-  return <Root ownerState={props}>{children}</Root>;
+  return (
+    <Root ownerState={props} sx={sx}>
+      {children}
+    </Root>
+  );
 }
 
 export { ChartsWrapper };

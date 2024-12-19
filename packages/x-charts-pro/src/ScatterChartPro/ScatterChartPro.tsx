@@ -37,6 +37,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const props = useThemeProps({ props: inProps, name: 'MuiScatterChartPro' });
   const { zoom, onZoomChange, ...other } = props;
   const {
+    chartsWrapperProps,
     chartContainerProps,
     zAxisProps,
     voronoiHandlerProps,
@@ -57,10 +58,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
 
   return (
     <ChartDataProviderPro {...chartDataProviderProProps} zoom={zoom} onZoomChange={onZoomChange}>
-      <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props.slotProps?.legend?.direction}
-      >
+      <ChartsWrapper {...chartsWrapperProps}>
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ZAxisContextProvider {...zAxisProps}>
