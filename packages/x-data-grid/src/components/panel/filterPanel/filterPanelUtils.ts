@@ -1,4 +1,8 @@
-import type { GridColDef, GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
+import type {
+  GridColDef,
+  GridSingleSelectColDef,
+  ValueOptions,
+} from '../../../models/colDef/gridColDef';
 import type { GridValueOptionsParams } from '../../../models/params/gridValueOptionsParams';
 
 export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridSingleSelectColDef {
@@ -30,4 +34,32 @@ export function getValueFromValueOptions(
     return String(optionValue) === String(value);
   });
   return getOptionValue(result);
+}
+
+/**
+ * Find the option matching the given value in valueOptions and get its label
+ * @param {string} value is used to extract label from valueOptions.
+ * @param {any[] | undeinfed} valueOptions is used to extract label.
+ * @param {NonNullable<GridSingleSelectColDef['getOptionLabel']>} getOptionLabel is used to get label from valueOption
+ * @param {NonNullable<GridSingleSelectColDef['getOptionValue']>} getOptionValue is used to get value from valueOption
+ * @returns {string | undefined} The label matching with the value.
+ */
+export function getLabelFromValueOptions(
+  value: string,
+  valueOptions: any[] | undefined,
+  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']> = (
+    valueOption: ValueOptions,
+  ) => (typeof valueOption === 'object' ? valueOption.label : valueOption),
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']> = (
+    valueOption: ValueOptions,
+  ) => (typeof valueOption === 'object' ? valueOption.value : valueOption),
+) {
+  if (valueOptions === undefined) {
+    return undefined;
+  }
+  const result = valueOptions.find((option) => {
+    const optionValue = getOptionValue(option);
+    return String(optionValue) === String(value);
+  });
+  return getOptionLabel(result);
 }
