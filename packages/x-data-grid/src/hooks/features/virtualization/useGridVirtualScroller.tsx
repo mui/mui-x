@@ -512,11 +512,11 @@ export const useGridVirtualScroller = () => {
       );
       const showBottomBorder = isLastVisibleInSection && params.position === 'top';
 
-      const isVirtualizationDisabled = rootProps.disableVirtualization && !enabledForColumns;
-
-      const firstColumnIndex = isVirtualizationDisabled ? 0 : currentRenderContext.firstColumnIndex;
-      const lastColumnIndex = isVirtualizationDisabled
-        ? visibleColumns.length
+      const firstColumnIndex = !enabledForColumns
+        ? pinnedColumns.left.length
+        : currentRenderContext.firstColumnIndex;
+      const lastColumnIndex = !enabledForColumns
+        ? visibleColumns.length - pinnedColumns.left.length - pinnedColumns.right.length
         : currentRenderContext.lastColumnIndex;
 
       rows.push(

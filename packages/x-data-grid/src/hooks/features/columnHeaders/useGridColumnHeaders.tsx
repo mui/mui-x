@@ -166,9 +166,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     let firstColumnToRender;
     let lastColumnToRender;
-    if (!rootProps.disableVirtualization && !hasColumnVirtualization) {
-      firstColumnToRender = 0;
-      lastColumnToRender = maxLastColumn;
+    const isPinnedPosition = params?.position !== undefined;
+
+    if (!hasColumnVirtualization && !isPinnedPosition) {
+      firstColumnToRender = pinnedColumns.left.length;
+      lastColumnToRender = maxLastColumn - pinnedColumns.right.length;
     } else {
       firstColumnToRender = currentContext.firstColumnIndex;
       lastColumnToRender = currentContext.lastColumnIndex;
