@@ -61,7 +61,6 @@ export const useDesktopPicker = <
 
   const {
     hasUIView,
-    layoutProps,
     providerProps,
     renderCurrentView,
     shouldRestoreFocus,
@@ -209,7 +208,7 @@ export const useDesktopPicker = <
         shouldRestoreFocus={shouldRestoreFocus}
         reduceAnimations={reduceAnimations}
       >
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersPopper>

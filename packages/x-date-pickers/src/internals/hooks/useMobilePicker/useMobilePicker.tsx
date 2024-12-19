@@ -56,7 +56,6 @@ export const useMobilePicker = <
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
-    layoutProps,
     providerProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
@@ -154,7 +153,7 @@ export const useMobilePicker = <
         unstableFieldRef={handleFieldRef}
       />
       <PickersModalDialog slots={slots} slotProps={slotProps}>
-        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}
         </Layout>
       </PickersModalDialog>

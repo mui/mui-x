@@ -63,7 +63,7 @@ export const usePickerOrientation = (
 export function usePickerProvider<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
->(parameters: UsePickerProviderParameters<TValue, TView>): UsePickerProviderReturnValue {
+>(parameters: UsePickerProviderParameters<TValue, TView>): UsePickerProviderReturnValue<TValue> {
   const {
     props,
     valueManager,
@@ -101,7 +101,7 @@ export function usePickerProvider<
     ],
   );
 
-  const contextValue = React.useMemo<PickerContextValue<TView>>(
+  const contextValue = React.useMemo<PickerContextValue<TValue, TView>>(
     () => ({
       ...paramsFromUsePickerValue.contextValue,
       ...paramsFromUsePickerViews.contextValue,
@@ -128,15 +128,16 @@ export function usePickerProvider<
   return {
     localeText,
     contextValue,
-    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
     privateContextValue,
+    actionsContextValue: paramsFromUsePickerValue.actionsContextValue,
+    isValidContextValue: paramsFromUsePickerValue.isValidContextValue,
   };
 }
 
 export interface UsePickerProviderParameters<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
-> extends Pick<PickerProviderProps, 'localeText'> {
+> extends Pick<PickerProviderProps<TValue>, 'localeText'> {
   props: UsePickerProps<TValue, any, any, any, any>;
   valueManager: PickerValueManager<TValue, any>;
   variant: PickerVariant;
@@ -144,7 +145,8 @@ export interface UsePickerProviderParameters<
   paramsFromUsePickerViews: UsePickerViewsProviderParams<TView>;
 }
 
-export interface UsePickerProviderReturnValue extends Omit<PickerProviderProps, 'children'> {}
+export interface UsePickerProviderReturnValue<TValue extends PickerValidValue>
+  extends Omit<PickerProviderProps<TValue>, 'children'> {}
 
 /**
  * Props used to create the picker's contexts.

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { MakeRequired } from '@mui/x-internals/types';
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { Validator } from '../../../validation';
 import { PickerVariant } from '../../models/common';
@@ -11,12 +12,10 @@ import {
   OnErrorProps,
   InferError,
   PickerValueType,
+  PickerChangeImportance,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import {
-  PickerShortcutChangeImportance,
-  PickersShortcutsItemContext,
-} from '../../../PickersShortcuts';
+import type { PickersShortcutsItemContext } from '../../../PickersShortcuts';
 import { InferNonNullablePickerValue, PickerValidValue } from '../../models';
 
 export interface PickerValueManager<TValue extends PickerValidValue, TError> {
@@ -188,10 +187,9 @@ export type PickerValueUpdateAction<TValue extends PickerValidValue, TError> =
       pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
     }
   | {
-      name: 'setValueFromShortcut';
+      name: 'setExplicitValue';
       value: TValue;
-      changeImportance: PickerShortcutChangeImportance;
-      shortcut: PickersShortcutsItemContext;
+      options: MakeRequired<SetValueActionOptions, 'changeImportance'>;
     };
 
 /**
@@ -290,44 +288,35 @@ export interface UsePickerValueViewsResponse<TValue extends PickerValidValue> {
 }
 
 /**
- * Props passed to `usePickerLayoutProps`.
- */
-export interface UsePickerValueLayoutResponse<TValue extends PickerValidValue> {
-  value: TValue;
-  onChange: (newValue: TValue) => void;
-  onSelectShortcut: (
-    newValue: TValue,
-    changeImportance: PickerShortcutChangeImportance,
-    shortcut: PickersShortcutsItemContext,
-  ) => void;
-  isValid: (value: TValue) => boolean;
-}
-
-/**
  * Params passed to `usePickerProvider`.
  */
 export interface UsePickerValueProviderParams<TValue extends PickerValidValue> {
   value: TValue;
-  contextValue: UsePickerValueContextValue;
-  actionsContextValue: UsePickerValueActionsContextValue;
+  contextValue: UsePickerValueContextValue<TValue>;
+  actionsContextValue: UsePickerValueActionsContextValue<TValue>;
   privateContextValue: UsePickerValuePrivateContextValue;
+  isValidContextValue: (value: TValue) => boolean;
 }
 
 export interface UsePickerValueResponse<TValue extends PickerValidValue, TError> {
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue, TError>;
-  layoutProps: UsePickerValueLayoutResponse<TValue>;
   provider: UsePickerValueProviderParams<TValue>;
 }
 
-export interface UsePickerValueContextValue extends UsePickerValueActionsContextValue {
+export interface UsePickerValueContextValue<TValue extends PickerValidValue>
+  extends UsePickerValueActionsContextValue<TValue> {
+  /**
+   * The current value of the picker.
+   */
+  value: TValue;
   /**
    * `true` if the picker is open, `false` otherwise.
    */
   open: boolean;
 }
 
-export interface UsePickerValueActionsContextValue {
+export interface UsePickerValueActionsContextValue<TValue extends PickerValidValue> {
   /**
    * Set the current open state of the Picker.
    * ```ts
@@ -339,6 +328,14 @@ export interface UsePickerValueActionsContextValue {
    * It can be a function that will receive the current open state.
    */
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  /**
+   * Set the current value of the picker.
+   * @param {TValue} value The new value of the picker.
+   * @param {object} options The options to customize the behavior of this update.
+   * @param {PickerChangeImportance | undefined} options.changeImportance The importance of the change. Is "accept" by default.
+   * @param {PickersShortcutsItemContext | undefined} options.shortcut The shortcut that triggered this change. Should not be defined if the change does not come from a shortcut.
+   */
+  setValue: (value: TValue, options?: SetValueActionOptions) => void;
   /**
    * Set the current value of the picker to be empty.
    * The value will be `null` on single pickers and `[null, null]` on range pickers.
@@ -368,4 +365,15 @@ export interface UsePickerValuePrivateContextValue {
    * Closes the picker and accepts the current value if it is not equal to the last accepted value.
    */
   dismissViews: () => void;
+}
+
+export interface SetValueActionOptions {
+  /**
+   * Importance of the change when picking a value:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance?: PickerChangeImportance;
+  shortcut?: PickersShortcutsItemContext;
 }

@@ -28,6 +28,7 @@ import {
   PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
+import { SetValueActionOptions } from '../internals/hooks/usePicker/usePickerValue.types';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
@@ -38,7 +39,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<PickerValue> {
+    BaseToolbarProps {
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -239,6 +240,8 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
  * This is used by the Date Time Range Picker Toolbar.
  */
 export const DateTimePickerToolbarOverrideContext = React.createContext<{
+  value: PickerValue;
+  setValue: (value: PickerValue, options?: SetValueActionOptions) => void;
   forceDesktopVariant: boolean;
   onViewChange: (view: DateOrTimeViewWithMeridiem) => void;
   view: DateOrTimeViewWithMeridiem | null;
@@ -259,9 +262,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const {
     ampm,
     ampmInClock,
-    value,
-    onChange,
-    isLandscape,
     toolbarFormat,
     toolbarPlaceholder = '––',
     toolbarTitle: inToolbarTitle,
@@ -271,27 +271,36 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   } = props;
 
   const {
+    value: valueContext,
+    setValue: setValueContext,
     disabled,
     readOnly,
     variant,
-    view: viewCtx,
-    onViewChange: onViewChangeCtx,
+    orientation,
+    view: viewContext,
+    onViewChange: onViewChangeContext,
     views,
   } = usePickerContext();
+
+  const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
   const utils = useUtils();
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
-  const translations = usePickerTranslations();
   const overrides = React.useContext(DateTimePickerToolbarOverrideContext);
+
+  const value = overrides ? overrides.value : valueContext;
+  const setValue = overrides ? overrides.setValue : setValueContext;
+  const view = overrides ? overrides.view : viewContext;
+  const onViewChange = overrides ? overrides.onViewChange : onViewChangeContext;
+
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
+    setValue(newValue, { changeImportance: 'set' }),
+  );
 
   const toolbarVariant = overrides?.forceDesktopVariant ? 'desktop' : variant;
   const isDesktop = toolbarVariant === 'desktop';
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const toolbarTitle = inToolbarTitle ?? translations.dateTimePickerToolbarTitle;
-
-  const view = overrides ? overrides.view : viewCtx;
-  const onViewChange = overrides ? overrides.onViewChange : onViewChangeCtx;
 
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -310,7 +319,6 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
 
   return (
     <DateTimePickerToolbarRoot
-      isLandscape={isLandscape}
       className={clsx(classes.root, className)}
       toolbarTitle={toolbarTitle}
       toolbarVariant={toolbarVariant}
@@ -354,7 +362,11 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
             <React.Fragment>
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
-                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                width={
+                  isDesktop && orientation === 'portrait'
+                    ? MULTI_SECTION_CLOCK_SECTION_WIDTH
+                    : undefined
+                }
                 data-testid="hours"
                 onClick={() => onViewChange('hours')}
                 selected={view === 'hours'}
@@ -369,7 +381,11 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
-                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                width={
+                  isDesktop && orientation === 'portrait'
+                    ? MULTI_SECTION_CLOCK_SECTION_WIDTH
+                    : undefined
+                }
                 data-testid="minutes"
                 onClick={() => onViewChange('minutes')}
                 selected={view === 'minutes' || (!views.includes('minutes') && view === 'hours')}
@@ -390,7 +406,11 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
-                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                width={
+                  isDesktop && orientation === 'portrait'
+                    ? MULTI_SECTION_CLOCK_SECTION_WIDTH
+                    : undefined
+                }
                 data-testid="seconds"
                 onClick={() => onViewChange('seconds')}
                 selected={view === 'seconds'}
@@ -455,8 +475,6 @@ DateTimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -479,7 +497,6 @@ DateTimePickerToolbar.propTypes = {
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
   toolbarTitle: PropTypes.node,
-  value: PropTypes.object,
 } as any;
 
 export { DateTimePickerToolbar };

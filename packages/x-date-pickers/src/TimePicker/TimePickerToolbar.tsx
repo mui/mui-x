@@ -26,9 +26,7 @@ import {
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
 
-export interface TimePickerToolbarProps
-  extends BaseToolbarProps<PickerValue>,
-    ExportedTimePickerToolbarProps {
+export interface TimePickerToolbarProps extends BaseToolbarProps, ExportedTimePickerToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
 }
@@ -154,25 +152,20 @@ const TimePickerToolbarAmPmSelection = styled('div', {
  */
 function TimePickerToolbar(inProps: TimePickerToolbarProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
-  const {
-    ampm,
-    ampmInClock,
-    value,
-    isLandscape,
-    onChange,
-    className,
-    classes: classesProp,
-    ...other
-  } = props;
+  const { ampm, ampmInClock, className, classes: classesProp, ...other } = props;
   const utils = useUtils();
   const translations = usePickerTranslations();
   const ownerState = useToolbarOwnerState();
   const classes = useUtilityClasses(classesProp, ownerState);
-  const { disabled, readOnly, view, onViewChange, views } =
-    usePickerContext<TimeViewWithMeridiem>();
+  const { value, setValue, disabled, readOnly, view, onViewChange, views } = usePickerContext<
+    PickerValue,
+    TimeViewWithMeridiem
+  >();
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
+    setValue(newValue, { changeImportance: 'set' }),
+  );
 
   const formatHours = (time: PickerValidDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -191,7 +184,6 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
     <TimePickerToolbarRoot
       landscapeDirection="row"
       toolbarTitle={translations.timePickerToolbarTitle}
-      isLandscape={isLandscape}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
       {...other}
@@ -276,8 +268,6 @@ TimePickerToolbar.propTypes = {
    * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
-  isLandscape: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -296,7 +286,6 @@ TimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
-  value: PropTypes.object,
 } as any;
 
 export { TimePickerToolbar };
