@@ -102,7 +102,6 @@ export default function ContinuousInteractiveDemoNoSnap() {
       )}
       getCode={(
         /** @type {{props: { direction: "horizontal" | "vertical"; length: number; thickness: number;  labelPosition:  'below' | 'above' | 'extremes' | 'left' | 'right'; reverseGradient: boolean; }}} */
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         { props },
       ) => {
         return `
