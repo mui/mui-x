@@ -2,19 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import {
   useGridComponentRenderer,
   RenderProp,
 } from '../../../hooks/utils/useGridComponentRenderer';
-import { useGridToolbarItem } from './useGridToolbarItem';
 import type { GridSlotProps } from '../../../models';
+import { useGridToolbarRootContext } from './GridToolbarRootContext';
 
 export type GridToolbarButtonProps = GridSlotProps['baseToolbarButton'] & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<{}>;
+  render?: RenderProp<GridSlotProps['baseToolbarButton']>;
 };
 
 /**
@@ -29,16 +30,37 @@ export type GridToolbarButtonProps = GridSlotProps['baseToolbarButton'] & {
 const GridToolbarButton = React.forwardRef<HTMLButtonElement, GridToolbarButtonProps>(
   function GridToolbarButton(props, ref) {
     const { render, ...other } = props;
+    const id = useId();
     const rootProps = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
-    const { tabIndex, onKeyDown } = useGridToolbarItem(buttonRef);
+    const { focusableItemId, registerItem, unregisterItem, onItemKeyDown } =
+      useGridToolbarRootContext();
+
+    React.useEffect(() => {
+      registerItem(id!);
+      return () => unregisterItem(id!);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const isInitialFocus = React.useRef(true);
+    React.useEffect(() => {
+      // Do not focus the item on initial render
+      if (focusableItemId && isInitialFocus.current) {
+        isInitialFocus.current = false;
+        return;
+      }
+
+      if (focusableItemId === id) {
+        buttonRef.current?.focus();
+      }
+    }, [focusableItemId, id]);
 
     return useGridComponentRenderer(rootProps.slots.baseToolbarButton, render, {
       ...rootProps.slotProps?.baseToolbarButton,
       ref: handleRef,
-      tabIndex,
-      onKeyDown,
+      tabIndex: focusableItemId === id ? 0 : -1,
+      onKeyDown: onItemKeyDown,
       ...other,
     });
   },

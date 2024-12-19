@@ -7,9 +7,7 @@ export type ComponentRenderFn<Props, State> = (
   state: State,
 ) => React.ReactElement<unknown>;
 
-export type RenderProp<State> =
-  | ComponentRenderFn<React.HTMLAttributes<any>, State>
-  | React.ReactElement;
+export type RenderProp<Props, State = {}> = ComponentRenderFn<Props, State> | React.ReactElement;
 
 /**
  * Resolves the rendering logic for a component.
@@ -25,7 +23,7 @@ export function useGridComponentRenderer<
   State extends Record<string, any>,
 >(
   defaultElement: keyof JSX.IntrinsicElements | React.ComponentType<Props>,
-  render: RenderProp<State> | undefined,
+  render: RenderProp<Props, State> | undefined,
   props: Props,
   state: State = {} as State,
 ) {

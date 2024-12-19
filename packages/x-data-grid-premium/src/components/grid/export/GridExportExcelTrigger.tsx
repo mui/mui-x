@@ -10,7 +10,7 @@ export type GridExportExcelTriggerProps = GridSlotProps['baseButton'] & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<{}>;
+  render?: RenderProp<GridSlotProps['baseButton']>;
   /**
    * The options to apply on the Excel export.
    * @demos

@@ -14,7 +14,7 @@ export type GridExportPrintTriggerProps = GridSlotProps['baseButton'] & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<{}>;
+  render?: RenderProp<GridSlotProps['baseButton']>;
   /**
    * The options to apply on the Print export.
    * @demos

@@ -16,7 +16,7 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../../models';
 
-export interface GridFilterPanelTriggerState {
+export interface GridFilterPanelState {
   /**
    * If `true`, the filter panel is open.
    */
@@ -31,11 +31,11 @@ export type GridFilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'cla
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridFilterPanelTriggerState>;
+  render?: RenderProp<GridSlotProps['baseButton'], GridFilterPanelState>;
   /**
    * A function to customize rendering of the component.
    */
-  className?: string | ((state: GridFilterPanelTriggerState) => string);
+  className?: string | ((state: GridFilterPanelState) => string);
 };
 
 /**

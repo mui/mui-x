@@ -12,7 +12,7 @@ export type GridToolbarRootProps = GridSlotProps['baseToolbar'] & {
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<{}>;
+  render?: RenderProp<GridSlotProps['baseToolbar']>;
 };
 
 const GridToolbarRoot = React.forwardRef<HTMLDivElement, GridToolbarRootProps>(

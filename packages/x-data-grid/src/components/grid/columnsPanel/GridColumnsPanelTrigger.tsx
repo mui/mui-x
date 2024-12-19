@@ -15,7 +15,7 @@ import {
 } from '../../../hooks/utils/useGridComponentRenderer';
 import type { GridSlotProps } from '../../../models';
 
-export interface GridColumnsPanelTriggerState {
+export interface GridColumnsPanelState {
   /**
    * If `true`, the columns panel is open.
    */
@@ -26,11 +26,11 @@ export type GridColumnsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'cl
   /**
    * A function to customize rendering of the component.
    */
-  render?: RenderProp<GridColumnsPanelTriggerState>;
+  render?: RenderProp<GridSlotProps['baseButton'], GridColumnsPanelState>;
   /**
    * Override or extend the styles applied to the component.
    */
-  className?: string | ((state: GridColumnsPanelTriggerState) => string);
+  className?: string | ((state: GridColumnsPanelState) => string);
 };
 
 /**
