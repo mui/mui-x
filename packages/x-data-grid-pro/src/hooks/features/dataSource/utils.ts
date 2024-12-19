@@ -72,16 +72,18 @@ export class NestedDataManager {
       this.queuedRequests.add(id);
       loadingIds[id] = true;
     });
-    this.api.setState((state) => ({
-      ...state,
-      dataSource: {
-        ...state.dataSource,
-        loading: {
-          ...state.dataSource.loading,
-          ...loadingIds,
+    this.api.setState((state) => {
+      return {
+        ...state,
+        dataSource: {
+          ...state.dataSource,
+          loading: {
+            ...state.dataSource.loading,
+            ...loadingIds,
+          },
         },
-      },
-    }));
+      };
+    });
     this.processQueue();
   };
 
