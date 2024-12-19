@@ -48,13 +48,7 @@ import * as ReactIs from 'react-is';
  * @param {Function} options.classesResolver A function that returns the classes for the component. It receives the props, after theme props and defaults have been applied. And the theme object as the second argument.
  * @param InComponent The component to render if the slot is not provided.
  */
-export const consumeThemeProps = <
-  Props extends {
-    slots?: Record<string, any>;
-    slotProps?: Record<string, any>;
-    classes?: Record<string, any>;
-  },
->(
+export const consumeThemeProps = <Props extends {}>(
   name: string,
   options: {
     defaultProps?:
@@ -62,9 +56,9 @@ export const consumeThemeProps = <
       | ((props: Props) => Omit<Partial<Props>, 'slots' | 'slotProps'>);
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.FunctionComponent<Props>,
-): React.FunctionComponent<Props> =>
-  function (props: Props) {
+  InComponent: React.JSXElementConstructor<Props>,
+) => {
+  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -86,5 +80,12 @@ export const consumeThemeProps = <
       (InComponent as any).displayName = name;
     }
 
+    if (ref !== null && ReactIs.isForwardRef(InComponent)) {
+      return <InComponent {...outProps} classes={classes} ref={ref} />;
+    }
+
     return <InComponent {...outProps} classes={classes} />;
-  };
+  }
+
+  return React.forwardRef(InternalComponent);
+};

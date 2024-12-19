@@ -35,7 +35,6 @@ export interface ChartsLegendProps {
   classes?: Partial<ChartsLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
-  ref?: React.Ref<HTMLUListElement>;
 }
 
 const RootElement = styled('ul', {
@@ -88,9 +87,9 @@ const ChartsLegend = consumeSlots(
     omitProps: ['position'],
     classesResolver: useUtilityClasses,
   },
-  function ChartsLegend(props: ChartsLegendProps) {
+  function ChartsLegend(props: ChartsLegendProps, ref: React.Ref<HTMLUListElement>) {
     const data = useLegend();
-    const { direction, onItemClick, className, classes, ref, ...other } = props;
+    const { direction, onItemClick, className, classes, ...other } = props;
 
     if (data.items.length === 0) {
       return null;

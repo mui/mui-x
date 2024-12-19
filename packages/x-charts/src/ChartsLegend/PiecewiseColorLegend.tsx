@@ -56,7 +56,6 @@ export interface PiecewiseColorLegendProps
   classes?: Partial<PiecewiseColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
-  ref?: React.Ref<HTMLUListElement>;
 }
 
 const RootElement = styled('ul', {
@@ -153,7 +152,10 @@ const PiecewiseColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function PiecewiseColorLegend(props: PiecewiseColorLegendProps) {
+  function PiecewiseColorLegend(
+    props: PiecewiseColorLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const {
       direction,
       classes,
@@ -164,7 +166,6 @@ const PiecewiseColorLegend = consumeThemeProps(
       axisId,
       labelFormatter,
       onItemClick,
-      ref,
       ...other
     } = props;
 

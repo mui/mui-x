@@ -14,7 +14,6 @@ export interface ChartsLabelProps {
   children?: React.ReactNode;
   className?: string;
   sx?: SxProps<Theme>;
-  ref?: React.Ref<HTMLSpanElement>;
 }
 
 const Root = styled('span', {
@@ -31,8 +30,8 @@ const ChartsLabel = consumeThemeProps(
   {
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabel(props: ChartsLabelProps) {
-    const { children, className, classes, ref, ...other } = props;
+  function ChartsLabel(props: ChartsLabelProps, ref: React.Ref<HTMLSpanElement>) {
+    const { children, className, classes, ...other } = props;
 
     return (
       <Root className={clsx(classes?.root, className)} ownerState={props} ref={ref} {...other}>

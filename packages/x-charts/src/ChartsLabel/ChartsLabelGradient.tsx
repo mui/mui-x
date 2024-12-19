@@ -41,7 +41,6 @@ export interface ChartsLabelGradientProps {
   classes?: Partial<ChartsLabelGradientClasses>;
   className?: string;
   sx?: SxProps<Theme>;
-  ref?: React.Ref<HTMLDivElement>;
 }
 
 const getRotation = (
@@ -115,8 +114,8 @@ const ChartsLabelGradient = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function ChartsLabelGradient(props: ChartsLabelGradientProps) {
-    const { gradientId, direction, classes, className, rotate, reverse, ref, thickness, ...other } =
+  function ChartsLabelGradient(props: ChartsLabelGradientProps, ref: React.Ref<HTMLDivElement>) {
+    const { gradientId, direction, classes, className, rotate, reverse, thickness, ...other } =
       props;
 
     return (

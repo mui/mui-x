@@ -2,6 +2,7 @@ import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import * as React from 'react';
+import * as ReactIs from 'react-is';
 
 /**
  * A higher order component that consumes a slot from the props and renders the component provided in the slot.
@@ -44,9 +45,7 @@ import * as React from 'react';
  * @param {Function} options.classesResolver A function that returns the classes for the component. It receives the props, after theme props and defaults have been applied. And the theme object as the second argument.
  * @param InComponent The component to render if the slot is not provided.
  */
-export const consumeSlots = <
-  Props extends { slots?: Record<string, any>; slotProps?: Record<string, any> },
->(
+export const consumeSlots = <Props extends {}>(
   name: string,
   slotPropName: string,
   options: {
@@ -57,9 +56,9 @@ export const consumeSlots = <
     omitProps?: Array<keyof Props>;
     classesResolver?: (props: Props, theme: any) => Record<string, string>;
   },
-  InComponent: React.FunctionComponent<Props>,
-): React.FunctionComponent<Props> =>
-  function (props: Props) {
+  InComponent: React.JSXElementConstructor<Props>,
+) => {
+  function InternalComponent(props: React.PropsWithoutRef<Props>, ref: React.Ref<any>) {
     const themedProps = useThemeProps({
       props,
       // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -72,21 +71,24 @@ export const consumeSlots = <
         : (options.defaultProps ?? {});
 
     const defaultizedProps = resolveProps(defaultProps, themedProps) as Props;
-    const { slots, slotProps, ...other } = defaultizedProps;
+    const { slots, slotProps, ...other } = defaultizedProps as {
+      slots?: Record<string, any>;
+      slotProps?: Record<string, any>;
+    };
 
     const theme = useTheme();
     const classes = options.classesResolver?.(defaultizedProps, theme);
 
-    const OutComponent = slots?.[slotPropName] ?? InComponent;
+    const Component = (slots?.[slotPropName] as React.JSXElementConstructor<Props>) ?? InComponent;
 
     if (process.env.NODE_ENV !== 'production') {
-      OutComponent.displayName = `${name}.slots.${slotPropName}`;
+      (Component as any).displayName = `${name}.slots.${slotPropName}`;
     }
 
     const propagateSlots = options.propagateSlots && !slots?.[slotPropName];
 
-    const { ownerState, ...outProps } = useSlotProps({
-      elementType: OutComponent,
+    const { ownerState, ...originalOutProps } = useSlotProps({
+      elementType: Component,
       externalSlotProps: slotProps?.[slotPropName],
       additionalProps: {
         ...other,
@@ -96,9 +98,18 @@ export const consumeSlots = <
       ownerState: {},
     });
 
+    const outProps = { ...originalOutProps } as unknown as Props;
+
     for (const prop of options.omitProps ?? []) {
       delete (outProps as unknown as Props)[prop];
     }
 
-    return <OutComponent {...outProps} />;
-  };
+    if (ref !== null && ReactIs.isForwardRef(Component)) {
+      return <Component {...outProps} classes={classes} ref={ref} />;
+    }
+
+    return <Component {...outProps} ref={ref} />;
+  }
+
+  return React.forwardRef(InternalComponent);
+};

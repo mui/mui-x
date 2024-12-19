@@ -60,7 +60,6 @@ export interface ContinuousColorLegendProps
   classes?: Partial<ContinuousColorLegendClasses>;
   className?: string;
   sx?: SxProps<Theme>;
-  ref?: React.Ref<HTMLUListElement>;
 }
 
 const templateAreas = {
@@ -180,7 +179,10 @@ const ContinuousColorLegend = consumeThemeProps(
     },
     classesResolver: useUtilityClasses,
   },
-  function ContinuousColorLegend(props: ContinuousColorLegendProps) {
+  function ContinuousColorLegend(
+    props: ContinuousColorLegendProps,
+    ref: React.Ref<HTMLUListElement>,
+  ) {
     const {
       minLabel,
       maxLabel,
@@ -193,7 +195,6 @@ const ContinuousColorLegend = consumeThemeProps(
       className,
       gradientId,
       labelPosition,
-      ref,
       thickness,
       ...other
     } = props;
