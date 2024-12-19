@@ -173,7 +173,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     );
 
     const clearFilterItem = React.useCallback(() => {
-      apiRef.current.deleteFilterItem(item);
+      apiRef.current.upsertFilterItem({ ...item, value: undefined });
     }, [apiRef, item]);
 
     let headerFilterComponent: React.ReactNode;
