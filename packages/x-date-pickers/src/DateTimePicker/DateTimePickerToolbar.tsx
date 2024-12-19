@@ -234,8 +234,8 @@ const DateTimePickerToolbarAmPmSelection = styled('div', {
 });
 
 /**
- * If `forceDesktopVariant` is set to true, the toolbar will always be rendered in the desktop mode.
- * If `onViewChange` is defined, the toolbar will call it instead of calling the one from `usePickerContext`.
+ * If `forceDesktopVariant` is set to `true`, the toolbar will always be rendered in the desktop mode.
+ * If `onViewChange` is defined, the toolbar will call it instead of calling the default handler from `usePickerContext`.
  * This is used by the Date Time Range Picker Toolbar.
  */
 export const DateTimePickerToolbarOverrideContext = React.createContext<{
