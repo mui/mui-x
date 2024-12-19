@@ -55,7 +55,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   const { pivotParams } = props;
-  const { pivotSettingsOpen } = pivotParams;
+  const pivotSettingsOpen = pivotParams?.pivotSettingsOpen ?? false;
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, dataGridPremiumPropValidators);
