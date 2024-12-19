@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { ErrorBoundary, createRenderer, screen, reactMajor } from '@mui/internal-test-utils';
 import { useHighlighted } from './useHighlighted';
 import { HighlightedProvider } from './HighlightedProvider';
-import { SeriesProvider } from '../SeriesProvider';
-import { PluginProvider } from '../PluginProvider';
+import { ChartProvider } from '../ChartProvider';
 
 function UseHighlighted() {
   const { highlightedItem } = useHighlighted();
@@ -48,13 +47,11 @@ describe('useHighlighted', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <PluginProvider>
-        <SeriesProvider series={[]}>
-          <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
-            <UseHighlighted />
-          </HighlightedProvider>
-        </SeriesProvider>
-      </PluginProvider>,
+      <ChartProvider pluginParams={{ series: [], width: 200, height: 200 }}>
+        <HighlightedProvider highlightedItem={{ seriesId: 'test-id' }}>
+          <UseHighlighted />
+        </HighlightedProvider>
+      </ChartProvider>,
     );
 
     expect(screen.getByText('test-id')).toBeVisible();
