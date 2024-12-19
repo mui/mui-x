@@ -3,8 +3,8 @@ import { AxisDefaultized } from '../models/axis';
 import { useCartesianContext } from '../context/CartesianProvider/useCartesianContext';
 
 import { ZAxisDefaultized } from '../models/z-axis';
-import { ColorLegendSelector } from './legend.types';
 import { useZAxis } from '../hooks/useZAxis';
+import { ColorLegendSelector } from './colorLegend.types';
 
 /**
  * Helper to select an axis definition according to its direction and id.

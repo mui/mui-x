@@ -14,6 +14,7 @@
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
+    "labelMarkType": { "type": { "description": "ChartsLabelMarkProps['type']" } },
     "layout": { "type": { "description": "'horizontal' | 'vertical'" }, "default": "'vertical'" },
     "stack": { "type": { "description": "string" } },
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },

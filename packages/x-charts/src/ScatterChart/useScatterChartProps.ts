@@ -2,7 +2,7 @@
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import type { ChartsVoronoiHandlerProps } from '../ChartsVoronoiHandler';
 import { ChartContainerProps } from '../ChartContainer';
@@ -95,7 +95,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };

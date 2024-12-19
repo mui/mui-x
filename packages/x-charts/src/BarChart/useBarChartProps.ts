@@ -10,7 +10,7 @@ import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -143,7 +143,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     ...axisHighlight,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };

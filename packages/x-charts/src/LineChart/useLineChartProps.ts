@@ -4,7 +4,7 @@ import { ChartsAxisProps } from '../ChartsAxis';
 import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPathProps } from '../ChartsClipPath';
 import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendProps } from '../ChartsLegend';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import { ChartsOnAxisClickHandlerProps } from '../ChartsOnAxisClickHandler';
 import { ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
@@ -157,7 +157,7 @@ export const useLineChartProps = (props: LineChartProps) => {
     slotProps,
   };
 
-  const legendProps: ChartsLegendProps = {
+  const legendProps: ChartsLegendSlotExtension = {
     slots,
     slotProps,
   };
