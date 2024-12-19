@@ -526,7 +526,7 @@ export const useGridVirtualScroller = () => {
           selected={isSelected}
           offsetTop={params.rows ? undefined : rowsMeta.positions[rowIndexInPage]}
           offsetLeft={offsetLeft}
-          dimensions={dimensions}
+          columnsTotalWidth={dimensions.columnsTotalWidth}
           rowHeight={baseRowHeight}
           pinnedColumns={pinnedColumns}
           visibleColumns={visibleColumns}
@@ -537,6 +537,8 @@ export const useGridVirtualScroller = () => {
           isLastVisible={isLastVisible}
           isNotVisible={isVirtualFocusRow}
           showBottomBorder={showBottomBorder}
+          scrollbarWidth={dimensions.hasScrollY ? dimensions.scrollbarSize : 0}
+          gridHasFiller={dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width}
           {...rowProps}
         />,
       );

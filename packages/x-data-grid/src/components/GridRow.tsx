@@ -20,7 +20,6 @@ import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, PinnedColumnPosition } from '../internals/constants';
-import type { GridDimensions } from '../hooks/features/dimensions';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
@@ -41,7 +40,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowHeight: number | 'auto';
   offsetTop: number | undefined;
   offsetLeft: number;
-  dimensions: GridDimensions;
+  columnsTotalWidth: number;
   firstColumnIndex: number;
   lastColumnIndex: number;
   visibleColumns: GridStateColDef[];
@@ -55,6 +54,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   isLastVisible: boolean;
   isNotVisible: boolean;
   showBottomBorder: boolean;
+  scrollbarWidth: number;
+  gridHasFiller: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -75,7 +76,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     pinnedColumns,
     offsetTop,
     offsetLeft,
-    dimensions,
+    columnsTotalWidth,
     firstColumnIndex,
     lastColumnIndex,
     focusedColumnIndex,
@@ -83,6 +84,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     isLastVisible,
     isNotVisible,
     showBottomBorder,
+    scrollbarWidth,
+    gridHasFiller,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -102,8 +105,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const handleRef = useForkRef(ref, refProp);
   const rowNode = apiRef.current.getRowNode(rowId);
-  const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
-  const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
   const editing = apiRef.current.getRowMode(rowId) === GridRowModes.Edit;
   const editable = rootProps.editMode === GridEditModes.Row;
 
@@ -296,7 +297,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       column.computedWidth,
       indexRelativeToAllColumns,
       columnPositions,
-      dimensions,
+      columnsTotalWidth,
+      scrollbarWidth,
     );
 
     if (rowNode?.type === 'skeletonRow') {

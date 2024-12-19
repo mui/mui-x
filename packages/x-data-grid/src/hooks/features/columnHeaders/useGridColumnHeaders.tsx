@@ -232,12 +232,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;
       const open = columnMenuState.open && columnMenuState.field === colDef.field;
       const pinnedPosition = params?.position;
+      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         colDef.computedWidth,
         columnIndex,
         columnPositions,
-        dimensions,
+        dimensions.columnsTotalWidth,
+        scrollbarWidth,
       );
 
       const siblingWithBorderingSeparator =
@@ -409,12 +411,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       };
 
       const pinnedPosition = params.position;
+      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         headerInfo.width,
         columnIndex,
         columnPositions,
-        dimensions,
+        dimensions.columnsTotalWidth,
+        scrollbarWidth,
       );
 
       columnIndex += columnFields.length;

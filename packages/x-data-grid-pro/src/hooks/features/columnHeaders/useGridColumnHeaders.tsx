@@ -120,12 +120,14 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const item = getFilterItem(colDef);
 
       const pinnedPosition = params?.position;
+      const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
       const pinnedOffset = getPinnedCellOffset(
         pinnedPosition,
         colDef.computedWidth,
         columnIndex,
         columnPositions,
-        dimensions,
+        dimensions.columnsTotalWidth,
+        scrollbarWidth,
       );
 
       const indexInSection = i;

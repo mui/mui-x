@@ -109,6 +109,7 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const sectionIndex = pinnedSide
           ? pinnedColumns[pinnedSide].findIndex((col) => col.field === column.field) // pinned section
           : colIndex - pinnedColumns.left.length; // middle section
+        const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
         const pinnedStyle = attachPinnedStyle(
           {},
           pinnedSide,
@@ -117,7 +118,8 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
             column.computedWidth,
             colIndex,
             positions,
-            dimensions,
+            dimensions.columnsTotalWidth,
+            scrollbarWidth,
           ),
         );
         const gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width;
@@ -138,7 +140,6 @@ const GridSkeletonLoadingOverlay = React.forwardRef<
         const emptyCell = (
           <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />
         );
-        const scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0;
         const hasScrollbarFiller = isLastColumn && scrollbarWidth !== 0;
 
         if (hasFillerBefore) {
