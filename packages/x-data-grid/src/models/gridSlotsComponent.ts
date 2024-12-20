@@ -16,6 +16,11 @@ export interface GridBaseSlots {
    */
   baseCheckbox: React.JSXElementConstructor<GridSlotProps['baseCheckbox']>;
   /**
+   * The custom CircularProgress component used in the grid.
+   * @default CircularProgress
+   */
+  baseCircularProgress: React.JSXElementConstructor<GridSlotProps['baseCircularProgress']>;
+  /**
    * The custom Chip component used in the grid.
    * @default Chip
    */
@@ -25,6 +30,11 @@ export interface GridBaseSlots {
    * @default Divider
    */
   baseDivider: React.JSXElementConstructor<GridSlotProps['baseDivider']>;
+  /**
+   * The custom LinearProgress component used in the grid.
+   * @default LinearProgress
+   */
+  baseLinearProgress: React.JSXElementConstructor<GridSlotProps['baseLinearProgress']>;
   /**
    * The custom MenuList component used in the grid.
    * @default MenuList
