@@ -24,8 +24,8 @@ export const useGridPreferencesPanel = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
-  const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>();
-  const immediateTimeout = React.useRef<ReturnType<typeof setTimeout>>();
+  const hideTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const immediateTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   /**
    * API METHODS

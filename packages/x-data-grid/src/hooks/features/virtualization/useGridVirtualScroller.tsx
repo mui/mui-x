@@ -99,7 +99,7 @@ try {
 }
 
 export const useGridVirtualScroller = () => {
-  const apiRef = useGridPrivateApiContext() as React.MutableRefObject<PrivateApiWithInfiniteLoader>;
+  const apiRef = useGridPrivateApiContext() as React.RefObject<PrivateApiWithInfiniteLoader>;
   const rootProps = useGridRootProps();
   const { unstable_listView: listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, () =>
@@ -136,6 +136,8 @@ export const useGridVirtualScroller = () => {
   const columnsTotalWidth = dimensions.columnsTotalWidth;
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
+  const previousSize = React.useRef<{ width: number; height: number }>(null);
+
   const mainRefCallback = React.useCallback(
     (node: HTMLDivElement | null) => {
       mainRef.current = node;
@@ -145,10 +147,16 @@ export const useGridVirtualScroller = () => {
       }
 
       const initialRect = node.getBoundingClientRect();
-
       let lastSize = roundDimensions(initialRect);
 
-      apiRef.current.publishEvent('resize', lastSize);
+      if (
+        !previousSize.current ||
+        (lastSize.width !== previousSize.current.width &&
+          lastSize.height !== previousSize.current.height)
+      ) {
+        previousSize.current = lastSize;
+        apiRef.current.publishEvent('resize', lastSize);
+      }
 
       if (typeof ResizeObserver === 'undefined') {
         return undefined;

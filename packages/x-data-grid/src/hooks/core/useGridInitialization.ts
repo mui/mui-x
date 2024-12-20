@@ -17,7 +17,7 @@ export const useGridInitialization = <
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(
-  inputApiRef: React.MutableRefObject<Api> | undefined,
+  inputApiRef: React.RefObject<Api> | undefined,
   props: DataGridProcessedProps,
 ) => {
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);

@@ -51,7 +51,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   };
 
   it('resizing after columns reorder should respect the new columns order', async () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+    let apiRef: React.RefObject<GridApi>;
 
     function TestCase(props: { width: number }) {
       const { width } = props;
@@ -66,14 +66,14 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const { setProps } = render(<TestCase width={300} />);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
-    act(() => apiRef.current.setColumnIndex('id', 1));
+    await act(() => apiRef.current.setColumnIndex('id', 1));
     setProps({ width: 200 });
     await raf();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'id']);
   });
 
-  it('should not reset the column order when a prop change', () => {
-    let apiRef: React.MutableRefObject<GridApi>;
+  it('should not reset the column order when a prop change', async () => {
+    let apiRef: React.RefObject<GridApi>;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
@@ -89,7 +89,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     const { forceUpdate } = render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    act(() => apiRef.current.setColumnIndex('brand', 2));
+    await act(() => apiRef.current.setColumnIndex('brand', 2));
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
     forceUpdate(); // test stability
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);

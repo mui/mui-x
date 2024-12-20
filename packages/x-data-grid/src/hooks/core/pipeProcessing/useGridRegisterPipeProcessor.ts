@@ -7,11 +7,11 @@ export const useGridRegisterPipeProcessor = <
   PrivateApi extends GridPrivateApiCommon,
   G extends GridPipeProcessorGroup,
 >(
-  apiRef: React.MutableRefObject<PrivateApi>,
+  apiRef: React.RefObject<PrivateApi>,
   group: G,
   callback: GridPipeProcessor<G>,
 ) => {
-  const cleanup = React.useRef<(() => void) | null>();
+  const cleanup = React.useRef<(() => void) | null>(null);
   const id = React.useRef(`mui-${Math.round(Math.random() * 1e9)}`);
 
   const registerPreProcessor = React.useCallback(() => {

@@ -21,7 +21,7 @@ const StyledText = styled('text')(({ theme }) => ({
   shapeRendering: 'crispEdges',
 }));
 
-function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement> }) {
+function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement | null> }) {
   const { svgRef } = props;
 
   // Get the drawing area bounding box

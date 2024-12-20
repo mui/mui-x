@@ -221,7 +221,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
       }
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      let workbook: Excel.Workbook | null = null;
+      await act(async () => {
+        workbook = await apiRef.current.getDataAsExcel();
+      });
       const worksheet = workbook!.worksheets[0];
 
       // 1-based index + 1 for column header row

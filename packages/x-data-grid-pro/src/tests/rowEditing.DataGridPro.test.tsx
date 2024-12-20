@@ -1241,13 +1241,13 @@ describe('<DataGridPro /> - Row editing', () => {
         expect(listener.lastCall.args[0].reason).to.equal('shiftTabKeyDown');
       });
 
-      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
-        render(<TestCase />);
+      it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=right', async () => {
+        const { user } = render(<TestCase />);
         const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
-        fireUserEvent.mousePress(cell);
-        fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
+        await user.click(cell);
+        await user.dblClick(cell);
+        await user.keyboard('{Tab}');
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1500,7 +1500,12 @@ describe('<DataGridPro /> - Row editing', () => {
       }, [hasFocus, inputRef]);
       return (
         <Portal>
-          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+          <input
+            ref={(ref) => {
+              setInputRef(ref);
+            }}
+            data-testid="input"
+          />
         </Portal>
       );
     }

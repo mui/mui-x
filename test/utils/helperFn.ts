@@ -140,9 +140,7 @@ export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLEl
 }
 
 export function getColumnHeadersTextContent() {
-  return Array.from(document.querySelectorAll('[role="columnheader"]')).map(
-    (node) => node!.textContent,
-  );
+  return screen.queryAllByRole('columnheader').map((node) => node!.textContent);
 }
 
 export function getRowsFieldContent(field: string) {

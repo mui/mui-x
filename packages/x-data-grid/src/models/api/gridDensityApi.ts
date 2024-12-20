@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridDensity } from '../gridDensity';
 
 export interface GridDensityOption {
-  icon: React.ReactElement;
+  icon: React.ReactElement<any>;
   label: string;
   value: GridDensity;
 }
