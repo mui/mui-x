@@ -33,7 +33,15 @@ import type { GridColumnsManagementProps } from '../components/columnsManagement
 import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
 import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { BadgeProps, DividerProps, MenuItemProps } from './gridBaseSlots';
+import type { ToolbarProps as MUIToolbarProps } from '../material/components/Toolbar/Toolbar';
+import type { ToolbarButtonProps as MUIToolbarButtonProps } from '../material/components/ToolbarButton/ToolbarButton';
+import type {
+  BadgeProps,
+  DividerProps,
+  MenuItemProps,
+  ToolbarButtonProps,
+  ToolbarProps,
+} from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
 type MainProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;
@@ -75,6 +83,8 @@ export interface PanelPropsOverrides {}
 export interface PinnedRowsPropsOverrides {}
 export interface SkeletonCellPropsOverrides {}
 export interface RowPropsOverrides {}
+export interface BaseToolbarPropsOverrides {}
+export interface BaseToolbarButtonPropsOverrides {}
 
 interface BaseSlotProps {
   baseBadge: BadgeProps & BaseBadgePropsOverrides;
@@ -98,11 +108,15 @@ interface BaseSlotProps {
     children?: React.ReactNode;
   } & BaseSelectOptionPropsOverrides;
   baseChip: ChipProps & BaseChipPropsOverrides;
+  baseToolbar: ToolbarProps & BaseToolbarPropsOverrides;
+  baseToolbarButton: ToolbarButtonProps & BaseToolbarButtonPropsOverrides;
 }
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
   baseMenuItem: MUIMenuItemProps;
+  baseToolbar: MUIToolbarProps;
+  baseToolbarButton: MUIToolbarButtonProps;
 }
 
 interface ElementSlotProps {

@@ -1,0 +1,381 @@
+{
+  "props": {
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ allColumns?: bool, columnsStyles?: object, escapeFormulas?: bool, exceljsPostProcess?: func, exceljsPreProcess?: func, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, includeColumnGroupsHeaders?: bool, includeHeaders?: bool, valueOptionsSheetName?: string, worker?: func }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "GridExportExcelTrigger",
+  "imports": [
+    "import { GridExportExcelTrigger } from '@mui/x-data-grid-premium/components';",
+    "import { GridExportExcelTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiGridExportExcelTrigger-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiGridExportExcelTrigger-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiGridExportExcelTrigger-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiGridExportExcelTrigger-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiGridExportExcelTrigger-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiGridExportExcelTrigger-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiGridExportExcelTrigger-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "contained",
+      "className": "MuiGridExportExcelTrigger-contained",
+      "description": "Styles applied to the root element if `variant=\"contained\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "containedError",
+      "className": "MuiGridExportExcelTrigger-containedError",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInfo",
+      "className": "MuiGridExportExcelTrigger-containedInfo",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInherit",
+      "className": "MuiGridExportExcelTrigger-containedInherit",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedPrimary",
+      "className": "MuiGridExportExcelTrigger-containedPrimary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSecondary",
+      "className": "MuiGridExportExcelTrigger-containedSecondary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeLarge",
+      "className": "MuiGridExportExcelTrigger-containedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeMedium",
+      "className": "MuiGridExportExcelTrigger-containedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeSmall",
+      "className": "MuiGridExportExcelTrigger-containedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSuccess",
+      "className": "MuiGridExportExcelTrigger-containedSuccess",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedWarning",
+      "className": "MuiGridExportExcelTrigger-containedWarning",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "disableElevation",
+      "className": "MuiGridExportExcelTrigger-disableElevation",
+      "description": "Styles applied to the root element if `disableElevation={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "endIcon",
+      "className": "MuiGridExportExcelTrigger-endIcon",
+      "description": "Styles applied to the endIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusVisible",
+      "className": "Mui-focusVisible",
+      "description": "State class applied to the ButtonBase root element if the button is keyboard focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "fullWidth",
+      "className": "MuiGridExportExcelTrigger-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "icon",
+      "className": "MuiGridExportExcelTrigger-icon",
+      "description": "Styles applied to the icon element if supplied",
+      "isGlobal": false
+    },
+    {
+      "key": "iconSizeLarge",
+      "className": "MuiGridExportExcelTrigger-iconSizeLarge",
+      "description": "Styles applied to the icon element if supplied and `size=\"large\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeMedium",
+      "className": "MuiGridExportExcelTrigger-iconSizeMedium",
+      "description": "Styles applied to the icon element if supplied and `size=\"medium\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeSmall",
+      "className": "MuiGridExportExcelTrigger-iconSizeSmall",
+      "description": "Styles applied to the icon element if supplied and `size=\"small\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlined",
+      "className": "MuiGridExportExcelTrigger-outlined",
+      "description": "Styles applied to the root element if `variant=\"outlined\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "outlinedError",
+      "className": "MuiGridExportExcelTrigger-outlinedError",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInfo",
+      "className": "MuiGridExportExcelTrigger-outlinedInfo",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInherit",
+      "className": "MuiGridExportExcelTrigger-outlinedInherit",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedPrimary",
+      "className": "MuiGridExportExcelTrigger-outlinedPrimary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSecondary",
+      "className": "MuiGridExportExcelTrigger-outlinedSecondary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeLarge",
+      "className": "MuiGridExportExcelTrigger-outlinedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeMedium",
+      "className": "MuiGridExportExcelTrigger-outlinedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeSmall",
+      "className": "MuiGridExportExcelTrigger-outlinedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSuccess",
+      "className": "MuiGridExportExcelTrigger-outlinedSuccess",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedWarning",
+      "className": "MuiGridExportExcelTrigger-outlinedWarning",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "root",
+      "className": "MuiGridExportExcelTrigger-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiGridExportExcelTrigger-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiGridExportExcelTrigger-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiGridExportExcelTrigger-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "startIcon",
+      "className": "MuiGridExportExcelTrigger-startIcon",
+      "description": "Styles applied to the startIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "text",
+      "className": "MuiGridExportExcelTrigger-text",
+      "description": "Styles applied to the root element if `variant=\"text\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "textError",
+      "className": "MuiGridExportExcelTrigger-textError",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInfo",
+      "className": "MuiGridExportExcelTrigger-textInfo",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInherit",
+      "className": "MuiGridExportExcelTrigger-textInherit",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textPrimary",
+      "className": "MuiGridExportExcelTrigger-textPrimary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSecondary",
+      "className": "MuiGridExportExcelTrigger-textSecondary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeLarge",
+      "className": "MuiGridExportExcelTrigger-textSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeMedium",
+      "className": "MuiGridExportExcelTrigger-textSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeSmall",
+      "className": "MuiGridExportExcelTrigger-textSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSuccess",
+      "className": "MuiGridExportExcelTrigger-textSuccess",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textWarning",
+      "className": "MuiGridExportExcelTrigger-textWarning",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    }
+  ],
+  "muiName": "MuiGridExportExcelTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid-premium/src/components/grid/export/GridExportExcelTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,0 +1,383 @@
+{
+  "props": {
+    "options": {
+      "type": {
+        "name": "shape",
+        "description": "{ allColumns?: bool, bodyClassName?: string, copyStyles?: bool, fields?: Array&lt;string&gt;, fileName?: string, getRowsToExport?: func, hideFooter?: bool, hideToolbar?: bool, includeCheckboxes?: bool, pageStyle?: func<br>&#124;&nbsp;string }"
+      }
+    },
+    "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }
+  },
+  "name": "GridExportPrintTrigger",
+  "imports": [
+    "import { GridExportPrintTrigger } from '@mui/x-data-grid/components';",
+    "import { GridExportPrintTrigger } from '@mui/x-data-grid';",
+    "import { GridExportPrintTrigger } from '@mui/x-data-grid-pro';",
+    "import { GridExportPrintTrigger } from '@mui/x-data-grid-premium';"
+  ],
+  "classes": [
+    {
+      "key": "colorError",
+      "className": "MuiGridExportPrintTrigger-colorError",
+      "description": "Styles applied to the root element if `color=\"error\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInfo",
+      "className": "MuiGridExportPrintTrigger-colorInfo",
+      "description": "Styles applied to the root element if `color=\"info\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorInherit",
+      "className": "MuiGridExportPrintTrigger-colorInherit",
+      "description": "Styles applied to the root element if `color=\"inherit\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorPrimary",
+      "className": "MuiGridExportPrintTrigger-colorPrimary",
+      "description": "Styles applied to the root element if `color=\"primary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSecondary",
+      "className": "MuiGridExportPrintTrigger-colorSecondary",
+      "description": "Styles applied to the root element if `color=\"secondary\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorSuccess",
+      "className": "MuiGridExportPrintTrigger-colorSuccess",
+      "description": "Styles applied to the root element if `color=\"success\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "colorWarning",
+      "className": "MuiGridExportPrintTrigger-colorWarning",
+      "description": "Styles applied to the root element if `color=\"warning\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "contained",
+      "className": "MuiGridExportPrintTrigger-contained",
+      "description": "Styles applied to the root element if `variant=\"contained\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "containedError",
+      "className": "MuiGridExportPrintTrigger-containedError",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInfo",
+      "className": "MuiGridExportPrintTrigger-containedInfo",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedInherit",
+      "className": "MuiGridExportPrintTrigger-containedInherit",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedPrimary",
+      "className": "MuiGridExportPrintTrigger-containedPrimary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSecondary",
+      "className": "MuiGridExportPrintTrigger-containedSecondary",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeLarge",
+      "className": "MuiGridExportPrintTrigger-containedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeMedium",
+      "className": "MuiGridExportPrintTrigger-containedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSizeSmall",
+      "className": "MuiGridExportPrintTrigger-containedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"contained\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedSuccess",
+      "className": "MuiGridExportPrintTrigger-containedSuccess",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "containedWarning",
+      "className": "MuiGridExportPrintTrigger-containedWarning",
+      "description": "Styles applied to the root element if `variant=\"contained\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "State class applied to the root element if `disabled={true}`.",
+      "isGlobal": true
+    },
+    {
+      "key": "disableElevation",
+      "className": "MuiGridExportPrintTrigger-disableElevation",
+      "description": "Styles applied to the root element if `disableElevation={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "endIcon",
+      "className": "MuiGridExportPrintTrigger-endIcon",
+      "description": "Styles applied to the endIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "focusVisible",
+      "className": "Mui-focusVisible",
+      "description": "State class applied to the ButtonBase root element if the button is keyboard focused.",
+      "isGlobal": true
+    },
+    {
+      "key": "fullWidth",
+      "className": "MuiGridExportPrintTrigger-fullWidth",
+      "description": "Styles applied to the root element if `fullWidth={true}`.",
+      "isGlobal": false
+    },
+    {
+      "key": "icon",
+      "className": "MuiGridExportPrintTrigger-icon",
+      "description": "Styles applied to the icon element if supplied",
+      "isGlobal": false
+    },
+    {
+      "key": "iconSizeLarge",
+      "className": "MuiGridExportPrintTrigger-iconSizeLarge",
+      "description": "Styles applied to the icon element if supplied and `size=\"large\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeMedium",
+      "className": "MuiGridExportPrintTrigger-iconSizeMedium",
+      "description": "Styles applied to the icon element if supplied and `size=\"medium\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "iconSizeSmall",
+      "className": "MuiGridExportPrintTrigger-iconSizeSmall",
+      "description": "Styles applied to the icon element if supplied and `size=\"small\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlined",
+      "className": "MuiGridExportPrintTrigger-outlined",
+      "description": "Styles applied to the root element if `variant=\"outlined\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "outlinedError",
+      "className": "MuiGridExportPrintTrigger-outlinedError",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInfo",
+      "className": "MuiGridExportPrintTrigger-outlinedInfo",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedInherit",
+      "className": "MuiGridExportPrintTrigger-outlinedInherit",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedPrimary",
+      "className": "MuiGridExportPrintTrigger-outlinedPrimary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSecondary",
+      "className": "MuiGridExportPrintTrigger-outlinedSecondary",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeLarge",
+      "className": "MuiGridExportPrintTrigger-outlinedSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeMedium",
+      "className": "MuiGridExportPrintTrigger-outlinedSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSizeSmall",
+      "className": "MuiGridExportPrintTrigger-outlinedSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"outlined\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedSuccess",
+      "className": "MuiGridExportPrintTrigger-outlinedSuccess",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "outlinedWarning",
+      "className": "MuiGridExportPrintTrigger-outlinedWarning",
+      "description": "Styles applied to the root element if `variant=\"outlined\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "root",
+      "className": "MuiGridExportPrintTrigger-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeLarge",
+      "className": "MuiGridExportPrintTrigger-sizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeMedium",
+      "className": "MuiGridExportPrintTrigger-sizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "sizeSmall",
+      "className": "MuiGridExportPrintTrigger-sizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "startIcon",
+      "className": "MuiGridExportPrintTrigger-startIcon",
+      "description": "Styles applied to the startIcon element if supplied.",
+      "isGlobal": false
+    },
+    {
+      "key": "text",
+      "className": "MuiGridExportPrintTrigger-text",
+      "description": "Styles applied to the root element if `variant=\"text\"`.",
+      "isGlobal": false
+    },
+    {
+      "key": "textError",
+      "className": "MuiGridExportPrintTrigger-textError",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"error\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInfo",
+      "className": "MuiGridExportPrintTrigger-textInfo",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"info\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textInherit",
+      "className": "MuiGridExportPrintTrigger-textInherit",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"inherit\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textPrimary",
+      "className": "MuiGridExportPrintTrigger-textPrimary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"primary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSecondary",
+      "className": "MuiGridExportPrintTrigger-textSecondary",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"secondary\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeLarge",
+      "className": "MuiGridExportPrintTrigger-textSizeLarge",
+      "description": "Styles applied to the root element if `size=\"large\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeMedium",
+      "className": "MuiGridExportPrintTrigger-textSizeMedium",
+      "description": "Styles applied to the root element if `size=\"medium\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSizeSmall",
+      "className": "MuiGridExportPrintTrigger-textSizeSmall",
+      "description": "Styles applied to the root element if `size=\"small\"` and `variant=\"text\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textSuccess",
+      "className": "MuiGridExportPrintTrigger-textSuccess",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"success\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    },
+    {
+      "key": "textWarning",
+      "className": "MuiGridExportPrintTrigger-textWarning",
+      "description": "Styles applied to the root element if `variant=\"text\"` and `color=\"warning\"`.",
+      "isGlobal": false,
+      "isDeprecated": true
+    }
+  ],
+  "muiName": "MuiGridExportPrintTrigger",
+  "forwardsRefTo": "GridRoot",
+  "filename": "/packages/x-data-grid/src/components/grid/export/GridExportPrintTrigger.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-plan\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-plan\">DataGridPremium</a></li></ul>",
+  "cssComponent": false
+}
