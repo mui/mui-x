@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { BadgeProps as MUIBadgeProps } from '@mui/material/Badge';
+import type { ButtonProps as MUIButtonProps } from '@mui/material/Button';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { CircularProgressProps as MUICircularProgressProps } from '@mui/material/CircularProgress';
 import type { LinearProgressProps as MUILinearProgressProps } from '@mui/material/LinearProgress';
@@ -9,8 +10,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps } from '@mui/material/Select';
 import type { SwitchProps } from '@mui/material/Switch';
-import type { ButtonProps } from '@mui/material/Button';
-import type { IconButtonProps } from '@mui/material/IconButton';
+import type { IconButtonProps as MUIIconButtonProps } from '@mui/material/IconButton';
 import type { InputAdornmentProps } from '@mui/material/InputAdornment';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
@@ -37,8 +37,10 @@ import type { GridRowCountProps } from '../components/GridRowCount';
 import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
 import type {
   BadgeProps,
+  ButtonProps,
   CircularProgressProps,
   DividerProps,
+  IconButtonProps,
   LinearProgressProps,
   MenuItemProps,
   SkeletonProps,
@@ -118,8 +120,10 @@ interface BaseSlotProps {
 
 interface MaterialSlotProps {
   baseBadge: MUIBadgeProps;
-  baseCircularProgress: MUICircularProgressProps;
+  baseButton: MUIButtonProps;
+  baseIconButton: MUIIconButtonProps;
   baseLinearProgress: MUILinearProgressProps;
+  baseCircularProgress: MUICircularProgressProps;
   baseMenuItem: MUIMenuItemProps;
 }
 
