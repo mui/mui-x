@@ -11,7 +11,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { validateProps } from '@mui/x-data-grid/internals';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
@@ -30,7 +30,7 @@ const configuration = {
 };
 const releaseInfo = getReleaseInfo();
 
-const DataGridProRaw = forwardRefShim(function DataGridPro<R extends GridValidRowModel>(
+const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {

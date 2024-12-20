@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRowsMetaSelector } from '../../hooks/features/rows';
@@ -33,7 +33,7 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   flexDirection: 'column',
 });
 
-const GridVirtualScrollerRenderZone = forwardRefShim<
+const GridVirtualScrollerRenderZone = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerRenderZone(props, ref) {

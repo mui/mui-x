@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
@@ -26,7 +26,7 @@ const Element = styled('div', {
   flexDirection: 'column',
 });
 
-export const GridMainContainer = forwardRefShim<
+export const GridMainContainer = forwardRef<
   HTMLDivElement,
   React.PropsWithChildren<{
     className: string;

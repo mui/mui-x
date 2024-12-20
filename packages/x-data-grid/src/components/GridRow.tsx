@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
@@ -69,7 +69,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   [x: `data-${string}`]: string;
 }
 
-const GridRow = forwardRefShim<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
+const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
     rowId,

@@ -6,7 +6,7 @@ import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -55,7 +55,7 @@ const GridPaperRoot = styled(Paper, {
   overflow: 'auto',
 }));
 
-const GridPanel = forwardRefShim<HTMLDivElement, GridPanelProps>((props, ref) => {
+const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

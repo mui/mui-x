@@ -4,7 +4,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -30,7 +30,7 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-const GridCellCheckboxForwardRef = forwardRefShim<HTMLInputElement, GridRenderCellParams>(
+const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,

@@ -9,7 +9,7 @@ import {
 } from '@mui/utils';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -153,7 +153,7 @@ let warnedOnce = false;
 
 // TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 
-const GridCell = forwardRefShim<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
+const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(props, ref) {
   const {
     column,
     rowId,

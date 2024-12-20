@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -33,7 +33,7 @@ const GridColumnHeaderTitleRoot = styled('div', {
   lineHeight: 'normal',
 });
 
-const ColumnHeaderInnerTitle = forwardRefShim<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function ColumnHeaderInnerTitle(props, ref) {
     // Tooltip adds aria-label to the props, which is not needed since the children prop is a string
     // See https://github.com/mui/mui-x/pull/14482

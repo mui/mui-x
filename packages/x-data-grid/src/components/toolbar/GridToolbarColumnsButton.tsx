@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -18,7 +18,7 @@ interface GridToolbarColumnsButtonProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarColumnsButton = forwardRefShim<HTMLButtonElement, GridToolbarColumnsButtonProps>(
+const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumnsButtonProps>(
   function GridToolbarColumnsButton(props, ref) {
     const { slotProps = {} } = props;
     const buttonProps = slotProps.button || {};

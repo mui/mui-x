@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import LinearProgress from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -44,7 +44,7 @@ const LOADING_VARIANTS: Record<
   },
 };
 
-const GridLoadingOverlay = forwardRefShim<HTMLDivElement, GridLoadingOverlayProps>(
+const GridLoadingOverlay = forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   function GridLoadingOverlay(props, ref) {
     const { variant = 'linear-progress', noRowsVariant = 'skeleton', style, ...other } = props;
     const apiRef = useGridApiContext();

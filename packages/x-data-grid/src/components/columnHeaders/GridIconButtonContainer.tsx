@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -31,7 +31,7 @@ const GridIconButtonContainerRoot = styled('div', {
   width: 0,
 }));
 
-export const GridIconButtonContainer = forwardRefShim<HTMLDivElement, GridIconButtonContainerProps>(
+export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
   function GridIconButtonContainer(props, ref) {
     const { className, ...other } = props;
     const rootProps = useGridRootProps();

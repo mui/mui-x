@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isHideMenuKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridMenu } from '../menu/GridMenu';
@@ -18,7 +18,7 @@ interface GridToolbarExportContainerProps {
   slotProps?: { button?: Partial<ButtonProps>; tooltip?: Partial<TooltipProps> };
 }
 
-const GridToolbarExportContainer = forwardRefShim<
+const GridToolbarExportContainer = forwardRef<
   HTMLButtonElement,
   React.PropsWithChildren<GridToolbarExportContainerProps>
 >(function GridToolbarExportContainer(props, ref) {

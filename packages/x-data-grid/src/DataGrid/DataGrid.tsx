@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
 import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
@@ -43,7 +43,7 @@ if (process.env.NODE_ENV !== 'production') {
   ];
 }
 
-const DataGridRaw = forwardRefShim(function DataGrid<R extends GridValidRowModel>(
+const DataGridRaw = forwardRef(function DataGrid<R extends GridValidRowModel>(
   inProps: DataGridProps<R>,
   ref: React.Ref<HTMLDivElement>,
 ) {

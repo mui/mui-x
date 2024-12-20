@@ -6,7 +6,7 @@ import {
   GRID_COLUMN_MENU_SLOT_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuAggregationItem } from './GridColumnMenuAggregationItem';
 import { isGroupingColumn } from '../hooks/features/rowGrouping';
 import { GridColumnMenuRowGroupItem } from './GridColumnMenuRowGroupItem';
@@ -33,7 +33,7 @@ export const GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM = {
   columnMenuGroupingItem: { displayOrder: 27 },
 };
 
-export const GridPremiumColumnMenu = forwardRefShim<HTMLUListElement, GridColumnMenuProps>(
+export const GridPremiumColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridPremiumColumnMenuSimple(props, ref) {
     return (
       <GridGenericColumnMenu

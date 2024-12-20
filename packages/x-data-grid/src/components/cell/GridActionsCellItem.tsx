@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { MenuItemProps } from '@mui/material/MenuItem';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {
@@ -26,7 +26,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
       } & Omit<MenuItemProps, 'component'>)
   );
 
-const GridActionsCellItem = forwardRefShim<HTMLElement, GridActionsCellItemProps>((props, ref) => {
+const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
   const rootProps = useGridRootProps();
 
   if (!props.showInMenu) {

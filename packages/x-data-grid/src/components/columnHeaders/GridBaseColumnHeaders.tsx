@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled, SxProps, Theme } from '@mui/system';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -34,7 +34,7 @@ interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement
   sx?: SxProps<Theme>;
 }
 
-export const GridBaseColumnHeaders = forwardRefShim<HTMLDivElement, GridBaseColumnHeadersProps>(
+export const GridBaseColumnHeaders = forwardRef<HTMLDivElement, GridBaseColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const { className, ...other } = props;
     const rootProps = useGridRootProps();

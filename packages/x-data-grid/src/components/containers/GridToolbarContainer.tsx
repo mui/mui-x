@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -36,7 +36,7 @@ const GridToolbarContainerRoot = styled('div', {
   padding: theme.spacing(0.5, 0.5, 0),
 }));
 
-const GridToolbarContainer = forwardRefShim<HTMLDivElement, GridToolbarContainerProps>(
+const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;
     const rootProps = useGridRootProps();

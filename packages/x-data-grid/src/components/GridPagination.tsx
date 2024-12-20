@@ -6,7 +6,7 @@ import TablePagination, {
   TablePaginationProps,
   LabelDisplayedRowsArgs,
 } from '@mui/material/TablePagination';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -61,7 +61,7 @@ interface GridPaginationOwnProps {
   component?: React.ElementType;
 }
 
-const GridPagination = forwardRefShim<
+const GridPagination = forwardRef<
   unknown,
   Partial<
     // See https://github.com/mui/material-ui/issues/40427

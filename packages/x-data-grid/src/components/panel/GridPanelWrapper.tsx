@@ -5,7 +5,7 @@ import FocusTrap, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
 import { MUIStyledCommonProps } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,7 +45,7 @@ export interface GridPanelWrapperProps
   };
 }
 
-const GridPanelWrapper = forwardRefShim<HTMLDivElement, GridPanelWrapperProps>(
+const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
     const { className, slotProps = {}, ...other } = props;
     const rootProps = useGridRootProps();

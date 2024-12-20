@@ -4,7 +4,7 @@ import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import { styled } from '@mui/material/styles';
 
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isHideMenuKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -13,7 +13,7 @@ const StyledMenuList = styled(MenuList)(() => ({
   minWidth: 248,
 }));
 
-const GridColumnMenuContainer = forwardRefShim<HTMLUListElement, GridColumnMenuContainerProps>(
+const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
     const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
 

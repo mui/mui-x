@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div')({
@@ -14,7 +14,7 @@ export interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     UseGridColumnHeadersProps {}
 
-const GridColumnHeaders = forwardRefShim<HTMLDivElement, GridColumnHeadersProps>(
+const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const {
       style,

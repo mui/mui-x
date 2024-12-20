@@ -6,7 +6,7 @@ import {
 } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
-import { forwardRefShim } from '@mui/x-internals/forwardRefShim';
+import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -54,7 +54,7 @@ export interface GridEditInputCellProps
   ) => Promise<void> | void;
 }
 
-const GridEditInputCell = forwardRefShim<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
+const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
   const rootProps = useGridRootProps();
 
   const {
