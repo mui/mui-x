@@ -11,7 +11,7 @@ describe('useGridComponentRenderer', () => {
 
   function TestComponent(
     props: React.ComponentPropsWithoutRef<'button'> & {
-      render?: RenderProp<{ someState: string }>;
+      render?: RenderProp<React.ComponentPropsWithoutRef<'button'>, { someState: string }>;
     },
   ) {
     const { render: renderProp, ...other } = props;
@@ -50,7 +50,9 @@ describe('useGridComponentRenderer', () => {
     render(
       <TestComponent
         data-testid="rendered-element"
-        render={(props) => <div {...props}>children</div>}
+        render={(props) => (
+          <div {...(props as React.ComponentPropsWithoutRef<'div'>)}>children</div>
+        )}
       />,
     );
     expect(screen.getByTestId('rendered-element')).to.be.instanceOf(window.HTMLDivElement);
@@ -61,7 +63,9 @@ describe('useGridComponentRenderer', () => {
     render(
       <TestComponent
         data-testid="rendered-element"
-        render={(props, state) => <div {...props}>{state.someState}</div>}
+        render={(props, state) => (
+          <div {...(props as React.ComponentPropsWithoutRef<'div'>)}>{state.someState}</div>
+        )}
       />,
     );
     expect(screen.getByTestId('rendered-element')).to.be.instanceOf(window.HTMLDivElement);
@@ -101,7 +105,7 @@ describe('useGridComponentRenderer', () => {
     }
 
     function TestComponentWithSxProp(
-      props: BoxProps & { render?: RenderProp<{ someState: string }> },
+      props: BoxProps & { render?: RenderProp<BoxProps, { someState: string }> },
     ) {
       const { render: renderProp, ...other } = props;
       return useGridComponentRenderer(Box, renderProp, other as Omit<BoxProps, 'color'>);
