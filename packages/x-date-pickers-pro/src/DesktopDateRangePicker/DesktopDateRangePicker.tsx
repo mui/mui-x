@@ -7,7 +7,7 @@ import {
   PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { extractValidationProps } from '@mui/x-date-pickers/validation';
-import { PickerOwnerState } from '@mui/x-date-pickers/models';
+import { PickerOwnerState, PickerLayoutOwnerState } from '@mui/x-date-pickers/models';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import { refType } from '@mui/utils';
 import { rangeValueManager } from '../internals/utils/valueManagers';
@@ -74,7 +74,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-      actionBar: (ownerState: any) => ({
+      actionBar: (ownerState: PickerLayoutOwnerState) => ({
         actions: [],
         ...resolveComponentProps(defaultizedProps.slotProps?.actionBar, ownerState),
       }),
